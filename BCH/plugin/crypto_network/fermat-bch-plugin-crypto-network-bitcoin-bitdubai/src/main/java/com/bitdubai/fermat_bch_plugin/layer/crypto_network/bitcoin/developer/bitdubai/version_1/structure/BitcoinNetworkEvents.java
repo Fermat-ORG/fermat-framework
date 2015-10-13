@@ -125,7 +125,21 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void onCoinsSent(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
-        //todo record this transaction
+        /**
+         * Register the new outgoing transaction into the database
+         */
+        try {
+            getDao().saveNewOutgoingTransaction(tx.getHashAsString(),
+                    getTransactionCryptoStatus(tx),
+                    tx.getConfidence().getDepthInBlocks(),
+                    getOutgoingTransactionAddressTo(tx),
+                    getOutgoingTransactionAddressFrom(wallet, tx),
+                    tx.getValue(wallet).getValue(),
+                    tx.getFee().getValue(),
+                    ProtocolStatus.TO_BE_NOTIFIED);
+        } catch (CantExecuteDatabaseOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -138,10 +152,14 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         /**
          * Depending this is a outgoing or incoming transaction, I will set the CryptoStatus
          */
-        if (isIncomingTransaction(tx.getHashAsString()))
-            setTransactionCryptoStatus(TransactionTypes.INCOMING, wallet, tx);
-        else
-            setTransactionCryptoStatus(TransactionTypes.OUTGOING, wallet, tx);
+        try {
+            if (isIncomingTransaction(tx.getHashAsString()))
+                setTransactionCryptoStatus(TransactionTypes.INCOMING, wallet, tx);
+            else
+                setTransactionCryptoStatus(TransactionTypes.OUTGOING, wallet, tx);
+        } catch (CantExecuteDatabaseOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -177,16 +195,16 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * @return
      */
     private CryptoStatus getTransactionCryptoStatus(Transaction tx){
-        switch (tx.getConfidence().getDepthInBlocks()){
-            case 0:
-                    return CryptoStatus.ON_CRYPTO_NETWORK;
-            case 1:
-                    return CryptoStatus.ON_BLOCKCHAIN;
-            case 2:
-                return CryptoStatus.IRREVERSIBLE;
-            default:
-                return CryptoStatus.PENDING_SUBMIT;
-        }
+        int depth = tx.getConfidence().getDepthInBlocks();
+
+        if (depth == 0)
+            return CryptoStatus.ON_CRYPTO_NETWORK;
+        else if(depth == 1)
+            return CryptoStatus.ON_BLOCKCHAIN;
+        else if (depth >= 2)
+            return CryptoStatus.IRREVERSIBLE;
+        else
+            return CryptoStatus.PENDING_SUBMIT;
     }
 
     /**
@@ -227,13 +245,30 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     }
 
     /**
+     * Extracts the Address From from an Outgoing Transaction
+     * @param tx
+     * @return
+     */
+    private CryptoAddress getOutgoingTransactionAddressFrom (Wallet wallet, Transaction tx){
+        return getIncomingTransactionAddressTo(wallet, tx);
+    }
+
+    /**
+     * Extracts the Address To from an outgoing Transaction
+     * @param tx
+     * @return
+     */
+    private CryptoAddress getOutgoingTransactionAddressTo (Transaction tx){
+        return getIncomingTransactionAddressFrom(tx);
+    }
+
+    /**
      * determines if the passed transaction is incoming or outgoing transaction
      * @param txHash
      * @return true if is an IncomingTransactin, false if is outgoing.
      */
-    private boolean isIncomingTransaction(String txHash){
-        //todo validate if this is incoming or outgoing by searching in both tables.
-        return true;
+    private boolean isIncomingTransaction(String txHash) throws CantExecuteDatabaseOperationException {
+        return getDao().isIncomingTransaction(txHash);
     }
 
     /**
@@ -246,12 +281,24 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         /**
          * I will get the previous CryptoStatus of the transaction to see if it is a Reversion
          */
-        CryptoStatus storedCryptoStatus = getStoredTransactionCryptoStatus(transactionType, tx.getHashAsString());
+        CryptoStatus storedCryptoStatus = null;
+        try {
+            storedCryptoStatus = getStoredTransactionCryptoStatus(transactionType, tx.getHashAsString());
+        } catch (CantExecuteDatabaseOperationException e) {
+            e.printStackTrace();
+        }
         /**
          * Also get the current CryptoStatus that triggered the event.
          */
         CryptoStatus currentCryptoStatus = getTransactionCryptoStatus(tx);
         CryptoStatus cryptoStatusToSet;
+
+        /**
+         * if the stored CryptoStatus is the same as the current one (for example IRREVERSIBLE)
+         * then there is nothing left to do
+         */
+        if (storedCryptoStatus == currentCryptoStatus)
+            return;
 
         switch (storedCryptoStatus) {
             case ON_BLOCKCHAIN:
@@ -300,16 +347,35 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                 }
                 break;
             case OUTGOING:
-                //todo save outgoing transaction
+                /**
+                 * Register the new incoming transaction into the database
+                 */
+                try {
+                    getDao().saveNewOutgoingTransaction(tx.getHashAsString(),
+                            cryptoStatusToSet,
+                            tx.getConfidence().getDepthInBlocks(),
+                            getIncomingTransactionAddressTo(wallet, tx),
+                            getIncomingTransactionAddressFrom(tx),
+                            tx.getValue(wallet).getValue(),
+                            tx.getFee().getValue(),
+                            ProtocolStatus.TO_BE_NOTIFIED);
+                } catch (CantExecuteDatabaseOperationException e) {
+                    e.printStackTrace();
+                }
                 break;
 
         }
     }
 
-    private CryptoStatus getStoredTransactionCryptoStatus(TransactionTypes transactionType, String txHashAsString) {
-        //todo complete this to get the correct stored cryptoStatus will bring the last crypto status recorded
-        // beacuse multiples may exists.
-        return CryptoStatus.PENDING_SUBMIT;
+    /**
+     * gets the stored crypto status from the specified transaction.
+     * @param transactionType
+     * @param txHash
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    private CryptoStatus getStoredTransactionCryptoStatus(TransactionTypes transactionType, String txHash) throws CantExecuteDatabaseOperationException {
+        return getDao().getStoredTransactionCryptoStatus(transactionType, txHash);
     }
 }
 
