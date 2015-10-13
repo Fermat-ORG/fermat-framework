@@ -42,8 +42,8 @@ public class AssetDistributionDao {
     }
 
     private DatabaseTable getDatabaseTable(String tableName){
-        DatabaseTable assetIssuingDatabaseTable = database.getTable(tableName);
-        return assetIssuingDatabaseTable;
+        DatabaseTable assetDistributionDatabaseTable = database.getTable(tableName);
+        return assetDistributionDatabaseTable;
     }
 
     private Database openDatabase() throws CantExecuteDatabaseOperationException {
@@ -116,19 +116,19 @@ public class AssetDistributionDao {
     public void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException {
         try {
             this.database=openDatabase();
-            DatabaseTable databaseTable = this.database.getTable(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME);
+            DatabaseTable databaseTable = this.database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_NAME);
             DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
             UUID eventRecordID = UUID.randomUUID();
             long unixTime = System.currentTimeMillis();
             Logger LOG = Logger.getGlobal();
             LOG.info("Distribution DAO:\nUUID:"+eventRecordID+"\n"+unixTime);
-            eventRecord.setUUIDValue(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_ID_COLUMN, eventRecordID);
-            eventRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_EVENT_COLUMN, eventType);
-            eventRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_SOURCE_COLUMN, eventSource);
-            eventRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_STATUS_COLUMN, EventStatus.PENDING.toString());
-            eventRecord.setLongValue(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_TIMESTAMP_COLUMN, unixTime);
+            eventRecord.setUUIDValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_ID_COLUMN_NAME, eventRecordID);
+            eventRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType);
+            eventRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
+            eventRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.toString());
+            eventRecord.setLongValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, unixTime);
             databaseTable.insertRecord(eventRecord);
-            LOG.info("record:" + eventRecord.getStringValue(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_ID_COLUMN));
+            LOG.info("record:" + eventRecord.getStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_ID_COLUMN_NAME));
             this.database.closeDatabase();
         }  catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();

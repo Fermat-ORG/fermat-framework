@@ -39,7 +39,6 @@ import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitduba
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeApp;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeSubApp;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppNavigationStructure;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
@@ -760,249 +759,77 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
              */
 
 
-        /*-- wallet store --*/
+            /**
+             * WALLET STORE
+             */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_WALLET_STORE);
             listSubApp.put(SubApps.CWP_WALLET_STORE, runtimeSubApp);
 
-
             //Activity 1
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
-            runtimeSubApp.setStartActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
+            runtimeActivity.setColor("#B46A54");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeActivity.setColor("#b46a54");
+            runtimeSubApp.setStartActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
 
-            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-
-            statusBar.setColor("#b46a54");
+            statusBar = new StatusBar();
+            statusBar.setColor("#B4573C");
+            runtimeActivity.setStatusBar(statusBar);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Wallet Store");
-
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-//            runtimeTabStrip = new TabStrip();
-//            runtimeTabStrip.setTabsColor("#d07b62");
-//            runtimeTabStrip.setTabsTextColor("#FFFFFF");
-//            runtimeTabStrip.setTabsIndicateColor("#b46a54");
-
-
-            //mati
-            SearchView runtimeSearchView = new SearchView();
-            runtimeSearchView.setLabel("Search");
-            runtimeTitleBar.setRuntimeSearchView(runtimeSearchView);
-
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT.getKey());
+            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_MAIN_ACTIVITY.getKey());
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_MAIN_ACTIVITY.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_MAIN_ACTIVITY.getKey());
 
             //Activity 2
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY);
+            runtimeActivity.setColor("#B46A54");
+            runtimeActivity.setBackActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeActivity.setColor("#00000000");
-            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-            statusBar.setColor("#00000000");
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#B4573C");
+            runtimeActivity.setStatusBar(statusBar);
+
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Wallet Store detail");
+            runtimeTitleBar.setColor("#FFFFFF");
+            runtimeTitleBar.setLabel("Wallet Details");
             runtimeActivity.setTitleBar(runtimeTitleBar);
-            runtimeSearchView = new SearchView();
-            runtimeSearchView.setLabel("Search");
-            runtimeTitleBar.setRuntimeSearchView(runtimeSearchView);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
+
             runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_FREE_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_FREE_FRAGMENT.getKey(), runtimeFragment);
+            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_DETAIL_ACTIVITY.getKey());
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_DETAIL_ACTIVITY.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_DETAIL_ACTIVITY.getKey());
 
             //Activity 3
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY);
+            runtimeActivity.setColor("#B46A54");
+            runtimeActivity.setBackActivity(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY);
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeActivity.setColor("#FFFFFF");
-            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-            statusBar.setColor("#b46a54");
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#B4573C");
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Wallet Store more detail");
             runtimeActivity.setTitleBar(runtimeTitleBar);
-            runtimeSearchView = new SearchView();
-            runtimeSearchView.setLabel("Search");
-            runtimeTitleBar.setRuntimeSearchView(runtimeSearchView);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT.getKey(), runtimeFragment);
-
-
-//            runtimeTabStrip = new TabStrip();
-//            runtimeTab = new Tab();
-//            runtimeTab.setLabel("All");
-//            runtimeTab.setFragment(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT);
-//            runtimeTabStrip.addTab(runtimeTab);
-//            runtimeTab = new Tab();
-//            runtimeTab.setLabel("Free");
-//            runtimeTab.setFragment(Fragments.CWP_WALLET_STORE_FREE_FRAGMENT);
-//            runtimeTabStrip.addTab(runtimeTab);
-//            runtimeTab = new Tab();
-//            runtimeTab.setLabel("Paid");
-//            runtimeTab.setFragment(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT);
-//            runtimeTabStrip.addTab(runtimeTab);
-//            runtimeTab = new Tab();
-//            runtimeTab.setLabel("Accepted nearby");
-//            runtimeTab.setFragment(Fragments.CWP_WALLET_STORE_ACCEPTED_NEARBY_FRAGMENT);
-//            runtimeTabStrip.addTab(runtimeTab);
-            /*runtimeTab = new Tab();
-            runtimeTab.setLabel("Search gone");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_STORE_SEARCH_MODE);
-            runtimeTabStrip.addTab(runtimeTab);*/
-
-
-            //runtimeActivity.setTabStrip(runtimeTabStrip);
-
-
-//            runtimeFragment = new Fragment();
-//            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_FREE_FRAGMENT.getKey());
-//            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_FREE_FRAGMENT.getKey(), runtimeFragment);
-//
-//            runtimeFragment = new Fragment();
-//            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT.getKey());
-//            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT.getKey(), runtimeFragment);
-//
-//
-//            runtimeFragment = new Fragment();
-//            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_ACCEPTED_NEARBY_FRAGMENT.getKey());
-//            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_ACCEPTED_NEARBY_FRAGMENT.getKey(), runtimeFragment);
-
-            /*runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_SEARCH_MODE);
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_SEARCH_MODE, runtimeFragment);
-*/
-
-/**
- * End of Wallet Store
- */
-
-            //Account Details
-
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNT_DETAIL);
-            runtimeActivity.setColor("#F0E173");
-            runtimeSubApp.addActivity(runtimeActivity);
-
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Account details");
-
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-
-            runtimeTabStrip = new TabStrip();
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("Debits");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS);
-            runtimeTabStrip.addTab(runtimeTab);
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("Credits");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS);
-            runtimeTabStrip.addTab(runtimeTab);
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("All");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL);
-            runtimeTabStrip.addTab(runtimeTab);
-
-            runtimeActivity.setTabStrip(runtimeTabStrip);
 
             runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS.getKey(), runtimeFragment);
-
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS.getKey(), runtimeFragment);
-
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL.getKey(), runtimeFragment);
-
-
-
-
-        /*------------------------------*/
-
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_REFFILS);
-            runtimeSubApp.addActivity(runtimeActivity);
-
-//-----------------------------------------------------------------------------------
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED);
-            runtimeSubApp.addActivity(runtimeActivity);
-
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED.getKey(), runtimeFragment);
-//------------------------------------------------------------------------------------
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_REQUEST_SEND);
-            runtimeSubApp.addActivity(runtimeActivity);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_ADULTS_ALL_REQUEST_SEND.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_ADULTS_ALL_REQUEST_SEND.getKey(), runtimeFragment);
-//-----------------------------------------------------------------------------------
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNTS);
-            runtimeSubApp.addActivity(runtimeActivity);
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Account details");
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            runtimeTabStrip = new TabStrip();
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("Debits");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS);
-            runtimeTabStrip.addTab(runtimeTab);
-
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("Credits");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS);
-            runtimeTabStrip.addTab(runtimeTab);
-
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("All");
-            runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL);
-            runtimeTabStrip.addTab(runtimeTab);
-
-
-            runtimeActivity.setTabStrip(runtimeTabStrip);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS.getKey(), runtimeFragment);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS.getKey(), runtimeFragment);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL.getKey(), runtimeFragment);
-            /**
-             * End of Wallet Accounts tabs.
-             */
-
+            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getKey());
+            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getKey());
 
             /**
              * Start Intra user sub app
              */
-
             RuntimeSubApp subAppIntraUser = new RuntimeSubApp();
             subAppIntraUser.setType(SubApps.CWP_INTRA_USER);
             listSubApp.put(SubApps.CWP_INTRA_USER, subAppIntraUser);
@@ -1020,14 +847,14 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             statusBar.setColor("#FF0B46F0");
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("");
+            runtimeTitleBar.setLabel("World");
             runtimeTitleBar.setColor("#FF0B46F0");
             runtimeTitleBar.setIconName("world");
 
-            RuntimeFernatComboBox comboBox = new RuntimeFernatComboBox();
-            comboBox.addValue("Mati");
+            //RuntimeFernatComboBox comboBox = new RuntimeFernatComboBox();
+            //comboBox.addValue("Mati");
 
-            runtimeTitleBar.setComboBox(comboBox);
+            //runtimeTitleBar.setComboBox(comboBox);
 
             runtimeActivity.setTitleBar(runtimeTitleBar);
 //            runtimeTabStrip = new TabStrip();
@@ -1035,7 +862,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 //            runtimeTabStrip.setTabsTextColor("#FFFFFF");
 //            runtimeTabStrip.setTabsIndicateColor("#b46a54");
             //mati
-            runtimeSearchView = new SearchView();
+            SearchView runtimeSearchView = new SearchView();
             runtimeSearchView.setLabel("Search");
             runtimeTitleBar.setRuntimeSearchView(runtimeSearchView);
 
@@ -1096,8 +923,6 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
 
             // DAP
-
-
             RuntimeSubApp dapFactory = new RuntimeSubApp();
             dapFactory.setType(SubApps.DAP_ASSETS_FACTORY);
             dapFactory.setStartActivity(Activities.DAP_MAIN);
@@ -1141,23 +966,25 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
              * End of intra user sub app
              */
 
-            // Crypto Broker Identity
+            /**
+             * CRYPTO BROKER IDENTITY
+             */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CBP_CRYPTO_BROKER_IDENTITY);
 
-
+            // Activity: List of identities
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
             runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode());
-            runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.setStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
+            runtimeActivity.setColor("#1189a5");
             runtimeSubApp.addActivity(runtimeActivity);
+            runtimeSubApp.setStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
 
-            TitleBar titleBar = new TitleBar();
-            titleBar.setLabel("Crypto Broker Identity");
-            titleBar.setColor("#FFFFFF");
-            titleBar.setLabelSize(16);
-            runtimeActivity.setTitleBar(titleBar);
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Crypto Broker Identity");
+            runtimeTitleBar.setColor("#FFFFFF");
+            runtimeTitleBar.setLabelSize(16);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
             statusBar.setColor("#0288D1");
@@ -1168,20 +995,19 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
 
-            // activity 2
-
+            // Activity: Create New Identity
             runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_2);
-            runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_2.getCode());
+            runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY);
+            runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode());
+            runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
-            titleBar = new TitleBar();
-            titleBar.setLabel("Crypto Broker Identity");
-            titleBar.setColor("#FFFFFF");
-            titleBar.setLabelSize(16);
-            runtimeActivity.setTitleBar(titleBar);
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Create New Identity");
+            runtimeTitleBar.setColor("#FFFFFF");
+            runtimeTitleBar.setLabelSize(16);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
             statusBar.setColor("#0288D1");
@@ -1189,10 +1015,64 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
-            runtimeFragment.setBack(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
             listSubApp.put(SubApps.CBP_CRYPTO_BROKER_IDENTITY, runtimeSubApp);
+
+            /**
+             * CRYPTO CUSTOMER IDENTITY
+             */
+            runtimeSubApp = new RuntimeSubApp();
+            runtimeSubApp.setType(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY);
+
+            // Activity: List of identities
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
+            runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode());
+            runtimeActivity.setColor("#03A9F4");
+            runtimeSubApp.addActivity(runtimeActivity);
+            runtimeSubApp.setStartActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Crypto Customer Identity");
+            runtimeTitleBar.setColor("#FFFFFF");
+            runtimeTitleBar.setLabelSize(16);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#0288D1");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT.getKey());
+
+            // Activity: Create New Identity
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY);
+            runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY.getCode());
+            runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
+            runtimeActivity.setColor("#03A9F4");
+            runtimeSubApp.addActivity(runtimeActivity);
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Create New Identity");
+            runtimeTitleBar.setColor("#FFFFFF");
+            runtimeTitleBar.setLabelSize(16);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#0288D1");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+            listSubApp.put(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY, runtimeSubApp);
 
         } catch (Exception e) {
             String message = CantFactoryResetException.DEFAULT_MESSAGE;

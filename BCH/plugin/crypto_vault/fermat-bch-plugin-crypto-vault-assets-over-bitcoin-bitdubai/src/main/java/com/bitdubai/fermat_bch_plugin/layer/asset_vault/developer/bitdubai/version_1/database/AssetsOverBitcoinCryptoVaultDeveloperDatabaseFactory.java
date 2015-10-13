@@ -201,6 +201,7 @@ public class AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory implements Dea
             List<DatabaseTableRecord> records = selectedTable.getRecords();
             for (DatabaseTableRecord row: records){
                 List<String> developerRow = new ArrayList<String>();
+
                 /**
                  * for each row in the table list
                  */

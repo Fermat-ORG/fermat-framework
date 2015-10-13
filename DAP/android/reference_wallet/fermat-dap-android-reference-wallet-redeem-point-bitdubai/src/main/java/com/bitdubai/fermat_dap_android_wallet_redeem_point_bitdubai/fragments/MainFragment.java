@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 
 /**
  * Main Fragment
@@ -14,7 +14,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class MainFragment extends FermatFragment {
+public class MainFragment extends FermatWalletFragment {
 
     /**
      * UI

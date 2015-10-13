@@ -96,12 +96,12 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
 
         try {
             Bitmap bitmap= null;
-            if(data.getInvolvedActor().getPhoto()!=null){
+            //if(data.getInvolvedActor().getPhoto()!=null){
                  bitmap  = BitmapFactory.decodeByteArray(data.getInvolvedActor().getPhoto(),0,data.getInvolvedActor().getPhoto().length);
                  holder.getContactIcon().setImageBitmap(bitmap);
-            }else{
+           // }else{
                 holder.getContactIcon().setImageResource(R.drawable.mati_profile);
-            }
+           // }
 
 
             holder.getTxt_amount().setText(formatBalanceString(data.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));

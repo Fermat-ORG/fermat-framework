@@ -19,6 +19,7 @@ public interface CashMoneyStockReplenishmentManager {
     CashMoneyStockReplenishment createCashMoneyStockReplenishment(
          final String publicKeyBroker
         ,final String merchandiseCurrency
+        ,final float merchandiseAmount
         ,final String executionTransactionId
         ,final String cashCurrencyType
     ) throws CantCreateCashMoneyStockReplenishmentException;

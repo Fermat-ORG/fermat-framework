@@ -30,9 +30,12 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantD
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.DealsWithAssetIssuerWallet;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.developer_utils.AssetDistributionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.AssetDistributionTransactionManager;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.DigitalAssetTransmissionVault;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.DigitalAssetDistributionVault;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -50,10 +53,11 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/09/15.
  */
-public class AssetDistributionPluginRoot implements AssetDistributionManager, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
+public class AssetDistributionPluginRoot implements AssetDistributionManager, DealsWithAssetIssuerWallet, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     AssetDistributionTransactionManager assetDistributionTransactionManager;
+    AssetIssuerWalletManager assetIssuerWalletManager;
     Database assetDistributionDatabase;
     AssetVaultManager assetVaultManager;
     ErrorManager errorManager;
@@ -104,7 +108,9 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, Da
                     throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Asset Distribution plugin - "+this.pluginId, "Cannot open or create the plugin database");
                 }
             }
-            DigitalAssetTransmissionVault digitalAssetTransmissionVault=new DigitalAssetTransmissionVault(this.pluginId, this.pluginFileSystem, this.errorManager);
+            DigitalAssetDistributionVault digitalAssetDistributionVault =new DigitalAssetDistributionVault(this.pluginId, this.pluginFileSystem, this.errorManager);
+            digitalAssetDistributionVault.setAssetIssuerWalletManager(this.assetIssuerWalletManager);
+            AssetDistributionDao assetDistributionDao=new AssetDistributionDao(pluginDatabaseSystem, pluginId);
             this.assetDistributionTransactionManager=new AssetDistributionTransactionManager(
                     this.assetVaultManager,
                     this.errorManager,
@@ -112,7 +118,8 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, Da
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem);
             this.assetDistributionTransactionManager.setAssetVaultManager(assetVaultManager);
-            this.assetDistributionTransactionManager.setDigitalAssetTransmissionVault(digitalAssetTransmissionVault);
+            this.assetDistributionTransactionManager.setDigitalAssetDistributionVault(digitalAssetDistributionVault);
+            this.assetDistributionTransactionManager.setAssetDistributionDatabaseDao(assetDistributionDao);
         }catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Distribution plugin", "Cannot set an object, probably is null");
         } catch (CantExecuteDatabaseOperationException exception) {
@@ -148,8 +155,8 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, Da
     }
 
     @Override
-    public void distributeAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute) throws CantDistributeDigitalAssetsException {
-        this.assetDistributionTransactionManager.distributeAssets(digitalAssetsToDistribute);
+    public void distributeAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute, String walletPublicKey) throws CantDistributeDigitalAssetsException {
+        this.assetDistributionTransactionManager.distributeAssets(digitalAssetsToDistribute, walletPublicKey);
     }
 
     @Override
@@ -228,5 +235,10 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, Da
                 AssetDistributionPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
+    }
+
+    @Override
+    public void setAssetIssuerManager(AssetIssuerWalletManager assetIssuerWalletManager) {
+        this.assetIssuerWalletManager=assetIssuerWalletManager;
     }
 }
