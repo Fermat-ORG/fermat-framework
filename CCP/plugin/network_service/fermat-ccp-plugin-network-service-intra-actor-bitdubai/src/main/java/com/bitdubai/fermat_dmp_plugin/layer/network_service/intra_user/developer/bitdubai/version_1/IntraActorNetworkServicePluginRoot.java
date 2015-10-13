@@ -72,6 +72,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloud
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -690,9 +692,11 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                 /*
                  * Register me
                  */
+            try {
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
-
-
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
 
 
         }
@@ -896,10 +900,32 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
         System.out.println(" TemplateNetworkServiceRoot - requestRemoteNetworkServicesRegisteredList");
 
-        /*
+         /*
          * Request the list of component registers
          */
-        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+        try {
+
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+
+        } catch (CantRequestListException e) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Plugin was not registered";
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+
+        }
 
     }
 
@@ -1057,7 +1083,11 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                 /*
                  * Register me
                  */
-            communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+            try {
+                communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
         }
 
 

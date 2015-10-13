@@ -7,7 +7,7 @@ package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions;
 public class CantRequestListException extends CommunicationException {
 
 
-	public static final String DEFAULT_MESSAGE = "CAN'T SEND ESTABLISH THE CONNECTION";
+	public static final String DEFAULT_MESSAGE = "CAN'T REQUEST THE LIST OF COMPONENTS";
 
 	public CantRequestListException(final String message, final Exception cause, final String context, final String possibleReason) {
 		super(message, cause, context, possibleReason);

@@ -27,6 +27,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
      * Represent the sleep time for the read or send (5000 milliseconds)
      */
     private static final long SLEEP_TIME = 5000;
+    private static final long MAX_SLEEP_TIME = 20000;
 
     /**
      * Represent the templateNetworkServicePluginRoot
@@ -63,51 +64,62 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
         while (active){
 
-            if (communicationsClientConnection.isRegister() && !assetTransmissionPluginRoot.isRegister()){
+            try {
 
-                /*
-                 * Construct my profile and register me
-                 */
-                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(assetTransmissionPluginRoot.getIdentityPublicKey(),
-                        (assetTransmissionPluginRoot.getAlias().toLowerCase()+"_"+assetTransmissionPluginRoot.getId().toString()),
-                        (assetTransmissionPluginRoot.getName()+" ("+assetTransmissionPluginRoot.getId()+")"),
-                        assetTransmissionPluginRoot.getNetworkServiceType(),
-                        assetTransmissionPluginRoot.getPlatformComponentType(),
-                        assetTransmissionPluginRoot.getExtraData());
+                if (communicationsClientConnection.isRegister() && !assetTransmissionPluginRoot.isRegister()){
 
-                /*
-                 * Register me
-                 */
-                communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+                        /*
+                         * Construct my profile and register me
+                         */
+                        PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(assetTransmissionPluginRoot.getIdentityPublicKey(),
+                                (assetTransmissionPluginRoot.getAlias().toLowerCase()+"_"+assetTransmissionPluginRoot.getId().toString()),
+                                (assetTransmissionPluginRoot.getName()+" ("+assetTransmissionPluginRoot.getId()+")"),
+                                assetTransmissionPluginRoot.getNetworkServiceType(),
+                                assetTransmissionPluginRoot.getPlatformComponentType(),
+                                assetTransmissionPluginRoot.getExtraData());
 
-                /*
-                 * Configure my new profile
-                 */
-                assetTransmissionPluginRoot.setPlatformComponentProfile(platformComponentProfile);
+                        /*
+                         * Register me
+                         */
+                        communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
 
-                /*
-                 * Initialize the connection manager
-                 */
-                assetTransmissionPluginRoot.initializeCommunicationNetworkServiceConnectionManager();
+                        /*
+                         * Configure my new profile
+                         */
+                        assetTransmissionPluginRoot.setPlatformComponentProfile(platformComponentProfile);
 
-                /*
-                 * Stop the agent
-                 */
-                active = Boolean.FALSE;
+                        /*
+                         * Initialize the connection manager
+                         */
+                        assetTransmissionPluginRoot.initializeCommunicationNetworkServiceConnectionManager();
 
-            }else if (!assetTransmissionPluginRoot.isRegister()){
+                        /*
+                         * Stop the agent
+                         */
+                        active = Boolean.FALSE;
 
+                    }else if (!assetTransmissionPluginRoot.isRegister()){
+
+                        try {
+                            sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            active = Boolean.FALSE;
+                        }
+
+                    }else if (!assetTransmissionPluginRoot.isRegister()){
+                        active = Boolean.FALSE;
+                    }
+
+            }catch (Exception e){
                 try {
-                    sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
-                } catch (InterruptedException e) {
                     e.printStackTrace();
+                    sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
                     active = Boolean.FALSE;
                 }
-
-            }else if (!assetTransmissionPluginRoot.isRegister()){
-                active = Boolean.FALSE;
             }
-
         }
     }
 

@@ -42,7 +42,9 @@ public class DigitalAssetMetadataTransmitMessageReceiverProcessor extends Fermat
          */
         DigitalAssetMetadata digitalAssetMetadata = (DigitalAssetMetadata) XMLParser.parseXML(digitalAssetMetadataXml, DigitalAssetMetadata.class);
 
-
+        /*
+         * Put into a event a
+         */
 
 
     }

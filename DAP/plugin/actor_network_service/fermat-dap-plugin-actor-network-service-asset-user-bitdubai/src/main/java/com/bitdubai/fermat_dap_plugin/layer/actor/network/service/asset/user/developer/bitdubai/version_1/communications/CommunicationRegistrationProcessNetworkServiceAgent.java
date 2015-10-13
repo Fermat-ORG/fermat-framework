@@ -26,6 +26,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     * Represent the sleep time for the read or send (5000 milliseconds)
     */
     private static final long SLEEP_TIME = 5000;
+    private static final long MAX_SLEEP_TIME = 20000;
 
     /**
      * Represent the templateNetworkServicePluginRoot
@@ -62,49 +63,61 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
         while (active){
 
-            if (communicationsClientConnection.isRegister() && !assetUserActorNetworkServicePluginRoot.isRegister()){
+            try {
 
-                /*
-                 * Construct my profile and register me
-                 */
-                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(assetUserActorNetworkServicePluginRoot.getIdentityPublicKey(),
-                        (assetUserActorNetworkServicePluginRoot.getAlias().toLowerCase()+"_"+assetUserActorNetworkServicePluginRoot.getId().toString()),
-                        (assetUserActorNetworkServicePluginRoot.getName()+" ("+assetUserActorNetworkServicePluginRoot.getId()+")"),
-                        assetUserActorNetworkServicePluginRoot.getNetworkServiceType(),
-                        assetUserActorNetworkServicePluginRoot.getPlatformComponentType(),
-                        assetUserActorNetworkServicePluginRoot.getExtraData());
+                if (communicationsClientConnection.isRegister() && !assetUserActorNetworkServicePluginRoot.isRegister()){
 
-                /*
-                 * Register me
-                 */
-                communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+                    /*
+                     * Construct my profile and register me
+                     */
+                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(assetUserActorNetworkServicePluginRoot.getIdentityPublicKey(),
+                            (assetUserActorNetworkServicePluginRoot.getAlias().toLowerCase()+"_"+assetUserActorNetworkServicePluginRoot.getId().toString()),
+                            (assetUserActorNetworkServicePluginRoot.getName()+" ("+assetUserActorNetworkServicePluginRoot.getId()+")"),
+                            assetUserActorNetworkServicePluginRoot.getNetworkServiceType(),
+                            assetUserActorNetworkServicePluginRoot.getPlatformComponentType(),
+                            assetUserActorNetworkServicePluginRoot.getExtraData());
 
-                /*
-                 * Configure my new profile
-                 */
-                assetUserActorNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
+                    /*
+                     * Register me
+                     */
+                    communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
 
-                /*
-                 * Initialize the connection manager
-                 */
-                assetUserActorNetworkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
+                    /*
+                     * Configure my new profile
+                     */
+                    assetUserActorNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
 
-                /*
-                 * Stop the agent
-                 */
-                active = Boolean.FALSE;
+                    /*
+                     * Initialize the connection manager
+                     */
+                    assetUserActorNetworkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
 
-            }else if (!assetUserActorNetworkServicePluginRoot.isRegister()){
+                    /*
+                     * Stop the agent
+                     */
+                    active = Boolean.FALSE;
 
-                try {
-                    sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                }else if (!assetUserActorNetworkServicePluginRoot.isRegister()){
+
+                    try {
+                        sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        active = Boolean.FALSE;
+                    }
+
+                }else if (!assetUserActorNetworkServicePluginRoot.isRegister()){
                     active = Boolean.FALSE;
                 }
 
-            }else if (!assetUserActorNetworkServicePluginRoot.isRegister()){
-                active = Boolean.FALSE;
+            }catch (Exception e){
+                try {
+                    e.printStackTrace();
+                    sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                    active = Boolean.FALSE;
+                }
             }
 
         }
