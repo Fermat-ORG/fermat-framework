@@ -234,6 +234,18 @@ public class AssetIssuerWalletDao {
         return null;
     }
 
+    public List<AssetIssuerWalletTransaction> distributeAssets(String assetPublicKey) throws CantGetTransactionsException {
+        try
+        {
+            List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions = listsTransactionsByAsset(assetPublicKey);
+            return assetIssuerWalletTransactions;
+        }
+        catch (CantGetTransactionsException e) {
+            throw new CantGetTransactionsException("Get List of Transactions", e, "Error load wallet table ", "Method: distributeAssets()");
+        }
+
+    }
+
     public void updateMemoField(UUID transactionID, String memo) throws CantStoreMemoException, CantFindTransactionException{
         try
         {
@@ -255,6 +267,22 @@ public class AssetIssuerWalletDao {
             throw new CantStoreMemoException("Transaction Memo Update Error",cantUpdateRecord,"Error update memo of Transaction " + transactionID.toString(), "");
         } catch(Exception exception){
             throw new CantStoreMemoException(CantStoreMemoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    private List<AssetIssuerWalletTransaction> listsTransactionsByAsset(String assetPublicKey) throws CantGetTransactionsException{
+        try {
+            DatabaseTable databaseTableAssuerIssuerWallet = getAssetIssuerWalletTable();
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+
+            databaseTableAssuerIssuerWallet.loadToMemory();
+            return createTransactionList(databaseTableAssuerIssuerWallet.getRecords());
+        }
+        catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantGetTransactionsException("Get List of Transactions", cantLoadTableToMemory, "Error load wallet table ", "");
+        }
+        catch (Exception exception){
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
         }
     }
 
