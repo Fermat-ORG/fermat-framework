@@ -523,6 +523,7 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
             String linkToRepo = "seed-resources/";
 
             String repoManifest = githubConnection.getFile(linkToRepo + repository.getPath() + "skin.xml");
+
             Skin skin = new Skin();
             skin = (Skin) XMLParser.parseXML(repoManifest, skin);
 
