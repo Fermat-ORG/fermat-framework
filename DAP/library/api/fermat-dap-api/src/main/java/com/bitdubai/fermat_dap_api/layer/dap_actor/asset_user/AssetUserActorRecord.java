@@ -1,88 +1,117 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
+import java.util.UUID;
+
 /**
- * Created by Nerio on 12/10/15.
+ * Created by Nerio on 22/09/15.
  */
-public class AssetUserActorNetworkService implements ActorAssetUser {
+public class AssetUserActorRecord implements ActorAssetUser {
 
     private String name;
     private String publicKey;
     private byte[] profileImage;
     private Location location;
+
     private long registrationDate;
     private ConnectionState connectionState;
     private Genders genders;
     private String age;
-    private String cryptoAddress;
+    private CryptoAddress cryptoAddress;
 
-    public AssetUserActorNetworkService(String name,String publicKey,byte[] profileImage, Location location){
+    /**
+     * Constructor
+     */
+
+    public AssetUserActorRecord(String name,String publicKey,byte[] profileImage, Location location){
 
         this.name = name;
         this.publicKey = publicKey;
         this.profileImage = profileImage.clone();
         this.location = location;
+
 //        this.registrationDate = registrationDate;
-//        this.genders = genders;
+        this.genders = Genders.INDEFINITE;
 //        this.age = age;
 //        this.cryptoAddress = cryptoAddress;
+        this.connectionState = ConnectionState.CONNECTED;
 
     }
 
+    public AssetUserActorRecord(String name,String publicKey,byte[] profileImage, long registrationDate, Genders genders, String age){
+
+        this.name = name;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage.clone();
+        this.registrationDate = registrationDate;
+//        this.location = location;
+        this.genders = genders;
+        this.age = age;
+//        this.cryptoAddress = cryptoAddress;
+        this.connectionState = ConnectionState.CONNECTED;
+
+    }
+
+
+
     /**
-     * The metho <code>getPublicKey</code> gives us the public key of the represented Asset user
+     * The metho <code>getPublicKey</code> gives us the public key of the represented Asset User
      *
      * @return the public key
      */
     @Override
     public String getPublicKey() {
-        return publicKey;
+        return this.publicKey;
     }
 
     /**
-     * The method <code>getName</code> gives us the name of the represented Asset user
+     * The method <code>getName</code> gives us the name of the represented Asset User
      *
      * @return the name of the intra user
      */
     @Override
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
-     * The method <code>getContactRegistrationDate</code> gives us the date when both Asset users
+     * The method <code>getContactRegistrationDate</code> gives us the date when both Asset Users
      * exchanged their information and accepted each other as contacts.
      *
      * @return the date
      */
     @Override
     public long getContactRegistrationDate() {
-        return registrationDate;
+        return this.registrationDate;
     }
 
     /**
-     * The method <coda>getProfileImage</coda> gives us the profile image of the represented Asset user
+     * The method <coda>getProfileImage</coda> gives us the profile image of the represented Asset User
      *
      * @return the image
      */
     @Override
     public byte[] getProfileImage() {
-        return new byte[0];
+        return this.profileImage.clone();
     }
 
     /**
-     * The method <code>getConnectionState</code> gives us the ConnectionState state of the represented Asset
-     * user
+     * The method <code>getContactState</code> gives us the contact state of the represented Asset User
      *
      * @return the contact state
      */
     @Override
     public ConnectionState getConnectionState() {
-        return connectionState;
+        return this.connectionState;
     }
 
     /**
@@ -92,7 +121,7 @@ public class AssetUserActorNetworkService implements ActorAssetUser {
      */
     @Override
     public Location getLocation() {
-        return location;
+        return this.location;
     }
 
     /**
@@ -102,7 +131,7 @@ public class AssetUserActorNetworkService implements ActorAssetUser {
      */
     @Override
     public Genders getGender() {
-        return genders;
+        return this.genders;
     }
 
     /**
@@ -112,7 +141,7 @@ public class AssetUserActorNetworkService implements ActorAssetUser {
      */
     @Override
     public String getAge() {
-        return age;
+        return this.age;
     }
 
     /**
@@ -121,7 +150,7 @@ public class AssetUserActorNetworkService implements ActorAssetUser {
      * @return CryptoAddress instance.
      */
     @Override
-    public String getCryptoAddress() {
-        return cryptoAddress;
+    public CryptoAddress getCryptoAddress() {
+        return this.cryptoAddress;
     }
 }

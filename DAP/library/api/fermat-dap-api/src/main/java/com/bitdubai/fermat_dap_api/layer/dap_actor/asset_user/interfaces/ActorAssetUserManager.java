@@ -117,13 +117,4 @@ public interface ActorAssetUserManager {
     */
   List<ActorAssetUser> getActorByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
 
-  /**
-   * The method <code>createActorByActorNetworkService</code> shows the information associated with the actorPublicKey
-   *
-   * @param actorAssetUsers      the public key of the Actor Asset User
-   * @throws CantGetAssetUserActorsException
-   * @throws CantAssetUserActorNotFoundException
-   */
-  void createActorByActorNetworkService(List<ActorAssetUser> actorAssetUsers) throws CantCreateAssetUserActorException, CantAssetUserActorNotFoundException;
-//  List<ActorAssetUser> createActorByActorNetworkService(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage, Location assetUserActorlocation) throws CantCreateAssetUserActorException, CantAssetUserActorNotFoundException;
 }
