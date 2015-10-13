@@ -12,7 +12,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.en
 import java.util.List;
 
 /**
- * The Class <code>com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.events.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent</code>
+ * The Class <code>CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 11/10/15.
  *

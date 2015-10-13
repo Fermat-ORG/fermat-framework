@@ -6,11 +6,11 @@
 */
 package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.events;
 
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.enums.EventTypeAssetUserANS;
 
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.enums.EventTypeAssetUserANS;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 /**
- * The Class <code>com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.events.CompleteClientAssetUserActorRegistrationNotificationEvent</code>
+ * The Class <code>CompleteClientAssetUserActorRegistrationNotificationEvent</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 12/10/15.
  *
@@ -25,7 +25,7 @@ public class CompleteClientAssetUserActorRegistrationNotificationEvent extends A
         return actorAssetUser;
     }
 
-    public void setActorAssetUserList(ActorAssetUser actorAssetUser) {
+    public void setActorAssetUser(ActorAssetUser actorAssetUser) {
         this.actorAssetUser = actorAssetUser;
     }
 

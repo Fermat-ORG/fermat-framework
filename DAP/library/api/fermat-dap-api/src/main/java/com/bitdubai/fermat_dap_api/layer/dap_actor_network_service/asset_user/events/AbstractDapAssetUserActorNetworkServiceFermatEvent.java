@@ -6,13 +6,12 @@
 */
 package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.events;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.enums.EventTypeAssetUserANS;
 
 /**
- * The Class <code>com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.events.AbstractDapAssetUserActorNetworkServiceFermatEvent</code>
+ * The Class <code>AbstractDapAssetUserActorNetworkServiceFermatEvent</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 11/10/15.
  *

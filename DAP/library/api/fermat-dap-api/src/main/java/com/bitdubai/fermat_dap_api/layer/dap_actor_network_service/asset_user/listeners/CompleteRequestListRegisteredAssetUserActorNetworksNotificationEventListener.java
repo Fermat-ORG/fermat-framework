@@ -10,14 +10,14 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.enums.EventTypeAssetUserANS;
 
 /**
- * The Class <code>com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.listeners.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventListener</code>
+ * The Class <code>CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventListener</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 11/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventListener extends BasicFermatEventListener{
+public class CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventListener extends BasicFermatEventListener {
 
     public CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventListener(EventTypeAssetUserANS eventType, FermatEventMonitor eventMonitor) {
         super(eventType, eventMonitor);

@@ -17,6 +17,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.ev
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.listeners.CompleteClientAssetUserActorRegistrationNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.listeners.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventListener;
 
+
 /**
  * The Class <code>com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.enums.EventType</code>
  * <p/>
