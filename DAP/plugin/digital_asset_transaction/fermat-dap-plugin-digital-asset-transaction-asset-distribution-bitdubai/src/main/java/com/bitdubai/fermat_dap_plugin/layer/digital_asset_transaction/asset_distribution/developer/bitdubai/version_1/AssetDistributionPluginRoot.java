@@ -32,7 +32,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exce
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.developer_utils.AssetDistributionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.AssetDistributionTransactionManager;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.DigitalAssetTransmissionVault;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.DigitalAssetDistributionVault;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -104,7 +105,8 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, Da
                     throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Asset Distribution plugin - "+this.pluginId, "Cannot open or create the plugin database");
                 }
             }
-            DigitalAssetTransmissionVault digitalAssetTransmissionVault=new DigitalAssetTransmissionVault(this.pluginId, this.pluginFileSystem, this.errorManager);
+            DigitalAssetDistributionVault digitalAssetDistributionVault =new DigitalAssetDistributionVault(this.pluginId, this.pluginFileSystem, this.errorManager);
+            AssetDistributionDao assetDistributionDao=new AssetDistributionDao(pluginDatabaseSystem, pluginId);
             this.assetDistributionTransactionManager=new AssetDistributionTransactionManager(
                     this.assetVaultManager,
                     this.errorManager,
@@ -112,7 +114,8 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, Da
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem);
             this.assetDistributionTransactionManager.setAssetVaultManager(assetVaultManager);
-            this.assetDistributionTransactionManager.setDigitalAssetTransmissionVault(digitalAssetTransmissionVault);
+            this.assetDistributionTransactionManager.setDigitalAssetDistributionVault(digitalAssetDistributionVault);
+            this.assetDistributionTransactionManager.setAssetDistributionDatabaseDao(assetDistributionDao);
         }catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Distribution plugin", "Cannot set an object, probably is null");
         } catch (CantExecuteDatabaseOperationException exception) {

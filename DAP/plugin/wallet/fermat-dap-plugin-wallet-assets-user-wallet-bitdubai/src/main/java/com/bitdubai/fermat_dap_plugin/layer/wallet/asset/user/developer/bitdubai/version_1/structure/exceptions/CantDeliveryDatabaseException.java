@@ -1,14 +1,11 @@
-package com.bitdubai.fermat_cbp_plugin.layer.request.customer_broker_purchase.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by eze on 2015.09.21..
+ * Created by franklin on 11/10/15.
  */
-public class CantInitializeCustomerBrokerPurchaseRequestDaoException extends FermatException {
-
-    public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE CUSTOMER BROKER PURCHASE REQUEST DATABASE EXCEPTION";
-
+public class CantDeliveryDatabaseException extends FermatException{
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -17,7 +14,7 @@ public class CantInitializeCustomerBrokerPurchaseRequestDaoException extends Fer
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantInitializeCustomerBrokerPurchaseRequestDaoException(String message, Exception cause, String context, String possibleReason) {
+    public CantDeliveryDatabaseException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

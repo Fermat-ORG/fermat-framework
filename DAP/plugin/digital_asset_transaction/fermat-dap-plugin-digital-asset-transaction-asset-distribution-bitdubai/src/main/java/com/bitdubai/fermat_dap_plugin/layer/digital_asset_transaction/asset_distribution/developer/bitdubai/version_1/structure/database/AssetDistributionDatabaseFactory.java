@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dis
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -76,29 +77,47 @@ public class AssetDistributionDatabaseFactory implements DealsWithPluginDatabase
 
             table.addIndex(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_FIRST_KEY_COLUMN);
 
-            DatabaseTableFactory eventsRecorderTable = databaseFactory.newTableFactory(ownerId, AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME );
-
-            eventsRecorderTable.addColumn(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_ID_COLUMN, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            eventsRecorderTable.addColumn(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_EVENT_COLUMN, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            eventsRecorderTable.addColumn(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_SOURCE_COLUMN, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            eventsRecorderTable.addColumn(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_STATUS_COLUMN, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            eventsRecorderTable.addColumn(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_TIMESTAMP_COLUMN, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
-
-            eventsRecorderTable.addIndex(AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, eventsRecorderTable);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating "+AssetDistributionDatabaseConstants.ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME +" table", "Exception not handled by the plugin, There is a problem and I cannot create the table.");
-            }
-
             try {
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
+
+            DatabaseTableFactory eventsRecorderTable = databaseFactory.newTableFactory(ownerId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_NAME);
+
+            eventsRecorderTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            eventsRecorderTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_EVENT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            eventsRecorderTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            eventsRecorderTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            eventsRecorderTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+
+            eventsRecorderTable.addIndex(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, eventsRecorderTable);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating "+AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_NAME +" table", "Exception not handled by the plugin, There is a problem and I cannot create the table.");
+            }
+
+            DatabaseTableFactory assetDeliveringTable = databaseFactory.newTableFactory(ownerId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME);
+
+            assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_MESSAGE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_MESSAGE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            assetDeliveringTable.addColumn(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_EVENT_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+
+            assetDeliveringTable.addIndex(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, assetDeliveringTable);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating "+AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME +" table", "Exception not handled by the plugin, There is a problem and I cannot create the table.");
+            }
+
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
