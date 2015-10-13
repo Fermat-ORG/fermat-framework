@@ -4,17 +4,20 @@ import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BusinessT
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BusinessTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
-import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.cash_money_stock_replenishment.interfaces.CashMoneyStockReplenishment;
+import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.customer_broke_cash_sale.interfaces.CustomerBrokerCashSale;
 
 import java.util.UUID;
 
 /**
  * Created by Yordin Alayn on 29.09.15.
  */
-public class CustomerBrokerCashSaleBusinessTransactionImpl implements BusinessTransaction, CashMoneyStockReplenishment{
-
+public class CustomerBrokerCashSaleBusinessTransactionImpl implements BusinessTransaction, CustomerBrokerCashSale{
     private UUID transactionId;
+    private UUID contractId;
     private String publicKeyBroker;
+    private String publicKeyCustomer;
+    private UUID paymentTransactionId;
+    private CurrencyType paymentCurrency;
     private CurrencyType merchandiseCurrency;
     private float merchandiseAmount;
     private UUID executionTransactionId;
@@ -23,7 +26,11 @@ public class CustomerBrokerCashSaleBusinessTransactionImpl implements BusinessTr
 
     public CustomerBrokerCashSaleBusinessTransactionImpl(
             UUID transactionId,
+            UUID contractId,
             String publicKeyBroker,
+            String publicKeyCustomer,
+            UUID paymentTransactionId,
+            CurrencyType paymentCurrency,
             CurrencyType merchandiseCurrency,
             float merchandiseAmount,
             UUID executionTransactionId,
@@ -31,7 +38,11 @@ public class CustomerBrokerCashSaleBusinessTransactionImpl implements BusinessTr
             BusinessTransactionStatus transactionStatus
     ){
         this.transactionId = transactionId;
+        this.contractId = contractId;
         this.publicKeyBroker = publicKeyBroker;
+        this.publicKeyCustomer = publicKeyCustomer;
+        this.paymentTransactionId = paymentTransactionId;
+        this.paymentCurrency = paymentCurrency;
         this.merchandiseCurrency = merchandiseCurrency;
         this.merchandiseAmount = merchandiseAmount;
         this.executionTransactionId = executionTransactionId;
@@ -44,8 +55,24 @@ public class CustomerBrokerCashSaleBusinessTransactionImpl implements BusinessTr
     public void setIdTransaction(UUID id) { this.transactionId = id; }
 
     @Override
+    public UUID getContractId(){ return this.contractId; }
+    public void setContractId(UUID id) { this.contractId = id; }
+
+    @Override
     public String getPublicKeyBroker(){ return this.publicKeyBroker; }
     public  void setPublicKeyBroker(String publicKey){ this.publicKeyBroker = publicKey; }
+
+    @Override
+    public String getPublicKeyCustomer(){ return this.publicKeyCustomer; }
+    public  void setPublicKeyCustomer(String publicKey){ this.publicKeyCustomer = publicKey; }
+
+    @Override
+    public UUID getPaymentTransactionId(){ return this.paymentTransactionId; }
+    public void setPaymentTransactionId(UUID paymentId){ this.paymentTransactionId = paymentId; }
+
+    @Override
+    public CurrencyType getPaymentCurrency(){ return this.paymentCurrency; }
+    public void setPaymentCurrency(CurrencyType payment){ this.paymentCurrency = payment; }
 
     @Override
     public CurrencyType getMerchandiseCurrency(){ return this.merchandiseCurrency; }
@@ -61,7 +88,7 @@ public class CustomerBrokerCashSaleBusinessTransactionImpl implements BusinessTr
 
     @Override
     public CashCurrencyType getCashCurrencyType(){ return this.cashCurrencyType; }
-    public void setCashCurrencyType(CashCurrencyType currencyType){ this.cashCurrencyType = currencyType; }
+    public void setCashCurrencyType(CashCurrencyType cashCurrency){ this.cashCurrencyType = cashCurrency; }
 
     @Override
     public BusinessTransactionStatus getStatus(){ return this.transactionStatus; }
