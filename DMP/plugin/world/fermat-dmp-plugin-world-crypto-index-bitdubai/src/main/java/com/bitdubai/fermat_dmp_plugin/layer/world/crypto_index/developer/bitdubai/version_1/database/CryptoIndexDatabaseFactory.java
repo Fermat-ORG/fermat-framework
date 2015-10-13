@@ -58,7 +58,7 @@ public class CryptoIndexDatabaseFactory {
 
         } catch (CantCreateTableException cantCreateTableException) {
 
-            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Crypto Index", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
 
         }catch (InvalidOwnerIdException e) {
 

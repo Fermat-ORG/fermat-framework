@@ -52,6 +52,8 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
      */
     private ExecutorService executor;
 
+    private int offset = 0;
+
 
     /**
      * Create a new instance of this fragment
@@ -129,6 +131,7 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
 
         try {
             lstPaymentRequest = cryptoWallet.listPaymentRequestDateOrder(walletPublicKey,10,0);
+            offset = lstPaymentRequest.size();
 
         } catch (Exception e) {
             referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
