@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 
+import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDao;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.interfaces.DealsWithWalletManagerDesktopModule;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
@@ -75,6 +76,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * Created by rodrigo on 9/7/15.
@@ -120,6 +122,8 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
     AssetFactoryMiddlewareManager assetFactoryMiddlewareManager;
 
     WalletManagerManager walletManagerManager;
+
+    AssetFactoryMiddlewareDao assetFactoryMiddlewareDao;
 
     @Override
     public void setId(UUID pluginId) {
@@ -204,6 +208,9 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
                 System.out.println("******* Metodo testAssetFactory, issuerAsset, Error. Franklin ******" );
                 e.printStackTrace();
             }*/
+            //Check Assets in Draft for star Agent
+            checkAssetDraft();
+
             database.closeDatabase();
         }
         catch (CantOpenDatabaseException | DatabaseNotFoundException e)
@@ -272,6 +279,26 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
                 AssetFactoryMiddlewarePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
+    }
+
+    public static LogLevel getLogLevelByClass(String className){
+        try{
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return AssetFactoryMiddlewarePluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e){
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
+    }
+
+    public boolean checkAssetDraft(){
+        return assetFactoryMiddlewareManager.checkAssetDraft();
     }
 
     public void testSaveAssetFactory()

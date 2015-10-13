@@ -192,8 +192,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         try {
 
 
-            System.out.println("CommunicationNetworkServiceRemoteAgent - ROBERTOOOO"+communicationsVPNConnection.isActive());
-
             //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.isActive() = "+communicationsVPNConnection.isActive());
 
 
@@ -202,7 +200,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
              */
             if (communicationsVPNConnection.isActive()){
 
-                   System.out.println("CommunicationNetworkServiceRemoteAgent - MATI!!! "+communicationsVPNConnection.getUnreadMessagesCount());
+
                 //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.getUnreadMessagesCount() = "+communicationsVPNConnection.getUnreadMessagesCount());
 
 
@@ -210,9 +208,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                  * process all pending messages
                  */
                 for (int i = 0; i < communicationsVPNConnection.getUnreadMessagesCount(); i++) {
-
-                    System.out.println("CommunicationNetworkServiceRemoteAgent - ADENTRO!!! " + communicationsVPNConnection.getUnreadMessagesCount());
-
 
 
                     /*
