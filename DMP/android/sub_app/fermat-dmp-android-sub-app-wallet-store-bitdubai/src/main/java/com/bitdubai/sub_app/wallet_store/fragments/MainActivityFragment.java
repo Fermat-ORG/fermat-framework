@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.wallet_store.fragments;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,8 +20,14 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.DetailedCatalogItem;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.Language;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.Skin;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreCatalogue;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreCatalogueItem;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
@@ -32,6 +39,7 @@ import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
 import com.bitdubai.sub_app.wallet_store.common.workers.DetailedCatalogItemWorker;
 import com.bitdubai.sub_app.wallet_store.common.workers.InstallWalletWorker;
 import com.bitdubai.sub_app.wallet_store.common.workers.InstallWalletWorkerCallback;
+import com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragmentsEnumType;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
 import com.bitdubai.sub_app.wallet_store.util.CommonLogger;
 import com.bitdubai.sub_app.wallet_store.util.UtilsFuncs;
@@ -39,7 +47,15 @@ import com.wallet_store.bitdubai.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
+
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.BASIC_DATA;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.DEVELOPER_NAME;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.LANGUAGE_ID;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.PREVIEW_IMGS;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.SKIN_ID;
+import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.WALLET_VERSION;
 
 /**
  * Fragment que luce como un Activity donde se muestra la lista de Wallets disponibles en el catalogo de la Wallet Store
@@ -249,35 +265,45 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
 
     private void showDetailsActivityFragment(WalletStoreListItem item) {
 
-        final Activity activity = getActivity();
-        FermatWorkerCallBack callBack = new FermatWorkerCallBack() {
-            @Override
-            public void onPostExecute(Object... result) {
+        if(item.isTestData()){
+            subAppsSession.setData(DEVELOPER_NAME, "developerAlias");
+            subAppsSession.setData(LANGUAGE_ID, new UUID(0, 0));
+            subAppsSession.setData(WALLET_VERSION, new Version(1, 0, 0));
+            subAppsSession.setData(SKIN_ID, new UUID(0, 0));
+            subAppsSession.setData(PREVIEW_IMGS, null);
+            subAppsSession.setData(BASIC_DATA, item);
 
-                final DetailsActivityFragment fragment = DetailsActivityFragment.newInstance();
-                fragment.setSubAppsSession(subAppsSession);
-                fragment.setSubAppSettings(subAppSettings);
-                fragment.setSubAppResourcesProviderManager(subAppResourcesProviderManager);
+            changeActivity(Activities.CWP_WALLET_STORE_DETAIL_ACTIVITY.getCode());
 
-                final FragmentTransaction FT = activity.getFragmentManager().beginTransaction();
-                FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                FT.replace(R.id.activity_container, fragment);
-                FT.addToBackStack(null);
-                FT.commit();
-            }
+        }else{
+            final Activity activity = getActivity();
+            FermatWorkerCallBack callBack = new FermatWorkerCallBack() {
+                @Override
+                public void onPostExecute(Object... result) {
 
-            @Override
-            public void onErrorOccurred(Exception ex) {
-                final ErrorManager errorManager = subAppsSession.getErrorManager();
-                errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
-                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                    final DetailsActivityFragment fragment = DetailsActivityFragment.newInstance();
+                    fragment.setSubAppsSession(subAppsSession);
+                    fragment.setSubAppSettings(subAppSettings);
+                    fragment.setSubAppResourcesProviderManager(subAppResourcesProviderManager);
 
-                Toast.makeText(activity, R.string.cannot_collect_wallet_details_message, Toast.LENGTH_SHORT).show();
-            }
-        };
+                    changeActivity(WalletStoreFragmentsEnumType.CWP_WALLET_STORE_DETAIL_ACTIVITY.getKey());
+                }
 
-        final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, subAppsSession, item, activity, callBack);
-        worker.execute();
+                @Override
+                public void onErrorOccurred(Exception ex) {
+
+                    final ErrorManager errorManager = subAppsSession.getErrorManager();
+                    errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+                            UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+
+                    Toast.makeText(activity, R.string.cannot_collect_wallet_details_message, Toast.LENGTH_SHORT).show();
+
+                }
+            };
+
+            final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, subAppsSession, item, activity, callBack);
+            worker.execute();
+        }
     }
 
     @NonNull
