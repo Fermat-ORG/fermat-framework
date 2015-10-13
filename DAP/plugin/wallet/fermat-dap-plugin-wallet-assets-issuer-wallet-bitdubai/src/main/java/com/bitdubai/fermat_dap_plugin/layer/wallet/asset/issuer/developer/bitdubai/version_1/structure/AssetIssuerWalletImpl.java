@@ -1,7 +1,10 @@
 package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -15,8 +18,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantInitializeAssetIssuerWalletException;
@@ -259,15 +264,70 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         return null;
     }
 
-    public void distributionAssets(String assetpublicKey, String walletPublicKey)  throws CantDistributeDigitalAssetsException, CantGetTransactionsException {
+    public void distributionAssets(String assetpublicKey, String walletPublicKey, ActorAssetUser actorAssetUser)  throws CantDistributeDigitalAssetsException, CantGetTransactionsException {
         try{
-            assetIssuerWalletDao.distributeAssets(assetpublicKey);
-            DigitalAsset digitalAsset = new  DigitalAsset();
-            digitalAsset.setPublicKey(assetpublicKey);
-            DigitalAssetMetadata digitalAssetMetadata = new DigitalAssetMetadata();
-            digitalAssetMetadata.setDigitalAsset(digitalAsset);
-            digitalAssetMetadata.setGenesisTransaction(null);
+            //Buscar el Asset Balance con la data para traerse las propiedades del Digital Asset que me entrego el Issuing en su momento.
+            List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions;
+            //TODO: Este actor es temporal mockActorAssetUser
+            ActorAssetUser mockActorAssetUser = new ActorAssetUser() {
+                @Override
+                public String getPublicKey() {
+                    return "publicKeyActor";
+                }
+
+                @Override
+                public String getName() {
+                    return null;
+                }
+
+                @Override
+                public long getContactRegistrationDate() {
+                    return 0;
+                }
+
+                @Override
+                public byte[] getProfileImage() {
+                    return new byte[0];
+                }
+
+                @Override
+                public ConnectionState getConnectionState() {
+                    return null;
+                }
+
+                @Override
+                public Location getLocation() {
+                    return null;
+                }
+
+                @Override
+                public Genders getGender() {
+                    return null;
+                }
+
+                @Override
+                public String getAge() {
+                    return null;
+                }
+
+                @Override
+                public CryptoAddress getCryptoAddress() {
+                    return null;
+                }
+            };
+            actorAssetUser = mockActorAssetUser;
+            HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
+            assetIssuerWalletTransactions = assetIssuerWalletDao.distributeAssets(assetpublicKey);
+            for (AssetIssuerWalletTransaction assetIssuerWalletTransactionList : assetIssuerWalletTransactions){
+                DigitalAsset digitalAsset = new  DigitalAsset();
+                digitalAsset.setPublicKey(assetpublicKey);
+                DigitalAssetMetadata digitalAssetMetadata = new DigitalAssetMetadata();
+                digitalAssetMetadata.setDigitalAsset(digitalAsset);
+                digitalAssetMetadata.setGenesisTransaction(assetIssuerWalletTransactionList.getTransactionHash());
+                hashMap.put(digitalAssetMetadata, actorAssetUser);
+            }
             assetDistributionManager.distributeAssets(null, walletPublicKey);
+
         }catch(CantDistributeDigitalAssetsException | CantGetTransactionsException cantDistributeDigitalAssetsException){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(cantDistributeDigitalAssetsException));
             throw new CantDistributeDigitalAssetsException(cantDistributeDigitalAssetsException, "Error Distribution Asset", "Method: distributionAssets()");
