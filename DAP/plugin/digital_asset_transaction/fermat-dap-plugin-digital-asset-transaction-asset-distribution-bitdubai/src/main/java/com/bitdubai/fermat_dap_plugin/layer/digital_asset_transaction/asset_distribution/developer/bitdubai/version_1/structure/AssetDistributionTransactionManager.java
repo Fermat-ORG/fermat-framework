@@ -87,7 +87,15 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
     }
 
     @Override
-    public void distributeAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute) throws CantDistributeDigitalAssetsException {
-        this.digitalAssetDistributor.distributeAssets(digitalAssetsToDistribute);
+    public void distributeAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute, String walletPublicKey) throws CantDistributeDigitalAssetsException {
+        try {
+            this.digitalAssetDistributor.setWalletPublicKey(walletPublicKey);
+            this.digitalAssetDistributor.distributeAssets(digitalAssetsToDistribute);
+        } catch (CantSetObjectException exception) {
+            throw new CantDistributeDigitalAssetsException(exception, "Setting wallet public key in asset distribution process", "The wallet public key is null");
+        } catch(Exception exception){
+            throw new CantDistributeDigitalAssetsException(exception, "Setting wallet public key in asset distribution process", "Unexpected exception");
+        }
+
     }
 }

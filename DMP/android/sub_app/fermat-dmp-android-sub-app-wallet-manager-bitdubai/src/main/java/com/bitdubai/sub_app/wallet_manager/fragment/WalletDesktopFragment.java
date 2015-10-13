@@ -54,6 +54,7 @@ public class WalletDesktopFragment extends Fragment implements Thread.UncaughtEx
 
     private WalletManager walletManager;
 
+
     private List<InstalledWallet> lstInstalledWallet;
 
     public static WalletDesktopFragment newInstance(int position, WalletManager walletManager) {
@@ -258,63 +259,79 @@ public class WalletDesktopFragment extends Fragment implements Thread.UncaughtEx
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            final InstalledWallet installedWallet = getItem(position);
+            try
+            {
+                final InstalledWallet installedWallet = getItem(position);
 
-            ViewHolder holder;
-            if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.shell_wallet_desktop_front_grid_item, parent, false);
-                holder = new ViewHolder();
-
-
-                holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
-                holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
+                ViewHolder holder;
+                if (convertView == null) {
+                    LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
+                    convertView = inflater.inflate(R.layout.shell_wallet_desktop_front_grid_item, parent, false);
+                    holder = new ViewHolder();
 
 
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
+                    holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
+                    holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
+
+
+                    convertView.setTag(holder);
+                } else {
+                    holder = (ViewHolder) convertView.getTag();
+                }
+
+                holder.companyTextView.setText(installedWallet.getWalletName());
+                holder.companyTextView.setTypeface(tf, Typeface.BOLD);
+
+
+                LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.wallet_3);
+
+                //Hardcodeado hasta que esté el wallet resources
+                switch (installedWallet.getWalletIcon()) {
+
+                    case "reference_wallet_icon":
+                        holder.imageView.setImageResource(R.drawable.fermat);
+                        holder.imageView.setTag("WalletBitcoinActivity|4");
+                        linearLayout.setTag("WalletBitcoinActivity|4");
+
+                        linearLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                               // try {
+                                    // check if intra user identity exists
+                                    //if (walletManager.hasIntraUserIdentity()) {
+                                        //set the next fragment and params
+                                        ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                                   // }
+                                   // else
+                                   // {
+
+                                   // }
+                               // } catch (Exception e) {
+                                   // Toast.makeText(getActivity(),"oooopps have an error ",Toast.LENGTH_SHORT).show();
+                               // }
+
+
+                            }
+                        });
+
+                        holder.imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                //set the next fragment and params
+                                ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+
+                            }
+                        });
+
+                        break;
+
+                }
+
             }
-
-            holder.companyTextView.setText(installedWallet.getWalletName());
-            holder.companyTextView.setTypeface(tf, Typeface.BOLD);
-
-
-            LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.wallet_3);
-
-            //Hardcodeado hasta que esté el wallet resources
-            switch (installedWallet.getWalletIcon()) {
-
-                case "reference_wallet_icon":
-                    holder.imageView.setImageResource(R.drawable.fermat);
-                    holder.imageView.setTag("WalletBitcoinActivity|4");
-                    linearLayout.setTag("WalletBitcoinActivity|4");
-
-                    linearLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                            // primero abrir el menu para la foto y agregar usuario aca
-
-                            //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
-
-                        }
-                    });
-
-                    holder.imageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                            //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectWallet( installedWallet);
-
-                        }
-                    });
-
-                    break;
-
-
+            catch (Exception e)
+            {
+                Toast.makeText(getActivity(),"oooopps ",Toast.LENGTH_SHORT).show();
             }
 
 

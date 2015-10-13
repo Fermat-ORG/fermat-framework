@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.communications;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -217,12 +217,12 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                     /*
                      * Validate the message signature
                      */
-                    AsymmectricCryptography.verifyMessageSignature(message.getSignature(), message.getContent(), communicationsVPNConnection.getRemoteParticipantNetworkService().getIdentityPublicKey());
+                    AsymmetricCryptography.verifyMessageSignature(message.getSignature(), message.getContent(), communicationsVPNConnection.getRemoteParticipantNetworkService().getIdentityPublicKey());
 
                     /*
                      * Decrypt the message content
                      */
-                    ((FermatMessageCommunication) message).setContent(AsymmectricCryptography.decryptMessagePrivateKey(message.getContent(), eccKeyPair.getPrivateKey()));
+                    ((FermatMessageCommunication) message).setContent(AsymmetricCryptography.decryptMessagePrivateKey(message.getContent(), eccKeyPair.getPrivateKey()));
 
                     /*
                      * Change to the new status
@@ -290,12 +290,12 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                             /*
                              * Encrypt the content of the message whit the remote network service public key
                              */
-                        ((FermatMessageCommunication) message).setContent(AsymmectricCryptography.encryptMessagePublicKey(message.getContent(), communicationsVPNConnection.getRemoteParticipantNetworkService().getIdentityPublicKey()));
+                        ((FermatMessageCommunication) message).setContent(AsymmetricCryptography.encryptMessagePublicKey(message.getContent(), communicationsVPNConnection.getRemoteParticipantNetworkService().getIdentityPublicKey()));
 
                             /*
                              * Sing the message
                              */
-                        String signature = AsymmectricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
+                        String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
                         ((FermatMessageCommunication) message).setSignature(signature);
 
                             /*

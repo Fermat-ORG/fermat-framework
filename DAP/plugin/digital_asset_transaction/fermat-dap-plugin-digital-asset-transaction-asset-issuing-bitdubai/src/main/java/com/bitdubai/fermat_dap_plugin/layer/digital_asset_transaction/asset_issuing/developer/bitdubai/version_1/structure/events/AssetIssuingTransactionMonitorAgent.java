@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.events;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.layer.DAPException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
@@ -27,7 +28,7 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issu
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeleteDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantInitializeAssetMonitorAgentException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetMetadataVault;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetIssuingVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseFactory;
@@ -57,7 +58,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
     UUID pluginId;
     //OutgoingIntraActorManager outgoingIntraActorManager;
     AssetVaultManager assetVaultManager;
-    DigitalAssetMetadataVault digitalAssetMetadataVault;
+    DigitalAssetIssuingVault digitalAssetIssuingVault;
 
 
     public AssetIssuingTransactionMonitorAgent(EventManager eventManager,
@@ -90,11 +91,11 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
         this.assetVaultManager=assetVaultManager;
     }
 
-    public void setDigitalAssetMetadataVault(DigitalAssetMetadataVault digitalAssetMetadataVault)throws CantSetObjectException{
-        if(digitalAssetMetadataVault==null){
-            throw new CantSetObjectException("DigitalAssetMetadataVault is null");
+    public void setDigitalAssetIssuingVault(DigitalAssetIssuingVault digitalAssetIssuingVault)throws CantSetObjectException{
+        if(digitalAssetIssuingVault ==null){
+            throw new CantSetObjectException("DigitalAssetIssuingVault is null");
         }
-        this.digitalAssetMetadataVault=digitalAssetMetadataVault;
+        this.digitalAssetIssuingVault = digitalAssetIssuingVault;
     }
 
     @Override
@@ -256,7 +257,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                         transactionCryptoStatus= cryptoGenesisTransaction.getCryptoStatus();
                         assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, transactionCryptoStatus);
                         String genesisTransaction=assetIssuingTransactionDao.getDigitalAssetGenesisTransactionByHash(transactionHash);
-                        digitalAssetMetadataVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, AssetBalanceType.BOOK);
+                        digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, AssetBalanceType.BOOK);
                     }
                 }
 
@@ -290,14 +291,14 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                         assetIssuingTransactionDao.updateDigitalAssetTransactionStatusByTransactionHash(transactionHash, TransactionStatus.DELIVERING);
                         String publicKey=this.assetIssuingTransactionDao.getPublicKeyByTransactionHash(transactionHash);
                         this.assetIssuingTransactionDao.updateAssetsGeneratedCounter(publicKey);
-                        digitalAssetMetadataVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, AssetBalanceType.AVAILABLE);
+                        digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, AssetBalanceType.AVAILABLE);
                     }
                 }
 
                 if (isReceivedDigitalAssets()){
                     List<String> genesisTransactionsFromAssetsReceived=getGenesisTransactionsFromDigitalAssetsReceived();
                     for(String genesisTransaction: genesisTransactionsFromAssetsReceived){
-                        digitalAssetMetadataVault.deleteDigitalAssetMetadataFromLocalStorage(genesisTransaction);
+                        digitalAssetIssuingVault.deleteDigitalAssetMetadataFromLocalStorage(genesisTransaction);
                     }
                 }
 
@@ -305,7 +306,12 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     List<String> transactionHashFromAssetsDelivered=assetIssuingTransactionDao.getTransactionHashByDeliveredStatus();
                     for(String transactionHash: transactionHashFromAssetsDelivered){
                         CryptoTransaction cryptoGenesisTransaction=getGenesisTransactionFromAssetVault(transactionHash);
-                        digitalAssetMetadataVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, AssetBalanceType.AVAILABLE);
+                        String digitalAssetPublicKey=assetIssuingTransactionDao.getPublicKeyByTransactionHash(transactionHash);
+                        if(digitalAssetIssuingVault.isAssetTransactionHashAvailableBalanceInAssetWallet(transactionHash, digitalAssetPublicKey)){
+                            assetIssuingTransactionDao.updateDigitalAssetTransactionStatusByTransactionHash(transactionHash, TransactionStatus.RECEIVED);
+                            continue;
+                        }
+                        digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, AssetBalanceType.AVAILABLE);
                     }
                 }
 
@@ -324,6 +330,8 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                 throw new CantCheckAssetIssuingProgressException(exception,"Exception in asset Issuing monitor agent","Cannot get genesis transaction from asset vault");
             } catch (CantDeleteDigitalAssetFromLocalStorageException exception) {
                 this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            } catch (DAPException exception) {
+                throw new CantCheckAssetIssuingProgressException(exception,"Exception in asset Issuing monitor agent","Cannot check the asset issuing progress");
             }
 
         }
