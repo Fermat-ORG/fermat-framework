@@ -163,6 +163,18 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager
         }
 
         /**
+         * test
+         */
+        try {
+            Thread.sleep(5000);
+            System.out.println(this.getNewAssetVaultCryptoAddress(BlockchainNetworkType.DEFAULT).getAddress());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (GetNewCryptoAddressException e) {
+            e.printStackTrace();
+        }
+
+        /**
          * Nothing left to do.
          */
         this.serviceStatus = ServiceStatus.STARTED;
