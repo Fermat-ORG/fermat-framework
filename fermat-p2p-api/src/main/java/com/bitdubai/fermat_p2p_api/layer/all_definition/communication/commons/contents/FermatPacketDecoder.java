@@ -6,7 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 
 /**
@@ -32,7 +32,7 @@ public class FermatPacketDecoder {
         /*
         * Decode the string into a json string representation
         */
-        String fermatPacketJsonDecode = AsymmectricCryptography.decryptMessagePrivateKey(fermatPacketEncode, privateKey);
+        String fermatPacketJsonDecode = AsymmetricCryptography.decryptMessagePrivateKey(fermatPacketEncode, privateKey);
 
         /**
          * Construct the fermat packet object with the decode json string

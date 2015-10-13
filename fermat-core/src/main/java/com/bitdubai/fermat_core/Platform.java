@@ -725,10 +725,12 @@ public class Platform implements Serializable {
                 /*
                  * Plugin Template Network Service
                  * -----------------------------
+<<<<<<< HEAD
                  */
 //                Plugin templateNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getTemplate();
 //                injectLayerReferences(templateNetworkService);
 //                injectPluginReferencesAndStart(templateNetworkService, Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE);
+
             }
 
 //            /*
@@ -1243,8 +1245,7 @@ public class Platform implements Serializable {
             injectPluginReferencesAndStart(moneyRequest, Plugins.BITDUBAI_REQUEST_MONEY_REQUEST);
 
             if(true) {
-
-           /*
+                /*
             * Plugin Asset User Actor Network Service
             * ----------------------------------------
             */
@@ -1273,8 +1274,8 @@ public class Platform implements Serializable {
             * Plugin Asset Wallet Asset Issuer
             * -----------------------------
             */
-            Plugin assetWalletUser = ((DAPWalletLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_WALLET_LAYER)).getPluginAssetWalletUser();
-            injectPluginReferencesAndStart(assetWalletUser, Plugins.BITDUBAI_DAP_ASSET_USER_WALLET);
+                Plugin assetWalletUser = ((DAPWalletLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_WALLET_LAYER)).getPluginAssetWalletUser();
+                injectPluginReferencesAndStart(assetWalletUser, Plugins.BITDUBAI_DAP_ASSET_USER_WALLET);
 
                 /*
                  * Plugin Asset Issuing Transaction

@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.network_service;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.network_service.exceptions.CantInsertRecordDatabaseException;
@@ -193,12 +193,12 @@ public class CryptoAddressesNetworkServiceRemoteAgent extends Observable {
                     /*
                      * Validate the message signature
                      */
-                    AsymmectricCryptography.verifyMessageSignature(incomingTemplateNetworkServiceMessage.getSignature(), incomingTemplateNetworkServiceMessage.getTextContent(), remoteNetworkServicePublicKey);
+                    AsymmetricCryptography.verifyMessageSignature(incomingTemplateNetworkServiceMessage.getSignature(), incomingTemplateNetworkServiceMessage.getTextContent(), remoteNetworkServicePublicKey);
 
                     /*
                      * Decrypt the message content
                      */
-                    incomingTemplateNetworkServiceMessage.setTextContent(AsymmectricCryptography.decryptMessagePrivateKey(incomingTemplateNetworkServiceMessage.getTextContent(), eccKeyPair.getPrivateKey()));
+                    incomingTemplateNetworkServiceMessage.setTextContent(AsymmetricCryptography.decryptMessagePrivateKey(incomingTemplateNetworkServiceMessage.getTextContent(), eccKeyPair.getPrivateKey()));
 
                     /*
                      * Change to the new status
@@ -261,12 +261,12 @@ public class CryptoAddressesNetworkServiceRemoteAgent extends Observable {
                         /*
                          * Encrypt the content of the message whit the remote public key
                          */
-                        message.setTextContent(AsymmectricCryptography.encryptMessagePublicKey(message.getTextContent(), remoteNetworkServicePublicKey));
+                        message.setTextContent(AsymmetricCryptography.encryptMessagePublicKey(message.getTextContent(), remoteNetworkServicePublicKey));
 
                         /*
                          * Sing the message
                          */
-                        AsymmectricCryptography.createMessageSignature(message.getTextContent(), eccKeyPair.getPrivateKey());
+                        AsymmetricCryptography.createMessageSignature(message.getTextContent(), eccKeyPair.getPrivateKey());
 
                         /*
                          * Send the message
