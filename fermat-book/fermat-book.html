@@ -1362,35 +1362,67 @@ Internally, the Wa-St module keeps the identity of the wallet, of its developer,
 <h2 id="_fermat_ccp_crypto_currency_platform">4. FERMAT CCP (crypto currency platform)</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This platform provides all the interconnectivity necessary to interact with existent cryptonetworks (Bitcoin, Litecoin, etc) and also to develop plug-ins for new cryptocurrencies invented in the future.<br></p>
-</div>
-<div class="sect2">
-<h3 id="_bitwa_basic_bitcoin_wallet">4.1. BitWa (Basic Bitcoin Wallet)</h3>
-<div class="paragraph">
-<p>Here we have one of FERMAT&#8217;s basic building block to allow interaction and actual value transport in the
-most popular cryptonetwork: Bitcoin Niche <strong>Reference Wallet</strong> (Bi-Wa module).<br>
-We begin with a <em>basic wallet</em> in terms of its functionalities, even simpler as other popular BTC wallets on the market to maximize its
-ulterior reutilisation.<br>
-Bi-Wa provides the minimum tasks to perform a succesful transaction of Bitcoins, so it is designed to: (+)</p>
+<p>This platform provides all the interconnectivity necessary to interact with existent cryptonetworks (Bitcoin, Litecoin, etc) and also to develop plug-ins for new cryptocurrencies invented in the future.<br>
+It contains the specific modules needed to run a Crypto Currency Wallet on FERMAT and these FERMAT-CCP&#8217;s modules connect to the underlying modules already providing cross-platform system-wide services, like those living on the foundationals layers and superlayer (FERMAT-CORE / FERMAT-PIP, FERMAT-OSA, FERMAT-BCH, FERMAT-P2P, etc.).
+For a <strong>niche wallet</strong> to run, we need to count on modules offering:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>make a payment in BTC ( send value to a BTC Wallet owner)</p>
+<p>1 user identification</p>
 </li>
 <li>
-<p>receive payments in BTC</p>
+<p>2 device identification</p>
 </li>
 <li>
-<p>show the balance of the transaction</p>
+<p>3 cryptonetwork services to allow connection to existing cryptocurrencies networks ( <strong>value transport</strong> )</p>
 </li>
 <li>
-<p>show the transaction in the public ledger</p>
+<p>4 cyptoaddress management (addressbook)</p>
 </li>
 <li>
-<p>see the contacts list</p>
+<p>5 network services ( to allow processing of events occurring outside the running device ) ( <strong>information transport</strong> )</p>
+</li>
+<li>
+<p>6 world services ( to allow access to information provided from services living in the web like exchange rates,&#8230;)</p>
+</li>
+<li>
+<p>7 transaction layer ( to allow the broadcasting of transaction created in a wallet)</p>
 </li>
 </ul>
+</div>
+<div class="sect2">
+<h3 id="_bitwa_basic_bitcoin_wallet">4.1. BitWa (Basic Bitcoin Wallet)</h3>
+<div class="paragraph">
+<p>This wallet is one of FERMAT&#8217;s basic building block to allow interaction with the
+most popular cryptonetwork: Bitcoin.<br>
+FERMAT&#8217;s Bitcoin&#8217;s Niche <strong>Reference Wallet</strong> (Bi-Wa module) ia a <em>basic wallet</em> in terms of its functionalities, even simpler as other popular BTC wallets on the market. This is so  to maximize its ulterior reutilisation.<br>
+Bi-Wa provides the minimum necessary functionalities to perform a succesful transaction of Bitcoins: (+)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>to make a payment in BTC ( send value to a BTC Wallet owner)</p>
+</li>
+<li>
+<p>to receive payments in BTC</p>
+</li>
+<li>
+<p>to show the transactions</p>
+</li>
+<li>
+<p>to show the balance of the wallet</p>
+</li>
+<li>
+<p>to show a basic contacts list ( username and cryptoaddress related to each contact)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The wallet prompts the user to provide a <strong>password</strong> ( or <strong>passphrase</strong> ) on first run. Then it generates a pair of privat key/public Key for him, and derived from it, a valid <em>bitcoin address</em> and the QR-Code image associated with it.
+When the user decides to send a payment, he enteres the amount and chooses the destination among the addresses stored in the contact&#8217;s list, the wallet software creates a transaction with the valid format of a bitcoin transaction, it signes the transaction with the wallet&#8217;s user unique digital signature (derived from his privat/public key), and sends it to the bitcoin network to be propagated among the active nodes.,s and when it is confirmed by others, it becomes part of the blockchain. When the transaction is confirmed by a mining node, it is written inside a transaction block of a new bitcoin blockchain&#8217;s block.<br>
+At this stage, the BTC amoun was really "spent" i.e. transfered from the wallet&#8217;s user to the destination user.
+The Bi-Wa will then be able to show its up-dated balance, and also the succesful transaction in the wallet&#8217;s transaction&#8217;s log.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1399,7 +1431,7 @@ Bi-Wa provides the minimum tasks to perform a succesful transaction of Bitcoins,
 <div class="title">Note</div>
 </td>
 <td class="content">
-the simplicity of this wallet is maximized. Bi-Wa does NOT handles payment or money request and and it is <em>wether</em> interconnected with other wallet <em>not</em> showing anything else but plain BTC currency. (no FIAT money abstraction!)
+the simplicity of this wallet is maximized. Bi-Wa does NOT handles payment or money request and and it is <em>wether</em> interconnected with other wallets <em>not</em> showing anything else but plain BTC currency. (no FIAT money abstraction!)
 </td>
 </tr>
 </table>
@@ -1408,15 +1440,17 @@ the simplicity of this wallet is maximized. Bi-Wa does NOT handles payment or mo
 <div class="sect2">
 <h3 id="_blp_bitcoin_loss_protected_wallet">4.2. BLP (Bitcoin Loss Protected wallet)</h3>
 <div class="paragraph">
-<p>BLP is the second <strong>Reference Wallet</strong> developed by FERMAT, and its main goal is to protect the user from lossing money when attemping to spend
+<p>BLP is the second <strong>Reference Wallet</strong> developed by FERMAT, and its main goal is to protect the user from losing money when attemping to spend
 Bitcoin at a change curse lower that the price when that Bitcoin amount was purchased (entered the wallet).<br>
 The new functionalities added are:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>to store the  when a payment is received
-*</p>
+<p>to store the <strong>exchange rate</strong> when a BTC amount is received in the wallet</p>
+</li>
+<li>
+<p>to check the <strong>exchange rate</strong> when the user attemps to spend an amount of BTC and to warn him if it is below the <strong>purchase price</strong></p>
 </li>
 </ul>
 </div>
@@ -1427,13 +1461,59 @@ The new functionalities added are:</p>
 <h2 id="_fermat_cbp">5. FERMAT CBP</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In this platform the actors involved are the * cryptobroker*, i.e  the person or organization whose business logic is to buy and sell cryptocurrency for fiat money, obtaining his profits from the difference in the buy/sell price, and his customers ( <strong>cryptocustomers</strong> ).</p>
+<p>In this platform the actors involved are the <strong>cryptobroker</strong>, i.e  the person or organization whose business logic is to buy and sell cryptocurrency for fiat money, obtaining his profits from the difference in the buy/sell price, and his customers (<strong>cryptocustomers</strong>).</p>
 </div>
 <div class="sect2">
 <h3 id="_fermat_cr_br_cryptobroker_wallet">5.1. FERMAT Cr-Br (Cryptobroker Wallet)</h3>
 <div class="paragraph">
-<p>This The theoretical assumption is that thet broker always has available stock of cryptocurrency and fiat money and that his activity is to be constantly selling this two kind of products obtaining profit.
-Allow a network of cryptobrokers associated by means of an <strong>agreement</strong> to be able to address larger operations.</p>
+<p>This Wallet is designed with the theoretical assumption that the broker always has available stock of cryptocurrency and fiat money and that his activity is to be constantly selling this two kind of products obtaining profit. The functionalities offered should help him to run the business in a simple way, taking the responsability of the basic management of the broker&#8217;s fund (in cryptocurrency and fiat money, in cash and in bank accounts), the management of the contact list of his customers, and a balance of the profits generated.<br>
+Key functionalities are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Funds replenishment</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Crypto Currency</p>
+</li>
+<li>
+<p>Cash Money (Fiat money in cash)</p>
+</li>
+<li>
+<p>Bank Money (Fiat money in a bank account)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Incoming/Outgoing money</strong>:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Cash on Hand</p>
+</li>
+<li>
+<p>Delivered Cash</p>
+</li>
+<li>
+<p>Money Bank Deposit</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Special functions</strong> for <em>associated crypto brokers network</em> (<strong>agreement</strong> between colleagues to be able to manage joint operations when needed) :</p>
+<div class="ulist">
+<ul>
+<li>
+<p>keep track of <strong>Broker-to-Broker contract</strong></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
@@ -1652,22 +1732,31 @@ Allow a network of cryptobrokers associated by means of an <strong>agreement</st
 </div>
 </div>
 <div class="sect1">
-<h2 id="_fermat_for_developers">13. FERMAT for developers</h2>
+<h2 id="_fermat_for_developers_1">13. FERMAT for developers 1</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_fermat_core">13.1. FERMAT CORE</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_fermat_p2p">13.2. FERMAT P2P</h3>
+<h3 id="_fermat_pip">13.2. FERMAT PIP</h3>
+
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fermat_for_developers_2_superlayers">14. FERMAT for developers 2: Superlayers</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_fermat_osa">14.1. FERMAT OSA</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_fermat_bch">13.3. FERMAT BCH</h3>
+<h3 id="_fermat_bch">14.2. FERMAT BCH</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_fermat_pip">13.4. FERMAT PIP</h3>
+<h3 id="_fermat_p2p">14.3. FERMAT P2P</h3>
 
 </div>
 </div>
@@ -1865,7 +1954,7 @@ All representatives of number theory are enumerated in that book, however, the m
 <div id="footer">
 <div id="footer-text">
 Version 1.0<br>
-Last updated 2015-10-09 20:38:44 ART
+Last updated 2015-10-12 18:03:20 ART
 </div>
 </div>
 </body>
