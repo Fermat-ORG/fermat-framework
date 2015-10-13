@@ -566,7 +566,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                         actorAssetUserToRegister.getName().toLowerCase().trim(),
                         actorAssetUserToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
-                        PlatformComponentType.ACTOR,
+                        PlatformComponentType.ACTOR_ASSET_USER,
                         actorAssetUserToRegister.getProfileImage().toString());
                 /*
                  * ask to the communication cloud client to register
@@ -582,7 +582,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                         actorAssetUserToRegister.getName().toLowerCase().trim(),
                         actorAssetUserToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
-                        PlatformComponentType.ACTOR,
+                        PlatformComponentType.ACTOR_ASSET_USER,
                         actorAssetUserToRegister.getProfileImage().toString());
                 /*
                  * Add to the list of pending to register
@@ -624,18 +624,18 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
          * Construct the discovery query parameters
          */
         DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
-                                                                     constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR, //applicant = who made the request
-                                                                             NetworkServiceType.UNDEFINED,
-                                                                             null,                     // alias
-                                                                             null,                     // identityPublicKey
-                                                                             null,                     // location
-                                                                             null,                     // distance
-                                                                             null,                     // name
-                                                                             null,                     // extraData
-                                                                             null,                     // offset
-                                                                             null,                     // max
-                                                                             null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                                                             null);
+                                                                     constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_USER, //applicant = who made the request
+                                                                                                         NetworkServiceType.UNDEFINED,
+                                                                                                         null,                     // alias
+                                                                                                         null,                     // identityPublicKey
+                                                                                                         null,                     // location
+                                                                                                         null,                     // distance
+                                                                                                         null,                     // name
+                                                                                                         null,                     // extraData
+                                                                                                         null,                     // offset
+                                                                                                         null,                     // max
+                                                                                                         null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                                                                                         null);
 
         /*
          * request the list to the server

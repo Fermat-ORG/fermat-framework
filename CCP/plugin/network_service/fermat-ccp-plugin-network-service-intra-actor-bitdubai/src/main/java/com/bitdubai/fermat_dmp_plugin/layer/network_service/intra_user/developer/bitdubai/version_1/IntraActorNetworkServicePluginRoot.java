@@ -644,7 +644,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
-        if(platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.ACTOR){
+        if(platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.ACTOR_INTRA_USER){
             System.out.print("-----------------------\n" +
                     "ACTOR REGISTRADO!! -----------------------\n" +
                     "-----------------------\n A: " +platformComponentProfileRegistered.getAlias());
@@ -684,7 +684,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                         ("alias"),
                         ("name+algo mas"),
                         NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
-                        PlatformComponentType.ACTOR, // actor.INTRA_USER
+                        PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
                         getExtraData());
 
 
@@ -1077,7 +1077,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                     (actor.getName().toLowerCase()),
                     (actor.getName().toLowerCase() + "_" + this.getName()),
                     NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
-                    PlatformComponentType.ACTOR, // actor.INTRA_USER
+                    PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
                     getExtraData());
 
                 /*

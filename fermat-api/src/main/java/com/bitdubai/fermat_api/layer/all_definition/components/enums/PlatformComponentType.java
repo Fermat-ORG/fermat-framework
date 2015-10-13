@@ -21,14 +21,13 @@ public enum PlatformComponentType implements FermatEnum {
 
     // Definition types
 
-    ACTOR                       ("ACT"),
     ACTOR_ASSET_USER            ("ACT_ASU"),
     ACTOR_ASSET_ISSUER          ("ACT_ASI"),
+    ACTOR_INTRA_USER            ("ACT_IU"),
     ACTOR_NETWORK_SERVICE       ("ANS"),
     COMMUNICATION_CLOUD_CLIENT  ("COM_CLD_CLI"),
     COMMUNICATION_CLOUD_SERVER  ("COM_CLD_SER"),
     NETWORK_SERVICE             ("NS"),;
-
 
     /**
      * Represent the code
@@ -63,7 +62,7 @@ public enum PlatformComponentType implements FermatEnum {
 
         switch (code){
 
-            case "ACT"         : return PlatformComponentType.ACTOR;
+            case "ACT_IU"      : return PlatformComponentType.ACTOR_INTRA_USER;
             case "ACT_ASU"     : return PlatformComponentType.ACTOR_ASSET_USER;
             case "ACT_ASI"     : return PlatformComponentType.ACTOR_ASSET_ISSUER;
             case "ANS"         : return PlatformComponentType.ACTOR_NETWORK_SERVICE;
