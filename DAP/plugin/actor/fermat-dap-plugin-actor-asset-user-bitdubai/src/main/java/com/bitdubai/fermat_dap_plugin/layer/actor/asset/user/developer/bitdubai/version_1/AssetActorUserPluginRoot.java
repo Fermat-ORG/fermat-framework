@@ -551,9 +551,9 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
     private void test() throws CantCreateAssetUserActorException {
 //        list.add(new AssetUserActorRecord("Thunders Asset Wallet User", UUID.randomUUID().toString(), new byte[0], 987654321, ConnectionState.CONNECTED));
 
-        System.out.println("************************************************************************");
-        System.out.println("------ Lista de Asset User Registered Actors Agregados en Table --------");
-        System.out.println("************************************************************************");
+//        System.out.println("************************************************************************");
+//        System.out.println("------ Lista de Asset User Registered Actors Agregados en Table --------");
+//        System.out.println("************************************************************************");
         for (int i = 0; i < 10; i++) {
 //            this.assetUserActorDao.createNewAssetUser(assetUserActorIdentityToLinkPublicKey, assetUserActorToAddName, assetUserActorToAddPublicKey, profileImage, ConnectionState.CONNECTED);
             try {
@@ -565,16 +565,16 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
                 String age = "25";
                 this.assetUserActorDao.createNewAssetUser(assetUserActorIdentityToLinkPublicKey, "Thunders Asset User_" + i, assetUserActorToAddPublicKey, new byte[0], genders, age, cryptoAddress, ConnectionState.CONNECTED);
 
-                System.out.println("Asset User Actor Identity Link PublicKey: " + assetUserActorIdentityToLinkPublicKey);
-                System.out.println("Asset User Actor Name: Thunders Asset User_" + i);
-                System.out.println("Asset User Actor PublicKey: " + assetUserActorToAddPublicKey);
-                System.out.println("profileImage: " + new byte[0]);
-//                System.out.println("Location: -AL: " + location.getAltitude() + " - LA: " + location.getLatitude() + " - LO: " + location.getLongitude() + " - Provider: " + LocationProvider.getByCode(location.getProvider().getCode()) + " - Time: " + location.getTime());
-                System.out.println("Genders: " + Genders.getByCode(genders.getCode()));
-                System.out.println("Age: " + age);
-                System.out.println("CryptoAddress: " + cryptoAddress.getAddress() + " " + CryptoCurrency.getByCode(cryptoAddress.getCryptoCurrency().getCode()));
-
-                System.out.println("------------------------------------------------------------------------");
+//                System.out.println("Asset User Actor Identity Link PublicKey: " + assetUserActorIdentityToLinkPublicKey);
+//                System.out.println("Asset User Actor Name: Thunders Asset User_" + i);
+//                System.out.println("Asset User Actor PublicKey: " + assetUserActorToAddPublicKey);
+//                System.out.println("profileImage: " + new byte[0]);
+////                System.out.println("Location: -AL: " + location.getAltitude() + " - LA: " + location.getLatitude() + " - LO: " + location.getLongitude() + " - Provider: " + LocationProvider.getByCode(location.getProvider().getCode()) + " - Time: " + location.getTime());
+//                System.out.println("Genders: " + Genders.getByCode(genders.getCode()));
+//                System.out.println("Age: " + age);
+//                System.out.println("CryptoAddress: " + cryptoAddress.getAddress() + " " + CryptoCurrency.getByCode(cryptoAddress.getCryptoCurrency().getCode()));
+//
+//                System.out.println("------------------------------------------------------------------------");
 
             } catch (CantAddPendingAssetUserException e) {
                 throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR", e, "", "");
@@ -582,7 +582,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
                 throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR", FermatException.wrapException(e), "", "");
             }
         }
-        System.out.println("************************************************************************");
+//        System.out.println("************************************************************************");
 
     }
     /**
