@@ -29,6 +29,7 @@ public class WalletStoreListItem implements Serializable {
     private Bitmap walletIcon;
     private UUID id;
     private WalletCategory category;
+    private boolean testData;
 
 
     /**
@@ -38,6 +39,7 @@ public class WalletStoreListItem implements Serializable {
      * @param res           resource object to generate the icon
      */
     public WalletStoreListItem(WalletStoreCatalogueItem catalogueItem, Resources res) {
+        testData = false;
 
         id = catalogueItem.getId();
 
@@ -89,6 +91,7 @@ public class WalletStoreListItem implements Serializable {
         this.walletName = walletName;
         this.installationStatus = installationStatus;
         this.walletIcon = walletIcon;
+        this.testData = true;
     }
 
     public static ArrayList<WalletStoreListItem> getTestData(Resources res) {
@@ -128,4 +131,7 @@ public class WalletStoreListItem implements Serializable {
     }
 
 
+    public boolean isTestData() {
+        return testData;
+    }
 }
