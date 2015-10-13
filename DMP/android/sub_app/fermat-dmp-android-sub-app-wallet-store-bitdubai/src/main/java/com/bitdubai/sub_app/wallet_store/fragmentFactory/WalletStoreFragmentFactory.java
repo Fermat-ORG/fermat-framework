@@ -10,12 +10,9 @@ import com.bitdubai.sub_app.wallet_store.fragments.MoreDetailsActivityFragment;
 import com.bitdubai.sub_app.wallet_store.preference_settings.WalletStorePreferenceSettings;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
 
-import static com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragmentsEnumType.CWP_WALLET_STORE_ALL_FRAGMENT;
 import static com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragmentsEnumType.CWP_WALLET_STORE_DETAIL_ACTIVITY;
-import static com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragmentsEnumType.CWP_WALLET_STORE_FREE_FRAGMENT;
 import static com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragmentsEnumType.CWP_WALLET_STORE_MAIN_ACTIVITY;
 import static com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragmentsEnumType.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY;
-import static com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragmentsEnumType.CWP_WALLET_STORE_PAID_FRAGMENT;
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
@@ -31,13 +28,6 @@ public class WalletStoreFragmentFactory extends FermatSubAppFragmentFactory<Wall
         if (fragments == CWP_WALLET_STORE_DETAIL_ACTIVITY)
             return DetailsActivityFragment.newInstance();
         if (fragments == CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY)
-            return MoreDetailsActivityFragment.newInstance();
-
-        if (fragments == CWP_WALLET_STORE_ALL_FRAGMENT)
-            return MainActivityFragment.newInstance();
-        if (fragments == CWP_WALLET_STORE_FREE_FRAGMENT)
-            return DetailsActivityFragment.newInstance();
-        if (fragments == CWP_WALLET_STORE_PAID_FRAGMENT)
             return MoreDetailsActivityFragment.newInstance();
 
         throw createFragmentNotFoundException(fragments);
