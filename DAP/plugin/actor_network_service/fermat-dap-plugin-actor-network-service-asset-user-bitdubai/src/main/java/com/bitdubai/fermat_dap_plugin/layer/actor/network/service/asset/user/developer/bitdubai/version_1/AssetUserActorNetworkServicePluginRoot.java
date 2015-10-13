@@ -89,8 +89,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-
-
 /**
  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.AssetUserActorNetworkServicePluginRoot</code> is
  * throw when error occurred updating new record in a table of the data base
@@ -643,17 +641,17 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
          */
         DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
                                                                      constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR, //applicant = who made the request
-                                                                                                            NetworkServiceType.UNDEFINED,
-                                                                                                            null,                     // alias
-                                                                                                            null,                     // identityPublicKey
-                                                                                                            null,                     // location
-                                                                                                            null,                     // distance
-                                                                                                            null,                     // name
-                                                                                                            null,                     // extraData
-                                                                                                            null,                     // offset
-                                                                                                            null,                     // max
-                                                                                                            null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                                                                                            null);
+                                                                             NetworkServiceType.UNDEFINED,
+                                                                             null,                     // alias
+                                                                             null,                     // identityPublicKey
+                                                                             null,                     // location
+                                                                             null,                     // distance
+                                                                             null,                     // name
+                                                                             null,                     // extraData
+                                                                             null,                     // offset
+                                                                             null,                     // max
+                                                                             null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                                                             null);
 
         /*
          * request the list to the server
@@ -679,7 +677,6 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
                 //Send the message
                 communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), msjContent);
-
 
             }else{
 
@@ -897,6 +894,10 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleFailureComponentRegistrationNotificationEvent");
 
+        /*
+         * TODO: ANALIZAR QUE HACER AQUI
+         */
+
     }
 
     @Override
@@ -965,6 +966,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
                 /*
                  * TODO: CREAR LOS ACTORES CON EL CONTENIDO DEL PROFILE Y AGREGARLOS A LA LISTA
                  */
+
             }
 
 

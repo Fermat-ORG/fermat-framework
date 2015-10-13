@@ -5,7 +5,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.sub_app.crypto_broker_identity.fragments.CreateIdentityFragment;
-import com.bitdubai.sub_app.crypto_broker_identity.fragments.MainFragment;
+import com.bitdubai.sub_app.crypto_broker_identity.fragments.IdentityListFragment;
 import com.bitdubai.sub_app.crypto_broker_identity.preference_settings.CryptoBrokerIdentityPreferenceSettings;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 
@@ -22,7 +22,7 @@ public class CryptoBrokerIdentityFragmentFactory extends FermatSubAppFragmentFac
     public FermatFragment getFermatFragment(CryptoBrokerIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {
 
         if (fragments == CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT)
-            return MainFragment.newInstance();
+            return IdentityListFragment.newInstance();
 
         if (fragments == CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT)
             return CreateIdentityFragment.newInstance();

@@ -89,6 +89,7 @@ dependencies {
     compile project(':fermat-dap-plugin-middleware-asset-factory-bitdubai')
     compile project(':fermat-dap-plugin-sub-app-module-asset-factory-bitdubai')
     compile project(':fermat-dap-plugin-wallet-assets-issuer-wallet-bitdubai')
+    compile project(':fermat-dap-plugin-wallet-assets-user-wallet-bitdubai')
     compile project(':fermat-dap-plugin-actor-network-service-asset-user-bitdubai')
     compile project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai')
 

@@ -334,14 +334,29 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
         listenersAdded.add(fermatEventListener);
 
 
+
+    }
+
+    /**
+     * Messages listeners
+     */
+    private void initializeMessagesListeners(){
+
         /*
          * Listen and handle Complete Request List Component Registered Notification Event
          */
-        fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+        FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
         fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(cryptoTransmissionAgent));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
+        /**
+         *
+         */
+        fermatEventListener = eventManager.getNewListener(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(cryptoTransmissionAgent));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
     }
 
     /**
@@ -788,7 +803,10 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
                     identity
             );
 
+            // Initialize messages handlers
+            initializeMessagesListeners();
 
+            // start main threads
             cryptoTransmissionAgent.start();
 
 
@@ -842,7 +860,8 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
         System.out.println(" CryptoTransmissionNetworkServiceRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
 
 
-      //  if(cryptoTransmissionAgent.isConnection(remoteComponentProfile.getIdentityPublicKey())) {
+
+        //if(cryptoTransmissionAgent.isConnection(remoteComponentProfile.getIdentityPublicKey())) {
             //TODO: acá podría mandarle al otro network service un mensaje diciendo que que le voy a mandar la metadata
 
         /*
@@ -899,7 +918,8 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
              */
             //templateNetworkServiceLocal.sendMessage(messageContent, identity);
 
-      //  }
+       // }
+
 
 //        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 

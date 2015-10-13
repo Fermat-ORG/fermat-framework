@@ -19,6 +19,10 @@ public interface AssetIssuerWallet {
 
     AssetIssuerWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException;
 
+    List<AssetIssuerWalletTransaction> getTransactionsAll(BalanceType balanceType,
+                                                          TransactionType transactionType,
+                                                          String assetPublicKey) throws CantGetTransactionsException;
+
     List<AssetIssuerWalletTransaction> getTransactions(BalanceType balanceType,
                                                         TransactionType transactionType,
                                                         int max,

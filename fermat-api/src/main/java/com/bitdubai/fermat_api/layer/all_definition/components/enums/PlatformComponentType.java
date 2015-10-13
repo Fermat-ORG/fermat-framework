@@ -23,6 +23,7 @@ public enum PlatformComponentType implements FermatEnum {
 
     ACTOR                       ("ACT"),
     ACTOR_ASSET_USER            ("ACT_ASU"),
+    ACTOR_ASSET_ISSUER          ("ACT_ASI"),
     ACTOR_NETWORK_SERVICE       ("ANS"),
     COMMUNICATION_CLOUD_CLIENT  ("COM_CLD_CLI"),
     COMMUNICATION_CLOUD_SERVER  ("COM_CLD_SER"),
@@ -64,6 +65,7 @@ public enum PlatformComponentType implements FermatEnum {
 
             case "ACT"         : return PlatformComponentType.ACTOR;
             case "ACT_ASU"     : return PlatformComponentType.ACTOR_ASSET_USER;
+            case "ACT_ASI"     : return PlatformComponentType.ACTOR_ASSET_ISSUER;
             case "ANS"         : return PlatformComponentType.ACTOR_NETWORK_SERVICE;
             case "COM_CLD_CLI" : return PlatformComponentType.COMMUNICATION_CLOUD_CLIENT;
             case "COM_CLD_SER" : return PlatformComponentType.COMMUNICATION_CLOUD_SERVER;
