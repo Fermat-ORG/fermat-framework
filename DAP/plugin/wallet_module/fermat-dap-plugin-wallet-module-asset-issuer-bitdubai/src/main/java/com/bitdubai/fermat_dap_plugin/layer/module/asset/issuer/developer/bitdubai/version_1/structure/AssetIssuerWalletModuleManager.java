@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by franklin on 06/10/15.
  */
-public class AssetIssuerWalletModuleManager implements DealsWithAssetIssuerWallet, AssetIssuerWalletSupAppModuleManager {
+public class AssetIssuerWalletModuleManager implements DealsWithAssetIssuerWallet {
     //TODO: Excepciones y documentar
     AssetIssuerWalletManager assetIssuerWalletManager;
     @Override
@@ -49,6 +49,4 @@ public class AssetIssuerWalletModuleManager implements DealsWithAssetIssuerWalle
             throw new CantLoadWalletException("Error load Wallet Balances Book", exception, "Method: getAssetIssuerWalletBalancesBook", "Class: AssetIssuerWalletModuleManager");
         }
     }
-
-
 }
