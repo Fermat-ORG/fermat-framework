@@ -1438,11 +1438,11 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
              */
 
 
-            WalletNavigationStructure walletNavigationStructure = getNavigationStructure(publicKey);
-            if(walletNavigationStructure==null){
+//            WalletNavigationStructure walletNavigationStructure = getNavigationStructure(publicKey);
+  //          if(walletNavigationStructure==null){
                 setNavigationStructureXml(startWalletNavigationStructure());
-                walletNavigationStructure= getNavigationStructure(publicKey);
-            }
+                WalletNavigationStructure walletNavigationStructure= getNavigationStructure(publicKey);
+    //        }
             //listWallets.put(publicKey, walletNavigationStructure);
             //walletNavigationStructureOpen=walletNavigationStructure;
         }catch(Exception e){
