@@ -210,7 +210,8 @@
                                 android:padding="3dp"
                                 android:clickable="true"
                                 android:text="Send"
-
+                                android:background="#1172aa"
+                                android:textColor="#fff"
                                 />
                         </LinearLayout>
 

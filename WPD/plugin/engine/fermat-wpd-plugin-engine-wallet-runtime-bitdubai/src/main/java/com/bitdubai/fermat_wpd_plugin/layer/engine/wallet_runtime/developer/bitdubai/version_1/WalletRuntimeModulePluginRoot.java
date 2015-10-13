@@ -1438,11 +1438,11 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
              */
 
 
-            WalletNavigationStructure walletNavigationStructure = getNavigationStructure(publicKey);
-            if(walletNavigationStructure==null){
+//            WalletNavigationStructure walletNavigationStructure = getNavigationStructure(publicKey);
+  //          if(walletNavigationStructure==null){
                 setNavigationStructureXml(startWalletNavigationStructure());
-                walletNavigationStructure= getNavigationStructure(publicKey);
-            }
+                WalletNavigationStructure walletNavigationStructure= getNavigationStructure(publicKey);
+    //        }
             //listWallets.put(publicKey, walletNavigationStructure);
             //walletNavigationStructureOpen=walletNavigationStructure;
         }catch(Exception e){
@@ -1710,8 +1710,16 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
+
+       /* runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setIcon("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_SETTINGS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);*/
+
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Exit");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeActivity.setSideMenu(runtimeSideMenu);
