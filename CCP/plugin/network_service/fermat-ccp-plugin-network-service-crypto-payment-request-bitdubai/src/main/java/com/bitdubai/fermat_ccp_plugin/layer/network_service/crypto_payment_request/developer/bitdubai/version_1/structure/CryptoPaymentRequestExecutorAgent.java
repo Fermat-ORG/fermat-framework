@@ -4,8 +4,8 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
@@ -86,7 +86,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
         this.pluginId                                     = pluginId                                    ;
         this.wsCommunicationsCloudClientManager           = wsCommunicationsCloudClientManager          ;
 
-        this.serviceStatus                                = ServiceStatus.CREATED                       ;
+        this.status                                       = AgentStatus.CREATED                         ;
     }
 
     public void start() throws CantStartAgentException {
@@ -105,7 +105,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                 throw new CantInitializeExecutorAgentException(e, "", "Problem initializing Crypto Payment Request DAO from Executor Agent.");
             }
 
-            this.serviceStatus = ServiceStatus.STARTED;
+            this.status = AgentStatus.STARTED;
 
         } catch (Exception exception) {
 

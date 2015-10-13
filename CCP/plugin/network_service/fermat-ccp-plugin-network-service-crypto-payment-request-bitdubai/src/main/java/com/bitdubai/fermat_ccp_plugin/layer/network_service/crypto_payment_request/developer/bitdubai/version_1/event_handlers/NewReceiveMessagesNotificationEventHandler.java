@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.event_handlers;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.structure.CryptoPaymentRequestExecutorAgent;
@@ -29,12 +29,11 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
         System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent);
 
 
-        if (this.cryptoPaymentRequestExecutorAgent.getStatus() == ServiceStatus.STARTED) {
+        if (this.cryptoPaymentRequestExecutorAgent.getStatus() == AgentStatus.STARTED) {
 
             NewNetworkServiceMessageSentNotificationEvent newNetworkServiceMessageSentNotificationEvent = (NewNetworkServiceMessageSentNotificationEvent) platformEvent;
 
             cryptoPaymentRequestExecutorAgent.handleNewMessages((FermatMessage) newNetworkServiceMessageSentNotificationEvent.getData());
-
 
         }
     }

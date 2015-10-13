@@ -20,8 +20,8 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
      */
     private static final long SLEEP_TIME = 5000;
 
-    private final CryptoPaymentRequestNetworkServicePluginRoot cryptoPaymentRequestNetworkServicePluginRoot;
-    private final CommunicationsClientConnection               communicationsClientConnection              ;
+    private final CryptoPaymentRequestNetworkServicePluginRoot networkServicePluginRoot      ;
+    private final CommunicationsClientConnection               communicationsClientConnection;
 
     /**
      * Represent the active
@@ -31,12 +31,12 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     /**
      * Constructor with parameters.
      */
-    public CommunicationRegistrationProcessNetworkServiceAgent(final CryptoPaymentRequestNetworkServicePluginRoot cryptoPaymentRequestNetworkServicePluginRoot,
-                                                               final CommunicationsClientConnection               communicationsClientConnection              ) {
+    public CommunicationRegistrationProcessNetworkServiceAgent(final CryptoPaymentRequestNetworkServicePluginRoot networkServicePluginRoot      ,
+                                                               final CommunicationsClientConnection               communicationsClientConnection) {
 
-        this.cryptoPaymentRequestNetworkServicePluginRoot = cryptoPaymentRequestNetworkServicePluginRoot;
-        this.communicationsClientConnection               = communicationsClientConnection              ;
-        this.active                                       = Boolean.FALSE                               ;
+        this.networkServicePluginRoot       = networkServicePluginRoot      ;
+        this.communicationsClientConnection = communicationsClientConnection;
+        this.active                         = Boolean.FALSE                 ;
     }
 
     /**
@@ -48,18 +48,18 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
         while (active){
 
-            if (communicationsClientConnection.isRegister() && !cryptoPaymentRequestNetworkServicePluginRoot.isRegister()){
+            if (communicationsClientConnection.isRegister() && !networkServicePluginRoot.isRegister()){
 
                 /*
                  * Construct my profile and register me
                  */
                 PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
-                        cryptoPaymentRequestNetworkServicePluginRoot.getIdentityPublicKey(),
-                        (cryptoPaymentRequestNetworkServicePluginRoot.getAlias().toLowerCase()+"_"+cryptoPaymentRequestNetworkServicePluginRoot.getId().toString()),
-                        (cryptoPaymentRequestNetworkServicePluginRoot.getName()+" ("+cryptoPaymentRequestNetworkServicePluginRoot.getId()+")"),
-                        cryptoPaymentRequestNetworkServicePluginRoot.getNetworkServiceType(),
-                        cryptoPaymentRequestNetworkServicePluginRoot.getPlatformComponentType(),
-                        cryptoPaymentRequestNetworkServicePluginRoot.getExtraData());
+                        networkServicePluginRoot.getIdentityPublicKey(),
+                        (networkServicePluginRoot.getAlias().toLowerCase()+"_"+networkServicePluginRoot.getId().toString()),
+                        (networkServicePluginRoot.getName()+" ("+networkServicePluginRoot.getId()+")"),
+                        networkServicePluginRoot.getNetworkServiceType(),
+                        networkServicePluginRoot.getPlatformComponentType(),
+                        networkServicePluginRoot.getExtraData());
 
                 /*
                  * Register me
@@ -69,19 +69,19 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                 /*
                  * Configure my new profile
                  */
-                cryptoPaymentRequestNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
+                networkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
 
                 /*
                  * Initialize the connection manager
                  */
-                cryptoPaymentRequestNetworkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
+                networkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
 
                 /*
                  * Stop the agent
                  */
                 active = Boolean.FALSE;
 
-            }else if (!cryptoPaymentRequestNetworkServicePluginRoot.isRegister()){
+            }else if (!networkServicePluginRoot.isRegister()){
 
                 try {
                     sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
@@ -90,7 +90,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     active = Boolean.FALSE;
                 }
 
-            }else if (!cryptoPaymentRequestNetworkServicePluginRoot.isRegister()){
+            }else if (!networkServicePluginRoot.isRegister()){
                 active = Boolean.FALSE;
             }
 

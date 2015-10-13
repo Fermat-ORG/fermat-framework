@@ -59,6 +59,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantTakeActionException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.structure.CryptoPaymentRequestExecutorAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -129,11 +130,6 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
      * Represent the cryptoPaymentRequestNetworkServiceConnectionManager
      */
     private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
-
-    /**
-     *   Represent the templateNetworkServiceDeveloperDatabaseFactory
-     */
-    private CommunicationLayerNetworkServiceDeveloperDatabaseFactory communicationLayerNetworkServiceDeveloperDatabaseFactory;
 
     /**
      * Represent the dataBase
@@ -755,11 +751,6 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
         return networkServiceType;
     }
 
-    /**
-     * Set the PlatformComponentProfile
-     *
-     * @param platformComponentProfile
-     */
     public void setPlatformComponentProfile(final PlatformComponentProfile platformComponentProfile) {
         this.platformComponentProfile = platformComponentProfile;
     }
@@ -820,7 +811,8 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     }
 
     @Override
-    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
+    public void handleFailureComponentRegistrationNotificationEvent(final PlatformComponentProfile networkServiceApplicant,
+                                                                    final PlatformComponentProfile remoteParticipant      ) {
         
     }
 
@@ -861,55 +853,32 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
          */
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
-
-        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
-
-            /**
-             * what to do here?
-             */
-
-        }
     }
 
     private void reportUnexpectedException(final Exception e) {
         this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
     }
 
-    /**
-     * DealsWithWsCommunicationCloudClient Interface implementation
-     */
     @Override
     public void setWsCommunicationsCloudClientConnectionManager(final WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager) {
         this.wsCommunicationsCloudClientManager = wsCommunicationsCloudClientManager;
     }
 
-    /**
-     * DealsWithErrors Interface implementation
-     */
     @Override
     public void setErrorManager(final ErrorManager errorManager) {
         this.errorManager = errorManager;
     }
 
-    /**
-     * DealsWithEvents Interface implementation
-     */
     @Override
     public void setEventManager(final EventManager eventManager) {
         this.eventManager = eventManager;
     }
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation
-     */
     @Override
     public void setPluginDatabaseSystem(final PluginDatabaseSystem pluginDatabaseSystemManager) {
         this.pluginDatabaseSystem = pluginDatabaseSystemManager;
     }
 
-    /**
-     * Plugin Interface implementation.
-     */
     @Override
     public void setId(final UUID pluginId) {
         this.pluginId = pluginId;

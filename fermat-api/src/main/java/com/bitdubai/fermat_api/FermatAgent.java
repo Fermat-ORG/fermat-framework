@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
 /**
@@ -10,26 +11,30 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
  */
 public abstract class FermatAgent {
 
-    protected ServiceStatus serviceStatus;
+    protected AgentStatus status;
 
     public void start() throws CantStartAgentException {
-        this.serviceStatus = ServiceStatus.STARTED;
+        this.status = AgentStatus.STARTED;
     }
 
     public void pause(){
-        this.serviceStatus = ServiceStatus.PAUSED;
+        this.status = AgentStatus.PAUSED;
     }
 
     public void resume(){
-        this.serviceStatus = ServiceStatus.STARTED;
+        this.status = AgentStatus.STARTED;
     }
 
     public void stop(){
-        this.serviceStatus = ServiceStatus.STOPPED;
+        this.status = AgentStatus.STOPPED;
     }
 
-    public ServiceStatus getStatus(){
-        return serviceStatus;
+    public AgentStatus getStatus(){
+        return status;
+    }
+
+    public boolean isRunning(){
+        return status == AgentStatus.STARTED;
     }
 
 }
