@@ -73,14 +73,13 @@ public class CustomerBrokerCashSaleBusinessTransactionDao {
             CurrencyType merchandiseCurrency,
             float merchandiseAmount,
             String executionTransactionId,
-            CashCurrencyType cashCurrencyType,
-            CashOperationType cashOperationType
+            CashCurrencyType cashCurrencyType
     ) throws CantInsertRecordCustomerBrokerCashSaleBusinessTransactionException {
         try {
             DatabaseTable transactionTable = this.database.getTable(CustomerBrokerCashSaleBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_SALE_TABLE_NAME);
             DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
             BusinessTransactionStatus transactionStatus = BusinessTransactionStatus.PENDING_PAYMENT;
-            loadRecordAsNew(recordToInsert, transactionStatus, contractId, publicKeyBroker, publicKeyCustomer, paymentTransactionId, paymentCurrency, merchandiseCurrency, merchandiseAmount, executionTransactionId, cashCurrencyType, cashOperationType);
+            loadRecordAsNew(recordToInsert, transactionStatus, contractId, publicKeyBroker, publicKeyCustomer, paymentTransactionId, paymentCurrency, merchandiseCurrency, merchandiseAmount, executionTransactionId, cashCurrencyType);
             transactionTable.insertRecord(recordToInsert);
         } catch (CantInsertRecordException e) {
             throw new CantInsertRecordCustomerBrokerCashSaleBusinessTransactionException("An exception happened", e, "", "");
@@ -125,8 +124,7 @@ public class CustomerBrokerCashSaleBusinessTransactionDao {
             CurrencyType merchandiseCurrency,
             float merchandiseAmount,
             String executionTransactionId,
-            CashCurrencyType cashCurrencyType,
-            CashOperationType cashOperationType
+            CashCurrencyType cashCurrencyType
     ) {
         UUID transactionId = UUID.randomUUID();
 

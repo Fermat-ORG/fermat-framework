@@ -13,7 +13,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CashOperationType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BusinessTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
@@ -73,14 +72,13 @@ public class CustomerBrokerCashPurchaseBusinessTransactionDao {
             CurrencyType merchandiseCurrency,
             float merchandiseAmount,
             String executionTransactionId,
-            CashCurrencyType cashCurrencyType,
-            CashOperationType cashOperationType
+            CashCurrencyType cashCurrencyType
     ) throws CantInsertRecordCustomerBrokerCashPurchaseBusinessTransactionException {
         try {
             DatabaseTable transactionTable = this.database.getTable(CustomerBrokerCashPurchaseBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_PURCHASE_TABLE_NAME);
             DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
             BusinessTransactionStatus transactionStatus = BusinessTransactionStatus.PENDING_PAYMENT;
-            loadRecordAsNew(recordToInsert, transactionStatus, contractId, publicKeyBroker, publicKeyCustomer, paymentTransactionId, paymentCurrency, merchandiseCurrency, merchandiseAmount, executionTransactionId, cashCurrencyType, cashOperationType);
+            loadRecordAsNew(recordToInsert, transactionStatus, contractId, publicKeyBroker, publicKeyCustomer, paymentTransactionId, paymentCurrency, merchandiseCurrency, merchandiseAmount, executionTransactionId, cashCurrencyType);
             transactionTable.insertRecord(recordToInsert);
         } catch (CantInsertRecordException e) {
             throw new CantInsertRecordCustomerBrokerCashPurchaseBusinessTransactionException("An exception happened", e, "", "");
@@ -125,8 +123,7 @@ public class CustomerBrokerCashPurchaseBusinessTransactionDao {
             CurrencyType merchandiseCurrency,
             float merchandiseAmount,
             String executionTransactionId,
-            CashCurrencyType cashCurrencyType,
-            CashOperationType cashOperationType
+            CashCurrencyType cashCurrencyType
     ) {
         UUID transactionId = UUID.randomUUID();
 
