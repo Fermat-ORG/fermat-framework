@@ -24,6 +24,7 @@ public interface CustomerBrokerBankSaleManager {
             ,final String paymentCurrency
             ,final String publicKeyBroker
             ,final String merchandiseCurrency
+            ,final float merchandiseAmount
             ,final String executionTransactionId
             ,final String bankCurrencyType
             ,final String bankOperationType
