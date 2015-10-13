@@ -26,6 +26,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.Dea
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DealsWithAssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
@@ -53,11 +55,12 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/09/15.
  */
-public class AssetDistributionPluginRoot implements AssetDistributionManager, DealsWithAssetIssuerWallet, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
+public class AssetDistributionPluginRoot implements AssetDistributionManager, DealsWithAssetIssuerWallet, DealsWithAssetTransmissionNetworkServiceManager, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     AssetDistributionTransactionManager assetDistributionTransactionManager;
     AssetIssuerWalletManager assetIssuerWalletManager;
+    AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
     Database assetDistributionDatabase;
     AssetVaultManager assetVaultManager;
     ErrorManager errorManager;
@@ -240,5 +243,10 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
     @Override
     public void setAssetIssuerManager(AssetIssuerWalletManager assetIssuerWalletManager) {
         this.assetIssuerWalletManager=assetIssuerWalletManager;
+    }
+
+    @Override
+    public void setAssetTransmissionNetworkServiceManager(AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager) {
+        this.assetTransmissionNetworkServiceManager=assetTransmissionNetworkServiceManager;
     }
 }
