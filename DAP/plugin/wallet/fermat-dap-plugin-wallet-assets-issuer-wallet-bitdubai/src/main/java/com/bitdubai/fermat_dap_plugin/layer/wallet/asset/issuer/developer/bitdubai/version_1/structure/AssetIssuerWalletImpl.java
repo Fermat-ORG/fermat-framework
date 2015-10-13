@@ -15,6 +15,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantInitializeAssetIssuerWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
@@ -60,11 +64,14 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 
     private UUID pluginId;
 
-    public AssetIssuerWalletImpl(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    private AssetDistributionManager assetDistributionManager;
+
+    public AssetIssuerWalletImpl(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, AssetDistributionManager assetDistributionManager) {
         this.errorManager = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+        this.assetDistributionManager = assetDistributionManager;
     }
 
     public void initialize(UUID walletId) throws CantInitializeAssetIssuerWalletException {
@@ -250,6 +257,21 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     @Override
     public AssetIssuerWalletTransactionSummary getActorTransactionSummary(String actorPublicKey, BalanceType balanceType) throws CantGetActorTransactionSummaryException {
         return null;
+    }
+
+    public void distributionAssets(String assetpublicKey, String walletPublicKey)  throws CantDistributeDigitalAssetsException, CantGetTransactionsException {
+        try{
+            assetIssuerWalletDao.distributeAssets(assetpublicKey);
+            DigitalAsset digitalAsset = new  DigitalAsset();
+            digitalAsset.setPublicKey(assetpublicKey);
+            DigitalAssetMetadata digitalAssetMetadata = new DigitalAssetMetadata();
+            digitalAssetMetadata.setDigitalAsset(digitalAsset);
+            digitalAssetMetadata.setGenesisTransaction(null);
+            assetDistributionManager.distributeAssets(null, walletPublicKey);
+        }catch(CantDistributeDigitalAssetsException | CantGetTransactionsException cantDistributeDigitalAssetsException){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(cantDistributeDigitalAssetsException));
+            throw new CantDistributeDigitalAssetsException(cantDistributeDigitalAssetsException, "Error Distribution Asset", "Method: distributionAssets()");
+        }
     }
 
 }
