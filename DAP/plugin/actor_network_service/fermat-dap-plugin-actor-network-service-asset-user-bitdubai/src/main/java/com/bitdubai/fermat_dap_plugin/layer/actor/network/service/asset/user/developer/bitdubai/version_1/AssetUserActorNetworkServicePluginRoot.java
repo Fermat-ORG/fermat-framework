@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
@@ -582,7 +583,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
                         actorAssetUserToRegister.getName().toLowerCase().trim(),
                         actorAssetUserToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
-                        PlatformComponentType.ACTOR,
+                        PlatformComponentType.ACTOR_ASSET_USER,
                         actorAssetUserToRegister.getProfileImage().toString());
                 /*
                  * ask to the communication cloud client to register
@@ -598,7 +599,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
                         actorAssetUserToRegister.getName().toLowerCase().trim(),
                         actorAssetUserToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
-                        PlatformComponentType.ACTOR,
+                        PlatformComponentType.ACTOR_ASSET_USER,
                         Arrays.toString(actorAssetUserToRegister.getProfileImage()));
                 /*
                  * Add to the list of pending to register
@@ -640,7 +641,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
          * Construct the discovery query parameters
          */
         DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
-                                                                     constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR, //applicant = who made the request
+                                                                     constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_USER, //applicant = who made the request
                                                                              NetworkServiceType.UNDEFINED,
                                                                              null,                     // alias
                                                                              null,                     // identityPublicKey
@@ -836,7 +837,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
             /* test register one actor */
 
-            ActorAssetUser actorAssetUserNewRegsitered = new AssetUserActorRecord("Pedrito","ActorAssetUser123456789",new byte[]{12,20},0, ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
+            ActorAssetUser actorAssetUserNewRegsitered = new AssetUserActorRecord("Pedrito","123456789",new byte[]{12,20},0, Genders.MALE,"23",null);
 
             try {
                 registerActorAssetUser(actorAssetUserNewRegsitered);
@@ -853,7 +854,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
         /*
          * If is a actor registered
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.ACTOR &&
+        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.ACTOR_ASSET_USER &&
                 platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.UNDEFINED){
 
             /*
@@ -871,10 +872,10 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
              * TODO: DISPARAR UN EVENTO NOTIFICANDO EL REGISTRO DE UN ACTOR CON EL ACTOR Q SE REGISTRO DENTRO
              */
 
-            System.out.println(" Actor Network Service Asset User Registered "+platformComponentProfileRegistered.getIdentityPublicKey()+"\n Alias "+platformComponentProfileRegistered.getAlias());
+            System.out.println(" Actor  Asset User Registered "+platformComponentProfileRegistered.getIdentityPublicKey()+"\n Alias "+platformComponentProfileRegistered.getAlias());
 
 
-            ActorAssetUser actorAssetUserNewRegsitered = new AssetUserActorRecord(platformComponentProfileRegistered.getName(),platformComponentProfileRegistered.getIdentityPublicKey(),new byte[]{10,3},0, ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
+            ActorAssetUser actorAssetUserNewRegsitered = new AssetUserActorRecord(platformComponentProfileRegistered.getName(),platformComponentProfileRegistered.getIdentityPublicKey(),new byte[]{10,3},0,Genders.FEMALE,"14", null);
 
 
 
@@ -924,14 +925,14 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
             //communicationNetworkServiceConnectionManager.connectTo(remoteNetworkServiceToConnect);
 
 
-            if(remoteNetworkServiceToConnect.getNetworkServiceType()== NetworkServiceType.UNDEFINED &&  remoteNetworkServiceToConnect.getPlatformComponentType()== PlatformComponentType.ACTOR ){
+            if(remoteNetworkServiceToConnect.getNetworkServiceType()== NetworkServiceType.UNDEFINED &&  remoteNetworkServiceToConnect.getPlatformComponentType()== PlatformComponentType.ACTOR_ASSET_USER ){
 
                 List<ActorAssetUser> actorAssetUserListRemote=null;
 
 
                 for(PlatformComponentProfile p : platformComponentProfileRegisteredList){
 
-                    ActorAssetUser actorAssetUserNew = new AssetUserActorRecord(p.getName(),p.getIdentityPublicKey(),convertoByteArrayfromString(p.getExtraData()),0, ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
+                    ActorAssetUser actorAssetUserNew = new AssetUserActorRecord(p.getName(),p.getIdentityPublicKey(),convertoByteArrayfromString(p.getExtraData()),0,Genders.FEMALE,"10", null);
 
                     actorAssetUserListRemote.add(actorAssetUserNew);
                 }
@@ -1185,6 +1186,8 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
     @Override
     public void handleCompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent(List<ActorAssetUser> actorAssetUserList) {
+
+        System.out.println("Satisfactoriamente llego la lista remota de asset user actor");
 
     }
 
