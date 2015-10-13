@@ -128,7 +128,7 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
         incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME);
         incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_VALUE_COLUMN_NAME);
         incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_FEE_COLUMN_NAME);
-        incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_TRANSMISSION_STATUS_COLUMN_NAME);
+        incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME);
         incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME);
         /**
          * Table Incoming_Transactions addition.
@@ -149,7 +149,7 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
         outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME);
         outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_VALUE_COLUMN_NAME);
         outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_FEE_COLUMN_NAME);
-        outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_TRANSMISSION_STATUS_COLUMN_NAME);
+        outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME);
         outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME);
         /**
          * Table Outgoing_Transactions addition.
@@ -213,8 +213,9 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
         }
 
         List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
+
         for (DatabaseTableRecord row : records) {
+            List<String> developerRow = new ArrayList<String>();
             /**
              * for each row in the table list
              */

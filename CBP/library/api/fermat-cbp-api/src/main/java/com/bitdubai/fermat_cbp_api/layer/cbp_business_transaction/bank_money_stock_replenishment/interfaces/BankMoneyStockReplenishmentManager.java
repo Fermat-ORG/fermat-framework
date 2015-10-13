@@ -19,6 +19,7 @@ public interface BankMoneyStockReplenishmentManager {
     BankMoneyStockReplenishment createBankMoneyStockReplenishment(
          final String publicKeyBroker
         ,final String merchandiseCurrency
+        ,final float merchandiseAmount
         ,final String executionTransactionId
         ,final String bankCurrencyType
         ,final String bankOperationType

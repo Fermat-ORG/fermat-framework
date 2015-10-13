@@ -18,18 +18,29 @@
             android:layout_width="4dp"
             android:layout_height="match_parent"
             android:id="@+id/txt_color_type"
-            android:background="#000"/>
+            android:background="#6563a4"/>
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:id="@+id/contactIcon"
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="10dp"
-            android:paddingBottom="5dp"
-            android:src="@drawable/mati_profile"
+            android:layout_marginBottom="5dp"
+            android:background="#cbcbcb">
 
-            />
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/contactIcon"
+                android:padding="3dp"
+                android:src="@drawable/luis_profile_picture"
+
+                />
+
+        </FrameLayout>
+
+
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -102,21 +113,23 @@
 
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_width="80dp"
+            android:layout_height="25dp"
             android:id="@+id/btn_accept_request"
             android:textSize="12dp"
             android:text="Accept"
             android:layout_marginRight="5dp"
-            android:background="#c3e9c8"/>
+            android:textColor="#fff"
+            android:background="@drawable/bg_home_accept_normal"/>
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_width="80dp"
+            android:layout_height="25dp"
             android:id="@+id/btn_refuse_request"
             android:textSize="12dp"
             android:text="Refuse"
-            android:background="#efefef"
+            android:textColor="#56705757"
+            android:background="@drawable/bg_home_cancel_normal"
             />
 
 
