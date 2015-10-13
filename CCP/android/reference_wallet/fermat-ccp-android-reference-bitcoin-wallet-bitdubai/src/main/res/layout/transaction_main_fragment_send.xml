@@ -201,7 +201,7 @@
                             android:paddingRight="7dip"
                             android:id="@+id/linear_send"
                             >
-                            <Button
+                            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                                 android:id="@+id/send_button"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
