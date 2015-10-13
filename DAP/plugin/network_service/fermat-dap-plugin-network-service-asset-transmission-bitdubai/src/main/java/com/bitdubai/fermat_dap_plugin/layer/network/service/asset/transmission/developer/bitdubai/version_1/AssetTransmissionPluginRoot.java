@@ -642,9 +642,6 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("eventManager: " + eventManager);
 
-            String context = contextBuffer.toString();
-            String possibleCause = "Plugin was not registered";
-
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
         }
