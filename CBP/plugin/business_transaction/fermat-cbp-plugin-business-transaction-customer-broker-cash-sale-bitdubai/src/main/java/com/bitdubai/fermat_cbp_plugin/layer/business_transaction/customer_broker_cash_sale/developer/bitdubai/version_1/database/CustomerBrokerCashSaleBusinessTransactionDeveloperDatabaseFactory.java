@@ -127,6 +127,7 @@ public class CustomerBrokerCashSaleBusinessTransactionDeveloperDatabaseFactory i
         customerBrokerCashSaleColumns.add(CustomerBrokerCashSaleBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_SALE_PAYMENT_TRANSACTION_ID_COLUMN_NAME);
         customerBrokerCashSaleColumns.add(CustomerBrokerCashSaleBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_SALE_PAYMENT_CURRENCY_COLUMN_NAME);
         customerBrokerCashSaleColumns.add(CustomerBrokerCashSaleBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_SALE_MERCHANDISE_CURRENCY_COLUMN_NAME);
+        customerBrokerCashSaleColumns.add(CustomerBrokerCashSaleBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_SALE_MERCHANDISE_AMOUNT_COLUMN_NAME);
         customerBrokerCashSaleColumns.add(CustomerBrokerCashSaleBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_SALE_EXECUTION_TRANSACTION_ID_COLUMN_NAME);
         customerBrokerCashSaleColumns.add(CustomerBrokerCashSaleBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_SALE_CASH_CURRENCY_TYPE_COLUMN_NAME);
         /**

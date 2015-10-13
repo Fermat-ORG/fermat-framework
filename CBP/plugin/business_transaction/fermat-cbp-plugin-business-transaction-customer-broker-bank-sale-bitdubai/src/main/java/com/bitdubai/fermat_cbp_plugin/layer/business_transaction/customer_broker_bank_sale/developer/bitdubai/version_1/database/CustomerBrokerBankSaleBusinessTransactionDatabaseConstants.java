@@ -25,6 +25,7 @@ public class CustomerBrokerBankSaleBusinessTransactionDatabaseConstants {
     static final String CUSTOMER_BROKER_BANK_SALE_PAYMENT_TRANSACTION_ID_COLUMN_NAME = "payment_transaction_id";
     static final String CUSTOMER_BROKER_BANK_SALE_PAYMENT_CURRENCY_COLUMN_NAME = "payment_currency";
     static final String CUSTOMER_BROKER_BANK_SALE_MERCHANDISE_CURRENCY_COLUMN_NAME = "merchandise_currency";
+    static final String CUSTOMER_BROKER_BANK_SALE_MERCHANDISE_AMOUNT_COLUMN_NAME = "merchandise_amount";
     static final String CUSTOMER_BROKER_BANK_SALE_EXECUTION_TRANSACTION_ID_COLUMN_NAME = "execution_transaction_id";
     static final String CUSTOMER_BROKER_BANK_SALE_BANK_CURRENCY_TYPE_COLUMN_NAME = "bank_currency_type";
     static final String CUSTOMER_BROKER_BANK_SALE_BANK_OPERATION_TYPE_COLUMN_NAME = "bank_operation_type";
