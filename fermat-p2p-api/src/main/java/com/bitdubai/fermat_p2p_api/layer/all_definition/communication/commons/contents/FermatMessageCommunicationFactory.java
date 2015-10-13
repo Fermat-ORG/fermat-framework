@@ -6,8 +6,8 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
@@ -41,8 +41,8 @@ public class FermatMessageCommunicationFactory {
      */
     public static FermatMessage constructFermatMessageEncryptedAndSinged(final ECCKeyPair senderIdentity, final String receiverIdentityPublicKey, final String content, final FermatMessageContentType fermatMessageContentType) throws FMPException{
 
-        String messageHash = AsymmectricCryptography.encryptMessagePublicKey(content, receiverIdentityPublicKey);
-        String signature   = AsymmectricCryptography.createMessageSignature(messageHash, senderIdentity.getPrivateKey());
+        String messageHash = AsymmetricCryptography.encryptMessagePublicKey(content, receiverIdentityPublicKey);
+        String signature   = AsymmetricCryptography.createMessageSignature(messageHash, senderIdentity.getPrivateKey());
 
         return new FermatMessageCommunication(messageHash, null, fermatMessageContentType, FermatMessagesStatus.PENDING_TO_SEND, receiverIdentityPublicKey, senderIdentity.getPublicKey(), new Timestamp(System.currentTimeMillis()), signature);
     }
