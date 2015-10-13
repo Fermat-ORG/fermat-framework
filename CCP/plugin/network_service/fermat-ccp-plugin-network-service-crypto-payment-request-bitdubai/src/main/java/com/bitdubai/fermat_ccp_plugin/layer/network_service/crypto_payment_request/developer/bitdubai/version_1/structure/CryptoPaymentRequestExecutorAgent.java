@@ -1,10 +1,15 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestAction;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestEvent;
@@ -17,12 +22,14 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeExecutorAgentException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantListRequestsException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantStartCryptoPaymentRequestExecutorAgentException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.InformationMessage;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.NetworkServiceMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.RequestMessage;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.google.gson.Gson;
 
 import java.util.List;
 import java.util.UUID;
@@ -34,10 +41,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 06/10/2015.
  */
-public class CryptoPaymentRequestExecutorAgent {
+public class CryptoPaymentRequestExecutorAgent implements FermatAgent {
 
     private Thread        agentThread  ;
     private ExecutorAgent executorAgent;
+
+    private ServiceStatus serviceStatus;
 
     private final CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
     private final ErrorManager                                 errorManager                                ;
@@ -56,9 +65,10 @@ public class CryptoPaymentRequestExecutorAgent {
         this.eventManager                                 = eventManager                                ;
         this.pluginDatabaseSystem                         = pluginDatabaseSystem                        ;
         this.pluginId                                     = pluginId                                    ;
+        this.serviceStatus                                = ServiceStatus.CREATED                       ;
     }
 
-    public void start() throws CantStartCryptoPaymentRequestExecutorAgentException {
+    public void start() throws CantStartAgentException {
 
         this.executorAgent = new ExecutorAgent(
                 communicationNetworkServiceConnectionManager,
@@ -74,9 +84,11 @@ public class CryptoPaymentRequestExecutorAgent {
             this.agentThread = new Thread(this.executorAgent);
             this.agentThread.start();
 
+            this.serviceStatus = ServiceStatus.STARTED;
+
         } catch (Exception exception) {
 
-            throw new CantStartCryptoPaymentRequestExecutorAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
+            throw new CantStartAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
         }
     }
 
@@ -90,8 +102,26 @@ public class CryptoPaymentRequestExecutorAgent {
             this.executorAgent.stop();
 
         agentThread.interrupt();
+
+        this.serviceStatus = ServiceStatus.STOPPED;
     }
 
+    @Override
+    public void pause() {
+        // TODO MANAGE PAUSE METHOD.
+        this.serviceStatus = ServiceStatus.PAUSED;
+    }
+
+    @Override
+    public void resume() {
+        // TODO MANAGE RESUME METHOD.
+        this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    @Override
+    public ServiceStatus getStatus() {
+        return serviceStatus;
+    }
 
     private static class ExecutorAgent implements Runnable  {
 
@@ -350,4 +380,43 @@ public class CryptoPaymentRequestExecutorAgent {
         }
 
     }
+
+    public void handleNewMessages(FermatMessage fermatMessage){
+
+        try {
+
+            Gson gson = new Gson();
+
+            String jsonMessage = fermatMessage.getContent();
+
+            NetworkServiceMessage networkServiceMessage = gson.fromJson(jsonMessage, NetworkServiceMessage.class);
+
+            switch (networkServiceMessage.getMessageType()) {
+                case INFORMATION:
+                    InformationMessage informationMessage = gson.fromJson(jsonMessage, InformationMessage.class);
+                    System.out.println(informationMessage);
+                    break;
+                case REQUEST:
+                    RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
+                    System.out.println(requestMessage);
+                    break;
+            }
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void informReception(String actorPublicKey, UUID requestId) {
+
+        CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorPublicKey);
+
+        // TODO VER QUE ACTION PONER AQUÍ.
+        InformationMessage informationMessage = new InformationMessage(requestId, RequestAction.INFORM_RECEPTION);
+
+        communicationNetworkServiceLocal.sendMessage(actorPublicKey, informationMessage.toJson());
+    }
+
 }

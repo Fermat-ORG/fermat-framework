@@ -1,6 +1,9 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.enums.CryptoTransmissionStates;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -146,6 +149,42 @@ public class BitcoinCryptoNetworkDatabaseDao {
             throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, outputMessage.toString(), "database issue.");
         }
 
+    }
+
+    /**
+     * saves a new Crypto transaction into database
+     * @param hash
+     * @param cryptoStatus
+     * @param blockDepth
+     * @param addressTo
+     * @param addressFrom
+     * @param value
+     * @param fee
+     * @param protocolStatus
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public void saveNewIncomingTransaction(String hash, CryptoStatus cryptoStatus, int blockDepth) throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_TABLE_NAME);
+        DatabaseTableRecord record = databaseTable.getEmptyRecord();
+
+        /**
+         * generates the trx_id
+         */
+        UUID trxId = UUID.randomUUID();
+
+        record.setUUIDValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_TRX_ID_COLUMN_NAME, trxId);
+        record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_HASH_COLUMN_NAME, hash);
+        record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode());
+        record.setIntegerValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME, blockDepth);
+        try {
+            databaseTable.insertRecord(record);
+        } catch (CantInsertRecordException e) {
+            StringBuilder outputMessage = new StringBuilder("There was an error inserting a new transaction. Transaction record is:");
+            outputMessage.append(System.lineSeparator());
+            outputMessage.append(XMLParser.parseObject(record));
+
+            throw new CantExecuteDatabaseOperationException (CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, outputMessage.toString(), "database issue.");
+        }
     }
 
 }
