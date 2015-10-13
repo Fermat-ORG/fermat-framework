@@ -1,10 +1,9 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.event_handlers;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.structure.CryptoPaymentRequestExecutorAgent;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.CryptoPaymentRequestNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent;
 
@@ -16,11 +15,11 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.New
  */
 public class NewReceiveMessagesNotificationEventHandler implements FermatEventHandler {
 
-    private final CryptoPaymentRequestExecutorAgent cryptoPaymentRequestExecutorAgent;
+    private final CryptoPaymentRequestNetworkServicePluginRoot cryptoPaymentRequestNetworkServicePluginRoot;
 
-    public NewReceiveMessagesNotificationEventHandler(final CryptoPaymentRequestExecutorAgent cryptoPaymentRequestExecutorAgent) {
+    public NewReceiveMessagesNotificationEventHandler(final CryptoPaymentRequestNetworkServicePluginRoot cryptoPaymentRequestNetworkServicePluginRoot) {
 
-        this.cryptoPaymentRequestExecutorAgent = cryptoPaymentRequestExecutorAgent;
+        this.cryptoPaymentRequestNetworkServicePluginRoot = cryptoPaymentRequestNetworkServicePluginRoot;
     }
 
     @Override
@@ -29,11 +28,11 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
         System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent);
 
 
-        if (this.cryptoPaymentRequestExecutorAgent.getStatus() == AgentStatus.STARTED) {
+        if (platformEvent instanceof NewNetworkServiceMessageSentNotificationEvent) {
 
             NewNetworkServiceMessageSentNotificationEvent newNetworkServiceMessageSentNotificationEvent = (NewNetworkServiceMessageSentNotificationEvent) platformEvent;
 
-            cryptoPaymentRequestExecutorAgent.handleNewMessages((FermatMessage) newNetworkServiceMessageSentNotificationEvent.getData());
+            cryptoPaymentRequestNetworkServicePluginRoot.handleNewMessages((FermatMessage) newNetworkServiceMessageSentNotificationEvent.getData());
 
         }
     }

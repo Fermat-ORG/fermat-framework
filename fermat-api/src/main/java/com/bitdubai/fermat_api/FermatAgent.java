@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_api;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
 /**
  * The abstract class <code>com.bitdubai.fermat_api.FermatAgent</code>
