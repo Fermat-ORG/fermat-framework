@@ -26,7 +26,7 @@ import java.util.UUID;
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Yordin Alayn - (y.alayn@gmail.com) on 01/10/15.
+ * Created by Yordin Alayn - (y.alayn@gmail.com) on 13/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -120,6 +120,7 @@ public class CashMoneyWalletDeveloperDatabaseFactory implements DealsWithPluginD
         List<String> cashMoneyColumns = new ArrayList<String>();
 
         cashMoneyColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_TRANSACTION_ID_COLUMN_NAME);
+        cashMoneyColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_WALLET_KEY_BROKER_COLUMN_NAME);
         cashMoneyColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
         cashMoneyColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_PUBLIC_KEY_BROKER_COLUMN_NAME);
         cashMoneyColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_TYPE_COLUMN_NAME);
@@ -137,6 +138,24 @@ public class CashMoneyWalletDeveloperDatabaseFactory implements DealsWithPluginD
          */
         DeveloperDatabaseTable cashMoneyTable = developerObjectFactory.getNewDeveloperDatabaseTable(CashMoneyWalletDatabaseConstants.CASH_MONEY_TABLE_NAME, cashMoneyColumns);
         tables.add(cashMoneyTable);
+
+        /**
+         * Table Cash Money Total Balances columns.
+         */
+        List<String> cashMoneyTotalBalancesColumns = new ArrayList<String>();
+
+        cashMoneyTotalBalancesColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_WALLET_KEY_BROKER_COLUMN_NAME);
+        cashMoneyTotalBalancesColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_PUBLIC_KEY_BROKER_COLUMN_NAME);
+        cashMoneyTotalBalancesColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_CASH_CURRENCY_TYPE_COLUMN_NAME);
+        cashMoneyTotalBalancesColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_NAME_COLUMN_NAME);
+        cashMoneyTotalBalancesColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_DESCRIPTION_COLUMN_NAME);
+        cashMoneyTotalBalancesColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_AVAILABLE_BALANCE_COLUMN_NAME);
+        cashMoneyTotalBalancesColumns.add(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_BOOK_BALANCE_COLUMN_NAME);
+        /**
+         * Table Cash Money Total Balances addition.
+         */
+        DeveloperDatabaseTable cashMoneyTotalBalancesTable = developerObjectFactory.getNewDeveloperDatabaseTable(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_TABLE_NAME, cashMoneyTotalBalancesColumns);
+        tables.add(cashMoneyTotalBalancesTable);
 
 
 
