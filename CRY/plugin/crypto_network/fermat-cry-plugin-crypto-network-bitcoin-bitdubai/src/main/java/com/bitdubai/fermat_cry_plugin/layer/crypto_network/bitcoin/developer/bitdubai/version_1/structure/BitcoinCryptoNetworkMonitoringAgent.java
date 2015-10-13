@@ -257,7 +257,11 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
         private void doTheMainTask() throws CantConnectToBitcoinNetwork {
             try {
                 peers.start();
-                peers.downloadBlockChain();
+                peers.startBlockChainDownload(myListeners);
+                while (true){
+                    //endless loop. Since bitcoinj upgrade, this is no longer running as a guava service.
+                    // so we need to keep the thread active.
+                }
             } catch (Exception exception) {
                 throw new CantConnectToBitcoinNetwork("Couldn't connect to Bitcoin Network.", exception, "", "Error executing Agent.");
             }
