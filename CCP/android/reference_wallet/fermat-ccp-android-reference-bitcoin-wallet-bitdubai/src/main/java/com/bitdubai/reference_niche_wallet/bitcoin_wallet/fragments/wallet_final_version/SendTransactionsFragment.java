@@ -214,13 +214,13 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                         Fx.slide_down(getActivity(), linear_layout_send_form);
                         empty.setVisibility(View.GONE);
                     }
-                    if (lstCryptoWalletTransactionsBook.isEmpty() && BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()).equals(BalanceType.BOOK)) {
-                        empty.setVisibility(View.VISIBLE);
-                    }else if (lstCryptoWalletTransactionsAvailable.isEmpty() && BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()).equals(BalanceType.AVAILABLE)){
-                        empty.setVisibility(View.VISIBLE);
-                    }else{
-                        empty.setVisibility(View.GONE);
-                    }
+//                    if (lstCryptoWalletTransactionsBook.isEmpty() && BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()).equals(BalanceType.BOOK)) {
+//                        empty.setVisibility(View.VISIBLE);
+//                    }else if (lstCryptoWalletTransactionsAvailable.isEmpty() && BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()).equals(BalanceType.AVAILABLE)){
+//                        empty.setVisibility(View.VISIBLE);
+//                    }else{
+//                        empty.setVisibility(View.GONE);
+//                    }
 
 
                 }
