@@ -697,7 +697,7 @@ public class Platform implements Serializable {
 
              /* flag temporal para desactivar plugins que tarde demasiado en inicializar,
             y asi poder trabajar en otras partes del sistema de forma relativamente rapida */
-            boolean activatePlugin = true;
+            boolean activatePlugin = false;
             if (activatePlugin) {
                 /*
                  * Plugin Web Socket Communication Cloud Client

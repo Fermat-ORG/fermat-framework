@@ -1,13 +1,9 @@
-package com.bitdubai.sub_app.crypto_broker_identity.common.views;
+package com.bitdubai.fermat_android_api.ui.util;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,7 +25,7 @@ import android.view.View;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class DividerItemDecoration extends RecyclerView.ItemDecoration {
+public class FermatDividerItemDecoration extends RecyclerView.ItemDecoration {
 
     private static final int[] ATTRS = new int[]{
             android.R.attr.listDivider
@@ -52,11 +48,11 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     /**
      * Create a item decorator that act has divider for a recyclerView with vertical orientation.
-     * the orientation can be changed with {@link DividerItemDecoration#setOrientation(int)}
+     * the orientation can be changed with {@link FermatDividerItemDecoration#setOrientation(int)}
      *
      * @param context the context activity where is the reciclerView
      */
-    public DividerItemDecoration(Context context) {
+    public FermatDividerItemDecoration(Context context) {
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
         mDivider = a.getDrawable(0);
         a.recycle();
@@ -64,12 +60,12 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     /**
-     * Call {@link DividerItemDecoration#DividerItemDecoration(Context, int, int)} with orientation as {@link DividerItemDecoration#VERTICAL_LIST}
+     * Call {@link FermatDividerItemDecoration#FermatDividerItemDecoration(Context, int, int)} with orientation as {@link FermatDividerItemDecoration#VERTICAL_LIST}
      *
      * @param context the context activity where is the reciclerView
      * @param resId   the resource id use a drawable xml, for example a shape
      */
-    public DividerItemDecoration(Context context, int resId) {
+    public FermatDividerItemDecoration(Context context, int resId) {
         this(context, resId, VERTICAL_LIST);
     }
 
@@ -79,9 +75,9 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
      *
      * @param context     the context activity where is the reciclerView
      * @param resId       the resource id use a drawable xml, for example a shape
-     * @param orientation one of this: {@link DividerItemDecoration#VERTICAL_LIST} or {@link DividerItemDecoration#HORIZONTAL_LIST}
+     * @param orientation one of this: {@link FermatDividerItemDecoration#VERTICAL_LIST} or {@link FermatDividerItemDecoration#HORIZONTAL_LIST}
      */
-    public DividerItemDecoration(Context context, int resId, int orientation) {
+    public FermatDividerItemDecoration(Context context, int resId, int orientation) {
         mDivider = ContextCompat.getDrawable(context, resId);
         setOrientation(orientation);
     }
@@ -89,7 +85,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     /**
      * Set the divider orientation
      *
-     * @param orientation one of this: {@link DividerItemDecoration#VERTICAL_LIST} or {@link DividerItemDecoration#HORIZONTAL_LIST}
+     * @param orientation one of this: {@link FermatDividerItemDecoration#VERTICAL_LIST} or {@link FermatDividerItemDecoration#HORIZONTAL_LIST}
      */
     public void setOrientation(int orientation) {
         if (orientation != HORIZONTAL_LIST && orientation != VERTICAL_LIST) {
