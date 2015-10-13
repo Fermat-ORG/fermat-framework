@@ -6,9 +6,12 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -23,7 +26,9 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCryptoNetworkDatabaseException;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -311,5 +316,114 @@ public class BitcoinCryptoNetworkDatabaseDao {
         }
 
         return cryptoStatus;
+    }
+
+    /**
+     * Gets the amount of transaction in ProtocolStatus as Pending Notified from the specified table
+     * @param transactionType
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public int getPendingNotifiedTransactions(TransactionTypes transactionType) throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable;
+        if (transactionType == TransactionTypes.OUTGOING) {
+            databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_TABLE_NAME);
+            databaseTable.setStringFilter(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
+        } else {
+            databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_TABLE_NAME);
+            databaseTable.setStringFilter(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
+        }
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "there was an error loading the database table to get pending transactions", "database error.");
+        }
+
+        /**
+         * I return the amount of records.
+         */
+        return databaseTable.getRecords().size();
+    }
+
+    /**
+     * Updates the execution statistics of the event Agent
+     * it will insert a new record if we have pending transactions, and update the existing value if we have zero transactions.
+     * @param pendingIncoming
+     * @param pendingOutgoing
+     */
+    public void updateEventAgentStats(int pendingIncoming, int pendingOutgoing) throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_TABLE_NAME);
+
+        /**
+         * I will get the current execution number
+         */
+        int currentExecutionNumber;
+        databaseTable.setFilterOrder(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_EXECUTION_NUMBER_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "cant load EventAgent Stats table.", "database issue");
+        }
+
+        if (databaseTable.getRecords() != null)
+            currentExecutionNumber = databaseTable.getRecords().get(0).getIntegerValue(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_EXECUTION_NUMBER_COLUMN_NAME);
+        else
+            currentExecutionNumber = 0;
+
+        /**
+         * if I have pending transactions, I will insert a new record, also if this is the first time I'm executing.
+         */
+        DatabaseTableRecord record = null;
+        try{
+            if (pendingIncoming != 0 || pendingOutgoing != 0 || currentExecutionNumber == 0){
+                record = databaseTable.getEmptyRecord();
+                record.setIntegerValue(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_EXECUTION_NUMBER_COLUMN_NAME, currentExecutionNumber + 1);
+                record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_LAST_EXECUTION_DATE_COLUMN_NAME, getCurrentDateTime());
+                record.setIntegerValue(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_PENDING_INCOMING_TRANSACTIONS_COLUMN_NAME, pendingIncoming);
+                record.setIntegerValue(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_PENDING_OUTGOING_TRANSACTIONS_COLUMN_NAME, pendingOutgoing);
+
+                databaseTable.insertRecord(record);
+
+            } else {
+                /**
+                 * I will update existing value with zero pending transactions
+                 */
+                DatabaseTableFilter filterIncoming = databaseTable.getEmptyTableFilter();
+                filterIncoming.setColumn(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_PENDING_INCOMING_TRANSACTIONS_COLUMN_NAME);
+                filterIncoming.setValue("0");
+                filterIncoming.setType(DatabaseFilterType.EQUAL);
+
+                DatabaseTableFilter filterOutgoing = databaseTable.getEmptyTableFilter();
+                filterOutgoing.setColumn(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_PENDING_OUTGOING_TRANSACTIONS_COLUMN_NAME);
+                filterOutgoing.setValue("0");
+                filterOutgoing.setType(DatabaseFilterType.EQUAL);
+
+                /**
+                 * I create the two filters and add them to form a filter group.
+                 */
+                List<DatabaseTableFilter> filters = new ArrayList<>();
+                filters.add(filterIncoming);
+                filters.add(filterOutgoing);
+
+                List<DatabaseTableFilterGroup> filterGroups = new ArrayList<>();
+                databaseTable.setFilterGroup(databaseTable.getNewFilterGroup(filters, filterGroups, DatabaseFilterOperator.AND));
+                databaseTable.loadToMemory();
+
+                record = databaseTable.getRecords().get(0);
+                record.setIntegerValue(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_EXECUTION_NUMBER_COLUMN_NAME, currentExecutionNumber + 1);
+                record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_LAST_EXECUTION_DATE_COLUMN_NAME, getCurrentDateTime());
+
+                databaseTable.updateRecord(record);
+            }
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "cant load EventAgent Stats table.", "database issue");
+        } catch (CantInsertRecordException | CantUpdateRecordException e) {
+            StringBuilder outputMessage = new StringBuilder("There was an error inserting or modifying a record. The record is:");
+            outputMessage.append(System.lineSeparator());
+            outputMessage.append(XMLParser.parseObject(record));
+
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, outputMessage.toString(), "database issue");
+        }
     }
 }
