@@ -32,9 +32,8 @@ import java.util.UUID;
 /**
  * Created by Franklin on 07/09/15.
  */
-public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAssetIssuerWallet, Service, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithAssetIssuerWalletSubAppModule {
+public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAssetIssuerWallet, AssetIssuerWalletSupAppModuleManager, Service, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors {
     AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
-    AssetIssuerWalletSupAppModuleManager assetIssuerWalletSupAppModuleManager;
     AssetIssuerWalletManager assetIssuerWalletManager;
 
     UUID pluginId;
@@ -147,7 +146,12 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAsset
     }
 
     @Override
-    public void setWalletAssetIssuerManager(AssetIssuerWalletSupAppModuleManager assetIssuerWalletSupAppModuleManager) {
-        this.assetIssuerWalletSupAppModuleManager = assetIssuerWalletSupAppModuleManager;
+    public List<AssetIssuerWalletList> getAssetIssuerWalletBalancesAvailable(String publicKey) throws CantLoadWalletException {
+        return this.assetIssuerWalletModuleManager.getAssetIssuerWalletBalancesAvailable(publicKey);
+    }
+
+    @Override
+    public List<AssetIssuerWalletList> getAssetIssuerWalletBalancesBook(String publicKey) throws CantLoadWalletException {
+        return this.assetIssuerWalletModuleManager.getAssetIssuerWalletBalancesBook(publicKey);
     }
 }
