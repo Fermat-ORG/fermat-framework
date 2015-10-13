@@ -41,7 +41,7 @@ public class CryptoTransmissionAgent {
     /*
     * Represent the sleep time for the read or send (2000 milliseconds)
     */
-    private static final long SLEEP_TIME = 6000;
+    private static final long SLEEP_TIME = 15000;
     private static final long RECEIVE_SLEEP_TIME = 15000;
 
 
@@ -505,26 +505,11 @@ public class CryptoTransmissionAgent {
         remoteNetworkServicesRegisteredList = list;
     }
 
-
-//    private List<CryptoTransmissionMetadata> checkIpkConnected(List<CryptoTransmissionMetadata> lstCryptoTransmissionMetadata){
-//        List<CryptoTransmissionMetadata> lstCryptoTransmissionMetadataNotConnected = new ArrayList<CryptoTransmissionMetadata>();
-//
-//        for (CryptoTransmissionMetadata cryptoTransmissionMetadata: lstCryptoTransmissionMetadata){
-//            cryptoTransmissionNetworkServiceConnectionManager.
-//        }
-//
-//    }
-
     // Este agente se usa por las dudas que no se haya escuchado el evento del receive que guarda las cosas en la db de la metadata recibida
     private void receiveCycle(){
-
         try {
-
-
             // function to process metadata received
             processReceive();
-
-
             //Sleep for a time
             toSend.sleep(CryptoTransmissionAgent.RECEIVE_SLEEP_TIME);
 
@@ -534,23 +519,17 @@ public class CryptoTransmissionAgent {
 
     }
 
-
     private void processReceive() {
 
         try {
         //communicationNetworkServiceConnectionManager.
 
         Map<String, Object> filters = new HashMap<>();
-
-            filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME, "false");
-
-        //filters.put(ComunicationLayerNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, remoteNetworkServicePublicKey);
+        filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME, "false");
 
          /*
          * Read all pending CryptoTransmissionMetadata from database
          */
-
-
             List<CryptoTransmissionMetadata> lstCryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.findAll(filters);
 
 
@@ -559,11 +538,6 @@ public class CryptoTransmissionAgent {
                 CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(cryptoTransmissionMetadata.getSenderPublicKey());
 
                 if(communicationNetworkServiceLocal!=null){
-                    //FermatMessage fermatMessage =  communicationNetworkServiceLocal.getLastMessageReceived();
-                    //String messageContent = fermatMessage.getContent();
-                    //Gson gson = new Gson();
-                    //CryptoTransmissionMetadata cryptoTransmissionMetadata = gson.fromJson(messageContent, CryptoTransmissionMetadata.class);
-
 
                     System.out.print("-----------------------\n" +
                             "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
@@ -603,6 +577,7 @@ public class CryptoTransmissionAgent {
                                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionStates());
                                     // deberia ver si tengo que lanzar un evento acá
                                     System.out.print("CryptoTransmission CREDITED_IN_DESTINATION_WALLET event");
+                                    this.poolConnectionsWaitingForResponse.remove(cryptoTransmissionMetadata.getDestinationPublicKey());
                                     break;
                                 // si el mensaje viene con un estado de SENT es porque es la primera vez que llega, por lo que tengo que guardarlo en la bd y responder
                                 case SENT:
@@ -622,10 +597,6 @@ public class CryptoTransmissionAgent {
                                             CryptoTransmissionMetadataType.METADATA_SEND);
 
                                     Gson gson = new Gson();
-//                                    JsonObject innerObject = new JsonObject();
-//                                    innerObject.addProperty("type_response",CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE.getCode() );
-//                                    innerObject.addProperty("transaction_id", cryptoTransmissionMetadata.getTransactionId().toString());
-//                                    innerObject.addProperty("type_messages", CryptoTransmissionMetadataType.METADATA_SEND.toString());
 
                                     String message = gson.toJson(cryptoTransmissionResponseMessage);
 
@@ -695,7 +666,7 @@ public class CryptoTransmissionAgent {
                     switch (cryptoTransmissionResponseMessage.getCryptoTransmissionStates()){
 
                         case SEEN_BY_DESTINATION_NETWORK_SERVICE:
-                            cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionResponseMessage.getTransactionId(),CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE);
+                            cryptoTransmissionMetadataDAO.changeState(cryptoTransmissionResponseMessage.getTransactionId(), CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE);
                             System.out.print("-----------------------\n" +
                                     "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
                                     "-----------------------\n STATE: " + CryptoTransmissionStates.SEEN_BY_DESTINATION_NETWORK_SERVICE);
@@ -719,6 +690,7 @@ public class CryptoTransmissionAgent {
                                     "-----------------------\n STATE: " + CryptoTransmissionStates.CREDITED_IN_DESTINATION_WALLET);
                             // deberia ver si tengo que lanzar un evento acá
                             System.out.print("CryptoTransmission CREDITED_IN_DESTINATION_WALLET event");
+
                             break;
                     }
 
@@ -728,8 +700,6 @@ public class CryptoTransmissionAgent {
                 }
 
             }
-
-
         } catch (CantSaveCryptoTransmissionMetadatatException e) {
             e.printStackTrace();
         }  catch (Exception e){
