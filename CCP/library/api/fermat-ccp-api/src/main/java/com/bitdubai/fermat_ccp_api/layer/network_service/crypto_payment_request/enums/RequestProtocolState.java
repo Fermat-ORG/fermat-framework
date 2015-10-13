@@ -11,9 +11,12 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum RequestProtocolState implements FermatEnum {
 
-    PENDING_ACTION   ("PEA"),
-    PROCESSING       ("PCS"),
-    WAITING_RESPONSE ("WRE");
+    DONE             ("DON"), // final state of request.
+    PENDING_ACTION   ("PEA"), // pending local action, is given after raise a crypto payment request event.
+    PROCESSING       ("PCS"), // when an action from the network service is needed (maybe send, maybe raise an event).
+    WAITING_RESPONSE ("WRE")  // waiting response from the counterpart.
+
+    ;
 
     private String code;
 
@@ -25,6 +28,7 @@ public enum RequestProtocolState implements FermatEnum {
 
         switch (code){
 
+            case "DON": return DONE            ;
             case "PEA": return PENDING_ACTION  ;
             case "PCS": return PROCESSING      ;
             case "WRE": return WAITING_RESPONSE;
