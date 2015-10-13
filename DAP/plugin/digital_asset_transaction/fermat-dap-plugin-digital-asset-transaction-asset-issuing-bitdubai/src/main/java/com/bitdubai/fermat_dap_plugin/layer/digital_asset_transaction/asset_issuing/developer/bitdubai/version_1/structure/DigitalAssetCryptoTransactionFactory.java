@@ -83,7 +83,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     String digitalAssetFileName;
     String digitalAssetFileStoragePath;
     String digitalAssetLocalFilePath;
-    DigitalAssetMetadataVault digitalAssetMetadataVault;
+    DigitalAssetIssuingVault digitalAssetIssuingVault;
     DigitalAsset digitalAsset;
     ErrorManager errorManager;
     private final int MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT=1;
@@ -127,11 +127,11 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         this.blockchainNetworkType=blockchainNetworkType;
     }
 
-    public void setDigitalAssetMetadataVault(DigitalAssetMetadataVault digitalAssetMetadataVault)throws CantSetObjectException{
-        if(digitalAssetMetadataVault==null){
-            throw new CantSetObjectException("digitalAssetMetadataVault is null");
+    public void setDigitalAssetIssuingVault(DigitalAssetIssuingVault digitalAssetIssuingVault)throws CantSetObjectException{
+        if(digitalAssetIssuingVault ==null){
+            throw new CantSetObjectException("digitalAssetIssuingVault is null");
         }
-        this.digitalAssetMetadataVault=digitalAssetMetadataVault;
+        this.digitalAssetIssuingVault = digitalAssetIssuingVault;
     }
 
     public void setAssetIssuingTransactionDao(AssetIssuingTransactionDao assetIssuingTransactionDao) throws CantSetObjectException {
@@ -298,7 +298,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         try {
             setBlockchainNetworkType(blockchainNetworkType);
             setWalletPublicKey(walletPublicKey);
-            this.digitalAssetMetadataVault.setWalletPublicKey(walletPublicKey);
+            this.digitalAssetIssuingVault.setWalletPublicKey(walletPublicKey);
             if(assetsAmount<MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT){
                 throw new ObjectNotSetException("The assetsAmount "+assetsAmount+" is lower that "+MINIMAL_DIGITAL_ASSET_TO_GENERATE_AMOUNT);
             }
@@ -472,7 +472,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new CantDeliverDigitalAssetToAssetWalletException("Cannot deliver the digital asset - is not complete:"+digitalAssetMetadata);
         }
         this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.ISSUING);
-        this.digitalAssetMetadataVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata);
+        this.digitalAssetIssuingVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata);
     }
 
     private void registerGenesisAddressInCryptoAddressBook(CryptoAddress genesisAddress) throws CantRegisterCryptoAddressBookRecordException{
@@ -593,7 +593,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         } catch (CantSendGenesisAmountException exception) {
             throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot send the Digital Asset genesis amount");
         } catch (CantCreateDigitalAssetFileException exception) {
-            throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Issuing a new Digital Asset", "Cannot kept the DigitalAssetMetadata in DigitalAssetMetadataVault");
+            throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Issuing a new Digital Asset", "Cannot kept the DigitalAssetMetadata in DigitalAssetIssuingVault");
         } catch (CantCheckAssetIssuingProgressException exception) {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Cannot deliver the digital asset:" + digitalAssetMetadata,"Unexpected result in database");
         }
