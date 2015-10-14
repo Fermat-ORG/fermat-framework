@@ -602,8 +602,49 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
         }
     }
 
-    public boolean checkAssetDraft(){
-        return true;
+    public boolean checkAssetDraft() throws CantLoadTableToMemoryException {
+        boolean isCheckAssetDraft = false;
+        // I define the filter to search for the state
+        DatabaseTableFilter filter = new DatabaseTableFilter() {
+            @Override
+            public void setColumn(String column) {
+
+            }
+
+            @Override
+            public void setType(DatabaseFilterType type) {
+
+            }
+
+            @Override
+            public void setValue(String value) {
+
+            }
+
+            @Override
+            public String getColumn() {
+                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
+            }
+
+            @Override
+            public String getValue() {
+                return State.DRAFT.toString();
+            }
+
+            @Override
+            public DatabaseFilterType getType() {
+                return DatabaseFilterType.EQUAL;
+            }
+        };
+
+        try {
+            if(getAssetFactoryData(filter).size() > 0) isCheckAssetDraft = true;
+        }catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "error trying to get assets factory from the database with filter: " , "Method: checkAssetDraft() ");
+        }
+        return isCheckAssetDraft;
     }
 
     public void markAssetFactoryData(AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException {

@@ -3,6 +3,9 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.TransactionTypes;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.UUID;
@@ -23,7 +26,7 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
      * class variables
      */
     private boolean isSupossedToBeRunning;
-    private final int AGENT_DELAY = 10000; // 5 seconds of delay
+    private final int AGENT_DELAY = 30000; // 30 seconds of delay
 
     /**
      * platform variables
@@ -67,6 +70,11 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
      * Class that executes the agent
      */
     private class NetworkAgent implements Runnable{
+        /**
+         * DAO object to access the db
+         */
+        BitcoinCryptoNetworkDatabaseDao dao;
+
         @Override
         public void run() {
             /**
@@ -121,7 +129,11 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
         }
 
         private void updateEventAgentStats(int pendingIncoming, int pendingOutgoing) {
-            //todo update stats in database
+            try {
+                getDao().updateEventAgentStats(pendingIncoming, pendingOutgoing);
+            } catch (CantExecuteDatabaseOperationException e) {
+                e.printStackTrace();
+            }
         }
 
         /**
@@ -129,8 +141,11 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
          * @return
          */
         private int getPendingNotifiedIncomingTransactions(){
-            //todo get this from the database
-            return 0;
+            try {
+                return getDao().getPendingNotifiedTransactions(TransactionTypes.INCOMING);
+            } catch (CantExecuteDatabaseOperationException e) {
+                return 0;
+            }
         }
 
         /**
@@ -138,8 +153,22 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
          * @return
          */
         private int getPendingNotifiedOutgoingTransactions(){
-            //todo get this from the database
-            return 0;
+            try {
+                return getDao().getPendingNotifiedTransactions(TransactionTypes.OUTGOING);
+            } catch (CantExecuteDatabaseOperationException e) {
+                return 0;
+            }
+        }
+
+        /**
+         * gets an instance of the dao object to access the db
+         * @return
+         */
+        private BitcoinCryptoNetworkDatabaseDao getDao(){
+            if (dao == null)
+                dao = new BitcoinCryptoNetworkDatabaseDao(pluginId, pluginDatabaseSystem);
+
+            return dao;
         }
     }
 }
