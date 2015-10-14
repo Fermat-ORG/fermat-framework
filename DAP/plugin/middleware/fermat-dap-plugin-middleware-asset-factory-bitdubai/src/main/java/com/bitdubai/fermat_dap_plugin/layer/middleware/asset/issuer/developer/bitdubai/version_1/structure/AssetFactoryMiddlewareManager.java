@@ -392,6 +392,11 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
         }
     }
 
+    public boolean checkAssetDraft() throws CantLoadTableToMemoryException{
+        //TODO: Descomentar el metodo getAssetFactoryMiddlewareDao, cuando sepamos que funciona el agente
+        return false;//getAssetFactoryMiddlewareDao().checkAssetDraft();
+    }
+
     public List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException
     {
         // I define the filter to null for all

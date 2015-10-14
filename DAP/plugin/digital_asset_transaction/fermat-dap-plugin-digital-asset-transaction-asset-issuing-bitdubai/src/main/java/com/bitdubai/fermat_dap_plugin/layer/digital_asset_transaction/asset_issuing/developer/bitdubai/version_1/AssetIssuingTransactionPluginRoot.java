@@ -65,7 +65,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantD
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.AssetIssuingTransactionManager;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetMetadataVault;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetIssuingVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseFactory;
@@ -172,7 +172,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     public void setEventManager(EventManager eventManager) {
         this.eventManager=eventManager;
     }
-    DigitalAssetMetadataVault digitalAssetMetadataVault;
+    DigitalAssetIssuingVault digitalAssetIssuingVault;
     @Override
     public void start() throws CantStartPluginException {
         //delete this
@@ -191,8 +191,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
                 throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Asset Issuing plugin - "+this.pluginId, "Cannot open or create the plugin database");
             }
         }try{
-            /*DigitalAssetMetadataVault*/ digitalAssetMetadataVault=new DigitalAssetMetadataVault(this.pluginId, this.pluginFileSystem, this.errorManager);
-            digitalAssetMetadataVault.setAssetIssuerWalletManager(this.assetIssuerWalletManager);
+            /*DigitalAssetIssuingVault*/ digitalAssetIssuingVault =new DigitalAssetIssuingVault(this.pluginId, this.pluginFileSystem, this.errorManager);
+            digitalAssetIssuingVault.setAssetIssuerWalletManager(this.assetIssuerWalletManager);
             this.assetIssuingTransactionDao=new AssetIssuingTransactionDao(this.pluginDatabaseSystem,this.pluginId);
             this.assetIssuingEventRecorderService =new AssetIssuingRecorderService(assetIssuingTransactionDao);
             this.assetIssuingTransactionManager=new AssetIssuingTransactionManager(this.pluginId,
@@ -204,7 +204,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
                     this.assetVaultManager,
                     this.cryptoAddressBookManager,
                     this.outgoingIntraActorManager);
-            this.assetIssuingTransactionManager.setDigitalAssetMetadataVault(digitalAssetMetadataVault);
+            this.assetIssuingTransactionManager.setDigitalAssetMetadataVault(digitalAssetIssuingVault);
             this.assetIssuingTransactionManager.setAssetIssuingTransactionDao(assetIssuingTransactionDao);
             //Start the plugin event Recorder
             //I will comment the EventRecorderService start, because I don't need this right now, it starting without problems.
@@ -256,7 +256,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
                     this.pluginId,
                     userPublicKey,
                     this.assetVaultManager);
-            this.assetIssuingTransactionMonitorAgent.setDigitalAssetMetadataVault(digitalAssetMetadataVault);
+            this.assetIssuingTransactionMonitorAgent.setDigitalAssetIssuingVault(digitalAssetIssuingVault);
             this.assetIssuingTransactionMonitorAgent.setLogManager(this.logManager);
             this.assetIssuingTransactionMonitorAgent.start();
         }else{
@@ -452,8 +452,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         LOG.info("MAP_DigitalAsset2:" + digitalAsset);
         DigitalAssetMetadata dam=new DigitalAssetMetadata(digitalAsset);
         dam.setGenesisTransaction("testGenesisTX");
-        this.digitalAssetMetadataVault.persistDigitalAssetMetadataInLocalStorage(dam);
-        LOG.info("DAM from vault:\n"+this.digitalAssetMetadataVault.getDigitalAssetMetadataFromLocalStorage("testGenesisTX").toString());
+        this.digitalAssetIssuingVault.persistDigitalAssetMetadataInLocalStorage(dam);
+        LOG.info("DAM from vault:\n"+this.digitalAssetIssuingVault.getDigitalAssetMetadataFromLocalStorage("testGenesisTX").toString());
     }
 
     private void testIssueSingleAsset() throws CantIssueDigitalAssetsException{

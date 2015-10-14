@@ -32,7 +32,7 @@ import java.util.UUID;
 /**
  * Created by Franklin on 07/09/15.
  */
-public class AssetWalletIssuerModulePluginRoot implements AssetIssuerWalletSupAppModuleManager,Plugin, DealsWithAssetIssuerWallet, Service, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors {
+public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAssetIssuerWallet, AssetIssuerWalletSupAppModuleManager, Service, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors {
     AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
     AssetIssuerWalletManager assetIssuerWalletManager;
 
@@ -70,6 +70,7 @@ public class AssetWalletIssuerModulePluginRoot implements AssetIssuerWalletSupAp
     public void start() throws CantStartPluginException {
         try {
             assetIssuerWalletModuleManager = new AssetIssuerWalletModuleManager(assetIssuerWalletManager);
+
             System.out.println("******* Asset Issuer Wallet Module Init ******");
             this.serviceStatus = ServiceStatus.STARTED;
         }catch (Exception exception) {
@@ -146,11 +147,11 @@ public class AssetWalletIssuerModulePluginRoot implements AssetIssuerWalletSupAp
 
     @Override
     public List<AssetIssuerWalletList> getAssetIssuerWalletBalancesAvailable(String publicKey) throws CantLoadWalletException {
-        return null;
+        return this.assetIssuerWalletModuleManager.getAssetIssuerWalletBalancesAvailable(publicKey);
     }
 
     @Override
     public List<AssetIssuerWalletList> getAssetIssuerWalletBalancesBook(String publicKey) throws CantLoadWalletException {
-        return null;
+        return this.assetIssuerWalletModuleManager.getAssetIssuerWalletBalancesBook(publicKey);
     }
 }

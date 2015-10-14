@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 
 
 
@@ -72,7 +72,7 @@ public class ConnectionRequestTest extends CloudServiceIntegrationTest {
 		FMPPacket request = MockFMPPacketsFactory.mockRequestConnectionPacket(testManager.getIdentityPublicKey());
 		testClient.sendMessage(request);		
 		FMPPacket response = getResponse();		
-		boolean signatureVerification = AsymmectricCryptography.verifyMessageSignature(response.getSignature(), response.getMessage(), response.getSender());
+		boolean signatureVerification = AsymmetricCryptography.verifyMessageSignature(response.getSignature(), response.getMessage(), response.getSender());
 		assertThat(signatureVerification).isTrue();	
 	}
 

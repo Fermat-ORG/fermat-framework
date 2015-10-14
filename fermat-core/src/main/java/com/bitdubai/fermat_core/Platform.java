@@ -22,11 +22,17 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.int
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.interfaces.DealsWithCryptoTransmissionNetworkService;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.DealsWithBitcoinNetwork;
+import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.DealsWithCryptoBrokerIdentities;
+import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces.DealsWithCryptoCustomerIdentities;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUsers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.DealsWithCryptoPaymentRequestNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.DealsWithCryptoPayment;
+import com.bitdubai.fermat_core.layer.cbp.identity.CBPIdentityLayer;
+import com.bitdubai.fermat_core.layer.cbp.sub_app_module.CBPSubAppModuleLayer;
 import com.bitdubai.fermat_core.layer.ccp.actor.CCPActorLayer;
 import com.bitdubai.fermat_core.layer.ccp.request.CCPRequestLayer;
 import com.bitdubai.fermat_core.layer.dap_actor_network_service.DAPActorNetworServiceLayer;
@@ -495,6 +501,11 @@ public class Platform implements Serializable {
             corePlatformContext.registerPlatformLayer(new WPDSubAppModuleLayer(), PlatformLayers.BITDUBAI_WPD_SUB_APP_MODULE_LAYER);
             // End  WPD Layers
 
+            //Init CBP Layers
+            corePlatformContext.registerPlatformLayer(new CBPIdentityLayer(), PlatformLayers.BITDUBAI_CBP_IDENTITY_LAYER);
+            corePlatformContext.registerPlatformLayer(new CBPSubAppModuleLayer(), PlatformLayers.BITDUBAI_CBP_SUB_APP_MODULE_LAYER);
+            //End CBP Layers
+
             /*
              * Start all other platform layers
              */
@@ -725,10 +736,11 @@ public class Platform implements Serializable {
                 /*
                  * Plugin Template Network Service
                  * -----------------------------
-                 */
+                 *
                 Plugin templateNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getTemplate();
                 injectLayerReferences(templateNetworkService);
                 injectPluginReferencesAndStart(templateNetworkService, Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE);
+                */
             }
 
 //            /*
@@ -1243,8 +1255,7 @@ public class Platform implements Serializable {
             injectPluginReferencesAndStart(moneyRequest, Plugins.BITDUBAI_REQUEST_MONEY_REQUEST);
 
             if(true) {
-
-           /*
+                /*
             * Plugin Asset User Actor Network Service
             * ----------------------------------------
             */
@@ -1273,8 +1284,8 @@ public class Platform implements Serializable {
             * Plugin Asset Wallet Asset Issuer
             * -----------------------------
             */
-            Plugin assetWalletUser = ((DAPWalletLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_WALLET_LAYER)).getPluginAssetWalletUser();
-            injectPluginReferencesAndStart(assetWalletUser, Plugins.BITDUBAI_DAP_ASSET_USER_WALLET);
+                Plugin assetWalletUser = ((DAPWalletLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_WALLET_LAYER)).getPluginAssetWalletUser();
+                injectPluginReferencesAndStart(assetWalletUser, Plugins.BITDUBAI_DAP_ASSET_USER_WALLET);
 
                 /*
                  * Plugin Asset Issuing Transaction
@@ -1360,6 +1371,30 @@ public class Platform implements Serializable {
                 Plugin assetIssuerWalletModule = ((DAPModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_MODULE_LAYER)).getPluginModuleAssetIssuerWallet();
                 injectPluginReferencesAndStart(assetIssuerWalletModule, Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE);
             }
+
+            /*
+             * Plugin Crypto Broker Identity
+             */
+            Plugin cryptoBrokerIdentity = ((CBPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CBP_IDENTITY_LAYER)).getCryptoBrokerIdentity();
+            injectPluginReferencesAndStart(cryptoBrokerIdentity, Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY);
+
+            /*
+             * Plugin Crypto Customer Identity
+             */
+            Plugin cryptoCustomerIdentity = ((CBPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CBP_IDENTITY_LAYER)).getCryptoCustomerIdentity();
+            injectPluginReferencesAndStart(cryptoCustomerIdentity, Plugins.BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY);
+
+            /*
+             * Plugin Crypto Broker Identity Sub App Module
+             */
+            Plugin cryptoBrokerIdentitySubAppModule = ((CBPSubAppModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CBP_SUB_APP_MODULE_LAYER)).getCryptoBrokerIdentity();
+            injectPluginReferencesAndStart(cryptoBrokerIdentitySubAppModule, Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE);
+
+            /*
+             * Plugin Crypto Customer Identity Sub App Module
+             */
+            Plugin cryptoCustomerIdentitySubAppModule = ((CBPSubAppModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CBP_SUB_APP_MODULE_LAYER)).getCryptoCustomerIdentity();
+            injectPluginReferencesAndStart(cryptoCustomerIdentitySubAppModule, Plugins.BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE);
 
         } catch (CantInitializePluginsManagerException cantInitializePluginsManagerException) {
 
@@ -1639,6 +1674,14 @@ public class Platform implements Serializable {
 
             if (plugin instanceof DealsWithCryptoTransmissionNetworkService) {
                 ((DealsWithCryptoTransmissionNetworkService) plugin).setCryptoTransmissionNetworkService((CryptoTransmissionNetworkServiceManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_CRYPTO_CRYPTO_TRANSMISSION_NETWORK_SERVICE));
+            }
+
+            if(plugin instanceof DealsWithCryptoBrokerIdentities){
+                ((DealsWithCryptoBrokerIdentities) plugin).setCryptoBrokerIdentityManager((CryptoBrokerIdentityManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY));
+            }
+
+            if(plugin instanceof DealsWithCryptoCustomerIdentities){
+                ((DealsWithCryptoCustomerIdentities) plugin).setCryptoCustomerIdentityManager((CryptoCustomerIdentityManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY));
             }
 
             /*

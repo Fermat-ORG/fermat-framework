@@ -16,7 +16,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_reception.interfaces.AssetReceptionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.DealsWithAssetIssuerWallet;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.DigitalAssetReceptionVault;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -28,9 +32,10 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/09/15.
  */
-public class AssetReceptionPluginRoot implements AssetReceptionManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
+public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWithAssetIssuerWallet, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+    AssetIssuerWalletManager assetIssuerWalletManager;
     Database assetDistributionDatabase;
     ErrorManager errorManager;
     PluginDatabaseSystem pluginDatabaseSystem;
@@ -98,6 +103,17 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, Database
 
     @Override
     public void start() throws CantStartPluginException {
+        try{
+            DigitalAssetReceptionVault digitalAssetReceptionVault=new DigitalAssetReceptionVault(
+                    pluginId,
+                    pluginFileSystem,
+                    errorManager);
+            digitalAssetReceptionVault.setAssetIssuerWalletManager(this.assetIssuerWalletManager);
+        } catch (CantSetObjectException exception) {
+            this.serviceStatus=ServiceStatus.STOPPED;
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Reception plugin", "Cannot set an object, probably is null");
+        }
+
         this.serviceStatus=ServiceStatus.STARTED;
     }
 
@@ -119,5 +135,10 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, Database
     @Override
     public ServiceStatus getStatus() {
         return this.serviceStatus;
+    }
+
+    @Override
+    public void setAssetIssuerManager(AssetIssuerWalletManager assetIssuerWalletManager) {
+        this.assetIssuerWalletManager=assetIssuerWalletManager;
     }
 }

@@ -20,9 +20,9 @@ databaseTables << [
                 ["block_depth", "INTEGER", "10", "false"],
                 ["address_to", "STRING", "100", "false"],
                 ["address_from", "STRING", "100", "false"],
-                ["value", "INTEGER", "10", "false"],
-                ["fee", "INTEGER", "10", "false"],
-                ["transmission_status", "STRING", "30", "false"],
+                ["value", "MONEY", "10", "false"],
+                ["fee", "MONEY", "10", "false"],
+                ["protocol_status", "STRING", "30", "false"],
                 ["last_update", "STRING", "50", "false"],
         ],
         firstKey:"trx_id"
@@ -37,9 +37,9 @@ databaseTables << [
                 ["block_depth", "INTEGER", "10", "false"],
                 ["address_to", "STRING", "100", "false"],
                 ["address_from", "STRING", "100", "false"],
-                ["value", "INTEGER", "10", "false"],
-                ["fee", "INTEGER", "10", "false"],
-                ["transmission_status", "STRING", "30", "false"],
+                ["value", "MONEY", "10", "false"],
+                ["fee", "MONEY", "10", "false"],
+                ["protocol_status", "STRING", "30", "false"],
                 ["last_update", "STRING", "50", "false"]
         ],
         firstKey:"trx_id"
@@ -431,8 +431,8 @@ templateDeveloperFactory += """
         }
 
         List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
         for (DatabaseTableRecord row : records) {
+            List<String> developerRow = new ArrayList<String>();
             /**
              * for each row in the table list
              */

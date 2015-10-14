@@ -6,14 +6,13 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.MalformedFMPPacketException;
-import com.google.gson.Gson;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FermatPacketCommunicationFactory</code> is a
@@ -42,8 +41,8 @@ public class FMPPacketFactory {
      */
     public static FMPPacket constructCloudFMPPacketEncryptedAndSinged(final String sender, final String destination, final String message, final FMPPacketType fmpPacketType, final NetworkServices networkServicesType, final String privateKey) throws FMPException{
 
-        String messageHash = AsymmectricCryptography.encryptMessagePublicKey(message, destination);
-        String signature = AsymmectricCryptography.createMessageSignature(messageHash, privateKey);
+        String messageHash = AsymmetricCryptography.encryptMessagePublicKey(message, destination);
+        String signature = AsymmetricCryptography.createMessageSignature(messageHash, privateKey);
 
         return new CloudFMPPacket(destination, sender, fmpPacketType, messageHash, signature, networkServicesType);
     }

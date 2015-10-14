@@ -237,6 +237,25 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
         }
 
     }
+
+    @Override
+   public boolean  hasIntraUserIdentity() throws CantListIntraWalletUsersException{
+        try {
+
+            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
+            if(intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser).size() > 0)
+                return true;
+            else
+                return false;
+        } catch (CantGetLoggedInDeviceUserException e) {
+            throw new CantListIntraWalletUsersException("CAN'T GET IF INTRA WALLET USER IDENTITIES  EXISTS", e, "Error get logged user device", "");
+        } catch (CantListIntraWalletUserIdentitiesException e) {
+            throw new CantListIntraWalletUsersException("CAN'T GET IF WALLET USER IDENTITIES EXISTS", e, "", "");
+
+        } catch (Exception e) {
+            throw new CantListIntraWalletUsersException("CAN'T GET IF INTRA WALLET USER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
+        }
+    }
     /**
      * Service Interface implementation.
      */

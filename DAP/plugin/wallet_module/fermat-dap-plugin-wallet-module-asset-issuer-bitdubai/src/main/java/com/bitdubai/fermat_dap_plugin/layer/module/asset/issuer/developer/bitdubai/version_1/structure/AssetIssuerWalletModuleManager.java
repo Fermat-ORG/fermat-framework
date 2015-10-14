@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by franklin on 06/10/15.
  */
-public class AssetIssuerWalletModuleManager implements DealsWithAssetIssuerWallet, AssetIssuerWalletSupAppModuleManager {
+public class AssetIssuerWalletModuleManager implements DealsWithAssetIssuerWallet {
     //TODO: Excepciones y documentar
     AssetIssuerWalletManager assetIssuerWalletManager;
     @Override
@@ -30,10 +30,12 @@ public class AssetIssuerWalletModuleManager implements DealsWithAssetIssuerWalle
      */
     public AssetIssuerWalletModuleManager(AssetIssuerWalletManager assetIssuerWalletManager) {
         this.assetIssuerWalletManager = assetIssuerWalletManager;
+
     }
 
     public List<AssetIssuerWalletList>  getAssetIssuerWalletBalancesAvailable(String publicKey) throws CantLoadWalletException{
         try{
+
             return assetIssuerWalletManager.loadAssetIssuerWallet(publicKey).getBookBalance(BalanceType.AVAILABLE).getAssetIssuerWalletBalancesAvailable();
         }catch (Exception exception){
             throw new CantLoadWalletException("Error load Wallet Balances Available", exception, "Method: getAssetIssuerWalletBalancesAvailable", "Class: AssetIssuerWalletModuleManager");
