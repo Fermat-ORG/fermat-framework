@@ -1,6 +1,6 @@
 package unit.com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.CryptoBrokerIdentityFragmentsEnumType;
 
-import com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.CryptoBrokerIdentityFragmentsEnumType;
+import com.bitdubai.sub_app.intra_user_identity.fragmentFactory.CryptoBrokerIdentityFragmentsEnumType;
 
 import org.junit.Test;
 

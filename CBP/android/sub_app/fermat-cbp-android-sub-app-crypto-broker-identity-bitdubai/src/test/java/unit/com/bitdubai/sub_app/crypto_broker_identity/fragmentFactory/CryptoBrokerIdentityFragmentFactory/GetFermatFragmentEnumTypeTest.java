@@ -1,8 +1,8 @@
 package unit.com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.CryptoBrokerIdentityFragmentFactory;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
-import com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.CryptoBrokerIdentityFragmentFactory;
-import com.bitdubai.sub_app.crypto_broker_identity.fragmentFactory.CryptoBrokerIdentityFragmentsEnumType;
+import com.bitdubai.sub_app.intra_user_identity.fragmentFactory.CryptoBrokerIdentityFragmentFactory;
+import com.bitdubai.sub_app.intra_user_identity.fragmentFactory.CryptoBrokerIdentityFragmentsEnumType;
 
 import org.junit.Before;
 import org.junit.Test;

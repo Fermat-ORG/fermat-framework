@@ -10,7 +10,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.A
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
+import com.bitdubai.sub_app.intra_user_identity.session.CryptoBrokerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 import com.bitdubai.sub_app.intra_user.session.IntraUserSubAppSession;
