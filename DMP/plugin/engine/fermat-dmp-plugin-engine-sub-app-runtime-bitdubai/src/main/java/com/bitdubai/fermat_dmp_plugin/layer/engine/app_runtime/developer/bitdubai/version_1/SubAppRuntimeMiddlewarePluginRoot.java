@@ -16,7 +16,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activit
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.RuntimeFernatComboBox;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SearchView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
@@ -962,6 +961,30 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             dapFactory.addActivity(runtimeActivity);
 
             listSubApp.put(SubApps.DAP_ASSETS_FACTORY, dapFactory);
+
+            // DAP ASSET USER COMMUNITY
+            // DAP
+            RuntimeSubApp dapUserCommunity = new RuntimeSubApp();
+            dapUserCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_USER);
+            dapUserCommunity.setStartActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
+
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
+            runtimeActivity.setColor("#FF0B46F0");
+
+            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#FF0B46F0");
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Asset User Community");
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+            runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey());
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey());
+            runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey(), runtimeFragment);
+
+            dapUserCommunity.addActivity(runtimeActivity);
+            listSubApp.put(SubApps.DAP_ASSETS_COMMUNITY_USER, dapUserCommunity);
+
             /**
              * End of intra user sub app
              */

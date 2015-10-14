@@ -84,6 +84,7 @@ public enum Activities {
     DAP_DESKTOP("DAPD"),
     CBP_DESKTOP("CBPD"),
     DAP_MAIN("DAPM"),
+    DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN("DAUCAM"),
 
     // Crypto Broker Wallet
     CBP_CRYPTO_BROKER_WALLET_HOME("CBPCBWH"),
@@ -104,14 +105,6 @@ public enum Activities {
 
     Activities(String code) {
         this.code = code;
-    }
-
-    public String getCode() {
-        return this.code;
-    }
-
-    public String toString() {
-        return code;
     }
 
     public static Activities getValueFromString(String code) throws InvalidParameterException {
@@ -240,6 +233,8 @@ public enum Activities {
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS;
             case "CWRWBWBV1M":
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN;
+            case "DAUCAM":
+                return DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN;
             case "CBPSACBI":
                 return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY;
             case "CBPSACBICI":
@@ -254,5 +249,13 @@ public enum Activities {
         // throw an IllegalArgumentException or return null
         //throw new IllegalArgumentException("the given number doesn't match any Status.");
         // return null;
+    }
+
+    public String getCode() {
+        return this.code;
+    }
+
+    public String toString() {
+        return code;
     }
 }
