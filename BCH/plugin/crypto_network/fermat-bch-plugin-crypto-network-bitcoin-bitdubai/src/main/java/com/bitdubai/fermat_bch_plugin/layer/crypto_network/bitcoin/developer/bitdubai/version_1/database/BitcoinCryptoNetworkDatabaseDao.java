@@ -366,7 +366,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
             throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "cant load EventAgent Stats table.", "database issue");
         }
 
-        if (databaseTable.getRecords() != null)
+        if (databaseTable.getRecords().size() != 0)
             currentExecutionNumber = databaseTable.getRecords().get(0).getIntegerValue(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_EXECUTION_NUMBER_COLUMN_NAME);
         else
             currentExecutionNumber = 0;

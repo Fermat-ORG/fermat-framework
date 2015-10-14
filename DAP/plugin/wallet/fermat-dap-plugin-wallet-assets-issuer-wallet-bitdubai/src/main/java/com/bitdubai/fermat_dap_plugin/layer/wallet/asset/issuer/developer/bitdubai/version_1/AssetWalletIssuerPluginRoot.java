@@ -29,6 +29,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.DealsWithAssetDistribution;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantInitializeAssetIssuerWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
@@ -58,9 +61,10 @@ import java.util.UUID;
 /**
  * Created by Franklin on 07/09/15.
  */
-public class AssetWalletIssuerPluginRoot implements AssetIssuerWalletManager, Plugin, Service, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, DatabaseManagerForDevelopers {
+public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, AssetIssuerWalletManager, Plugin, Service, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, DatabaseManagerForDevelopers {
     private static final String WALLET_ISSUER_FILE_NAME = "walletsIds";
     private Map<String, UUID> walletIssuer = new HashMap<>();
+    AssetDistributionManager assetDistributionManager;
 
     private UUID pluginId;
 
@@ -95,7 +99,7 @@ public class AssetWalletIssuerPluginRoot implements AssetIssuerWalletManager, Pl
     public void start() throws CantStartPluginException {
         try{
             loadWalletIssuerMap();
-            //createWalletAssetIssuer("walletPublicKeyTest");
+            createWalletAssetIssuer("walletPublicKeyTest");
             //assetIssuerWallet = loadAssetIssuerWallet("walletPublicKeyTest");
             //testWallet();
             System.out.println("Star Plugin AssetWalletIssuer");
@@ -221,7 +225,7 @@ public class AssetWalletIssuerPluginRoot implements AssetIssuerWalletManager, Pl
     public AssetIssuerWallet loadAssetIssuerWallet(String walletPublicKey) throws CantLoadWalletException {
 
         try {
-            AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
+            AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, assetDistributionManager);
 
             UUID internalAssetIssuerWalletId = walletIssuer.get(walletPublicKey);
             assetIssuerWallet.initialize(internalAssetIssuerWalletId);
@@ -239,7 +243,7 @@ public class AssetWalletIssuerPluginRoot implements AssetIssuerWalletManager, Pl
     @Override
     public void createWalletAssetIssuer(String walletPublicKey) throws CantCreateWalletException {
         try {
-            AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
+            AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, assetDistributionManager);
 
             UUID internalAssetIssuerWalletId = assetIssuerWallet.create(walletPublicKey);
 
@@ -323,5 +327,10 @@ public class AssetWalletIssuerPluginRoot implements AssetIssuerWalletManager, Pl
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void setAssetDistributionManager(AssetDistributionManager assetIssuingManager) throws CantSetObjectException {
+        this.assetDistributionManager = assetIssuingManager;
     }
 }
