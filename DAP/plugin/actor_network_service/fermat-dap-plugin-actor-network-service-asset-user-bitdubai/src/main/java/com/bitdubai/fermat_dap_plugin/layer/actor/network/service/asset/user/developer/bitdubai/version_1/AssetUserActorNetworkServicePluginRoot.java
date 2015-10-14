@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
+
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -23,8 +22,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.events.CompleteClientAssetUserActorRegistrationNotificationEvent;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.events.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.events.CompleteClientAssetUserActorRegistrationNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.events.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -38,9 +37,10 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.enums.EventTypeAssetUserANS;
+import com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.enums.DapEvenType;
 
 
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantSendMessageException;
@@ -82,7 +82,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure.AssetUserActorRecord;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -91,6 +90,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
+
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ReturnAssetUserActorNetworkService;
+
 
 /**
  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.AssetUserActorNetworkServicePluginRoot</code> is
@@ -853,7 +855,17 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
             /* test register one actor */
 
-            ActorAssetUser actorAssetUserNewRegsitered = new AssetUserActorRecord("Pedrito","123456789",new byte[]{10,3},0,Genders.FEMALE,"14", null);
+            ReturnAssetUserActorNetworkService returnactor = null;
+
+            Location loca = null;
+
+
+            ActorAssetUser actorAssetUserNewRegsitered = null;
+            try {
+                actorAssetUserNewRegsitered = returnactor.creatActorAssetUser("123456789","Pedrito",new byte[]{10,3}, loca);
+            } catch (CantCreateAssetUserActorException e) {
+                e.printStackTrace();
+            }
 
 
             try {
@@ -891,13 +903,20 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
             System.out.println(" Actor  Asset User Registered "+platformComponentProfileRegistered.getIdentityPublicKey()+"\n Alias "+platformComponentProfileRegistered.getAlias());
 
+            ReturnAssetUserActorNetworkService returnactor = null;
 
-            ActorAssetUser actorAssetUserNewRegsitered = new AssetUserActorRecord(platformComponentProfileRegistered.getName(),platformComponentProfileRegistered.getIdentityPublicKey(),convertoByteArrayfromString(platformComponentProfileRegistered.getExtraData()),0,Genders.FEMALE,"14", null);
+            Location loca = null;
+
+            ActorAssetUser actorAssetUserNewRegsitered = null;
+            try {
+                actorAssetUserNewRegsitered = returnactor.creatActorAssetUser(platformComponentProfileRegistered.getIdentityPublicKey(),
+                        platformComponentProfileRegistered.getName(),convertoByteArrayfromString(platformComponentProfileRegistered.getExtraData()),loca);
+            } catch (CantCreateAssetUserActorException e) {
+                e.printStackTrace();
+            }
 
 
-
-
-            FermatEvent event =  eventManager.getNewEvent(EventTypeAssetUserANS.COMPLETE_CLIENT_ASSET_USER_REGISTRATION_NOTIFICATION);
+            FermatEvent event =  eventManager.getNewEvent(DapEvenType.COMPLETE_CLIENT_ASSET_USER_REGISTRATION_NOTIFICATION);
             event.setSource(EventSource.ACTOR_ASSET_USER);
 
             ((CompleteClientAssetUserActorRegistrationNotificationEvent)event).setActorAssetUser(actorAssetUserNewRegsitered);
@@ -949,7 +968,17 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
                 for(PlatformComponentProfile p : platformComponentProfileRegisteredList){
 
-                    ActorAssetUser actorAssetUserNew = new AssetUserActorRecord(p.getName(),p.getIdentityPublicKey(),convertoByteArrayfromString(p.getExtraData()),0,Genders.FEMALE,"10", null);
+
+                    ReturnAssetUserActorNetworkService returnactor = null;
+
+                    Location loca = null;
+
+                    ActorAssetUser actorAssetUserNew = null;
+                    try {
+                        actorAssetUserNew = returnactor.creatActorAssetUser(p.getIdentityPublicKey(),p.getName(),convertoByteArrayfromString(p.getExtraData()), loca);
+                    } catch (CantCreateAssetUserActorException e) {
+                        e.printStackTrace();
+                    }
 
                     actorAssetUserListRemote.add(actorAssetUserNew);
                 }
@@ -957,7 +986,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
 
 
-                FermatEvent event =  eventManager.getNewEvent(EventTypeAssetUserANS.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
+                FermatEvent event =  eventManager.getNewEvent(DapEvenType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
                 event.setSource(EventSource.ACTOR_ASSET_USER);
 
                 ((CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent)event).setActorAssetUserList(actorAssetUserListRemote);
@@ -1180,12 +1209,12 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
         try{
 
-            FermatEventListener event = eventManager.getNewListener(EventTypeAssetUserANS.COMPLETE_CLIENT_ASSET_USER_REGISTRATION_NOTIFICATION);
+            FermatEventListener event = eventManager.getNewListener(DapEvenType.COMPLETE_CLIENT_ASSET_USER_REGISTRATION_NOTIFICATION);
             event.setEventHandler(new CompleteClientAssetUserActorRegistrationNotificationEventHandler(this));
             eventManager.addListener(event);
             listenersAdded.add(event);
 
-            event = eventManager.getNewListener(EventTypeAssetUserANS.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
+            event = eventManager.getNewListener(DapEvenType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
             event.setEventHandler(new CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventHandler(this));
             eventManager.addListener(event);
             listenersAdded.add(event);

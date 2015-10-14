@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
 * BITDUBAI/CONFIDENTIAL
 */
-package com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.enums.listeners;
+package com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.listeners;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;

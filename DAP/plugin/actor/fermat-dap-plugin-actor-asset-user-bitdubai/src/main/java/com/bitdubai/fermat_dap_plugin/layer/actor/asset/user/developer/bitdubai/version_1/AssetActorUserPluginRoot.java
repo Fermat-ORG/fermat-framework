@@ -51,7 +51,7 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserActorDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateAssetUserConnectionException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure.AssetUserActorDao;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure.AssetUserActorRecord;
+//import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure.AssetUserActorRecord;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -338,7 +338,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
      * @param profileImage                          The profile image that the Asset User Actor has
      * @throws CantCreateAssetUserActorException if something goes wrong.
      */
-    @Override
+
     public void askAssetUserActorForAcceptance(String assetUserActorIdentityToLinkPublicKey, String assetUserActorToAddName, String assetUserActorToAddPublicKey, byte[] profileImage) throws CantCreateAssetUserActorException {
     //TODO ARREGLAR METODO
 //        try {
@@ -358,7 +358,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
      * @param assetUserActorToAddPublicKey    The public key of the Asset User Actor to add
      * @throws CantAcceptAssetUserActorException
      */
-    @Override
+
     public void acceptAssetUserActor(String assetUserActorLoggedInPublicKey, String assetUserActorToAddPublicKey) throws CantAcceptAssetUserActorException {
         try {
             this.assetUserActorDao.updateAssetUserConnectionState(assetUserActorLoggedInPublicKey, assetUserActorToAddPublicKey, ConnectionState.CONNECTED);
@@ -376,7 +376,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
      * @param assetUserActorToRejectPublicKey The public key of the Asset User Actor that sent the request
      * @throws CantDenyConnectionAssetUserActorException
      */
-    @Override
+
     public void denyConnection(String assetUserActorLoggedInPublicKey, String assetUserActorToRejectPublicKey) throws CantDenyConnectionAssetUserActorException {
         try {
             this.assetUserActorDao.updateAssetUserConnectionState(assetUserActorLoggedInPublicKey, assetUserActorToRejectPublicKey, ConnectionState.DENIED_LOCALLY);
@@ -394,7 +394,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
      * @param assetUserActorToDisconnectPublicKey The public key of the Asset User Actor to disconnect as connection
      * @throws CantDisconnectAssetUserActorException
      */
-    @Override
+
     public void disconnectAssetUserActor(String assetUserActorLoggedInPublicKey, String assetUserActorToDisconnectPublicKey) throws CantDisconnectAssetUserActorException {
         try {
             this.assetUserActorDao.updateAssetUserConnectionState(assetUserActorLoggedInPublicKey, assetUserActorToDisconnectPublicKey, ConnectionState.DISCONNECTED_REMOTELY);
@@ -412,7 +412,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
      * @param assetUserActorToCancelPublicKey The public key of the Asset User Actor to cancel as connection
      * @throws CantCancelAssetUserActorException
      */
-    @Override
+
     public void cancelAssetUserActor(String assetUserActorLoggedInPublicKey, String assetUserActorToCancelPublicKey) throws CantCancelAssetUserActorException {
         try {
             this.assetUserActorDao.updateAssetUserConnectionState(assetUserActorLoggedInPublicKey, assetUserActorToCancelPublicKey, ConnectionState.CANCELLED);
@@ -431,7 +431,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
      * @param offset                          @return the list of Asset User Actors the logged in Asset User Actor has as connections.
      * @throws CantGetAssetUserActorsException
      */
-    @Override
+
     public List<ActorAssetUser> getAllAssetUserActors(String assetUserActorLoggedInPublicKey, int max, int offset) throws CantGetAssetUserActorsException {
         try {
             return this.assetUserActorDao.getAllAssetUsers(assetUserActorLoggedInPublicKey, max, offset);
@@ -452,7 +452,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
      * @return the list of Asset User Actors the logged in Asset User Actor has as connections.
      * @throws CantGetAssetUserActorsException
      */
-    @Override
+
     public List<ActorAssetUser> getWaitingYourAcceptanceAssetUserActors(String assetUserActorLoggedInPublicKey, int max, int offset) throws CantGetAssetUserActorsException {
         try {
             return this.assetUserActorDao.getAllAssetUsers(assetUserActorLoggedInPublicKey, ConnectionState.PENDING_LOCALLY_ACCEPTANCE, max, offset);
@@ -473,7 +473,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
      * @return the list of Asset User Actors the logged in Asset User Actor has as connections.
      * @throws CantGetAssetUserActorsException
      */
-    @Override
+
     public List<ActorAssetUser> getWaitingTheirAcceptanceAssetUserActors(String assetUserActorLoggedInPublicKey, int max, int offset) throws CantGetAssetUserActorsException {
         try {
             return this.assetUserActorDao.getAllAssetUsers(assetUserActorLoggedInPublicKey, ConnectionState.PENDING_REMOTELY_ACCEPTANCE, max, offset);
@@ -493,7 +493,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
      * @param profileImage                    The profile image that the Asset User Actor has
      * @throws CantCreateAssetUserActorException
      */
-    @Override
+
     public void receivingAssetUserActorRequestConnection(String assetUserActorLoggedInPublicKey, String assetUserActorToAddName, String assetUserActorToAddPublicKey, byte[] profileImage) throws CantCreateAssetUserActorException {
     //TODO ARREGLAR METODO
 //        try {

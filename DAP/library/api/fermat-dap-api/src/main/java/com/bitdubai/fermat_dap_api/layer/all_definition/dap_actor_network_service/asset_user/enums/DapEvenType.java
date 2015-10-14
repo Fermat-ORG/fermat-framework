@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
 * BITDUBAI/CONFIDENTIAL
 */
-package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.enums;
+package com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
@@ -12,10 +12,10 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.events.CompleteClientAssetUserActorRegistrationNotificationEvent;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.events.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.listeners.CompleteClientAssetUserActorRegistrationNotificationEventListener;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.listeners.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventListener;
+import com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.events.CompleteClientAssetUserActorRegistrationNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.events.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.listeners.CompleteClientAssetUserActorRegistrationNotificationEventListener;
+import com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.listeners.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventListener;
 
 
 /**
@@ -26,7 +26,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.li
  * @version 1.0
  * @since Java JDK 1.7
  */
-public enum EventTypeAssetUserANS implements FermatEventEnum {
+public enum DapEvenType implements FermatEventEnum {
 
     COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION("CL_RLCRN") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
@@ -59,7 +59,7 @@ public enum EventTypeAssetUserANS implements FermatEventEnum {
      *
      * @param code the valid code
      */
-    EventTypeAssetUserANS(String code) {
+    DapEvenType(String code) {
         this.code = code;
     }
 
@@ -75,8 +75,8 @@ public enum EventTypeAssetUserANS implements FermatEventEnum {
      * @return EventType enum
      * @throws InvalidParameterException error with is no a valid code
      */
-    public static EventTypeAssetUserANS getByCode(String code) throws InvalidParameterException {
-        for (EventTypeAssetUserANS eventType : EventTypeAssetUserANS.values()) {
+    public static DapEvenType getByCode(String code) throws InvalidParameterException {
+        for (DapEvenType eventType : DapEvenType.values()) {
             if (eventType.code.equals(code)) {
                 return eventType;
             }
