@@ -254,9 +254,8 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
         try {
 
-            List<CryptoPaymentRequest> cryptoPaymentRequestList = cryptoPaymentRequestNetworkServiceDao.listRequestsByProtocolStateAndType(
-                    RequestProtocolState.PROCESSING_RECEIVE,
-                    RequestType.SENT
+            List<CryptoPaymentRequest> cryptoPaymentRequestList = cryptoPaymentRequestNetworkServiceDao.listRequestsByProtocolState(
+                    RequestProtocolState.PROCESSING_RECEIVE
             );
 
             for(CryptoPaymentRequest cpr : cryptoPaymentRequestList) {
@@ -307,7 +306,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
         CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorPublicKey);
 
         if(communicationNetworkServiceLocal != null)
-            communicationNetworkServiceLocal.sendMessage(communicationNetworkServiceConnectionManager.getIdentity().getPublicKey(), jsonMessage);
+            communicationNetworkServiceLocal.sendMessage(communicationNetworkServiceConnectionManager.getIdentity().getPublicKey(), actorPublicKey, jsonMessage);
     }
 
     private String buildJsonInformationMessage(CryptoPaymentRequest cpr) {
