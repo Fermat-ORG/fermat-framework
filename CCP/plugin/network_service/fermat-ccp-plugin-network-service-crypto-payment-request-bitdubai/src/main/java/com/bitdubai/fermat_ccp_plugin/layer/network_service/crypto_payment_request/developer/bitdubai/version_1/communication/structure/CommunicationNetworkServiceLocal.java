@@ -62,9 +62,8 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
 
     /**
      * (non-javadoc)
-     * @see NetworkServiceLocal#sendMessage(String, String)
      */
-    public void sendMessage(final String senderIdentityPublicKey, final String messageContent) {
+    public void sendMessage(final String senderIdentityPublicKey,final String receiverPK ,final String messageContent) {
 
         try {
 
@@ -135,7 +134,7 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
 
     /**
      * (non-javadoc)
-     * @see NetworkServiceLocal#getLastMessageReceived()
+     * @see NetworkServiceLocal#
      */
     public FermatMessage getLastMessageReceived() {
         return lastMessageReceived;
