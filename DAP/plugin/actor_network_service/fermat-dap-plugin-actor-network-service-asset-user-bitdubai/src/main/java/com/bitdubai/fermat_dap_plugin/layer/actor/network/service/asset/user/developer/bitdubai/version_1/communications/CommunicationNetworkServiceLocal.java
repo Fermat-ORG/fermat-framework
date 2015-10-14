@@ -40,7 +40,6 @@ import java.util.Observer;
  * @since Java JDK 1.7
  */
 public class CommunicationNetworkServiceLocal implements Observer, NetworkServiceLocal {
-
     /**
      * Represent the profile of the remote network service
      */
@@ -90,9 +89,9 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
         try {
 
             FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(senderIdentityPublicKey,  //Sender NetworkService
-                                                                                                    remoteNetworkServiceProfile,   //Receiver
-                                                                                                    messageContent,                //Message Content
-                                                                                                    FermatMessageContentType.TEXT);//Type
+                    remoteNetworkServiceProfile.getIdentityPublicKey(),   //Receiver
+                    messageContent,                //Message Content
+                    FermatMessageContentType.TEXT);//Type
 
             /*
              * Configure the correct status
@@ -136,6 +135,8 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
         ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingMessage);
         eventManager.raiseEvent(fermatEvent);
 
+        System.out.println("CommunicationNetworkServiceLocal - fired event = NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION");
+
     }
 
     /**
@@ -156,7 +157,7 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
 
     /**
      * (non-javadoc)
-     *
+     * @see NetworkServiceLocal#getLastMessageReceived()
      */
     public FermatMessage getLastMessageReceived() {
         return lastMessageReceived;

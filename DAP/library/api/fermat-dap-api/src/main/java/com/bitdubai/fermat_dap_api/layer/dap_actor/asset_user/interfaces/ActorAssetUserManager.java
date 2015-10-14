@@ -115,4 +115,5 @@ public interface ActorAssetUserManager {
     * @throws CantAssetUserActorNotFoundException
     */
   List<ActorAssetUser> getActorByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
+
 }

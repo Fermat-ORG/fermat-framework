@@ -31,6 +31,7 @@ import org.java_websocket.server.WebSocketServer;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -370,6 +371,17 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
          * Hold references to remove
          */
         Map<NetworkServiceType, PlatformComponentProfile> platformComponentProfileMapToRemove = new HashMap();
+
+        /*
+        Iterator<Map.Entry<NetworkServiceType, List<PlatformComponentProfile>>> iteratorByNS = registeredNetworkServicesCache.entrySet().iterator();
+
+
+        while (iteratorByNS.hasNext()){
+
+            Map.Entry<NetworkServiceType, List<PlatformComponentProfile>> profiles = iteratorByNS.next();
+
+        }*/
+
 
         /*
          * Search all the profile to remove
