@@ -1,5 +1,4 @@
-package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_reddem_point.interfaces;
-
+package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransactionSummary;
