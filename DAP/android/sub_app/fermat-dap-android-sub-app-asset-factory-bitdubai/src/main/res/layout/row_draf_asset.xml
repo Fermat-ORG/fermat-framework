@@ -69,8 +69,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginTop="4dp"
-                android:maxLines="4"
-                android:text="DRAF"
                 android:textColor="#fa5959"
                 android:textSize="14sp" />
         </LinearLayout>
