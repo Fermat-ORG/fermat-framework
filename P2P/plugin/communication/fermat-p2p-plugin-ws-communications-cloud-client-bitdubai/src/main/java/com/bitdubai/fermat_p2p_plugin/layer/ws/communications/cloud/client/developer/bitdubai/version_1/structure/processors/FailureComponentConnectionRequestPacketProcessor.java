@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.Asymmetric
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentConnectionRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
@@ -68,7 +68,7 @@ public class FailureComponentConnectionRequestPacketProcessor extends FermatPack
         /*
          * Create a new event whit the networkServiceType and remoteIdentity
          */
-        FermatEvent event = EventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION.getNewEvent();
+        FermatEvent event = P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION.getNewEvent();
         event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
 
         /*
@@ -80,7 +80,7 @@ public class FailureComponentConnectionRequestPacketProcessor extends FermatPack
         /*
          * Raise the event
          */
-        System.out.println("FailureComponentConnectionRequestPacketProcessor - Raised a event = EventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION");
+        System.out.println("FailureComponentConnectionRequestPacketProcessor - Raised a event = P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION");
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
 
     }
