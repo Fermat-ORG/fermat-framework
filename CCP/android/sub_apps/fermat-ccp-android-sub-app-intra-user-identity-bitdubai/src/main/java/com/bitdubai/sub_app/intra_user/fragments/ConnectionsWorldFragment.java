@@ -206,7 +206,15 @@ public class ConnectionsWorldFragment  extends FermatFragment {
                     case 8:
                         holder.Photo.setImageResource(R.drawable.florence_profile_picture);
                         break;
-
+                     case 9:
+                         holder.Photo.setImageResource(R.drawable.alexandra_profile_picture);
+                         break;
+                    case 10:
+                        holder.Photo.setImageResource(R.drawable.simon_profile_picture);
+                        break;
+                    case 11:
+                        holder.Photo.setImageResource(R.drawable.victoria_profile_picture);
+                        break;
                     default:
                         holder.Photo.setImageResource(R.drawable.robert_profile_picture);
                         break;

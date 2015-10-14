@@ -106,8 +106,8 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         this.errorManager=errorManager;
     }
 
-    public void setDigitalAssetMetadataVault(DigitalAssetMetadataVault digitalAssetMetadataVault) throws CantSetObjectException {
-        this.digitalAssetCryptoTransactionFactory.setDigitalAssetMetadataVault(digitalAssetMetadataVault);
+    public void setDigitalAssetMetadataVault(DigitalAssetIssuingVault digitalAssetIssuingVault) throws CantSetObjectException {
+        this.digitalAssetCryptoTransactionFactory.setDigitalAssetIssuingVault(digitalAssetIssuingVault);
     }
 
     public void setPluginId(UUID pluginId) throws CantSetObjectException{

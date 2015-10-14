@@ -15,6 +15,14 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.CantCreateNewWalletException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantCreateNewIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUser;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantGetIfIntraWalletUsersExistsException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletCreateNewIntraUserIdentityException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletGetIntraUsersIdentityException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantRemoveWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantRenameWalletException;
@@ -79,7 +87,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithWalletManager,LogManagerForDevelopers, Plugin,Service, WalletManagerModule, WalletManager {
+public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, DealsWithEvents, DealsWithErrors, DealsWithCCPIntraWalletUser, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithWalletManager,LogManagerForDevelopers, Plugin,Service, WalletManagerModule, WalletManager {
 
 
     /**
@@ -139,6 +147,13 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
      * DealsWithWalletManager Interface member variables.
      */
     WalletManagerManager walletMiddlewareManager;
+
+    /**
+     * DealsWithWalletManager Interface member variables.
+     */
+
+    IntraWalletUserManager intraWalletUserManager;
+
 
     /**
      * Plugin Interface member variables.
@@ -399,18 +414,6 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
         }
     }
 
-
-
-    /**
-     * DealsWithBitcoinWallet Interface implementation.
-     */
-
-    @Override
-    public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager) {
-        this.bitcoinWalletManager = bitcoinWalletManager;
-    }
-
-
     public void persistWallet(String walletId) throws CantPersistWalletException {
         /**
          * Now I will add this wallet to the list of wallets managed by the plugin.
@@ -461,107 +464,41 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
 
     }
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation.
-     */
-
     @Override
+    public void createNewIntraWalletUser(String alias, byte[] profileImage) throws WalletCreateNewIntraUserIdentityException {
+        try
+        {
+           intraWalletUserManager.createNewIntraWalletUser(alias,profileImage);
 
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-
-    /**
-     * DealsWithPluginFileSystem Interface implementation.
-     */
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-
-    @Override
-    public void setEventManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /**
-     * DealWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithPluginIdentity methods implementation.
-     */
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-
-    /**
-     * DealsWithWalletManager methods implementation.
-     */
-    @Override
-    public void setWalletManagerManager(WalletManagerManager walletManagerManager){
-        this.walletMiddlewareManager = walletManagerManager;
-    }
-    /**
-     * DealsWithLogger Interface implementation.
-     */
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    /**
-     * LogManagerForDevelopers Interface implementation.
-     */
-
-    @Override
-    public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.WalletManagerModulePluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerWallet");
-
-
-        /**
-         * I return the values.
-         */
-        return returnedClasses;
-    }
-
-
-    @Override
-    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-        /**
-         * I will check the current values and update the LogLevel in those which is different
-         */
-
-        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-            /**
-             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
-             */
-            if (WalletManagerModulePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                WalletManagerModulePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                WalletManagerModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            } else {
-                WalletManagerModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            }
         }
+        catch( CantCreateNewIntraWalletUserException e)
+        {
+            throw  new WalletCreateNewIntraUserIdentityException("CAN'T CREATE NEW INTRA USER IDENTITY",e,"","");
 
+        }
+        catch(Exception e)
+        {
+            throw  new WalletCreateNewIntraUserIdentityException("CAN'T CREATE NEW INTRA USER IDENTITY",FermatException.wrapException(e),"","");
+        }
     }
+
+
+    @Override
+    public boolean hasIntraUserIdentity() throws CantGetIfIntraWalletUsersExistsException {
+        try
+        {
+            return intraWalletUserManager.hasIntraUserIdentity();
+        }
+        catch( CantListIntraWalletUsersException e)
+        {
+            throw  new CantGetIfIntraWalletUsersExistsException("CAN'T GET IF INTRA USERs IDENTITY EXISTS",e,"","");
+        }
+        catch(Exception e)
+        {
+            throw  new CantGetIfIntraWalletUsersExistsException("CAN'T GET IF INTRA USERS IDENTITY EXISTS",FermatException.wrapException(e),"","");
+        }
+    }
+
 
     //TODO: revisar si esta interface Wallet Manager se va a usar (Natalia)
     /**
@@ -571,7 +508,8 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
 
 
     //TODO: Analizar este metodo deberia reemplazarce por el metodo getInstalledWallets de la interface WalletManagerModule que ya esta implementado (Natalia)
-    public List<InstalledWallet> getUserWallets() {
+        @Override
+        public List<InstalledWallet> getUserWallets() {
         // Harcoded para testear el circuito más arriba
         InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
                 WalletType.REFERENCE,
@@ -805,5 +743,124 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
         }
     }
 
+    /**
+     * DealsWithBitcoinWallet Interface implementation.
+     */
+
+    @Override
+    public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager) {
+        this.bitcoinWalletManager = bitcoinWalletManager;
+    }
+
+
+
+
+    /**
+     * DealsWithPluginDatabaseSystem Interface implementation.
+     */
+
+    @Override
+
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+
+    /**
+     * DealsWithPluginFileSystem Interface implementation.
+     */
+
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
+
+
+    /**
+     * DealWithEvents Interface implementation.
+     */
+
+    @Override
+    public void setEventManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
+    /**
+     * DealWithErrors Interface implementation.
+     */
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
+
+    /**
+     * DealsWithPluginIdentity methods implementation.
+     */
+
+    @Override
+    public void setId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
+
+
+    /**
+     * DealsWithWalletManager methods implementation.
+     */
+    @Override
+    public void setWalletManagerManager(WalletManagerManager walletManagerManager){
+        this.walletMiddlewareManager = walletManagerManager;
+    }
+    /**
+     * DealsWithLogger Interface implementation.
+     */
+
+    @Override
+    public void setLogManager(LogManager logManager) {
+        this.logManager = logManager;
+    }
+
+    /**
+     * LogManagerForDevelopers Interface implementation.
+     */
+
+    @Override
+    public List<String> getClassesFullPath() {
+        List<String> returnedClasses = new ArrayList<String>();
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.WalletManagerModulePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerWallet");
+
+
+        /**
+         * I return the values.
+         */
+        return returnedClasses;
+    }
+
+
+    @Override
+    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+        /**
+         * I will check the current values and update the LogLevel in those which is different
+         */
+
+        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+            /**
+             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+             */
+            if (WalletManagerModulePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                WalletManagerModulePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                WalletManagerModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            } else {
+                WalletManagerModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            }
+        }
+
+    }
+
+
+    @Override
+    public void setIntraUserManager(IntraWalletUserManager intraWalletUserManager) {
+        this.intraWalletUserManager = intraWalletUserManager;
+    }
 }
 

@@ -74,6 +74,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -357,9 +359,9 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
              * I will check the current values and update the LogLevel in those which is different
              */
             for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-            /**
-             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
-             */
+                /**
+                 * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+                 */
                 if (AssetUserActorNetworkServicePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
                     AssetUserActorNetworkServicePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
                     AssetUserActorNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
@@ -576,6 +578,12 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
              */
             if(this.isRegister()){
 
+                System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+
+                System.out.println("Registrar Datos "+actorAssetUserToRegister.getName());
+
+                System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+
                 /*
                  * Construct the profile
                  */
@@ -584,7 +592,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
                         actorAssetUserToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_ASSET_USER,
-                        actorAssetUserToRegister.getProfileImage().toString());
+                        Arrays.toString(actorAssetUserToRegister.getProfileImage()));
                 /*
                  * ask to the communication cloud client to register
                  */
@@ -641,18 +649,18 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
          * Construct the discovery query parameters
          */
         DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
-                                                                     constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_USER, //applicant = who made the request
-                                                                             NetworkServiceType.UNDEFINED,
-                                                                             null,                     // alias
-                                                                             null,                     // identityPublicKey
-                                                                             null,                     // location
-                                                                             null,                     // distance
-                                                                             null,                     // name
-                                                                             null,                     // extraData
-                                                                             null,                     // offset
-                                                                             null,                     // max
-                                                                             null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                                                             null);
+                constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_USER, //applicant = who made the request
+                        NetworkServiceType.UNDEFINED,
+                        null,                     // alias
+                        null,                     // identityPublicKey
+                        null,                     // location
+                        null,                     // distance
+                        null,                     // name
+                        null,                     // extraData
+                        null,                     // offset
+                        null,                     // max
+                        null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                        null);
 
         /*
          * request the list to the server
@@ -685,9 +693,9 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
                  * Created the message
                  */
                 FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetUserSender.getPublicKey(),//Sender
-                                                                                                        actorAssetUserDestination.getPublicKey(), //Receiver
-                                                                                                        msjContent,                //Message Content
-                                                                                                        FermatMessageContentType.TEXT);//Type
+                        actorAssetUserDestination.getPublicKey(), //Receiver
+                        msjContent,                //Message Content
+                        FermatMessageContentType.TEXT);//Type
 
                 /*
                  * Configure the correct status
@@ -785,7 +793,11 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
         /*
          * Request the list of component registers
          */
-        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+        try {
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+        } catch (CantRequestListException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -829,7 +841,11 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
                      /*
                      * ask to the communication cloud client to register
                      */
-                    communicationsClientConnection.registerComponentForCommunication(platformComponentProfileAssetUser);
+                    try {
+                        communicationsClientConnection.registerComponentForCommunication(platformComponentProfileAssetUser);
+                    } catch (CantRegisterComponentException e) {
+                        e.printStackTrace();
+                    }
 
                 }
 
@@ -837,7 +853,8 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
             /* test register one actor */
 
-            ActorAssetUser actorAssetUserNewRegsitered = new AssetUserActorRecord("Pedrito","123456789",new byte[]{12,20},0, Genders.MALE,"23",null);
+            ActorAssetUser actorAssetUserNewRegsitered = new AssetUserActorRecord("Pedrito","123456789",new byte[]{10,3},0,Genders.FEMALE,"14", null);
+
 
             try {
                 registerActorAssetUser(actorAssetUserNewRegsitered);
@@ -875,7 +892,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
             System.out.println(" Actor  Asset User Registered "+platformComponentProfileRegistered.getIdentityPublicKey()+"\n Alias "+platformComponentProfileRegistered.getAlias());
 
 
-            ActorAssetUser actorAssetUserNewRegsitered = new AssetUserActorRecord(platformComponentProfileRegistered.getName(),platformComponentProfileRegistered.getIdentityPublicKey(),new byte[]{10,3},0,Genders.FEMALE,"14", null);
+            ActorAssetUser actorAssetUserNewRegsitered = new AssetUserActorRecord(platformComponentProfileRegistered.getName(),platformComponentProfileRegistered.getIdentityPublicKey(),convertoByteArrayfromString(platformComponentProfileRegistered.getExtraData()),0,Genders.FEMALE,"14", null);
 
 
 
@@ -968,7 +985,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
                  * TODO: CREAR LOS ACTORES CON EL CONTENIDO DEL PROFILE Y AGREGARLOS A LA LISTA
                  */
 
-            }
+        }
 
 
 
