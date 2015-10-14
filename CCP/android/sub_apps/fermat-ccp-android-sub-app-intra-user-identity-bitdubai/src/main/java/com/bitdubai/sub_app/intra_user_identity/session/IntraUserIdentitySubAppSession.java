@@ -2,7 +2,9 @@ package com.bitdubai.sub_app.intra_user_identity.session;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
@@ -31,17 +33,16 @@ public class IntraUserIdentitySubAppSession implements SubAppsSession {
     /**
      * Wallet Store Module
      */
-    private CryptoBrokerIdentityModuleManager moduleManager;
+    private IntraWalletUserManager moduleManager;
 
 
     /**
      * Create a session for the Wallet Store SubApp
-     *
      * @param subApps                  the SubApp type
      * @param errorManager             the error manager
      * @param moduleManager the module of this SubApp
      */
-    public IntraUserIdentitySubAppSession(SubApps subApps, ErrorManager errorManager, CryptoBrokerIdentityModuleManager moduleManager) {
+    public IntraUserIdentitySubAppSession(SubApps subApps, ErrorManager errorManager, IntraWalletUserManager moduleManager) {
         this.subApps = subApps;
         data = new HashMap<String, Object>();
         this.errorManager = errorManager;
@@ -105,7 +106,7 @@ public class IntraUserIdentitySubAppSession implements SubAppsSession {
      *
      * @return reference to the Wallet Store Module
      */
-    public CryptoBrokerIdentityModuleManager getModuleManager() {
+    public IntraWalletUserManager getModuleManager() {
         return moduleManager;
     }
 
