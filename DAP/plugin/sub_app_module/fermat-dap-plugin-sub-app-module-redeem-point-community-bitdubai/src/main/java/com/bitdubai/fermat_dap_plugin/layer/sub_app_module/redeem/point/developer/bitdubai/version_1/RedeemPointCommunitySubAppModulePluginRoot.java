@@ -74,7 +74,7 @@ public class RedeemPointCommunitySubAppModulePluginRoot implements DealsWithLogg
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.fermat_dmp_plugin.layer.module.wallet_factory.developer.bitdubai.version_1.WalletFactoryModulePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.sub_app_module.redeem.point.developer.bitdubai.version_1.RedeemPointCommunitySubAppModulePluginRoot");
         /**
          * I return the values.
          */

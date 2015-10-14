@@ -9,6 +9,11 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
+import com.bitdubai.fermat_dap_plugin.layer.sub_app_module.asset.user.developer.bitdubai.version_1.structure.AssetUserCommunitySupAppModuleManager;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +23,7 @@ import java.util.UUID;
 /**
  * Created by Nerio on 13/10/15.
  */
-public class AssetUserCommunitySubAppModulePluginRoot implements DealsWithLogger, LogManagerForDevelopers, Plugin, Service {
+public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommunitySubAppModuleManager, DealsWithLogger, LogManagerForDevelopers, Plugin, Service {
 
     UUID pluginId;
 
@@ -35,6 +40,8 @@ public class AssetUserCommunitySubAppModulePluginRoot implements DealsWithLogger
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
+    AssetUserCommunitySupAppModuleManager assetUserCommunitySupAppModuleManager;
+
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
@@ -42,6 +49,8 @@ public class AssetUserCommunitySubAppModulePluginRoot implements DealsWithLogger
 
     @Override
     public void start() throws CantStartPluginException {
+        assetUserCommunitySupAppModuleManager = new AssetUserCommunitySupAppModuleManager();
+
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -73,7 +82,7 @@ public class AssetUserCommunitySubAppModulePluginRoot implements DealsWithLogger
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.fermat_dmp_plugin.layer.module.wallet_factory.developer.bitdubai.version_1.WalletFactoryModulePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.sub_app_module.asset.user.developer.bitdubai.version_1.AssetUserCommunitySubAppModulePluginRoot");
         /**
          * I return the values.
          */
@@ -97,5 +106,10 @@ public class AssetUserCommunitySubAppModulePluginRoot implements DealsWithLogger
                 AssetUserCommunitySubAppModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
+    }
+
+    @Override
+    public List<AssetUserActorRecord> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException {
+        return null;
     }
 }
