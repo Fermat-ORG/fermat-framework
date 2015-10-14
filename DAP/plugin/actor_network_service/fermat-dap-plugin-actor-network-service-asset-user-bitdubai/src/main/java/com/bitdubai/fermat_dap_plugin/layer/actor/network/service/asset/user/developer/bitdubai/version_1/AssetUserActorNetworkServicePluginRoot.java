@@ -40,6 +40,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.enums.DapEvenType;
 
 
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserANS;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
@@ -855,7 +856,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
             /* test register one actor */
 
-            ReturnAssetUserActorNetworkService returnactor = null;
+            ReturnAssetUserActorNetworkService returnactor =new AssetUserANS();
 
             Location loca = null;
 
@@ -903,7 +904,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
             System.out.println(" Actor  Asset User Registered "+platformComponentProfileRegistered.getIdentityPublicKey()+"\n Alias "+platformComponentProfileRegistered.getAlias());
 
-            ReturnAssetUserActorNetworkService returnactor = null;
+            ReturnAssetUserActorNetworkService returnactor = new AssetUserANS();
 
             Location loca = null;
 
@@ -969,7 +970,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
                 for(PlatformComponentProfile p : platformComponentProfileRegisteredList){
 
 
-                    ReturnAssetUserActorNetworkService returnactor = null;
+                    ReturnAssetUserActorNetworkService returnactor = new AssetUserANS();
 
                     Location loca = null;
 
@@ -1175,29 +1176,35 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
         if(arrengebytes!=null){
 
-            String[] byteValues = arrengebytes.substring(1, arrengebytes.length() - 1).split(",");
-            byte[] bytes = new byte[byteValues.length];
+            try {
 
-            if(bytes.length > 0){
+                String[] byteValues = arrengebytes.substring(1, arrengebytes.length() - 1).split(",");
+                byte[] bytes = new byte[byteValues.length];
+
+                if (bytes.length > 0) {
 
 
-                for (int i=0, len=bytes.length; i<len; i++) {
-                    bytes[i] = Byte.parseByte(byteValues[i].trim());
+                    for (int i = 0, len = bytes.length; i < len; i++) {
+                        bytes[i] = Byte.parseByte(byteValues[i].trim());
+                    }
+
+                    return bytes;
+
+
+                } else {
+
+                    return new byte[]{};
+
                 }
 
-                return bytes;
 
-
-            }else{
-
-                return null;
-
+            }catch (Exception e){
+                return new byte[]{};
             }
-
 
         }else{
 
-            return null;
+            return new byte[]{};
 
         }
 
