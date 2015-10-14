@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.fa
 import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.fragments.HomeFragment;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.Session;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.settings.Settings;
 
@@ -16,7 +17,7 @@ public class CommunityUserFragmentFactory extends FermatSubAppFragmentFactory<Se
     public FermatFragment getFermatFragment(FragmentFactoryEnumType fragments) throws FragmentNotFoundException {
         switch (fragments) {
             case DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN:
-                return null; // TODO: 14/10/15 Create Main Fragment
+                return HomeFragment.newInstance();
             default:
                 throw new FragmentNotFoundException(String.format("Fragment: %s not found", fragments.getKey()),
                         new Exception(), "fermat-dap-android-wallet-asset-issuer", "fragment not found");

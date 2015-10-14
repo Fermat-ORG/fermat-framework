@@ -7,7 +7,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
  */
 public enum FragmentFactoryEnumType implements FermatFragmentsEnumType<FragmentFactoryEnumType> {
 
-    DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN("DAUCM");
+    DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN("DAUCAM");
 
     private String key;
 
