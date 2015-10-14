@@ -338,6 +338,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
+                    showMessage(getActivity(), "Unexpected error get Contact Detalil - " + ex.getMessage());
                 }
             }
         });

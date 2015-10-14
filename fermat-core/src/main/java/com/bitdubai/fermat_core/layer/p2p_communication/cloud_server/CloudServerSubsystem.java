@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantStartSubsystemException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationSubsystem;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by loui on 26/04/15.
@@ -26,8 +25,8 @@ public class CloudServerSubsystem implements CommunicationSubsystem {
          */
 
         try {
-            DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-            plugin = developerBitDubai.getPlugin();
+          //  DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
+          //  plugin = developerBitDubai.getPlugin();
         }
         catch (Exception exception)
         {

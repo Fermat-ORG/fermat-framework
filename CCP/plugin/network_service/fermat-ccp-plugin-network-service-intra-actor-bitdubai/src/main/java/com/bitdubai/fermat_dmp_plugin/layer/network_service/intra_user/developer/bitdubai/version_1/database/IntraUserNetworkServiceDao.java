@@ -91,6 +91,7 @@ public class IntraUserNetworkServiceDao {
             record.setStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_LOGGED_IN_PUBLIC_KEY_COLUMN_NAME,intraUserLoggedInPublicKey);
             record.setLongValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_CREATED_TIME_COLUMN_NAME, millis);
             record.setStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_DESCRIPTOR_COLUMN_NAME, requestDescriptor.getCode());
+            record.setStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_REASON_COLUMN_NAME, "");
 
             table.insertRecord(record);
 

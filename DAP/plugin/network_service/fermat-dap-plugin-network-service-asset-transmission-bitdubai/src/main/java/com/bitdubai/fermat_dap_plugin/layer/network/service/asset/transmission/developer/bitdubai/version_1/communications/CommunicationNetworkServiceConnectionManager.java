@@ -138,7 +138,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
         }
     }
 
@@ -244,6 +244,10 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
             communicationNetworkServiceRemoteAgentsCache.get(key).pause();
         }
 
+    }
+
+    public ECCKeyPair getIdentity() {
+        return identity;
     }
 
     /**
