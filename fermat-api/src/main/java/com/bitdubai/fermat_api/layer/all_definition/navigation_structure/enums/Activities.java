@@ -101,8 +101,8 @@ public enum Activities {
     CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY("CCPSACCICI"),
 
     // CCP Crypto Customer Identity
-    CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY("CBPSACCI"),
-    CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY("CCPSACCICI");
+    CCP_SUB_APP_INTRA_USER_IDENTITY("CCPSAISI"),
+    CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY("CCPSAIICI");
 
     private String code;
 
@@ -252,6 +252,10 @@ public enum Activities {
                 return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY;
             case "CBPSACCICI":
                 return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY;
+            case "CCPSAISI":
+                return CCP_SUB_APP_INTRA_USER_IDENTITY;
+            case "CCPSAIICI":
+                return CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

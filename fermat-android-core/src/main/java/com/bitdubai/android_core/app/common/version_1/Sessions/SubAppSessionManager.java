@@ -14,6 +14,7 @@ import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentityS
 import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 import com.bitdubai.sub_app.wallet_publisher.session.WalletPublisherSubAppSession;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
@@ -66,7 +67,9 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
             case CWP_WALLET_RUNTIME:
                 break;
             case CWP_INTRA_USER_IDENTITY:
-                break;
+                IntraUserIdentitySubAppSession intraUserIdentitySubAppSession = new IntraUserIdentitySubAppSession(subApps,errorManager,null);
+                lstSubAppSession.put(subApps,intraUserIdentitySubAppSession);
+                return intraUserIdentitySubAppSession;
             case CCP_INTRA_USER_COMMUNITY:
                 IntraUserSubAppSession intraUserSubAppSession = new IntraUserSubAppSession(subApps,errorManager,intraUserModuleManager);
                 lstSubAppSession.put(subApps,intraUserSubAppSession);

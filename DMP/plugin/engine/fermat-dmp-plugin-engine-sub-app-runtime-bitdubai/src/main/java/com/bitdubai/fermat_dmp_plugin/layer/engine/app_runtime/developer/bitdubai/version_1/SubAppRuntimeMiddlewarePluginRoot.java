@@ -1082,11 +1082,11 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             // Activity: List of identities
             runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
-            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode());
+            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode());
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.setStartActivity(Activities.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
+            runtimeSubApp.setStartActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Crypto Customer Identity");
@@ -1105,9 +1105,9 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             // Activity: Create New Identity
             runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY);
-            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY.getCode());
-            runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
+            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
+            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode());
+            runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
 
@@ -1127,6 +1127,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
             listSubApp.put(SubApps.CWP_INTRA_USER_IDENTITY, runtimeSubApp);
+
 
         } catch (Exception e) {
             String message = CantFactoryResetException.DEFAULT_MESSAGE;
