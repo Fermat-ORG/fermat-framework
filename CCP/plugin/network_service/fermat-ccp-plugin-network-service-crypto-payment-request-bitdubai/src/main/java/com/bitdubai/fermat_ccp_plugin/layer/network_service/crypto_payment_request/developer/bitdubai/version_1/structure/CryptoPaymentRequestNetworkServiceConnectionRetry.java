@@ -19,14 +19,28 @@ public class CryptoPaymentRequestNetworkServiceConnectionRetry {
     private       long                     waitTime                ;
     private       int                      counter                 ;
 
+    /**
+     * Constructor with params, defines the platform component profile, and the wait time.
+     * The counter is set in 0 by default.
+     *
+     * @param platformComponentProfile  with whom we're trying to connect.
+     * @param waitTime                  manually defined time in millis to wait.
+     */
     public CryptoPaymentRequestNetworkServiceConnectionRetry(final PlatformComponentProfile platformComponentProfile,
-                                                             long waitTime) {
+                                                                   long                     waitTime                ) {
 
         this.platformComponentProfile = platformComponentProfile;
         this.waitTime                 = waitTime                ;
         this.counter                  = 0                       ;
     }
 
+    /**
+     * Constructor with params.
+     * The waitTime is set with the value WAIT_TIME_DEFAULT by default.
+     * The counter is set in 0 by default.
+     *
+     * @param platformComponentProfile  with whom we're trying to connect.
+     */
     public CryptoPaymentRequestNetworkServiceConnectionRetry(final PlatformComponentProfile platformComponentProfile) {
 
         this.platformComponentProfile = platformComponentProfile;
