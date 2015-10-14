@@ -510,6 +510,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
         if (databaseTable.getRecords().size() > 0){
             DatabaseTableRecord record = databaseTable.getRecords().get(0);
             record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.RECEPTION_NOTIFIED.getCode());
+            record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME, getCurrentDateTime());
 
             try {
                 databaseTable.updateRecord(record);
@@ -538,11 +539,12 @@ public class BitcoinCryptoNetworkDatabaseDao {
         }
 
         /**
-         * set the value to RECEPTION_NOTIFIED
+         * set the value to RECEPTION_NOTIFIED and the Last_update_time to now
          */
         if (databaseTable.getRecords().size() > 0){
             DatabaseTableRecord record = databaseTable.getRecords().get(0);
             record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.RECEPTION_NOTIFIED.getCode());
+            record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME, getCurrentDateTime());
 
             try {
                 databaseTable.updateRecord(record);
