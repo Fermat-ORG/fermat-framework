@@ -147,8 +147,8 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
         /**
          * will stop the bitcoin monitoring agent.
          */
-        peers.stopAsync();
-        peers.awaitTerminated();
+        if (peers.isRunning())
+            peers.stop();
     }
 
     /**
@@ -205,10 +205,13 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
         /**
          * I define the peers information that I will be connecting to.
          */
+        myListeners = new BitcoinEventListeners();
         try {
             storedBlockChain.getBlockChain().addWallet(wallet);
+            storedBlockChain.getBlockChain().addListener(myListeners);
             peers = new PeerGroup(this.networkParameters, storedBlockChain.getBlockChain());
             peers.addWallet(wallet);
+
 
             peers.setUserAgent(BitcoinManager.FERMAT_AGENT_NAME, BitcoinManager.FERMAT_AGENT_VERSION);
             peers.setUseLocalhostPeerWhenPossible(true);
@@ -227,7 +230,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
                 logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoNetwork information: Using " + networkParameters.toString() + " network.", null, null);
                 peers.addPeerDiscovery(new DnsDiscovery(this.networkParameters));
             }
-            myListeners = new BitcoinEventListeners();
+
             myListeners.setLogManager(this.logManager);
             peers.addEventListener(myListeners);
         } catch (Exception exception) {
@@ -256,10 +259,14 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
          */
         private void doTheMainTask() throws CantConnectToBitcoinNetwork {
             try {
-                peers.startAsync();
-                peers.awaitRunning();
+                peers.start();
                 peers.downloadBlockChain();
+                while (true){
+                    //endless loop. Since bitcoinj upgrade, this is no longer running as a guava service.
+                    // so we need to keep the thread active.
+                }
             } catch (Exception exception) {
+                exception.printStackTrace();
                 throw new CantConnectToBitcoinNetwork("Couldn't connect to Bitcoin Network.", exception, "", "Error executing Agent.");
             }
         }

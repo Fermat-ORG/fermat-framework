@@ -7,7 +7,6 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure;
 
 import java.nio.channels.SelectionKey;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -15,8 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
@@ -30,7 +28,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudServiceManager</code> represent
@@ -126,8 +123,8 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 
             String message = CloudCommunicationException.DEFAULT_MESSAGE;
             FermatException cause = fMPException;
-            String context = "Packet Data: " + dataPacket.toString();
-            String possibleReason = "Something failed in the processing of one of the different PacketType, you should check the FMPException that is linked below";
+            String context = "FermatPacketCommunication Data: " + dataPacket.toString();
+            String possibleReason = "Something failed in the processing of one of the different FermatPacketType, you should check the FMPException that is linked below";
             throw new CloudCommunicationException(message, cause, context, possibleReason);
 
         }catch(NoSuchElementException ex){
@@ -397,7 +394,7 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
             /*
              * Decrypt the data packet json object string
              */
-            String decryptedJsonMessageContent = AsymmectricCryptography.decryptMessagePrivateKey(fMPPacketReceive.getMessage(), identity.getPrivateKey());
+            String decryptedJsonMessageContent = AsymmetricCryptography.decryptMessagePrivateKey(fMPPacketReceive.getMessage(), identity.getPrivateKey());
 
             System.out.println("CloudServiceManager - decryptedJsonMessageContent = "+decryptedJsonMessageContent);
 
@@ -514,7 +511,7 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 		String message = IncorrectFMPPacketDestinationException.DEFAULT_MESSAGE;
 		FermatException cause = null;
 		String context = "Supposed Destination: " + supposedDestination;
-		context += "Packet Info: " + packet.toString();
+		context += "FermatPacketCommunication Info: " + packet.toString();
 		String possibleReason = "This is a very weird error, we should check the sender to see if it's registered, we should be aware of this";
 		return new IncorrectFMPPacketDestinationException(message, cause, context, possibleReason);
 	}

@@ -2,39 +2,26 @@ package unit.com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bi
 
 import com.bitdubai.fermat_api.layer.all_definition.IntraUsers.IntraUserSettings;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.interfaces.ActorIntraUserManager;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentity;
-import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentityManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
+
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CouldNotCreateIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraUserModulePluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUsersModuleLoginConstants;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
+import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraWalletUserModulePluginRoot;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import junit.framework.TestCase;
 
 import org.fest.assertions.api.Assertions;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -43,9 +30,6 @@ import java.util.UUID;
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyByte;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 /**
@@ -73,14 +57,14 @@ public class CreateIntraUserTest extends TestCase {
      * DealWithIntraUserIdentityManager Interface member variables.
      */
     @Mock
-    private IntraUserIdentityManager mockIntraUserIdentityManager;
+    private com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager mockIntraUserIdentityManager;
 
 
     /**
      * DealWithActorIntraUserManager Interface member variables.
      */
     @Mock
-    private ActorIntraUserManager mockActorIntraUserManager;
+    private IntraWalletUserManager mockIntraWalletUserManager;
 
 
     /**
@@ -95,13 +79,13 @@ public class CreateIntraUserTest extends TestCase {
 
     private IntraUserSettings intraUserSettings;
 
-    private IntraUserModulePluginRoot testIntraUserModulePluginRoot;
+    private IntraWalletUserModulePluginRoot testIntraUserModulePluginRoot;
 
     private IntraUserLoginIdentity testIntraUser;
 
 
     @Mock
-    IntraUserIdentity mockIntraUserIdentity;
+    IntraWalletUser mockIntraUserIdentity;
 
 
     UUID pluginId;
@@ -115,13 +99,13 @@ public class CreateIntraUserTest extends TestCase {
         MockitoAnnotations.initMocks(this);
 
         pluginId= UUID.randomUUID();
-        testIntraUserModulePluginRoot = new IntraUserModulePluginRoot();
+        testIntraUserModulePluginRoot = new IntraWalletUserModulePluginRoot();
         testIntraUserModulePluginRoot.setPluginFileSystem(mockPluginFileSystem);
 
         testIntraUserModulePluginRoot.setErrorManager(mockErrorManager);
         testIntraUserModulePluginRoot.setIntraUserManager(mockIntraUserIdentityManager);
 
-        testIntraUserModulePluginRoot.setActorIntraUserManager(mockActorIntraUserManager);
+        testIntraUserModulePluginRoot.setIntraWalletUserManager(mockIntraWalletUserManager);
         testIntraUserModulePluginRoot.setIntraUserNetworkServiceManager(mockIntraUserNetworkServiceManager);
 
         setUpMockitoRules();
@@ -135,7 +119,7 @@ public class CreateIntraUserTest extends TestCase {
         intraUserSettings = new IntraUserSettings();
         intraUserSettings.setLoggedInPublicKey(UUID.randomUUID().toString());
         when(mockPluginFileSystem.getTextFile(pluginId, pluginId.toString(), "intraUsersLogin", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)).thenReturn(mockIntraUserLoginXml);
-         when(mockIntraUserIdentityManager.createNewIntraUser(intraUserAlias, intraUserImageProfile)).thenReturn(mockIntraUserIdentity);
+         when(mockIntraUserIdentityManager.createNewIntraWalletUser(intraUserAlias, intraUserImageProfile)).thenReturn(mockIntraUserIdentity);
         when(mockIntraUserLoginXml.getContent()).thenReturn(XMLParser.parseObject(intraUserSettings));
         when(mockIntraUserIdentity.getAlias()).thenReturn(intraUserAlias);
         when(mockIntraUserIdentity.getPublicKey()).thenReturn(UUID.randomUUID().toString());
@@ -159,7 +143,7 @@ public class CreateIntraUserTest extends TestCase {
     @Test
     public void createIntraUserTest_Exception_throwsCouldNotCreateIntraUserException() throws Exception{
 
-        when(mockIntraUserIdentityManager.createNewIntraUser(intraUserAlias, null)).thenReturn(null);
+        when(mockIntraUserIdentityManager.createNewIntraWalletUser(intraUserAlias, null)).thenReturn(null);
 
         catchException(testIntraUserModulePluginRoot).createIntraUser(intraUserAlias, null);
 

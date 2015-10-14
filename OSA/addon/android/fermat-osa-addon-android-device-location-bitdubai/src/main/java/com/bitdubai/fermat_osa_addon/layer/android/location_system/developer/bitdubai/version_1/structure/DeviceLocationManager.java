@@ -3,7 +3,9 @@ package com.bitdubai.fermat_osa_addon.layer.android.location_system.developer.bi
 import android.content.Context;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.os.Looper;
 
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
@@ -81,19 +83,37 @@ public class DeviceLocationManager implements LocationManager,LocationListener{
         try {
             locationManager = (android.location.LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
-            // getting GPS status
-            boolean isGPSEnabled = locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER);
+               // getting GPS status
+            if (locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
+                locationManager.requestLocationUpdates(android.location.LocationManager.GPS_PROVIDER,MIN_TIME_BW_UPDATES,MIN_DISTANCE_CHANGE_FOR_UPDATES, this,Looper.getMainLooper());
+                //"GPS Enabled"
+                if (locationManager != null)
+                {
+                    deviceLocation = locationManager.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER);
+                    if (deviceLocation != null) {
 
-            // getting network status
-            boolean isNetworkEnabled = locationManager.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER);
+                        location = new DeviceLocation(deviceLocation.getLatitude(),deviceLocation.getLongitude(),deviceLocation.getTime(),deviceLocation.getAltitude(),LocationProvider.GPS);
 
-            //if (isGPSEnabled && !isNetworkEnabled)
-            if (isGPSEnabled) {
-                // no network provider is enabled
-            
-                // First get location from Network Provider
-                if (isNetworkEnabled) {
-                    locationManager.requestLocationUpdates( android.location.LocationManager.NETWORK_PROVIDER,  MIN_TIME_BW_UPDATES,  MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                    }
+                    else{
+                        /**
+                         * I not get location device return an exception
+                         */
+                        throw  new CantGetDeviceLocationException("Not get GPS Enabled");
+                    }
+                }
+                else{
+                    /**
+                     * I not get location device return an exception
+                     */
+                    throw  new CantGetDeviceLocationException("LocationManager is null");
+                }
+            }
+            else {
+
+                // GPS not enabled, get status from Network Provider
+                if (locationManager.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER)) {
+                    locationManager.requestLocationUpdates( android.location.LocationManager.NETWORK_PROVIDER,  MIN_TIME_BW_UPDATES,  MIN_DISTANCE_CHANGE_FOR_UPDATES, this, Looper.getMainLooper());
                     // "Network"
                     if (locationManager != null) {
                         deviceLocation = locationManager.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER);
@@ -106,49 +126,29 @@ public class DeviceLocationManager implements LocationManager,LocationListener{
                             /**
                              * I not get location device return an exception
                              */
-                            throw  new CantGetDeviceLocationException();
+                            throw  new CantGetDeviceLocationException("Not get Network Enabled");
                         }
                     }else
                     {
                         /**
                          * I not get location device return an exception
                          */
-                        throw  new CantGetDeviceLocationException();
+                        throw  new CantGetDeviceLocationException("LocationManager is null");
                     }
                 }
-                //get the location by gps
-                if (isGPSEnabled && deviceLocation == null) {
-                        locationManager.requestLocationUpdates(android.location.LocationManager.GPS_PROVIDER,MIN_TIME_BW_UPDATES,MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                        //"GPS Enabled"
-                        if (locationManager != null)
-                        {
-                            deviceLocation = locationManager.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER);
-                            if (deviceLocation != null) {
 
-                                location = new DeviceLocation(deviceLocation.getLatitude(),deviceLocation.getLongitude(),deviceLocation.getTime(),deviceLocation.getAltitude(),LocationProvider.GPS);
 
-                            }
-                            else{
-                                /**
-                                 * I not get location device return an exception
-                                 */
-                                throw  new CantGetDeviceLocationException();
-                            }
-                        }
-                        else{
-                            /**
-                             * I not get location device return an exception
-                             */
-                            throw  new CantGetDeviceLocationException();
-                        }
-                }
             }
 
+
+
+
         } catch (Exception e) {
+
             /**
              * unexpected error
              */
-            throw  new CantGetDeviceLocationException();
+            throw  new CantGetDeviceLocationException(CantGetDeviceLocationException.DEFAULT_MESSAGE,e,"","unexpected error");
         }
 
         return location;

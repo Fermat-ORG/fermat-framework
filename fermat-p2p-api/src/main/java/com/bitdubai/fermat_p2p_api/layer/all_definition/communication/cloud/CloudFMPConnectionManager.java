@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
@@ -39,8 +39,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -431,13 +429,13 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
                 /*
                  * Decrypt the data packet json object string
                  */
-                String decryptedJson = AsymmectricCryptography.decryptMessagePrivateKey(stringBuffer.toString(), identity.getPrivateKey());
+                String decryptedJson = AsymmetricCryptography.decryptMessagePrivateKey(stringBuffer.toString(), identity.getPrivateKey());
 
 
                 System.out.println("CloudFMPConnectionManager - Received packet json = " + decryptedJson);
 
                 /*
-                 * Create a new FMPPacket whit the decrypted string of data
+                 * Create a new FermatPacketCommunication whit the decrypted string of data
                  */
                 FMPPacket incomingPacket = FMPPacketFactory.constructCloudFMPPacket(decryptedJson);
 
@@ -544,15 +542,15 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
                     ByteBuffer writeBuffer = ByteBuffer.allocate(FMPPacket.PACKET_MAX_BYTE_SIZE);
                     writeBuffer.clear();
 
-                    System.out.println("CloudFMPConnectionManager - Packet json to send = " + dataPacketToSend.toJson());
+                    System.out.println("CloudFMPConnectionManager - FermatPacketCommunication json to send = " + dataPacketToSend.toJson());
 
                     /*
                      * Encrypt the data packet json object string
                      */
-                    String encryptedJson = AsymmectricCryptography.encryptMessagePublicKey(dataPacketToSend.toJson(), dataPacketToSend.getDestination());
+                    String encryptedJson = AsymmetricCryptography.encryptMessagePublicKey(dataPacketToSend.toJson(), dataPacketToSend.getDestination());
 
                     //System.out.println("CloudFMPConnectionManager - Encrypted packet json to send  = " + encryptedJson);
-                    System.out.println("CloudFMPConnectionManager - Packet data length = " + encryptedJson.length());
+                    System.out.println("CloudFMPConnectionManager - FermatPacketCommunication data length = " + encryptedJson.length());
 
                     /*
                      * Get json format and convert to bytes
@@ -772,8 +770,8 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 
 			String message = CloudCommunicationException.DEFAULT_MESSAGE;
 			FermatException cause = fMPException;
-			String context = "Packet Data: " + dataPacket.toString();
-			String possibleReason = "Something failed in the processing of one of the different PacketType, you should check the FMPException that is linked below";
+			String context = "FermatPacketCommunication Data: " + dataPacket.toString();
+			String possibleReason = "Something failed in the processing of one of the different FermatPacketType, you should check the FMPException that is linked below";
 			throw new CloudCommunicationException(message, cause, context, possibleReason);
 
 		}catch(NoSuchElementException ex){
@@ -1078,7 +1076,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
      * to the writing process of the connection to your destination
      *
      * @param destination
-     * @return FMPPacket
+     * @return FermatPacketCommunication
      */
     protected FMPPacket getNextPendingOutgoingPacketCacheForDestination(String destination){
 
@@ -1097,13 +1095,9 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
                  * Get the next packet to send
                  */
                   return (FMPPacket) ((Queue) pendingOutgoingPacketCache.get(destination)).iterator().next();
-
             }
-
         }
-
         return null;
-
     }
 
 

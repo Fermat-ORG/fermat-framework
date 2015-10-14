@@ -3,16 +3,12 @@ package com.bitdubai.sub_app.wallet_store.common.models;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.widget.ImageView;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_store.enums.InstallationStatus;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.interfaces.WalletStoreCatalogueItem;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreCatalogueItem;
 import com.wallet_store.bitdubai.R;
 
-import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -33,6 +29,7 @@ public class WalletStoreListItem implements Serializable {
     private Bitmap walletIcon;
     private UUID id;
     private WalletCategory category;
+    private boolean testData;
 
 
     /**
@@ -42,6 +39,7 @@ public class WalletStoreListItem implements Serializable {
      * @param res           resource object to generate the icon
      */
     public WalletStoreListItem(WalletStoreCatalogueItem catalogueItem, Resources res) {
+        testData = false;
 
         id = catalogueItem.getId();
 
@@ -93,6 +91,7 @@ public class WalletStoreListItem implements Serializable {
         this.walletName = walletName;
         this.installationStatus = installationStatus;
         this.walletIcon = walletIcon;
+        this.testData = true;
     }
 
     public static ArrayList<WalletStoreListItem> getTestData(Resources res) {
@@ -132,4 +131,7 @@ public class WalletStoreListItem implements Serializable {
     }
 
 
+    public boolean isTestData() {
+        return testData;
+    }
 }

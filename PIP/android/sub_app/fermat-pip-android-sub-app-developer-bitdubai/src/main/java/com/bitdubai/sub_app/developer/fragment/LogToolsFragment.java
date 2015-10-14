@@ -84,12 +84,8 @@ public class LogToolsFragment extends FermatFragment {
 
     Typeface tf;
 
-    public static LogToolsFragment newInstance(int position) {
-        LogToolsFragment f = new LogToolsFragment();
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
-        return f;
+    public static LogToolsFragment newInstance() {
+        return new LogToolsFragment();
     }
 
     @Override
@@ -278,11 +274,10 @@ public class LogToolsFragment extends FermatFragment {
                         ArrayListLoggers lst = lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_0);
 
                         //set the next fragment and params
-                        Object[] params = new Object[1];
 
-                        params[0] = lst;
+                        developerSubAppSession.setData("list",lst);
 
-                        ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey(), params);
+                        ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey(),R.id.logContainer, null);
 
 
                     }

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:background="#0d557e">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="0.2"
+            android:paddingLeft="15dp"
+            android:paddingTop="5dp"
+            android:id="@+id/linear_type_container"
+            >
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Available balance"
+                android:textSize="18dp"
+                android:id="@+id/txt_type_balance"
+                android:textColor="#FFF"/>
+
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Touch to change"
+                android:id="@+id/txt_touch_to_change"
+                android:textColor="#44bcff"
+                android:textSize="12dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:paddingRight="15dp"
+            android:paddingTop="5dp"
+            android:id="@+id/linear_amount_container"
+            >
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/txt_balance_amount"
+                android:textSize="20dp"
+                android:layout_toLeftOf="@+id/txt_amount_type"
+                android:paddingRight="7dp"
+                android:textColor="#c8c7d8"
+                />
+
+
+
+
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+
+
+
+</FrameLayout>

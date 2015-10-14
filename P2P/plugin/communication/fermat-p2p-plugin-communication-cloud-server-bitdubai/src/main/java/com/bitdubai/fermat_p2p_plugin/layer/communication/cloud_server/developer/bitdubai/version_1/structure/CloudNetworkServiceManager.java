@@ -124,7 +124,7 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 	private void requestRegisteredConnection(FMPPacket packet) throws FMPException {
 		String decryptedMessage;
 		try{
-			decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(packet.getMessage(), identity.getPrivateKey());
+			decryptedMessage = AsymmetricCryptography.decryptMessagePrivateKey(packet.getMessage(), identity.getPrivateKey());
 		}catch(Exception ex){
 			denyConnectionRequest(packet, ex.getMessage());
 			return;
@@ -142,11 +142,11 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 	
 	private void requestUnregisteredConnection(final FMPPacket packet) throws FMPException {
 		if(!packet.getDestination().equals(getIdentityPublicKey()))
-			throw new IncorrectFMPPacketDestinationException(IncorrectFMPPacketDestinationException.DEFAULT_MESSAGE, null, "Packet Data: " + packet.toString(), "The Destination of the Packet is not the server");
+			throw new IncorrectFMPPacketDestinationException(IncorrectFMPPacketDestinationException.DEFAULT_MESSAGE, null, "FermatPacketCommunication Data: " + packet.toString(), "The Destination of the FermatPacketCommunication is not the server");
 		
 		NetworkServices networkService;
 		try{
-			networkService = NetworkServices.valueOf(AsymmectricCryptography.decryptMessagePrivateKey(packet.getMessage(), identity.getPrivateKey()));
+			networkService = NetworkServices.valueOf(AsymmetricCryptography.decryptMessagePrivateKey(packet.getMessage(), identity.getPrivateKey()));
 		} catch(Exception ex){
 			denyConnectionRequest(packet, ex.getMessage());
 			return;
@@ -276,7 +276,7 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 		possibleReason += " even though this might be due to improper client message flow, it can also be a threading problem";
 		possibleReason += " as we can process a register packet for a connection that has already been registered, we need to improve this";
 
-		String context = "Packet Data: " + packet.toString();
+		String context = "FermatPacketCommunication Data: " + packet.toString();
 		context += RegisteringAddressHasNotRequestedConnectionException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Is this connection already registered? " + registeredConnections.containsKey(packet.getSender());
 

@@ -85,11 +85,15 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mUserLearnedDrawer;
 
     private List<String> menuOption;
+    private  List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> menuItem = new ArrayList<>();
 
     public NavigationDrawerFragment() {
     }
 
 
+ //   public NavigationDrawerArrayAdapter getmAdapter() {
+      //  return mAdapter;
+    //}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,18 +101,18 @@ public class NavigationDrawerFragment extends Fragment {
 
         try{
 
-        // Read in the flag indicating whether or not the user has demonstrated awareness of the
-        // drawer. See PREF_USER_LEARNED_DRAWER for details.
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
+            // Read in the flag indicating whether or not the user has demonstrated awareness of the
+            // drawer. See PREF_USER_LEARNED_DRAWER for details.
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
 
-        if (savedInstanceState != null) {
-            mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
-            mFromSavedInstanceState = true;
-        }
+            if (savedInstanceState != null) {
+                mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
+                mFromSavedInstanceState = true;
+            }
 
-        // Select either the default item (0) or the last selected item.
-        selectItem(mCurrentSelectedPosition);
+            // Select either the default item (0) or the last selected item.
+            selectItem(mCurrentSelectedPosition);
         }
         catch (Exception e)
         {
@@ -143,12 +147,12 @@ public class NavigationDrawerFragment extends Fragment {
                 }
             });
 
-            //create menu option based activity submenu definition
-            Platform platform = ((ApplicationSession)(getActivity().getApplication())).getFermatPlatform();
-
-            this.platformContext = platform.getCorePlatformContext();
-
-            this.appRuntimeMiddleware =  (SubAppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+//            //create menu option based activity submenu definition
+//            Platform platform = ((ApplicationSession)(getActivity().getApplication())).getFermatPlatform();
+//
+//            this.platformContext = platform.getCorePlatformContext();
+//
+//            this.appRuntimeMiddleware =  (SubAppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
 
             menuOption = new ArrayList<String>();
 
@@ -160,16 +164,25 @@ public class NavigationDrawerFragment extends Fragment {
             mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 
         }
-    catch (Exception e)
-    {
-        throw e;
-    }
+        catch (Exception e)
+        {
+            throw e;
+        }
 
         return mDrawerListView;
     }
 
     public boolean isDrawerOpen() {
-        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
+        try{
+            if(mDrawerLayout != null) {
+                if (mDrawerLayout.isDrawerOpen(mFragmentContainerView)) {
+                    return true;
+                }
+            }
+        }catch (Exception e){
+
+        }
+        return  false;
     }
 
     /**
@@ -184,7 +197,6 @@ public class NavigationDrawerFragment extends Fragment {
         try {
 
             menuOption = new ArrayList<String>();
-            List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> menuItem = new ArrayList<>();
 
             if (sideMenu != null) {
                 menuItem = sideMenu.getMenuItems();
@@ -285,26 +297,32 @@ public class NavigationDrawerFragment extends Fragment {
                 mDrawerLayout.closeDrawer(mFragmentContainerView);
             }
             if (mCallbacks != null) {
-                mCallbacks.onNavigationDrawerItemSelected(position);
+
+                if(menuOption!=null) {
+                    com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem = this.menuItem.get(position);
+                   if (menuItem != null)
+                        mCallbacks.onNavigationDrawerItemSelected(position, menuItem.getLinkToActivity().getCode());
+               }
+
             }
             //test mati
-            if (((FermatActivity)(getActivity())).getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getType().getCode() == "DesktopActivity") {
-
-
-                //wallet store
-                if (position == 5) {
-                    SubAppRuntimeManager appRuntimeMiddleware = (SubAppRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
-                    appRuntimeMiddleware = (SubAppRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
-                    Intent intent;
-                    appRuntimeMiddleware.getLastSubApp().getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
-                    intent = new Intent(getActivity(), SubAppActivity.class);
-                    intent.putExtra("executeStart", "1");
-                    startActivity(intent);
-
-
-                }
-
-            }
+//            if (((FermatActivity)(getActivity())).getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getType().getCode() == "DesktopActivity") {
+//
+//
+//                //wallet store
+//                if (position == 5) {
+//                    SubAppRuntimeManager appRuntimeMiddleware = (SubAppRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+//                    appRuntimeMiddleware = (SubAppRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+//                    Intent intent;
+//                    appRuntimeMiddleware.getLastSubApp().getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
+//                    intent = new Intent(getActivity(), SubAppActivity.class);
+//                    intent.putExtra("executeStart", "1");
+//                    startActivity(intent);
+//
+//
+//                }
+//
+//            }
         }
         catch (Exception e)
         {
@@ -320,7 +338,7 @@ public class NavigationDrawerFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            //*** CAST EXCEPTION ! mCallbacks = (NavigationDrawerCallbacks) activity;
+            mCallbacks = (NavigationDrawerCallbacks) activity;
         } catch (ClassCastException e) {
             throw e;
         }
@@ -330,7 +348,11 @@ public class NavigationDrawerFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mCallbacks = null;
+        mFragmentContainerView = null;
+        onPause();
     }
+
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -354,19 +376,19 @@ public class NavigationDrawerFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // If the drawer is open, show the wallet_framework_activity_framework_drawer_open_menu app actions in the action bar. See also
         // showGlobalContextActionBar, which controls the top-left area of the action bar.
-      try
-      {
+        try
+        {
 
             if (mDrawerLayout != null && isDrawerOpen()) {
                 inflater.inflate(R.menu.wallet_framework_activity_framework_drawer_open_menu, menu);
                 showGlobalContextActionBar();
             }
             super.onCreateOptionsMenu(menu, inflater);
-      }
-      catch (Exception e)
-      {
-          throw e;
-      }
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
     }
 
     @Override
@@ -395,7 +417,7 @@ public class NavigationDrawerFragment extends Fragment {
     public void onPrepareOptionsMenu(Menu menu) {
         if (mDrawerLayout != null && isDrawerOpen()) {
             menu.clear();
-       }
+        }
     }
 
     /**
@@ -417,10 +439,13 @@ public class NavigationDrawerFragment extends Fragment {
     /**
      * Callbacks interface that all activities using this fragment must implement.
      */
+    /**
+     * Callbacks interface that all activities using this fragment must implement.
+     */
     public static interface NavigationDrawerCallbacks {
         /**
          * Called when an item in the navigation drawer is selected.
          */
-        void onNavigationDrawerItemSelected(int position);
+        void onNavigationDrawerItemSelected(int position,String activityCode);
     }
 }

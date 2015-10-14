@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
@@ -28,7 +28,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPack
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.CloudFMPClientStartFailedException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.ConnectionAlreadyRegisteredException;
@@ -38,7 +37,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 
 
 /**
@@ -78,7 +76,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
      * @throws IllegalArgumentException
      */
 	public CloudClientCommunicationManager(final CommunicationChannelAddress serverAddress, final ExecutorService executor, final String clientPrivateKey, final String identityPublicKeyRemoteServer) throws IllegalArgumentException {
-		super(serverAddress, executor, new ECCKeyPair(clientPrivateKey, AsymmectricCryptography.derivePublicKey(clientPrivateKey)), CloudFMPConnectionManagerMode.FMP_CLIENT);
+		super(serverAddress, executor, new ECCKeyPair(clientPrivateKey, AsymmetricCryptography.derivePublicKey(clientPrivateKey)), CloudFMPConnectionManagerMode.FMP_CLIENT);
 		this.identityPublicKeyRemoteServer = identityPublicKeyRemoteServer;
 		networkServiceRegistry = new ConcurrentHashMap<>();
 		networkServiceRegistry.clear();
@@ -148,8 +146,8 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 
             String message = CloudCommunicationException.DEFAULT_MESSAGE;
             FermatException cause = fMPException;
-            String context = "Packet Data: " + dataPacket.toString();
-            String possibleReason = "Something failed in the processing of one of the different PacketType, you should check the FMPException that is linked below";
+            String context = "FermatPacketCommunication Data: " + dataPacket.toString();
+            String possibleReason = "Something failed in the processing of one of the different FermatPacketType, you should check the FMPException that is linked below";
             throw new CloudCommunicationException(message, cause, context, possibleReason);
 
         }catch(NoSuchElementException ex){
@@ -237,7 +235,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
             /*
              * Decrypt the message
              */
-            String decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), identity.getPrivateKey());
+            String decryptedMessage = AsymmetricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), identity.getPrivateKey());
 
             /*
              * Get the JsonObject structure from the message
@@ -267,7 +265,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
              */
 		    CloudClientCommunicationNetworkServiceConnection networkServiceClient = new CloudClientCommunicationNetworkServiceConnection(networkServiceServerAddress,
                                                                                                                                          executorService,
-					                                                                                                                     AsymmectricCryptography.createPrivateKey(),
+					                                                                                                                     AsymmetricCryptography.createPrivateKey(),
 																																		 identityCloudNetworkServiceManager,
                                                                                                                                          identityPublicKeyNetworkService,
                                                                                                                                          networkService);
@@ -294,7 +292,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
      */
 	@Override
 	public void handleConnectionDeny(final FMPPacket dataPacket) throws FMPException {
-		System.out.println(AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), identity.getPrivateKey()));
+		System.out.println(AsymmetricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), identity.getPrivateKey()));
 	}
 
     /**
@@ -350,7 +348,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
         /*
          * Get the content of the message
          */
-		String message = AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), identity.getPrivateKey());
+		String message = AsymmetricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), identity.getPrivateKey());
 
 
         /*
@@ -388,7 +386,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
          */
         List<String> remoteNetworkServicesIdentities =  Arrays.asList(identitiesList);
 
-        System.out.print("remoteNetworkServicesIdentities = "+remoteNetworkServicesIdentities);
+        System.out.print("remoteNetworkServicesIdentities = " + remoteNetworkServicesIdentities);
 
         //TODO: How to retrieve this list to the network service that request? fire a event with the list???
 
@@ -552,7 +550,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
             /*
              * Throw new CloudCommunicationException
              */
-			throw wrapFMPException(identity.getPublicKey(), identityPublicKeyRemoteServer, FMPPacketType.CONNECTION_REQUEST.toString(), identity.getPublicKey(), AsymmectricCryptography.createMessageSignature(identity.getPublicKey(), identity.getPrivateKey()), ex);
+			throw wrapFMPException(identity.getPublicKey(), identityPublicKeyRemoteServer, FMPPacketType.CONNECTION_REQUEST.toString(), identity.getPublicKey(), AsymmetricCryptography.createMessageSignature(identity.getPublicKey(), identity.getPrivateKey()), ex);
 		}
 	}
 
@@ -590,7 +588,6 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
                                                                                                   networkService,
                                                                                                   identity.getPrivateKey());
 
-
             System.out.println("CloudClientCommunicationManager - requestPacketNetworkService = " + requestPacket.toJson());
 
             /*
@@ -621,7 +618,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
             /*
              * Throw new CloudCommunicationException
              */
-            throw wrapFMPException(identity.getPublicKey(), identityPublicKeyRemoteServer, FMPPacketType.CONNECTION_REQUEST.toString(), identity.getPublicKey(), AsymmectricCryptography.createMessageSignature(identity.getPublicKey(), identity.getPrivateKey()), ex);
+            throw wrapFMPException(identity.getPublicKey(), identityPublicKeyRemoteServer, FMPPacketType.CONNECTION_REQUEST.toString(), identity.getPublicKey(), AsymmetricCryptography.createMessageSignature(identity.getPublicKey(), identity.getPrivateKey()), ex);
 		}
 	}
 
@@ -657,7 +654,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
         /*
          * Validate the signature
          */
-		return AsymmectricCryptography.verifyMessageSignature(dataPacket.getSignature(), dataPacket.getMessage(), dataPacket.getSender());
+		return AsymmetricCryptography.verifyMessageSignature(dataPacket.getSignature(), dataPacket.getMessage(), dataPacket.getSender());
 	}
 
     /**
@@ -673,7 +670,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 		context += IllegalPacketSenderException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Client Public Key: " + identity.getPublicKey();
 		context += IllegalPacketSenderException.CONTEXT_CONTENT_SEPARATOR;
-		context += "Packet Sender: " + packet.getSender();
+		context += "FermatPacketCommunication Sender: " + packet.getSender();
 		String possibleReason = "This is a problem of the flow of the packets, this might be accidental or some echo loop.";
 		possibleReason += "This can also be an unexpected attack from an unexpected sender.";
 		return new IllegalPacketSenderException(message, null, context, possibleReason);
@@ -689,7 +686,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 	private IllegalPacketSignatureException constructIllegalPacketSignatureException(final FMPPacket packet){
 
         String message = IllegalPacketSignatureException.DEFAULT_MESSAGE;
-		String context = "Data Packet Information: " + packet.toString();
+		String context = "Data FermatPacketCommunication Information: " + packet.toString();
 		String possibleReason = "There was an improper signature associated with this packet; check if you're using the standard Asymmetric Cryptography Signature method";
 
 		return new IllegalPacketSignatureException(message, null, context, possibleReason);
@@ -716,11 +713,11 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 		context += CloudCommunicationException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Type: " + type;
 		context += CloudCommunicationException.CONTEXT_CONTENT_SEPARATOR;
-		context += "Message Hash: " + messageHash;
+		context += "FermatMessage Hash: " + messageHash;
 		context += CloudCommunicationException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Signature: " + signature;
 
-		String possibleReason = "The FMP Packet construction failed, check the cause and the values in the context";
+		String possibleReason = "The FMP FermatPacketCommunication construction failed, check the cause and the values in the context";
 
 		return new CloudCommunicationException(message, cause, context, possibleReason);
 	}
@@ -776,11 +773,18 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
             /*
              * Throw new CloudCommunicationException
              */
-            throw wrapFMPException(identity.getPublicKey(), identityPublicKeyRemoteServer, FMPPacketType.CONNECTION_REQUEST.toString(), identity.getPublicKey(), AsymmectricCryptography.createMessageSignature(identity.getPublicKey(), identity.getPrivateKey()), ex);
+            throw wrapFMPException(identity.getPublicKey(), identityPublicKeyRemoteServer, FMPPacketType.CONNECTION_REQUEST.toString(), identity.getPublicKey(), AsymmetricCryptography.createMessageSignature(identity.getPublicKey(), identity.getPrivateKey()), ex);
         }
 
 
 
     }
+
+  /*  private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    } */
 	
 }

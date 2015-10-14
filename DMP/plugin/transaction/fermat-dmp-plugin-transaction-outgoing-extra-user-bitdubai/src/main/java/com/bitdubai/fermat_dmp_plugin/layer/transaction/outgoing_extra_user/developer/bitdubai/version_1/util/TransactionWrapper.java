@@ -3,97 +3,86 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.dev
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionState;
 
 import java.util.UUID;
 
 /**
  * Created by eze on 2015.06.25..
+ * Modified by Leon Acosta (laion.cj91@gmail.com) on 29/09/2015.
  */
 public class TransactionWrapper implements BitcoinWalletTransactionRecord {
 
-    /*
-     * BitcoinWalletTransactionRecord Interface member variables
-     */
+    private final UUID             transactionId     ;
+    private final String           actorFromPublicKey;
+    private final String           actorToPublicKey  ;
+    private final Actors           actorFromType     ;
+    private final Actors           actorToType       ;
+    private final String           transactionHash   ;
+    private final CryptoAddress    addressFrom       ;
+    private final CryptoAddress    addressTo         ;
+    private final long             amount            ;
+    private final long             timestamp         ;
+    private final String           memo              ;
+    private final String           walletPublicKey   ;
+    private final TransactionState state             ;
+    private final CryptoStatus     cryptoStatus      ;
 
-    private UUID transactionId;
+    public TransactionWrapper(final UUID             transactionId     ,
+                              final String           actorFromPublicKey,
+                              final String           actorToPublicKey  ,
+                              final Actors           actorFromType     ,
+                              final Actors           actorToType       ,
+                              final String           transactionHash   ,
+                              final CryptoAddress    addressFrom       ,
+                              final CryptoAddress    addressTo         ,
+                              final long             amount            ,
+                              final long             timestamp         ,
+                              final String           memo              ,
+                              final String           walletPublicKey   ,
+                              final TransactionState state             ,
+                              final CryptoStatus     cryptoStatus      ) {
 
-    private UUID actorFromId;
-
-    private UUID actorToId;
-
-    private Actors actorFromType;
-
-    private Actors actorToType;
-
-    private String transactionHash;
-
-    private CryptoAddress addressFrom;
-
-    private CryptoAddress addressTo;
-
-    private long amount;
-
-    private long timestamp;
-
-    private String memo;
-
-    @Override
-    public CryptoAddress getAddressFrom() {
-        return addressFrom;
-    }
-
-    public void setAddressFrom(CryptoAddress addressFrom) {
-        this.addressFrom = addressFrom;
-    }
-
-    @Override
-    public UUID getIdTransaction() {
-        return this.transactionId;
-    }
-
-
-    public void setIdTransaction(UUID id) {
-        this.transactionId = id;
-    }
-
-    @Override
-    public CryptoAddress getAddressTo() {
-        return addressTo;
-    }
-
-    public void setAddressTo(CryptoAddress addressTo) {
-        this.addressTo = addressTo;
+        this.transactionId      = transactionId     ;
+        this.actorFromPublicKey = actorFromPublicKey;
+        this.actorToPublicKey   = actorToPublicKey  ;
+        this.actorFromType      = actorFromType     ;
+        this.actorToType        = actorToType       ;
+        this.transactionHash    = transactionHash   ;
+        this.addressFrom        = addressFrom       ;
+        this.addressTo          = addressTo         ;
+        this.amount             = amount            ;
+        this.timestamp          = timestamp         ;
+        this.memo               = memo              ;
+        this.walletPublicKey    = walletPublicKey   ;
+        this.state              = state             ;
+        this.cryptoStatus       = cryptoStatus      ;
     }
 
     @Override
-    public long getAmount() {
-        return amount;
-    }
-
-    public void setAmount(long amount) {
-        this.amount = amount;
+    public UUID getTransactionId() {
+        return transactionId;
     }
 
     @Override
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public String getActorFromPublicKey() {
+        return actorFromPublicKey;
     }
 
     @Override
-    public String getMemo() {
-        return memo;
+    public String getActorToPublicKey() {
+        return actorToPublicKey;
     }
 
-    public void setMemo(String memo) {
-        this.memo = memo;
+    @Override
+    public Actors getActorFromType() {
+        return actorFromType;
+    }
+
+    @Override
+    public Actors getActorToType() {
+        return actorToType;
     }
 
     @Override
@@ -101,63 +90,40 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
         return transactionHash;
     }
 
-
     @Override
-    public UUID getActorTo() {
-        return this.actorToId;
+    public CryptoAddress getAddressFrom() {
+        return addressFrom;
     }
 
-    public void setActorToId(UUID actorToId) {this.actorToId = actorToId;}
-
     @Override
-    public UUID getActorFrom() {
-        return this.actorFromId;
+    public CryptoAddress getAddressTo() {
+        return addressTo;
     }
 
-    public void setActorFromId(UUID actorFromId){this.actorFromId = actorFromId;}
-
     @Override
-    public Actors getActorToType() {return this.actorToType; }
-
-    public void setActorToType(Actors actorToType) {this.actorToType = actorToType;}
-
-    @Override
-    public Actors getActorFromType() { return this.actorFromType;}
-
-    public void setActorFromType(Actors actorFromType){ this.actorFromType = actorFromType; }
-
-    public void setTransactionHash(String tramsactionHash) {
-        this.transactionHash = tramsactionHash;
+    public long getAmount() {
+        return amount;
     }
 
+    @Override
+    public long getTimestamp() {
+        return timestamp;
+    }
 
-
-    private String walletPublicKey;
-    private TransactionState state;
-    private CryptoStatus cryptoStatus;
-
+    @Override
+    public String getMemo() {
+        return memo;
+    }
 
     public String getWalletPublicKey() {
         return walletPublicKey;
     }
 
-    public void setWalletPublicKey(String walletPublicKey) {
-        this.walletPublicKey = walletPublicKey;
-    }
-
     public TransactionState getState() {
-        return this.state;
-    }
-
-    public void setState(TransactionState state) {
-        this.state = state;
+        return state;
     }
 
     public CryptoStatus getCryptoStatus() {
-        return this.cryptoStatus;
-    }
-
-    public void setCryptoStatus(CryptoStatus cryptoStatus) {
-        this.cryptoStatus = cryptoStatus;
+        return cryptoStatus;
     }
 }

@@ -6,17 +6,16 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.MalformedFMPPacketException;
-import com.google.gson.Gson;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketFactory</code> is a
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FermatPacketCommunicationFactory</code> is a
  * factory class tha construct the different packet types
  * <p/>
  *
@@ -28,7 +27,7 @@ import com.google.gson.Gson;
 public class FMPPacketFactory {
 
     /**
-     * Construct a FMPPacket encrypted with the destination identity public key and signed
+     * Construct a FermatPacketCommunication encrypted with the destination identity public key and signed
      * whit the private key passed as an argument
      *
      * @param sender
@@ -37,23 +36,23 @@ public class FMPPacketFactory {
      * @param fmpPacketType
      * @param networkServicesType
      * @param privateKey to sing the message
-     * @return FMPPacket
+     * @return FermatPacketCommunication
      * @throws FMPException
      */
     public static FMPPacket constructCloudFMPPacketEncryptedAndSinged(final String sender, final String destination, final String message, final FMPPacketType fmpPacketType, final NetworkServices networkServicesType, final String privateKey) throws FMPException{
 
-        String messageHash = AsymmectricCryptography.encryptMessagePublicKey(message, destination);
-        String signature = AsymmectricCryptography.createMessageSignature(messageHash, privateKey);
+        String messageHash = AsymmetricCryptography.encryptMessagePublicKey(message, destination);
+        String signature = AsymmetricCryptography.createMessageSignature(messageHash, privateKey);
 
         return new CloudFMPPacket(destination, sender, fmpPacketType, messageHash, signature, networkServicesType);
     }
 
 
     /**
-     * Construct a FMPPacket from a json string
+     * Construct a FermatPacketCommunication from a json string
      *
      * @param jsonPacketData
-     * @return FMPPacket
+     * @return FermatPacketCommunication
      * @throws FMPException
      */
 	public static FMPPacket constructCloudFMPPacket(String jsonPacketData) throws FMPException {
@@ -91,14 +90,14 @@ public class FMPPacketFactory {
      * @param message
      * @param signature
      * @param networkServicesType
-     * @return FMPPacket
+     * @return FermatPacketCommunication
      * @throws FMPException
      */
 	public static FMPPacket constructCloudFMPPacket(String destination, String sender, FMPPacketType fMPPacketType, String message, String signature, NetworkServices networkServicesType) throws FMPException{
 
         if((destination == null) || (sender == null) || (fMPPacketType == null) || (message == null) || (signature == null) || (networkServicesType == null)){
 
-            throw new MalformedFMPPacketException("All argument to construct the FMPPacket are required",null, "", "Any argument is null");
+            throw new MalformedFMPPacketException("All argument to construct the FermatPacketCommunication are required",null, "", "Any argument is null");
         }
 
 		return new CloudFMPPacket(destination, sender, fMPPacketType, message, signature, networkServicesType);

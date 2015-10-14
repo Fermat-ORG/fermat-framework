@@ -14,6 +14,7 @@ public class CryptoTransaction{
     private CryptoCurrency cryptoCurrency;
     private long cryptoAmount;
     private CryptoStatus cryptoStatus;
+    private String op_Return;
 
 
     public CryptoTransaction(String transactionHash,
@@ -30,6 +31,15 @@ public class CryptoTransaction{
         this.cryptoAmount = cryptoAmount;
         this.cryptoStatus = cryptoStatus;
     }
+
+    /**
+     * Default constructor.
+     */
+    public CryptoTransaction(){}
+
+    /**
+     * Getters
+     * */
 
     public String getTransactionHash() {
         return transactionHash;
@@ -51,5 +61,41 @@ public class CryptoTransaction{
 
     public CryptoStatus getCryptoStatus() {
         return cryptoStatus;
+    }
+
+    public String getOp_Return() {
+        return op_Return;
+    }
+
+    /**
+     * setters
+     */
+
+    public void setOp_Return(String op_Return) {
+        this.op_Return = op_Return;
+    }
+
+    public void setTransactionHash(String transactionHash) {
+        this.transactionHash = transactionHash;
+    }
+
+    public void setAddressFrom(CryptoAddress addressFrom) {
+        this.addressFrom = addressFrom;
+    }
+
+    public void setAddressTo(CryptoAddress addressTo) {
+        this.addressTo = addressTo;
+    }
+
+    public void setCryptoCurrency(CryptoCurrency cryptoCurrency) {
+        this.cryptoCurrency = cryptoCurrency;
+    }
+
+    public void setCryptoAmount(long cryptoAmount) {
+        this.cryptoAmount = cryptoAmount;
+    }
+
+    public void setCryptoStatus(CryptoStatus cryptoStatus) {
+        this.cryptoStatus = cryptoStatus;
     }
 }

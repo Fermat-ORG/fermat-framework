@@ -118,7 +118,7 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 	private void requestUnregisteredConnection(final FMPPacket packet) throws FMPException {
 		NetworkServices networkService;
 		try{
-			networkService = NetworkServices.valueOf(AsymmectricCryptography.decryptMessagePrivateKey(packet.getMessage(), identity.getPrivateKey()));
+			networkService = NetworkServices.valueOf(AsymmetricCryptography.decryptMessagePrivateKey(packet.getMessage(), identity.getPrivateKey()));
 		} catch(Exception ex){
 			denyConnectionRequest(packet, ex.getMessage());
 			return;
@@ -192,7 +192,7 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 		possibleReason += " even though this might be due to improper client message flow, it can also be a threading problem";
 		possibleReason += " as we can process a register packet for a connection that has already been registered, we need to improve this";
 
-		String context = "Packet Data: " + packet.toString();
+		String context = "FermatPacketCommunication Data: " + packet.toString();
 		context += RegisteringAddressHasNotRequestedConnectionException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Is this connection already registered? " + registeredConnections.containsKey(packet.getSender());
 

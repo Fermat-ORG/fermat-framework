@@ -51,6 +51,7 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.store.UnreadableWalletException;
@@ -433,13 +434,14 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             /**
              * I broadcast and wait for the confirmation of the network
              */
-            ListenableFuture<Transaction> future = peers.broadcastTransaction(request.tx);
+            TransactionBroadcast transactionBroadcast = peers.broadcastTransaction(request.tx);
+            ListenableFuture<Transaction> listenableFuture = transactionBroadcast.broadcast();
 
             /**
              * the transaction was broadcasted and accepted by the nwetwork
              * I will persist it to inform it when the confidence level changes
              */
-             future.get();
+            listenableFuture.get();
             /**
              * returns the created transaction id
              */
@@ -606,22 +608,60 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         Transaction tx = vault.getTransaction(hash);
 
         /**
-         * I will search on all outputs for an address that is mine
+         * I need to determine if this address is outgoing on incoming to determine what is addressTo
+         * and addressFrom.
          */
-        for (TransactionOutput output : tx.getOutputs()) {
-            if (output.isMine(vault)){
-                /**
-                 * this is address To
-                 */
-                addresses[1] = output.getScriptPubKey().getToAddress(this.networkParameters).toString();
-            } else {
-                /**
-                 * This is address From
-                 */
-                addresses[0] = output.getScriptPubKey().getToAddress(networkParameters).toString();
-            }
+        boolean isOutgoing;
+        if (tx.getValueSentFromMe(vault).getValue() != 0)
+            isOutgoing = true;
+        else
+            isOutgoing = false;
 
+        /**
+         * if is a transaction I generated to send to some one
+         */
+        if (isOutgoing){
+            /**
+             * I will search on all outputs for an address that is mine
+             */
+            for (TransactionOutput output : tx.getOutputs()) {
+                if (output.isMine(vault)){
+                    /**
+                     * this is address From
+                     */
+                    addresses[0] = output.getScriptPubKey().getToAddress(this.networkParameters).toString();
+                } else {
+                    /**
+                     * This is address To
+                     */
+                    addresses[1] = output.getScriptPubKey().getToAddress(networkParameters).toString();
+                }
+
+            }
+        } else
+        /**
+         * if it is an incoming transaction
+         */
+        {
+            /**
+             * I will search on all outputs for an address that is mine
+             */
+            for (TransactionOutput output : tx.getOutputs()) {
+                if (output.isMine(vault)){
+                    /**
+                     * this is address To
+                     */
+                    addresses[1] = output.getScriptPubKey().getToAddress(this.networkParameters).toString();
+                } else {
+                    /**
+                     * This is address From
+                     */
+                    addresses[0] = output.getScriptPubKey().getToAddress(networkParameters).toString();
+                }
+
+            }
         }
+
         return addresses;
     }
 

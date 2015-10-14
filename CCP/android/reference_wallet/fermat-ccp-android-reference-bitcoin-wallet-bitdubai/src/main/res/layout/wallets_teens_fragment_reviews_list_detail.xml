@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:orientation="horizontal"
+    android:paddingLeft="7dip"
+    android:paddingRight="7dip"
+    >
+
+    <ImageView
+        android:id="@+id/frame_tx_record"
+        android:layout_width="match_parent"
+        android:layout_height="106dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/object_frame_4x05_filled_white"
+        android:layout_gravity="center"
+
+        />
+
+    <ImageView
+        android:id="@+id/icon_send_to_contact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_menu_send"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="11dp"
+        android:paddingRight="0dp"
+        android:paddingBottom="7dp"
+        android:paddingTop="7dp"
+        android:onClick="onSendToContactIconClicked"
+
+        />
+
+    <ImageView
+        android:id="@+id/icon_chat_over_trx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_menu_directions"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="7dp"
+        android:paddingRight="7dp"
+        android:paddingBottom="0dp"
+        android:paddingTop="7dp"
+        android:onClick="onChatOverTrxIconClicked"
+        />
+
+    <TextView
+        android:id="@+id/when"
+        android:layout_width="170dp"
+        android:layout_height="30dp"
+        android:paddingBottom="0dp"
+        android:paddingLeft="7dp"
+        android:paddingRight="7dp"
+        android:paddingTop="14dp"
+        android:textSize="12sp"
+        android:text="1 min ago a la 10:34 AM"
+        android:gravity="left"
+        android:textColor="#FF666666"
+        android:layout_alignParentTop="true"
+
+        android:layout_toRightOf="@+id/icon_send_to_contact"
+        />
+    <TextView
+        android:id="@+id/notes"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:paddingBottom="9dp"
+        android:paddingLeft="45dp"
+        android:paddingRight="45dp"
+        android:paddingTop="0dp"
+        android:textSize="12sp"
+        android:text="Apartment rent Apartment rent"
+        android:gravity="center"
+
+        android:layout_alignParentBottom="true"
+        android:textColor="#FF666666"
+
+
+
+        />
+    <TextView
+        android:id="@+id/amount"
+        android:layout_width="150dp"
+        android:layout_height="35dp"
+
+        android:paddingBottom="2dp"
+        android:paddingLeft="7dp"
+        android:paddingRight="50dp"
+        android:paddingTop="14dp"
+        android:textSize="12sp"
+        android:text="$3,300.00"
+        android:gravity="right"
+        android:textColor="#FF666666"
+        android:textStyle="bold"
+
+
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+
+
+        />
+
+
+</RelativeLayout>

@@ -16,9 +16,9 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
      */
     private UUID transactionId;
 
-    private UUID actorFromId;
+    private String actorFromPublicKey;
 
-    private UUID actorToId;
+    private String actorToPublicKey;
 
     private Actors actorFromType;
 
@@ -46,7 +46,7 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     }
 
     @Override
-    public UUID getIdTransaction() {
+    public UUID getTransactionId() {
         return this.transactionId;
     }
 
@@ -97,19 +97,21 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     }
 
 
-    @Override
-    public UUID getActorTo() {
-        return this.actorToId;
+    public String getActorFromPublicKey() {
+        return actorFromPublicKey;
     }
 
-    public void setActorToId(UUID actorToId) {this.actorToId = actorToId;}
-
-    @Override
-    public UUID getActorFrom() {
-        return this.actorFromId;
+    public void setActorFromPublicKey(String actorFromPublicKey) {
+        this.actorFromPublicKey = actorFromPublicKey;
     }
 
-    public void setActorFromId(UUID actorFromId){this.actorFromId = actorFromId;}
+    public String getActorToPublicKey() {
+        return actorToPublicKey;
+    }
+
+    public void setActorToPublicKey(String actorToPublicKey) {
+        this.actorToPublicKey = actorToPublicKey;
+    }
 
     @Override
     public Actors getActorToType() {return this.actorToType; }

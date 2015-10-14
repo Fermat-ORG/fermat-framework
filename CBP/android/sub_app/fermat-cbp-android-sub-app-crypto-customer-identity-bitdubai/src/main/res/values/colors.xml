@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="background_tab_pressed">#6633B5E5</color>
+    <color name="identity_list_fragment_background">#FFFFFF</color>
+    <color name="create_identity_fragment_background">#FFFFFF</color>
+    <color name="add_button_normal">#7cffb3</color>
+    <color name="create_identity_button">#5677fc</color>
+
+</resources>

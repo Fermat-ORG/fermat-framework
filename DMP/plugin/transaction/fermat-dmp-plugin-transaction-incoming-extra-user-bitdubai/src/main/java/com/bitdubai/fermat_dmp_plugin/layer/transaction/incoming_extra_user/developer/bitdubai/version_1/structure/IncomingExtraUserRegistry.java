@@ -202,6 +202,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             List<DatabaseTableRecord> events = eventsTable.getRecords();
 
             if (events == null || events.isEmpty()) {
+                //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                 return null;
             }
 
@@ -255,7 +256,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
     }
 
     // Retorna las que están en (A,TBN)
-    protected List<Transaction<CryptoTransaction>> getAcknowledgedTransactions() throws InvalidParameterException {//throws CantGetTransactionsException
+    protected List<Transaction<CryptoTransaction>> getAcknowledgedTransactions() throws InvalidParameterException {//throws CantListTransactionsException
         List<Transaction<CryptoTransaction>> tbaList = new ArrayList<>();
 
         DatabaseTable registryTable = database.getTable(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_NAME);
@@ -383,7 +384,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
         databaseTableRecord.setStringValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName, transactionStatus.getCode());
         databaseTableRecord.setStringValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName, protocolStatus.getCode());
 
-        databaseTableRecord.setLongValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN.columnName, transaction.getTimestamp());
+        databaseTableRecord.setLongValue(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TIMESTAMP_COLUMN.columnName, transaction.getTimestamp());
 
     }
 

@@ -17,4 +17,6 @@ public interface NotificationEvent {
 
     public String getWalletPublicKey();
 
+    public String getNotificationType();
+
 }

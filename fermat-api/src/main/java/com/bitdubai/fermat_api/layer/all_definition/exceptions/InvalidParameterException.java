@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.FermatException;
  */
 
 public class InvalidParameterException extends FermatException {
-    private static String defaultMsg = "Wrong Parameter Found: ";
 
     public static final String DEFAULT_MESSAGE = "INVALID PARAMETER";
 
@@ -19,8 +18,12 @@ public class InvalidParameterException extends FermatException {
         this(message, cause, "", "");
     }
 
+    public InvalidParameterException(final String context, final String possibleReason) {
+        this(DEFAULT_MESSAGE, null, context, possibleReason);
+    }
+
     public InvalidParameterException(final String message) {
-        this(message, null);
+        this(message, null, null, null);
     }
 
     public InvalidParameterException(final Exception exception) {
@@ -31,4 +34,5 @@ public class InvalidParameterException extends FermatException {
     public InvalidParameterException() {
         this(DEFAULT_MESSAGE);
     }
+
 }

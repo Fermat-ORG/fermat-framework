@@ -48,7 +48,6 @@ import java.util.List;
  */
 public class DatabaseToolsDatabaseTableRecordListFragment extends FermatFragment {
 
-    private static final String ARG_POSITION = "position";
     View rootView;
     private ErrorManager errorManager;
     private DatabaseTool databaseTools;
@@ -60,29 +59,28 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends FermatFragment
 
 
     private Resource resource;
-
     LinearLayout base;
-    TableLayout tableLayout;
 
     /**
      * SubApp session
      */
     DeveloperSubAppSession developerSubAppSession;
 
-    public static DatabaseToolsDatabaseTableRecordListFragment newInstance(int position,com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession subAppSession) {
-        DatabaseToolsDatabaseTableRecordListFragment f = new DatabaseToolsDatabaseTableRecordListFragment();
-        f.setDeveloperSubAppSession((DeveloperSubAppSession) subAppSession);
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
-        return f;
+    public static DatabaseToolsDatabaseTableRecordListFragment newInstance() {
+        return new DatabaseToolsDatabaseTableRecordListFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        //developerSubAppSession = (DeveloperSubAppSession) super.walletSession;
+        if(super.subAppsSession!=null){
+            developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+
+            resource = (Resource)developerSubAppSession.getData("resource");
+            developerDatabaseTable = (DeveloperDatabaseTable)developerSubAppSession.getData("databaseTable");
+            developerDatabase = (DeveloperDatabase)developerSubAppSession.getData("developerDataBase");
+        }
 
         errorManager = developerSubAppSession.getErrorManager();
         try {

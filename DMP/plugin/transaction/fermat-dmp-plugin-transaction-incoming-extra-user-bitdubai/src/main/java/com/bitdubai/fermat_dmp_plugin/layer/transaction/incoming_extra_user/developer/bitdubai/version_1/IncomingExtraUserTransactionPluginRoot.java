@@ -23,15 +23,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.DealsWithActorAddressBook;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.DealsWithWalletAddressBook;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.DealsWithIncomingCrypto;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.developerUtils.IncomingExtraUserDeveloperDatabaseFactory;
@@ -73,18 +71,13 @@ import java.util.UUID;
  * * * 
  */
 
-public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerForDevelopers, DealsWithActorAddressBook , DealsWithBitcoinWallet, DealsWithErrors, DealsWithEvents, DealsWithIncomingCrypto, DealsWithPluginDatabaseSystem, DealsWithWalletAddressBook ,IncomingExtraUserManager, Plugin, Service {
+public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerForDevelopers, DealsWithBitcoinWallet, DealsWithErrors, DealsWithEvents, DealsWithIncomingCrypto, DealsWithPluginDatabaseSystem, DealsWithCryptoAddressBook,IncomingExtraUserManager, Plugin, Service {
 
 
     /*
      * DealsWithBitcoinWallet Interface member variables.
      */
     private BitcoinWalletManager bitcoinWalletManager;
-
-    /*
-     * DealsWithActorAddressBook Interface member variables
-     */
-    private ActorAddressBookManager actorAddressBookManager;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -109,11 +102,9 @@ public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerFo
 
 
     /*
-     * DealsWithWalletAddressBook  Interface member variables.
+     * DealsWithCryptoAddressBook  Interface member variables.
      */
-    private WalletAddressBookManager walletAddressBookManager;
-
-
+    private CryptoAddressBookManager cryptoAddressBookManager;
 
     /**
      * IncomingCryptoManager Interface member variables.
@@ -173,15 +164,6 @@ public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerFo
         return new ArrayList<>();
     }
 
-
-    /*
-     * DealsWithActorAddressBook Interface methods implementation
-     */
-    @Override
-    public void setActorAddressBookManager(ActorAddressBookManager actorAddressBookManager) {
-        this.actorAddressBookManager = actorAddressBookManager;
-    }
-
     /*
      * DealsWithBitcoinWallet Interface implementation
      */
@@ -224,11 +206,11 @@ public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerFo
     }
 
     /*
-     * DealsWithWalletAddressBook  Interface implementation
+     * DealsWithCryptoAddressBook  Interface implementation
      */
     @Override
-    public void setWalletAddressBookManager(WalletAddressBookManager walletAddressBookManager){
-        this.walletAddressBookManager = walletAddressBookManager;
+    public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager){
+        this.cryptoAddressBookManager = cryptoAddressBookManager;
     }
 
     /**
@@ -266,7 +248,7 @@ public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerFo
             throw new CantStartPluginException(cantInitializeCryptoRegistryException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
         catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantStartPluginException(e, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
 
@@ -294,7 +276,7 @@ public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerFo
         /**
          * I will start the Relay Agent.
          */
-        this.relay = new IncomingExtraUserRelayAgent(this.bitcoinWalletManager,this.actorAddressBookManager, this.errorManager, this.registry, this.walletAddressBookManager);
+        this.relay = new IncomingExtraUserRelayAgent(this.bitcoinWalletManager, this.errorManager, eventManager,this.registry, this.cryptoAddressBookManager);
         try {
             this.relay.start();
         }
