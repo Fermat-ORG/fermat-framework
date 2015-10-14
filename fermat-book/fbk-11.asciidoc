@@ -1,17 +1,16 @@
-:numbered:
-== First run on FERMAT 
-Versatility !! feedback - existent network - impact - creation and re-creation - intelligent growth ALONG real world trade....
+== Marketing with Digital Assets 
+
+FERMAT Marketing Platform (FERMAT-MKT) 
+
+=== VoWa (VShop wallet) 
+-> for 
+
+=== (Voucher Wallet) 
+-> for 
+
+=== DiWa (Shop wallet) 
+-> for shop owners who accept cryptocurrency in payment of their products !
 
 
-=== Fermat Reference Distribution
-==== Downloading and installing
-==== Three examples of feedback loop between FERMAT application and the real world network of relationships ( commercial / legal / ..)
-* Bitcoin niche wallet
-* Discount Wallet
-* FERMAT CCP - Crypto Currency Platform
-
-===== Bitcoin niche wallet
-===== Discount Wallet
-===== FERMAT CCP - Crypto Currency Platform
 
 
