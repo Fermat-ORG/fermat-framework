@@ -25,6 +25,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CouldNotCreateCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
@@ -116,7 +117,7 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
                 int resultKey = CREATE_IDENTITY_SUCCESS;
                 switch (resultKey) {
                     case CREATE_IDENTITY_SUCCESS:
-                        changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
+                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode());
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
                         Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
@@ -204,6 +205,11 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
         if (dataIsValid) {
             if (moduleManager != null) {
                 //moduleManager.createCryptoBrokerIdentity(brokerNameText, brokerImageByteArray);
+                try {
+                    moduleManager.createNewIntraWalletUser(brokerNameText,brokerImageByteArray);
+                } catch (CantCreateNewIntraWalletUserException e) {
+                    e.printStackTrace();
+                }
                 return CREATE_IDENTITY_SUCCESS;
             }
             return CREATE_IDENTITY_FAIL_MODULE_IS_NULL;
