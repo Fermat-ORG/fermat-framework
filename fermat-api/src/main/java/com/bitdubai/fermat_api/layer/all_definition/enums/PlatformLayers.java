@@ -83,6 +83,11 @@ public enum PlatformLayers {
     BITDUBAI_WPD_SUB_APP_MODULE_LAYER ("BWPDSAML", Developers.BITDUBAI),
     // End WPD Layers
 
+    //Init CBP Layers
+    BITDUBAI_CBP_IDENTITY_LAYER ("BCBPIL", Developers.BITDUBAI),
+    BITDUBAI_CBP_SUB_APP_MODULE_LAYER ("BCBPSAML", Developers.BITDUBAI),
+    //END CBP Layers
+
             ;
 
     /**
@@ -218,6 +223,11 @@ public enum PlatformLayers {
             case "BWPDNSL":  return BITDUBAI_WPD_NETWORK_SERVICE_LAYER;
             case "BWPDSAML": return BITDUBAI_WPD_SUB_APP_MODULE_LAYER;
             // End  WPD Layers
+
+            //Init CBP Layers
+            case "BCBPIL": return BITDUBAI_CBP_IDENTITY_LAYER;
+            case "BCBPSAML": return BITDUBAI_CBP_SUB_APP_MODULE_LAYER;
+            //End CBP Layers
 
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the PlatformLayers enum");
