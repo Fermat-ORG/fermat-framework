@@ -176,6 +176,6 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
 
     @Override
     public void onBlocksDownloaded(Peer peer, Block block, @Nullable FilteredBlock filteredBlock, int blocksLeft) {
-        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        System.out.println("Blockchain block downloaded. Blocks Left: " + blocksLeft);
     }
 }
