@@ -28,7 +28,9 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -425,5 +427,49 @@ public class BitcoinCryptoNetworkDatabaseDao {
 
             throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, outputMessage.toString(), "database issue");
         }
+    }
+
+    /**
+     * Gets the crypto Status list that are in pending status from the specified table.
+     * @param transactionType
+     * @return
+     */
+    public Set<CryptoStatus> getPendingCryptoStatus(TransactionTypes transactionType) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable;
+        String cryptoStatusColumnName;
+        Set<CryptoStatus> cryptoStatuses = new HashSet<>();
+
+        /**
+         * Will set up filters and column names depending on the transaction type.
+         */
+        if (transactionType == TransactionTypes.OUTGOING){
+            databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_TABLE_NAME);
+            databaseTable.setStringFilter(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
+            cryptoStatusColumnName = BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME;
+        } else{
+            databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_TABLE_NAME);
+            databaseTable.setStringFilter(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
+            cryptoStatusColumnName = BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME;
+        }
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error loading table into memory", "database error");
+        }
+
+        /**
+         * get all the CryptoStatus and remove duplicates as Im storing them in a set.
+         */
+        for (DatabaseTableRecord record : databaseTable.getRecords()){
+            try {
+                CryptoStatus cryptoStatus = CryptoStatus.getByCode(record.getStringValue(cryptoStatusColumnName));
+                cryptoStatuses.add(cryptoStatus);
+            } catch (InvalidParameterException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return cryptoStatuses;
     }
 }

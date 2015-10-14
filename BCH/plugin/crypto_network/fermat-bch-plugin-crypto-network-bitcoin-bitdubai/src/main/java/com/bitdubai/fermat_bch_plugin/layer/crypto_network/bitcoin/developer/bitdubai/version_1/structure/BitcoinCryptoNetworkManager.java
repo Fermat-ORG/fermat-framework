@@ -189,9 +189,21 @@ public class BitcoinCryptoNetworkManager {
             return true;
     }
 
+    /**
+     * instantiate if needed the dao object to access the database
+     * @return
+     */
     private BitcoinCryptoNetworkDatabaseDao getDao(){
         if (bitcoinCryptoNetworkDatabaseDao == null)
             bitcoinCryptoNetworkDatabaseDao = new BitcoinCryptoNetworkDatabaseDao(this.pluginId, this.pluginDatabaseSystem);
         return bitcoinCryptoNetworkDatabaseDao;
+    }
+
+    /**
+     * gets the bitcoinJ Wallet object.
+     * @return
+     */
+    public Wallet getWallet() {
+        return wallet;
     }
 }

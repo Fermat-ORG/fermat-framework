@@ -124,6 +124,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
              * I will try saving the transaction with minimal information.
              * I will complete this info in the agent that triggers the events.
              */
+            e.printStackTrace();
             try{
                 CryptoAddress errorAddress = new CryptoAddress("error", CryptoCurrency.BITCOIN);
                 getDao().saveNewIncomingTransaction(tx.getHashAsString(),
@@ -246,7 +247,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     }
 
     /**
-     * Extracts the Address From from an Incoming Transaction
+     * Extracts the AddressFrom from an Incoming Transaction
      * @param tx
      * @return
      */
