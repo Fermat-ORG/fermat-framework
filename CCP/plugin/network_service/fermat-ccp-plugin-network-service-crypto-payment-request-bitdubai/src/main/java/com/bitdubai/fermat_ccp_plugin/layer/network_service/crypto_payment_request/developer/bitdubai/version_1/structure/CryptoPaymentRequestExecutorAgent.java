@@ -60,7 +60,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
     private Boolean running;
 
     // network services registered
-    private List<String> poolConnectionsWaitingForResponse;
+    private Map<String, String> poolConnectionsWaitingForResponse;
 
     // counter and wait time
     private Map<String, CryptoPaymentRequestNetworkServiceConnectionRetry> waitingPlatformComponentProfile;
@@ -93,8 +93,8 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
         this.status                                       = AgentStatus.CREATED                         ;
 
-        waitingPlatformComponentProfile   = new HashMap<>()  ;
-        poolConnectionsWaitingForResponse = new ArrayList<>();
+        waitingPlatformComponentProfile   = new HashMap<>();
+        poolConnectionsWaitingForResponse = new HashMap<>();
 
         //Create a thread to send the messages
         this.toSend = new Thread(new Runnable() {
@@ -318,18 +318,14 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
         }
     }
 
-    private void reportUnexpectedError(FermatException e) {
-        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-    }
-
-    private void sendMessageToActor(String jsonMessage      ,
-                                    String actorPublicKey   ,
-                                    Actors actorType        ,
-                                    String identityPublicKey,
-                                    Actors identityType     ) {
+    private void sendMessageToActor(final String jsonMessage      ,
+                                    final String actorPublicKey   ,
+                                    final Actors actorType        ,
+                                    final String identityPublicKey,
+                                    final Actors identityType     ) {
 
         try {
-            if (!poolConnectionsWaitingForResponse.contains(actorPublicKey)) {
+            if (!poolConnectionsWaitingForResponse.containsKey(actorPublicKey)) {
 
                 if (communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorPublicKey) == null) {
 
@@ -356,7 +352,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                             );
 
                             // i put the actor in the pool of connections waiting for response-
-                            poolConnectionsWaitingForResponse.add(actorPublicKey);
+                            poolConnectionsWaitingForResponse.put(actorPublicKey, actorPublicKey);
                         }
 
                     }
@@ -374,6 +370,10 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
                                 actorPublicKey,
                                 jsonMessage
                         );
+
+                        poolConnectionsWaitingForResponse.remove(actorPublicKey);
+
+                        communicationNetworkServiceConnectionManager.closeConnection(actorPublicKey); // close connection once i send message ?
 
                     } catch (Exception e) {
 
@@ -448,14 +448,12 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
         eventManager.raiseEvent(eventToRaise);
     }
 
-    private void informReception(String actorPublicKey, UUID requestId) {
+    private void reportUnexpectedError(FermatException e) {
+        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+    }
 
-        CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorPublicKey);
-
-        // TODO VER QUE ACTION PONER AQUÍ.
-        InformationMessage informationMessage = new InformationMessage(requestId, RequestAction.INFORM_RECEPTION);
-
-        communicationNetworkServiceLocal.sendMessage(actorPublicKey, null,informationMessage.toJson());
+    public void connectionFailure(String identityPublicKey){
+        this.poolConnectionsWaitingForResponse.remove(identityPublicKey);
     }
 
 }
