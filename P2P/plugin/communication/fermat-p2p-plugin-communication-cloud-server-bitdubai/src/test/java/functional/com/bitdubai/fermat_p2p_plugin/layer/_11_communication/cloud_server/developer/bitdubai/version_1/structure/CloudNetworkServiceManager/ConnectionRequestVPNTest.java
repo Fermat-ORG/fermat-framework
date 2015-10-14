@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
 
@@ -27,7 +27,7 @@ public class ConnectionRequestVPNTest extends
 		setUpConnections(0);
 		assertThat(requestAndRegisterClient()).isNotNull();
 		FMPPacket requestVPNResponse = requestVPN();
-		System.out.println(AsymmectricCryptography.decryptMessagePrivateKey(requestVPNResponse.getMessage(), MockFMPPacketsFactory.MOCK_PRIVATE_KEY));
+		System.out.println(AsymmetricCryptography.decryptMessagePrivateKey(requestVPNResponse.getMessage(), MockFMPPacketsFactory.MOCK_PRIVATE_KEY));
 		assertThat(requestVPNResponse.getType()).isEqualTo(FMPPacketType.CONNECTION_REQUEST);
 	}
 
@@ -38,7 +38,7 @@ public class ConnectionRequestVPNTest extends
 		assertThat(requestAndRegisterClient()).isNotNull();
 		
 		FMPPacket requestVPNResponse = requestVPN();
-		String decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(requestVPNResponse.getMessage(), MockFMPPacketsFactory.MOCK_PRIVATE_KEY);
+		String decryptedMessage = AsymmetricCryptography.decryptMessagePrivateKey(requestVPNResponse.getMessage(), MockFMPPacketsFactory.MOCK_PRIVATE_KEY);
 		assertThat(decryptedMessage).contains(MockFMPPacketsFactory.MOCK_PUBLIC_KEY);
 	}
 
@@ -49,7 +49,7 @@ public class ConnectionRequestVPNTest extends
 		assertThat(requestAndRegisterClient()).isNotNull();
 		
 		FMPPacket requestVPNResponse = requestVPN();
-		String decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(requestVPNResponse.getMessage(), MockFMPPacketsFactory.MOCK_PRIVATE_KEY);
+		String decryptedMessage = AsymmetricCryptography.decryptMessagePrivateKey(requestVPNResponse.getMessage(), MockFMPPacketsFactory.MOCK_PRIVATE_KEY);
 		
 		FMPPacket acceptVPNResponse = acceptVPN(requestVPNResponse.getSender(), decryptedMessage);
 		assertThat(acceptVPNResponse.getType()).isEqualTo(FMPPacketType.CONNECTION_ACCEPT_FORWARD);

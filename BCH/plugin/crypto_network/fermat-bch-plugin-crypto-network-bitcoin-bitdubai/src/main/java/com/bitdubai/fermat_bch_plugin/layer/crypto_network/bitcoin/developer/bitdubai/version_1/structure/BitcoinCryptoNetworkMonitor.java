@@ -79,7 +79,7 @@ class BitcoinCryptoNetworkMonitor implements Agent {
             while (isSupposedToBeRunning){
                 try {
                     doTheMainTask();
-                } catch (BlockchainException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

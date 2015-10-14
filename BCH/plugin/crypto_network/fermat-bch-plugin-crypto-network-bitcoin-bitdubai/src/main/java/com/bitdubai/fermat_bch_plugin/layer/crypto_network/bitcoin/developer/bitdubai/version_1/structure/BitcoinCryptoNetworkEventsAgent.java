@@ -26,7 +26,7 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
      * class variables
      */
     private boolean isSupossedToBeRunning;
-    private final int AGENT_DELAY = 10000; // 10 seconds of delay
+    private final int AGENT_DELAY = 30000; // 30 seconds of delay
 
     /**
      * platform variables

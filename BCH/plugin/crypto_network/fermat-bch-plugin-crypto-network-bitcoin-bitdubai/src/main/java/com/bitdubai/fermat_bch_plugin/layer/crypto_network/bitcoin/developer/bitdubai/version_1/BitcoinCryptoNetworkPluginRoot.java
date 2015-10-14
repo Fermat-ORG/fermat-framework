@@ -108,12 +108,12 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, Da
         /**
          * Start the agent that will search for pending transactions to be notified.
          */
-       // BitcoinCryptoNetworkEventsAgent bitcoinCryptoNetworkEventsAgent = new BitcoinCryptoNetworkEventsAgent(this.pluginDatabaseSystem, this.pluginId, this.eventManager);
-       // try {
-        //    bitcoinCryptoNetworkEventsAgent.start();
-        //} catch (CantStartAgentException e) {
-         //   e.printStackTrace();
-        //}
+        BitcoinCryptoNetworkEventsAgent bitcoinCryptoNetworkEventsAgent = new BitcoinCryptoNetworkEventsAgent(this.pluginDatabaseSystem, this.pluginId, this.eventManager);
+        try {
+            bitcoinCryptoNetworkEventsAgent.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         /**
          * nothing left to do.
@@ -148,7 +148,7 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, Da
     public void monitorNetworkFromKeyList(CryptoVaults cryptoVault, List<BlockchainNetworkType> blockchainNetworkTypes, List<ECKey> keyList) throws CantMonitorBitcoinNetworkException {
         try {
             bitcoinCryptoNetworkManager.monitorNetworkFromKeyList(cryptoVault, blockchainNetworkTypes, keyList);
-        } catch (CantStartAgentException e) {
+        } catch (Exception e) {
             throw new CantMonitorBitcoinNetworkException (CantMonitorBitcoinNetworkException.DEFAULT_MESSAGE, e, null, null);
         }
     }
