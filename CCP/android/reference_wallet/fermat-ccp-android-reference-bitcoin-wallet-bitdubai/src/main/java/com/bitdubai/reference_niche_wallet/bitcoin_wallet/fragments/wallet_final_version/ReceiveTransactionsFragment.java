@@ -267,7 +267,6 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
                 public void onClick(View view) {
                     walletContact = new WalletContact();
                     walletContact.setName(autocompleteContacts.getText().toString());
-                    registerForContextMenu(btn_give_address);
                     getActivity().openContextMenu(btn_give_address);
                 }
             });
@@ -318,6 +317,8 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
                 }
             });
+
+            registerForContextMenu(btn_give_address);
 
             empty=(LinearLayout) rootView.findViewById(R.id.empty);
 

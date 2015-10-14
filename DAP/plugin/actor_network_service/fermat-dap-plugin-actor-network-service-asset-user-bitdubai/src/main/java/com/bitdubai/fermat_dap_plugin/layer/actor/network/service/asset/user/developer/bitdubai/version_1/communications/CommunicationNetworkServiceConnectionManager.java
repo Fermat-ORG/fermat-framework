@@ -35,7 +35,6 @@ import java.util.Map;
  */
 public class CommunicationNetworkServiceConnectionManager implements NetworkServiceConnectionManager {
 
-
     /**
      * Represent the communicationsClientConnection
      */
@@ -139,7 +138,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
         }
     }
 
@@ -247,6 +246,10 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
     }
 
+    public ECCKeyPair getIdentity() {
+        return identity;
+    }
+
     /**
      * Resume the manager
      */
@@ -275,5 +278,4 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
     public IncomingMessageDao getIncomingMessageDao() {
         return incomingMessageDao;
     }
-
 }

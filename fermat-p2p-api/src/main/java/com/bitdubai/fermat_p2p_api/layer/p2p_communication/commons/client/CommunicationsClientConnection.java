@@ -11,6 +11,10 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantSendMessageException;
 
 
 /**
@@ -51,8 +55,6 @@ public interface CommunicationsClientConnection {
      */
     public PlatformComponentProfile constructBasicPlatformComponentProfileFactory(String identityPublicKey, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType);
 
-
-
     /**
      * Construct a DiscoveryQueryParameters instance, for use in the process
      * of the discovery query to search all component register in the communication
@@ -78,16 +80,18 @@ public interface CommunicationsClientConnection {
      * Method that register a platform component with for Communication like online
      *
      * @param platformComponentProfile
+     * @throws CantRegisterComponentException
      */
-    public void registerComponentForCommunication(PlatformComponentProfile platformComponentProfile);
+    public void registerComponentForCommunication(PlatformComponentProfile platformComponentProfile) throws CantRegisterComponentException;
 
     /**
      * Method that request to the communication cloud server the list of component registered that mathc
      * whit the discovery query params
      *
      * @param discoveryQueryParameters
+     * @throws CantRequestListException
      */
-    public void requestListComponentRegistered(DiscoveryQueryParameters discoveryQueryParameters);
+    public void requestListComponentRegistered(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException;
 
     /**
      * Method that request to the communication cloud server create a vpn connection between the applicant and
@@ -95,8 +99,9 @@ public interface CommunicationsClientConnection {
      *
      * @param applicant who is made the request
      * @param remoteDestination the remote destination component to receive message
+     * @throws CantEstablishConnectionException
      */
-    public void requestVpnConnection(PlatformComponentProfile applicant, PlatformComponentProfile remoteDestination);
+    public void requestVpnConnection(PlatformComponentProfile applicant, PlatformComponentProfile remoteDestination) throws CantEstablishConnectionException;
 
     /**
      * Method that request to the communication cloud server create a vpn connection between the applicant and
@@ -106,8 +111,9 @@ public interface CommunicationsClientConnection {
      * @param applicantParticipant the applicant participant of the vpn
      * @param applicantNetworkService the profile of the network service which it makes the request
      * @param remoteParticipant the remote participant of the vpn
+     * @throws CantEstablishConnectionException
      */
-    public void requestDiscoveryVpnConnection(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant);
+    public void requestDiscoveryVpnConnection(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant) throws CantEstablishConnectionException;
 
     /**
      * Method that verified is the connection is

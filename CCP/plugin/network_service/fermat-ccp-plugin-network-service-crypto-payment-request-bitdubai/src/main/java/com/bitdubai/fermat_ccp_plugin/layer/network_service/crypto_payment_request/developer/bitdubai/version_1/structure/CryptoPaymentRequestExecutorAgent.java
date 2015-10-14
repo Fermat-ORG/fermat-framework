@@ -330,7 +330,7 @@ public class CryptoPaymentRequestExecutorAgent implements FermatAgent {
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorPublicKey);
 
             if(communicationNetworkServiceLocal != null)
-                communicationNetworkServiceLocal.sendMessage(communicationNetworkServiceConnectionManager.getIdentity().getPublicKey(), jsonMessage);
+                communicationNetworkServiceLocal.sendMessage(communicationNetworkServiceConnectionManager.getIdentity().getPublicKey(),null, jsonMessage);
         }
 
         private String buildJsonInformationMessage(CryptoPaymentRequest cpr) {
@@ -416,7 +416,7 @@ public class CryptoPaymentRequestExecutorAgent implements FermatAgent {
         // TODO VER QUE ACTION PONER AQUÍ.
         InformationMessage informationMessage = new InformationMessage(requestId, RequestAction.INFORM_RECEPTION);
 
-        communicationNetworkServiceLocal.sendMessage(actorPublicKey, informationMessage.toJson());
+        communicationNetworkServiceLocal.sendMessage(actorPublicKey, null,informationMessage.toJson());
     }
 
 }
