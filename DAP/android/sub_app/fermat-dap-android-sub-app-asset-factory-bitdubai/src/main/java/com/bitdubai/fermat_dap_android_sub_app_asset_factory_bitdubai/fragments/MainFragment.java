@@ -28,6 +28,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.adapters.A
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.interfaces.PopupMenu;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantPublishAssetFactoy;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
@@ -209,9 +210,12 @@ public class MainFragment extends FermatFragment implements
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.action_edit)
-            changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), getAssetForEdit());
-        else if (menuItem.getItemId() == R.id.action_publish) {
+        if (menuItem.getItemId() == R.id.action_edit) {
+            if (getAssetForEdit() != null && getAssetForEdit().getState() == State.DRAFT)
+                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), getAssetForEdit());
+            else
+                selectedAsset = null;
+        } else if (menuItem.getItemId() == R.id.action_publish) {
             try {
                 if (manager.isReadyToPublish(selectedAsset.getPublicKey())) {
                     final ProgressDialog dialog = new ProgressDialog(getActivity());
