@@ -9,6 +9,7 @@ import com.bitdubai.sub_app.crypto_customer_identity.fragmentFactory.CryptoCusto
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperSubAppFragmentFactory;
 
 import com.bitdubai.sub_app.intra_user_community.fragmentFactory.IntraUserFragmentFactory;
+import com.bitdubai.sub_app.intra_user_identity.fragmentFactory.IntraUserIdentityFragmentFactory;
 import com.bitdubai.sub_app.wallet_factory.factory.WalletFactoryFragmentFactory;
 import com.bitdubai.sub_app.wallet_publisher.FragmentFactory.WalletPublisherFragmentFactory;
 import com.bitdubai.sub_app.wallet_store.fragmentFactory.WalletStoreFragmentFactory;
@@ -30,7 +31,7 @@ public class SubAppFragmentFactory {
             case CWP_DEVELOPER_APP:
                 return new DeveloperSubAppFragmentFactory();
             case CWP_INTRA_USER_IDENTITY:
-
+                return new IntraUserIdentityFragmentFactory();
             case CCP_INTRA_USER_COMMUNITY:
                 return new IntraUserFragmentFactory();
             case DAP_ASSETS_FACTORY:

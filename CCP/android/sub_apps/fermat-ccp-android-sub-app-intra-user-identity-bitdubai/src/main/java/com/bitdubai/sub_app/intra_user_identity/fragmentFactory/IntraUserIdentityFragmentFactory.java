@@ -10,8 +10,7 @@ import com.bitdubai.sub_app.intra_user_identity.fragments.IntraUserIdentityListF
 import com.bitdubai.sub_app.intra_user_identity.preference_settings.IntraUserIdentityPreferenceSettings;
 import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
 
-import static com.bitdubai.sub_app.intra_user_identity.fragmentFactory.IntraUserIdentityFragmentsEnumType.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT;
-import static com.bitdubai.sub_app.intra_user_identity.fragmentFactory.IntraUserIdentityFragmentsEnumType.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT;
+
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
@@ -22,10 +21,10 @@ public class IntraUserIdentityFragmentFactory extends FermatSubAppFragmentFactor
     @Override
     public FermatFragment getFermatFragment(IntraUserIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {
 
-        if (fragments == CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT)
+        if (fragments.equals(IntraUserIdentityFragmentsEnumType.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT))
             return IntraUserIdentityListFragment.newInstance();
 
-        if (fragments == CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT)
+        if (fragments.equals(IntraUserIdentityFragmentsEnumType.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT))
             return CreateIntraUserIdentityFragment.newInstance();
 
 

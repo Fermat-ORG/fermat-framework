@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CantGetCryptoBrokerListException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.sub_app.intra_user_identity.common.adapters.IntraUserIdentityInfoAdapter;
@@ -36,7 +37,7 @@ public class IntraUserIdentityListFragment extends FermatListFragment<CryptoBrok
         implements FermatListItemListeners<CryptoBrokerIdentityInformation> {
 
 
-    private CryptoBrokerIdentityModuleManager moduleManager;
+    private IntraWalletUserManager moduleManager;
     private ErrorManager errorManager;
     private ArrayList<CryptoBrokerIdentityInformation> identityInformationList;
 
@@ -67,7 +68,7 @@ public class IntraUserIdentityListFragment extends FermatListFragment<CryptoBrok
         newIdentityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode());
+                changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
             }
         });
 
@@ -152,11 +153,7 @@ public class IntraUserIdentityListFragment extends FermatListFragment<CryptoBrok
                 data.add(new IntraUserIdentityInformationImp("Broker Name " + i));
             }
         } else {
-            try {
-                data = moduleManager.getAllCryptoBrokersIdentities(0, 0);
-            } catch (CantGetCryptoBrokerListException e) {
-                e.printStackTrace();
-            }
+            //data = moduleManager.getAllCryptoBrokersIdentities(0, 0);
         }
 
         return data;
