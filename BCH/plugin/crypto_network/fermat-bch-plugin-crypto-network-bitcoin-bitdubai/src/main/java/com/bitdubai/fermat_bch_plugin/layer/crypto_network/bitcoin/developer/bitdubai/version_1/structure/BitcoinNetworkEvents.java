@@ -115,7 +115,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                     tx.getConfidence().getDepthInBlocks(),
                     getIncomingTransactionAddressTo(wallet, tx),
                     getIncomingTransactionAddressFrom(tx),
-                    tx.getValue(wallet).getValue(),
+                    tx.getValueSentToMe(wallet).getValue(),
                     tx.getFee().getValue(),
                     ProtocolStatus.TO_BE_NOTIFIED);
         }  catch (Exception e){

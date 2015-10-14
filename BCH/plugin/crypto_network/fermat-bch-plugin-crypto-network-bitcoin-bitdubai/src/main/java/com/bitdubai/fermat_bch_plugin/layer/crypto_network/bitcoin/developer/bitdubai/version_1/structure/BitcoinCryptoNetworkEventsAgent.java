@@ -201,6 +201,10 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
                     event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
                     break;
             }
+            /**
+             * I raise the event
+             */
+            //eventManager.raiseEvent(event);
         }
 
         /**
