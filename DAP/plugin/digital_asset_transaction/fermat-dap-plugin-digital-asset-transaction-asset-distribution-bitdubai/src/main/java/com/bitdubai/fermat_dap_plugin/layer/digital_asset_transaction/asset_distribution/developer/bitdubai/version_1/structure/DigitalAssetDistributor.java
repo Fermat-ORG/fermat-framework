@@ -145,8 +145,9 @@ public class DigitalAssetDistributor extends DigitalAssetSwap {
     private void deliverToRemoteActor(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser remoteActorAssetUser)throws CantSendDigitalAssetMetadataException{
         String genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
         try {
+            //TODO: saqué esto porque estaba dando problemas, fijarse que falta
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.DELIVERING,genesisTransaction);
-            this.assetTransmissionNetworkServiceManager.sendDigitalAssetMetadata(digitalAssetMetadata, remoteActorAssetUser);
+            this.assetTransmissionNetworkServiceManager.sendDigitalAssetMetadata(null,null,null);//digitalAssetMetadata, remoteActorAssetUser);
         } catch (CantExecuteQueryException exception) {
             throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE,exception,"Delivering Digital Asset Metadata to Remote Actor", "There is an error executing a query in database");
         } catch (UnexpectedResultReturnedFromDatabaseException exception) {
