@@ -127,6 +127,7 @@ public class IntraUserNetworkServiceDatabaseFactory {
             table.addColumn(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_LOGGED_IN_PUBLIC_KEY_COLUMN_NAME,DatabaseDataType.STRING,100, Boolean.FALSE);
             table.addColumn(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_CREATED_TIME_COLUMN_NAME,    DatabaseDataType.LONG_INTEGER,  50, Boolean.FALSE);
             table.addColumn(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_DESCRIPTOR_COLUMN_NAME,    DatabaseDataType.STRING,  20, Boolean.FALSE);
+            table.addColumn(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_REASON_COLUMN_NAME,        DatabaseDataType.STRING,  100, Boolean.FALSE);
 
             try {
                 //Create the Known Network Intra Users Cache table

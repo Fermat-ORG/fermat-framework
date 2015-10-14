@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -326,13 +328,15 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
             });
 
 
-            ((Button) rootView.findViewById(R.id.send_button)).setOnClickListener(new View.OnClickListener() {
+            FermatButton send_button = (FermatButton) rootView.findViewById(R.id.send_button);
+            send_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     InputMethodManager im = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     if (getActivity().getCurrentFocus() != null && im.isActive(getActivity().getCurrentFocus())) {
                         im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                     }
+
 
       /*              if(walletContact!= null)
                         sendCrypto();
@@ -357,6 +361,9 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                             Actors.INTRA_USER);
                 }
             });
+
+            send_button.selector(R.drawable.bg_home_accept_active,R.drawable.bg_home_accept_normal,R.drawable.bg_home_accept_active);
+
 
             /**
              * BarCode Scanner

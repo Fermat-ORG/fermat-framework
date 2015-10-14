@@ -190,8 +190,8 @@ public class CustomerBrokerPurchaseNegotiationDeveloperDatabaseFactory implement
         }
 
         List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
         for (DatabaseTableRecord row : records) {
+            List<String> developerRow = new ArrayList<String>();
             /**
              * for each row in the table list
              */

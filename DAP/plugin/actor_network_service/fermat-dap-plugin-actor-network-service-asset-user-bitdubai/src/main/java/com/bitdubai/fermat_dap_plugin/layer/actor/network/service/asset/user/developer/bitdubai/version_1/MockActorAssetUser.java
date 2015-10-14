@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.de
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
@@ -66,7 +67,7 @@ public class MockActorAssetUser implements ActorAssetUser {
     }
 
     @Override
-    public String getCryptoAddress() {
+    public CryptoAddress getCryptoAddress() {
         return null;
     }
 
