@@ -10,6 +10,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
@@ -26,6 +27,7 @@ public abstract class DigitalAssetSwap {
     AssetVaultManager assetVaultManager;
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
+    public AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
 
     public DigitalAssetSwap(AssetVaultManager assetVaultManager,
                                    UUID pluginId,
@@ -33,6 +35,10 @@ public abstract class DigitalAssetSwap {
         this.assetVaultManager=assetVaultManager;
         this.pluginFileSystem=pluginFileSystem;
         this.pluginId=pluginId;
+    }
+
+    public void setAssetTransmissionNetworkServiceManager(AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager){
+        this.assetTransmissionNetworkServiceManager=assetTransmissionNetworkServiceManager;
     }
 
     public abstract void checkDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata) throws DAPException;

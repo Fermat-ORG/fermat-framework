@@ -120,6 +120,7 @@ public class AssetDistributionDeveloperDatabaseFactory implements DealsWithPlugi
         assetDistributionColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DISTRIBUTION_STATUS_COLUMN_NAME);
         assetDistributionColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_CRYPTO_STATUS_COLUMN_NAME);
         assetDistributionColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_PROTOCOL_STATUS_COLUMN_NAME);
+        assetDistributionColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_ACTOR_ASSET_USER_BITCOIN_ADDRESS_COLUMN_NAME);
         /**
          * Table Asset Distribution addition.
          */
@@ -151,7 +152,7 @@ public class AssetDistributionDeveloperDatabaseFactory implements DealsWithPlugi
         assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TIMESTAMP_COLUMN_NAME);
         assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_EVENT_ID_COLUMN_NAME);
 
-        DeveloperDatabaseTable assetDeliveringTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_FIRST_KEY_COLUMN, assetDeliveringColumns);
+        DeveloperDatabaseTable assetDeliveringTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME, assetDeliveringColumns);
         tables.add(assetDeliveringTable);
 
         return tables;

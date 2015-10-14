@@ -13,6 +13,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -21,6 +24,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_reception.interfa
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.DealsWithAssetIssuerWallet;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.DigitalAssetReceptionVault;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDatabaseConstants;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -36,7 +41,7 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     AssetIssuerWalletManager assetIssuerWalletManager;
-    Database assetDistributionDatabase;
+    Database assetReceptionDatabase;
     ErrorManager errorManager;
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
@@ -101,9 +106,24 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
         this.pluginId=pluginId;
     }
 
+    private void createAssetReceptionTransactionDatabase() throws CantCreateDatabaseException {
+        AssetReceptionDatabaseFactory databaseFactory = new AssetReceptionDatabaseFactory(this.pluginDatabaseSystem);
+        assetReceptionDatabase = databaseFactory.createDatabase(pluginId, AssetReceptionDatabaseConstants.ASSET_RECEPTION_DATABASE);
+    }
+
     @Override
     public void start() throws CantStartPluginException {
         try{
+            try {
+                this.assetReceptionDatabase=this.pluginDatabaseSystem.openDatabase(pluginId, AssetReceptionDatabaseConstants.ASSET_RECEPTION_DATABASE);
+            } catch (CantOpenDatabaseException |DatabaseNotFoundException e) {
+                //printSomething("CREATING A PLUGIN DATABASE.");
+                try {
+                    createAssetReceptionTransactionDatabase();
+                } catch (CantCreateDatabaseException innerException) {
+                    throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Asset Reception plugin - "+this.pluginId, "Cannot open or create the plugin database");
+                }
+            }
             DigitalAssetReceptionVault digitalAssetReceptionVault=new DigitalAssetReceptionVault(
                     pluginId,
                     pluginFileSystem,
