@@ -1304,8 +1304,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     }
 
     public CryptoBrokerIdentityModuleManager getCryptoBrokerIdentityModuleManager() {
-        //return (CryptoBrokerIdentityModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BRO);
-        return null;
+        return (CryptoBrokerIdentityModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE);
     }
 
     /**
