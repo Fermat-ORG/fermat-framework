@@ -828,11 +828,11 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getKey());
 
             /**
-             * Start Intra user sub app
+             * Start Intra user community sub app
              */
             RuntimeSubApp subAppIntraUser = new RuntimeSubApp();
-            subAppIntraUser.setType(SubApps.CWP_INTRA_USER);
-            listSubApp.put(SubApps.CWP_INTRA_USER, subAppIntraUser);
+            subAppIntraUser.setType(SubApps.CCP_INTRA_USER_COMMUNITY);
+            listSubApp.put(SubApps.CCP_INTRA_USER_COMMUNITY, subAppIntraUser);
 
 
             //Activity 1
@@ -1075,10 +1075,10 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             listSubApp.put(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY, runtimeSubApp);
 
             /**
-             * CCP CRYPTO CUSTOMER IDENTITY
+             * CCP INTRA USER IDENTITY
              */
             runtimeSubApp = new RuntimeSubApp();
-            runtimeSubApp.setType(SubApps.CCP_CRYPTO_CUSTOMER_IDENTITY);
+            runtimeSubApp.setType(SubApps.CWP_INTRA_USER_IDENTITY);
 
             // Activity: List of identities
             runtimeActivity = new Activity();
@@ -1126,7 +1126,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity.addFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
-            listSubApp.put(SubApps.CCP_CRYPTO_CUSTOMER_IDENTITY, runtimeSubApp);
+            listSubApp.put(SubApps.CWP_INTRA_USER_IDENTITY, runtimeSubApp);
 
         } catch (Exception e) {
             String message = CantFactoryResetException.DEFAULT_MESSAGE;

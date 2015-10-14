@@ -3,15 +3,14 @@ package com.bitdubai.sub_app.intra_user_community.fragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
-import com.bitdubai.sub_app.intra_user.fragments.ConnectionsListFragment;
-import com.bitdubai.sub_app.intra_user.fragments.ConnectionsRequestListFragment;
-import com.bitdubai.sub_app.intra_user.fragments.ConnectionsWorldFragment;
-import com.bitdubai.sub_app.intra_user.fragments.DetailsActivityFragment;
-import com.bitdubai.sub_app.intra_user.fragments.HomeFragment;
-import com.bitdubai.sub_app.intra_user.fragments.MoreDetailsActivityFragment;
-import com.bitdubai.sub_app.intra_user.fragments.RegisterIntraUserFragment;
-import com.bitdubai.sub_app.intra_user.preference_settings.IntraUserPreferenceSettings;
-import com.bitdubai.sub_app.intra_user.session.IntraUserSubAppSession;
+
+import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsWorldFragment;
+
+
+
+import com.bitdubai.sub_app.intra_user_community.fragments.RegisterIntraUserFragment;
+import com.bitdubai.sub_app.intra_user_community.preference_settings.IntraUserPreferenceSettings;
+import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 
 
 /**
@@ -27,7 +26,7 @@ public class IntraUserFragmentFactory extends FermatSubAppFragmentFactory<IntraU
 
         switch (fragments) {
             case CWP_WALLET_STORE_MAIN_ACTIVITY:
-                currentFragment = HomeFragment.newInstance(1);
+               // currentFragment = HomeFragment.newInstance(1);
                 break;
             case CWP_WALLET_STORE_DETAIL_ACTIVITY:
                 //currentFragment = ConnectionsListFragment.newInstance();

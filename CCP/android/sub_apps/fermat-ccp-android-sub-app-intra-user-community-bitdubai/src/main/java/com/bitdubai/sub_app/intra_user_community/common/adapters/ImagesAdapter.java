@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.intra_user.common.adapters;
+package com.bitdubai.sub_app.intra_user_community.common.adapters;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -7,7 +7,7 @@ import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.intra_user_identity.R;
+import com.bitdubai.sub_app.intra_user_community.R;
 
 import java.util.ArrayList;
 

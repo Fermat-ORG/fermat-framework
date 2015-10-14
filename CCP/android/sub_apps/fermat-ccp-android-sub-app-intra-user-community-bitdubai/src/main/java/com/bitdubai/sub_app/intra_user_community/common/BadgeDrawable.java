@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.intra_user.common;
+package com.bitdubai.sub_app.intra_user_community.common;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,7 +10,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 
-import com.bitdubai.intra_user_identity.R;
+import com.bitdubai.sub_app.intra_user_community.R;
 
 
 public class BadgeDrawable extends Drawable {

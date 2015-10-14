@@ -19,10 +19,10 @@ import java.util.ArrayList;
  *
  * @author Nelson Ramirez
  */
-public class CryptoBrokerIdentityInfoAdapter extends FermatAdapter<CryptoBrokerIdentityInformation, CryptoBrokerIdentityInfoViewHolder> {
+public class IntraUserIdentityInfoAdapter extends FermatAdapter<CryptoBrokerIdentityInformation, CryptoBrokerIdentityInfoViewHolder> {
 
 
-    public CryptoBrokerIdentityInfoAdapter(Context context, ArrayList<CryptoBrokerIdentityInformation> dataSet) {
+    public IntraUserIdentityInfoAdapter(Context context, ArrayList<CryptoBrokerIdentityInformation> dataSet) {
         super(context, dataSet);
     }
 

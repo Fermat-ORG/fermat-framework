@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.intra_user.common;
+package com.bitdubai.sub_app.intra_user_community.common;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

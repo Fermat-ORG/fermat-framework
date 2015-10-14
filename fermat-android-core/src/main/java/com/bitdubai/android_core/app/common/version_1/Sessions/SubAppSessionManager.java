@@ -10,10 +10,10 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.A
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.sub_app.intra_user_identity.session.CryptoBrokerIdentitySubAppSession;
+import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
-import com.bitdubai.sub_app.intra_user.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 import com.bitdubai.sub_app.wallet_publisher.session.WalletPublisherSubAppSession;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
@@ -65,7 +65,9 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
                 return walletPublisherSubAppSession;
             case CWP_WALLET_RUNTIME:
                 break;
-            case CWP_INTRA_USER:
+            case CWP_INTRA_USER_IDENTITY:
+                break;
+            case CCP_INTRA_USER_COMMUNITY:
                 IntraUserSubAppSession intraUserSubAppSession = new IntraUserSubAppSession(subApps,errorManager,intraUserModuleManager);
                 lstSubAppSession.put(subApps,intraUserSubAppSession);
                 return intraUserSubAppSession;

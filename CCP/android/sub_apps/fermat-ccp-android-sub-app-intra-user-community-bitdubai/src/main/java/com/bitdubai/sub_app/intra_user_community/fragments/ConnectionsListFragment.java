@@ -51,14 +51,14 @@ import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserS
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.sub_app.intra_user.adapters.CheckBoxListItem;
-import com.bitdubai.sub_app.intra_user.adapters.ListAdapter;
-import com.bitdubai.sub_app.intra_user.common.Views.Utils;
-import com.bitdubai.sub_app.intra_user.common.adapters.IntraUserConnectionsAdapter;
-import com.bitdubai.sub_app.intra_user.common.models.IntraUserConnectionListItem;
-import com.bitdubai.sub_app.intra_user.session.IntraUserSubAppSession;
-import com.bitdubai.sub_app.intra_user.util.CommonLogger;
-import com.bitdubai.intra_user_community.R;
+import com.bitdubai.sub_app.intra_user_community.adapters.CheckBoxListItem;
+import com.bitdubai.sub_app.intra_user_community.adapters.ListAdapter;
+import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
+import com.bitdubai.sub_app.intra_user_community.common.adapters.IntraUserConnectionsAdapter;
+import com.bitdubai.sub_app.intra_user_community.common.models.IntraUserConnectionListItem;
+import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
+import com.bitdubai.sub_app.intra_user_community.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,11 +110,6 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
 
             mNotificationsCount = intraUserModuleManager.getIntraUsersWaitingYourAcceptance(MAX,OFFSET).size();
 
-//            System.out.println("ACAAAAAA");
-//            System.out.println(System.currentTimeMillis());
-//            paintCheckBoxInActionBar();
-//            System.out.println(System.currentTimeMillis());
-//            System.out.println("ACAAAAAA");
 
             // TODO: display unread notifications.
             // Run a task to fetch the notifications count

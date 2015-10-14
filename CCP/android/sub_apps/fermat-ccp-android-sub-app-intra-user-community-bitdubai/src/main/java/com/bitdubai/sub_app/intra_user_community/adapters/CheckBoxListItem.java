@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.intra_user.adapters;
+package com.bitdubai.sub_app.intra_user_community.adapters;
 
 import android.graphics.drawable.Drawable;
 

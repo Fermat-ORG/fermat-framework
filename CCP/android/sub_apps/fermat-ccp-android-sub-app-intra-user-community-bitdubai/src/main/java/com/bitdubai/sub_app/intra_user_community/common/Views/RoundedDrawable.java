@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.intra_user.common.Views;
+package com.bitdubai.sub_app.intra_user_community.common.Views;
 
 /**
  * Created by ronner on 10/08/15.

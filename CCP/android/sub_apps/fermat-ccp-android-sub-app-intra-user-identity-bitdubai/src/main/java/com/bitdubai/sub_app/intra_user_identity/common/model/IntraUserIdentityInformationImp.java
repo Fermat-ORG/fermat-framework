@@ -5,12 +5,12 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identi
 /**
  * Created by nelson on 09/10/15.
  */
-public class CryptoBrokerIdentityInformationImp implements CryptoBrokerIdentityInformation {
+public class IntraUserIdentityInformationImp implements CryptoBrokerIdentityInformation {
 
     private String brokerName;
     private byte[] profileImage;
 
-    public CryptoBrokerIdentityInformationImp(String brokerName) {
+    public IntraUserIdentityInformationImp(String brokerName) {
         this.brokerName = brokerName;
         profileImage = null;
     }

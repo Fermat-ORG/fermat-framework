@@ -6,7 +6,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
  * Created by Matias Furszyfer on 2015.07.22..
  */
 
-public enum CryptoBrokerIdentityFragmentsEnumType implements FermatFragmentsEnumType<CryptoBrokerIdentityFragmentsEnumType> {
+public enum IntraUserIdentityFragmentsEnumType implements FermatFragmentsEnumType<IntraUserIdentityFragmentsEnumType> {
 
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT("CBPSACBIMF"),
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT("CBPSACBICIF")
@@ -14,7 +14,7 @@ public enum CryptoBrokerIdentityFragmentsEnumType implements FermatFragmentsEnum
 
     private String key;
 
-    CryptoBrokerIdentityFragmentsEnumType(String key) {
+    IntraUserIdentityFragmentsEnumType(String key) {
         this.key = key;
     }
 
@@ -29,8 +29,8 @@ public enum CryptoBrokerIdentityFragmentsEnumType implements FermatFragmentsEnum
         return key;
     }
 
-    public static CryptoBrokerIdentityFragmentsEnumType getValue(String name) {
-        for (CryptoBrokerIdentityFragmentsEnumType fragments : CryptoBrokerIdentityFragmentsEnumType.values()) {
+    public static IntraUserIdentityFragmentsEnumType getValue(String name) {
+        for (IntraUserIdentityFragmentsEnumType fragments : IntraUserIdentityFragmentsEnumType.values()) {
             if (fragments.key.equals(name)) {
                 return fragments;
             }

@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.intra_user.adapters;
+package com.bitdubai.sub_app.intra_user_community.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.intra_user_identity.R;
+import com.bitdubai.sub_app.intra_user_community.R;
 
 import java.util.List;
 

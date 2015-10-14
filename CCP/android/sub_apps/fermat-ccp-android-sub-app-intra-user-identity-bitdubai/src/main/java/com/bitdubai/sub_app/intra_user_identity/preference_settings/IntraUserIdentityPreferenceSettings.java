@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  * Created by mati on 2015.08.24..
  */
-public class CryptoBrokerIdentityPreferenceSettings implements SubAppSettings {
+public class IntraUserIdentityPreferenceSettings implements SubAppSettings {
     /**
      * This method let us know the default language of a wallet
      *

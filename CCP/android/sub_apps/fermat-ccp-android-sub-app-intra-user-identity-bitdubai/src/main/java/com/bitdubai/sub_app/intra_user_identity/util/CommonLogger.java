@@ -2,7 +2,7 @@ package com.bitdubai.sub_app.intra_user_identity.util;
 
 import android.util.Log;
 
-import com.bitdubai.sub_app.intra_user_identity.BuildConfig;
+import com.bitdubai.android_api.BuildConfig;
 
 
 /**

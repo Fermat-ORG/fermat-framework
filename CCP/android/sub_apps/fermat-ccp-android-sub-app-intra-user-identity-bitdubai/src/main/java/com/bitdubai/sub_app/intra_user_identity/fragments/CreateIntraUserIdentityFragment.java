@@ -27,7 +27,7 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identi
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
-import com.bitdubai.sub_app.intra_user_identity.session.CryptoBrokerIdentitySubAppSession;
+import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
 
 import java.io.ByteArrayOutputStream;
@@ -35,7 +35,7 @@ import java.io.ByteArrayOutputStream;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
+public class CreateIntraUserIdentityFragment extends FermatFragment {
     private static final String TAG = "CreateBrokerIdentity";
 
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
@@ -59,8 +59,8 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
     private ImageView mBrokerImage;
 
 
-    public static CreateCryptoBrokerIdentityFragment newInstance() {
-        return new CreateCryptoBrokerIdentityFragment();
+    public static CreateIntraUserIdentityFragment newInstance() {
+        return new CreateIntraUserIdentityFragment();
     }
 
     @Override
@@ -68,7 +68,7 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoBrokerIdentitySubAppSession) subAppsSession).getModuleManager();
+            moduleManager = ((IntraUserIdentitySubAppSession) subAppsSession).getModuleManager();
             errorManager = subAppsSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);

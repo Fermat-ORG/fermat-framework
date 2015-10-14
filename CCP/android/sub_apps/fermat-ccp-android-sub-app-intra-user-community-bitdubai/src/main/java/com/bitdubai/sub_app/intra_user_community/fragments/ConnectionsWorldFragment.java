@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.intra_user.fragments;
+package com.bitdubai.sub_app.intra_user_community.fragments;
 
 
 import android.app.Service;
@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
@@ -26,13 +27,10 @@ import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserM
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserSearch;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
-import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.Image;
-import com.bitdubai.sub_app.intra_user.session.IntraUserSubAppSession;
-import com.bitdubai.sub_app.intra_user.util.CommonLogger;
-import com.bitdubai.intra_user_identity.R;
+import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
+import com.bitdubai.sub_app.intra_user_community.R;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -97,19 +95,12 @@ public class ConnectionsWorldFragment  extends FermatFragment {
         GridView gridView = new GridView(getActivity());
         try
         {
-
-
             IntraUserSearch intraUserSearch = moduleManager.searchIntraUser();
 
-
             intraUserSearch.setNameToSearch("");
-
             lstIntraUserInformations = intraUserSearch.getResult();
 
-
-
             moduleManager.getSuggestionsToContact(MAX, offset);
-
 
             Configuration config = getResources().getConfiguration();
             if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -120,12 +111,12 @@ public class ConnectionsWorldFragment  extends FermatFragment {
 
             gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.intra_user_connection_word_filter, lstIntraUserInformations));
 
+        }
+         catch(Exception ex) {
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
-
-            }
-            catch(Exception ex) {
-                CommonLogger.exception(TAG, ex.getMessage(), ex);
-            }
+         }
 
         RelativeLayout rootView = new RelativeLayout(getActivity());
 

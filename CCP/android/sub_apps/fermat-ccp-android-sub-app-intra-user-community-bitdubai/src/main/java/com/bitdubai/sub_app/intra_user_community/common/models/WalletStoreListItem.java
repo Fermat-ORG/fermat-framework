@@ -1,11 +1,11 @@
-package com.bitdubai.sub_app.intra_user.common.models;
+package com.bitdubai.sub_app.intra_user_community.common.models;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreCatalogueItem;
-import com.bitdubai.intra_user_identity.R;
+import com.bitdubai.sub_app.intra_user_community.R;
 
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;

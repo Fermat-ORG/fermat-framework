@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public class CryptoBrokerIdentitySubAppSession implements SubAppsSession {
+public class IntraUserIdentitySubAppSession implements SubAppsSession {
 
     /**
      * SubApps type
@@ -41,7 +41,7 @@ public class CryptoBrokerIdentitySubAppSession implements SubAppsSession {
      * @param errorManager             the error manager
      * @param moduleManager the module of this SubApp
      */
-    public CryptoBrokerIdentitySubAppSession(SubApps subApps, ErrorManager errorManager, CryptoBrokerIdentityModuleManager moduleManager) {
+    public IntraUserIdentitySubAppSession(SubApps subApps, ErrorManager errorManager, CryptoBrokerIdentityModuleManager moduleManager) {
         this.subApps = subApps;
         data = new HashMap<String, Object>();
         this.errorManager = errorManager;
@@ -53,7 +53,7 @@ public class CryptoBrokerIdentitySubAppSession implements SubAppsSession {
      *
      * @param subApps the SubApp type
      */
-    public CryptoBrokerIdentitySubAppSession(SubApps subApps) {
+    public IntraUserIdentitySubAppSession(SubApps subApps) {
         this.subApps = subApps;
     }
 
@@ -114,7 +114,7 @@ public class CryptoBrokerIdentitySubAppSession implements SubAppsSession {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        CryptoBrokerIdentitySubAppSession that = (CryptoBrokerIdentitySubAppSession) o;
+        IntraUserIdentitySubAppSession that = (IntraUserIdentitySubAppSession) o;
 
         return subApps == that.subApps;
 

@@ -1,11 +1,11 @@
-package com.bitdubai.sub_app.intra_user.common;
+package com.bitdubai.sub_app.intra_user_community.common;
 
 import android.os.AsyncTask;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.sub_app.intra_user.common.models.WalletStoreListItem;
+import com.bitdubai.sub_app.intra_user_community.common.models.WalletStoreListItem;
 
 
 

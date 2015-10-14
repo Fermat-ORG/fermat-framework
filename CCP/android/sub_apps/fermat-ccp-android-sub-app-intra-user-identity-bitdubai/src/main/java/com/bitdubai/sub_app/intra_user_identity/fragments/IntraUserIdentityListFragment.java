@@ -17,10 +17,12 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identi
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
-import com.bitdubai.sub_app.intra_user_identity.common.adapters.CryptoBrokerIdentityInfoAdapter;
-import com.bitdubai.sub_app.intra_user_identity.common.model.CryptoBrokerIdentityInformationImp;
+import com.bitdubai.sub_app.intra_user_identity.common.adapters.IntraUserIdentityInfoAdapter;
+
+import com.bitdubai.sub_app.intra_user_identity.common.model.IntraUserIdentityInformationImp;
 import com.bitdubai.sub_app.intra_user_identity.common.views.DividerItemDecoration;
-import com.bitdubai.sub_app.intra_user_identity.session.CryptoBrokerIdentitySubAppSession;
+
+import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
 import com.melnykov.fab.FloatingActionButton;
 
@@ -30,7 +32,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoBrokerIdentityInformation>
+public class IntraUserIdentityListFragment extends FermatListFragment<CryptoBrokerIdentityInformation>
         implements FermatListItemListeners<CryptoBrokerIdentityInformation> {
 
 
@@ -39,8 +41,8 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     private ArrayList<CryptoBrokerIdentityInformation> identityInformationList;
 
 
-    public static CryptoBrokerIdentityListFragment newInstance() {
-        return new CryptoBrokerIdentityListFragment();
+    public static IntraUserIdentityListFragment newInstance() {
+        return new IntraUserIdentityListFragment();
     }
 
     @Override
@@ -49,7 +51,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
 
         try {
             // setting up  module
-            moduleManager = ((CryptoBrokerIdentitySubAppSession) subAppsSession).getModuleManager();
+            moduleManager = ((IntraUserIdentitySubAppSession) subAppsSession).getModuleManager();
             errorManager = subAppsSession.getErrorManager();
             identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -128,7 +130,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new CryptoBrokerIdentityInfoAdapter(getActivity(), identityInformationList);
+            adapter = new IntraUserIdentityInfoAdapter(getActivity(), identityInformationList);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
@@ -147,7 +149,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         List<CryptoBrokerIdentityInformation> data = new ArrayList<>();
         if (moduleManager == null) {
             for (int i = 0; i < 20; i++) {
-                data.add(new CryptoBrokerIdentityInformationImp("Broker Name " + i));
+                data.add(new IntraUserIdentityInformationImp("Broker Name " + i));
             }
         } else {
             try {

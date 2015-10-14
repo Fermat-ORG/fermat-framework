@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.intra_user.fragments;
+package com.bitdubai.sub_app.intra_user_community.fragments;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -45,14 +45,14 @@ import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserS
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.sub_app.intra_user.adapters.CheckBoxListItem;
-import com.bitdubai.sub_app.intra_user.adapters.ListAdapter;
-import com.bitdubai.sub_app.intra_user.common.Views.Utils;
-import com.bitdubai.sub_app.intra_user.common.adapters.IntraUserConnectionsAdapter;
-import com.bitdubai.sub_app.intra_user.common.models.IntraUserConnectionListItem;
-import com.bitdubai.sub_app.intra_user.session.IntraUserSubAppSession;
-import com.bitdubai.sub_app.intra_user.util.CommonLogger;
-import com.bitdubai.intra_user_identity.R;
+import com.bitdubai.sub_app.intra_user_community.adapters.CheckBoxListItem;
+import com.bitdubai.sub_app.intra_user_community.adapters.ListAdapter;
+import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
+import com.bitdubai.sub_app.intra_user_community.common.adapters.IntraUserConnectionsAdapter;
+import com.bitdubai.sub_app.intra_user_community.common.models.IntraUserConnectionListItem;
+import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
+import com.bitdubai.sub_app.intra_user_community.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,12 +97,6 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
 
             mNotificationsCount = intraUserModuleManager.getIntraUsersWaitingYourAcceptance(MAX,OFFSET).size();
 
-//            System.out.println("ACAAAAAA");
-//            System.out.println(System.currentTimeMillis());
-//            paintCheckBoxInActionBar();
-//            System.out.println(System.currentTimeMillis());
-//            System.out.println("ACAAAAAA");
-
             // TODO: display unread notifications.
             // Run a task to fetch the notifications count
             new FetchCountTask().execute();
@@ -138,17 +132,6 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
 
 
 
-//        List<String> lst = new ArrayList<String>();
-//        lst.add("Matias");
-//        lst.add("Work");
-//        ArrayAdapter<String> itemsAdapter =
-//                new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, lst);
-//        MenuItem item = menu.findItem(R.id.spinner);
-//        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
-//
-//        spinner.setAdapter(itemsAdapter); // set the adapter to provide layout of rows and content
-//        //s.setOnItemSelectedListener(onItemSelectedListener); // set the listener, to perform actions based on item selection
-
     }
 
     @Override
@@ -164,9 +147,7 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
                 changeActivity(Activities.CWP_INTRA_USER_CREATE_ACTIVITY.getCode());
 
             }
-//            if(id == R.id.action_connection_request){
-//                Toast.makeText(getActivity(),"Intra user request",Toast.LENGTH_SHORT).show();
-//            }
+
             if (item.getItemId() == R.id.action_notifications) {
 
 
@@ -438,18 +419,6 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
         }
     }
 
-//    private static final String TITLE = "title";
-//    private static final String ICON = "icon";
-//
-//    private List<HashMap<String, Object>> data = new ArrayList<HashMap<String, Object>>();
-//
-//    // Use this to add items to the list that the ListPopupWindow will use
-//    private void addItem(String title, int iconResourceId) {
-//        HashMap<String, Object> map = new HashMap<String, Object>();
-//        map.put(TITLE, title);
-//        map.put(ICON, iconResourceId);
-//        data.add(map);
-//    }
 
     // Call this when you want to show the ListPopupWindow
     private void showListMenu(View anchor,List<IntraUserInformation> lstIntraUserRequestWaiting) {

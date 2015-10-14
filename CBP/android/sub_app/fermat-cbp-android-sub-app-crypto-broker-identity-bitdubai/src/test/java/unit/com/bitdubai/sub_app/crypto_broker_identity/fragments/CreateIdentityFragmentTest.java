@@ -7,7 +7,7 @@ import android.widget.EditText;
 
 import com.bitdubai.sub_app.intra_user_identity.BuildConfig;
 import com.bitdubai.sub_app.intra_user_identity.R;
-import com.bitdubai.sub_app.intra_user_identity.fragments.CreateCryptoBrokerIdentityFragment;
+import com.bitdubai.sub_app.crypto_broker_identity.fragments.CreateCryptoBrokerIdentityFragment;
 
 import org.junit.Before;
 import org.junit.Test;

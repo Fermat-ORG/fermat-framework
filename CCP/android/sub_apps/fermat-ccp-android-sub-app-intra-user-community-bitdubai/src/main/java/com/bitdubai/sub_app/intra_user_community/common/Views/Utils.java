@@ -1,11 +1,11 @@
-package com.bitdubai.sub_app.intra_user.common.Views;
+package com.bitdubai.sub_app.intra_user_community.common.Views;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 
-import com.bitdubai.sub_app.intra_user.common.BadgeDrawable;
-import com.bitdubai.intra_user_identity.R;
+import com.bitdubai.sub_app.intra_user_community.common.BadgeDrawable;
+import com.bitdubai.sub_app.intra_user_community.R;
 
 public class Utils {
 
