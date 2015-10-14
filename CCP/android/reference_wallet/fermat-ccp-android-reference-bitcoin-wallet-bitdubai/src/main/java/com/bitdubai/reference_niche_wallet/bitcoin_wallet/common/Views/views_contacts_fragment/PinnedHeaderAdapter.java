@@ -223,11 +223,20 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
     //TODO: ver si lo que cambie aca del toString está bien, estoy casao
     @Override
     public void configurePinnedHeader(View v, int position) {
-        // set text in pinned header
-        LinearLayout linearLayout =(LinearLayout)v;
-        TextView header = (TextView) linearLayout.getChildAt(0);
-        mCurrentSectionPosition = getCurrentSectionPosition(position);
-        header.setText(mListItems.get(mCurrentSectionPosition).toString());
+        try
+        {
+            // set text in pinned header
+            LinearLayout linearLayout =(LinearLayout)v;
+            TextView header = (TextView) linearLayout.getChildAt(0);
+            mCurrentSectionPosition = getCurrentSectionPosition(position);
+            header.setText(mListItems.get(mCurrentSectionPosition).toString());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
     }
 
     @Override
@@ -277,21 +286,25 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
     public int getCurrentSectionPosition(int position) {
         final boolean searchMode = constrainStr != null;
 
-        if (searchMode) {
-            return TOTAL_CONTACTS_SECTION_POSITION;
-        }
 
-        String listChar = ((String)mListItems.get(position)).substring(0, 1).toUpperCase(Locale.getDefault());
+            if (searchMode) {
+                return TOTAL_CONTACTS_SECTION_POSITION;
+            }
 
-        if (listChar.matches(HeaderTypes.LETTER.getRegex())) {
-            return mListItems.indexOf(listChar);
-        }
+            String listChar ="";
+            if (mListItems.get(position).getClass().equals(String.class))
+                listChar = ((String)mListItems.get(position)).substring(0, 1).toUpperCase(Locale.getDefault());
 
-        if (listChar.matches(HeaderTypes.NUMBER.getRegex())) {
-            return mListItems.indexOf(HeaderTypes.NUMBER.getCode());
-        }
+            if (listChar.matches(HeaderTypes.LETTER.getRegex())) {
+                return mListItems.indexOf(listChar);
+            }
+
+            if (listChar.matches(HeaderTypes.NUMBER.getRegex())) {
+                return mListItems.indexOf(HeaderTypes.NUMBER.getCode());
+            }
 
         return mListItems.indexOf(HeaderTypes.SYMBOL.getCode());
+
     }
 
 

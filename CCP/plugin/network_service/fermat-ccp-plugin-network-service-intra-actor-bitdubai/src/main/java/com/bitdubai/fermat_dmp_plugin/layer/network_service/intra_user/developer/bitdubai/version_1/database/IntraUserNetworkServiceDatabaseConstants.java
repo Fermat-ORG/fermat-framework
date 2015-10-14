@@ -59,6 +59,5 @@ public class IntraUserNetworkServiceDatabaseConstants {
     public static final String INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_LOGGED_IN_PUBLIC_KEY_COLUMN_NAME = "intra_user_logged_in_public_key";
     public static final String INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_CREATED_TIME_COLUMN_NAME = "created_time";
     public static final String INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_DESCRIPTOR_COLUMN_NAME = "request_descriptor";
-
-
+    public static final String INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_REASON_COLUMN_NAME = "reason";
 }
