@@ -6,12 +6,13 @@
  */
 package com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantConnectToAssetTransmissionNetworkServiceException;
-import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantRequestListAssetTransmissionNetworkServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendTransactionNewStatusNotificationException;
+
+import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager</code> define
@@ -26,11 +27,21 @@ import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission
 public interface AssetTransmissionNetworkServiceManager {
 
     /**
+     * Method that send DigitalAssetMetadata
      *
+     * @param actorAssetIssuerSender
+     * @param actorAssetUserReceiver
      * @param digitalAssetMetadataToSend
-     * @param actorAssetUser
      * @throws CantSendDigitalAssetMetadataException
      */
-    public void sendDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadataToSend, ActorAssetUser actorAssetUser) throws CantSendDigitalAssetMetadataException;
+    void sendDigitalAssetMetadata(ActorAssetIssuer actorAssetIssuerSender, ActorAssetUser actorAssetUserReceiver, DigitalAssetMetadata digitalAssetMetadataToSend) throws CantSendDigitalAssetMetadataException;
+
+    /**
+     * Method that send the Transaction New Status Notification
+     *
+     * @param transactionId
+     * @param newStatus
+     */
+    void sendTransactionNewStatusNotification(ActorAssetUser actorAssetUserSender,  ActorAssetIssuer actorAssetIssuerReceiver, String transactionId, String newStatus) throws CantSendTransactionNewStatusNotificationException;
 
 }

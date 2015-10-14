@@ -52,35 +52,35 @@ public class AssetUserActorConnectionAcceptedEventHandlers implements FermatEven
      */
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if (((Service) this.actorAssetUserManager).getStatus() == ServiceStatus.STARTED) {
-
-            try {
-                AssetUserActorConnectionAcceptedEvent assetUserActorConnectionAcceptedEvent = (AssetUserActorConnectionAcceptedEvent) fermatEvent;
-                /**
-                 * Change ASSET USER ACTOR Status To Connected
-                 */
-                this.actorAssetUserManager.acceptAssetUserActor(assetUserActorConnectionAcceptedEvent.getAssetUserLinkedIdentiyPublicKey(),
-                        assetUserActorConnectionAcceptedEvent.getAssetUserToAddPublicKey());
-                /**
-                 * Confirm connexion on Network services
-                 */
-                //TODO DEBE EDITARSE parametro PARA PODER HACER EL registerActorAssetUser COMPLETO
-//                assetUserActorNetworkServiceManager.registerActorAssetUser(assetUserActorConnectionAcceptedEvent.getAssetUserToAddPublicKey());
-
-//                 assetUserActorNetworkServiceManager.requestListActorAssetUserRegistered();
+//        if (((Service) this.actorAssetUserManager).getStatus() == ServiceStatus.STARTED) {
+//
+//            try {
+//                AssetUserActorConnectionAcceptedEvent assetUserActorConnectionAcceptedEvent = (AssetUserActorConnectionAcceptedEvent) fermatEvent;
 //                /**
-//                 * fire event "INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION"
+//                 * Change ASSET USER ACTOR Status To Connected
 //                 */
-//                FermatEvent event = eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION);
-//                eventManager.raiseEvent(event);
-
-            } catch (CantAcceptAssetUserActorException e) {
-                this.fermatEventMonitor.handleEventException(e, fermatEvent);
-            } catch (Exception e) {
-                this.fermatEventMonitor.handleEventException(e, fermatEvent);
-            }
-        } else {
-            throw new TransactionServiceNotStartedException();
-        }
+//                this.actorAssetUserManager.acceptAssetUserActor(assetUserActorConnectionAcceptedEvent.getAssetUserLinkedIdentiyPublicKey(),
+//                        assetUserActorConnectionAcceptedEvent.getAssetUserToAddPublicKey());
+//                /**
+//                 * Confirm connexion on Network services
+//                 */
+//                //TODO DEBE EDITARSE parametro PARA PODER HACER EL registerActorAssetUser COMPLETO
+////                assetUserActorNetworkServiceManager.registerActorAssetUser(assetUserActorConnectionAcceptedEvent.getAssetUserToAddPublicKey());
+//
+////                 assetUserActorNetworkServiceManager.requestListActorAssetUserRegistered();
+////                /**
+////                 * fire event "INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION"
+////                 */
+////                FermatEvent event = eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION);
+////                eventManager.raiseEvent(event);
+//
+//            } catch (CantAcceptAssetUserActorException e) {
+//                this.fermatEventMonitor.handleEventException(e, fermatEvent);
+//            } catch (Exception e) {
+//                this.fermatEventMonitor.handleEventException(e, fermatEvent);
+//            }
+//        } else {
+//            throw new TransactionServiceNotStartedException();
+//        }
     }
 }

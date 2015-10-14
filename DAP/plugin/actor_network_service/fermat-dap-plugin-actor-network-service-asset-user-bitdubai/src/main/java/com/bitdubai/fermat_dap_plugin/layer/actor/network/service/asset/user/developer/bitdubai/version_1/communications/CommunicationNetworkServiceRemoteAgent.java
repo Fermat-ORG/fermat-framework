@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.communications;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -53,8 +53,8 @@ import java.util.Observable;
 public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
     /*
-    * Represent the sleep time for the read or send (2000 milliseconds)
-    */
+   * Represent the sleep time for the read or send (2000 milliseconds)
+   */
     private static final long SLEEP_TIME = 2000;
 
     /**
@@ -194,14 +194,14 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-            // System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
+            //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.isActive() = "+communicationsVPNConnection.isActive());
 
             /**
              * Verified the status of the connection
              */
             if (communicationsVPNConnection.isActive()){
 
-                //   System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.getUnreadMessagesCount());
+                //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.getUnreadMessagesCount() = "+communicationsVPNConnection.getUnreadMessagesCount());
 
                 /**
                  * process all pending messages
@@ -213,16 +213,15 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                      */
                     FermatMessage message = communicationsVPNConnection.readNextMessage();
 
-
                     /*
                      * Validate the message signature
                      */
-                    AsymmectricCryptography.verifyMessageSignature(message.getSignature(), message.getContent(), communicationsVPNConnection.getRemoteParticipantNetworkService().getIdentityPublicKey());
+                    AsymmetricCryptography.verifyMessageSignature(message.getSignature(), message.getContent(), communicationsVPNConnection.getRemoteParticipantNetworkService().getIdentityPublicKey());
 
                     /*
                      * Decrypt the message content
                      */
-                    ((FermatMessageCommunication) message).setContent(AsymmectricCryptography.decryptMessagePrivateKey(message.getContent(), eccKeyPair.getPrivateKey()));
+                    ((FermatMessageCommunication) message).setContent(AsymmetricCryptography.decryptMessagePrivateKey(message.getContent(), eccKeyPair.getPrivateKey()));
 
                     /*
                      * Change to the new status
@@ -290,13 +289,14 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                             /*
                              * Encrypt the content of the message whit the remote network service public key
                              */
-                        ((FermatMessageCommunication) message).setContent(AsymmectricCryptography.encryptMessagePublicKey(message.getContent(), communicationsVPNConnection.getRemoteParticipantNetworkService().getIdentityPublicKey()));
+                        ((FermatMessageCommunication) message).setContent(AsymmetricCryptography.encryptMessagePublicKey(message.getContent(), communicationsVPNConnection.getRemoteParticipantNetworkService().getIdentityPublicKey()));
 
                             /*
                              * Sing the message
                              */
-                        String signature = AsymmectricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
+                        String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
                         ((FermatMessageCommunication) message).setSignature(signature);
+
 
                             /*
                              * Send the message
@@ -306,6 +306,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                             /*
                              * Change the message and update in the data base
                              */
+
                         ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
                         outgoingMessageDao.update(message);
 

@@ -8,7 +8,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.deve
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -19,6 +19,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.util.DistanceCalculator;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -27,6 +28,8 @@ import org.java_websocket.WebSocket;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor</code> implement
@@ -52,7 +55,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         /*
          * Get the filters from the message content and decrypt
          */
-        String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
+        String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
 
         /*
          * Construct the json object
@@ -176,7 +179,6 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
 
         System.out.println("RequestListComponentRegisterPacketProcessor - totalFilterToApply    = "+totalFilterToApply);
 
-
         if (totalFilterToApply > 0){
 
             /*
@@ -228,8 +230,14 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
                 discoveryQueryParameters.getLocation().getLatitude() != 0 &&
                     discoveryQueryParameters.getLocation().getLongitude() != 0){
 
+
+            filteredLis = applyGeoLocationFilter(filteredLis, discoveryQueryParameters);
+
         }
 
+        /*
+         * Apply pagination
+         */
         if ((discoveryQueryParameters.getMax() != 0) && (discoveryQueryParameters.getOffset() != 0)){
 
             /*
@@ -248,6 +256,52 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
 
         return filteredLis;
 
+    }
+
+    /**
+     * Method that apply geo location filter to the list
+     *
+     * @param listToApply
+     * @return List<PlatformComponentProfile>
+     */
+    private List<PlatformComponentProfile> applyGeoLocationFilter(List<PlatformComponentProfile> listToApply, DiscoveryQueryParameters discoveryQueryParameters) {
+
+        /*
+         * Hold the data ordered by distance
+         */
+        Map<Double, PlatformComponentProfile> orderedByDistance = new TreeMap<>();
+
+        /*
+         * For each component
+         */
+        for (PlatformComponentProfile platformComponentProfile: listToApply) {
+
+            /*
+             * If component have a geo location
+             */
+            if (platformComponentProfile.getLocation() != null){
+
+                /*
+                 * Calculate the distance between the two points
+                 */
+                Double componentDistance = DistanceCalculator.distance(discoveryQueryParameters.getLocation(), platformComponentProfile.getLocation(), DistanceCalculator.KILOMETERS);
+
+                /*
+                 * Compare the distance
+                 */
+                if (componentDistance <= discoveryQueryParameters.getDistance()){
+
+                    /*
+                     * Add to the list
+                     */
+                    orderedByDistance.put(componentDistance, platformComponentProfile);
+                }
+
+            }
+
+        }
+
+        return new ArrayList<>(orderedByDistance.values());
     }
 
     /**
@@ -285,7 +339,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         /*
          * Remove the requester from the list
          */
-        for (PlatformComponentProfile platformComponentProfileRegistered: filteredListFromOtherComponentType) {
+       for (PlatformComponentProfile platformComponentProfileRegistered: filteredListFromOtherComponentType) {
             if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(receiveFermatPacket.getSender())){
                 System.out.println("RequestListComponentRegisterPacketProcessor - removing ="+platformComponentProfileRegistered.getName());
                 filteredListFromOtherComponentType.remove(platformComponentProfileRegistered);

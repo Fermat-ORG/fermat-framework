@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDao;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.interfaces.DealsWithWalletManagerDesktopModule;
@@ -213,7 +214,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
 
             database.closeDatabase();
         }
-        catch (CantOpenDatabaseException | DatabaseNotFoundException e)
+        catch (CantOpenDatabaseException | DatabaseNotFoundException | CantLoadTableToMemoryException e)
         {
             try
             {
@@ -297,8 +298,12 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
         }
     }
 
-    public boolean checkAssetDraft(){
-        return assetFactoryMiddlewareManager.checkAssetDraft();
+    public void checkAssetDraft() throws CantLoadTableToMemoryException {
+        boolean isCheckAssetDraft = assetFactoryMiddlewareManager.checkAssetDraft();
+        if (isCheckAssetDraft){
+            //TODO: Implementar
+            //startMonitorAgent();
+        }
     }
 
     public void testSaveAssetFactory()

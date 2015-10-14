@@ -66,7 +66,8 @@ public class CashMoneyStockReplenishmentBusinessTransactionDao{
     /*CREATE NEW TRANSACTION*/
     public void createNewCashMoneyStockReplenishment(
             String publicKeyBroker,
-            String merchandiseCurrency,
+            CurrencyType merchandiseCurrency,
+            float merchandiseAmount,
             String executionTransactionId,
             CashCurrencyType cashCurrencyType
     ) throws CantInsertRecordCashMoneyStockReplenishmentBusinessTransactionException {
@@ -74,7 +75,7 @@ public class CashMoneyStockReplenishmentBusinessTransactionDao{
             DatabaseTable transactionTable = this.database.getTable(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_TABLE_NAME);
             DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
             BusinessTransactionStatus transactionStatus = BusinessTransactionStatus.PENDING_PAYMENT;
-            loadRecordAsNew(recordToInsert, transactionStatus,publicKeyBroker, merchandiseCurrency, executionTransactionId, cashCurrencyType);
+            loadRecordAsNew(recordToInsert, transactionStatus, publicKeyBroker, merchandiseCurrency, merchandiseAmount, executionTransactionId, cashCurrencyType);
             transactionTable.insertRecord(recordToInsert);
         } catch (CantInsertRecordException e) {
             throw new CantInsertRecordCashMoneyStockReplenishmentBusinessTransactionException("An exception happened", e, "", "");
@@ -112,7 +113,8 @@ public class CashMoneyStockReplenishmentBusinessTransactionDao{
             DatabaseTableRecord databaseTableRecord,
             BusinessTransactionStatus transactionStatus,
             String publicKeyBroker,
-            String merchandiseCurrency,
+            CurrencyType merchandiseCurrency,
+            float merchandiseAmount,
             String executionTransactionId,
             CashCurrencyType cashCurrencyType
     ) {
@@ -121,8 +123,8 @@ public class CashMoneyStockReplenishmentBusinessTransactionDao{
         databaseTableRecord.setUUIDValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_TRANSACTION_ID_COLUMN_NAME, transactionId);
         databaseTableRecord.setStringValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_STATUS_COLUMN_NAME, transactionStatus.getCode());
         databaseTableRecord.setStringValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_PUBLIC_KEY_BROKER_COLUMN_NAME, publicKeyBroker);
-        databaseTableRecord.setStringValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_CURRENCY_COLUMN_NAME, merchandiseCurrency);
-        databaseTableRecord.setStringValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_AMOUNT_COLUMN_NAME, merchandiseCurrency);
+        databaseTableRecord.setStringValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_CURRENCY_COLUMN_NAME, merchandiseCurrency.getCode());
+        databaseTableRecord.setFloatValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_AMOUNT_COLUMN_NAME, merchandiseAmount);
         databaseTableRecord.setStringValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_EXECUTION_TRANSACTION_ID_COLUMN_NAME, executionTransactionId);
         databaseTableRecord.setStringValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_CASH_CURRENCY_TYPE_COLUMN_NAME,cashCurrencyType.getCode());
 
@@ -154,7 +156,7 @@ public class CashMoneyStockReplenishmentBusinessTransactionDao{
         UUID                        transactionId           = record.getUUIDValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_TRANSACTION_ID_COLUMN_NAME);
         String                      brokerPublicKey         = record.getStringValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_PUBLIC_KEY_BROKER_COLUMN_NAME);
         CurrencyType                merchandiseCurrency     = CurrencyType.getByCode(record.getStringValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_CURRENCY_COLUMN_NAME));
-        float                       amountCurrency          = record.getFloatValue(record.getStringValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_AMOUNT_COLUMN_NAME));
+        float                       merchandiseAmount       = record.getFloatValue(record.getStringValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_AMOUNT_COLUMN_NAME));
         UUID                        executionTransactionId  = record.getUUIDValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_EXECUTION_TRANSACTION_ID_COLUMN_NAME);
         CashCurrencyType            cashCurrencyType        = CashCurrencyType.getByCode(record.getStringValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_CASH_CURRENCY_TYPE_COLUMN_NAME));
         BusinessTransactionStatus   status                  = BusinessTransactionStatus.getByCode(record.getStringValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_STATUS_COLUMN_NAME));
@@ -163,7 +165,7 @@ public class CashMoneyStockReplenishmentBusinessTransactionDao{
                 transactionId,
                 brokerPublicKey,
                 merchandiseCurrency,
-                amountCurrency,
+                merchandiseAmount,
                 executionTransactionId,
                 cashCurrencyType,
                 status
