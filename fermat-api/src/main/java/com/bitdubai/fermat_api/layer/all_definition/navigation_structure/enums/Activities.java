@@ -249,6 +249,8 @@ public enum Activities {
                 return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY;
             case "CBPSACBICI":
                 return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY;
+            case "CBPSACBIEI":
+                return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY;
             case "CBPSACCI":
                 return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY;
             case "CBPSACCICI":
