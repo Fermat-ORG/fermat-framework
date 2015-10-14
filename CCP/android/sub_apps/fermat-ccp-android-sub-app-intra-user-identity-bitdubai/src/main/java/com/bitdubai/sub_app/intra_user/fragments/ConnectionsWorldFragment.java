@@ -108,7 +108,7 @@ public class ConnectionsWorldFragment  extends FermatFragment {
 
 
 
-            //lstIntraUserInformations =  moduleManager.getSuggestionsToContact(MAX, offset);
+            moduleManager.getSuggestionsToContact(MAX, offset);
 
 
             Configuration config = getResources().getConfiguration();
