@@ -120,6 +120,7 @@ public class AssetDistributionDeveloperDatabaseFactory implements DealsWithPlugi
         assetDistributionColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DISTRIBUTION_STATUS_COLUMN_NAME);
         assetDistributionColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_CRYPTO_STATUS_COLUMN_NAME);
         assetDistributionColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_PROTOCOL_STATUS_COLUMN_NAME);
+        assetDistributionColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_ACTOR_ASSET_USER_BITCOIN_ADDRESS_COLUMN_NAME);
         /**
          * Table Asset Distribution addition.
          */

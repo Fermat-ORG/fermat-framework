@@ -123,6 +123,7 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
             this.assetDistributionTransactionManager.setAssetVaultManager(assetVaultManager);
             this.assetDistributionTransactionManager.setDigitalAssetDistributionVault(digitalAssetDistributionVault);
             this.assetDistributionTransactionManager.setAssetDistributionDatabaseDao(assetDistributionDao);
+            this.assetDistributionTransactionManager.setAssetTransmissionNetworkServiceManager(this.assetTransmissionNetworkServiceManager);
         }catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Distribution plugin", "Cannot set an object, probably is null");
         } catch (CantExecuteDatabaseOperationException exception) {
