@@ -172,11 +172,11 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, Da
     }
 
     /**
-     * returns the list of pending transactions to the Incoming crypto router
+     * returns Transcation Manager for the Incoming Crypto Router
      * @return
      */
     @Override
     public TransactionProtocolManager<CryptoTransaction> getTransactionManager() {
-        return null;
+        return bitcoinCryptoNetworkManager;
     }
 }
