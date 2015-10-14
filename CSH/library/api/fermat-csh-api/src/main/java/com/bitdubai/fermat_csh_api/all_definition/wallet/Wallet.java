@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface Wallet {
 
-    String getPublicKeyBroker();
+    String getPublicKeyOwner();
 
     String getPublicKeyWallet();
 
