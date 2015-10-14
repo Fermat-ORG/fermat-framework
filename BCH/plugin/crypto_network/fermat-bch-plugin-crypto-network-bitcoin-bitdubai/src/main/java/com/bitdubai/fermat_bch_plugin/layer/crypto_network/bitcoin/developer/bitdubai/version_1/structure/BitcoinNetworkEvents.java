@@ -118,8 +118,25 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                     tx.getValue(wallet).getValue(),
                     tx.getFee().getValue(),
                     ProtocolStatus.TO_BE_NOTIFIED);
-        } catch (CantExecuteDatabaseOperationException e) {
-            e.printStackTrace();
+        }  catch (Exception e){
+            /**
+             * if there is an error in getting information from the transaction object.
+             * I will try saving the transaction with minimal information.
+             * I will complete this info in the agent that triggers the events.
+             */
+            try{
+                CryptoAddress errorAddress = new CryptoAddress("error", CryptoCurrency.BITCOIN);
+                getDao().saveNewIncomingTransaction(tx.getHashAsString(),
+                        getTransactionCryptoStatus(tx),
+                        0,
+                        errorAddress,
+                        errorAddress,
+                        0,
+                        0,
+                        ProtocolStatus.TO_BE_NOTIFIED);
+            } catch (CantExecuteDatabaseOperationException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
@@ -222,7 +239,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
             /**
              * get the address from the output
              */
-            address = output.getAddressFromP2PKHScript(wallet.getNetworkParameters());
+            address = output.getScriptPubKey().getToAddress(wallet.getNetworkParameters());
         }
         CryptoAddress cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
         return cryptoAddress;
