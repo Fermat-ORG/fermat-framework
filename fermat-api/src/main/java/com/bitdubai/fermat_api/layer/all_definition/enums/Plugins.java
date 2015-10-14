@@ -73,14 +73,6 @@ public enum Plugins {
     BITDUBAI_DESIGNER_IDENTITY("BDDESID", Developers.BITDUBAI),
     BITDUBAI_DEVELOPER_MODULE("BDEVMOD", Developers.BITDUBAI),
     BITDUBAI_MIDDLEWARE_NOTIFICATION("BDNOTMID", Developers.BITDUBAI),
-
-    BITDUBAI_ASSET_ISSUING_TRANSACTION("BAIT", Developers.BITDUBAI),
-    BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION("BADT", Developers.BITDUBAI),
-    BITDUBAI_ASSET_RECEPTION_TRANSACTION("BADR", Developers.BITDUBAI),
-    BITDUBAI_ASSET_FACTORY("BASF", Developers.BITDUBAI),
-    BITDUBAI_ASSET_FACTORY_MODULE("BASFM", Developers.BITDUBAI),
-    BITDUBAI_ASSET_WALLET_ISSUER("BASWI", Developers.BITDUBAI),
-
     BITDUBAI_DESKTOP_RUNTIME("BDR",Developers.BITDUBAI),
 
     // Init CCP Plugins
@@ -99,16 +91,22 @@ public enum Plugins {
     // End  CCP Plugins
 
     // Init DAP Plugins
-    BITDUBAI_DAP_ASSET_ISSUER_ACTOR                     ("BDAPAIA", Developers.BITDUBAI),
-    BITDUBAI_DAP_ASSET_USER_ACTOR                       ("BDAPAUA", Developers.BITDUBAI),
-    BITDUBAI_DAP_REDEEM_POINT_ACTOR                     ("BDAPRPA", Developers.BITDUBAI),
-    BITDUBAI_DAP_ASSET_ISSUER_IDENTITY                  ("BDAPAII", Developers.BITDUBAI),
-    BITDUBAI_DAP_ASSET_USER_IDENTITY                    ("BDAPAUI", Developers.BITDUBAI),
-    BITDUBAI_DAP_REDEEM_POINT_IDENTITY                  ("BDAPRPI", Developers.BITDUBAI),
-    BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE             ("BDAIWMO", Developers.BITDUBAI),
-    BITDUBAI_DAP_ASSET_USER_WALLET                      ("BDAPAWU", Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_ISSUER_ACTOR                     ("BDAPAIA",   Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_USER_ACTOR                       ("BDAPAUA",   Developers.BITDUBAI),
+    BITDUBAI_DAP_REDEEM_POINT_ACTOR                     ("BDAPRPA",   Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_ISSUER_IDENTITY                  ("BDAPAII",   Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_USER_IDENTITY                    ("BDAPAUI",   Developers.BITDUBAI),
+    BITDUBAI_DAP_REDEEM_POINT_IDENTITY                  ("BDAPRPI",   Developers.BITDUBAI),
+    BITDUBAI_ASSET_ISSUING_TRANSACTION                  ("BAIT",      Developers.BITDUBAI),
+    BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION             ("BADT",      Developers.BITDUBAI),
+    BITDUBAI_ASSET_RECEPTION_TRANSACTION                ("BADR",      Developers.BITDUBAI),
+    BITDUBAI_ASSET_WALLET_ISSUER                        ("BASWI",     Developers.BITDUBAI),
+    BITDUBAI_ASSET_FACTORY                              ("BASF",      Developers.BITDUBAI),
+    BITDUBAI_ASSET_FACTORY_MODULE                       ("BASFM",     Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE             ("BDAIWMO",   Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_USER_WALLET                      ("BDAPAWU",   Developers.BITDUBAI),
     BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE       ("BDAPAUANS", Developers.BITDUBAI),
-    BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE       ("BDAPATNS", Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE     ("BDAPATNS",  Developers.BITDUBAI),
     // End  DAP Plugins
 
     // Init WPD Plugins
@@ -127,6 +125,13 @@ public enum Plugins {
     BITDUBAI_WPD_WALLET_PUBLISHER_SUB_APP_MODULE        ("BWPDWPSAM", Developers.BITDUBAI),
     BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE            ("BWPDWSSAM", Developers.BITDUBAI),
     // End  WPD Plugins
+
+    //Init CBP Plugins
+    BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY ("BCBPCBI", Developers.BITDUBAI),
+    BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY ("BCBPCCI", Developers.BITDUBAI),
+    BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE ("BCBPCBISAM", Developers.BITDUBAI),
+    BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE ("BCBPCCISAM", Developers.BITDUBAI),
+    //End CBP Plugins
 
     ;
 
@@ -323,6 +328,14 @@ public enum Plugins {
             case "BWPDWPSAM": return BITDUBAI_WPD_WALLET_PUBLISHER_SUB_APP_MODULE;
             case "BWPDWSSAM": return BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE;
             // End  WPD Plugins
+
+            //Init CBP Plugins
+            case "BCBPCBI": return BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY;
+            case "BCBPCCI": return BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY;
+            case "BCBPCBISAM": return BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE;
+            case "BCBPCCISAM": return BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE;
+            //End CBP Plugins
+
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

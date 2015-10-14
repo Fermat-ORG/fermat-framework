@@ -388,11 +388,11 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
             db.setVault(vault);
 
-            //if (!db.isNewFermatTransaction(FermatTxId))
+            if (!db.isNewFermatTransaction(FermatTxId))
             /**
              * Already sent, this might be an error. I'm not going to send it again.
              */
-            //    throw new CryptoTransactionAlreadySentException("This transaction has already been sent before.", null, "Transaction ID: " + FermatTxId.toString(), "An error in a previous module.");
+                throw new CryptoTransactionAlreadySentException("This transaction has already been sent before.", null, "Transaction ID: " + FermatTxId.toString(), "An error in a previous module.");
 
             Address address = null;
             /**
@@ -608,22 +608,60 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         Transaction tx = vault.getTransaction(hash);
 
         /**
-         * I will search on all outputs for an address that is mine
+         * I need to determine if this address is outgoing on incoming to determine what is addressTo
+         * and addressFrom.
          */
-        for (TransactionOutput output : tx.getOutputs()) {
-            if (output.isMine(vault)){
-                /**
-                 * this is address To
-                 */
-                addresses[1] = output.getScriptPubKey().getToAddress(this.networkParameters).toString();
-            } else {
-                /**
-                 * This is address From
-                 */
-                addresses[0] = output.getScriptPubKey().getToAddress(networkParameters).toString();
-            }
+        boolean isOutgoing;
+        if (tx.getValueSentFromMe(vault).getValue() != 0)
+            isOutgoing = true;
+        else
+            isOutgoing = false;
 
+        /**
+         * if is a transaction I generated to send to some one
+         */
+        if (isOutgoing){
+            /**
+             * I will search on all outputs for an address that is mine
+             */
+            for (TransactionOutput output : tx.getOutputs()) {
+                if (output.isMine(vault)){
+                    /**
+                     * this is address From
+                     */
+                    addresses[0] = output.getScriptPubKey().getToAddress(this.networkParameters).toString();
+                } else {
+                    /**
+                     * This is address To
+                     */
+                    addresses[1] = output.getScriptPubKey().getToAddress(networkParameters).toString();
+                }
+
+            }
+        } else
+        /**
+         * if it is an incoming transaction
+         */
+        {
+            /**
+             * I will search on all outputs for an address that is mine
+             */
+            for (TransactionOutput output : tx.getOutputs()) {
+                if (output.isMine(vault)){
+                    /**
+                     * this is address To
+                     */
+                    addresses[1] = output.getScriptPubKey().getToAddress(this.networkParameters).toString();
+                } else {
+                    /**
+                     * This is address From
+                     */
+                    addresses[0] = output.getScriptPubKey().getToAddress(networkParameters).toString();
+                }
+
+            }
         }
+
         return addresses;
     }
 

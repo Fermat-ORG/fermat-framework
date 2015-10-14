@@ -1292,7 +1292,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      * Assest issuer
      */
     public AssetIssuerWalletSupAppModuleManager getAssetIssuerWalletModuleManager() {
-        return (AssetIssuerWalletSupAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE);
+        return null;//(AssetIssuerWalletSupAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE);
     }
 
     /**

@@ -111,7 +111,7 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, Da
         BitcoinCryptoNetworkEventsAgent bitcoinCryptoNetworkEventsAgent = new BitcoinCryptoNetworkEventsAgent(this.pluginDatabaseSystem, this.pluginId, this.eventManager);
         try {
             bitcoinCryptoNetworkEventsAgent.start();
-        } catch (CantStartAgentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -148,7 +148,7 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, Da
     public void monitorNetworkFromKeyList(CryptoVaults cryptoVault, List<BlockchainNetworkType> blockchainNetworkTypes, List<ECKey> keyList) throws CantMonitorBitcoinNetworkException {
         try {
             bitcoinCryptoNetworkManager.monitorNetworkFromKeyList(cryptoVault, blockchainNetworkTypes, keyList);
-        } catch (CantStartAgentException e) {
+        } catch (Exception e) {
             throw new CantMonitorBitcoinNetworkException (CantMonitorBitcoinNetworkException.DEFAULT_MESSAGE, e, null, null);
         }
     }

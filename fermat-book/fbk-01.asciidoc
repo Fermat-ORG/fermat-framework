@@ -50,7 +50,9 @@ We strive in FERMAT to lay foundational concepts, technologies and systems to su
 The analogy having a big architect wanting to design a new city can serves us for comparison as long as we explore FERMAT'S basic components and their development inside the master plan.
 
 As every master plan, we have to consider that the plan has succesive phases of implementation. +
+
 :numbered!:
+
 ==== PHASE I:
 
 * First, we need the ground were to build: in this case, the ground is all the available technology available today in internet, specially the available open source software, and all the devices and network technologies that let digital communication be available at a massive level.
