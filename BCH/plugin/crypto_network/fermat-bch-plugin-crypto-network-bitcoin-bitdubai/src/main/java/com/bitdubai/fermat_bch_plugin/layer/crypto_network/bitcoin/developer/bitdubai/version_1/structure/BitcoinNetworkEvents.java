@@ -80,7 +80,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void onPeerConnected(Peer peer, int peerCount) {
-        System.out.println("peer connected: " + peer.toString());
+
     }
 
     @Override
@@ -252,6 +252,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      */
     private CryptoAddress getIncomingTransactionAddressFrom (Transaction tx){
         Address address = null;
+
         for (TransactionInput input : tx.getInputs()){
             if (input.getFromAddress() != null)
                 address = input.getFromAddress();
