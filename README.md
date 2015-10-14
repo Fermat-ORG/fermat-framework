@@ -21,16 +21,16 @@ Not stopping until we reach our goal and finding the answers to the following qu
 * How do we integrate legacy financial institutions in a way they feel comfortable? 
 * How do we integrate merchants, retailers and brands of all sizes in a clever way?
 
-The answers to each of these questions are addressed within the Fermat platform.
+The answers to each of these questions are addressed within Fermat.
 
 What is Fermat? 
 ----------------------
 
-Fermat is a platform for experimentation on what needs to be done to get crypto currencies mass adopted.
+Fermat is a system for experimentation on what needs to be done to get crypto currencies mass adopted.
 
 Technically Fermat is an open-source P2P system built on a plug-ins architecture that handles a stack of platforms and runs on multiple OS including Android, Linux, iOS, OSX and Windows.
 
-What makes Fermat different from other wallet platforms or services?
+What makes Fermat different from other wallet systems or services?
 
 * **Fermat is P2P.** This makes it censorship resistent and difficult to be attacked.
 
@@ -38,9 +38,9 @@ What makes Fermat different from other wallet platforms or services?
 
 * **Fermat runs on end users' devices.** This enables users to hold their own money eliminating the need to trust a third party. 
 
-* **Fermat is inclusive.** By creating their own plugins, current industry members can integrate with Fermat to offer their services and products to Fermat user base. 
+* **Fermat is inclusive.** By creating their own plugins, current industry members can integrate with Fermat to offer their services and products to Fermat's user base. 
 
-* **Fermat segments the world population and offers a custom tailored solution for each segment.** Any developer can easily create niche wallets for a particular group of people. Brands can create their own wallets for their followers. All the heavy lifting is done by the Fermat platform.
+* **Fermat segments the world population and offers a custom tailored solution for each segment.** Any developer can easily create niche wallets for a particular group of people. Brands can create their own wallets for their followers. All the heavy lifting is done by the Fermat underlaying technology.
 
 * **Fermat guaratees plugins and wallet developers a revenue stream.** Fermat implements an innovative business model which allows plugins and wallet developers to define a use license, and Fermat itself enforces this license on behalf of developers. 
 
@@ -48,7 +48,7 @@ Fermat is moving towards version 1, but we're not stopping there. We have many f
 [documentation](https://github.com/bitDubai/fermat/tree/master/fermat-documentation) that we're anxious to add. 
 So take Fermat out for a spin and let us know how we can make it your favorite platform to launch your own digital wallet. 
 
-You can see some cool visualizations of Fermat and its P2P network at 
+You can learn more and see some cool visualizations of Fermat's architecture and its P2P network at 
 [Fermat.org](http://www.fermat.org).
 
 
