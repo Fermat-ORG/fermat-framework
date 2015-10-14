@@ -1,6 +1,10 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
@@ -25,7 +29,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by rodrigo on 10/4/15.
  */
-public class BitcoinCryptoNetworkManager {
+public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
+
     /**
      * BitcoinJ wallet where I'm storing the public keys and transactions
      */
@@ -199,5 +204,30 @@ public class BitcoinCryptoNetworkManager {
         if (bitcoinCryptoNetworkDatabaseDao == null)
             bitcoinCryptoNetworkDatabaseDao = new BitcoinCryptoNetworkDatabaseDao(this.pluginId, this.pluginDatabaseSystem);
         return bitcoinCryptoNetworkDatabaseDao;
+    }
+
+    /**
+     * TransactionProtocolManager interface implementations
+     */
+
+    /**
+     * Confirms the reception of a transaction
+     * @param transactionID
+     * @throws CantConfirmTransactionException
+     */
+    @Override
+    public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
+
+    }
+
+    /**
+     * Gets the list of pending transactions-
+     * @param specialist
+     * @return
+     * @throws CantDeliverPendingTransactionsException
+     */
+    @Override
+    public List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
+        return null;
     }
 }

@@ -116,8 +116,8 @@ dependencies {
     compile project(':fermat-pip-plugin-module-notification-bitdubai')
     compile project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai')
     // P2P Projects
-    compile project(':fermat-p2p-plugin-communication-cloud-client-bitdubai')
-    compile project(':fermat-p2p-plugin-communication-cloud-server-bitdubai')
+//    compile project(':fermat-p2p-plugin-communication-cloud-client-bitdubai')
+//    compile project(':fermat-p2p-plugin-communication-cloud-server-bitdubai')
     compile project(':fermat-p2p-plugin-ws-communications-cloud-client-bitdubai')
     compile project(':fermat-p2p-plugin-ws-communications-cloud-server-bitdubai')
     //WPD Projects (Plugins)

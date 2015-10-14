@@ -219,10 +219,10 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
          * Construct a fermat packet whit the message to transmit
          */
         FermatPacket fermatPacketRequest = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(vpnServerIdentity,                  //Destination
-                vpnClientIdentity.getPublicKey(),   //Sender
-                fermatMessage.toJson(),             //Message Content
-                FermatPacketType.MESSAGE_TRANSMIT,  //Packet type
-                vpnClientIdentity.getPrivateKey()); //Sender private key
+                                                                                                                    vpnClientIdentity.getPublicKey(),   //Sender
+                                                                                                                    fermatMessage.toJson(),             //Message Content
+                                                                                                                    FermatPacketType.MESSAGE_TRANSMIT,  //Packet type
+                                                                                                                    vpnClientIdentity.getPrivateKey()); //Sender private key
         /*
          * Send the encode packet to the server
          */

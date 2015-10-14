@@ -109,36 +109,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         /**
          * Register the new incoming transaction into the database
          */
-        try {
-            getDao().saveNewIncomingTransaction(tx.getHashAsString(),
-                    getTransactionCryptoStatus(tx),
-                    tx.getConfidence().getDepthInBlocks(),
-                    getIncomingTransactionAddressTo(wallet, tx),
-                    getIncomingTransactionAddressFrom(tx),
-                    tx.getValueSentToMe(wallet).getValue(),
-                    tx.getFee().getValue(),
-                    ProtocolStatus.TO_BE_NOTIFIED);
-        }  catch (Exception e){
-            /**
-             * if there is an error in getting information from the transaction object.
-             * I will try saving the transaction with minimal information.
-             * I will complete this info in the agent that triggers the events.
-             */
-            e.printStackTrace();
-            try{
-                CryptoAddress errorAddress = new CryptoAddress("error", CryptoCurrency.BITCOIN);
-                getDao().saveNewIncomingTransaction(tx.getHashAsString(),
-                        getTransactionCryptoStatus(tx),
-                        0,
-                        errorAddress,
-                        errorAddress,
-                        0,
-                        0,
-                        ProtocolStatus.TO_BE_NOTIFIED);
-            } catch (CantExecuteDatabaseOperationException e1) {
-                e1.printStackTrace();
-            }
-        }
+        saveIncomingTransaction(wallet, tx);
     }
 
     @Override
@@ -352,18 +323,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                 /**
                  * Register the new incoming transaction into the database
                  */
-                try {
-                    getDao().saveNewIncomingTransaction(tx.getHashAsString(),
-                            cryptoStatusToSet,
-                            tx.getConfidence().getDepthInBlocks(),
-                            getIncomingTransactionAddressTo(wallet, tx),
-                            getIncomingTransactionAddressFrom(tx),
-                            tx.getValue(wallet).getValue(),
-                            tx.getFee().getValue(),
-                            ProtocolStatus.TO_BE_NOTIFIED);
-                } catch (CantExecuteDatabaseOperationException e) {
-                    e.printStackTrace();
-                }
+                saveIncomingTransaction(wallet, tx);
                 break;
             case OUTGOING:
                 /**
@@ -395,6 +355,47 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      */
     private CryptoStatus getStoredTransactionCryptoStatus(TransactionTypes transactionType, String txHash) throws CantExecuteDatabaseOperationException {
         return getDao().getStoredTransactionCryptoStatus(transactionType, txHash);
+    }
+
+    /**
+     * saves the new incoming transaction into the database
+     * @param wallet
+     * @param tx
+     */
+    private void saveIncomingTransaction(Wallet wallet, Transaction tx){
+        /**
+         * Register the new incoming transaction into the database
+         */
+        try {
+            getDao().saveNewIncomingTransaction(tx.getHashAsString(),
+                    getTransactionCryptoStatus(tx),
+                    tx.getConfidence().getDepthInBlocks(),
+                    getIncomingTransactionAddressTo(wallet, tx),
+                    getIncomingTransactionAddressFrom(tx),
+                    tx.getValueSentToMe(wallet).getValue(),
+                    tx.getFee().getValue(),
+                    ProtocolStatus.TO_BE_NOTIFIED);
+        }  catch (Exception e){
+            /**
+             * if there is an error in getting information from the transaction object.
+             * I will try saving the transaction with minimal information.
+             * I will complete this info in the agent that triggers the events.
+             */
+            e.printStackTrace();
+            try{
+                CryptoAddress errorAddress = new CryptoAddress("error", CryptoCurrency.BITCOIN);
+                getDao().saveNewIncomingTransaction(tx.getHashAsString(),
+                        getTransactionCryptoStatus(tx),
+                        0,
+                        errorAddress,
+                        errorAddress,
+                        0,
+                        0,
+                        ProtocolStatus.TO_BE_NOTIFIED);
+            } catch (CantExecuteDatabaseOperationException e1) {
+                e1.printStackTrace();
+            }
+        }
     }
 }
 

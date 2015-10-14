@@ -19,9 +19,10 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
      * Represent the sleep time for the read or send (5000 milliseconds)
      */
     private static final long SLEEP_TIME = 5000;
+    private static final long MAX_SLEEP_TIME = 20000;
 
-    private final CryptoPaymentRequestNetworkServicePluginRoot cryptoPaymentRequestNetworkServicePluginRoot;
-    private final CommunicationsClientConnection               communicationsClientConnection              ;
+    private final CryptoPaymentRequestNetworkServicePluginRoot networkServicePluginRoot      ;
+    private final CommunicationsClientConnection               communicationsClientConnection;
 
     /**
      * Represent the active
@@ -31,12 +32,12 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     /**
      * Constructor with parameters.
      */
-    public CommunicationRegistrationProcessNetworkServiceAgent(final CryptoPaymentRequestNetworkServicePluginRoot cryptoPaymentRequestNetworkServicePluginRoot,
-                                                               final CommunicationsClientConnection               communicationsClientConnection              ) {
+    public CommunicationRegistrationProcessNetworkServiceAgent(final CryptoPaymentRequestNetworkServicePluginRoot networkServicePluginRoot      ,
+                                                               final CommunicationsClientConnection               communicationsClientConnection) {
 
-        this.cryptoPaymentRequestNetworkServicePluginRoot = cryptoPaymentRequestNetworkServicePluginRoot;
-        this.communicationsClientConnection               = communicationsClientConnection              ;
-        this.active                                       = Boolean.FALSE                               ;
+        this.networkServicePluginRoot       = networkServicePluginRoot      ;
+        this.communicationsClientConnection = communicationsClientConnection;
+        this.active                         = Boolean.FALSE                 ;
     }
 
     /**
@@ -48,52 +49,64 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
         while (active){
 
-            if (communicationsClientConnection.isRegister() && !cryptoPaymentRequestNetworkServicePluginRoot.isRegister()){
+            try {
 
-                /*
-                 * Construct my profile and register me
-                 */
-                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
-                        cryptoPaymentRequestNetworkServicePluginRoot.getIdentityPublicKey(),
-                        (cryptoPaymentRequestNetworkServicePluginRoot.getAlias().toLowerCase()+"_"+cryptoPaymentRequestNetworkServicePluginRoot.getId().toString()),
-                        (cryptoPaymentRequestNetworkServicePluginRoot.getName()+" ("+cryptoPaymentRequestNetworkServicePluginRoot.getId()+")"),
-                        cryptoPaymentRequestNetworkServicePluginRoot.getNetworkServiceType(),
-                        cryptoPaymentRequestNetworkServicePluginRoot.getPlatformComponentType(),
-                        cryptoPaymentRequestNetworkServicePluginRoot.getExtraData());
+                if (communicationsClientConnection.isRegister() && !networkServicePluginRoot.isRegister()){
 
-                /*
-                 * Register me
-                 */
-                communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+                    /*
+                     * Construct my profile and register me
+                     */
+                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
+                            networkServicePluginRoot.getIdentityPublicKey(),
+                            (networkServicePluginRoot.getAlias().toLowerCase()+"_"+networkServicePluginRoot.getId().toString()),
+                            (networkServicePluginRoot.getName()+" ("+networkServicePluginRoot.getId()+")"),
+                            networkServicePluginRoot.getNetworkServiceType(),
+                            networkServicePluginRoot.getPlatformComponentType(),
+                            networkServicePluginRoot.getExtraData());
 
-                /*
-                 * Configure my new profile
-                 */
-                cryptoPaymentRequestNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
+                    /*
+                     * Register me
+                     */
+                    communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
 
-                /*
-                 * Initialize the connection manager
-                 */
-                cryptoPaymentRequestNetworkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
+                    /*
+                     * Configure my new profile
+                     */
+                    networkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
 
-                /*
-                 * Stop the agent
-                 */
-                active = Boolean.FALSE;
+                    /*
+                     * Initialize the connection manager
+                     */
+                    networkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
 
-            }else if (!cryptoPaymentRequestNetworkServicePluginRoot.isRegister()){
+                    /*
+                     * Stop the agent
+                     */
+                    active = Boolean.FALSE;
 
-                try {
-                    sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                }else if (!networkServicePluginRoot.isRegister()){
+
+                    try {
+                        sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        active = Boolean.FALSE;
+                    }
+
+                }else if (!networkServicePluginRoot.isRegister()){
                     active = Boolean.FALSE;
                 }
 
-            }else if (!cryptoPaymentRequestNetworkServicePluginRoot.isRegister()){
-                active = Boolean.FALSE;
-            }
+            }catch (Exception e){
+                try {
+                    e.printStackTrace();
+                    sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                    active = Boolean.FALSE;
+                }
 
+            }
         }
     }
 

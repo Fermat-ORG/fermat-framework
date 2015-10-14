@@ -19,6 +19,7 @@ public enum RequestAction implements FermatEnum {
     INFORM_DENIAL    ("INDE"),
     INFORM_RECEPTION ("INRC"),
     INFORM_REFUSAL   ("INRF"),
+    NONE             ("NONE"),
     REQUEST          ("REQU"),
 
     ;
@@ -37,11 +38,10 @@ public enum RequestAction implements FermatEnum {
             case "INDE": return INFORM_DENIAL   ;
             case "INRC": return INFORM_RECEPTION;
             case "INRF": return INFORM_REFUSAL  ;
+            case "NONE": return NONE            ;
             case "REQU": return REQUEST         ;
 
             default: throw new InvalidParameterException(
-                    InvalidParameterException.DEFAULT_MESSAGE,
-                    null,
                     "Code Received: " + code,
                     "This code is not valid for the RequestAction enum."
             );
