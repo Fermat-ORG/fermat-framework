@@ -68,8 +68,8 @@ public class BankMoneyStockReplenishmentBusinessTransactionDao{
     /*CREATE NEW TRANSACTION*/
     public void createNewBankMoneyStockReplenishment(
             String publicKeyBroker,
-            String merchandiseCurrency,
-            String merchandiseAmount,
+            CurrencyType merchandiseCurrency,
+            float merchandiseAmount,
             String executionTransactionId,
             BankCurrencyType bankCurrencyType,
             BankOperationType bankOperationType
@@ -115,8 +115,8 @@ public class BankMoneyStockReplenishmentBusinessTransactionDao{
         DatabaseTableRecord databaseTableRecord,
         BusinessTransactionStatus transactionStatus,
         String publicKeyBroker,
-        String merchandiseCurrency,
-        String merchandiseAmount,
+        CurrencyType merchandiseCurrency,
+        float merchandiseAmount,
         String executionTransactionId,
         BankCurrencyType bankCurrencyType,
         BankOperationType bankOperationType
@@ -125,8 +125,8 @@ public class BankMoneyStockReplenishmentBusinessTransactionDao{
         databaseTableRecord.setUUIDValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_TRANSACTION_ID_COLUMN_NAME, transactionId);
         databaseTableRecord.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_STATUS_COLUMN_NAME, transactionStatus.getCode());
         databaseTableRecord.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_PUBLIC_KEY_BROKER_COLUMN_NAME, publicKeyBroker);
-        databaseTableRecord.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_CURRENCY_COLUMN_NAME, merchandiseCurrency);
-        databaseTableRecord.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_CURRENCY_COLUMN_NAME, merchandiseAmount);
+        databaseTableRecord.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_CURRENCY_COLUMN_NAME, merchandiseCurrency.getCode());
+        databaseTableRecord.setFloatValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_CURRENCY_COLUMN_NAME, merchandiseAmount);
         databaseTableRecord.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_EXECUTION_TRANSACTION_ID_COLUMN_NAME, executionTransactionId);
         databaseTableRecord.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_BANK_CURRENCY_TYPE_COLUMN_NAME,bankCurrencyType.getCode());
         databaseTableRecord.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_BANK_OPERATION_TYPE_COLUMN_NAME,bankOperationType.getCode());

@@ -17,6 +17,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantInitializeAssetMonitorAgentException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.AssetFactoryMiddlewarePluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.AssetFactoryMiddlewareManager;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssertFactoryMiddlewareDatabaseConstant;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDao;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDatabaseFactory;
@@ -39,27 +40,36 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
     ErrorManager errorManager;
     EventManager eventManager;
     PluginDatabaseSystem pluginDatabaseSystem;
+    AssetFactoryMiddlewareManager assetFactoryMiddlewareManager;
     AssetIssuingManager assetIssuingManager;
     UUID pluginId;
 
     public AssetFactoryMiddlewareMonitorAgent(EventManager eventManager,
                                               PluginDatabaseSystem pluginDatabaseSystem,
                                               ErrorManager errorManager,
+                                              AssetFactoryMiddlewareManager assetFactoryMiddlewareManager,
                                               AssetIssuingManager assetIssuingManager,
                                               UUID pluginId) throws CantSetObjectException {
         this.eventManager= eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
+        setAssetFactoryMiddlewareManager(assetFactoryMiddlewareManager);
         setAssetIssuingManager(assetIssuingManager);
         this.pluginId = pluginId;
 
     }
 
+    private void setAssetFactoryMiddlewareManager(AssetFactoryMiddlewareManager assetFactoryMiddlewareManager) throws CantSetObjectException {
+        if(assetFactoryMiddlewareManager == null){
+            throw new CantSetObjectException("AssetFactoryMiddlewareManager is null");
+        }
+        this.assetFactoryMiddlewareManager = assetFactoryMiddlewareManager;
+    }
+
     private void setAssetIssuingManager(AssetIssuingManager assetIssuingManager) throws CantSetObjectException {
-        if(assetIssuingManager == null){
+        if (assetIssuingManager == null){
             throw new CantSetObjectException("AssetIssuingManager is null");
         }
-        this.assetIssuingManager = assetIssuingManager;
     }
 
     @Override
@@ -163,7 +173,7 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
         }
 
         private void doTheMainTask(){
-
+            //TODO: Implementar ese metodo que tendra toda la logica que tendra el Agente
         }
 
         public void Initialize() throws CantInitializeAssetMonitorAgentException {

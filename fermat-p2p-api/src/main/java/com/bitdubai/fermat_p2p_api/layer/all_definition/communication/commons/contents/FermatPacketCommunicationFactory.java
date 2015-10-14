@@ -6,7 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
@@ -36,8 +36,8 @@ public class FermatPacketCommunicationFactory {
      */
     public static FermatPacket constructFermatPacketEncryptedAndSinged(final String destination, final String sender, final String messageContentJsonString, final FermatPacketType fermatPacketType, final String privateKeyToSing) {
 
-        String messageHash = AsymmectricCryptography.encryptMessagePublicKey(messageContentJsonString, destination);
-        String signature = AsymmectricCryptography.createMessageSignature(messageHash, privateKeyToSing);
+        String messageHash = AsymmetricCryptography.encryptMessagePublicKey(messageContentJsonString, destination);
+        String signature = AsymmetricCryptography.createMessageSignature(messageHash, privateKeyToSing);
 
         return new FermatPacketCommunication(destination, sender, fermatPacketType, messageHash, signature);
     }
@@ -63,8 +63,8 @@ public class FermatPacketCommunicationFactory {
      */
     public static FermatPacket constructFermatPacketEncryptedAndSingedForMsjTransmit(final String destination, final String sender, final String messageContentJsonString, final FermatPacketType fermatPacketType, final String clientPrivateKeyToSing, final String publicKeyToEncrypt) {
 
-        String messageHash = AsymmectricCryptography.encryptMessagePublicKey(messageContentJsonString, publicKeyToEncrypt);
-        String signature = AsymmectricCryptography.createMessageSignature(messageHash, clientPrivateKeyToSing);
+        String messageHash = AsymmetricCryptography.encryptMessagePublicKey(messageContentJsonString, publicKeyToEncrypt);
+        String signature = AsymmetricCryptography.createMessageSignature(messageHash, clientPrivateKeyToSing);
 
         return new FermatPacketCommunication(destination, sender, fermatPacketType, messageHash, signature);
     }

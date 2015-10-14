@@ -1,6 +1,6 @@
 package test.com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoRegistry;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -20,15 +20,12 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoRegistry;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
-import static org.fest.assertions.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static com.googlecode.catchexception.CatchException.*;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.exceptions.verification.WantedButNotInvoked;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
@@ -69,8 +66,8 @@ public class AcknowledgeTransactionsTest {
 
     @Before
     public void setUpTransactionList(){
-        String from = AsymmectricCryptography.generateTestAddress(AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey()));
-        String to = AsymmectricCryptography.generateTestAddress(AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey()));
+        String from = AsymmetricCryptography.generateTestAddress(AsymmetricCryptography.derivePublicKey(AsymmetricCryptography.createPrivateKey()));
+        String to = AsymmetricCryptography.generateTestAddress(AsymmetricCryptography.derivePublicKey(AsymmetricCryptography.createPrivateKey()));
         CryptoAddress fromAddress = new CryptoAddress(from, CryptoCurrency.BITCOIN);
         CryptoAddress toAddress = new CryptoAddress(to, CryptoCurrency.BITCOIN);
         String transactionHash = CryptoHasher.performSha256("TRANSACTION");

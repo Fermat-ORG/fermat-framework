@@ -2,7 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.develope
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantSetNewProfileImageException;
 
@@ -66,7 +66,7 @@ public class IntraWalletUserIdentity implements DealsWithPluginFileSystem, Deals
     @Override
     public String createMessageSignature(String message) throws CantSignIntraWalletUserMessageException {
         try {
-            return AsymmectricCryptography.createMessageSignature(message, this.privateKey);
+            return AsymmetricCryptography.createMessageSignature(message, this.privateKey);
         } catch (Exception e) {
             throw new CantSignIntraWalletUserMessageException("Fatal Error Signed message", e, "", "");
         }

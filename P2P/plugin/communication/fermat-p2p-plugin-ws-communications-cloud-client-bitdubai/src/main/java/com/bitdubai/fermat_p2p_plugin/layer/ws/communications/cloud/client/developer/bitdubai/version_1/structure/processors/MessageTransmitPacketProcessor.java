@@ -6,7 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
@@ -37,7 +37,7 @@ public class MessageTransmitPacketProcessor extends FermatPacketProcessor {
         /*
          * Get the platformComponentProfile from the message content and decrypt
          */
-        String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
+        String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
         System.out.println("MessageTransmitPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
@@ -49,7 +49,7 @@ public class MessageTransmitPacketProcessor extends FermatPacketProcessor {
 
         System.out.println("MessageTransmitPacketProcessor - fermatMessage = "+fermatMessage);
         System.out.println("MessageTransmitPacketProcessor - fermatMessage.getContent() ");
-        System.out.println(AsymmectricCryptography.decryptMessagePrivateKey(fermatMessage.getContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey()));
+        System.out.println(AsymmetricCryptography.decryptMessagePrivateKey(fermatMessage.getContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey()));
 
         //TODO: ATTACH THIS TO A EVENT AND FIRED
     }
