@@ -928,10 +928,10 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
             cryptoPaymentRequestNetworkServiceDao.createCryptoPaymentRequest(
                     requestMessage.getRequestId()        ,
-                    requestMessage.getIdentityPublicKey(),
-                    requestMessage.getIdentityType()     ,
-                    requestMessage.getActorPublicKey()   ,
-                    requestMessage.getActorType()        ,
+                    requestMessage.getActorPublicKey()   , // the actor receiving, is the identity now.
+                    requestMessage.getActorType()        , // the actor receiving, is the identity now.
+                    requestMessage.getIdentityPublicKey(), // the identity who sent the request, is the actor now.
+                    requestMessage.getIdentityType()     , // the identity who sent the request, is the actor now.
                     requestMessage.getCryptoAddress()    ,
                     requestMessage.getDescription()      ,
                     requestMessage.getAmount()           ,
