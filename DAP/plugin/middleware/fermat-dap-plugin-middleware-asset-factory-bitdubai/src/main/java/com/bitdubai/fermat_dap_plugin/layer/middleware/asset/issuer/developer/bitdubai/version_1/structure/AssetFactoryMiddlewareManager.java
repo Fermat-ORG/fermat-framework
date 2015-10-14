@@ -121,12 +121,12 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
         boolean isBoolean = true;
         //TODO: Descomentar luego solo es para la prueba y testeo
         //if (assetFactory.getResources() == null) isBoolean = false;
-        if (assetFactory.getState() == null) isBoolean = false;
-        if (assetFactory.getName() == null) isBoolean = false;
-        if (assetFactory.getDescription() == null) isBoolean = false;
-        if (assetFactory.getQuantity() == 0) isBoolean = false;
-        if (assetFactory.getAmount() == 0) isBoolean = false;
-        if (assetFactory.getAssetBehavior() == null) isBoolean = false;
+//        if (assetFactory.getState() == null) isBoolean = false;
+//        if (assetFactory.getName() == null) isBoolean = false;
+//        if (assetFactory.getDescription() == null) isBoolean = false;
+//        if (assetFactory.getQuantity() == 0) isBoolean = false;
+//        if (assetFactory.getAmount() == 0) isBoolean = false;
+//        if (assetFactory.getAssetBehavior() == null) isBoolean = false;
         return isBoolean;
     }
 

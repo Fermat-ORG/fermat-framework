@@ -70,8 +70,7 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAsset
     @Override
     public void start() throws CantStartPluginException {
         try {
-             assetIssuerWalletModuleManager = new AssetIssuerWalletModuleManager(assetIssuerWalletManager);
-
+            assetIssuerWalletModuleManager = new AssetIssuerWalletModuleManager(assetIssuerWalletManager);
             System.out.println("******* Asset Issuer Wallet Module Init ******");
             this.serviceStatus = ServiceStatus.STARTED;
         }catch (Exception exception) {

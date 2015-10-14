@@ -17,13 +17,9 @@ import java.util.List;
 /**
  * Created by franklin on 06/10/15.
  */
-public class AssetIssuerWalletModuleManager implements DealsWithAssetIssuerWallet, AssetIssuerWalletSupAppModuleManager {
+public class AssetIssuerWalletModuleManager implements AssetIssuerWalletSupAppModuleManager {
     //TODO: Excepciones y documentar
     AssetIssuerWalletManager assetIssuerWalletManager;
-    @Override
-    public void setAssetIssuerManager(AssetIssuerWalletManager assetIssuerWalletManager) {
-        this.assetIssuerWalletManager = assetIssuerWalletManager;
-    }
 
     /**
      * constructor
