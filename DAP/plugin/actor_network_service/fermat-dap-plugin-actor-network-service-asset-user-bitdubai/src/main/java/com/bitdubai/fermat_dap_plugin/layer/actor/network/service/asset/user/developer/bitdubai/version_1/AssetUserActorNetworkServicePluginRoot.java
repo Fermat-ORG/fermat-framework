@@ -660,7 +660,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
             if (communicationNetworkServiceLocal != null) {
 
                 //Send the message
-                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), msjContent);
+                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), null,msjContent);
 
             }else{
 
