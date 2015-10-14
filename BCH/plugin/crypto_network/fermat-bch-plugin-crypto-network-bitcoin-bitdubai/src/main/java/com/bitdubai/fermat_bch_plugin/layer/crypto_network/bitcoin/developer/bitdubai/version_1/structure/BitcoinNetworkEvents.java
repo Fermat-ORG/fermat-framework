@@ -223,14 +223,22 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * @return
      */
     private CryptoAddress getIncomingTransactionAddressFrom (Transaction tx){
-        Address address = null;
+        CryptoAddress cryptoAddress= null;
+        try{
+            Address address = null;
 
-        for (TransactionInput input : tx.getInputs()){
-            if (input.getFromAddress() != null)
-                address = input.getFromAddress();
+            for (TransactionInput input : tx.getInputs()){
+                if (input.getFromAddress() != null)
+                    address = input.getFromAddress();
+            }
+
+            cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
+        } catch (Exception e){
+            /**
+             * if there is an error, because this may not always be possible to get.
+             */
+            cryptoAddress = new CryptoAddress("error", CryptoCurrency.BITCOIN);
         }
-
-        CryptoAddress cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
         return cryptoAddress;
     }
 
@@ -372,8 +380,8 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                     tx.getConfidence().getDepthInBlocks(),
                     getIncomingTransactionAddressTo(wallet, tx),
                     getIncomingTransactionAddressFrom(tx),
-                    tx.getValueSentToMe(wallet).getValue(),
-                    tx.getFee().getValue(),
+                    getIncomingTransactionValue(wallet, tx),
+                    getIncomingTransactionFee(tx),
                     ProtocolStatus.TO_BE_NOTIFIED);
         }  catch (Exception e){
             /**
@@ -395,6 +403,33 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
             } catch (CantExecuteDatabaseOperationException e1) {
                 e1.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * gets the fee of the incoming transaction
+     * @param tx
+     * @return
+     */
+    private long getIncomingTransactionFee(Transaction tx) {
+        try{
+            return tx.getFee().getValue();
+        } catch (Exception e){
+            return 0;
+        }
+    }
+
+    /**
+     * gets the value sent to me in a transaction
+     * @param wallet
+     * @param tx
+     * @return
+     */
+    private long getIncomingTransactionValue(Wallet wallet, Transaction tx) {
+        try{
+            return tx.getValue(wallet).getValue();
+        } catch (Exception e){
+            return 0;
         }
     }
 }
