@@ -14,6 +14,11 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.exceptions.C
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.DealsWithCryptoBrokerIdentities;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CantGetCryptoBrokerListException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CouldNotCreateCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CouldNotPublishCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -28,11 +33,7 @@ import java.util.regex.Pattern;
  * Created by natalia on 16.09.15.
  */
 
-/**
-
- */
-
-public class IdentitySubAppModuleCryptoBrokenPluginRoot implements DealsWithCryptoBrokerIdentities,DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class IdentitySubAppModuleCryptoBrokenPluginRoot implements CryptoBrokerIdentityModuleManager,DealsWithCryptoBrokerIdentities,DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
 
     /**
      * Elementos de DealsWithCryptoBrokerIdentities
@@ -182,13 +183,48 @@ public class IdentitySubAppModuleCryptoBrokenPluginRoot implements DealsWithCryp
         this.identityManager = cryptoBrokerIdentityManager;
     }
 
+    //public CryptoBrokerIdentity createCryptoBrokerIdentity(final String alias, final byte[] profileImage) throws CantCreateCryptoBrokerIdentityException{
+    // return this.identityManager.createCryptoBrokerIdentity(alias, profileImage);
+    //}
+
     public List<CryptoBrokerIdentity> getAllCryptoBrokersFromCurrentDeviceUser() throws CantGetCryptoBrokerIdentityException{
         return this.identityManager.getAllCryptoBrokersFromCurrentDeviceUser();
     }
 
-    public CryptoBrokerIdentity createCryptoBrokerIdentity(final String alias, final byte[] profileImage) throws CantCreateCryptoBrokerIdentityException{
-        return this.identityManager.createCryptoBrokerIdentity(alias, profileImage);
+    @Override
+    public CryptoBrokerIdentityInformation createCryptoBrokerIdentity(String cryptoBrokerName, byte[] profileImage) throws CouldNotCreateCryptoBrokerException {
+        try {
+            CryptoBrokerIdentity identity = this.identityManager.createCryptoBrokerIdentity(cryptoBrokerName,profileImage);
+            return converIdentityToInformation(identity);
+        } catch (CantCreateCryptoBrokerIdentityException e) {
+            throw new CouldNotCreateCryptoBrokerException(CouldNotCreateCryptoBrokerException.DEFAULT_MESSAGE, e, "", "");
+        }
     }
+
+    @Override
+    public void publishCryptoBrokerIdentity(String cryptoBrokerPublicKey) throws CouldNotPublishCryptoBrokerException {
+
+    }
+
+    @Override
+    public List<CryptoBrokerIdentityInformation> getAllCryptoBrokersIdentities(int max, int offset) throws CantGetCryptoBrokerListException {
+        try {
+            List<CryptoBrokerIdentityInformation> cryptoBrokers = new ArrayList<>();
+            for(CryptoBrokerIdentity identity : this.identityManager.getAllCryptoBrokersFromCurrentDeviceUser()){
+                cryptoBrokers.add(converIdentityToInformation(identity));
+            }
+            return cryptoBrokers;
+        } catch (CantGetCryptoBrokerIdentityException e) {
+            throw new CantGetCryptoBrokerListException(CantGetCryptoBrokerListException.DEFAULT_MESSAGE, e, "","");
+        }
+    }
+
+    private CryptoBrokerIdentityInformation converIdentityToInformation(final CryptoBrokerIdentity identity){
+        return new CryptoBrokerIdentityInformationImpl(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage());
+    }
+
+
+
 
 
 
