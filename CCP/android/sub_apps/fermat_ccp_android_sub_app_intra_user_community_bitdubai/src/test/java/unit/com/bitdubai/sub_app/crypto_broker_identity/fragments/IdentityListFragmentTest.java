@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 
 
-import com.bitdubai.sub_app.crypto_broker_identity.BuildConfig;
 import com.bitdubai.sub_app.crypto_broker_identity.fragments.CryptoBrokerIdentityListFragment;
+import com.bitdubai.sub_app.intra_user_identity.BuildConfig;
 
 import org.junit.Before;
 import org.junit.Test;
