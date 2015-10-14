@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
  * Custom Button
  *
  * @author Francisco Vásquez
+ * @author Matias Furszyfer
  * @version 1.0
  */
 public class FermatButton extends Button {
@@ -68,6 +70,28 @@ public class FermatButton extends Button {
             setTypeface(tf);
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    /**
+     *  Set the button selector
+     *
+     * @param pressed_image
+     * @param normal_image
+     * @param focussed_iamge
+     */
+
+    public void selector(int pressed_image,int normal_image,int focussed_iamge){
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            StateListDrawable states = new StateListDrawable();
+            states.addState(new int[] {android.R.attr.state_pressed},
+                    getResources().getDrawable(pressed_image));
+            states.addState(new int[]{android.R.attr.state_focused},
+                    getResources().getDrawable(focussed_iamge));
+            states.addState(new int[]{},
+                    getResources().getDrawable(normal_image));
+            setBackground(states);
         }
     }
 }

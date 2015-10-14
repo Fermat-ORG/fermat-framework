@@ -123,7 +123,7 @@ public class IntraUserNetworkServiceDeveloperDatabaseFactory implements DealsWit
         intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_LOGGED_IN_PUBLIC_KEY_COLUMN_NAME);
         intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_CREATED_TIME_COLUMN_NAME);
         intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_DESCRIPTOR_COLUMN_NAME);
-
+        intraUserColumns.add(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_REASON_COLUMN_NAME);
 
         /**
          * Table Intra User addition.

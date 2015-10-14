@@ -163,4 +163,9 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
     public FermatMessage getLastMessageReceived() {
         return lastMessageReceived;
     }
+
+    @Override
+    public void sendMessage(String senderIdentityPublicKey, String receiverPublicKey, String messageContent) {
+
+    }
 }

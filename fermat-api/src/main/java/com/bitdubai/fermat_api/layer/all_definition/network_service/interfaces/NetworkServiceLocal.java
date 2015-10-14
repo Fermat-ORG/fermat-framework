@@ -25,7 +25,7 @@ public interface NetworkServiceLocal {
      * @param senderIdentityPublicKey
      * @param messageContent
      */
-    public void sendMessage(final String senderIdentityPublicKey, final String messageContent);
+    public void sendMessage(final String senderIdentityPublicKey,final String receiverPublicKey ,final String messageContent);
 
 
     //public FermatMessage getLastMessageReceived();

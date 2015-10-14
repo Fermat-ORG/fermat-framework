@@ -1607,7 +1607,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTab = new Tab();
-        runtimeTab.setLabel("Balance");
+        runtimeTab.setLabel("REQUEST");
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
         runtimeTabStrip.addTab(runtimeTab);
         runtimeTabStrip.setStartItem(1);
