@@ -80,7 +80,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void onPeerConnected(Peer peer, int peerCount) {
-        System.out.println("peer connected: " + peer.toString());
+
     }
 
     @Override
@@ -115,11 +115,29 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                     tx.getConfidence().getDepthInBlocks(),
                     getIncomingTransactionAddressTo(wallet, tx),
                     getIncomingTransactionAddressFrom(tx),
-                    tx.getValue(wallet).getValue(),
+                    tx.getValueSentToMe(wallet).getValue(),
                     tx.getFee().getValue(),
                     ProtocolStatus.TO_BE_NOTIFIED);
-        } catch (CantExecuteDatabaseOperationException e) {
+        }  catch (Exception e){
+            /**
+             * if there is an error in getting information from the transaction object.
+             * I will try saving the transaction with minimal information.
+             * I will complete this info in the agent that triggers the events.
+             */
             e.printStackTrace();
+            try{
+                CryptoAddress errorAddress = new CryptoAddress("error", CryptoCurrency.BITCOIN);
+                getDao().saveNewIncomingTransaction(tx.getHashAsString(),
+                        getTransactionCryptoStatus(tx),
+                        0,
+                        errorAddress,
+                        errorAddress,
+                        0,
+                        0,
+                        ProtocolStatus.TO_BE_NOTIFIED);
+            } catch (CantExecuteDatabaseOperationException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
@@ -222,19 +240,20 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
             /**
              * get the address from the output
              */
-            address = output.getAddressFromP2PKHScript(wallet.getNetworkParameters());
+            address = output.getScriptPubKey().getToAddress(wallet.getNetworkParameters());
         }
         CryptoAddress cryptoAddress = new CryptoAddress(address.toString(), CryptoCurrency.BITCOIN);
         return cryptoAddress;
     }
 
     /**
-     * Extracts the Address From from an Incoming Transaction
+     * Extracts the AddressFrom from an Incoming Transaction
      * @param tx
      * @return
      */
     private CryptoAddress getIncomingTransactionAddressFrom (Transaction tx){
         Address address = null;
+
         for (TransactionInput input : tx.getInputs()){
             if (input.getFromAddress() != null)
                 address = input.getFromAddress();
