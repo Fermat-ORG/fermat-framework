@@ -13,6 +13,7 @@ public enum IntraUserFragmentsEnumType implements FermatFragmentsEnumType<IntraU
     CWP_WALLET_STORE_DETAIL_ACTIVITY("CWSDA"),
     CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY("CWSMDA"),
     CWP_WALLET_STORE_ALL_FRAGMENT("CWSAF"),
+    CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT("CCPSAIUCF"),
 
     /**
      * Va a ser eliminado. No se usa.

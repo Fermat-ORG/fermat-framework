@@ -36,6 +36,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantLoginIntraUserException;
@@ -50,6 +51,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
 import com.bitdubai.sub_app.intra_user_community.common.adapters.IntraUserConnectionsAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.models.IntraUserConnectionListItem;
+import com.bitdubai.sub_app.intra_user_community.fragmentFactory.IntraUserFragmentsEnumType;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 import com.bitdubai.sub_app.intra_user_community.R;
@@ -105,6 +107,8 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+
+            setHasOptionsMenu(true);
             // setting up  module
             moduleManager = ((IntraUserSubAppSession) subAppsSession).getIntraUserModuleManager();
             errorManager = subAppsSession.getErrorManager();
@@ -135,7 +139,7 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
             intraUserSearch.setNameToSearch("");
             lstIntraUserInformations = intraUserSearch.getResult();
 
-            moduleManager.getSuggestionsToContact(MAX, offset);
+            //moduleManager.getSuggestionsToContact(MAX, offset);
 
             Configuration config = getResources().getConfiguration();
             if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -185,6 +189,8 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
         mSearchView.setSubmitButtonEnabled(true);
         mSearchView.setOnCloseListener(this);
 
+
+
         //MenuItem action_connection_request = menu.findItem(R.id.action_connection_request);
         // Get the notifications MenuItem and
         // its LayerDrawable (layer-list)
@@ -226,20 +232,7 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
 //                Toast.makeText(getActivity(),"Intra user request",Toast.LENGTH_SHORT).show();
 //            }
             if (item.getItemId() == R.id.action_notifications) {
-
-
-                List<IntraUserInformation> lstIntraUserRequestWaiting = null;
-                try {
-                    lstIntraUserRequestWaiting = moduleManager.getIntraUsersWaitingYourAcceptance(MAX,offset);
-
-
-                    View view = getActivity().findViewById(R.id.action_notifications);
-                    //showListMenu(view,lstIntraUserRequestWaiting);
-
-                } catch (CantGetIntraUsersListException e) {
-                    e.printStackTrace();
-                }
-
+                changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST.getCode());
                 return true;
             }
 
@@ -302,6 +295,9 @@ Updates the count of notifications in the ActionBar.
         //swipeRefreshLayout.setRefreshing(true);
         IntraUserSearch intraUserSearch = moduleManager.searchIntraUser();
         intraUserSearch.setNameToSearch(name);
+
+        // This method does not exist
+        mSearchView.onActionViewCollapsed();
         //TODO: cuando esté el network service, esto va a descomentarse
 //        try {
 //            adapter.changeDataSet(intraUserSearch.getResult());
