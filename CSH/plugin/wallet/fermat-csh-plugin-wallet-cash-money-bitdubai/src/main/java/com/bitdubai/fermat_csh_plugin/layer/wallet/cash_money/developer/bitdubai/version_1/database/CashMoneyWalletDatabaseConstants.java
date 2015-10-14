@@ -5,7 +5,7 @@ package com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitduba
  * keeps constants the column names of the database.<p/>
  * <p/>
  *
- * Created by Yordin Alayn - (y.alayn@gmail.com) on 01/10/15.
+ * Created by Yordin Alayn - (y.alayn@gmail.com) on 13/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -18,6 +18,7 @@ public class CashMoneyWalletDatabaseConstants {
     static final String CASH_MONEY_TABLE_NAME = "cash_money";
 
     static final String CASH_MONEY_CASH_TRANSACTION_ID_COLUMN_NAME = "cash_transaction_id";
+    static final String CASH_MONEY_WALLET_KEY_BROKER_COLUMN_NAME = "wallet_key_broker";
     static final String CASH_MONEY_PUBLIC_KEY_CUSTOMER_COLUMN_NAME = "public_key_customer";
     static final String CASH_MONEY_PUBLIC_KEY_BROKER_COLUMN_NAME = "public_key_broker";
     static final String CASH_MONEY_BALANCE_TYPE_COLUMN_NAME = "balance_type";
@@ -32,5 +33,20 @@ public class CashMoneyWalletDatabaseConstants {
     static final String CASH_MONEY_STATUS_COLUMN_NAME = "status";
 
     static final String CASH_MONEY_FIRST_KEY_COLUMN = "cash_transaction_id";
+
+    /**
+     * Cash Money Total Balances database table definition.
+     */
+    static final String CASH_MONEY_TOTAL_BALANCES_TABLE_NAME = "cash_money_total_balances";
+
+    static final String CASH_MONEY_TOTAL_BALANCES_WALLET_KEY_BROKER_COLUMN_NAME = "wallet_key_broker";
+    static final String CASH_MONEY_TOTAL_BALANCES_PUBLIC_KEY_BROKER_COLUMN_NAME = "public_key_broker";
+    static final String CASH_MONEY_TOTAL_BALANCES_CASH_CURRENCY_TYPE_COLUMN_NAME = "cash_currency_type";
+    static final String CASH_MONEY_TOTAL_BALANCES_NAME_COLUMN_NAME = "name";
+    static final String CASH_MONEY_TOTAL_BALANCES_DESCRIPTION_COLUMN_NAME = "description";
+    static final String CASH_MONEY_TOTAL_BALANCES_AVAILABLE_BALANCE_COLUMN_NAME = "available_balance";
+    static final String CASH_MONEY_TOTAL_BALANCES_BOOK_BALANCE_COLUMN_NAME = "book_balance";
+
+    static final String CASH_MONEY_TOTAL_BALANCES_FIRST_KEY_COLUMN = "wallet_key_broker";
 
 }
