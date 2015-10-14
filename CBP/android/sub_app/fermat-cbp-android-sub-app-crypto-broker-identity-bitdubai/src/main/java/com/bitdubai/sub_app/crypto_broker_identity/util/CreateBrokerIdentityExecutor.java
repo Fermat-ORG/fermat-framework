@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.crypto_broker_identity.util;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CouldNotCreateCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
@@ -28,11 +29,15 @@ public class CreateBrokerIdentityExecutor extends CreateIdentityExecutor {
         identity = null;
     }
 
-    public CreateBrokerIdentityExecutor(CryptoBrokerIdentitySubAppSession session, byte[] imageInBytes, String identityName) {
+    public CreateBrokerIdentityExecutor(SubAppsSession session, String identityName, byte[] imageInBytes) {
         super(imageInBytes, identityName);
-        this.moduleManager = session.getModuleManager();
-        this.errorManager = session.getErrorManager();
         identity = null;
+
+        if(session != null){
+            CryptoBrokerIdentitySubAppSession subAppSession = (CryptoBrokerIdentitySubAppSession) session;
+            this.moduleManager = subAppSession.getModuleManager();
+            this.errorManager = subAppSession.getErrorManager();
+        }
     }
 
     @Override
@@ -63,6 +68,7 @@ public class CreateBrokerIdentityExecutor extends CreateIdentityExecutor {
     private boolean entryDataIsInvalid() {
         if (moduleManager == null) return true;
         if (imageInBytes == null) return true;
+        if (imageInBytes.length == 0) return true;
         if (identityName == null) return true;
         if (identityName.isEmpty()) return true;
         return false;

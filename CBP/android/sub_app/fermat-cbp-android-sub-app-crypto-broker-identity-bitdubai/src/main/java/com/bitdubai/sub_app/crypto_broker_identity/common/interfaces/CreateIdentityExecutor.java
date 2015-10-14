@@ -5,8 +5,8 @@ package com.bitdubai.sub_app.crypto_broker_identity.common.interfaces;
  */
 public abstract class CreateIdentityExecutor {
     public static final int EXCEPTION_THROWN = 3;
-    public static int SUCCESS = 1;
-    public static int INVALID_ENTRY_DATA = 2;
+    public static final int SUCCESS = 1;
+    public static final int INVALID_ENTRY_DATA = 2;
 
     protected byte[] imageInBytes;
     protected String identityName;
