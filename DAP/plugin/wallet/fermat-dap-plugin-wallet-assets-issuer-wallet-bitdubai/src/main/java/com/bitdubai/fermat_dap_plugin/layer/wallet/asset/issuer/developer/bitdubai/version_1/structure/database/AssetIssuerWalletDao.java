@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -13,6 +14,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
@@ -40,8 +46,20 @@ import java.util.UUID;
 /**
  * Created by franklin on 28/09/15.
  */
-public class AssetIssuerWalletDao {
+public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
     //TODO: Manejo de excepciones
+    public static final String PATH_DIRECTORY = "assetissuer/assets";
+    PluginFileSystem pluginFileSystem;
+    UUID plugin;
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
+
+    public void setPlugin(UUID plugin){
+        this.plugin = plugin;
+    }
+
     private Database database;
 
     public AssetIssuerWalletDao(Database database){
@@ -334,6 +352,10 @@ public class AssetIssuerWalletDao {
             databaseTable.loadToMemory();
             if (databaseTable.getRecords().isEmpty()){
                 transaction.addRecordToInsert(databaseTable, assetBalanceRecord);
+                String digitalAssetInnerXML = assetIssuerWalletTransactionRecord.getDigitalAsset().toString();
+                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(plugin, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey(), PATH_DIRECTORY, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                pluginTextFile.setContent(digitalAssetInnerXML);
+                pluginTextFile.persistToMedia();
             }else{
                 transaction.addRecordToUpdate(databaseTable, assetBalanceRecord);
             }
