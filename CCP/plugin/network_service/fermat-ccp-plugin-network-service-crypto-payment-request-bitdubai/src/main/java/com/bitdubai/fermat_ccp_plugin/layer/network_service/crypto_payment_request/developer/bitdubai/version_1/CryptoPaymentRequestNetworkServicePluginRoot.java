@@ -841,11 +841,18 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     @Override
     public void handleFailureComponentRegistrationNotificationEvent(final PlatformComponentProfile networkServiceApplicant,
                                                                     final PlatformComponentProfile remoteParticipant      ) {
-        
+
+        cryptoPaymentRequestExecutorAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
     }
 
     @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
+
+        System.out.println(" Crypto Payment Request Network Service - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
+
+        System.out.print(" CPR NS - SUCCESSFUL CONNECTION: : " + getName());
+
+        remoteNetworkServicesRegisteredList.addAll(platformComponentProfileRegisteredList);
 
     }
 
@@ -881,6 +888,13 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
          */
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
+        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
+
+            remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
+
+            System.out.print(" CPR NS - INCOMING CONNECTION ADDED: " + remoteComponentProfile.getAlias());
+        }
+
     }
 
 
@@ -899,11 +913,13 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
                     // update the request to processing receive state with the given action.
                     InformationMessage informationMessage = gson.fromJson(jsonMessage, InformationMessage.class);
                     receiveInformationMessage(informationMessage);
+                    System.out.println(" CPR NS - Information Message Received: "+informationMessage.toString());
                     break;
                 case REQUEST:
                     // create the request in processing receive state.
                     RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
                     receiveCryptoPaymentRequest(requestMessage);
+                    System.out.println(" CPR NS - Request Message Received: " + requestMessage.toString());
                     break;
             }
 
@@ -928,10 +944,10 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
             cryptoPaymentRequestNetworkServiceDao.createCryptoPaymentRequest(
                     requestMessage.getRequestId()        ,
-                    requestMessage.getIdentityPublicKey(),
-                    requestMessage.getIdentityType()     ,
-                    requestMessage.getActorPublicKey()   ,
-                    requestMessage.getActorType()        ,
+                    requestMessage.getActorPublicKey()   , // the actor receiving, is the identity now.
+                    requestMessage.getActorType()        , // the actor receiving, is the identity now.
+                    requestMessage.getIdentityPublicKey(), // the identity who sent the request, is the actor now.
+                    requestMessage.getIdentityType()     , // the identity who sent the request, is the actor now.
                     requestMessage.getCryptoAddress()    ,
                     requestMessage.getDescription()      ,
                     requestMessage.getAmount()           ,
