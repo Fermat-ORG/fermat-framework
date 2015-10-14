@@ -1,6 +1,6 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoWallet;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
@@ -93,7 +93,7 @@ public class CreateWalletContactTest extends TestCase {
         actorType = Actors.EXTRA_USER;
         deliveredCryptoAddress = new CryptoAddress("asdasd ", CryptoCurrency.BITCOIN);
         referenceWallet = ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
-        walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
+        walletPublicKey = AsymmetricCryptography.derivePublicKey(AsymmetricCryptography.createPrivateKey());
         walletModuleCryptoWallet = new CryptoWalletWalletModuleManager();
         walletModuleCryptoWallet.setErrorManager(errorManager);
         walletModuleCryptoWallet.setExtraUserManager(extraUserManager);

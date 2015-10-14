@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
@@ -26,7 +27,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPack
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.CloudFMPClientStartFailedException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.ConnectionAlreadyRegisteredException;
@@ -92,7 +92,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
      */
 	public CloudClientCommunicationNetworkServiceConnection(final CommunicationChannelAddress serverAddress, final ExecutorService executor, final String clientPrivateKey, final String identityPublicKeyRemoteServer, final String identityPublicKeyNetworkServiceRegistered, final NetworkServices networkService) throws IllegalArgumentException {
 
-        super(serverAddress, executor, new ECCKeyPair(clientPrivateKey, AsymmectricCryptography.derivePublicKey(clientPrivateKey)), CloudFMPConnectionManagerMode.FMP_CLIENT);
+        super(serverAddress, executor, new ECCKeyPair(clientPrivateKey, AsymmetricCryptography.derivePublicKey(clientPrivateKey)), CloudFMPConnectionManagerMode.FMP_CLIENT);
 		this.identityPublicKeyRemoteServer = identityPublicKeyRemoteServer;
         this.identityPublicKeyNetworkServiceRegistered = identityPublicKeyNetworkServiceRegistered;
 		this.networkService = networkService;
@@ -170,7 +170,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
             /*
              * Decrypt the message
              */
-            String decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), identity.getPrivateKey());
+            String decryptedMessage = AsymmetricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), identity.getPrivateKey());
 
             /*
              * Get the JsonObject structure from the message
@@ -227,7 +227,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
      */
 	@Override
 	public void handleConnectionDeny(final FMPPacket dataPacket) throws FMPException {
-		System.out.println(AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), identity.getPrivateKey()));
+		System.out.println(AsymmetricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), identity.getPrivateKey()));
 	}
 
     /**
@@ -271,7 +271,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
         /*
          * Decrypt the message
          */
-		String decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), identity.getPrivateKey());
+		String decryptedMessage = AsymmetricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), identity.getPrivateKey());
 
         /*
          * put into vpn request
@@ -324,7 +324,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
         /*
          * Get the content of the message
          */
-        String message = AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), identity.getPrivateKey());
+        String message = AsymmetricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), identity.getPrivateKey());
 
 
         /*
@@ -435,7 +435,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
 			/*
              * Throw new CloudCommunicationException
              */
-            throw wrapFMPException(identity.getPublicKey(), identityPublicKeyRemoteServer, FMPPacketType.CONNECTION_REQUEST.toString(), identity.getPublicKey(), AsymmectricCryptography.createMessageSignature(identity.getPublicKey(), identity.getPrivateKey()), null );
+            throw wrapFMPException(identity.getPublicKey(), identityPublicKeyRemoteServer, FMPPacketType.CONNECTION_REQUEST.toString(), identity.getPublicKey(), AsymmetricCryptography.createMessageSignature(identity.getPublicKey(), identity.getPrivateKey()), null );
 
         }
 	}
@@ -493,7 +493,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
 			/*
              * Throw new CloudCommunicationException
              */
-            throw wrapFMPException(identity.getPublicKey(), identityPublicKeyRemoteServer, FMPPacketType.CONNECTION_REQUEST.toString(), identity.getPublicKey(), AsymmectricCryptography.createMessageSignature(identity.getPublicKey(), identity.getPrivateKey()), ex);
+            throw wrapFMPException(identity.getPublicKey(), identityPublicKeyRemoteServer, FMPPacketType.CONNECTION_REQUEST.toString(), identity.getPublicKey(), AsymmetricCryptography.createMessageSignature(identity.getPublicKey(), identity.getPrivateKey()), ex);
 
         }
 	}
@@ -600,7 +600,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
 			/*
              * Throw new CloudCommunicationException
              */
-            throw wrapFMPException(identity.getPublicKey(), identityPublicKeyRemoteServer, FMPPacketType.CONNECTION_REQUEST.toString(), identity.getPublicKey(), AsymmectricCryptography.createMessageSignature(identity.getPublicKey(), identity.getPrivateKey()), ex);
+            throw wrapFMPException(identity.getPublicKey(), identityPublicKeyRemoteServer, FMPPacketType.CONNECTION_REQUEST.toString(), identity.getPublicKey(), AsymmetricCryptography.createMessageSignature(identity.getPublicKey(), identity.getPrivateKey()), ex);
 
         }
 	}
@@ -639,7 +639,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
 		 /*
          * Validate the signature
          */
-        return AsymmectricCryptography.verifyMessageSignature(dataPacket.getSignature(), dataPacket.getMessage(), dataPacket.getSender());
+        return AsymmetricCryptography.verifyMessageSignature(dataPacket.getSignature(), dataPacket.getMessage(), dataPacket.getSender());
 	}
 
     /**

@@ -6,7 +6,7 @@ import static com.googlecode.catchexception.CatchException.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 
@@ -22,8 +22,8 @@ public class StartClientTest extends CloudFMPConnectionManagerUnitTest {
 	
 	@Before
 	public void setUpClientKeys(){
-		testClientPrivateKey = AsymmectricCryptography.createPrivateKey();
-		testClientPublicKey = AsymmectricCryptography.derivePublicKey(testClientPrivateKey);
+		testClientPrivateKey = AsymmetricCryptography.createPrivateKey();
+		testClientPublicKey = AsymmetricCryptography.derivePublicKey(testClientPrivateKey);
 	}
 	
 	@Test

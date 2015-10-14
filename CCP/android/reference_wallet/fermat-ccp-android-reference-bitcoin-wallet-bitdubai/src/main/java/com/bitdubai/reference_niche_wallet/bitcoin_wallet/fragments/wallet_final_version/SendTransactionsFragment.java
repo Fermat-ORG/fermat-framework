@@ -208,9 +208,11 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                     if (isShow) {
                         Fx.slide_up(getActivity(), linear_layout_send_form);
                         linear_layout_send_form.setVisibility(View.GONE);
+                        empty.setVisibility(View.VISIBLE);
                     } else {
                         linear_layout_send_form.setVisibility(View.VISIBLE);
                         Fx.slide_down(getActivity(), linear_layout_send_form);
+                        empty.setVisibility(View.GONE);
                     }
                     if (lstCryptoWalletTransactionsBook.isEmpty() && BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()).equals(BalanceType.BOOK)) {
                         empty.setVisibility(View.VISIBLE);
@@ -331,7 +333,12 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                     if (getActivity().getCurrentFocus() != null && im.isActive(getActivity().getCurrentFocus())) {
                         im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                     }
-                    //sendCrypto();
+
+                    if(walletContact!= null)
+                        sendCrypto();
+                    else
+                        Toast.makeText(getActivity(), "Contacto Inexistente", Toast.LENGTH_LONG).show();
+
 
                     //testing
 //
@@ -339,15 +346,15 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 //
 //
 //                    String notes = txt_notes.getText().toString();
-//
-                    cryptoWallet.sendMetadataLikeChampion(Long.parseLong("100000"),
-                            null,
-                            "holasdad",
-                            referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
-                            "actor_prueba_juan_public_key",
-                            Actors.INTRA_USER,
-                            "actor_prueba_robert_public_key",
-                            Actors.INTRA_USER);
+////
+//                    cryptoWallet.sendMetadataLikeChampion(Long.parseLong("100000"),
+//                            null,
+//                            "holasdad",
+//                            referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
+//                            "actor_prueba_juan_public_key",
+//                            Actors.INTRA_USER,
+//                            "actor_prueba_robert_public_key",
+//                            Actors.INTRA_USER);
                 }
             });
 
@@ -555,6 +562,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                     if(txt_notes.getText().toString().length()!=0){
                         notes = txt_notes.getText().toString();
                     }
+
 
                     CryptoWalletWalletContact cryptoWalletWalletContact = cryptoWallet.findWalletContactById(walletContact.contactId);
 
