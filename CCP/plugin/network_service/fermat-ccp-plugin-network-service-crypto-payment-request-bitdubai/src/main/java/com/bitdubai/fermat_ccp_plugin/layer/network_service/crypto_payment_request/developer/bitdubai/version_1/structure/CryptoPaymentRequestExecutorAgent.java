@@ -363,7 +363,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
         // TODO VER QUE ACTION PONER AQUÍ.
         InformationMessage informationMessage = new InformationMessage(requestId, RequestAction.INFORM_RECEPTION);
 
-        communicationNetworkServiceLocal.sendMessage(actorPublicKey, informationMessage.toJson());
+        communicationNetworkServiceLocal.sendMessage(actorPublicKey, null,informationMessage.toJson());
     }
 
 }

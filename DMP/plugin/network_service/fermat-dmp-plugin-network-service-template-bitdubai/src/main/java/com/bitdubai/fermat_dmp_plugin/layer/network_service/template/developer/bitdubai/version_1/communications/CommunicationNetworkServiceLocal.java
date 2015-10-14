@@ -90,7 +90,7 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
         try {
 
             FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(senderIdentityPublicKey,  //Sender NetworkService
-                                                                                                    remoteNetworkServiceProfile,   //Receiver
+                                                                                                    remoteNetworkServiceProfile.getIdentityPublicKey(),   //Receiver
                                                                                                     messageContent,                //Message Content
                                                                                                     FermatMessageContentType.TEXT);//Type
 
@@ -162,5 +162,10 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
      */
     public FermatMessage getLastMessageReceived() {
         return lastMessageReceived;
+    }
+
+    @Override
+    public void sendMessage(String senderIdentityPublicKey, String receiverPublicKey, String messageContent) {
+
     }
 }
