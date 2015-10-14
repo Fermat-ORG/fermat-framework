@@ -708,6 +708,16 @@ public class Platform implements Serializable {
             boolean SHP = true;
             boolean WPD = true;
 
+            //TODO: Esto va acá porque es necesario para que se le pase la instancia a otros plugins
+            /*
+            * Plugin Bitcoin Wallet Basic Wallet
+            * -----------------------------
+            */
+            Plugin bitcoinWalletBasicWallet = ((BasicWalletLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_BASIC_WALLET_LAYER)).getBitcoinWallet();
+            injectPluginReferencesAndStart(bitcoinWalletBasicWallet, Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET);
+
+            //--------------------------------
+
             if (P2P) {
            /*
             * Plugin Web Socket Communication Cloud Client
@@ -990,6 +1000,8 @@ public class Platform implements Serializable {
                 Plugin incomingDeviceUserTransaction = ((TransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_TRANSACTION_LAYER)).getIncomingDeviceUserPlugin();
                 injectPluginReferencesAndStart(incomingDeviceUserTransaction, Plugins.BITDUBAI_INCOMING_DEVICE_USER_TRANSACTION);
 
+
+
            /*
             * Plugin crypto Wallet Niche Type Wallet
             * ----------------------------------
@@ -1032,12 +1044,6 @@ public class Platform implements Serializable {
                 Plugin bankNotesMiddleware = ((MiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER)).getBankNotesPlugin();
                 injectPluginReferencesAndStart(bankNotesMiddleware, Plugins.BITDUBAI_BANK_NOTES_MIDDLEWARE);
 
-           /*
-            * Plugin Bitcoin Wallet Basic Wallet
-            * -----------------------------
-            */
-                Plugin bitcoinWalletBasicWallet = ((BasicWalletLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_BASIC_WALLET_LAYER)).getBitcoinWallet();
-                injectPluginReferencesAndStart(bitcoinWalletBasicWallet, Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET);
 
             }
 
