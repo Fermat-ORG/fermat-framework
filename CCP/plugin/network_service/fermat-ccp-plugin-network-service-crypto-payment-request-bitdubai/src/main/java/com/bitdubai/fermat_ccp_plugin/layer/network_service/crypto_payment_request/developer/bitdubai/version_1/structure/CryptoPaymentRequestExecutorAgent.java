@@ -160,9 +160,8 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
     private void processSend() {
         try {
 
-            List<CryptoPaymentRequest> cryptoPaymentRequestList = cryptoPaymentRequestNetworkServiceDao.listRequestsByProtocolStateAndType(
-                    RequestProtocolState.PROCESSING,
-                    RequestType.SENT
+            List<CryptoPaymentRequest> cryptoPaymentRequestList = cryptoPaymentRequestNetworkServiceDao.listRequestsByProtocolState(
+                    RequestProtocolState.PROCESSING_SEND
             );
 
             for(CryptoPaymentRequest cpr : cryptoPaymentRequestList) {
@@ -256,7 +255,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
         try {
 
             List<CryptoPaymentRequest> cryptoPaymentRequestList = cryptoPaymentRequestNetworkServiceDao.listRequestsByProtocolStateAndType(
-                    RequestProtocolState.PROCESSING,
+                    RequestProtocolState.PROCESSING_RECEIVE,
                     RequestType.SENT
             );
 

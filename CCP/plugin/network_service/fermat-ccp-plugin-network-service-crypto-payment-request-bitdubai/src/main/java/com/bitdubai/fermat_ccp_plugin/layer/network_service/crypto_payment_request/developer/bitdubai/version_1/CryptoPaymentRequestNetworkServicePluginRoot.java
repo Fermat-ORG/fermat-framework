@@ -37,6 +37,8 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantInformReceptionException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantInformRefusalException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantListPendingRequestsException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantReceiveInformationMessageException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantReceiveRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantSendRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequest;
@@ -192,7 +194,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
     /**
      * I indicate to the Agent the action that it must take:
-     * - Protocol State: PROCESSING.
+     * - Protocol State: PROCESSING_SEND.
      * - Action        : REQUEST.
      * - Type          : SENT.
      */
@@ -210,9 +212,9 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
         try {
 
-            RequestProtocolState          protocolState = RequestProtocolState         .PROCESSING;
-            RequestAction action        = RequestAction.REQUEST   ;
-            RequestType direction     = RequestType.SENT;
+            RequestProtocolState protocolState = RequestProtocolState.PROCESSING_SEND;
+            RequestAction        action        = RequestAction       .REQUEST        ;
+            RequestType          direction     = RequestType         .SENT           ;
 
             cryptoPaymentRequestNetworkServiceDao.createCryptoPaymentRequest(
                     requestId        ,
@@ -244,7 +246,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     /**
      * I indicate to the Agent the action that it must take:
      * - Action        : INFORM_REFUSAL.
-     * - Protocol State: PROCESSING.
+     * - Protocol State: PROCESSING_SEND.
      */
     @Override
     public void informRefusal(UUID requestId) throws RequestNotFoundException   ,
@@ -255,7 +257,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
             cryptoPaymentRequestNetworkServiceDao.takeAction(
                     requestId,
                     RequestAction.INFORM_REFUSAL,
-                    RequestProtocolState.PROCESSING
+                    RequestProtocolState.PROCESSING_SEND
             );
 
         } catch(CantTakeActionException e) {
@@ -276,7 +278,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     /**
      * I indicate to the Agent the action that it must take:
      * - Action        : INFORM_DENIAL.
-     * - Protocol State: PROCESSING.
+     * - Protocol State: PROCESSING_SEND.
      */
     @Override
     public void informDenial(UUID requestId) throws RequestNotFoundException  ,
@@ -287,7 +289,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
             cryptoPaymentRequestNetworkServiceDao.takeAction(
                     requestId,
                     RequestAction.INFORM_DENIAL,
-                    RequestProtocolState.PROCESSING
+                    RequestProtocolState.PROCESSING_SEND
             );
 
         } catch(CantTakeActionException e) {
@@ -307,7 +309,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
     /**
      * I indicate to the Agent the action that it must take:
-     * - Protocol State: PROCESSING.
+     * - Protocol State: PROCESSING_SEND.
      * - Action        : INFORM_APPROVAL.
      */
     @Override
@@ -319,7 +321,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
             cryptoPaymentRequestNetworkServiceDao.takeAction(
                     requestId,
                     RequestAction.INFORM_APPROVAL,
-                    RequestProtocolState.PROCESSING
+                    RequestProtocolState.PROCESSING_SEND
             );
 
         } catch(CantTakeActionException e) {
@@ -340,7 +342,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
     /**
      * I indicate to the Agent the action that it must take:
      * - Action        : INFORM_RECEPTION.
-     * - Protocol State: PROCESSING.
+     * - Protocol State: PROCESSING_SEND.
      */
     @Override
     public void informReception(UUID requestId) throws CantInformReceptionException, RequestNotFoundException {
@@ -350,7 +352,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
             cryptoPaymentRequestNetworkServiceDao.takeAction(
                     requestId,
                     RequestAction.INFORM_RECEPTION,
-                    RequestProtocolState.PROCESSING
+                    RequestProtocolState.PROCESSING_SEND
             );
 
         } catch(CantTakeActionException e) {
@@ -871,12 +873,14 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
             switch (networkServiceMessage.getMessageType()) {
                 case INFORMATION:
+                    // update the request to processing receive state with the given action.
                     InformationMessage informationMessage = gson.fromJson(jsonMessage, InformationMessage.class);
-                    System.out.println(informationMessage);
+                    receiveInformationMessage(informationMessage);
                     break;
                 case REQUEST:
+                    // create the request in processing receive state.
                     RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
-                    System.out.println(requestMessage);
+                    receiveCryptoPaymentRequest(requestMessage);
                     break;
             }
 
@@ -884,6 +888,66 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * I indicate to the Agent the action that it must take:
+     * - Protocol State: PROCESSING_RECEIVE.
+     * - Action        : REQUEST           .
+     */
+    private void receiveCryptoPaymentRequest(RequestMessage requestMessage) throws CantReceiveRequestException {
+        try {
+
+            RequestProtocolState protocolState = RequestProtocolState.PROCESSING_RECEIVE;
+            RequestAction        action        = RequestAction       .REQUEST           ;
+            RequestType          direction     = RequestType         .RECEIVED          ;
+
+            cryptoPaymentRequestNetworkServiceDao.createCryptoPaymentRequest(
+                    requestMessage.getRequestId()        ,
+                    requestMessage.getIdentityPublicKey(),
+                    requestMessage.getIdentityType()     ,
+                    requestMessage.getActorPublicKey()   ,
+                    requestMessage.getActorType()        ,
+                    requestMessage.getCryptoAddress()    ,
+                    requestMessage.getDescription()      ,
+                    requestMessage.getAmount()           ,
+                    requestMessage.getStartTimeStamp()   ,
+                    direction                            ,
+                    action                               ,
+                    protocolState                        ,
+                    requestMessage.getNetworkType()
+            );
+
+        } catch(CantCreateCryptoPaymentRequestException e) {
+            // i inform to error manager the error.
+            reportUnexpectedException(e);
+            throw new CantReceiveRequestException(e, "", "Error in Crypto Payment Request NS Dao.");
+        } catch(Exception e) {
+
+            reportUnexpectedException(e);
+            throw new CantReceiveRequestException(e, "", "Unhandled Exception.");
+        }
+    }
+
+    private void receiveInformationMessage(InformationMessage informationMessage) throws CantReceiveInformationMessageException {
+        try {
+
+            cryptoPaymentRequestNetworkServiceDao.takeAction(
+                    informationMessage.getRequestId(),
+                    informationMessage.getAction(),
+                    RequestProtocolState.PROCESSING_RECEIVE
+            );
+
+        } catch(CantTakeActionException  |
+                RequestNotFoundException e) {
+            // i inform to error manager the error.
+            reportUnexpectedException(e);
+            throw new CantReceiveInformationMessageException(e, "", "Error in Crypto Payment Request NS Dao.");
+        } catch(Exception e) {
+
+            reportUnexpectedException(e);
+            throw new CantReceiveInformationMessageException(e, "", "Unhandled Exception.");
         }
     }
 
