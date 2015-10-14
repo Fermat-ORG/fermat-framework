@@ -22,6 +22,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAtt
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.util.DistanceCalculator;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.java_websocket.WebSocket;
@@ -42,6 +43,25 @@ import java.util.TreeMap;
  */
 public class RequestListComponentRegisterPacketProcessor extends FermatPacketProcessor {
 
+
+    /**
+     * Represent the gson
+     */
+    private Gson gson;
+
+    /**
+     * Represent the jsonParser
+     */
+    private JsonParser jsonParser;
+
+    /**
+     * Constructor
+     */
+    public RequestListComponentRegisterPacketProcessor() {
+        gson = new Gson();
+        jsonParser = new JsonParser();
+    }
+
     /**
      * (no-javadoc)
      * @see FermatPacketProcessor#processingPackage(WebSocket, FermatPacket, ECCKeyPair)
@@ -52,60 +72,96 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("RequestListComponentRegisterPacketProcessor - Starting processingPackage");
 
-        /*
-         * Get the filters from the message content and decrypt
-         */
-        String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
+        String packetContentJsonStringRepresentation = null;
 
-        /*
-         * Construct the json object
-         */
-        Gson gson = new Gson();
-        DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(messageContentJsonStringRepresentation);
+        try{
 
-        /*
-         * hold the result list
-         */
-        List<PlatformComponentProfile> resultList = null;
+             /*
+             * Get the filters from the message content and decrypt
+             */
+            packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
 
-        if (discoveryQueryParameters.getFromOtherPlatformComponentType() == null &&
-                discoveryQueryParameters.getFromOtherNetworkServiceType() == null){
+            /*
+             * Construct the json object
+             */
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(packetContentJsonStringRepresentation);
 
-            resultList = applyDiscoveryQueryParameters(discoveryQueryParameters, receiveFermatPacket);
+            /*
+             * hold the result list
+             */
+            List<PlatformComponentProfile> resultList = null;
 
-        }else{
+            if (discoveryQueryParameters.getFromOtherPlatformComponentType() == null &&
+                    discoveryQueryParameters.getFromOtherNetworkServiceType() == null){
 
-            resultList = applyDiscoveryQueryParametersFromOtherComponent(discoveryQueryParameters, receiveFermatPacket);
+                resultList = applyDiscoveryQueryParameters(discoveryQueryParameters, receiveFermatPacket);
+
+            }else{
+
+                resultList = applyDiscoveryQueryParametersFromOtherComponent(discoveryQueryParameters, receiveFermatPacket);
+
+            }
+
+            System.out.println("RequestListComponentRegisterPacketProcessor - filteredLis.size() ="+resultList.size());
+
+            /*
+             * Convert the list to json representation
+             */
+            String jsonListRepresentation = gson.toJson(resultList, new TypeToken<List<PlatformComponentProfileCommunication>>(){ }.getType());
+
+            /*
+             * Create the respond
+             */
+            JsonObject jsonObjectRespond = new JsonObject();
+            jsonObjectRespond.addProperty(JsonAttNamesConstants.COMPONENT_TYPE,       discoveryQueryParameters.getPlatformComponentType().toString());
+            jsonObjectRespond.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, discoveryQueryParameters.getNetworkServiceType().toString());
+            jsonObjectRespond.addProperty(JsonAttNamesConstants.RESULT_LIST,          jsonListRepresentation);
+
+             /*
+             * Construct a fermat packet whit the list
+             */
+            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                    //Destination
+                    serverIdentity.getPublicKey(),                      //Sender
+                    gson.toJson(jsonObjectRespond),                     //Message Content
+                    FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED, //Packet type
+                    serverIdentity.getPrivateKey());                    //Sender private key
+            /*
+            * Send the encode packet to the server
+            */
+            clientConnection.send(FermatPacketEncoder.encode(fermatPacketRespond));
+
+        }catch (Exception e){
+
+            System.out.println("RequestListComponentRegisterPacketProcessor - requested list is not available");
+            e.printStackTrace();
+
+            /*
+             * Get the client connection destination
+             */
+            WebSocket clientConnectionDestination = getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().get(receiveFermatPacket.getSender());
+
+            /*
+             * Construct the json object
+             */
+            JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
+            packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "failure in obtain the list requested: "+e.getMessage());
+
+            /*
+             * Create the respond packet
+             */
+            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(), //Destination
+                                                                                                                        serverIdentity.getPublicKey(), //Sender
+                                                                                                                        gson.toJson(packetContent), //packet Content
+                                                                                                                        FermatPacketType.FAILURE_REQUESTED_LIST_NOT_AVAILABLE, //Packet type
+                                                                                                                        serverIdentity.getPrivateKey()); //Sender private key
+            /*
+             * Send the packet
+             */
+            clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
 
         }
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - filteredLis.size() ="+resultList.size());
 
-        /*
-         * Convert the list to json representation
-         */
-        String jsonListRepresentation = gson.toJson(resultList, new TypeToken<List<PlatformComponentProfileCommunication>>(){ }.getType());
-
-        /*
-         * Create the respond
-         */
-        JsonObject jsonObjectRespond = new JsonObject();
-        jsonObjectRespond.addProperty(JsonAttNamesConstants.COMPONENT_TYPE,       discoveryQueryParameters.getPlatformComponentType().toString());
-        jsonObjectRespond.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, discoveryQueryParameters.getNetworkServiceType().toString());
-        jsonObjectRespond.addProperty(JsonAttNamesConstants.RESULT_LIST,          jsonListRepresentation);
-
-         /*
-         * Construct a fermat packet whit the list
-         */
-        FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                    //Destination
-                                                                                                                    serverIdentity.getPublicKey(),                      //Sender
-                                                                                                                    gson.toJson(jsonObjectRespond),                     //Message Content
-                                                                                                                    FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED, //Packet type
-                                                                                                                    serverIdentity.getPrivateKey());                    //Sender private key
-        /*
-        * Send the encode packet to the server
-        */
-        clientConnection.send(FermatPacketEncoder.encode(fermatPacketRespond));
     }
 
     /**
