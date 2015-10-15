@@ -11,7 +11,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.exceptions.CantRe
 
 public interface CashMoneyBalance {
 
-    long getBalance()  throws CantCalculateBalanceException;
+    double getBalance()  throws CantCalculateBalanceException;
 
     void debit(CashMoneyBalanceRecord CashMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterDebitException;
 
