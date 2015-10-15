@@ -4,10 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * The enum <code>com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.RequestProtocolState</code>
- * represents the protocol state of the Crypto Payment Request in the network service.
  *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 30/09/2015.
+ * Created by Matias Furszyfer- (matiasfurszyfer@gmail.com) on 30/09/2015.
  */
 public enum ActorProtocolState implements FermatEnum {
 
