@@ -1309,7 +1309,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      *  Assets issuer community
      */
     public AssetUserCommunitySubAppModuleManager getAssetUserCommunitySubAppModuleManager() {
-        return null;//(AssetUserCommunitySubAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY);
+        return null;//(AssetUserCommunitySubAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.DAP);
     }
 
 
