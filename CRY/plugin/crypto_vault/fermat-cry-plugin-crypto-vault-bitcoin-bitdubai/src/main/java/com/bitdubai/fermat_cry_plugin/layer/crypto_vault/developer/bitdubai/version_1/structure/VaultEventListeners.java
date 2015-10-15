@@ -48,7 +48,6 @@ public class VaultEventListeners extends AbstractWalletEventListener {
 
         this.dbActions = new CryptoVaultDatabaseActions(
                 database,
-                errorManager,
                 eventManager
         );
     }
@@ -131,7 +130,7 @@ public class VaultEventListeners extends AbstractWalletEventListener {
                                                    final CryptoStatus cryptoStatus,
                                                    final EventType    eventType   ) throws CantExecuteQueryException {
 
-        dbActions.insertNewTransactionWithNewConfidence(hash, cryptoStatus);
+        dbActions.insertNewTransactionWithNewConfidence(hash, cryptoStatus, dbActions.calculateTransactionType(hash));
         raiseTransactionEvent(eventType);
     }
 

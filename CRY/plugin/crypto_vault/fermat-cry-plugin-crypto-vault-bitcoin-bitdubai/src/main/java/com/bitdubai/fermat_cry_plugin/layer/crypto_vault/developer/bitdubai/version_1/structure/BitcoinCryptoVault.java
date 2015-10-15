@@ -404,7 +404,7 @@ public class BitcoinCryptoVault implements
             // if the transaction was requested before but resent by mistake, we're not going to send it again
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Sending bitcoins...", "Address to:" + addressTo.getAddress() + "TxId: " + fermatTxId, null);
 
-            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, eventManager);
 
             // check if the transaction was already sent, this might be an error. we're not going to send it again.
             if (!db.isNewFermatTransaction(fermatTxId)) {
@@ -545,7 +545,7 @@ public class BitcoinCryptoVault implements
          * will marked the transaction as notified
          */
         try{
-            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, eventManager);
             db.updateTransactionProtocolStatus(transactionID, ProtocolStatus.RECEPTION_NOTIFIED);
         } catch (Exception e){
             throw new CantConfirmTransactionException("There was an error trying to confirm reception of a transaction", e, "TransactionId: " + transactionID.toString(), "Database plugin error.");
@@ -559,7 +559,7 @@ public class BitcoinCryptoVault implements
          */
         try{
             List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction> txs = new ArrayList<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction>();
-            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, eventManager);
             /**
              * Im getting the transaction headers which is a map with transactionID and Transaction Hash. I will use this information to access the vault.
              */
@@ -721,11 +721,11 @@ public class BitcoinCryptoVault implements
 
     // modified by lnacosta
     public CryptoStatus getCryptoStatus(final String txHash) throws CantExecuteQueryException                     ,
-                                                                         UnexpectedResultReturnedFromDatabaseException {
+                                                                    UnexpectedResultReturnedFromDatabaseException {
 
         try {
 
-            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, eventManager);
             return db.getLastCryptoStatus(txHash);
 
         } catch(CantLoadTableToMemoryException exception){
