@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -761,6 +762,11 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
     @Override
     public void registrateActors(List<Actor> actor) {
 
+    }
+
+    @Override
+    public Actor contructIdentity(String publicKey, String alias, Actors actors, byte[] profileImage) {
+        return null;
     }
 
     /**

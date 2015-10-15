@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorAcceptIntraUserException;
@@ -102,4 +103,5 @@ public interface IntraUserManager {
      */
     public void registrateActors(List<Actor> actor);
 
+    Actor contructIdentity(String publicKey, String alias,Actors actors ,byte[] profileImage);
 }

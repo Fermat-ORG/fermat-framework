@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -73,6 +74,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.Identity;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNSInformation;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceNotification;
@@ -748,7 +750,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
         NetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
 
-        communicationNetworkServiceLocal.sendMessage(platformComponentProfile.getIdentityPublicKey(),remoteComponentProfile.getIdentityPublicKey(),"Leon la puta que te pario");
+        communicationNetworkServiceLocal.sendMessage(platformComponentProfile.getIdentityPublicKey(), remoteComponentProfile.getIdentityPublicKey(), "Leon la puta que te pario");
 
         if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
 
@@ -1317,6 +1319,11 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public Actor contructIdentity(String publicKey, String alias,Actors actors ,byte[] profileImage) {
+        return new Identity(publicKey,alias,actors,profileImage);
     }
 
     /**
