@@ -14,8 +14,12 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.CompleteClientAssetUserActorRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.ReceivedNewDigitalAssetMetadataNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.ReceivedNewTransactionStatusNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.CompleteClientAssetUserActorRegistrationNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventListener;
+import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ReceivedNewDigitalAssetMetadataNotificationEventListener;
+import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ReceivedNewTransactionStatusNotificationEventListener;
 
 
 /**
@@ -45,6 +49,23 @@ public enum DapEvenType implements FermatEventEnum {
         }
     },
 
+    RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION("RNDAMN") {
+        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
+            return new ReceivedNewDigitalAssetMetadataNotificationEventListener(this, eventMonitor);
+        }
+        public FermatEvent getNewEvent() {
+            return new ReceivedNewDigitalAssetMetadataNotificationEvent(this);
+        }
+    },
+
+    RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION("RNTSN") {
+        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
+            return new ReceivedNewTransactionStatusNotificationEventListener(this, eventMonitor);
+        }
+        public FermatEvent getNewEvent() {
+            return new ReceivedNewTransactionStatusNotificationEvent(this);
+        }
+    },
 
     ;
 

@@ -11,20 +11,20 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DapEvenType;
 
 /**
- * The Class <code>AbstractDapAssetUserActorNetworkServiceFermatEvent</code>
+ * The Class <code>AbstractDapFermatEvent</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 11/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AbstractDapAssetUserActorNetworkServiceFermatEvent implements FermatEvent {
+public class AbstractDapFermatEvent implements FermatEvent {
 
     private final DapEvenType eventType;
 
     private EventSource eventSource;
 
-    public AbstractDapAssetUserActorNetworkServiceFermatEvent(DapEvenType eventType){
+    public AbstractDapFermatEvent(DapEvenType eventType){
 
         this.eventType = eventType;
     }

@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces;
 
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
@@ -39,9 +40,9 @@ public interface AssetTransmissionNetworkServiceManager {
     /**
      * Method that send the Transaction New Status Notification
      *
-     * @param transactionId
-     * @param newStatus
+     * @param transactionId (GenesisTransaction)
+     * @param newDistributionStatus
      */
-    void sendTransactionNewStatusNotification(ActorAssetUser actorAssetUserSender,  ActorAssetIssuer actorAssetIssuerReceiver, String transactionId, String newStatus) throws CantSendTransactionNewStatusNotificationException;
+    void sendTransactionNewStatusNotification(ActorAssetUser actorAssetUserSender,  ActorAssetIssuer actorAssetIssuerReceiver, String transactionId, DistributionStatus newDistributionStatus) throws CantSendTransactionNewStatusNotificationException;
 
 }

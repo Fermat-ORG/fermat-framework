@@ -19,7 +19,7 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent extends AbstractDapAssetUserActorNetworkServiceFermatEvent {
+public class CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent extends AbstractDapFermatEvent {
 
     private List<ActorAssetUser> actorAssetUserList;
 
