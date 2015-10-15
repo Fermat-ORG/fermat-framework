@@ -6,6 +6,9 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -110,6 +113,16 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
 
     @Override
     public List<AssetUserActorRecord> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException {
-        return null;
+        List<AssetUserActorRecord> actorAssetList= new ArrayList<>();
+
+        Location location = new DeviceLocation(00.00, 00.00, 12345678910L, 00.00, LocationProvider.NETWORK);
+
+
+        actorAssetList.add(new AssetUserActorRecord("Rodrigo Acosta",UUID.randomUUID().toString(),new byte[0],location));
+        actorAssetList.add(new AssetUserActorRecord("Franklin Marcano",UUID.randomUUID().toString(),new byte[0],location));
+        actorAssetList.add(new AssetUserActorRecord("Manuel Colmenares",UUID.randomUUID().toString(),new byte[0],location));
+        actorAssetList.add(new AssetUserActorRecord("Nerio Indriago",UUID.randomUUID().toString(),new byte[0],location));
+
+        return actorAssetList;
     }
 }
