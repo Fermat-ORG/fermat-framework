@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.StateListDrawable;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,7 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
-import android.view.Gravity;
+;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +25,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
+
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -58,7 +58,6 @@ import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.TransactionNewAdapter;
@@ -337,40 +336,26 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                         im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                     }
 
-                    if (walletContact != null)
+                   if(walletContact!= null)
                         sendCrypto();
                     else
-                        Toast.makeText(getActivity(), "Contacto Inexistente", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Contact not found, please add it.", Toast.LENGTH_LONG).show();
 
+                    //testing metadata
+                         /*   cryptoWallet.sendMetadataLikeChampion(Long.parseLong("100000"),
+                                    null,
+                                    "holasdad",
+                                    referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
+                                    "actor_prueba_juan_public_key",
+                                    Actors.INTRA_USER,
+                                    "actor_prueba_robert_public_key",
+                                    Actors.INTRA_USER);*/
 
-                    //testing
-//
-//                    EditText amount = (EditText) rootView.findViewById(R.id.amount);
-//
-//
-//                    String notes = txt_notes.getText().toString();
-////
-//                    cryptoWallet.sendMetadataLikeChampion(Long.parseLong("100000"),
-//                            null,
-//                            "holasdad",
-//                            referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
-//                            "actor_prueba_juan_public_key",
-//                            Actors.INTRA_USER,
-//                            "actor_prueba_robert_public_key",
-//                            Actors.INTRA_USER);
                 }
             });
 
             send_button.selector(R.drawable.bg_home_accept_active,R.drawable.bg_home_accept_normal,R.drawable.bg_home_accept_active);
 
-//            StateListDrawable states = new StateListDrawable();
-//            states.addState(new int[] {android.R.attr.state_pressed},
-//                    getResources().getDrawable());
-//            states.addState(new int[]{android.R.attr.state_focused},
-//                    getResources().getDrawable(R.drawable.bg_home_accept_active));
-//            states.addState(new int[]{},
-//                    getResources().getDrawable(R.drawable.bg_home_accept_normal));
-//            send_button.setBackground(states);
 
             /**
              * BarCode Scanner

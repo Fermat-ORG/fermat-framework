@@ -10,6 +10,7 @@ repositories {
 dependencies {
     compile project(':fermat-api')
     compile project(':fermat-ccm-api')
+    compile project(':fermat-cbp-api')
     compile project(':fermat-ccp-api')
     compile project(':fermat-dap-api')
     compile project(':fermat-p2p-api')
@@ -116,8 +117,8 @@ dependencies {
     compile project(':fermat-pip-plugin-module-notification-bitdubai')
     compile project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai')
     // P2P Projects
-    compile project(':fermat-p2p-plugin-communication-cloud-client-bitdubai')
-    compile project(':fermat-p2p-plugin-communication-cloud-server-bitdubai')
+//    compile project(':fermat-p2p-plugin-communication-cloud-client-bitdubai')
+//    compile project(':fermat-p2p-plugin-communication-cloud-server-bitdubai')
     compile project(':fermat-p2p-plugin-ws-communications-cloud-client-bitdubai')
     compile project(':fermat-p2p-plugin-ws-communications-cloud-server-bitdubai')
     //WPD Projects (Plugins)
@@ -139,8 +140,18 @@ dependencies {
     compile project(':fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai')
     compile project(':fermat-bch-plugin-crypto-network-bitcoin-bitdubai')
     compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
+
 //    compile project(':fermat-dap-android-sub-app-asset-issuer-community-bitdubai')
 //    compile project(':fermat-dap-android-sub-app-asset-user-community-bitdubai')
 //    compile project(':fermat-dap-android-sub-app-redeem-point-community-bitdubai')
+
+
+    //CBP Projects
+    compile project(':fermat-cbp-plugin-identity-crypto-broker-bitdubai')
+    compile project(':fermat-cbp-plugin-identity-crypto-customer-bitdubai')
+    compile project(':fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai')
+    compile project(':fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai')
+
+
 }
 

@@ -1,8 +1,5 @@
 package com.bitdubai.sub_app.crypto_broker_identity.common.model;
 
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 
 /**

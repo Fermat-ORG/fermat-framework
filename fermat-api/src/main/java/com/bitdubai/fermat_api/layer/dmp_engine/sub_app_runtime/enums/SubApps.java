@@ -13,12 +13,13 @@ public enum SubApps {
     CWP_WALLET_FACTORY("CWF"),
     CWP_DEVELOPER_APP("CDA"),
     CWP_WALLET_PUBLISHER("CWP"),
-    CWP_INTRA_USER("CIU"),
+    CWP_INTRA_USER_IDENTITY("CIUI"),
     CWP_SHELL("CS"),
     CBP_CRYPTO_BROKER_IDENTITY("CBPCBI"),
     CBP_CRYPTO_BROKER_COMMUNITY("CBPCBC"),
     CBP_CRYPTO_CUSTOMER_IDENTITY("CBPCCI"),
     CBP_CRYPTO_CUSTOMER_COMMUNITY("CBPCCC"),
+    CCP_INTRA_USER_COMMUNITY("CCPIUC"),
     CBP_CUSTOMERS("CBPC"),
     DAP_ASSETS_FACTORY("DAPAF"),
     DAP_ASSETS_COMMUNITY_USER("DACU");
@@ -46,7 +47,7 @@ public enum SubApps {
             case "CWP":
                 return SubApps.CWP_WALLET_PUBLISHER;
             case "CIU":
-                return SubApps.CWP_INTRA_USER;
+                return SubApps.CWP_INTRA_USER_IDENTITY;
             case "CBPC":
                 return CBP_CUSTOMERS;
             //Modified by Manuel Perez on 05/08/2015
