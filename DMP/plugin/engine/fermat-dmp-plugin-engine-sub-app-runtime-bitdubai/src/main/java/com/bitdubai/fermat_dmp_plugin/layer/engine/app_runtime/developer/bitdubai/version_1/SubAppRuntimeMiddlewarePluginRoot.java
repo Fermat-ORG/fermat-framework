@@ -995,10 +995,11 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
-            runtimeActivity.setColor("#FF0B46F0");
+            runtimeActivity.setColor("#0072bc");
 
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-            statusBar.setColor("#FF0B46F0");
+            statusBar.setColor("#0072bc");
+
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Asset User Community");
             runtimeActivity.setTitleBar(runtimeTitleBar);
