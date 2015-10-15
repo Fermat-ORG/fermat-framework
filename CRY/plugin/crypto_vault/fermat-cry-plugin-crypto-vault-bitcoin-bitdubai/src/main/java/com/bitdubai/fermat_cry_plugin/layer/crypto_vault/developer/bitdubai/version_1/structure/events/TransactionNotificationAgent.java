@@ -193,7 +193,7 @@ public class TransactionNotificationAgent implements Agent {
             /**
              * I search for transactions not yet notified. If I found something, Ill raise an event
              */
-            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, eventManager);
 
             /**
              * If I found transactions on Crypto_Statuts  ON_CryptoNetwork and Protocol_Status PENDING_NOTIFIED, lanzo el evento
@@ -282,7 +282,7 @@ public class TransactionNotificationAgent implements Agent {
 
         private boolean isTransactionToBeNotified(final CryptoStatus cryptoStatus) throws CantExecuteQueryException {
 
-            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, eventManager);
             return db.isPendingTransactions(cryptoStatus);
         }
 
