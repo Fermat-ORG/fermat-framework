@@ -1,12 +1,11 @@
 package unit.com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.bitdubai.sub_app.crypto_broker_identity.BuildConfig;
-import com.bitdubai.sub_app.crypto_broker_identity.R;
+import com.bitdubai.sub_app.intra_user_identity.BuildConfig;
+import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.fragments.CreateCryptoBrokerIdentityFragment;
 
 import org.junit.Before;
@@ -35,13 +34,11 @@ public class CreateIdentityFragmentTest {
         fragment = CreateCryptoBrokerIdentityFragment.newInstance();
         activity = Robolectric.setupActivity(TestActivity.class);
 
-        FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
-        ft.add(TestActivity.LAYOUT_ID, fragment);
-        ft.commit();
+        activity.setFragment(fragment);
     }
 
     @Test
-    public void testIsVisible() {
+    public void fragmentIsVisible() {
         Activity resultActivity = fragment.getActivity();
         assertThat(resultActivity).isInstanceOf(TestActivity.class);
         assertThat(fragment.isVisible()).isTrue();
@@ -49,7 +46,7 @@ public class CreateIdentityFragmentTest {
 
     @Test
     @SuppressWarnings("ConstantConditions")
-    public void clickOnCreateButtonSendBackToIdentityListFragment() {
+    public void clickOnCreateButton_CloseThisFragment() {
         assertThat(fragment.isVisible()).isTrue();
 
         Button button = (Button) fragment.getView().findViewById(R.id.create_crypto_broker_button);

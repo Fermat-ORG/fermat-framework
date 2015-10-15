@@ -20,6 +20,10 @@ public class CantListRequestsException extends FermatException {
         this(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
+    public CantListRequestsException(String context, String possibleReason) {
+        this(DEFAULT_MESSAGE, null, context, possibleReason);
+    }
+
     public CantListRequestsException(Exception cause) {
         this(DEFAULT_MESSAGE, cause, null, null);
     }

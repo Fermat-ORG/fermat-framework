@@ -122,9 +122,9 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
             for (DatabaseTableRecord record : table.getRecords ()) {
                 list.add(new CryptoBrokerIdentityImpl(
                         record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME),
-                        record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME),
-                        getCryptoBrokerIdentityPrivateKey(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME),
-                        getCryptoBrokerIdentityProfileImagePrivateKey(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME),
+                        record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME),
+                        getCryptoBrokerIdentityPrivateKey(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME)),
+                        getCryptoBrokerIdentityProfileImagePrivateKey(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME)),
                         pluginFileSystem)
                 );
             }
@@ -220,7 +220,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
             privateKey = file.getContent();
         } catch (CantLoadFileException e) {
             throw new CantGetCryptoBrokerIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error loaded file.", null);
-        } catch (FileNotFoundException |CantCreateFileException e) {
+        } catch (CantCreateFileException e) {
             throw new CantGetCryptoBrokerIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error getting developer identity private keys file.", null);
         } catch (Exception e) {
             throw  new CantGetCryptoBrokerIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ",FermatException.wrapException(e),"", "");

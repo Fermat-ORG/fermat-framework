@@ -2242,6 +2242,7 @@
 							<mantainer name="lnacosta"></mantainer>
 						</mantainers>
 						<certifications>
+							<certification signed-by="lnacosta" type="implementation"></certification>
 						</certifications>
 					</plugin>
 					<plugin
@@ -7000,7 +7001,7 @@
 	                  platform="CBP"
 	                  superlayer=""
 	                  component="Plugin"
-	                  layer="Module"
+	                  layer="Sub App Module"
 	                  name="Crypto Broker Community"
 	                  >
 	                <next>

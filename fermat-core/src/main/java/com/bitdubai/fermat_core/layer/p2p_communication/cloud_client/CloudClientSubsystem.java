@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantStartSubsystemException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationSubsystem;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.DeveloperBitDubai;
+// import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by ciencias on 20.01.15.
@@ -26,8 +26,8 @@ public class CloudClientSubsystem implements CommunicationSubsystem {
          */
 
         try {
-            DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-            plugin = developerBitDubai.getPlugin();
+          //  DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
+           // plugin = developerBitDubai.getPlugin();
         }
         catch (Exception exception) {
             String message = CantStartSubsystemException.DEFAULT_MESSAGE;
