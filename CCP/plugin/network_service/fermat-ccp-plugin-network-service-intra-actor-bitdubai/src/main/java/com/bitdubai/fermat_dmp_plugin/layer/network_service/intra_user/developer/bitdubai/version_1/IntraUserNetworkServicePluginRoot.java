@@ -551,7 +551,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
      */
 
     @Override
-    public List<IntraUser> searchIntraUserByName(String intraUserAlias) throws ErrorInIntraUserSearchException {
+    public List<IntraUserInformation> searchIntraUserByName(String intraUserAlias) throws ErrorInIntraUserSearchException {
         //TODO Harcode
 
         List<IntraUserInformation> intraUserList = new ArrayList<IntraUserInformation>();

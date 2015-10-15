@@ -1064,7 +1064,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     //TODO harcodeado
 
     @Override
-    public List<IntraUser> searchIntraUserByName(String intraUserAlias) throws ErrorInIntraUserSearchException {
+    public List<IntraUserInformation> searchIntraUserByName(String intraUserAlias) throws ErrorInIntraUserSearchException {
 
         List<IntraUserInformation> intraUserList = new ArrayList<IntraUserInformation>();
 
@@ -1084,7 +1084,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
         intraUserList.add(new IntraUserNetworkService("public_key1",new byte[0],"Leon"));
         intraUserList.add(new IntraUserNetworkService("public_key2",new byte[0],"Luis"));
         intraUserList.add(new IntraUserNetworkService("public_key3",new byte[0],"Rodrigo"));
-        return null;
+        return intraUserList;
     }
 
     @Override

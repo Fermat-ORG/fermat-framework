@@ -26,7 +26,7 @@ public interface IntraUserManager {
      * @return
      * @throws ErrorInIntraUserSearchException
      */
-    public List<IntraUser> searchIntraUserByName(String intraUserAlias) throws ErrorInIntraUserSearchException;
+    public List<IntraUserInformation> searchIntraUserByName(String intraUserAlias) throws ErrorInIntraUserSearchException;
 
     /**
      * The method <code>getIntraUsersSuggestions</code> returns a list of intra users that the logged in
