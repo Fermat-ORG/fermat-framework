@@ -12,6 +12,12 @@ At its core we find FERMAT CORE PLATFORM which is responsible for deploying the 
 NOTE: Android is a *special case* because of some programming restrictions that only allow initialization from components written in android's language. Therefore the initialization sequence in this case, begins in the module *android core* which is the first one to become active and after that, it sets FERMAT CORE to run.
 
 FERMAT CORE initializes every single platform of the system and every single plug-in by collecting information about the corresponding *application public interfaces (API)* and delivering to each one a *reference* on its dependance to consume services building a "communication channel" to instantiate objects and after that giving the "start" signal to beggin running. + 
+
+NOTE: FERMAT Plug-ins are not allowed to consume services directly among them, but referencing themselves to the corresponding platform via the platform's *api module* 
+
+.FERMAT Api modules
+* There is an *api module* for each FERMAT platform, where *public interfaces* of each plug-in are published in order to let them comsume services from others living in the same platform.
+
 When all the basic infrastructure is layed out and some initial plug-ins are running, then the process thread turns to the *OS application* which starts the graphic interfaces and ressources needed to interact with the user, and the application opens its "starting screen". +
 From that moment on, the activation of other dormant modules of FERMAT will follow according user's demand (depending on users activity).
 
@@ -22,10 +28,6 @@ This is the *core platform* of FERMAT Multiplatform System. It contains the deep
 FERMAT Core Platform is written in JAVA as the most of FERMAT, therefore its *code base portability*. + 
 After initialization, this platform monitors the way the system is behaving as a whole.
 
-:numbered!: 
-
-==== _core layer_
-
 .FERMAT Core modules
 * *fermat core* +
 Initializes all system-wide plug-ins and start a platform specific core module for each platform running on FERMAT.
@@ -34,11 +36,6 @@ Initializes android's components that connect FERMAT to the android user's envir
 * *platform specific core* +
 There's a *core module* for each one of the platform existent in FERMAT, which initializes all platform's specific plug-ins: _wallet production & distribution core_ / _crypto currency core_ / _digital assets core_ / etc... .
 
-==== _api layer_
-.FERMAT Api modules
-* There is an *api module* for each FERMAT platform, where *public interfaces* of each plug-in are published in order to let them comsume services from others living in the same platform.
-
-NOTE: FERMAT Plug-ins are not allowed to consume services directly among them, but referencing themselves to the corresponding platform via the platform's *api module* 
 
 :numbered: 
 
@@ -72,19 +69,48 @@ In this layer, we find the different modules to allow FERMAT function on a devic
 :numbered:
 
 === FERMAT BlockChain Superlayer
-*** This platform  provides the connection to cryptonetworks for transporting value.*TRANSPORT OF VALUE* 
+This superlayer provides to the entire FERMAT multiplatform system the connection to existing cryptonetworks for transporting value.*TRANSPORT OF VALUE* 
+==== _Crypto Networks layer_
+There is one module for each cryptonetwork available: Bitcoin, Litecoin, Ripple, Ethereum,  etc
+==== _Crypto Vaults layers_
+Vaults: Bitcoin, Assets over Bitcoin, Bitcoin watch only, Litecoin, Ripple, Ethereum, etc
+==== _Crypto Modules layer_
+Crypto Address Book
+==== _Crypto Router layer_
+Incoming Crypto, Outgoing Crypto
 
 :numbered:
 === FERMAT P2P Network and Communication Superlayer
+This superlayer provides connectivity between devices. FERMAT P2P Network is a dumb network connecting platform network services to each other irrespective of what these services are doing. It provides the communication channels and on top of its connectivity layer network services interact with each other across different devices. Anybody can provide new network services as *plug-ins*.
+This ensures a rich *set of abstractions for wallet applications running on top of the platform*. + 
+Fermat P2P Network is used for transporting the information associated with the transaction. *TRANSPORT OF INFORMATION* (METADATA)
 
-*** This layer provides connectivity between devices. FERMAT-P2P is a dumb network connecting platform network services to each other irrespective of what these services are doing. It provides the communication channels and on top of its connectivity layer network services interact with each other across different devices. Anybody can provide new network services as *plug-ins*.
-This ensures a rich *set of abstractions for wallet applications running on top of the platform*. Fermat P2P is used for transporting the information associated with the transaction. *TRANSPORT OF INFORMATION* (METADATA)
+==== _Communication layer_
+Cloud Server, Cloud Client, P2P, Geofenced, Near Field Communication, WiFi, Mesh, etc
 
 :numbered:
 
 === FERMAT Plug-ins Platform
 
-***Fermat PIP is an open source platform running on end users’ devices . It allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment. A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way.
+FERMAT Plug-ins Platform is open source and run on end users’ devices. It allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment. A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way.
+
+.FERMAT Plug-ins Platform layers
+* Platform Services
+* Hardware
+* Users
+* Plugin
+* License
+* Network Service
+* Actor Network Service
+* Identity
+* World
+* Middleware
+* Actor
+* Desktop Module
+* Subapp Module
+* Engine
+* Desktop
+* Subapp
 
 
 

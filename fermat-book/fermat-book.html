@@ -1210,186 +1210,222 @@ Android is a <strong>special case</strong> because of some programming restricti
 </table>
 </div>
 <div class="paragraph">
-<p>FERMAT CORE initializes every single platform of the system and every single plug-in by collecting information about the corresponding * application public interfaces (API)* and delivering to each one a <strong>reference</strong> on its dependance to consume services building a "communication channel" to instantiate objects and after that giving the "start" signal to beggin running.<br>
-When all the basic infrastructure is layed out and some initial plug-ins are running, then the process thread turns to the <strong>OS application</strong> which starts the graphic interfaces and ressources needed to interact with the user, and the application opens its "starting screen".<br>
-From that moment on, the activation of other dormant modules of FERMAT will follow according user&#8217;s demand ( depending on users activity).</p>
+<p>FERMAT CORE initializes every single platform of the system and every single plug-in by collecting information about the corresponding <strong>application public interfaces (API)</strong> and delivering to each one a <strong>reference</strong> on its dependance to consume services building a "communication channel" to instantiate objects and after that giving the "start" signal to beggin running.<br></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+FERMAT Plug-ins are not allowed to consume services directly among them, but referencing themselves to the corresponding platform via the platform&#8217;s <strong>api module</strong>
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<div class="title">FERMAT Api modules</div>
+<ul>
+<li>
+<p>There is an <strong>api module</strong> for each FERMAT platform, where <strong>public interfaces</strong> of each plug-in are published in order to let them comsume services from others living in the same platform.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When all the basic infrastructure is layed out and some initial plug-ins are running, then the process thread turns to the <strong>OS application</strong> which starts the graphic interfaces and ressources needed to interact with the user, and the application opens its "starting screen".<br>
+From that moment on, the activation of other dormant modules of FERMAT will follow according user&#8217;s demand (depending on users activity).</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+Following in this chapter the description of each platform and each layer within each platform. We recommend to visit FERMAT offcial site (<a href="http://fermat.org">http://fermat.org</a>) to have a picture in mind when reading, to help understand the system structure. <em>Layers</em> description follow the sequence from bottom to top (like "stacking" them), and <em>platforms</em> from left to right.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_fermat_core_platform">3.3. FERMAT Core Platform</h3>
 <div class="paragraph">
-<p>This is the CORE Platform of FERMAT platform stack system, corresponding at the lowest level modules, which encasulaptes the basics definitions that let FERMATs function as a whole system.
-This platform "wakes up" when receiving a call from the application (Android) or executable program (others OS) that is written in OS&#8217;s specific programming language.
-Then, FERMAT CORE (written in JAVA - therefore its <strong>code base portability</strong>) initializes the rest of the platforms and its corresponding <strong>plugins</strong> .
-Its modules provide the <em>class</em> definitions that are the representation of the entire multi-platform system.<br>
-Besides initialization this CORE platform monitors the way the application is behaving as a whole.</p>
+<p>This is the <strong>core platform</strong> of FERMAT Multiplatform System. It contains the deepest levels of layers in the layers stack. Its modules encasulapte the basics definitions and functionalities that let FERMAT operate as an <em>integrated system</em>, by determining the interactions among the isolated plug-ins and putting then to run (starting).<br>
+FERMAT Core Platform is written in JAVA as the most of FERMAT, therefore its <strong>code base portability</strong>.<br>
+After initialization, this platform monitors the way the system is behaving as a whole.</p>
 </div>
 <div class="ulist">
 <div class="title">FERMAT Core modules</div>
 <ul>
 <li>
-<p>fermat core</p>
+<p><strong>fermat core</strong><br>
+Initializes all system-wide plug-ins and start a platform specific core module for each platform running on FERMAT.</p>
 </li>
 <li>
-<p>android core</p>
+<p><strong>android core</strong><br>
+Initializes android&#8217;s components that connect FERMAT to the android user&#8217;s environment.</p>
 </li>
 <li>
-<p>core</p>
-</li>
-<li>
-<p>core</p>
-</li>
-<li>
-<p>core</p>
-</li>
-<li>
-<p>core</p>
-</li>
-<li>
-<p>core</p>
-</li>
-<li>
-<p>core</p>
-</li>
-<li>
-<p>core</p>
-</li>
-<li>
-<p>core</p>
-</li>
-<li>
-<p>core</p>
-</li>
-<li>
-<p>core</p>
+<p><strong>platform specific core</strong><br>
+There&#8217;s a <strong>core module</strong> for each one of the platform existent in FERMAT, which initializes all platform&#8217;s specific plug-ins: <em>wallet production &amp; distribution core</em> / <em>crypto currency core</em> / <em>digital assets core</em> / etc&#8230; .</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_fermat_operating_systems_superlayer">3.4. FERMAT Operating Systems Superlayer</h3>
-<div class="sect3">
-<h4 id="_layer_api">3.4.1. layer: Api</h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+We call in FERMAT <strong>Superlayer</strong> to a group of layers whose modules offer services to be consumed system-wide, i.e. offering an infrastructure that hold the different <strong>platforms</strong> running over FERMAT. (it is like a "common ground" where different "towers" (the platforms) are built, sharing basics level services - like water, electricity and gas supply for a real world building-. )
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
-<p>The modules inside each layer define the necessary interfaces to accomplish their duty inside the plug-ins. However, this interfaces bring many times too much information to the developer. This is why we define a group of reduces interfaces to export to other layers. This interfaces among other definitions can be found in this module called fermat-pip-api.+ Some other definitions are for example exceptions and enums.</p>
+<p>This superlayer allow the connectivity of OS dependant modules to the rest of FERMAT multiplatform (<em>OS independent</em>). The modules offer the necessary functions to interact with the corresponding OS.</p>
 </div>
-<div class="sect4">
-<h5 id="_core_api">core-api</h5>
-
+<div class="sect3">
+<h4 id="__em_android_layer_em"><em>Android layer</em></h4>
+<div class="paragraph">
+<p>In this layer, we find the different modules to allow FERMAT function on a device running Android. The usual requirements of storing and retrieving information, managing files, managing user log-on, checking the device status, location, etc are taken by each specific modules.</p>
 </div>
-<div class="sect4">
-<h5 id="_api">api</h5>
-
-</div>
-<div class="sect4">
-<h5 id="_apis">apis</h5>
-
-</div>
-<div class="sect4">
-<h5 id="_api_2">api</h5>
-
-</div>
-<div class="sect4">
-<h5 id="_api_3">api</h5>
-
-</div>
-<div class="sect4">
-<h5 id="_api_4">api</h5>
-
-</div>
-<div class="sect4">
-<h5 id="_api_5">api</h5>
-
-</div>
-<div class="sect4">
-<h5 id="_api_6">api</h5>
-
-</div>
-<div class="sect4">
-<h5 id="_api_7">api</h5>
-
-</div>
-<div class="sect4">
-<h5 id="_api_8">api</h5>
-
-</div>
-<div class="sect4">
-<h5 id="_api_9">api</h5>
-
+<div class="ulist">
+<div class="title">Android layer modules:</div>
+<ul>
+<li>
+<p>File System</p>
+</li>
+<li>
+<p>Database System</p>
+</li>
+<li>
+<p>Logger</p>
+</li>
+<li>
+<p>Device Location</p>
+</li>
+<li>
+<p>Device Connectivity</p>
+</li>
+<li>
+<p>Device Power</p>
+</li>
+<li>
+<p>Device Contacts</p>
+</li>
+<li>
+<p>Device Hardware</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_layer_android">3.4.2. layer: Android</h4>
-<div class="sect4">
-<h5 id="_file_system">File System</h5>
-
-</div>
-<div class="sect4">
-<h5 id="_database_system">Database System</h5>
-
-</div>
-<div class="sect4">
-<h5 id="_logger">Logger</h5>
-
-</div>
-<div class="sect4">
-<h5 id="_device_location">Device Location</h5>
-
-</div>
-<div class="sect4">
-<h5 id="_device_connectivity">Device Connectivity</h5>
-
-</div>
-<div class="sect4">
-<h5 id="_device_power">Device Power</h5>
-
-</div>
-<div class="sect4">
-<h5 id="_device_contacts">Device Contacts</h5>
-
-</div>
-<div class="sect4">
-<h5 id="_device_hardware">Device Hardware</h5>
-
-</div>
-</div>
-<div class="sect3">
-<h4 id="_layer_multi_os">3.4.3. layer: Multi OS</h4>
-<div class="sect4">
-<h5 id="_file_system_2">File System</h5>
-
-</div>
-<div class="sect4">
-<h5 id="_database_system_2">Database System</h5>
-
+<h4 id="__em_multi_os_layer_em"><em>Multi OS layer</em></h4>
+<div class="ulist">
+<div class="title">modules</div>
+<ul>
+<li>
+<p>File System</p>
+</li>
+<li>
+<p>Database System</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_fermat_blockchain_superlayer">3.5. FERMAT BlockChain Superlayer</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>This platform  provides the conenction to cryptonetworks for transporting value.<strong>TRANSPORT OF VALUE</strong></p>
-</li>
-</ul>
+<div class="paragraph">
+<p>This superlayer provides to the entire FERMAT multiplatform system the connection to existing cryptonetworks for transporting value.<strong>TRANSPORT OF VALUE</strong>
+==== <em>Crypto Networks layer</em>
+There is one module for each cryptonetwork available: Bitcoin, Litecoin, Ripple, Ethereum,  etc
+==== <em>Crypto Vaults layers</em>
+Vaults: Bitcoin, Assets over Bitcoin, Bitcoin watch only, Litecoin, Ripple, Ethereum, etc
+==== <em>Crypto Modules layer</em>
+Crypto Address Book
+==== <em>Crypto Router layer</em>
+Incoming Crypto, Outgoing Crypto</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_fermat_p2p_network_and_communication_superlayer">3.6. FERMAT P2P Network and Communication Superlayer</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>This layer provides connectivity between devices. FERMAT-P2P is a dumb network connecting platform network services to each other irrespective of what these services are doing. It provides the communication channels and on top of its connectivity layer network services interact with each other across different devices. Anybody can provide new network services as <strong>plug-ins</strong>.
-This ensures a rich <strong>set of abstractions for wallet applications running on top of the platform</strong>. Fermat P2P is used for transporting the information associated with the transaction. <strong>TRANSPORT OF INFORMATION</strong> (METADATA)</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>This superlayer provides connectivity between devices. FERMAT P2P Network is a dumb network connecting platform network services to each other irrespective of what these services are doing. It provides the communication channels and on top of its connectivity layer network services interact with each other across different devices. Anybody can provide new network services as <strong>plug-ins</strong>.
+This ensures a rich <strong>set of abstractions for wallet applications running on top of the platform</strong>.<br>
+Fermat P2P Network is used for transporting the information associated with the transaction. <strong>TRANSPORT OF INFORMATION</strong> (METADATA)</p>
+</div>
+<div class="sect3">
+<h4 id="__em_communication_layer_em">3.6.1. <em>Communication layer</em></h4>
+<div class="paragraph">
+<p>Cloud Server, Cloud Client, P2P, Geofenced, Near Field Communication, WiFi, Mesh, etc</p>
+</div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_fermat_plug_ins_platform">3.7. FERMAT Plug-ins Platform</h3>
 <div class="paragraph">
-<p>***Fermat PIP is an open source platform running on end users’ devices . It allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment. A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way.</p>
+<p>FERMAT Plug-ins Platform is open source and run on end users’ devices. It allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment. A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way.</p>
+</div>
+<div class="ulist">
+<div class="title">FERMAT Plug-ins Platform layers</div>
+<ul>
+<li>
+<p>Platform Services</p>
+</li>
+<li>
+<p>Hardware</p>
+</li>
+<li>
+<p>Users</p>
+</li>
+<li>
+<p>Plugin</p>
+</li>
+<li>
+<p>License</p>
+</li>
+<li>
+<p>Network Service</p>
+</li>
+<li>
+<p>Actor Network Service</p>
+</li>
+<li>
+<p>Identity</p>
+</li>
+<li>
+<p>World</p>
+</li>
+<li>
+<p>Middleware</p>
+</li>
+<li>
+<p>Actor</p>
+</li>
+<li>
+<p>Desktop Module</p>
+</li>
+<li>
+<p>Subapp Module</p>
+</li>
+<li>
+<p>Engine</p>
+</li>
+<li>
+<p>Desktop</p>
+</li>
+<li>
+<p>Subapp</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
