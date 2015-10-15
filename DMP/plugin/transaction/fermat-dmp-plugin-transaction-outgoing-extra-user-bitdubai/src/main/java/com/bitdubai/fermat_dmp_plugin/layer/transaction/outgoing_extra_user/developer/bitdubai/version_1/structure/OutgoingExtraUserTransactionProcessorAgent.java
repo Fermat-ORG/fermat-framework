@@ -228,11 +228,13 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
                     if (funds < transaction.getAmount()) {
                         dao.cancelTransaction(transaction, "Insufficient founds.");
                         // TODO: Lanzar un evento de fondos insuficientes
+                    } else {
+                        // If we have enough funds we debit them from the available balance
+                        bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).debit(transaction);
+                        // The we set that we register that we have executed the debit
+                        dao.setToPIA(transaction);
                     }
-                    // If we have enough funds we debit them from the available balance
-                    bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).debit(transaction);
-                    // The we set that we register that we have executed the debit
-                    dao.setToPIA(transaction);
+
                 } catch (CantLoadWalletException e) {
                     this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
                     continue;
