@@ -444,19 +444,21 @@ public class BitcoinCryptoVault implements
             // after we persist the new Transaction, we'll persist it as a Fermat transaction.
             db.persistnewFermatTransaction(fermatTxId.toString());
 
-            vault.commitTx(tx);
+            vault.commitTx(request.tx);
 
             PeerGroup peers = (PeerGroup) bitcoinCryptoNetworkManager.getBroadcasters();
 
             // well broadcast and wait for the confirmation of the network
-            TransactionBroadcast transactionBroadcast = peers.broadcastTransaction(tx);
+            TransactionBroadcast transactionBroadcast = peers.broadcastTransaction(request.tx);
             ListenableFuture<Transaction> listenableFuture = transactionBroadcast.broadcast();
 
             /*
              * the transaction was broadcasted and accepted by the nwetwork
              * I will persist it to inform it when the confidence level changes
              */
-            Transaction transaction = listenableFuture.get();
+            listenableFuture.get();
+
+            vault.saveToFile(vaultFile);
 
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: bitcoin sent!!!", "Address to: " + addressTo.getAddress(), "Amount: " + amount);
 
