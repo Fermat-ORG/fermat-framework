@@ -241,7 +241,7 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
      */
     @Override
     public void onErrorOccurred(Exception ex) {
-        mDialog.dismiss();
+        //mDialog.dismiss();
         ex.printStackTrace();
         Toast.makeText(getApplicationContext(), "Application crash, re open the app please",
                 Toast.LENGTH_LONG).show();
