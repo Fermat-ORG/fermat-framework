@@ -184,7 +184,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     @Override
     public AssetIssuerWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException {
         try {
-            return new AssetIssuerWallletBalanceImpl(database);
+            return new AssetIssuerWallletBalanceImpl(database, pluginId, pluginFileSystem);
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
