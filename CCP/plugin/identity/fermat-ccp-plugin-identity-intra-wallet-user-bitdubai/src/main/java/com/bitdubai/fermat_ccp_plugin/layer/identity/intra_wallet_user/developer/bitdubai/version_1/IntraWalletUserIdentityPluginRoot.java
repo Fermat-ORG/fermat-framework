@@ -175,24 +175,17 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
 
             List<IntraWalletUser> intraWalletUserList1 = new ArrayList<IntraWalletUser>();
 
-            //TODO Descomentar
-           // DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            //intraWalletUserList1 = intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser);
 
-            //TODO harcoder
+            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
+            intraWalletUserList1 = intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser);
 
-
-            intraWalletUserList1.add(new IntraWalletUserIdentity("Matias","public_key1",UUID.randomUUID().toString(),new byte[0],this.pluginFileSystem,this.pluginId));
-            intraWalletUserList1.add(new IntraWalletUserIdentity("Jorge","public_key2",UUID.randomUUID().toString(),new byte[0],this.pluginFileSystem,this.pluginId));
-            intraWalletUserList1.add(new IntraWalletUserIdentity("Leon","public_key",UUID.randomUUID().toString(),new byte[0],this.pluginFileSystem,this.pluginId));
-            intraWalletUserList1.add(new IntraWalletUserIdentity("Rodrigo","public_key3",UUID.randomUUID().toString(),new byte[0],this.pluginFileSystem,this.pluginId));
 
             return intraWalletUserList1;
 
-       // } catch (CantGetLoggedInDeviceUserException e) {
-         //   throw new CantListIntraWalletUsersException("CAN'T GET INTRA WALLET USER IDENTITIES", e, "Error get logged user device", "");
-       // } catch (CantListIntraWalletUserIdentitiesException e) {
-          //  throw new CantListIntraWalletUsersException("CAN'T GET INTRA WALLET USER IDENTITIES", e, "", "");
+        } catch (CantGetLoggedInDeviceUserException e) {
+          throw new CantListIntraWalletUsersException("CAN'T GET INTRA WALLET USER IDENTITIES", e, "Error get logged user device", "");
+        } catch (CantListIntraWalletUserIdentitiesException e) {
+            throw new CantListIntraWalletUsersException("CAN'T GET INTRA WALLET USER IDENTITIES", e, "", "");
         } catch (Exception e) {
             throw new CantListIntraWalletUsersException("CAN'T GET INTRA WALLET USER IDENTITIES", FermatException.wrapException(e), "", "");
         }
