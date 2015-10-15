@@ -8,11 +8,11 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners
 
 
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
 /**
  * The Class <code>com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.listeners.CompleteClientComponentRegistrationNotificationEventListener</code> is
- * the event listener for the <code>com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType.COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION</code>.
+ * the event listener for the <code>com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.P2pEventType.COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION</code>.
  * <p/>
  *
  * Created by Roberto Requena - (rrequena) on 14/09/15.
@@ -24,10 +24,10 @@ public class CompleteClientComponentRegistrationNotificationEventListener extend
     /**
      * Constructor with parameters
      *
-     * @param eventType
+     * @param p2pEventType
      * @param eventMonitor
      */
-    public CompleteClientComponentRegistrationNotificationEventListener(EventType eventType, FermatEventMonitor eventMonitor) {
-        super(eventType, eventMonitor);
+    public CompleteClientComponentRegistrationNotificationEventListener(P2pEventType p2pEventType, FermatEventMonitor eventMonitor) {
+        super(p2pEventType, eventMonitor);
     }
 }

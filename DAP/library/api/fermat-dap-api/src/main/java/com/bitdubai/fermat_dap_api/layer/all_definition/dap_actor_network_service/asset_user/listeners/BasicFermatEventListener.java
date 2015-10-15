@@ -1,26 +1,27 @@
 /*
- * @#BasicFermatEventListener.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
-package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners;
+* @#BasicFermatEventListener.java - 2015
+* Copyright bitDubai.com., All rights reserved.
+ * You may not modify, use, reproduce or distribute this software.
+* BITDUBAI/CONFIDENTIAL
+*/
+package com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.listeners;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.enums.DapEvenType;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.BasicFermatEventListener</code>
+ * The Class <code>BasicFermatEventListener</code>
  * <p/>
- * Created by Roberto Requena - (rart3001@gmail.com) on 20/09/15.
+ * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 11/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
 public class BasicFermatEventListener implements FermatEventListener {
+
 
     /**
      * Represent the eventMonitor
@@ -28,9 +29,9 @@ public class BasicFermatEventListener implements FermatEventListener {
     private FermatEventMonitor eventMonitor;
 
     /**
-     * Represent the p2pEventType
+     * Represent the eventType
      */
-    private P2pEventType p2pEventType;
+    private DapEvenType eventType;
 
     /**
      * Represent the eventHandler
@@ -40,11 +41,11 @@ public class BasicFermatEventListener implements FermatEventListener {
     /**
      * Constructor with parameters
      *
-     * @param p2pEventType
+     * @param eventType
      * @param eventMonitor
      */
-    public BasicFermatEventListener(P2pEventType p2pEventType, FermatEventMonitor eventMonitor){
-        this.p2pEventType = p2pEventType;
+    public BasicFermatEventListener(DapEvenType eventType, FermatEventMonitor eventMonitor){
+        this.eventType = eventType;
         this.eventMonitor = eventMonitor;
     }
 
@@ -53,8 +54,8 @@ public class BasicFermatEventListener implements FermatEventListener {
      * @see FermatEventListener#getEventType()
      */
     @Override
-    public P2pEventType getEventType() {
-        return p2pEventType;
+    public DapEvenType getEventType() {
+        return eventType;
     }
 
     /**
