@@ -32,9 +32,10 @@ import java.util.UUID;
 /**
  * Created by Franklin on 07/09/15.
  */
-public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAssetIssuerWallet, Service, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors {
+public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAssetIssuerWallet, Service, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, AssetIssuerWalletSupAppModuleManager {
     //AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
     AssetIssuerWalletManager assetIssuerWalletManager;
+    //AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
     AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
 
     UUID pluginId;
@@ -143,5 +144,15 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAsset
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
+    }
+
+    @Override
+    public List<AssetIssuerWalletList> getAssetIssuerWalletBalancesAvailable(String publicKey) throws CantLoadWalletException {
+        return assetIssuerWalletModuleManager.getAssetIssuerWalletBalancesAvailable(publicKey);
+    }
+
+    @Override
+    public List<AssetIssuerWalletList> getAssetIssuerWalletBalancesBook(String publicKey) throws CantLoadWalletException {
+        return assetIssuerWalletModuleManager.getAssetIssuerWalletBalancesBook(publicKey);
     }
 }
