@@ -22,6 +22,8 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -92,14 +94,14 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
  */
-public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DealsWithAssetVault, DealsWithAssetIssuerWallet, DatabaseManagerForDevelopers, DealsWithCryptoAddressBook, DealsWithCryptoVault, DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithOutgoingIntraActor, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service/*, TransactionProtocolManager*/ {
+public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DealsWithAssetVault, DealsWithAssetIssuerWallet, DealsWithBitcoinWallet, DatabaseManagerForDevelopers, DealsWithCryptoAddressBook, DealsWithCryptoVault, DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithOutgoingIntraActor, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service/*, TransactionProtocolManager*/ {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     AssetIssuingTransactionManager assetIssuingTransactionManager;
     AssetIssuingTransactionMonitorAgent assetIssuingTransactionMonitorAgent;
     AssetTransactionService assetIssuingEventRecorderService;
     AssetIssuingTransactionDao assetIssuingTransactionDao;
-    CryptoWallet cryptoWallet;
+    BitcoinWalletManager bitcoinWalletManager;
     CryptoVaultManager cryptoVaultManager;
     ErrorManager errorManager;
     EventManager eventManager;
@@ -191,7 +193,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             this.assetIssuingEventRecorderService =new AssetIssuingRecorderService(assetIssuingTransactionDao);
             this.assetIssuingTransactionManager=new AssetIssuingTransactionManager(this.pluginId,
                     this.cryptoVaultManager,
-                    this.cryptoWallet,
+                    this.bitcoinWalletManager,
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem,
                     this.errorManager,
@@ -321,8 +323,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     }
 
     @Override
-    public void setCryptoWallet(CryptoWallet cryptoWallet){
-        this.cryptoWallet=cryptoWallet;
+    public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager) {
+        this.bitcoinWalletManager=bitcoinWalletManager;
     }
 
     @Override
@@ -485,7 +487,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         DigitalAssetMetadata dam=new DigitalAssetMetadata(digitalAsset);
         dam.setGenesisTransaction("testGenesisTX");
         this.digitalAssetIssuingVault.persistDigitalAssetMetadataInLocalStorage(dam);
-        LOG.info("DAM from vault:\n"+this.digitalAssetIssuingVault.getDigitalAssetMetadataFromLocalStorage("testGenesisTX").toString());
+        LOG.info("DAM from vault:\n" + this.digitalAssetIssuingVault.getDigitalAssetMetadataFromLocalStorage("testGenesisTX").toString());
     }
 
     private void testIssueSingleAsset() throws CantIssueDigitalAssetsException{
@@ -608,6 +610,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         this.assetIssuingTransactionManager.issueAssets(digitalAsset, 10, "TESTING PUBLICKEY", BlockchainNetworkType.REG_TEST);
         LOG.info("MAP_END_TEST_MULTIPLE_FULL_ASSETS");
     }
+
 
 
 }
