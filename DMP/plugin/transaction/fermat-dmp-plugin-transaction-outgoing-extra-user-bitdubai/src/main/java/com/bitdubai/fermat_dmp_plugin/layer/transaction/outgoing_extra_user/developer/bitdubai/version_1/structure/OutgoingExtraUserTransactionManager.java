@@ -122,9 +122,18 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
             bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
             funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
             if (cryptoAmount > funds) {
-                throw new InsufficientFundsException("We don't have enough funds", null, "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds, "Many transactions were accepted before discounting from basic wallet balanace");
+
+                throw new InsufficientFundsException(
+                        "We don't have enough funds",
+                        null, "" +
+                        "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds,
+                        "Many transactions were accepted before discounting from basic wallet balanace"
+                );
+
+            } else {
+
+                dao.registerNewTransaction(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType);
             }
-            dao.registerNewTransaction(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType);
         } catch (InsufficientFundsException exception) {
             throw exception;
         } catch (CantInitializeDaoException e) {
