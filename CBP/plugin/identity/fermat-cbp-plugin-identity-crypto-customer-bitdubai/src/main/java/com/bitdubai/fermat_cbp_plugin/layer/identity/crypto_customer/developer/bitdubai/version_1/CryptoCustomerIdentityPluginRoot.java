@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.IdentityPublished;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.exceptions.CantCreateCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces.CryptoCustomerIdentity;
@@ -102,13 +103,13 @@ public class CryptoCustomerIdentityPluginRoot implements    CryptoCustomerIdenti
     public CryptoCustomerIdentity createCryptoCustomerIdentity(String alias, byte[] profileImage) throws CantCreateCryptoCustomerIdentityException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-
             ECCKeyPair keyPair = new ECCKeyPair();
             String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
+            IdentityPublished publicKeyPublished = IdentityPublished.UNPUBLISHED;
 
             cryptoCustomerIdentityDatabaseDao.createNewCryptoCustomerIdentity(alias, publicKey, privateKey, loggedUser, profileImage);
-            return new CryptoCustomerIdentityImpl(alias, publicKey, privateKey, profileImage, pluginFileSystem);
+            return new CryptoCustomerIdentityImpl(alias, publicKey, privateKey, profileImage, publicKeyPublished, pluginFileSystem);
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateCryptoCustomerIdentityException("CAN'T CREATE NEW CRYPTO CUSTOMER IDENTITY", e, "Error getting current logged in device user", "");
         } catch (CantCreateNewDeveloperException e) {

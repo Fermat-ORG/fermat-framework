@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.IdentityPublished;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentity;
@@ -101,13 +102,13 @@ public class CryptoBrokerIdentityPluginRoot implements  CryptoBrokerIdentityMana
     public CryptoBrokerIdentity createCryptoBrokerIdentity(String alias, byte[] profileImage) throws CantCreateCryptoBrokerIdentityException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-
             ECCKeyPair keyPair = new ECCKeyPair();
             String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
+            IdentityPublished publicKeyPublished = IdentityPublished.UNPUBLISHED;
 
             cryptoBrokerIdentityDatabaseDao.createNewCryptoBrokerIdentity(alias, publicKey, privateKey, loggedUser, profileImage);
-            return new CryptoBrokerIdentityImpl(alias, publicKey, privateKey, profileImage, pluginFileSystem);
+            return new CryptoBrokerIdentityImpl(alias, publicKey, privateKey, profileImage, publicKeyPublished, pluginFileSystem);
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateCryptoBrokerIdentityException("CAN'T CREATE NEW CRYPTO BROKER IDENTITY", e, "Error getting current logged in device user", "");
         } catch (CantCreateNewDeveloperException e) {
