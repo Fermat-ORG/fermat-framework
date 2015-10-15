@@ -20,10 +20,11 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.deve
  */
 public class TransactionHandler {
 
-    public static void handleTransaction(TransactionWrapper transaction, CryptoStatus cryptoStatus,
-                                         BitcoinWalletWallet bitcoinWallet,OutgoingExtraUserDao dao,
-                                         ErrorManager errorManager
-                                        ){
+    public static void handleTransaction(TransactionWrapper   transaction  ,
+                                         CryptoStatus         cryptoStatus ,
+                                         BitcoinWalletWallet  bitcoinWallet,
+                                         OutgoingExtraUserDao dao          ,
+                                         ErrorManager         errorManager ){
         CryptoStatus oldStatus = transaction.getCryptoStatus();
 
         if(oldStatus.equals(CryptoStatus.PENDING_SUBMIT)) {

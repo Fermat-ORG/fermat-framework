@@ -121,11 +121,11 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
 
             for (DatabaseTableRecord record : table.getRecords ()) {
                 list.add(new CryptoCustomerIdentityImpl(
-                        record.getStringValue(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME),
-                        record.getStringValue(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME),
-                        getCryptoCustomerIdentityPrivateKey(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME),
-                        getCryptoCustomerIdentityProfileImagePrivateKey(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME),
-                        pluginFileSystem)
+                    record.getStringValue(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME),
+                    record.getStringValue(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME),
+                    getCryptoCustomerIdentityPrivateKey(record.getStringValue(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)),
+                    getCryptoCustomerIdentityProfileImagePrivateKey(record.getStringValue(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)),
+                    pluginFileSystem)
                 );
             }
         } catch (CantLoadTableToMemoryException e) {
