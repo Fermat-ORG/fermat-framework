@@ -13,18 +13,18 @@ public class ECCKeyPair implements KeyPair {
 	public ECCKeyPair(final String privateKey, String publicKey) throws IllegalArgumentException{
 		if(publicKey == null || publicKey.isEmpty())
 			throw new IllegalArgumentException();
-		if(!publicKey.equals(AsymmectricCryptography.derivePublicKey(privateKey)))
+		if(!publicKey.equals(AsymmetricCryptography.derivePublicKey(privateKey)))
 			throw new IllegalArgumentException();
 		this.privateKey = privateKey;
 		this.publicKey = publicKey;
 	}
 	
 	public ECCKeyPair(final String privateKey) throws IllegalArgumentException{
-		this(privateKey, AsymmectricCryptography.derivePublicKey(privateKey));
+		this(privateKey, AsymmetricCryptography.derivePublicKey(privateKey));
 	}
 	
 	public ECCKeyPair(){
-		this(AsymmectricCryptography.createPrivateKey());
+		this(AsymmetricCryptography.createPrivateKey());
 	}
 
 	public String getPrivateKey() {

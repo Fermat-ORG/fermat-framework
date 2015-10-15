@@ -66,7 +66,8 @@ public class CryptoMoneyStockReplenishmentBusinessTransactionDao {
     /*CREATE NEW TRANSACTION*/
     public void createNewCryptoMoneyStockReplenishment(
             String publicKeyBroker,
-            String merchandiseCurrency,
+            CurrencyType merchandiseCurrency,
+            float merchandiseAmount,
             String executionTransactionId,
             CryptoCurrencyType cryptoCurrencyType
     ) throws CantInsertRecordCryptoMoneyStockReplenishmentBusinessTransactionException {
@@ -74,7 +75,7 @@ public class CryptoMoneyStockReplenishmentBusinessTransactionDao {
             DatabaseTable transactionTable = this.database.getTable(CryptoMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CRYPTO_MONEY_STOCK_REPLENISHMENT_TABLE_NAME);
             DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
             BusinessTransactionStatus transactionStatus = BusinessTransactionStatus.PENDING_PAYMENT;
-            loadRecordAsNew(recordToInsert, transactionStatus,publicKeyBroker, merchandiseCurrency, executionTransactionId, cryptoCurrencyType);
+            loadRecordAsNew(recordToInsert, transactionStatus, publicKeyBroker, merchandiseCurrency, merchandiseAmount, executionTransactionId, cryptoCurrencyType);
             transactionTable.insertRecord(recordToInsert);
         } catch (CantInsertRecordException e) {
             throw new CantInsertRecordCryptoMoneyStockReplenishmentBusinessTransactionException("An exception happened", e, "", "");
@@ -112,7 +113,8 @@ public class CryptoMoneyStockReplenishmentBusinessTransactionDao {
             DatabaseTableRecord databaseTableRecord,
             BusinessTransactionStatus transactionStatus,
             String publicKeyBroker,
-            String merchandiseCurrency,
+            CurrencyType merchandiseCurrency,
+            float merchandiseAmount,
             String executionTransactionId,
             CryptoCurrencyType cryptoCurrencyType
     ) {
@@ -121,8 +123,8 @@ public class CryptoMoneyStockReplenishmentBusinessTransactionDao {
         databaseTableRecord.setUUIDValue(CryptoMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CRYPTO_MONEY_STOCK_REPLENISHMENT_TRANSACTION_ID_COLUMN_NAME, transactionId);
         databaseTableRecord.setStringValue(CryptoMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CRYPTO_MONEY_STOCK_REPLENISHMENT_STATUS_COLUMN_NAME, transactionStatus.getCode());
         databaseTableRecord.setStringValue(CryptoMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CRYPTO_MONEY_STOCK_REPLENISHMENT_PUBLIC_KEY_BROKER_COLUMN_NAME, publicKeyBroker);
-        databaseTableRecord.setStringValue(CryptoMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CRYPTO_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_CURRENCY_COLUMN_NAME, merchandiseCurrency);
-        databaseTableRecord.setStringValue(CryptoMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CRYPTO_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_AMOUNT_COLUMN_NAME, merchandiseCurrency);
+        databaseTableRecord.setStringValue(CryptoMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CRYPTO_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_CURRENCY_COLUMN_NAME, merchandiseCurrency.getCode());
+        databaseTableRecord.setFloatValue(CryptoMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CRYPTO_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_AMOUNT_COLUMN_NAME, merchandiseAmount);
         databaseTableRecord.setStringValue(CryptoMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CRYPTO_MONEY_STOCK_REPLENISHMENT_EXECUTION_TRANSACTION_ID_COLUMN_NAME, executionTransactionId);
         databaseTableRecord.setStringValue(CryptoMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CRYPTO_MONEY_STOCK_REPLENISHMENT_CRYPTO_CURRENCY_TYPE_COLUMN_NAME, cryptoCurrencyType.getCode());
 

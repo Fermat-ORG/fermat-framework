@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.exceptions.CantSingMessageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.interfaces.PublisherIdentity;
 
@@ -65,12 +65,12 @@ public class PublisherIdentityRecord implements PublisherIdentity {
             /*
              * Get the message hash
              */
-            String messageHash = AsymmectricCryptography.encryptMessagePublicKey(mensage, publicKey);
+            String messageHash = AsymmetricCryptography.encryptMessagePublicKey(mensage, publicKey);
 
             /*
              * Create the message signature
              */
-            return AsymmectricCryptography.createMessageSignature(messageHash, privateKey);
+            return AsymmetricCryptography.createMessageSignature(messageHash, privateKey);
         }
         catch(Exception e)
         {
