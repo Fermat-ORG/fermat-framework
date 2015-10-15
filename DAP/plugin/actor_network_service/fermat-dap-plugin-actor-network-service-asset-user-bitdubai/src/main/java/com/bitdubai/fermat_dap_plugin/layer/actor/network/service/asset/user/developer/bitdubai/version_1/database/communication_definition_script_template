@@ -15,11 +15,11 @@ databaseTables << [
         ["id", "STRING", "36", "false"],
         ["sender id", "STRING", "100", "false"],
         ["receiver id", "STRING", "10", "false"],
-	["text content", "STRING", "255", "false"],
-	["type", "STRING", "100", "false"],
-	["shipping timestamp", "STRING", "100", "false"],
-	["delivery timestamp", "STRING", "255", "false"],
-	["status", "STRING", "100", "false"]
+	    ["text content", "STRING", "255", "false"],
+	    ["type", "STRING", "100", "false"],
+	    ["shipping timestamp", "STRING", "100", "false"],
+	    ["delivery timestamp", "STRING", "255", "false"],
+	    ["status", "STRING", "100", "false"]
     ],
     firstKey:"id"
 ]
@@ -30,11 +30,11 @@ databaseTables << [
         ["id", "STRING", "36", "false"],
         ["sender id", "STRING", "100", "false"],
         ["receiver id", "STRING", "10", "false"],
-	["text content", "STRING", "255", "false"],
-	["type", "STRING", "100", "false"],
-	["shipping timestamp", "STRING", "100", "false"],
-	["delivery timestamp", "STRING", "255", "false"],
-	["status", "STRING", "100", "false"]
+	    ["text content", "STRING", "255", "false"],
+	    ["type", "STRING", "100", "false"],
+	    ["shipping timestamp", "STRING", "100", "false"],
+	    ["delivery timestamp", "STRING", "255", "false"],
+	    ["status", "STRING", "100", "false"]
     ],
     firstKey:"id"
 ]

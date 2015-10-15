@@ -195,13 +195,6 @@ public class CryptoTransmissionAgent {
             }
         });
 
-
-
-
-
-
-
-
     }
 
     /**

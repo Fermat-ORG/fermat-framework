@@ -34,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:singleLine="true"
+        android:textSize="20sp"
         android:textColor="@color/crypto_broker_identity_name_item"
         tools:text="Nelson Alfonso Ramirez Noguera" />
 </LinearLayout>

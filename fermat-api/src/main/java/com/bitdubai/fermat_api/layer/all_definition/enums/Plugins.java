@@ -126,6 +126,13 @@ public enum Plugins {
     BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE            ("BWPDWSSAM", Developers.BITDUBAI),
     // End  WPD Plugins
 
+    //Init CBP Plugins
+    BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY ("BCBPCBI", Developers.BITDUBAI),
+    BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY ("BCBPCCI", Developers.BITDUBAI),
+    BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE ("BCBPCBISAM", Developers.BITDUBAI),
+    BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE ("BCBPCCISAM", Developers.BITDUBAI),
+    //End CBP Plugins
+
     ;
 
     private String code;
@@ -321,6 +328,14 @@ public enum Plugins {
             case "BWPDWPSAM": return BITDUBAI_WPD_WALLET_PUBLISHER_SUB_APP_MODULE;
             case "BWPDWSSAM": return BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE;
             // End  WPD Plugins
+
+            //Init CBP Plugins
+            case "BCBPCBI": return BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY;
+            case "BCBPCCI": return BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY;
+            case "BCBPCBISAM": return BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE;
+            case "BCBPCCISAM": return BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE;
+            //End CBP Plugins
+
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

@@ -1,23 +1,39 @@
 package com.bitdubai.fermat_api;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 
 /**
- * The interface <code>com.bitdubai.fermat_api.FermatAgent</code>
+ * The abstract class <code>com.bitdubai.fermat_api.FermatAgent</code>
  * provides the basic functionality of a fermat agent.
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 12/10/2015.
  */
-public interface FermatAgent {
+public abstract class FermatAgent {
 
-    void start() throws CantStartAgentException;
+    protected AgentStatus status;
 
-    void pause();
+    public void start() throws CantStartAgentException {
+        this.status = AgentStatus.STARTED;
+    }
 
-    void resume();
+    public void pause(){
+        this.status = AgentStatus.PAUSED;
+    }
 
-    void stop();
+    public void resume(){
+        this.status = AgentStatus.STARTED;
+    }
 
-    ServiceStatus getStatus();
+    public void stop(){
+        this.status = AgentStatus.STOPPED;
+    }
+
+    public AgentStatus getStatus(){
+        return status;
+    }
+
+    public boolean isRunning(){
+        return status == AgentStatus.STARTED;
+    }
 
 }
