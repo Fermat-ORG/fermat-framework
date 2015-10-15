@@ -228,9 +228,6 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
             //LOG.info("Asset Issuing monitor agent DoTheMainTask");
             try {
                 assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
-/**
- * If I found transactions on Crypto_Statuts  ON_CryptoNetwork and Protocol_Status PENDING_NOTIFIED, lanzo el evento
- */
 
                 List<String> transactionHashList;
                 CryptoStatus transactionCryptoStatus;
@@ -247,7 +244,6 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                         }
                     }
                 }
-
 
                 if (isTransactionToBeNotified(CryptoStatus.ON_BLOCKCHAIN)){
                     transactionHashList=assetIssuingTransactionDao.getTransactionsHashByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
