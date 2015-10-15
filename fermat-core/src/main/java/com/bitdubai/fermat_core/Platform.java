@@ -203,6 +203,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfoManager;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
+import com.carrotsearch.sizeof.RamUsageEstimator;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -401,6 +402,7 @@ public class Platform implements Serializable {
         ((DealWithDatabaseManagers) corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE)).setDatabaseManagers(dealsWithDatabaseManagersPlugins, dealsWithDatabaseManagersAddons);
         ((DealsWithLogManagers) corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE)).setLogManagers(dealsWithLogManagersPlugins, dealsWithLogManagersAddons);
 
+        System.err.println("Tamaño en runtime es: " + RamUsageEstimator.sizeOf(this));
     }
 
     /**
@@ -653,7 +655,7 @@ public class Platform implements Serializable {
         } catch (CantStartPluginException cantStartPluginException) {
 
             LOG.log(Level.SEVERE, cantStartPluginException.getLocalizedMessage());
-            throw new CantStartPlatformException();
+            throw new CantStartPlatformException(CantStartPlatformException.DEFAULT_MESSAGE, cantStartPluginException, "", "");
         }
 
     }
@@ -1447,7 +1449,7 @@ public class Platform implements Serializable {
 
         } catch (CantInitializePluginsManagerException cantInitializePluginsManagerException) {
             LOG.log(Level.SEVERE, cantInitializePluginsManagerException.getLocalizedMessage());
-            throw new CantStartPlatformException();
+            throw new CantStartPlatformException(CantStartPlatformException.DEFAULT_MESSAGE,cantInitializePluginsManagerException, "","");
         }
         List<Map.Entry<Plugins, Long>> list = new LinkedList<>(pluginsStartUpTime.entrySet());
         Collections.sort(list, new Comparator<Map.Entry<Plugins, Long>>() {
@@ -1804,7 +1806,7 @@ public class Platform implements Serializable {
 
         } catch (Exception exception) {
             LOG.log(Level.SEVERE, exception.getLocalizedMessage());
-            throw new CantStartPlatformException();
+            throw new CantStartPlatformException(CantStartPlatformException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "", "");
         }
     }
 
