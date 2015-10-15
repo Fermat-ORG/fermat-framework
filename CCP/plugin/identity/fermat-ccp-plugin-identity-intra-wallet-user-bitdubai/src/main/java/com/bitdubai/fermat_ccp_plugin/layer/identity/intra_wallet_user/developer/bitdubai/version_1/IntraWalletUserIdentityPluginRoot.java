@@ -179,10 +179,6 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             intraWalletUserList1 = intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser);
 
-            //TODO harcoder
-
-
-            intraWalletUserList1.add(new IntraWalletUserIdentity("Matias","public_key1",UUID.randomUUID().toString(),new byte[0],this.pluginFileSystem,this.pluginId));
 
             return intraWalletUserList1;
 
