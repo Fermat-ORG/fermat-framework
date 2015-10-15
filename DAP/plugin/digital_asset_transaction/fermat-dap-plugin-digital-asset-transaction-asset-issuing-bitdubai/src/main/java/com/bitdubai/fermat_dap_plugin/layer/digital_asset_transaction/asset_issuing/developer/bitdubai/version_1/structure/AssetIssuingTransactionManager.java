@@ -60,7 +60,6 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         setPluginDatabaseSystem(pluginDatabaseSystem);
         setAssetVaultManager(assetVaultManager);
         setCryptoAddressBookManager(cryptoAddressBookManager);
-        //TODO: when the OutgoingIntraUser is working, please, uncomment the following line
         setOutgoingIntraActorManager(outgoingIntraActorManager);
         this.digitalAssetCryptoTransactionFactory=new DigitalAssetCryptoTransactionFactory(this.pluginId,
                 this.cryptoVaultManager,
@@ -95,11 +94,6 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     public void setCryptoWallet(CryptoWallet cryptoWallet) {
         this.cryptoWallet=cryptoWallet;
     }
-
-    /*@Override
-    public TransactionProtocolManager<CryptoTransaction> getTransactionManager() {
-        return this;
-    }*/
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
@@ -188,41 +182,4 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
             throw new CantExecuteDatabaseOperationException(exception, "Getting the number of issued assets","Cannot check the asset issuing progress");
         }
     }
-
-    /**
-    @Override
-    public List<Transaction> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
-return null;
-
-        try{
-            List<Transaction> txs = new ArrayList<Transaction>();
-            AssetIssuingTransactionDao assetIssuingTransactionDao= new AssetIssuingTransactionDao(this.pluginDatabaseSystem, this.pluginId);
-
-            HashMap<String, String> transactionHeaders = assetIssuingTransactionDao.getPendingTransactionsHeaders();
-            for (Map.Entry<String, String> entry : transactionHeaders.entrySet()){
-                String txId = entry.getKey();
-                String txHash = entry.getValue();
-                //TODO: finish this
-                String[] addresses = getAddressFromTransaction(txHash);
-                CryptoAddress addressFrom = new CryptoAddress(addresses[0], CryptoCurrency.BITCOIN);
-                CryptoAddress addressTo = new CryptoAddress(addresses[1], CryptoCurrency.BITCOIN);
-                long amount = getAmountFromVault(txHash);
-
-
-
-                CryptoStatus cryptoStatus = db.getCryptoStatus(txId);
-
-
-                CryptoTransaction cryptoTransaction = new CryptoTransaction(txHash, addressFrom, addressTo,CryptoCurrency.BITCOIN, amount, cryptoStatus);
-
-                com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction tx = new com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction(UUID.fromString(txId),cryptoTransaction, Action.APPLY, getTransactionTimestampFromVault(txHash));
-                txs.add(tx);
-
-                db.updateTransactionProtocolStatus(UUID.fromString(txId), ProtocolStatus.SENDING_NOTIFIED);
-            }
-            return txs;
-        } catch (Exception e){
-            throw new CantDeliverPendingTransactionsException("I couldn't deliver pending transactions",e,null,null);
-        }
-    }*/
 }
