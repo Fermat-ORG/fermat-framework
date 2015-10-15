@@ -34,6 +34,8 @@ import com.melnykov.fab.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession.IDENTITY_INFO;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -158,9 +160,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     public List<CryptoBrokerIdentityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoBrokerIdentityInformation> data = new ArrayList<>();
         if (moduleManager == null) {
-            for (int i = 0; i < 20; i++) {
-                data.add(new CryptoBrokerIdentityInformationImp("Broker Name " + i));
-            }
+            loadTestData(data);
         } else {
             try {
                 data = moduleManager.getAllCryptoBrokersIdentities(0, 0);
@@ -168,6 +168,8 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
 
                 if (errorManager != null) {
+                    loadTestData(data);
+
                     errorManager.reportUnexpectedSubAppException(
                             SubApps.CBP_CRYPTO_BROKER_IDENTITY,
                             UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
@@ -179,9 +181,16 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         return data;
     }
 
+    private void loadTestData(List<CryptoBrokerIdentityInformation> data) {
+        for (int i = 0; i < 20; i++) {
+            data.add(new CryptoBrokerIdentityInformationImp("Broker Name " + i));
+        }
+    }
+
     @Override
     public void onItemClickListener(CryptoBrokerIdentityInformation data, int position) {
-
+        subAppsSession.setData(IDENTITY_INFO, data);
+        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY.getCode());
     }
 
     @Override

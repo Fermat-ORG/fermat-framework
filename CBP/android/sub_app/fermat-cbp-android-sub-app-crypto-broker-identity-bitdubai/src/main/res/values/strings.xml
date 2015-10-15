@@ -9,5 +9,5 @@
     <string name="broker_name">Broker name</string>
     <string name="identity_img">identity_image</string>
     <string name="description_search">Search</string>
-    <string name="Publish">Publish</string>
+    <string name="publish_identity">Publish identity</string>
 </resources>

@@ -4,7 +4,7 @@
     android:id="@+id/activity_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/identity_list_fragment_background">
+    android:background="@color/sub_app_background">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"

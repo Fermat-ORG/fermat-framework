@@ -25,18 +25,18 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
+import com.bitdubai.sub_app.crypto_broker_identity.common.model.CryptoBrokerIdentityInformationImp;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
-import com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor;
 
 import java.io.ByteArrayOutputStream;
 
-import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.EXCEPTION_THROWN;
-import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.INVALID_ENTRY_DATA;
-import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.SUCCESS;
+import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession.IDENTITY_INFO;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,15 +44,10 @@ import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdent
 public class EditCryptoBrokerIdentityFragment extends FermatFragment {
     // Constants
     private static final String TAG = "EditBrokerIdentity";
-
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
-
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
-    private static final String BROKER_NAME = "CRYPTO_BROKER_NAME";
-    private static final String BROKER_IMG_BIT_ARRAY = "CRYPTO_BROKER_IMG_BIT_ARRAY";
-    private static final String IDENTITY_IS_PUBLISH = "CRYPTO_IDENTITY_IS_PUBLISH";
 
     // Image data
     private Bitmap cryptoBrokerBitmap;
@@ -101,22 +96,27 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        mUpdateButton = (Button) layout.findViewById(R.id.create_crypto_broker_button);
+        mUpdateButton = (Button) layout.findViewById(R.id.update_crypto_broker_button);
         mBrokerName = (FermatTextView) layout.findViewById(R.id.crypto_broker_name);
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
         publishIdentityCheckBox = (FermatCheckBox) layout.findViewById(R.id.publish_identity);
 
+        CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) subAppsSession.getData(IDENTITY_INFO);
 
-        String brokerName = (String) subAppsSession.getData(BROKER_NAME);
-        mBrokerName.setText(brokerName);
+        if (identityInfo != null) {
+            mBrokerName.setText(identityInfo.getName());
 
-        byte[] imageInBytes = (byte[]) subAppsSession.getData(BROKER_IMG_BIT_ARRAY);
-        Bitmap bitmapImg = BitmapFactory.decodeByteArray(imageInBytes, 0, imageInBytes.length);
-        mBrokerImage.setImageBitmap(bitmapImg);
+            byte[] profileImage = identityInfo.getProfileImage();
+            if(profileImage != null){
+                cryptoBrokerBitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
+                mBrokerImage.setImageBitmap(cryptoBrokerBitmap);
+            }else if(identityInfo instanceof CryptoBrokerIdentityInformationImp){
+                mBrokerImage.setImageResource(R.drawable.deniz_profile_picture);
+            }
 
-        boolean isPublish = (boolean) subAppsSession.getData(IDENTITY_IS_PUBLISH);
-        publishIdentityCheckBox.setChecked(isPublish);
-
+            // TODO falta campo para saber si un broker tiene su identidad publica o no
+            publishIdentityCheckBox.setChecked(false);
+        }
 
         mBrokerImage.setOnClickListener(new View.OnClickListener() {
             @Override
