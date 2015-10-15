@@ -22,6 +22,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.DealsWithBitcoinNetwork;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -58,7 +60,7 @@ import java.util.regex.Pattern;
  * Created by loui on 18/03/15.
  * Modified by Arturo Vallone 25/04/2015
  */
-public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManager, DatabaseManagerForDevelopers, DealsWithCryptoAddressBook, DealsWithCryptoVault, DealsWithErrors, DealsWithEvents, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, Plugin, Service {
+public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManager, DatabaseManagerForDevelopers, DealsWithCryptoAddressBook, DealsWithCryptoVault, DealsWithErrors, DealsWithBitcoinNetwork, DealsWithEvents, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, Plugin, Service {
 
     /*
      * DealsWithCryptoAddressBook member variables
@@ -74,6 +76,11 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
      * DealsWithErrors Interface member variables.
      */
     private ErrorManager errorManager;
+
+    /**
+     * DealsWithBitcoinNetwork interface member variable
+     */
+    BitcoinNetworkManager bitcoinNetworkManager;
 
     /**
      * DealsWithEvents Interface member variables.
@@ -175,6 +182,13 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
         this.errorManager = errorManager;
     }
 
+    /**
+     * DealsWithBitcoinNetwork interface implementatin
+     */
+    @Override
+    public void setBitcoinNetworkManager(BitcoinNetworkManager bitcoinNetworkManager) {
+        this.bitcoinNetworkManager = bitcoinNetworkManager;
+    }
 
     /**
      * DealsWithLogger interface implementation
@@ -373,6 +387,7 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
         this.monitor = new IncomingCryptoMonitorAgent();
         try {
             ((DealsWithCryptoVault) this.monitor).setCryptoVaultManager(this.cryptoVaultManager);
+            ((DealsWithBitcoinNetwork) this.monitor).setBitcoinNetworkManager(this.bitcoinNetworkManager);
             ((DealsWithErrors) this.monitor).setErrorManager(this.errorManager);
             ((DealsWithRegistry) this.monitor).setRegistry(this.registry);
             this.monitor.start();
