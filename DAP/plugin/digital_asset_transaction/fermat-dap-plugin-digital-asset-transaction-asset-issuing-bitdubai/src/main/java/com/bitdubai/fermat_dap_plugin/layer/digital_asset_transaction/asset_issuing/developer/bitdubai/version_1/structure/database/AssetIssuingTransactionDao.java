@@ -239,11 +239,6 @@ public class AssetIssuingTransactionDao {
 
     }
 
-    private List<String> getDigitalAssetPublicKeys(){
-        //No se si esto me pueda servir a futuro.
-        return null;
-    }
-
     public String getDigitalAssetPublicKeyById(String transactionId) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
 
         return getStringFieldFromAssetIssuingTableById(transactionId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PUBLIC_KEY_COLUMN_NAME);
@@ -722,7 +717,6 @@ public class AssetIssuingTransactionDao {
             for(DatabaseTableRecord databaseTableRecord : databaseTableRecords){
                 String genesisTransaction=databaseTableRecord.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME);
                 genesisTransactionsFromDigitalAssetReceived.add(genesisTransaction);
-                //updateDigitalAssetTransactionStatusByGenesisTransaction(genesisTransaction, TransactionStatus.DELIVERED);
                 databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME, TransactionStatus.DELIVERED.getCode());
                 databaseTable.updateRecord(databaseTableRecord);
             }
@@ -757,6 +751,14 @@ public class AssetIssuingTransactionDao {
                 AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_DIGITAL_ASSET_HASH_COLUMN_NAME);
     }
 
+    /**
+     * This method returns a <code>List<String></code> from the Asset issuing table.
+     * @param fieldCode Column name used as index
+     * @param valueAsked the "needle" seeked
+     * @param columnToReturn column that cointains the required value
+     * @return
+     * @throws CantCheckAssetIssuingProgressException
+     */
     private List<String> getValueListFromAssetIssuingTableByFieldCode(String fieldCode, String valueAsked, String columnToReturn) throws CantCheckAssetIssuingProgressException {
         try{
             this.database=openDatabase();
