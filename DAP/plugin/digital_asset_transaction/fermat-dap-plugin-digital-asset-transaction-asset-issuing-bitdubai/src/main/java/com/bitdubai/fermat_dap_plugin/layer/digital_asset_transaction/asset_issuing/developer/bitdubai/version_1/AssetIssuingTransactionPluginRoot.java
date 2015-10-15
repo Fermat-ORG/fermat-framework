@@ -190,7 +190,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             digitalAssetIssuingVault =new DigitalAssetIssuingVault(this.pluginId, this.pluginFileSystem, this.errorManager);
             digitalAssetIssuingVault.setAssetIssuerWalletManager(this.assetIssuerWalletManager);
             this.assetIssuingTransactionDao=new AssetIssuingTransactionDao(this.pluginDatabaseSystem,this.pluginId);
-            this.assetIssuingEventRecorderService =new AssetIssuingRecorderService(assetIssuingTransactionDao);
+            this.assetIssuingEventRecorderService =new AssetIssuingRecorderService(assetIssuingTransactionDao, eventManager);
             this.assetIssuingTransactionManager=new AssetIssuingTransactionManager(this.pluginId,
                     this.cryptoVaultManager,
                     this.bitcoinWalletManager,
@@ -203,6 +203,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             this.assetIssuingTransactionManager.setDigitalAssetMetadataVault(digitalAssetIssuingVault);
             this.assetIssuingTransactionManager.setAssetIssuingTransactionDao(assetIssuingTransactionDao);
             try{
+                //printSomething("Event manager:"+this.eventManager);
                 this.assetIssuingEventRecorderService.start();
             } catch(CantStartServiceException exception){
                 //This plugin must be stopped if this happens.
