@@ -388,8 +388,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
             /**
              * now I will start the TransactionNotificationAgent to monitor
              */
-            transactionNotificationAgent = new TransactionNotificationAgent(eventManager, pluginDatabaseSystem, errorManager, pluginId, userPublicKey);
-            transactionNotificationAgent.setLogManager(this.logManager);
+            transactionNotificationAgent = new TransactionNotificationAgent(eventManager, errorManager, logManager, pluginDatabaseSystem, pluginId, userPublicKey);
             try {
                 transactionNotificationAgent.start();
             } catch (CantStartAgentException cantStartAgentException ) {

@@ -405,7 +405,6 @@ public class BitcoinCryptoVault implements
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Sending bitcoins...", "Address to:" + addressTo.getAddress() + "TxId: " + fermatTxId, null);
 
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
-            db.setVault(vault);
 
             // check if the transaction was already sent, this might be an error. we're not going to send it again.
             if (!db.isNewFermatTransaction(fermatTxId)) {
@@ -435,7 +434,7 @@ public class BitcoinCryptoVault implements
             if (isSendingMoneyToMyself(tx)) {
                 throw new InvalidSendToAddressException(
                         "Address to:" + addressTo.getAddress(),
-                        "The user entered an address given by this vault."
+                        "The user entered an address given by his own vault."
                 );
             }
 
@@ -445,19 +444,19 @@ public class BitcoinCryptoVault implements
             // after we persist the new Transaction, we'll persist it as a Fermat transaction.
             db.persistnewFermatTransaction(fermatTxId.toString());
 
-            vault.commitTx(request.tx);
+            vault.commitTx(tx);
 
             PeerGroup peers = (PeerGroup) bitcoinCryptoNetworkManager.getBroadcasters();
 
             // well broadcast and wait for the confirmation of the network
-            TransactionBroadcast transactionBroadcast = peers.broadcastTransaction(request.tx);
+            TransactionBroadcast transactionBroadcast = peers.broadcastTransaction(tx);
             ListenableFuture<Transaction> listenableFuture = transactionBroadcast.broadcast();
 
             /*
              * the transaction was broadcasted and accepted by the nwetwork
              * I will persist it to inform it when the confidence level changes
              */
-            listenableFuture.get();
+            Transaction transaction = listenableFuture.get();
 
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: bitcoin sent!!!", "Address to: " + addressTo.getAddress(), "Amount: " + amount);
 
@@ -545,7 +544,6 @@ public class BitcoinCryptoVault implements
          */
         try{
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
-            db.setVault(vault);
             db.updateTransactionProtocolStatus(transactionID, ProtocolStatus.RECEPTION_NOTIFIED);
         } catch (Exception e){
             throw new CantConfirmTransactionException("There was an error trying to confirm reception of a transaction", e, "TransactionId: " + transactionID.toString(), "Database plugin error.");
@@ -560,7 +558,6 @@ public class BitcoinCryptoVault implements
         try{
             List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction> txs = new ArrayList<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction>();
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
-            db.setVault(vault);
             /**
              * Im getting the transaction headers which is a map with transactionID and Transaction Hash. I will use this information to access the vault.
              */
@@ -727,7 +724,6 @@ public class BitcoinCryptoVault implements
         try {
 
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
-            db.setVault(vault);
             return db.getLastCryptoStatus(txHash);
 
         } catch(CantLoadTableToMemoryException exception){
