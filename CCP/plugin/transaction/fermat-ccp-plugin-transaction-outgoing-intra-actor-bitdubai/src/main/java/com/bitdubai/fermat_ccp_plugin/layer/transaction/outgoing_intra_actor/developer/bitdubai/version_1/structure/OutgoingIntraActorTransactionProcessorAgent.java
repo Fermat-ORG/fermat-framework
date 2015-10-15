@@ -58,7 +58,7 @@ public class OutgoingIntraActorTransactionProcessorAgent  {
         this.errorManager                            = errorManager;
         this.cryptoVaultManager                      = cryptoVaultManager;
         this.bitcoinWalletManager                    = bitcoinWalletManager;
-        this.outgoingIntraActorDao = outgoingIntraActorDao;
+        this.outgoingIntraActorDao                   = outgoingIntraActorDao;
         this.transactionHandlerFactory               = transactionHandlerFactory;
         this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
     }
@@ -247,7 +247,7 @@ public class OutgoingIntraActorTransactionProcessorAgent  {
 
                 for (OutgoingIntraActorTransactionWrapper transaction : transactionList) {
                     try {
-                        CryptoStatus cryptoStatus = this.cryptoVaultManager.getCryptoStatus(transaction.getTransactionId());
+                        CryptoStatus cryptoStatus = this.cryptoVaultManager.getCryptoStatus(transaction.getTransactionHash());
                         this.transactionHandlerFactory.getHandler(transaction.getReferenceWallet()).handleTransaction(transaction, cryptoStatus);
                     } catch (CouldNotGetCryptoStatusException | OutgoingIntraActorCantFindHandlerException | OutgoingIntraActorCantHandleTransactionException e) {
                         reportUnexpectedException(e);

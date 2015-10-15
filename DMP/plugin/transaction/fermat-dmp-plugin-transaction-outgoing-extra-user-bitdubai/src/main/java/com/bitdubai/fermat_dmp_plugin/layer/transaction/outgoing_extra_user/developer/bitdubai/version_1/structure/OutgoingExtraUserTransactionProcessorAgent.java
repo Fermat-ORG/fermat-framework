@@ -218,7 +218,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
         /*
          * Now we proceed to apply the transactions sent to the bitcoin network to the wallet book
-         * balance. We need to check the state of the transaction to the crypto vault before
+         * balance. We need to check the state of the transaction in the crypto vault before
          * discounting it
          */
         try {
@@ -233,7 +233,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
             try {
                 BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey());
-                CryptoStatus cryptoStatus = this.cryptoVaultManager.getCryptoStatus(transaction.getTransactionId());
+                CryptoStatus cryptoStatus = this.cryptoVaultManager.getCryptoStatus(transaction.getTransactionHash());
                 TransactionHandler.handleTransaction(transaction, cryptoStatus, bitcoinWalletWallet, this.dao,this.errorManager);
 
             } catch (Exception exception) {
