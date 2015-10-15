@@ -1,10 +1,6 @@
-== FERMAT for developers 2: Superlayers
+== FERMAT DPN: Digital Private Network
+Securing your funds 
 
-=== FERMAT OSA 
-=== FERMAT BCH
-=== FERMAT P2P
-
-
-
+=== 
 
 
