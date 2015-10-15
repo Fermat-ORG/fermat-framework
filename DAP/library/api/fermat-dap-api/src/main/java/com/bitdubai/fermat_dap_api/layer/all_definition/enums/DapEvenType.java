@@ -28,7 +28,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.CompleteReques
  */
 public enum DapEvenType implements FermatEventEnum {
 
-    COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION("CL_RLCRN") {
+    COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION("CL_RLAURN") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
             return new CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventListener(this, eventMonitor);
         }
@@ -36,7 +36,7 @@ public enum DapEvenType implements FermatEventEnum {
             return new CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent(this);
         }
     },
-    COMPLETE_CLIENT_ASSET_USER_REGISTRATION_NOTIFICATION("CL_CAURN") {
+    COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION("CL_CAURN") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
             return new CompleteClientAssetUserActorRegistrationNotificationEventListener(this, eventMonitor);
         }
