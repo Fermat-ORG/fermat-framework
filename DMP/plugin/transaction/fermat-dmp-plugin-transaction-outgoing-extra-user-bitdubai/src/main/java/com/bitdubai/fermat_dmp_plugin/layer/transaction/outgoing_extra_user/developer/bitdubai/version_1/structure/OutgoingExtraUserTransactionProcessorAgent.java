@@ -233,7 +233,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
             try {
                 BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey());
-                CryptoStatus cryptoStatus = this.cryptoVaultManager.getCryptoStatus(transaction.getTransactionId());
+                CryptoStatus cryptoStatus = this.cryptoVaultManager.getCryptoStatus(transaction.getTransactionHash());
                 TransactionHandler.handleTransaction(transaction, cryptoStatus, bitcoinWalletWallet, this.dao,this.errorManager);
 
             } catch (Exception exception) {

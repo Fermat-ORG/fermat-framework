@@ -70,7 +70,17 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by rodrigo on 09/06/15.
  */
-public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWithBitcoinCryptoNetwork, DealsWithEvents,DealsWithErrors, DealsWithPluginIdentity, DealsWithPluginDatabaseSystem, DealsWithLogger, DealsWithPluginFileSystem, TransactionProtocolManager{
+public class BitcoinCryptoVault implements
+        BitcoinManager,
+        CryptoVault,
+        DealsWithBitcoinCryptoNetwork,
+        DealsWithEvents,
+        DealsWithErrors,
+        DealsWithPluginIdentity,
+        DealsWithPluginDatabaseSystem,
+        DealsWithLogger,
+        DealsWithPluginFileSystem,
+        TransactionProtocolManager {
 
     /**
      * BitcoinCryptoVault member variables
@@ -711,14 +721,14 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     }
 
     // modified by lnacosta
-    public CryptoStatus getCryptoStatus(final UUID transactionId) throws CantExecuteQueryException                     ,
+    public CryptoStatus getCryptoStatus(final String txHash) throws CantExecuteQueryException                     ,
                                                                          UnexpectedResultReturnedFromDatabaseException {
 
         try {
 
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
             db.setVault(vault);
-            return db.getLastCryptoStatus(transactionId.toString());
+            return db.getLastCryptoStatus(txHash);
 
         } catch(CantLoadTableToMemoryException exception){
 

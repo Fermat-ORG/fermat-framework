@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.ver
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -499,7 +500,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         }
     }
 
-    public CryptoStatus getLastCryptoStatus(String txHash) throws CantLoadTableToMemoryException {
+    public CryptoStatus getLastCryptoStatus(String txHash) throws CantLoadTableToMemoryException, InvalidParameterException {
         DatabaseTable cryptoTransactionsTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
         cryptoTransactionsTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
         cryptoTransactionsTable.loadToMemory();
@@ -510,7 +511,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         } else {
             CryptoStatus lastCryptoStatus = null;
             for (DatabaseTableRecord record : databaseTableRecordList) {
-                CryptoStatus cryptoStatus = CryptoStatus.valueOf(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME));
+                CryptoStatus cryptoStatus = CryptoStatus.getByCode(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME));
                 if (lastCryptoStatus == null)
                     lastCryptoStatus = cryptoStatus;
                 else if (lastCryptoStatus.getOrder() < cryptoStatus.getOrder())
