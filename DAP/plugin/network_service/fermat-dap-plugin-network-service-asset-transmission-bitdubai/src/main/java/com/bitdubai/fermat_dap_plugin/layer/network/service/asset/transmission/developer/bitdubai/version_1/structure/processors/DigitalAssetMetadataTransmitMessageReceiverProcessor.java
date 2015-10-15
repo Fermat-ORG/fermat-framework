@@ -6,16 +6,13 @@
  */
 package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.processors;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DapEvenType;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
-import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.AssetTransmissionJsonAttNames;
@@ -79,7 +76,7 @@ public class DigitalAssetMetadataTransmitMessageReceiverProcessor extends Fermat
             digitalAssetMetadataTransaction.setDigitalAssetMetadata(digitalAssetMetadata);
            // digitalAssetMetadataTransaction.setDistributionStatus(DistributionStatus.CRYPTO_RECEIVED); TODO: REVISAR STATUS
             digitalAssetMetadataTransaction.setType(DigitalAssetMetadataTransactionType.META_DATA_TRANSMIT);
-            digitalAssetMetadataTransaction.setProcessed(DigitalAssetMetadataTransactionImpl.PROCESSED_NO);
+            digitalAssetMetadataTransaction.setProcessed(DigitalAssetMetadataTransactionImpl.NO_PROCESSED);
 
             /*
              * Save into data base for audit control

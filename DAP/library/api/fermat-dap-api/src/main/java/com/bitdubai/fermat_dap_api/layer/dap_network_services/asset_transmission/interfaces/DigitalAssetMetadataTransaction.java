@@ -63,4 +63,10 @@ public interface DigitalAssetMetadataTransaction {
      */
     DigitalAssetMetadataTransactionType getType() ;
 
+    /**
+     * Get the Timestamp
+     * @return Long
+     */
+    public Long getTimestamp();
+
 }

@@ -9,8 +9,6 @@ package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DapEvenType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
@@ -77,7 +75,7 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
                 digitalAssetMetadataTransactionImpl.setReceiverId(fermatMessage.getReceiver());
                 digitalAssetMetadataTransactionImpl.setReceiverType(receiverType);
                 digitalAssetMetadataTransactionImpl.setDistributionStatus(distributionStatus);
-                digitalAssetMetadataTransactionImpl.setProcessed(DigitalAssetMetadataTransactionImpl.PROCESSED_NO);
+                digitalAssetMetadataTransactionImpl.setProcessed(DigitalAssetMetadataTransactionImpl.NO_PROCESSED);
             }
 
             /*

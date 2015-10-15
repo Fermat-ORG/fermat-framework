@@ -27,7 +27,12 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.template.TemplateManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -48,6 +53,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendTransactionNewStatusNotificationException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DigitalAssetMetadataTransaction;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
@@ -100,7 +106,7 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServiceManager,TemplateManager, Service, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, DatabaseManagerForDevelopers {
+public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServiceManager, Service, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, DatabaseManagerForDevelopers {
 
     /**
      * Represent the EVENT_SOURCE
@@ -735,8 +741,6 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
 
         }
 
-
-
     }
 
     @Override
@@ -768,8 +772,8 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
              * RECOMMENDATION: the content have to be a json string
              */
             String messageContent = "*********************************************************************************\n " +
-                    "* HELLO TEAM...  This message was sent from the device of Roberto Requena Asset Transmission  Network Service... :) *\n" +
-                    "*********************************************************************************";
+                                    "* HELLO TEAM...  This message was sent from the device of Roberto Requena Asset Transmission  Network Service... :) *\n" +
+                                    "*********************************************************************************";
 
             /*
              * Send a message using the local representation
@@ -940,7 +944,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             digitalAssetMetadataTransaction.setDigitalAssetMetadata(digitalAssetMetadataToSend);
             digitalAssetMetadataTransaction.setDistributionStatus(DistributionStatus.DELIVERING);
             digitalAssetMetadataTransaction.setType(DigitalAssetMetadataTransactionType.META_DATA_TRANSMIT);
-            digitalAssetMetadataTransaction.setProcessed(DigitalAssetMetadataTransactionImpl.PROCESSED_YES);
+            digitalAssetMetadataTransaction.setProcessed(DigitalAssetMetadataTransactionImpl.PROCESSED);
 
             /*
              * Save into data base
@@ -1129,5 +1133,81 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
      */
     public ErrorManager getErrorManager() {
         return errorManager;
+    }
+
+
+    /**
+     * (non-Javadoc)
+     * @see TransactionProtocolManager#confirmReception(UUID)
+     */
+    @Override
+    public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
+
+        try {
+
+            DigitalAssetMetadataTransactionImpl digitalAssetMetadataTransaction = digitalAssetMetaDataTransactionDao.findById(transactionID.toString());
+            digitalAssetMetadataTransaction.setProcessed(DigitalAssetMetadataTransactionImpl.PROCESSED);
+            digitalAssetMetaDataTransactionDao.update(digitalAssetMetadataTransaction);
+
+        } catch (Exception e) {
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+            throw new CantConfirmTransactionException(CantConfirmTransactionException.DEFAULT_MESSAGE,e, contextBuffer.toString(), "Database error" );
+        }
+
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see TransactionProtocolManager#getPendingTransactions(Specialist)
+     */
+    @Override
+    public List<Transaction<DigitalAssetMetadataTransaction>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
+
+        List<Transaction<DigitalAssetMetadataTransaction>> pendingTransactions = new ArrayList<>();
+
+        try {
+
+            List<DigitalAssetMetadataTransactionImpl> pendingDigitalAssetMetadataTransactions = digitalAssetMetaDataTransactionDao.findAll(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_PROCESSED_COLUMN_NAME, DigitalAssetMetadataTransactionImpl.NO_PROCESSED);
+
+            if (pendingTransactions != null && !pendingTransactions.isEmpty()){
+
+                for (DigitalAssetMetadataTransactionImpl digitalAssetMetadataTransaction: pendingDigitalAssetMetadataTransactions) {
+
+                    Transaction<DigitalAssetMetadataTransaction> transaction = new Transaction<>(digitalAssetMetadataTransaction.getTransactionId(),
+                                                                                                 (DigitalAssetMetadataTransaction) digitalAssetMetadataTransaction,
+                                                                                                 Action.APPLY,
+                                                                                                 digitalAssetMetadataTransaction.getTimestamp());
+
+                    pendingTransactions.add(transaction);
+
+                }
+
+            }
+
+        } catch (CantReadRecordDataBaseException e) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+           throw new CantDeliverPendingTransactionsException(CantDeliverPendingTransactionsException.DEFAULT_MESSAGE,e, contextBuffer.toString(), "No pending Transaction" );
+        }
+
+        return pendingTransactions;
     }
 }

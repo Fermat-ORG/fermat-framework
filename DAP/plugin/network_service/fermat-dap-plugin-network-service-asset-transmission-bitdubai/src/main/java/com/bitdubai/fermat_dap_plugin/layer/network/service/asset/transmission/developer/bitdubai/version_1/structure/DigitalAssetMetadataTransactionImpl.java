@@ -27,14 +27,14 @@ import java.util.UUID;
 public class DigitalAssetMetadataTransactionImpl implements DigitalAssetMetadataTransaction {
 
     /**
-     * Represent the value of PROCESSED_YES
+     * Represent the value of PROCESSED
      */
-    public final static String PROCESSED_YES = "Y";
+    public final static String PROCESSED = "Y";
 
     /**
-     * Represent the value of PROCESSED_NO
+     * Represent the value of NO_PROCESSED
      */
-    public final static String PROCESSED_NO  = "N";
+    public final static String NO_PROCESSED = "N";
 
     /**
      * Represent the value of transactionId
@@ -290,8 +290,8 @@ public class DigitalAssetMetadataTransactionImpl implements DigitalAssetMetadata
     }
 
     /**
-     * Get the Timestamp
-     * @return Long
+     * (non-javadoc)
+     * @see DigitalAssetMetadataTransaction#getTimestamp()
      */
     public Long getTimestamp() {
         return timestamp;
