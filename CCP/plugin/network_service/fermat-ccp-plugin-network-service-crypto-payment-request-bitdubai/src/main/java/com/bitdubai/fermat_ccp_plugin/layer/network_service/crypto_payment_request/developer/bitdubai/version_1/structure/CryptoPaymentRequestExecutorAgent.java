@@ -14,14 +14,12 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.Networ
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestAction;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.CryptoPaymentRequestNetworkServicePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantChangeRequestProtocolStateException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException;
@@ -55,9 +53,6 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
     // Represent the receive and send cycles for this agent.
     private Thread toSend   ;
     private Thread toReceive;
-
-    // Is the thread running?
-    private Boolean running;
 
     // network services registered
     private Map<String, String> poolConnectionsWaitingForResponse;
@@ -100,7 +95,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
         this.toSend = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (running)
+                while (isRunning())
                     sendCycle();
             }
         });
@@ -109,7 +104,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
         this.toReceive = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (running)
+                while (isRunning())
                     receiveCycle();
             }
         });

@@ -61,12 +61,10 @@ import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.d
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.AssetTransmissionJsonAttNames;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.AssetTransmissionMsjContentType;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.EncodeMsjContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -80,8 +78,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -419,7 +415,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
          /*
          * Listen and handle Complete Component Registration Notification Event
          */
-        FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
+        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
@@ -427,7 +423,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
          /*
          * Listen and handle Complete Request List Component Registered Notification Event
          */
-        fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
+        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
@@ -435,7 +431,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
         /*
          * Listen and handle Complete Request List Component Registered Notification Event
          */
-        fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteComponentConnectionRequestNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
@@ -443,7 +439,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
         /*
          * Listen and handle new message sent
          */
-        fermatEventListener = eventManager.getNewListener(EventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
         fermatEventListener.setEventHandler(new NewSentMessagesNotificationEventHandler());
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
@@ -451,7 +447,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
         /*
          * Listen and handle new message receive notification
          */
-        fermatEventListener = eventManager.getNewListener(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
         fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler());
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
@@ -461,6 +457,8 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
 
     @Override
     public void start() throws CantStartPluginException {
+
+        System.out.println("AssetTransmissionNetworkService - Starting");
         logManager.log(AssetTransmissionPluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetTransmissionNetworkService - Starting", "AssetTransmissionPluginRoot - Starting", "AssetTransmissionPluginRoot - Starting");
 
           /*
@@ -475,7 +473,6 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
              */
             identity = new ECCKeyPair();
 
-
             /*
             * Initialize the data base
             */
@@ -487,12 +484,10 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
-
             /*
              * Initialize listeners
              */
             initializeListener();
-
 
             /*
              * Verify if the communication cloud client is active
@@ -509,9 +504,6 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             /*
              * Its all ok, set the new status
             */
-
-
-
             this.serviceStatus = ServiceStatus.STARTED;
 
         } catch (CantInitializeTemplateNetworkServiceDatabaseException exception) {

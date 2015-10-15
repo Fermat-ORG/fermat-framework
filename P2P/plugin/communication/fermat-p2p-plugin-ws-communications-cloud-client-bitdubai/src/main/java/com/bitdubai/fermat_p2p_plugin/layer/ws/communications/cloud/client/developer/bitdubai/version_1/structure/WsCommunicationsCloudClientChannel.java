@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketDecoder;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteClientComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
@@ -98,7 +98,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
 
     @Override
     public void onWebsocketPong(WebSocket conn, Framedata f) {
-        System.out.println(" WsCommunicationsCloudClientChannel - onWebsocketPong");
+        System.out.println(" WsCommunicationsCloudClientChannel - onWebSocketPong");
         System.out.println(" WsCommunicationsCloudClientChannel - conn = "+conn);
         System.out.println(" WsCommunicationsCloudClientChannel - f = "+f);
     }
@@ -212,7 +212,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
             validateFermatPacketSignature(fermatPacketReceive);
         }
 
-        System.out.println(" WsCommunicationsCloudClientChannel - decode fermatPacket " + fermatPacketReceive);
+        System.out.println(" WsCommunicationsCloudClientChannel - decode fermatPacket " + fermatPacketReceive.toJson());
 
 
         //verify is packet supported
@@ -234,9 +234,6 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
             System.out.println(" WsCommunicationsCloudClientChannel - Packet type " + fermatPacketReceive.getFermatPacketType() + "is not supported");
 
         }
-
-
-
 
     }
 
@@ -437,7 +434,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     public void launchCompleteClientComponentRegistrationNotificationEvent() {
 
-        FermatEvent platformEvent = eventManager.getNewEvent(EventType.COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION);
+        FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION);
         CompleteClientComponentRegistrationNotificationEvent event =  (CompleteClientComponentRegistrationNotificationEvent) platformEvent;
         event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
         event.setMessage("Cloud client communication, registered and established connection.");

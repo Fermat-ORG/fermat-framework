@@ -6,8 +6,8 @@ import com.bitdubai.fermat_cry_api.CryptoException;
 /**
  * Created by rodrigo on 2015.06.19..
  */
-public class InsufficientMoneyException extends FermatException {
-    public InsufficientMoneyException(String message, Exception cause, String context, String possibleReason) {
+public class InsufficientCryptoFundsException extends FermatException {
+    public InsufficientCryptoFundsException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
