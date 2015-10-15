@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorAcceptIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorAskIntraUserForAcceptanceException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorCancellingIntraUserException;
@@ -34,7 +35,7 @@ public interface IntraUserManager {
      * @return The list of suggestions
      * @throws ErrorSearchingSuggestionsException
      */
-    public List<IntraUser> getIntraUsersSuggestions(int max,int offset) throws ErrorSearchingSuggestionsException;
+    public List<IntraUserInformation> getIntraUsersSuggestions(int max, int offset) throws ErrorSearchingSuggestionsException;
 
     /**
      * The method <code>askIntraUserForAcceptance</code> sends a connection request to anothe intra user.

@@ -2,7 +2,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
 
 /**
@@ -10,17 +10,17 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Even
  */
 public abstract class AbstractP2PFermatEvent implements FermatEvent {
 
-    private final EventType eventType;
+    private final P2pEventType p2pEventType;
 
     private EventSource eventSource;
 
-    public AbstractP2PFermatEvent(EventType eventType) {
-        this.eventType = eventType;
+    public AbstractP2PFermatEvent(P2pEventType p2pEventType) {
+        this.p2pEventType = p2pEventType;
     }
 
     @Override
-    public EventType getEventType() {
-        return this.eventType;
+    public P2pEventType getEventType() {
+        return this.p2pEventType;
     }
 
     @Override

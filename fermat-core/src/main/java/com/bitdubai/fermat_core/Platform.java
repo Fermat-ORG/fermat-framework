@@ -27,6 +27,8 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.DealsWithCryptoPaymentRequestNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.DealsWithCryptoPayment;
+import com.bitdubai.fermat_core.layer.cbp.identity.CBPIdentityLayer;
+import com.bitdubai.fermat_core.layer.cbp.sub_app_module.CBPSubAppModuleLayer;
 import com.bitdubai.fermat_core.layer.ccp.actor.CCPActorLayer;
 import com.bitdubai.fermat_core.layer.ccp.request.CCPRequestLayer;
 import com.bitdubai.fermat_core.layer.dap_actor_network_service.DAPActorNetworkServiceLayer;
@@ -702,7 +704,7 @@ public class Platform implements Serializable {
             boolean BCH = true;
             boolean BNK = true;
             boolean BNP = true;
-            boolean CBP = true;
+            boolean CBP = false;
             boolean CCM = true;
             boolean CCP = true;
             boolean CRY = true;
@@ -743,69 +745,7 @@ public class Platform implements Serializable {
 
             }
 
-            if (CCP) {
 
-           /*
-            * Plugin CCP Crypto Payment Request Network Service
-            * -----------------------------
-            */
-                Plugin cryptoPaymentRequestNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoPaymentRequestPlugin();
-                injectLayerReferences(cryptoPaymentRequestNetworkService);
-                injectPluginReferencesAndStart(cryptoPaymentRequestNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE);
-
-           /*
-            * Plugin CCP Crypto Trasmission Network Service
-            * -----------------------------
-            */
-                Plugin cryptoTransmissionNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoTransmissionPlugin();
-                injectLayerReferences(cryptoTransmissionNetworkService);
-                injectPluginReferencesAndStart(cryptoTransmissionNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_CRYPTO_TRANSMISSION_NETWORK_SERVICE);
-
-
-           /*
-            * Plugin Crypto Addresses Network Service
-            * -----------------------------
-            */
-                Plugin cryptoAddressesNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoAddressesPlugin();
-                injectPluginReferencesAndStart(cryptoAddressesNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE);
-
-
-           /*
-            * Plugin Wallet Contacts Middleware
-            * ----------------------------------
-            */
-                Plugin walletContactsMiddleware = ((CCPMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_MIDDLEWARE_LAYER)).getWalletContactsPlugin();
-                injectPluginReferencesAndStart(walletContactsMiddleware, Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE);
-
-           /*
-            * Plugin CCP Crypto Payment Request
-            * ----------------------------------
-            */
-                Plugin cryptoPaymentRequest = ((CCPRequestLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_REQUEST_LAYER)).getCryptoPaymentPlugin();
-                injectPluginReferencesAndStart(cryptoPaymentRequest, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST);
-
-           /*
-            * Plugin Intra User Identity
-            * -----------------------------
-            */
-                Plugin ccpIntraWalletUserIdentity = ((CCPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_IDENTITY_LAYER)).getIntraWalletUserPlugin();
-                injectPluginReferencesAndStart(ccpIntraWalletUserIdentity, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY);
-
-           /*
-            * Plugin CCP Outgoing Intra Actor Transaction
-            * ----------------------------------
-            */
-                Plugin outgoingIntraActorPlugin = ((CCPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_TRANSACTION_LAYER)).getOutgoingIntraActorPlugin();
-                injectPluginReferencesAndStart(outgoingIntraActorPlugin, Plugins.BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION);
-
-           /*
-            * Plugin Intra User Actor
-            * -----------------------------
-            */
-                Plugin intraUserActor = ((CCPActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_ACTOR_LAYER)).getIntraWalletUserPlugin();
-                injectPluginReferencesAndStart(intraUserActor, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR);
-
-            }
 
             if (PIP) {
            /*
@@ -897,6 +837,173 @@ public class Platform implements Serializable {
             */
                 Plugin incomingCryptoTransaction = ((CryptoRouterLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CRYPTO_ROUTER_LAYER)).getIncomingCrypto();
                 injectPluginReferencesAndStart(incomingCryptoTransaction, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
+
+            }
+
+            if (WPD) {
+
+           /*
+            * Plugin Publisher Identity
+            * -----------------------------
+            */
+                Plugin publisherIdentity = ((WPDIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_IDENTITY_LAYER)).getPublisherIdentity();
+                injectPluginReferencesAndStart(publisherIdentity, Plugins.BITDUBAI_WPD_PUBLISHER_IDENTITY);
+
+           /*
+            * Plugin Wallet Manager
+            * -----------------------------
+            */
+                Plugin walletManager = ((WPDDesktopModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_DESKTOP_MODULE_LAYER)).getWalletManager();
+                injectPluginReferencesAndStart(walletManager, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
+
+           /*
+            * Plugin Wallet Factory Middleware
+            * ----------------------------------
+            */
+                Plugin walletFactoryMiddleware = ((WPDMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_MIDDLEWARE_LAYER)).getWalletFactoryPlugin();
+                injectPluginReferencesAndStart(walletFactoryMiddleware, Plugins.BITDUBAI_WPD_WALLET_FACTORY_MIDDLEWARE);
+
+           /*
+            * Plugin Wallet Manager Middleware
+            * ----------------------------------
+            */
+                Plugin walletManagerMiddleware = ((WPDMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_MIDDLEWARE_LAYER)).getWalletManagerPlugin();
+                injectPluginReferencesAndStart(walletManagerMiddleware, Plugins.BITDUBAI_WPD_WALLET_MANAGER_MIDDLEWARE);
+
+           /*
+            * Plugin Wallet Publisher Middleware
+            * ----------------------------------
+            */
+                Plugin walletPublisherMiddleware = ((WPDMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_MIDDLEWARE_LAYER)).getWalletPublisherPlugin();
+                injectPluginReferencesAndStart(walletPublisherMiddleware, Plugins.BITDUBAI_WPD_WALLET_PUBLISHER_MIDDLEWARE);
+
+           /*
+            * Plugin Wallet Store Middleware
+            * ----------------------------------
+            */
+                Plugin walletStoreMiddleware = ((WPDMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_MIDDLEWARE_LAYER)).getWalletStorePlugin();
+                injectPluginReferencesAndStart(walletStoreMiddleware, Plugins.BITDUBAI_WPD_WALLET_STORE_MIDDLEWARE);
+
+           /*
+            * Plugin Wallet Store Module
+            * ----------------------------------
+            */
+                Plugin walletStoreModule = ((WPDSubAppModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_SUB_APP_MODULE_LAYER)).getWalletStore();
+                injectPluginReferencesAndStart(walletStoreModule, Plugins.BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE);
+
+           /*
+            * Plugin Wallet factory
+            * -----------------------------
+            */
+                Plugin walletFactoryModule = ((WPDSubAppModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_SUB_APP_MODULE_LAYER)).getWalletFactory();
+                injectPluginReferencesAndStart(walletFactoryModule, Plugins.BITDUBAI_WPD_WALLET_FACTORY_SUB_APP_MODULE);
+
+           /*
+            * Plugin Wallet publisher Module
+            * ----------------------------------
+            */
+                Plugin walletPublisherModule = ((WPDSubAppModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_SUB_APP_MODULE_LAYER)).getWalletPublisher();
+                injectPluginReferencesAndStart(walletPublisherModule, Plugins.BITDUBAI_WPD_WALLET_PUBLISHER_SUB_APP_MODULE);
+
+           /*
+            * Plugin Wallet settings Middleware
+            * ----------------------------------
+            */
+                Plugin walletSettingsMiddleware = ((WPDMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_MIDDLEWARE_LAYER)).getWalletSettingsPlugin();
+                injectPluginReferencesAndStart(walletSettingsMiddleware, Plugins.BITDUBAI_WPD_WALLET_SETTINGS_MIDDLEWARE);
+
+           /*
+            * Plugin Wallet Resources Network Service
+            * -----------------------------
+            */
+                Plugin walletResourcesNetworkService = ((WPDNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_NETWORK_SERVICE_LAYER)).getWalletResources();
+                injectPluginReferencesAndStart(walletResourcesNetworkService, Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE);
+
+           /*
+            * Plugin Wallet Community Network Service
+            * -----------------------------
+            */
+                Plugin walletCommunityNetworkService = ((WPDNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_NETWORK_SERVICE_LAYER)).getWalletCommunity();
+                injectPluginReferencesAndStart(walletCommunityNetworkService, Plugins.BITDUBAI_WALLET_COMMUNITY_NETWORK_SERVICE);
+
+           /*
+            * Plugin Wallet Store Network Service
+            * -----------------------------
+            */
+                Plugin walletStoreNetworkService = ((WPDNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_NETWORK_SERVICE_LAYER)).getWalletStore();
+                injectLayerReferences(walletStoreNetworkService);
+                injectPluginReferencesAndStart(walletStoreNetworkService, Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE);
+
+           /*
+            * Plugin Wallet Statistics Network Service
+            * -----------------------------
+            */
+                Plugin walletStatisticsNetworkService = ((WPDNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_NETWORK_SERVICE_LAYER)).getWalletStatistics();
+                injectPluginReferencesAndStart(walletStatisticsNetworkService, Plugins.BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE);
+
+            }
+
+            if (CCP) {
+
+           /*
+            * Plugin CCP Crypto Payment Request Network Service
+            * -----------------------------
+            */
+                Plugin cryptoPaymentRequestNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoPaymentRequestPlugin();
+                injectLayerReferences(cryptoPaymentRequestNetworkService);
+                injectPluginReferencesAndStart(cryptoPaymentRequestNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE);
+
+           /*
+            * Plugin CCP Crypto Trasmission Network Service
+            * -----------------------------
+            */
+                Plugin cryptoTransmissionNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoTransmissionPlugin();
+                injectLayerReferences(cryptoTransmissionNetworkService);
+                injectPluginReferencesAndStart(cryptoTransmissionNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_CRYPTO_TRANSMISSION_NETWORK_SERVICE);
+
+
+           /*
+            * Plugin Crypto Addresses Network Service
+            * -----------------------------
+            */
+                Plugin cryptoAddressesNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoAddressesPlugin();
+                injectPluginReferencesAndStart(cryptoAddressesNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE);
+
+
+           /*
+            * Plugin Wallet Contacts Middleware
+            * ----------------------------------
+            */
+                Plugin walletContactsMiddleware = ((CCPMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_MIDDLEWARE_LAYER)).getWalletContactsPlugin();
+                injectPluginReferencesAndStart(walletContactsMiddleware, Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE);
+
+           /*
+            * Plugin CCP Crypto Payment Request
+            * ----------------------------------
+            */
+                Plugin cryptoPaymentRequest = ((CCPRequestLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_REQUEST_LAYER)).getCryptoPaymentPlugin();
+                injectPluginReferencesAndStart(cryptoPaymentRequest, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST);
+
+           /*
+            * Plugin Intra User Identity
+            * -----------------------------
+            */
+                Plugin ccpIntraWalletUserIdentity = ((CCPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_IDENTITY_LAYER)).getIntraWalletUserPlugin();
+                injectPluginReferencesAndStart(ccpIntraWalletUserIdentity, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY);
+
+           /*
+            * Plugin CCP Outgoing Intra Actor Transaction
+            * ----------------------------------
+            */
+                Plugin outgoingIntraActorPlugin = ((CCPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_TRANSACTION_LAYER)).getOutgoingIntraActorPlugin();
+                injectPluginReferencesAndStart(outgoingIntraActorPlugin, Plugins.BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION);
+
+           /*
+            * Plugin Intra User Actor
+            * -----------------------------
+            */
+                Plugin intraUserActor = ((CCPActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_ACTOR_LAYER)).getIntraWalletUserPlugin();
+                injectPluginReferencesAndStart(intraUserActor, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR);
 
             }
 
@@ -1055,6 +1162,8 @@ public class Platform implements Serializable {
 
             }
 
+
+
             if (DAP) {
                 /*
             * Plugin Asset User Actor Network Service
@@ -1080,7 +1189,7 @@ public class Platform implements Serializable {
                 injectPluginReferencesAndStart(assetWalletIssuer, Plugins.BITDUBAI_ASSET_WALLET_ISSUER);
 
            /*
-            * Plugin Asset Wallet Asset Issuer
+            * Plugin Asset Wallet Asset User
             * -----------------------------
             */
                 Plugin assetWalletUser = ((DAPWalletLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_WALLET_LAYER)).getPluginAssetWalletUser();
@@ -1193,108 +1302,7 @@ public class Platform implements Serializable {
 
             }
 
-            if (WPD) {
 
-           /*
-            * Plugin Publisher Identity
-            * -----------------------------
-            */
-                Plugin publisherIdentity = ((WPDIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_IDENTITY_LAYER)).getPublisherIdentity();
-                injectPluginReferencesAndStart(publisherIdentity, Plugins.BITDUBAI_WPD_PUBLISHER_IDENTITY);
-
-           /*
-            * Plugin Wallet Manager
-            * -----------------------------
-            */
-                Plugin walletManager = ((WPDDesktopModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_DESKTOP_MODULE_LAYER)).getWalletManager();
-                injectPluginReferencesAndStart(walletManager, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
-
-           /*
-            * Plugin Wallet Factory Middleware
-            * ----------------------------------
-            */
-                Plugin walletFactoryMiddleware = ((WPDMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_MIDDLEWARE_LAYER)).getWalletFactoryPlugin();
-                injectPluginReferencesAndStart(walletFactoryMiddleware, Plugins.BITDUBAI_WPD_WALLET_FACTORY_MIDDLEWARE);
-
-           /*
-            * Plugin Wallet Manager Middleware
-            * ----------------------------------
-            */
-                Plugin walletManagerMiddleware = ((WPDMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_MIDDLEWARE_LAYER)).getWalletManagerPlugin();
-                injectPluginReferencesAndStart(walletManagerMiddleware, Plugins.BITDUBAI_WPD_WALLET_MANAGER_MIDDLEWARE);
-
-           /*
-            * Plugin Wallet Publisher Middleware
-            * ----------------------------------
-            */
-                Plugin walletPublisherMiddleware = ((WPDMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_MIDDLEWARE_LAYER)).getWalletPublisherPlugin();
-                injectPluginReferencesAndStart(walletPublisherMiddleware, Plugins.BITDUBAI_WPD_WALLET_PUBLISHER_MIDDLEWARE);
-
-           /*
-            * Plugin Wallet Store Middleware
-            * ----------------------------------
-            */
-                Plugin walletStoreMiddleware = ((WPDMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_MIDDLEWARE_LAYER)).getWalletStorePlugin();
-                injectPluginReferencesAndStart(walletStoreMiddleware, Plugins.BITDUBAI_WPD_WALLET_STORE_MIDDLEWARE);
-
-           /*
-            * Plugin Wallet Store Module
-            * ----------------------------------
-            */
-                Plugin walletStoreModule = ((WPDSubAppModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_SUB_APP_MODULE_LAYER)).getWalletStore();
-                injectPluginReferencesAndStart(walletStoreModule, Plugins.BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE);
-
-           /*
-            * Plugin Wallet factory
-            * -----------------------------
-            */
-                Plugin walletFactoryModule = ((WPDSubAppModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_SUB_APP_MODULE_LAYER)).getWalletFactory();
-                injectPluginReferencesAndStart(walletFactoryModule, Plugins.BITDUBAI_WPD_WALLET_FACTORY_SUB_APP_MODULE);
-
-           /*
-            * Plugin Wallet publisher Module
-            * ----------------------------------
-            */
-                Plugin walletPublisherModule = ((WPDSubAppModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_SUB_APP_MODULE_LAYER)).getWalletPublisher();
-                injectPluginReferencesAndStart(walletPublisherModule, Plugins.BITDUBAI_WPD_WALLET_PUBLISHER_SUB_APP_MODULE);
-
-           /*
-            * Plugin Wallet settings Middleware
-            * ----------------------------------
-            */
-                Plugin walletSettingsMiddleware = ((WPDMiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_MIDDLEWARE_LAYER)).getWalletSettingsPlugin();
-                injectPluginReferencesAndStart(walletSettingsMiddleware, Plugins.BITDUBAI_WPD_WALLET_SETTINGS_MIDDLEWARE);
-
-           /*
-            * Plugin Wallet Resources Network Service
-            * -----------------------------
-            */
-                Plugin walletResourcesNetworkService = ((WPDNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_NETWORK_SERVICE_LAYER)).getWalletResources();
-                injectPluginReferencesAndStart(walletResourcesNetworkService, Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE);
-
-           /*
-            * Plugin Wallet Community Network Service
-            * -----------------------------
-            */
-                Plugin walletCommunityNetworkService = ((WPDNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_NETWORK_SERVICE_LAYER)).getWalletCommunity();
-                injectPluginReferencesAndStart(walletCommunityNetworkService, Plugins.BITDUBAI_WALLET_COMMUNITY_NETWORK_SERVICE);
-
-           /*
-            * Plugin Wallet Store Network Service
-            * -----------------------------
-            */
-                Plugin walletStoreNetworkService = ((WPDNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_NETWORK_SERVICE_LAYER)).getWalletStore();
-                injectLayerReferences(walletStoreNetworkService);
-                injectPluginReferencesAndStart(walletStoreNetworkService, Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE);
-
-           /*
-            * Plugin Wallet Statistics Network Service
-            * -----------------------------
-            */
-                Plugin walletStatisticsNetworkService = ((WPDNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WPD_NETWORK_SERVICE_LAYER)).getWalletStatistics();
-                injectPluginReferencesAndStart(walletStatisticsNetworkService, Plugins.BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE);
-
-            }
 
             /*
              * Plugin Template Network Service
@@ -1419,6 +1427,20 @@ public class Platform implements Serializable {
 //              Plugin walletFactoryModule =  ((ModuleLayer) mModuleLayer).getWalletFactory();
 //              injectPluginReferencesAndStart(walletFactoryModule, Plugins.BITDUBAI_WPD_WALLET_FACTORY_SUB_APP_MODULE);
 
+            if(CBP){
+                Plugin cryptoBrokerIdentity = ((CBPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CBP_IDENTITY_LAYER)).getCryptoBrokerIdentity();
+                injectPluginReferencesAndStart(cryptoBrokerIdentity, Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY);
+
+
+                Plugin cryptoCustomerIdentity = ((CBPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CBP_IDENTITY_LAYER)).getCryptoCustomerIdentity();
+                injectPluginReferencesAndStart(cryptoCustomerIdentity, Plugins.BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY);
+
+                Plugin cryptoBrokerIdentitySubAppModule = ((CBPSubAppModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CBP_SUB_APP_MODULE_LAYER)).getCryptoBrokerIdentity();
+                injectPluginReferencesAndStart(cryptoBrokerIdentitySubAppModule, Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE);
+
+                Plugin cryptoCustomerIdentitySubAppModule = ((CBPSubAppModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CBP_SUB_APP_MODULE_LAYER)).getCryptoCustomerIdentity();
+                injectPluginReferencesAndStart(cryptoCustomerIdentitySubAppModule, Plugins.BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE);
+            }
 
         } catch (CantInitializePluginsManagerException cantInitializePluginsManagerException) {
             LOG.log(Level.SEVERE, cantInitializePluginsManagerException.getLocalizedMessage());
