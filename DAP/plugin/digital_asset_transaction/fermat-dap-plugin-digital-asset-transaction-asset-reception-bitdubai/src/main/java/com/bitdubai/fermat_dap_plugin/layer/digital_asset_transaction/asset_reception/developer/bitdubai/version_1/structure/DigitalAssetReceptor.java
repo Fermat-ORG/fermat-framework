@@ -57,7 +57,7 @@ public class DigitalAssetReceptor extends DigitalAssetSwap {
             String genesisTransactionFromDigitalAssetMetadata=digitalAssetMetadata.getGenesisTransaction();
             //this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CHECKING_HASH,genesisTransactionFromDigitalAssetMetadata);
             String digitalAssetMetadataHash=digitalAssetMetadata.getDigitalAssetHash();
-            CryptoTransaction cryptoTransaction = this.assetVaultManager.getGenesisTransaction(digitalAssetMetadataHash);
+            CryptoTransaction cryptoTransaction = /*this.assetVaultManager.getGenesisTransaction(digitalAssetMetadataHash)*/null;
             //This won't work until I can get the CryptoTransaction from AssetVault
             String op_ReturnFromAssetVault=cryptoTransaction.getOp_Return();
             if(!digitalAssetMetadataHash.equals(op_ReturnFromAssetVault)){
@@ -67,11 +67,16 @@ public class DigitalAssetReceptor extends DigitalAssetSwap {
                         "digitalAssetMetadata:"+digitalAssetMetadata);
             }
             //this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED,genesisTransactionFromDigitalAssetMetadata);
-        } catch (CantGetGenesisTransactionException exception) {
+        } catch(Exception e) {
+            //TODO: Eliminate this catch, this is only for compilation
+            throw new CantReceiveDigitalAssetException(e,
+                    "Delivering the Digital Asset \n"+digitalAssetMetadata,
+                    "Unexpected result in database");
+        /*catch (CantGetGenesisTransactionException exception) {
             throw new CantReceiveDigitalAssetException(exception,
                     "Receiving the Digital Asset \n"+digitalAssetMetadata,
                     "Cannot get the genesis transaction from Asset vault");
-        } /*catch (CantExecuteQueryException exception) {
+        } catch (CantExecuteQueryException exception) {
             throw new CantReceiveDigitalAssetException(exception,
                     "Delivering the Digital Asset \n"+digitalAssetMetadata,
                     "Cannot execute a database operation");
@@ -80,6 +85,7 @@ public class DigitalAssetReceptor extends DigitalAssetSwap {
                     "Delivering the Digital Asset \n"+digitalAssetMetadata,
                     "Unexpected result in database");
         }*/
+        }
     }
 
     public void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser actorAssetUser) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException {

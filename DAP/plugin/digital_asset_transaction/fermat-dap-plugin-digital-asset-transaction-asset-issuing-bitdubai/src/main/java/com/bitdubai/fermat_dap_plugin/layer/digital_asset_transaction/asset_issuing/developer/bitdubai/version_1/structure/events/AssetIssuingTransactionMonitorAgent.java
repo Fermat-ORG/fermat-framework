@@ -374,8 +374,8 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
         }*/
 
         private CryptoTransaction getGenesisTransactionFromAssetVault(String transactionHash) throws CantGetGenesisTransactionException {
-            CryptoTransaction cryptoTransaction=assetVaultManager.getGenesisTransaction(transactionHash);
-            return cryptoTransaction;
+            //CryptoTransaction cryptoTransaction=assetVaultManager.getGenesisTransaction(transactionHash);
+            return null;
         }
 
     }

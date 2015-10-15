@@ -72,7 +72,7 @@ public class DigitalAssetDistributor extends DigitalAssetSwap {
             String genesisTransactionFromDigitalAssetMetadata=digitalAssetMetadata.getGenesisTransaction();
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CHECKING_HASH,genesisTransactionFromDigitalAssetMetadata);
             String digitalAssetMetadataHash=digitalAssetMetadata.getDigitalAssetHash();
-            CryptoTransaction cryptoTransaction = assetVaultManager.getGenesisTransaction(digitalAssetMetadataHash);
+            CryptoTransaction cryptoTransaction = /*assetVaultManager.getGenesisTransaction(digitalAssetMetadataHash)*/null;
             //This won't work until I can get the CryptoTransaction from AssetVault
             String op_ReturnFromAssetVault=cryptoTransaction.getOp_Return();
             if(!digitalAssetMetadataHash.equals(op_ReturnFromAssetVault)){
@@ -82,11 +82,11 @@ public class DigitalAssetDistributor extends DigitalAssetSwap {
                         "digitalAssetMetadata:"+digitalAssetMetadata);
             }
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED, genesisTransactionFromDigitalAssetMetadata);
-        } catch (CantGetGenesisTransactionException exception) {
+        } /*catch (CantGetGenesisTransactionException exception) {
             throw new CantDeliverDigitalAssetException(exception,
                     "Delivering the Digital Asset \n"+digitalAssetMetadata,
                     "Cannot get the genesis transaction from Asset vault");
-        } catch (CantExecuteQueryException exception) {
+        }*/ catch (CantExecuteQueryException exception) {
             throw new CantDeliverDigitalAssetException(exception,
                     "Delivering the Digital Asset \n"+digitalAssetMetadata,
                     "Cannot execute a database operation");
