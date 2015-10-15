@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantSavePr
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserCancellingFailedException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserConectionDenegationFailedException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserDisconnectingFailedException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUser;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ import java.util.List;
  * provides the methods for the Intra Users sub app.
  */
 public interface IntraUserModuleManager {
+
 
     /**
      * The method <code>createIntraUser</code> is used to create a new intra user

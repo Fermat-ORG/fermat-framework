@@ -1,7 +1,6 @@
-package com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUser;
 
 /**
  * The class <code>com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleInformation</code>
@@ -10,14 +9,14 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.I
  *
  * Created by natalia on 11/08/15.
  */
-public class IntraUserModuleInformation implements IntraUserInformation {
+public class IntraUserNSInformation implements IntraUserInformation {
 
     private String name;
     private String publicKey;
     private byte[] profileImage;
 
 
-    public IntraUserModuleInformation(String name,String publicKey,byte[] profileImage)
+    public IntraUserNSInformation(String name, String publicKey, byte[] profileImage)
     {
         this.name = name;
         this.publicKey = publicKey;

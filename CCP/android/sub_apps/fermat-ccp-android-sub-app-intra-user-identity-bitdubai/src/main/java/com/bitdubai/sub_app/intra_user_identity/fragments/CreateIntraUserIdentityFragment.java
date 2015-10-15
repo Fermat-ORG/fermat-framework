@@ -22,12 +22,14 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CouldNotCreateCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
@@ -113,7 +115,7 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
             public void onClick(View view) {
                 CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
 
-                // TODO ejecutar createNewIdentity(); cuando ya tenga una referencia del Module Manager
+                createNewIdentity();
                 int resultKey = CREATE_IDENTITY_SUCCESS;
                 switch (resultKey) {
                     case CREATE_IDENTITY_SUCCESS:
@@ -204,11 +206,10 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
 
         if (dataIsValid) {
             if (moduleManager != null) {
-                //moduleManager.createCryptoBrokerIdentity(brokerNameText, brokerImageByteArray);
                 try {
-                    moduleManager.createNewIntraWalletUser(brokerNameText,brokerImageByteArray);
+                    moduleManager.createNewIntraWalletUser(brokerNameText, brokerImageByteArray);
                 } catch (CantCreateNewIntraWalletUserException e) {
-                    e.printStackTrace();
+                    errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
                 }
                 return CREATE_IDENTITY_SUCCESS;
             }
@@ -238,9 +239,9 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
         if (brokerNameText.isEmpty())
             return false;
         if (brokerImageBytes == null)
-            return false;
+            return true;
         if (brokerImageBytes.length > 0)
-            return false;
+            return true;
 
         return true;
     }
