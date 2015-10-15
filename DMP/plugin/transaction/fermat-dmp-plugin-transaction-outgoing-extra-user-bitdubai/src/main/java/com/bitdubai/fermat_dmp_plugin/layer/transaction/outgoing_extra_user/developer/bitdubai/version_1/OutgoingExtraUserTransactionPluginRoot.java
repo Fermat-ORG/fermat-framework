@@ -130,11 +130,9 @@ public class OutgoingExtraUserTransactionPluginRoot implements DatabaseManagerFo
     @Override
     public void start() throws CantStartPluginException  {
 
-        OutgoingExtraUserDao dao = new OutgoingExtraUserDao();
-        dao.setErrorManager(this.errorManager);
-        dao.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        OutgoingExtraUserDao dao = new OutgoingExtraUserDao(errorManager, pluginDatabaseSystem, pluginId);
         try {
-            dao.initialize(this.pluginId);
+            dao.initialize();
         } catch (CantInitializeDaoException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
             throw new CantStartPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION);

@@ -113,12 +113,10 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
          */
 
         BitcoinWalletWallet bitcoinWalletWallet;
-        OutgoingExtraUserDao dao = new OutgoingExtraUserDao();
-        dao.setErrorManager(this.errorManager);
-        dao.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        OutgoingExtraUserDao dao = new OutgoingExtraUserDao(errorManager, pluginDatabaseSystem, pluginId);
         long funds;
         try {
-            dao.initialize(this.pluginId);
+            dao.initialize();
             bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
             funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
             if (cryptoAmount > funds) {
