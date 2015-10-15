@@ -63,38 +63,73 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("ComponentConnectionRequestPacketProcessor - Starting processingPackage");
+        String packetContentJsonStringRepresentation = null;
 
-        /*
-         * Get the packet content from the message content and decrypt
-         */
-        String packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
-        System.out.println("ComponentConnectionRequestPacketProcessor - packetContentJsonStringRepresentation = "+packetContentJsonStringRepresentation);
+        try {
 
+             /*
+             * Get the packet content from the message content and decrypt
+             */
+            packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
+            System.out.println("ComponentConnectionRequestPacketProcessor - packetContentJsonStringRepresentation = "+packetContentJsonStringRepresentation);
 
-        /*
-         * Get the list
-         */
-        List<PlatformComponentProfile> participantsList = gson.fromJson(packetContentJsonStringRepresentation, new TypeToken<List<PlatformComponentProfileCommunication>>(){}.getType());
+            /*
+             * Get the list
+             */
+            List<PlatformComponentProfile> participantsList = gson.fromJson(packetContentJsonStringRepresentation, new TypeToken<List<PlatformComponentProfileCommunication>>(){}.getType());
 
-        for (PlatformComponentProfile participant: participantsList) {
-            System.out.println("ComponentConnectionRequestPacketProcessor - participant = "+participant.getIdentityPublicKey());
+            for (PlatformComponentProfile participant: participantsList) {
+                System.out.println("ComponentConnectionRequestPacketProcessor - participant = "+participant.getIdentityPublicKey());
+            }
+
+            //Create a new vpn
+            WsCommunicationVPNServer vpnServer = getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().createNewWsCommunicationVPNServer(participantsList, getWsCommunicationCloudServer());
+
+            PlatformComponentProfile peer1 = participantsList.get(0);
+            PlatformComponentProfile peer2 = participantsList.get((participantsList.size() -1));
+
+            constructRespondPacketAndSend(vpnServer, peer1, peer2, peer2);
+            constructRespondPacketAndSend(vpnServer, peer2, peer1, peer1);
+
+            //if no running
+            if (!getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().isRunning()){
+
+                //Start the agent
+                getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().start();
+            }
+
+        }catch (Exception e){
+
+            System.out.println("ComponentConnectionRequestPacketProcessor - requested connection is no possible ");
+            e.printStackTrace();
+
+            /*
+             * Get the client connection destination
+             */
+            WebSocket clientConnectionDestination = getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().get(receiveFermatPacket.getSender());
+
+            /*
+             * Construct the json object
+             */
+            JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
+            packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "failure in component connection: "+e.getMessage());
+
+            /*
+             * Create the respond packet
+             */
+            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(), //Destination
+                                                                                                                        serverIdentity.getPublicKey(), //Sender
+                                                                                                                        gson.toJson(packetContent), //packet Content
+                                                                                                                        FermatPacketType.FAILURE_COMPONENT_CONNECTION_REQUEST, //Packet type
+                                                                                                                        serverIdentity.getPrivateKey()); //Sender private key
+            /*
+             * Send the packet
+             */
+            clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
+
         }
 
-        //Create a new vpn
-        WsCommunicationVPNServer vpnServer = getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().createNewWsCommunicationVPNServer(participantsList, getWsCommunicationCloudServer());
 
-        PlatformComponentProfile peer1 = participantsList.get(0);
-        PlatformComponentProfile peer2 = participantsList.get((participantsList.size() -1));
-
-        constructRespondPacketAndSend(vpnServer, peer1, peer2, peer2);
-        constructRespondPacketAndSend(vpnServer, peer2, peer1, peer1);
-
-        //if no running
-        if (!getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().isRunning()){
-
-            //Start the agent
-            getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().start();
-        }
 
 
     }

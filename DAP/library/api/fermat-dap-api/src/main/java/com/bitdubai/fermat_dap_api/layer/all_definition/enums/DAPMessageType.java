@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/10/15.
  */
 public enum DAPMessageType {
+    DIGITAL_ASSET_METADATA("DAM"),
     INCOMING("RX"),
     OUTGOING("TX");
 
@@ -19,6 +20,8 @@ public enum DAPMessageType {
 
     public DAPMessageType getByCode(String code)throws InvalidParameterException {
         switch (code){
+            case "DAM":
+                return DAPMessageType.DIGITAL_ASSET_METADATA;
             case "RX":
                 return DAPMessageType.INCOMING;
             case "TX":

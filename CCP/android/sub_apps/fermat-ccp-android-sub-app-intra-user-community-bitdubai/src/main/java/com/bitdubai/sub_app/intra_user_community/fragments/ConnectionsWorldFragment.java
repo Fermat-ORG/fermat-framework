@@ -122,6 +122,7 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY,UnexpectedUIExceptionSeverity.CRASH,ex);
         }
     }
 
