@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.Image;
 
 import java.util.List;
 
@@ -55,6 +56,11 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
 
                 rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_navigation_drawer_first_row, parent, false);
+
+                ImageView icon = (ImageView) rowView.findViewById(R.id.icon);
+
+                TextView label = (TextView) rowView.findViewById(R.id.label);
+
                 /*switch (ApplicationSession.getActivityId())
                 {
                     case "DesktopActivity":

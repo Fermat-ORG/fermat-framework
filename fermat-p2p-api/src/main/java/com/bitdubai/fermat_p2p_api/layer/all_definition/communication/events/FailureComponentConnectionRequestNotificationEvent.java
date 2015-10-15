@@ -6,9 +6,8 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentConnectionRequestNotificationEvent</code>
@@ -32,10 +31,10 @@ public class FailureComponentConnectionRequestNotificationEvent extends Abstract
 
     /**
      * Constructor with parameter
-     * @param eventType
+     * @param p2pEventType
      */
-    public FailureComponentConnectionRequestNotificationEvent(EventType eventType) {
-        super(eventType);
+    public FailureComponentConnectionRequestNotificationEvent(P2pEventType p2pEventType) {
+        super(p2pEventType);
     }
 
     /**
