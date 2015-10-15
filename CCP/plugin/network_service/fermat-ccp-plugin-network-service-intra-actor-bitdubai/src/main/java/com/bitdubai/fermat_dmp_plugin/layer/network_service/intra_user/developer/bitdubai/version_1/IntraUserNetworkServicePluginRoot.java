@@ -151,10 +151,7 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
      */
     private Database dataBase;
 
-    /**
-     * Represent the eccKeyPair
-     */
-    private ECCKeyPair eccKeyPair;
+
 
     /**
      * Constructor
@@ -516,22 +513,22 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
         /*
          * Create a new instance
          */
-        IntraUserNetworkServiceCommunicationManager manager = new IntraUserNetworkServiceCommunicationManager(eccKeyPair, communicationLayerManager, dataBase, errorManager, eventManager);
+       // IntraUserNetworkServiceCommunicationManager manager = new IntraUserNetworkServiceCommunicationManager(eccKeyPair, communicationLayerManager, dataBase, errorManager, eventManager);
 
         /*
          * Initialize the manager to listener the events
          */
-        initializeListener(manager);
+      //  initializeListener(manager);
 
         /**
          * Cache the instance
          */
-        intraUserNetworkServiceManagersCache.put(pluginClientId, manager);
+       // intraUserNetworkServiceManagersCache.put(pluginClientId, manager);
 
         /*
          * return the instance
          */
-        return manager;
+        return null;
 
     }
 
