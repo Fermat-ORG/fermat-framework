@@ -98,7 +98,7 @@ public interface CryptoPaymentRequestManager {
 
     /**
      * Throw the method <code>confirmRequest</code> you can confirm and delete the request.
-     * I confirm the request when i receive an approval or a refusal by the counterparty.
+     * I confirm the request when i receive an approval or a refusal by the counterpart.
      * First i receive the event, and after handle it i confirm the request.
      *
      * @param requestId  uuid identifying the request to confirm.

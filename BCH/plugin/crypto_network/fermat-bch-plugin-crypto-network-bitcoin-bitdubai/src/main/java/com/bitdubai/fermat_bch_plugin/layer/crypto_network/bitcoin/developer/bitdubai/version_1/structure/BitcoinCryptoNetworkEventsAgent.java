@@ -204,7 +204,7 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
             /**
              * I raise the event
              */
-            //eventManager.raiseEvent(event);
+            eventManager.raiseEvent(event);
         }
 
         /**

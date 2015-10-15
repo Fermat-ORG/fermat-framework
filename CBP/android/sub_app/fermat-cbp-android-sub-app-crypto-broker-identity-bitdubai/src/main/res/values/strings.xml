@@ -7,4 +7,5 @@
     <string name="create">CREATE</string>
     <string name="broker_name">Broker name</string>
     <string name="identity_img">identity_image</string>
+    <string name="description_search">Search</string>
 </resources>

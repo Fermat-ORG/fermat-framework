@@ -145,6 +145,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
 
             table.insertRecord(record);
 
+            if(profileImage!=null)
             persistNewUserProfileImage(publicKey, profileImage);
 
         } catch (CantInsertRecordException e){
