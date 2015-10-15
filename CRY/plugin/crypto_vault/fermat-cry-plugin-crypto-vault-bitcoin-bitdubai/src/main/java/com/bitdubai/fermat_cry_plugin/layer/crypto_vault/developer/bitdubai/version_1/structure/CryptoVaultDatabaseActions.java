@@ -337,7 +337,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         try {
             DatabaseTable cryptoTxTable;
             cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId.toString(), DatabaseFilterType.EQUAL);
+            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId, DatabaseFilterType.EQUAL);
 
             cryptoTxTable.loadToMemory();
 
@@ -346,9 +346,9 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
              * I will make sure I only get one result.
              */
             if (cryptoTxTable.getRecords().size() > 1)
-                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", null, "TxId:" + txId.toString(), "duplicated Transaction Hash.");
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", null, "TxId:" + txId, "duplicated Transaction Hash.");
             else if (cryptoTxTable.getRecords().size() == 0)
-                throw new UnexpectedResultReturnedFromDatabaseException("No values returned when trying to get CryptoStatus from transaction in database.", null, "TxId:" + txId.toString(), "transaction not yet persisted in database.");
+                throw new UnexpectedResultReturnedFromDatabaseException("No values returned when trying to get CryptoStatus from transaction in database.", null, "TxId:" + txId, "transaction not yet persisted in database.");
             else
                 currentRecord = cryptoTxTable.getRecords().get(0);
 
@@ -496,6 +496,27 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
             throw new CantExecuteQueryException("Error executing query in DB.", e, "TxId: " + txId, "Error in database plugin.");
         } catch(Exception exception){
             throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    public CryptoStatus getLastCryptoStatus(String txHash) throws CantLoadTableToMemoryException {
+        DatabaseTable cryptoTransactionsTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+        cryptoTransactionsTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
+        cryptoTransactionsTable.loadToMemory();
+
+        List<DatabaseTableRecord> databaseTableRecordList = cryptoTransactionsTable.getRecords();
+        if (databaseTableRecordList.isEmpty()) {
+            return null;
+        } else {
+            CryptoStatus lastCryptoStatus = null;
+            for (DatabaseTableRecord record : databaseTableRecordList) {
+                CryptoStatus cryptoStatus = CryptoStatus.valueOf(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME));
+                if (lastCryptoStatus == null)
+                    lastCryptoStatus = cryptoStatus;
+                else if (lastCryptoStatus.getOrder() < cryptoStatus.getOrder())
+                    lastCryptoStatus = cryptoStatus;
+            }
+            return lastCryptoStatus;
         }
     }
 

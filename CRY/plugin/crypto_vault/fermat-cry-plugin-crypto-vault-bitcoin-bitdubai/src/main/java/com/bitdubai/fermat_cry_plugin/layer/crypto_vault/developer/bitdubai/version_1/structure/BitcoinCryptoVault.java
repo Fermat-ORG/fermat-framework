@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentE
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -709,19 +710,21 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         return tx.getUpdateTime().getTime();
     }
 
-    public CryptoStatus getCryptoStatus(UUID transactionId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
-        /**
-         * Last Update: 23/07/2015 for: fmarcano
-         */
-        try{
+    // modified by lnacosta
+    public CryptoStatus getCryptoStatus(final UUID transactionId) throws CantExecuteQueryException                     ,
+                                                                         UnexpectedResultReturnedFromDatabaseException {
+
+        try {
+
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
             db.setVault(vault);
-            return db.getCryptoStatus(transactionId.toString());
-        }catch(CantExecuteQueryException exception){
+            return db.getLastCryptoStatus(transactionId.toString());
+
+        } catch(CantLoadTableToMemoryException exception){
+
             throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, exception, null, "Check the cause");
-        }catch(UnexpectedResultReturnedFromDatabaseException exception){
-            throw new UnexpectedResultReturnedFromDatabaseException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, null, "Check the cause");
-        }catch(Exception exception){
+        } catch(Exception exception){
+
             throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
