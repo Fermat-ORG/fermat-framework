@@ -29,10 +29,10 @@ import java.util.UUID;
  */
 public class VaultEventListeners extends AbstractWalletEventListener {
 
-    private final ErrorManager errorManager;
-    private final EventManager eventManager;
-    private final LogManager   logManager  ;
-    private final CryptoVaultDatabaseActions dbActions;
+    private final ErrorManager               errorManager;
+    private final EventManager               eventManager;
+    private final LogManager                 logManager  ;
+    private final CryptoVaultDatabaseActions dbActions   ;
 
     /**
      * Constructor with final params...
@@ -60,7 +60,7 @@ public class VaultEventListeners extends AbstractWalletEventListener {
          * I save this transaction in the database
          */
         try {
-            dbActions.setVault(wallet);
+
             dbActions.saveIncomingTransaction(UUID.randomUUID(), tx.getHashAsString());
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -80,6 +80,8 @@ public class VaultEventListeners extends AbstractWalletEventListener {
     public void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
         logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Transaction confidence change detected!", "Transaction confidence changed. Transaction: " + tx, "Transaction confidence changed. Transaction: " + tx);
 
+        System.out.println("\nTransaction HASH: "+tx.getHashAsString());
+
         TransactionConfidenceCalculator transactionConfidenceCalculator = new TransactionConfidenceCalculator(tx, wallet);
         CryptoStatus cryptoStatus;
         try {
@@ -87,6 +89,7 @@ public class VaultEventListeners extends AbstractWalletEventListener {
         } catch (CantCalculateTransactionConfidenceException e) {
             cryptoStatus = CryptoStatus.ON_CRYPTO_NETWORK;
         }
+        System.out.println("\nTransaction ACTUAL CRYPTOSTATUS: "+cryptoStatus);
         try {
             switch (cryptoStatus){
                 case ON_CRYPTO_NETWORK:
@@ -102,7 +105,7 @@ public class VaultEventListeners extends AbstractWalletEventListener {
                     insertNewTransactionAndRaiseEvent(tx.getHashAsString(), cryptoStatus, EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
                     break;
                 case IRREVERSIBLE:
-                    raiseTransactionEvent(EventType.INCOMING_CRYPTO_IRREVERSIBLE);
+                    insertNewTransactionAndRaiseEvent(tx.getHashAsString(), cryptoStatus, EventType.INCOMING_CRYPTO_IRREVERSIBLE);
                     break;
                 default:
                     throw new UnexpectedCryptoStatusException(

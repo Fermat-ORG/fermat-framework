@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events;
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -11,18 +10,14 @@ import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantInitializeMonitorAgentException;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cry_api.layer.definition.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultTransactionNotificationAgent;
@@ -36,14 +31,14 @@ import java.util.UUID;
 
 /**
  * Created by rodrigo on 2015.06.18..
+ * Modified by lnacosta (laion.cj91@gmail.com) on 15/10/2015.
  */
-public class TransactionNotificationAgent implements Agent,DealsWithLogger,DealsWithEvents,DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class TransactionNotificationAgent implements Agent {
 
-        /**
+    /**
      * TransactionNotificationAgent variables
      */
     Database database;
-    String userPublicKey;
 
     /**
      * Agent interface member variables
@@ -51,43 +46,29 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
     Thread agentThread;
     MonitorAgent monitorAgent;
 
-    /**
-     * DealWithLogger interface member variable
-     */
-    LogManager logManager;
-
-
-
-    /**
-     * DealsWithEvents interface member variables
-     */
-    EventManager eventManager;
+    private final LogManager           logManager          ;
+    private final EventManager         eventManager        ;
+    private final ErrorManager         errorManager        ;
+    private final PluginDatabaseSystem pluginDatabaseSystem;
+    private final UUID                 pluginId            ;
+    private final String               userPublicKey       ;
 
     /**
-     * DealsWithErrors interface member variables
+     * Constructor with final params...
      */
-    ErrorManager errorManager;
+    public TransactionNotificationAgent(final EventManager         eventManager        ,
+                                        final ErrorManager         errorManager        ,
+                                        final LogManager           logManager          ,
+                                        final PluginDatabaseSystem pluginDatabaseSystem,
+                                        final UUID                 pluginId            ,
+                                        final String               userPublicKey       ){
 
-    /**
-     * DealsWithPluginDatabaseSystem interface member variable
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * DealsWithPluginIdentity interfaz member variable
-     */
-    UUID pluginId;
-
-
-    /**
-     * Constructor
-     */
-    public TransactionNotificationAgent(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager, UUID pluginId, String userPublicKey){
-        this.eventManager = eventManager;
+        this.eventManager         = eventManager        ;
+        this.errorManager         = errorManager        ;
+        this.logManager           = logManager          ;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.errorManager = errorManager;
-        this.pluginId = pluginId;
-        this.userPublicKey = userPublicKey;
+        this.pluginId             = pluginId            ;
+        this.userPublicKey        = userPublicKey       ;
     }
 
     /**
@@ -99,21 +80,15 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
         /**
          * I initialize the monitor agent private class that will run in a new thread
          */
-        monitorAgent = new MonitorAgent();
+        monitorAgent = new MonitorAgent(
+                errorManager,
+                pluginDatabaseSystem
+        );
 
-        ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        ((DealsWithErrors) this.monitorAgent).setErrorManager(this.errorManager);
-
-        /**
-         * I will create or load the DB if it already exists.
-         */
         try {
-            ((MonitorAgent) this.monitorAgent).Initialize();
-        }
-        catch (CantInitializeMonitorAgentException cantInitializeCryptoRegistryException) {
-            /**
-             * I cant continue if this happens.
-             */
+            this.monitorAgent.Initialize();
+        } catch (CantInitializeMonitorAgentException cantInitializeCryptoRegistryException) {
+
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantInitializeCryptoRegistryException);
         }
 
@@ -131,47 +106,9 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
     }
 
     /**
-     * DealsWithEvents interface implementation
-     */
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem interfaz implementation
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    /**
-     * DealsWithErrors interface implementation
-     */
-     @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithPlugInIdentity interface implementation
-     * @param pluginId
-     */
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-    /**
      * Private class which implements runnable and is started by the Agent
      */
-    private class MonitorAgent implements CryptoVaultTransactionNotificationAgent, DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable{
+    private class MonitorAgent implements CryptoVaultTransactionNotificationAgent, Runnable {
 
         /**
          * how often I will search for transactions to notify
@@ -179,72 +116,39 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
         public final int SLEEP_TIME = CryptoVaultTransactionNotificationAgent.AGENT_SLEEP_TIME;
         int iteration = 0;
 
-        /**
-         * PluginDatabaseSystem interfaz member variables
-         */
-        PluginDatabaseSystem pluginDatabaseSystem;
+        private final ErrorManager         errorManager        ;
+        private final PluginDatabaseSystem pluginDatabaseSystem;
 
-        /**
-         * DealsWithErrors interfaz member variables
-         */
-        ErrorManager errorManager;
+        public MonitorAgent(final ErrorManager         errorManager        ,
+                            final PluginDatabaseSystem pluginDatabaseSystem) {
 
-        /**
-         * DealsWithErrors interface implementation
-         * @param errorManager
-         */
-        @Override
-        public void setErrorManager(ErrorManager errorManager) {
-            this.errorManager = errorManager;
-        }
-
-        @Override
-        public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+            this.errorManager         = errorManager        ;
             this.pluginDatabaseSystem = pluginDatabaseSystem;
         }
 
         public void Initialize() throws CantInitializeMonitorAgentException {
-            /**
-             * I open the database
-             */
+
             try {
 
                 database = this.pluginDatabaseSystem.openDatabase(pluginId, userPublicKey);
-            }
-            catch (DatabaseNotFoundException databaseNotFoundException) {
-                /**
-                 * if the database doesnt exists, I will create it.
-                 */
+            } catch (DatabaseNotFoundException databaseNotFoundException) {
+
                 CryptoVaultDatabaseFactory databaseFactory = new CryptoVaultDatabaseFactory();
                 databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
-                /**
-                 * I will create the database where I am going to store the information of this wallet.
-                 */
                 try {
 
-                    database =  databaseFactory.createDatabase(pluginId, userPublicKey);
+                    database = databaseFactory.createDatabase(pluginId, userPublicKey);
 
-                }
-                catch (CantCreateDatabaseException cantCreateDatabaseException){
+                } catch (CantCreateDatabaseException cantCreateDatabaseException) {
 
-                    /**
-                     * The database cannot be created. I can not handle this situation.
-                     */
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                     throw new CantInitializeMonitorAgentException();
 
                 }
-            }
-            catch (CantOpenDatabaseException cantOpenDatabaseException){
+            } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
-                /**
-                 * The database exists but cannot be open. I can not handle this situation.
-                 */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeMonitorAgentException();
             }
-
         }
 
         @Override
@@ -374,28 +278,12 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                  this.iteration = db.updateTransactionProtocolStatus(true);
             }
 
-
-
         }
 
+        private boolean isTransactionToBeNotified(final CryptoStatus cryptoStatus) throws CantExecuteQueryException {
 
-        /**
-         * Used to return transactions with Protocol_STatus pending notified.
-         * @return
-         * @throws CantExecuteQueryException
-         */
-        @Deprecated
-        private boolean isTransactionToBeNotified() throws CantExecuteQueryException {
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
-            boolean isPending =db.isPendingTransactions();
-           return isPending;
-        }
-
-
-        private boolean isTransactionToBeNotified(CryptoStatus cryptoStatus) throws CantExecuteQueryException {
-            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
-            boolean isPending =db.isPendingTransactions(cryptoStatus);
-            return isPending;
+            return db.isPendingTransactions(cryptoStatus);
         }
 
     }
