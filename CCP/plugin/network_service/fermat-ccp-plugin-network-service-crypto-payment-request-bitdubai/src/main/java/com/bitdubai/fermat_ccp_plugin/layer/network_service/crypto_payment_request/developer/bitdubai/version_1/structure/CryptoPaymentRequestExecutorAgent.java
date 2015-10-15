@@ -54,9 +54,6 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
     private Thread toSend   ;
     private Thread toReceive;
 
-    // Is the thread running?
-    private Boolean running;
-
     // network services registered
     private Map<String, String> poolConnectionsWaitingForResponse;
 
@@ -98,7 +95,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
         this.toSend = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (running)
+                while (isRunning())
                     sendCycle();
             }
         });
@@ -107,7 +104,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
         this.toReceive = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (running)
+                while (isRunning())
                     receiveCycle();
             }
         });

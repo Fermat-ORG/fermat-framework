@@ -679,10 +679,12 @@ public class CryptoWalletWalletModuleManager implements DealsWithCryptoTransmiss
 
             switch (deliveredToActorType) {
                 case EXTRA_USER:
+                    System.out.println("Sending throw outgoing Extra User ...");
                     outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType);
 
                     break;
                 case INTRA_USER:
+                    System.out.println("Sending throw outgoing Intra Actor ...");
                     outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet);
 
                     break;

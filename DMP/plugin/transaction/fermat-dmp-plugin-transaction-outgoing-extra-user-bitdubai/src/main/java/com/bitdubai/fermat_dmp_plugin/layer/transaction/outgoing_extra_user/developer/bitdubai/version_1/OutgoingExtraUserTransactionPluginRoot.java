@@ -142,14 +142,13 @@ public class OutgoingExtraUserTransactionPluginRoot implements DatabaseManagerFo
         catch (Exception exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
-        this.transactionProcessorAgent = new OutgoingExtraUserTransactionProcessorAgent();
-        this.transactionProcessorAgent.setBitcoinWalletManager(this.bitcoinWalletManager);
-        this.transactionProcessorAgent.setCryptoVaultManager(this.cryptoVaultManager);
-        this.transactionProcessorAgent.setErrorManager(this.errorManager);
-        this.transactionProcessorAgent.setOutgoingExtraUserDao(dao);
-
+        this.transactionProcessorAgent = new OutgoingExtraUserTransactionProcessorAgent(
+                bitcoinWalletManager,
+                cryptoVaultManager  ,
+                errorManager        ,
+                dao
+        );
         this.transactionProcessorAgent.start();
-
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
