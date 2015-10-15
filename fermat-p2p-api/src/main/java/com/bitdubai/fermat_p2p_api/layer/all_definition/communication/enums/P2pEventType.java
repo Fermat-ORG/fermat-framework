@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.common.GenericEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -15,7 +14,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentConnectionRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.BasicFermatEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteClientComponentRegistrationNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteComponentConnectionRequestNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteComponentRegistrationNotificationEventListener;
@@ -23,7 +21,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.FailureComponentConnectionRequestNotificationEventListener;
 
 /**
- * The enum <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType</code>
+ * The enum <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType</code>
  * represent the different type for the events of cry api.<p/>
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/09/2015.
@@ -32,7 +30,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.
  * @version 1.0
  * @since Java JDK 1.7
  */
-public enum EventType implements FermatEventEnum {
+public enum P2pEventType implements FermatEventEnum {
 
     /**
      * Declaration of the Web Socket Communication Layer Events
@@ -106,7 +104,7 @@ public enum EventType implements FermatEventEnum {
      *
      * @param code the valid code
      */
-    EventType(String code) {
+    P2pEventType(String code) {
         this.code = code;
     }
 
@@ -120,16 +118,16 @@ public enum EventType implements FermatEventEnum {
      * Return the enum by the code
      *
      * @param code the valid code
-     * @return EventType enum
+     * @return P2pEventType enum
      * @throws InvalidParameterException error with is no a valid code
      */
-    public static EventType getByCode(String code) throws InvalidParameterException {
-        for (EventType eventType : EventType.values()) {
-            if (eventType.code.equals(code)) {
-                return eventType;
+    public static P2pEventType getByCode(String code) throws InvalidParameterException {
+        for (P2pEventType p2pEventType : P2pEventType.values()) {
+            if (p2pEventType.code.equals(code)) {
+                return p2pEventType;
             }
         }
-        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This code isn't valid for the EventType Enum");
+        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This code isn't valid for the P2pEventType Enum");
     }
 
     @Override

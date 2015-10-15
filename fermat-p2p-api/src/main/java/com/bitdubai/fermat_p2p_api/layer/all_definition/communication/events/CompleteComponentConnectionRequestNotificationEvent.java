@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent</code>
@@ -33,10 +33,10 @@ public class CompleteComponentConnectionRequestNotificationEvent extends Abstrac
 
     /**
      * Constructor with parameter
-     * @param eventType
+     * @param p2pEventType
      */
-    public CompleteComponentConnectionRequestNotificationEvent(EventType eventType) {
-        super(eventType);
+    public CompleteComponentConnectionRequestNotificationEvent(P2pEventType p2pEventType) {
+        super(p2pEventType);
     }
 
     /**
