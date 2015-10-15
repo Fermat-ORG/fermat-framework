@@ -50,6 +50,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.ex
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.ActorNetworkServiceAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.agents.AssetUserActorNetworkServiceAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
@@ -235,6 +236,10 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
      * Represent the actorAssetUserPendingToRegistration
      */
     private List<PlatformComponentProfile> actorAssetUserPendingToRegistration;
+
+    private AssetUserActorNetworkServiceAgent assetUserActorNetworkServiceAgent;
+
+    private int createactorAgentnum=0;
 
     /**
      * Constructor
@@ -557,6 +562,8 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
         //set to not register
         register = Boolean.FALSE;
 
+        assetUserActorNetworkServiceAgent.stop();
+
         /*
          * Set the new status
          */
@@ -688,7 +695,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
             if (communicationNetworkServiceLocal != null) {
 
                 //Send the message
-                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), null,msjContent);
+                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), null, msjContent);
 
             }else{
 
@@ -903,9 +910,27 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
                 e.printStackTrace();
             }
 
+            if(createactorAgentnum==0) {
+
+
+                assetUserActorNetworkServiceAgent = new AssetUserActorNetworkServiceAgent(this, wsCommunicationsCloudClientManager, communicationNetworkServiceConnectionManager,
+                        platformComponentProfile,
+                        errorManager,
+                        identity,
+                        dataBase);
+
+
+                // start main threads
+                assetUserActorNetworkServiceAgent.start();
+
+                createactorAgentnum=1;
+
+            }
 
             FermatEvent event =  eventManager.getNewEvent(DapEvenType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
             event.setSource(EventSource.ACTOR_ASSET_USER);
+
+            // raise Event
 
             ((CompleteClientAssetUserActorRegistrationNotificationEvent)event).setActorAssetUser(actorAssetUserNewRegsitered);
             eventManager.raiseEvent(event);
@@ -917,7 +942,9 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
     @Override
     public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
 
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleFailureComponentRegistrationNotificationEvent");
+        System.out.println(" Failure ConnectoTo() with "+remoteParticipant.getIdentityPublicKey());
+
+        assetUserActorNetworkServiceAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
 
 
 
