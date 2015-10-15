@@ -1,12 +1,9 @@
-package com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces;
-
-import com.bitdubai.fermat_api.layer.identity.common.IdentityUserInformation;
+package com.bitdubai.fermat_api.layer.identity.common;
 
 /**
- * The interface <code>com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation</code>
- * provides the method to extract information about an intra user.
+ * Created by Matias Furszyfer on 2015.10.15..
  */
-public interface IntraUserInformation extends IdentityUserInformation {
+public interface IdentityUserInformation {
 
     /**
      * The method <code>getPublicKet</code> returns the public key of the represented Intra User
@@ -27,4 +24,6 @@ public interface IntraUserInformation extends IdentityUserInformation {
      * @return the profile image
      */
     public byte[] getProfileImage();
+
+
 }

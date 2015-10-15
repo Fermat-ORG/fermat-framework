@@ -576,7 +576,8 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                             user_id,
                             Actors.INTRA_USER,
                             walletContact.actorPublicKey,
-                            cryptoWalletWalletContact.getActorType(), referenceWallet
+                            cryptoWalletWalletContact.getActorType(),
+                            referenceWallet
                     );
                     Toast.makeText(getActivity(), "Send OK", Toast.LENGTH_LONG).show();
                 } catch (InsufficientFundsException e) {
