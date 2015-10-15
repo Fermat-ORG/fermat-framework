@@ -56,6 +56,7 @@ public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem
             cryptoTransactionsTable.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, DatabaseDataType.STRING, 64, true);
             cryptoTransactionsTable.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
             cryptoTransactionsTable.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
+            cryptoTransactionsTable.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
 
             DatabaseTableFactory fermatTransactionsTable = databaseFactory.newTableFactory(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_NAME);
             fermatTransactionsTable.addColumn(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, DatabaseDataType.STRING, 34, true);
