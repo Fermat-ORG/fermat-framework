@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
@@ -558,12 +559,12 @@ public class BitcoinCryptoVault implements
          * will return all the pending transactions
          */
         try{
-            List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction> txs = new ArrayList<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction>();
+            List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction> txs = new ArrayList<>();
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, eventManager);
             /**
              * Im getting the transaction headers which is a map with transactionID and Transaction Hash. I will use this information to access the vault.
              */
-            HashMap<String, String> transactionHeaders = db.getPendingTransactionsHeaders();
+            HashMap<String, String> transactionHeaders = db.getPendingTransactionsHeadersByTransactionType(CryptoTransactionType.INCOMING);
             for (Map.Entry<String, String> entry : transactionHeaders.entrySet()){
                 String txId = entry.getKey();
                 String txHash = entry.getValue();
@@ -583,10 +584,21 @@ public class BitcoinCryptoVault implements
                  */
                 CryptoStatus cryptoStatus = db.getCryptoStatus(txId);
 
+                CryptoTransaction cryptoTransaction = new CryptoTransaction(
+                        txHash,
+                        addressFrom,
+                        addressTo,
+                        CryptoCurrency.BITCOIN,
+                        amount,
+                        cryptoStatus
+                );
 
-                CryptoTransaction cryptoTransaction = new CryptoTransaction(txHash, addressFrom, addressTo,CryptoCurrency.BITCOIN, amount, cryptoStatus);
-
-                com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction tx = new com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction(UUID.fromString(txId),cryptoTransaction, Action.APPLY, getTransactionTimestampFromVault(txHash));
+                com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction tx = new com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction(
+                        UUID.fromString(txId),
+                        cryptoTransaction,
+                        Action.APPLY,
+                        getTransactionTimestampFromVault(txHash)
+                );
                 txs.add(tx);
 
                 /**

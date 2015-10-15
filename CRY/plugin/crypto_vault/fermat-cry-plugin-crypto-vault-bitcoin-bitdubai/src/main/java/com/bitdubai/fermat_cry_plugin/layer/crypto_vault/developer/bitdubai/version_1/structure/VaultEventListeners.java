@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.ver
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.UnexpectedCryptoStatusException;
 import com.bitdubai.fermat_cry_api.layer.definition.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -62,7 +63,7 @@ public class VaultEventListeners extends AbstractWalletEventListener {
 
             dbActions.saveIncomingTransaction(UUID.randomUUID(), tx.getHashAsString());
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportUnexpectedError(e);
         }
     }
 
@@ -71,24 +72,22 @@ public class VaultEventListeners extends AbstractWalletEventListener {
         try {
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Money sent.", "Prev Balance: " + prevBalance.getValue() + " New Balance:" + newBalance.getValue(), "Transaction: " + tx.toString());
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportUnexpectedError(e);
         }
     }
 
     @Override
-    public void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
+    public void onTransactionConfidenceChanged(final Wallet wallet, final Transaction tx) {
         logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Transaction confidence change detected!", "Transaction confidence changed. Transaction: " + tx, "Transaction confidence changed. Transaction: " + tx);
 
-        System.out.println("\nTransaction HASH: "+tx.getHashAsString());
-
-        TransactionConfidenceCalculator transactionConfidenceCalculator = new TransactionConfidenceCalculator(tx, wallet);
+        TransactionConfidenceCalculator transactionConfidenceCalculator = new TransactionConfidenceCalculator(tx);
         CryptoStatus cryptoStatus;
         try {
             cryptoStatus = transactionConfidenceCalculator.getCryptoStatus();
         } catch (CantCalculateTransactionConfidenceException e) {
             cryptoStatus = CryptoStatus.ON_CRYPTO_NETWORK;
         }
-        System.out.println("\nTransaction ACTUAL CRYPTOSTATUS: "+cryptoStatus);
+
         try {
             switch (cryptoStatus){
                 case ON_CRYPTO_NETWORK:
@@ -113,10 +112,13 @@ public class VaultEventListeners extends AbstractWalletEventListener {
                     );
             }
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportUnexpectedError(e);
         }
     }
 
+    private void reportUnexpectedError(Exception e) {
+        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+    }
     /**
      * Create the transaction in the DB and raise the event.
      *
@@ -130,8 +132,11 @@ public class VaultEventListeners extends AbstractWalletEventListener {
                                                    final CryptoStatus cryptoStatus,
                                                    final EventType    eventType   ) throws CantExecuteQueryException {
 
-        dbActions.insertNewTransactionWithNewConfidence(hash, cryptoStatus, dbActions.calculateTransactionType(hash));
-        raiseTransactionEvent(eventType);
+        CryptoTransactionType type = dbActions.calculateTransactionType(hash);
+        dbActions.insertNewTransactionWithNewConfidence(hash, cryptoStatus, type);
+
+        if (type.equals(CryptoTransactionType.INCOMING))
+            raiseTransactionEvent(eventType);
     }
 
     private void raiseTransactionEvent(final EventType eventType) {
