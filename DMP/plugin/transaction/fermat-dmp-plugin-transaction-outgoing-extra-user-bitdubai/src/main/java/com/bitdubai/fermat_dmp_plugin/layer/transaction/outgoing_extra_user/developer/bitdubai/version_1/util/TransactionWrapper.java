@@ -126,4 +126,17 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     public CryptoStatus getCryptoStatus() {
         return cryptoStatus;
     }
+
+    @Override
+    public String toString() {
+        return "TransactionWrapper{" +
+                "transactionId=" + transactionId +
+                ", transactionHash='" + transactionHash + '\'' +
+                ", amount=" + amount +
+                ", memo='" + memo + '\'' +
+                ", timestamp=" + timestamp +
+                ", state=" + state +
+                ", cryptoStatus=" + cryptoStatus +
+                '}';
+    }
 }

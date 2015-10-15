@@ -130,11 +130,9 @@ public class OutgoingExtraUserTransactionPluginRoot implements DatabaseManagerFo
     @Override
     public void start() throws CantStartPluginException  {
 
-        OutgoingExtraUserDao dao = new OutgoingExtraUserDao();
-        dao.setErrorManager(this.errorManager);
-        dao.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        OutgoingExtraUserDao dao = new OutgoingExtraUserDao(errorManager, pluginDatabaseSystem, pluginId);
         try {
-            dao.initialize(this.pluginId);
+            dao.initialize();
         } catch (CantInitializeDaoException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
             throw new CantStartPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION);
@@ -142,14 +140,13 @@ public class OutgoingExtraUserTransactionPluginRoot implements DatabaseManagerFo
         catch (Exception exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
-        this.transactionProcessorAgent = new OutgoingExtraUserTransactionProcessorAgent();
-        this.transactionProcessorAgent.setBitcoinWalletManager(this.bitcoinWalletManager);
-        this.transactionProcessorAgent.setCryptoVaultManager(this.cryptoVaultManager);
-        this.transactionProcessorAgent.setErrorManager(this.errorManager);
-        this.transactionProcessorAgent.setOutgoingExtraUserDao(dao);
-
+        this.transactionProcessorAgent = new OutgoingExtraUserTransactionProcessorAgent(
+                bitcoinWalletManager,
+                cryptoVaultManager  ,
+                errorManager        ,
+                dao
+        );
         this.transactionProcessorAgent.start();
-
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
