@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.ExtraUserNo
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.interfaces.DealsWithExtraUsers;
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
@@ -208,7 +209,7 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
         eventManager.addListener(fermatEventListenerNewNotification);
         listenersAdded.add(fermatEventListenerNewNotification);
 
-        FermatEventListener fermatEventListenerCloudClientConnectedNotification = eventManager.getNewListener(com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType.COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION);
+        FermatEventListener fermatEventListenerCloudClientConnectedNotification = eventManager.getNewListener(P2pEventType.COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION);
         FermatEventHandler CloudClietNotificationHandler = new CloudClietNotificationHandler(this);
         fermatEventListenerCloudClientConnectedNotification.setEventHandler(CloudClietNotificationHandler);
         eventManager.addListener(fermatEventListenerCloudClientConnectedNotification);
