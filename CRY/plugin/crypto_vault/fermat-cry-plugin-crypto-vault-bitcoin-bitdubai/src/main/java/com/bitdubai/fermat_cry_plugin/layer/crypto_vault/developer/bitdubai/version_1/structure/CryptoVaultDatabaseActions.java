@@ -511,7 +511,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         } else {
             CryptoStatus lastCryptoStatus = null;
             for (DatabaseTableRecord record : databaseTableRecordList) {
-                CryptoStatus cryptoStatus = CryptoStatus.getByCode(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME));
+                CryptoStatus cryptoStatus = CryptoStatus.valueOf(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME));
                 if (lastCryptoStatus == null)
                     lastCryptoStatus = cryptoStatus;
                 else if (lastCryptoStatus.getOrder() < cryptoStatus.getOrder())

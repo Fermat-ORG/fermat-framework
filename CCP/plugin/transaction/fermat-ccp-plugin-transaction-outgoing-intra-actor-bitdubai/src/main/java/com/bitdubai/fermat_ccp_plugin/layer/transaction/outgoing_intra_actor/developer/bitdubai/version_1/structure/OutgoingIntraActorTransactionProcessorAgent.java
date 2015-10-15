@@ -58,7 +58,7 @@ public class OutgoingIntraActorTransactionProcessorAgent  {
         this.errorManager                            = errorManager;
         this.cryptoVaultManager                      = cryptoVaultManager;
         this.bitcoinWalletManager                    = bitcoinWalletManager;
-        this.outgoingIntraActorDao = outgoingIntraActorDao;
+        this.outgoingIntraActorDao                   = outgoingIntraActorDao;
         this.transactionHandlerFactory               = transactionHandlerFactory;
         this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
     }
