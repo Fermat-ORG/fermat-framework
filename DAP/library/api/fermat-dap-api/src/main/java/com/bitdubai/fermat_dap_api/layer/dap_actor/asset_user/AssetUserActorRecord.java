@@ -1,27 +1,23 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
-import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-
-import java.util.UUID;
 
 /**
  * Created by Nerio on 22/09/15.
  */
 public class AssetUserActorRecord implements ActorAssetUser {
 
-    private String name;
+    private String linkedIdentity;
     private String publicKey;
+    private String name;
     private byte[] profileImage;
     private Location location;
-
+    private String locationLatitude;
+    private String locationLongitude;
     private long registrationDate;
     private ConnectionState connectionState;
     private Genders genders;
@@ -32,11 +28,11 @@ public class AssetUserActorRecord implements ActorAssetUser {
      * Constructor
      */
 
-    public AssetUserActorRecord(String name,String publicKey,byte[] profileImage, Location location){
+    public AssetUserActorRecord(String name, String publicKey, byte[] profileImage, Location location) {
 
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = profileImage.clone();
+        this.profileImage = profileImage != null ? profileImage.clone() : null;
         this.location = location;
 
 //        this.registrationDate = registrationDate;
@@ -47,11 +43,11 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     }
 
-    public AssetUserActorRecord(String name,String publicKey,byte[] profileImage, long registrationDate, Genders genders, String age){
+    public AssetUserActorRecord(String name, String publicKey, byte[] profileImage, long registrationDate, Genders genders, String age) {
 
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = profileImage.clone();
+        this.profileImage = profileImage != null ? profileImage.clone() : null;
         this.registrationDate = registrationDate;
 //        this.location = location;
         this.genders = genders;
@@ -61,6 +57,20 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     }
 
+    public AssetUserActorRecord(String linkedIdentity, String publicKey, String name, String locationLatitude, String locationLongitude, Genders genders, String age){
+
+        this.linkedIdentity = linkedIdentity;
+        this.publicKey = publicKey;
+        this.name = name;
+        this.profileImage = profileImage.clone();
+        this.locationLatitude = locationLatitude;
+        this.locationLongitude = locationLongitude;
+        this.genders = genders;
+        this.age = age;
+//        this.cryptoAddress = cryptoAddress;
+        this.connectionState = ConnectionState.CONNECTED;
+
+    }
 
 
     /**

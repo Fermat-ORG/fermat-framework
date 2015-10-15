@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
@@ -26,7 +27,8 @@ public interface SubAppSessionManager {
                                             WalletPublisherModuleManager walletPublisherManager,
                                             IntraUserModuleManager intraUserModuleManager,
                                             AssetFactoryModuleManager assetFactoryModuleManager,
-                                            CryptoBrokerIdentityModuleManager cryptoBrokerIdentityModuleManager);
+                                            CryptoBrokerIdentityModuleManager cryptoBrokerIdentityModuleManager,
+                                            IntraWalletUserManager intraWalletUserManager);
 
     public boolean closeSubAppSession(SubApps subApps);
     public Map<SubApps,SubAppsSession> listOpenSubApps();
