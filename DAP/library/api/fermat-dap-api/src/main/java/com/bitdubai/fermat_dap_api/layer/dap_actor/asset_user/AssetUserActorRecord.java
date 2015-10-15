@@ -17,11 +17,13 @@ import java.util.UUID;
  */
 public class AssetUserActorRecord implements ActorAssetUser {
 
-    private String name;
+    private String linkedIdentity;
     private String publicKey;
+    private String name;
     private byte[] profileImage;
     private Location location;
-
+    private String locationLatitude;
+    private String locationLongitude;
     private long registrationDate;
     private ConnectionState connectionState;
     private Genders genders;
@@ -54,6 +56,21 @@ public class AssetUserActorRecord implements ActorAssetUser {
         this.profileImage = profileImage.clone();
         this.registrationDate = registrationDate;
 //        this.location = location;
+        this.genders = genders;
+        this.age = age;
+//        this.cryptoAddress = cryptoAddress;
+        this.connectionState = ConnectionState.CONNECTED;
+
+    }
+
+    public AssetUserActorRecord(String linkedIdentity, String publicKey, String name, String locationLatitude, String locationLongitude, Genders genders, String age){
+
+        this.linkedIdentity = linkedIdentity;
+        this.publicKey = publicKey;
+        this.name = name;
+        this.profileImage = profileImage.clone();
+        this.locationLatitude = locationLatitude;
+        this.locationLongitude = locationLongitude;
         this.genders = genders;
         this.age = age;
 //        this.cryptoAddress = cryptoAddress;
