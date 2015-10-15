@@ -1,5 +1,9 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces;
 
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
@@ -43,6 +47,8 @@ public interface AssetIssuerWallet {
 
     AssetIssuerWalletTransactionSummary getActorTransactionSummary(String actorPublicKey,
                                                                    BalanceType balanceType) throws CantGetActorTransactionSummaryException;
+
+    void distributionAssets(String assetPublicKey, String walletPublicKey, ActorAssetUser actorAssetUser)  throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException;
 
 
 }

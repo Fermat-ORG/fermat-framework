@@ -162,6 +162,8 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager
         } catch (Exception e){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "couldn't start plugin because seed creation/loading failed. Key hierarchy not created.", "");
         }
+
+
         /**
          * Nothing left to do.
          */

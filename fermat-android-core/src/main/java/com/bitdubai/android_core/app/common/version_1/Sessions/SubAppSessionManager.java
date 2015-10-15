@@ -4,6 +4,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubApp
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.IntraWalletUserIdentityPluginRoot;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
@@ -14,7 +16,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
-import com.bitdubai.sub_app.intra_user.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
 import com.bitdubai.sub_app.wallet_factory.session.WalletFactorySubAppSession;
 import com.bitdubai.sub_app.wallet_publisher.session.WalletPublisherSubAppSession;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
@@ -47,9 +50,10 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
                                             ToolManager toolManager,
                                             WalletStoreModuleManager walletStoreModuleManager,
                                             WalletPublisherModuleManager walletPublisherManager,
-                                            IntraUserModuleManager intraUserModuleManager,
+                                            IntraUserModuleManager intraUserCommunityModuleManager,
                                             AssetFactoryModuleManager assetFactoryModuleManager,
-                                            CryptoBrokerIdentityModuleManager cryptoBrokerIdentityModuleManager) {
+                                            CryptoBrokerIdentityModuleManager cryptoBrokerIdentityModuleManager,
+                                            IntraWalletUserManager intraWalletUserManager) {
 
         switch (subApps) {
             case CWP_WALLET_FACTORY:
@@ -70,11 +74,13 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
                 WalletPublisherSubAppSession walletPublisherSubAppSession = new WalletPublisherSubAppSession(subApps, errorManager, walletPublisherManager);
                 lstSubAppSession.put(subApps, walletPublisherSubAppSession);
                 return walletPublisherSubAppSession;
-            case CWP_WALLET_RUNTIME:
-                break;
-            case CWP_INTRA_USER:
-                IntraUserSubAppSession intraUserSubAppSession = new IntraUserSubAppSession(subApps, errorManager, intraUserModuleManager);
-                lstSubAppSession.put(subApps, intraUserSubAppSession);
+            case CWP_INTRA_USER_IDENTITY:
+                IntraUserIdentitySubAppSession intraUserIdentitySubAppSession = new IntraUserIdentitySubAppSession(subApps,errorManager,intraWalletUserManager);
+                lstSubAppSession.put(subApps,intraUserIdentitySubAppSession);
+                return intraUserIdentitySubAppSession;
+            case CCP_INTRA_USER_COMMUNITY:
+                IntraUserSubAppSession intraUserSubAppSession = new IntraUserSubAppSession(subApps,errorManager,intraUserCommunityModuleManager);
+                lstSubAppSession.put(subApps,intraUserSubAppSession);
                 return intraUserSubAppSession;
             case DAP_ASSETS_FACTORY:
                 AssetFactorySession assetFactorySession = new AssetFactorySession(subApps, errorManager, assetFactoryModuleManager);

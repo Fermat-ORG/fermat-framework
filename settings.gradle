@@ -377,8 +377,8 @@ include ':fermat-ccp-android-sub-app-intra-user-identity-bitdubai'
 project(':fermat-ccp-android-sub-app-intra-user-identity-bitdubai').projectDir = new File('CCP/android/sub_apps/fermat-ccp-android-sub-app-intra-user-identity-bitdubai')
 
 
-include ':fermat_ccp_android_sub_app_intra_user_community_bitdubai'
-project(':fermat_ccp_android_sub_app_intra_user_community_bitdubai').projectDir = new File('CCP/android/sub_apps/fermat_ccp_android_sub_app_intra_user_community_bitdubai')
+include ':fermat-ccp-android-sub-app-intra-user-community-bitdubai'
+project(':fermat-ccp-android-sub-app-intra-user-community-bitdubai').projectDir = new File('CCP/android/sub_apps/fermat-ccp-android-sub-app-intra-user-community-bitdubai')
 
 
 // Milestone 2 project middlware:
