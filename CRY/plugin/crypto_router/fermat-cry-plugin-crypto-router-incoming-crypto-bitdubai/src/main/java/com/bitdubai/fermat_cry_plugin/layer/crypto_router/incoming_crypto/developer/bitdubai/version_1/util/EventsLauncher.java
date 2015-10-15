@@ -56,6 +56,9 @@ public class EventsLauncher implements DealsWithEvents {
                     case REVERSED_ON_BLOCKCHAIN:
                         raiseEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
                         break;
+                    case IRREVERSIBLE:
+                        //define what to do.
+                        break;
                     default:
                         String message       = "I could not find the event for this crypto status";
                         String context       = "Specialist: " + specialist.name() + " with code: " + specialist.getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "Crypto Status: " + cryptoStatus.name() + " with code: " + cryptoStatus.getCode();
@@ -77,6 +80,9 @@ public class EventsLauncher implements DealsWithEvents {
                     case REVERSED_ON_BLOCKCHAIN:
                         raiseEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER);
                         break;
+                    case IRREVERSIBLE:
+                        //define what to do.
+                        break;
                     default:
                         String message       = "I could not find the event for this crypto status";
                         String context       = "Specialist: " + specialist.name() + " with code: " + specialist.getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "Crypto Status: " + cryptoStatus.name() + " with code: " + cryptoStatus.getCode();
@@ -91,12 +97,16 @@ public class EventsLauncher implements DealsWithEvents {
                         break;
                     case ON_BLOCKCHAIN:
                         raiseEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER);
+                        System.out.println("Event INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER raised.");
                         break;
                     case REVERSED_ON_CRYPTO_NETWORK:
                         raiseEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_INTRA_USER);
                         break;
                     case REVERSED_ON_BLOCKCHAIN:
                         raiseEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER);
+                        break;
+                    case IRREVERSIBLE:
+                        //define what to do.
                         break;
                     default:
                         String message = "I could not find the event for this crypto status";
@@ -105,7 +115,34 @@ public class EventsLauncher implements DealsWithEvents {
                         throw new CryptoStatusNotHandledException(message, null, context, possibleCause);
 
                 }
-            default:
+                break;
+            case ASSET_USER_SPECIALIST:
+                switch (cryptoStatus) {
+                    case ON_CRYPTO_NETWORK:
+                        raiseEvent(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER);
+                        break;
+                    case ON_BLOCKCHAIN:
+                        raiseEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER);
+                        System.out.println("Event INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER raised.");
+                        break;
+                    case REVERSED_ON_CRYPTO_NETWORK:
+                        raiseEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_INTRA_USER);
+                        break;
+                    case REVERSED_ON_BLOCKCHAIN:
+                        raiseEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER);
+                        break;
+                    case IRREVERSIBLE:
+                        //define what to do.
+                        break;
+                    default:
+                        String message = "I could not find the event for this crypto status";
+                        String context = "Specialist: " + specialist.name() + " with code: " + specialist.getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "Crypto Status: " + cryptoStatus.name() + " with code: " + cryptoStatus.getCode();
+                        String possibleCause = "Crypto Status not considered in switch statement";
+                        throw new CryptoStatusNotHandledException(message, null, context, possibleCause);
+                }
+                break;
+
+                    default:
                 String message       = "I could not find the event for this specialist";
                 String context       = "Specialist: " + specialist.name() + " with code: " + specialist.getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "Crypto Status: " + cryptoStatus.name() + " with code: " + cryptoStatus.getCode();
                 String possibleCause = "Specialist not considered in switch statement";
