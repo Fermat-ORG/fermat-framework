@@ -1,15 +1,5 @@
-== FERMAT for developers 2: Superlayers
+== 
 
-=== FERMAT OSA *** This layer provides connectivity between devices. FERMAT-P2P is a dumb network connecting platform network services to each other irrespective of what these services are doing. It provides the communication channels and on top of its connectivity layer network services interact with each other across different devices. Anybody can provide new network services as *plug-ins*.
-This ensures a rich *set of abstractions for wallet applications running on top of the platform*. Fermat P2P is used for transporting the information associated with the transaction. *TRANSPORT OF INFORMATION* (METADATA)
-** FERMAT BCH (blockchain) 
-*** This layer provides the conenction to cryptonetworks for transporting value.*TRANSPORT OF VALUE* 
-** FERMAT PIP (Plug-ins Platform)
-***Fermat PIP is an open source platform running on end users’ devices . It allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment. A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way.
-
-
-=== FERMAT BCH
-=== FERMAT P2P
 
 
 

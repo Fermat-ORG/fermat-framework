@@ -100,10 +100,10 @@ A *platform* consists of a group of components living in different *layers* inte
 
 
 .General overview on FERMAT'S platforms and superlayers.
-* *FERMAT Operating Systems Superlayer*
-* *FERMAT BlockChain Superlayer*
-* *FERMAT P2P Network and Communication Superlayer*
 * *FERMAT Core Platform* 
+** *FERMAT Operating Systems Superlayer*
+** *FERMAT BlockChain Superlayer*
+** *FERMAT P2P Network and Communication Superlayer*
 * *FERMAT Plug-ins Platform*
 * *FERMAT Wallet Production & Distribution Platform*
 * *FERMAT Crypto Currency Platform*

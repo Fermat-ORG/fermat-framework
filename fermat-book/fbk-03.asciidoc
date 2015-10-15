@@ -2,14 +2,59 @@
 
 == Setting FERMAT to work. 
 === First run
-Connect to FERMAT offical site ( www.fermat.org), choose the Operating System of the device where you want to install FERMAT, and download FERMAT APK (Android) or FERMAT installation file (windows)...
+Connect to FERMAT offical site ( http://www.fermat.org), choose the Operating System of the device where you want to install FERMAT, and download FERMAT APK (Android) or FERMAT installation file (windows)...
 
-=== FERMAT CORE 
+=== Android Core
+The application written for Android that calls the platform components that are *OS INDEPENDENT*, to initialize the multi-platform system as a whole.
+
+
+=== *FERMAT Operating Systems Superlayer*
+==== layer: Multi OS
+===== File System
+===== Database System
+==== layer: Android
+===== File System
+===== Database System
+===== Logger
+===== Device Location
+===== Device Connectivity 
+===== Device Power
+===== Device Contacts
+===== Device Hardware
+
+fermat-api
+
+The modules inside each layer define the necessary interfaces to accomplish their duty inside the plug-ins. However, this interfaces bring many times too much information to the developer. This is why we define a group of reduces interfaces to export to other layers. This interfaces among other definitions can be found in this module called fermat-pip-api.+ Some other definitions are for example exceptions and enums.
+
+
+
+
+
+=== *FERMAT Core Platform*  
 This is the CORE Platform of FERMAT platform stack system, corresponding at the lowest level modules, which encasulaptes the basics definitions that let FERMATs function as a whole system.
 This platform "wakes up" when receiving a call from the application (Android) or executable program (others OS) that is written in OS's specific programming language.
-Then, FERMAT CORE ( written in JAVA - therefore its * code base portability* ) initializes the rest of the platforms and its corresponding *plugins* .
-Its modules provide the _class_ definitions 
-=== FERMAT PIP
+Then, FERMAT CORE (written in JAVA - therefore its *code base portability*) initializes the rest of the platforms and its corresponding *plugins* .
+Its modules provide the _class_ definitions that are the representation of the entire multi-platform system. + 
+Besides initialization this CORE platform monitors the way the application is behaving as a whole.
+
+==== System-wide definitions
+One of main concept's inside FERMAT's design is that of _actors_ and _identities_
+
+.FERMAT Core modules
+* fermat core
+* android core
+
+
+=== *FERMAT BlockChain Superlayer*
+*** This platform  provides the conenction to cryptonetworks for transporting value.*TRANSPORT OF VALUE* 
+
+=== *FERMAT P2P Network and Communication Superlayer*
+*** This layer provides connectivity between devices. FERMAT-P2P is a dumb network connecting platform network services to each other irrespective of what these services are doing. It provides the communication channels and on top of its connectivity layer network services interact with each other across different devices. Anybody can provide new network services as *plug-ins*.
+This ensures a rich *set of abstractions for wallet applications running on top of the platform*. Fermat P2P is used for transporting the information associated with the transaction. *TRANSPORT OF INFORMATION* (METADATA)
+
+=== *FERMAT Plug-ins Platform*
+***Fermat PIP is an open source platform running on end users’ devices . It allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment. A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way.
+
 
 
 

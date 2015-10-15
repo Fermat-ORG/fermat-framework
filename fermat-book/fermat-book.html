@@ -1022,6 +1022,10 @@ FERMAT&#8217;S core concept of providing REUSABLE COMPONENTS is based on this pl
 <div class="title">General overview on FERMAT&#8217;S platforms and superlayers.</div>
 <ul>
 <li>
+<p><strong>FERMAT Core Platform</strong></p>
+<div class="ulist">
+<ul>
+<li>
 <p><strong>FERMAT Operating Systems Superlayer</strong></p>
 </li>
 <li>
@@ -1030,8 +1034,8 @@ FERMAT&#8217;S core concept of providing REUSABLE COMPONENTS is based on this pl
 <li>
 <p><strong>FERMAT P2P Network and Communication Superlayer</strong></p>
 </li>
-<li>
-<p><strong>FERMAT Core Platform</strong></p>
+</ul>
+</div>
 </li>
 <li>
 <p><strong>FERMAT Plug-ins Platform</strong></p>
@@ -1184,46 +1188,130 @@ All this different * abstraction levels* are possible within FERMAT, and FERMAT&
 <div class="sect2">
 <h3 id="_first_run">3.1. First run</h3>
 <div class="paragraph">
-<p>Connect to FERMAT offical site ( www.fermat.org), choose the Operating System of the device where you want to install FERMAT, and download FERMAT APK (Android) or FERMAT installation file (windows)&#8230;</p>
+<p>Connect to FERMAT offical site ( <a href="http://www.fermat.org)">http://www.fermat.org)</a>, choose the Operating System of the device where you want to install FERMAT, and download FERMAT APK (Android) or FERMAT installation file (windows)&#8230;</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_fermat_core">3.2. FERMAT CORE</h3>
+<h3 id="_android_core">3.2. Android Core</h3>
+<div class="paragraph">
+<p>The application written for Android that calls the platform components that are <strong>OS INDEPENDENT</strong>, to initialize the multi-platform system as a whole.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__strong_fermat_operating_systems_superlayer_strong">3.3. <strong>FERMAT Operating Systems Superlayer</strong></h3>
+<div class="sect3">
+<h4 id="_layer_multi_os">3.3.1. layer: Multi OS</h4>
+<div class="sect4">
+<h5 id="_file_system">File System</h5>
+
+</div>
+<div class="sect4">
+<h5 id="_database_system">Database System</h5>
+
+</div>
+</div>
+<div class="sect3">
+<h4 id="_layer_android">3.3.2. layer: Android</h4>
+<div class="sect4">
+<h5 id="_file_system_2">File System</h5>
+
+</div>
+<div class="sect4">
+<h5 id="_database_system_2">Database System</h5>
+
+</div>
+<div class="sect4">
+<h5 id="_logger">Logger</h5>
+
+</div>
+<div class="sect4">
+<h5 id="_device_location">Device Location</h5>
+
+</div>
+<div class="sect4">
+<h5 id="_device_connectivity">Device Connectivity</h5>
+
+</div>
+<div class="sect4">
+<h5 id="_device_power">Device Power</h5>
+
+</div>
+<div class="sect4">
+<h5 id="_device_contacts">Device Contacts</h5>
+
+</div>
+<div class="sect4">
+<h5 id="_device_hardware">Device Hardware</h5>
+<div class="paragraph">
+<p>fermat-api</p>
+</div>
+<div class="paragraph">
+<p>The modules inside each layer define the necessary interfaces to accomplish their duty inside the plug-ins. However, this interfaces bring many times too much information to the developer. This is why we define a group of reduces interfaces to export to other layers. This interfaces among other definitions can be found in this module called fermat-pip-api.+ Some other definitions are for example exceptions and enums.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__strong_fermat_core_platform_strong">3.4. <strong>FERMAT Core Platform</strong></h3>
 <div class="paragraph">
 <p>This is the CORE Platform of FERMAT platform stack system, corresponding at the lowest level modules, which encasulaptes the basics definitions that let FERMATs function as a whole system.
 This platform "wakes up" when receiving a call from the application (Android) or executable program (others OS) that is written in OS&#8217;s specific programming language.
-Then, FERMAT CORE ( written in JAVA - therefore its * code base portability* ) initializes the rest of the platforms and its corresponding <strong>plugins</strong> .
-Its modules provide the <em>class</em> definitions
-=== FERMAT PIP</p>
+Then, FERMAT CORE (written in JAVA - therefore its <strong>code base portability</strong>) initializes the rest of the platforms and its corresponding <strong>plugins</strong> .
+Its modules provide the <em>class</em> definitions that are the representation of the entire multi-platform system.<br>
+Besides initialization this CORE platform monitors the way the application is behaving as a whole.</p>
 </div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_fermat_for_developers_2_superlayers">4. FERMAT for developers 2: Superlayers</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_fermat_osa_strong_strong_this_layer_provides_connectivity_between_devices_fermat_p2p_is_a_dumb_network_connecting_platform_network_services_to_each_other_irrespective_of_what_these_services_are_doing_it_provides_the_communication_channels_and_on_top_of_its_connectivity_layer_network_services_interact_with_each_other_across_different_devices_anybody_can_provide_new_network_services_as_strong_plug_ins_strong">4.1. FERMAT OSA <strong>*</strong> This layer provides connectivity between devices. FERMAT-P2P is a dumb network connecting platform network services to each other irrespective of what these services are doing. It provides the communication channels and on top of its connectivity layer network services interact with each other across different devices. Anybody can provide new network services as <strong>plug-ins</strong>.</h3>
+<div class="sect3">
+<h4 id="_system_wide_definitions">3.4.1. System-wide definitions</h4>
 <div class="paragraph">
-<p>This ensures a rich <strong>set of abstractions for wallet applications running on top of the platform</strong>. Fermat P2P is used for transporting the information associated with the transaction. <strong>TRANSPORT OF INFORMATION</strong> (METADATA)
-<strong> FERMAT BCH (blockchain)
-</strong>* This layer provides the conenction to cryptonetworks for transporting value.<strong>TRANSPORT OF VALUE</strong>
-<strong> FERMAT PIP (Plug-ins Platform)
-</strong>*Fermat PIP is an open source platform running on end users’ devices . It allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment. A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way.</p>
+<p>One of main concept&#8217;s inside FERMAT&#8217;s design is that of <em>actors</em> and <em>identities</em></p>
+</div>
+<div class="ulist">
+<div class="title">FERMAT Core modules</div>
+<ul>
+<li>
+<p>fermat core</p>
+</li>
+<li>
+<p>android core</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_fermat_bch">4.2. FERMAT BCH</h3>
-
+<h3 id="__strong_fermat_blockchain_superlayer_strong">3.5. <strong>FERMAT BlockChain Superlayer</strong></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>This platform  provides the conenction to cryptonetworks for transporting value.<strong>TRANSPORT OF VALUE</strong></p>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_fermat_p2p">4.3. FERMAT P2P</h3>
-
+<h3 id="__strong_fermat_p2p_network_and_communication_superlayer_strong">3.6. <strong>FERMAT P2P Network and Communication Superlayer</strong></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>This layer provides connectivity between devices. FERMAT-P2P is a dumb network connecting platform network services to each other irrespective of what these services are doing. It provides the communication channels and on top of its connectivity layer network services interact with each other across different devices. Anybody can provide new network services as <strong>plug-ins</strong>.
+This ensures a rich <strong>set of abstractions for wallet applications running on top of the platform</strong>. Fermat P2P is used for transporting the information associated with the transaction. <strong>TRANSPORT OF INFORMATION</strong> (METADATA)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__strong_fermat_plug_ins_platform_strong">3.7. <strong>FERMAT Plug-ins Platform</strong></h3>
+<div class="paragraph">
+<p>***Fermat PIP is an open source platform running on end users’ devices . It allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment. A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way.</p>
+</div>
+<div class="paragraph">
+<p>==</p>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_fermat_wpd_wallet_factory_wallet_production_line">5. FERMAT WPD: Wallet Factory &amp; Wallet Production Line</h2>
+<h2 id="_fermat_wpd_wallet_factory_wallet_production_line">4. FERMAT WPD: Wallet Factory &amp; Wallet Production Line</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>In the cryptocurrency environment, value is held in specific applications/programs called <strong>WALLET</strong>.
@@ -1288,7 +1376,7 @@ gatherings of the components of a certain wallet:<br>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_fermat_wallet_factory">5.1. FERMAT Wallet Factory</h3>
+<h3 id="_fermat_wallet_factory">4.1. FERMAT Wallet Factory</h3>
 <div class="paragraph">
 <p>Once we have at least one <strong>Niche Reference Wallet</strong> (e.g.<strong>Bitcoin Reference Wallet</strong>), we can realize that in the <strong>front-end</strong> there are two disctint tasks taking place: on one hand, there exist a <strong>navigation structure</strong> (available menus, tabs, buttons, etc) that provides the means by which the user operates the wallet, an on the other hand, there exists a set of <strong>resources</strong> (multimedia files, images, etc) used for the visualization of each element of the wallet.
 At the <strong>back-end</strong> , where the really action is occuring, we have a lot of modules acting to provide the necessary functions, like:<br></p>
@@ -1310,7 +1398,7 @@ At the <strong>back-end</strong> , where the really action is occuring, we have 
 <p>If someone having the required programmer&#8217;s skills wants to build a Wallet, he would necessary have to build every and each one of the modules needed for the wallet to run begin to write the code from zero. However, if you remember that FERMAT is an open system allowing third part developers and actors in general to form part, developers of new wallet can use any of the available <strong>reference niche wallet</strong> to reutilize the COMPLETE back-end ( all the programming code stuff!), and concentrate his endeavour only to the *front-end*making his job a lot easier and allowing all his creativity to be channeled in a better and more attractive result for the end user. ( not only for a nice look but also for improved and more efficient functionalities!).</p>
 </div>
 <div class="sect3">
-<h4 id="_inside_the_wallet_factory">5.1.1. Inside the Wallet Factory</h4>
+<h4 id="_inside_the_wallet_factory">4.1.1. Inside the Wallet Factory</h4>
 <div class="paragraph">
 <p>The first step to create a wallet is to join FERMAT an get an identification as DEVELOPER.
 Then, the new registered <strong>developer</strong> installs the WaFa-module (Wallet Factory) and logs-in.<br>
@@ -1322,14 +1410,14 @@ To give birth the new wallet into the world, he will have to <strong>publish</st
 </div>
 </div>
 <div class="sect2">
-<h3 id="_fermat_wallet_publisher">5.2. FERMAT Wallet Publisher</h3>
+<h3 id="_fermat_wallet_publisher">4.2. FERMAT Wallet Publisher</h3>
 <div class="paragraph">
 <p>The main task of the WaPu-module (WALLET PUBLISHER) is to make the new wallet designed and held into a WFP-file to be <strong>published</strong> in the Wa-Sto ( WALLET STORE) and therefore become available to the rest of the FERMAT community to use it.<br>
 This module also has the responsability of notifying the release of new updates for each version or upgrades to new versions of the existing wallets.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_fermat_wallet_store">5.3. FERMAT Wallet Store</h3>
+<h3 id="_fermat_wallet_store">4.3. FERMAT Wallet Store</h3>
 <div class="paragraph">
 <p>The Wa-St module (Wallet Store) is inside FERMAT  a DAPP (Distributed Application), i.e. and undetermined amount of nodes collaborate bewteen them to provide the functionality of the app inside the whole system.<br>
 The Wallet Store functions in a similar way of known app-stores, and it serves to show the user the wallet that may be attractive to him. Itis a <strong>distributed catalog</strong> of wallets.<br>
@@ -1338,7 +1426,7 @@ Internally, the Wa-St module keeps the identity of the wallet, of its developer,
 </div>
 </div>
 <div class="sect2">
-<h3 id="_fermat_wallet_manager">5.4. FERMAT Wallet Manager</h3>
+<h3 id="_fermat_wallet_manager">4.4. FERMAT Wallet Manager</h3>
 <div class="paragraph">
 <p>The Wa-Ma module ( Wallet Manager) lets install the chosen wallet in the user&#8217;s device, collecting from the distributed network, the necessary components: te walletś navigation structure and the wallet&#8217;s ressources.</p>
 </div>
@@ -1346,7 +1434,7 @@ Internally, the Wa-St module keeps the identity of the wallet, of its developer,
 </div>
 </div>
 <div class="sect1">
-<h2 id="_fermat_ccp_crypto_currency_platform">6. FERMAT CCP (crypto currency platform)</h2>
+<h2 id="_fermat_ccp_crypto_currency_platform">5. FERMAT CCP (crypto currency platform)</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This platform provides all the interconnectivity necessary to interact with existent cryptonetworks (Bitcoin, Litecoin, etc) and also to develop plug-ins for new cryptocurrencies invented in the future.<br>
@@ -1379,7 +1467,7 @@ For a <strong>niche wallet</strong> to run, we need to count on modules offering
 </ul>
 </div>
 <div class="sect2">
-<h3 id="_bitwa_basic_bitcoin_wallet">6.1. BitWa (Basic Bitcoin Wallet)</h3>
+<h3 id="_bitwa_basic_bitcoin_wallet">5.1. BitWa (Basic Bitcoin Wallet)</h3>
 <div class="paragraph">
 <p>This wallet is one of FERMAT&#8217;s basic building block to allow interaction with the
 most popular cryptonetwork: Bitcoin.<br>
@@ -1425,7 +1513,7 @@ the simplicity of this wallet is maximized. Bi-Wa does NOT handles payment or mo
 </div>
 </div>
 <div class="sect2">
-<h3 id="_blp_bitcoin_loss_protected_wallet">6.2. BLP (Bitcoin Loss Protected wallet)</h3>
+<h3 id="_blp_bitcoin_loss_protected_wallet">5.2. BLP (Bitcoin Loss Protected wallet)</h3>
 <div class="paragraph">
 <p>BLP is the second <strong>Reference Wallet</strong> developed by FERMAT, and its main goal is to protect the user from losing money when attemping to spend
 Bitcoin at a change curse lower that the price when that Bitcoin amount was purchased (entered the wallet).<br>
@@ -1445,7 +1533,7 @@ The new functionalities added are:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_fermat_bank_notes_platform">7. FERMAT Bank Notes Platform</h2>
+<h2 id="_fermat_bank_notes_platform">6. FERMAT Bank Notes Platform</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This platform</p>
@@ -1453,7 +1541,7 @@ The new functionalities added are:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_fermat_crypto_commodity_money">8. FERMAT Crypto Commodity Money</h2>
+<h2 id="_fermat_crypto_commodity_money">7. FERMAT Crypto Commodity Money</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This platform</p>
@@ -1461,10 +1549,10 @@ The new functionalities added are:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_fermat_shp_making_it_easy_for_shop_owners">9. FERMAT SHP : Making it easy for shop owners</h2>
+<h2 id="_fermat_shp_making_it_easy_for_shop_owners">8. FERMAT SHP : Making it easy for shop owners</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_shop_owners">9.1. Shop Owners</h3>
+<h3 id="_shop_owners">8.1. Shop Owners</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1474,7 +1562,7 @@ The new functionalities added are:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_brands">9.2. Brands</h3>
+<h3 id="_brands">8.2. Brands</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1484,7 +1572,7 @@ The new functionalities added are:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_retailers">9.3. Retailers</h3>
+<h3 id="_retailers">8.3. Retailers</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1496,29 +1584,29 @@ The new functionalities added are:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_blockchain_beyond_currency_digital_assets">10. Blockchain beyond currency: DIGITAL ASSETS</h2>
+<h2 id="_blockchain_beyond_currency_digital_assets">9. Blockchain beyond currency: DIGITAL ASSETS</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_fermat_digital_asset_platform">10.1. FERMAT Digital Asset Platform</h3>
+<h3 id="_fermat_digital_asset_platform">9.1. FERMAT Digital Asset Platform</h3>
 <div class="sect3">
-<h4 id="_what_is_a_digital_asset">10.1.1. What is a Digital Asset ?</h4>
+<h4 id="_what_is_a_digital_asset">9.1.1. What is a Digital Asset ?</h4>
 
 </div>
 </div>
 <div class="sect2">
-<h3 id="_asis_asset_issuer_wallet">10.2. AsIs (Asset Issuer Wallet)</h3>
+<h3 id="_asis_asset_issuer_wallet">9.2. AsIs (Asset Issuer Wallet)</h3>
 <div class="paragraph">
 <p>&#8594; for company or brand that issues a Digital Assets to offer to their customers*</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_asus_shop_wallet">10.3. AsUs (Shop wallet)</h3>
+<h3 id="_asus_shop_wallet">9.3. AsUs (Shop wallet)</h3>
 <div class="paragraph">
 <p>&#8594; for <strong>the customer who accepts/obtain some Digital Assets according to his interests</strong></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_repo_shop_wallet">10.4. RePo (Shop wallet)</h3>
+<h3 id="_repo_shop_wallet">9.4. RePo (Shop wallet)</h3>
 <div class="paragraph">
 <p>&#8594; for the place/shop/person that exchanges the Asset for a certain service or product (redeems it).*</p>
 </div>
@@ -1526,25 +1614,25 @@ The new functionalities added are:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_marketing_with_digital_assets">11. Marketing with Digital Assets</h2>
+<h2 id="_marketing_with_digital_assets">10. Marketing with Digital Assets</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>FERMAT Marketing Platform (FERMAT-MKT)</p>
 </div>
 <div class="sect2">
-<h3 id="_vowa_vshop_wallet">11.1. VoWa (VShop wallet)</h3>
+<h3 id="_vowa_vshop_wallet">10.1. VoWa (VShop wallet)</h3>
 <div class="paragraph">
 <p>&#8594; for</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="__voucher_wallet">11.2. (Voucher Wallet)</h3>
+<h3 id="__voucher_wallet">10.2. (Voucher Wallet)</h3>
 <div class="paragraph">
 <p>&#8594; for</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_diwa_shop_wallet">11.3. DiWa (Shop wallet)</h3>
+<h3 id="_diwa_shop_wallet">10.3. DiWa (Shop wallet)</h3>
 <div class="paragraph">
 <p>&#8594; for shop owners who accept cryptocurrency in payment of their products !</p>
 </div>
@@ -1552,13 +1640,13 @@ The new functionalities added are:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_fermat_cbp">12. FERMAT CBP</h2>
+<h2 id="_fermat_cbp">11. FERMAT CBP</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>In this platform the actors involved are the <strong>cryptobroker</strong> and his customers (<strong>cryptocustomers</strong>). A <strong>cryptobroker</strong> is a person or small organization whose business logic is to buy and sell cryptocurrency for fiat money in his local market, obtaining his profits from the difference in the buy/sell price. We distinguish also two common level of * cryptobrokers*, those acting as <strong>cryptobrokers wholesalers</strong> adn those who deal with final users/customers.</p>
 </div>
 <div class="sect2">
-<h3 id="_fermat_cr_br_cryptobroker_wallet">12.1. FERMAT Cr-Br (Cryptobroker Wallet)</h3>
+<h3 id="_fermat_cr_br_cryptobroker_wallet">11.1. FERMAT Cr-Br (Cryptobroker Wallet)</h3>
 <div class="paragraph">
 <p>This Wallet is designed with the theoretical assumption that the broker always has available stock of cryptocurrency and fiat money and that his activity is to be constantly selling this two kind of products obtaining profit. The functionalities offered should help him to run the business in a simple way, taking the responsability of the basic management of the broker&#8217;s fund (in cryptocurrency and fiat money, in cash and in bank accounts), the management of the contact list of his customers, and a balance of the profits generated.<br>
 Key functionalities are:</p>
@@ -1611,34 +1699,34 @@ Key functionalities are:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_fermat_cr_cu_cryptobroker_customer_wallet">12.2. FERMAT Cr-Cu (Cryptobroker Customer Wallet)</h3>
+<h3 id="_fermat_cr_cu_cryptobroker_customer_wallet">11.2. FERMAT Cr-Cu (Cryptobroker Customer Wallet)</h3>
 
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_developing_regional_crypto_ecosystems_fermat_crypto_distribution_network">13. Developing regional crypto ecosystems: FERMAT Crypto Distribution Network</h2>
+<h2 id="_developing_regional_crypto_ecosystems_fermat_crypto_distribution_network">12. Developing regional crypto ecosystems: FERMAT Crypto Distribution Network</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_crwh_crypto_wholesaler">13.1. CrWh (Crypto Wholesaler)</h3>
+<h3 id="_crwh_crypto_wholesaler">12.1. CrWh (Crypto Wholesaler)</h3>
 <div class="paragraph">
 <p>&#8594; for organizations owing a certain large amount of crypto-credit to sell through a distribution chain.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_crcu_crypto_distributor">13.2. CrCu (Crypto Distributor)</h3>
+<h3 id="_crcu_crypto_distributor">12.2. CrCu (Crypto Distributor)</h3>
 <div class="paragraph">
 <p>&#8594; for those who form the next level in the distribution, buying to wholesalers and re-selling to Top Up Point</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_tup_top_up_point">13.3. TUP (Top Up Point)</h3>
+<h3 id="_tup_top_up_point">12.3. TUP (Top Up Point)</h3>
 <div class="paragraph">
 <p>&#8594; for shops/organizations/persons who transfer crypto-credit in exchange for fiat-money (receives money - gives crypto)</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_cop_cash_out_point">13.4. COP (Cash Out Point)</h3>
+<h3 id="_cop_cash_out_point">12.4. COP (Cash Out Point)</h3>
 <div class="paragraph">
 <p>&#8594; for shops/organizations/persons who gives out money in exchange for a transfer of crypto (receive crypto - gives money)</p>
 </div>
@@ -1646,7 +1734,7 @@ Key functionalities are:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_fermat_dpn_digital_private_network">14. FERMAT DPN: Digital Private Network</h2>
+<h2 id="_fermat_dpn_digital_private_network">13. FERMAT DPN: Digital Private Network</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Securing your funds</p>
