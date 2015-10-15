@@ -677,7 +677,7 @@ public class CryptoWalletWalletModuleManager implements DealsWithCryptoTransmiss
     public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType,ReferenceWallet referenceWallet) throws CantSendCryptoException, InsufficientFundsException {
         try {
 
-            switch (deliveredByActorType) {
+            switch (deliveredToActorType) {
                 case EXTRA_USER:
                     outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType);
 
