@@ -198,7 +198,7 @@ public class CryptoVaultDatabaseActions {
      * Will retrieve all the transactions that are in status pending ProtocolStatus = TO_BE_NOTIFIED
      * @return
      */
-    public HashMap<String, String> getPendingTransactionsHeaders() throws CantExecuteQueryException {
+    public HashMap<String, String> getPendingTransactionsHeadersByTransactionType(CryptoTransactionType type) throws CantExecuteQueryException {
         /**
          * I need to obtain all the transactions ids with protocol status SENDING_NOTIFIED y TO_BE_NOTIFIED
          */
@@ -211,7 +211,8 @@ public class CryptoVaultDatabaseActions {
             /**
              * I get the transaction IDs and Hashes for the TO_BE_NOTIFIED
              */
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
+            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME    , ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
+            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_TYPE_COLUMN_NAME, type                         .getCode(), DatabaseFilterType.EQUAL);
 
             cryptoTxTable.loadToMemory();
              for (DatabaseTableRecord record : cryptoTxTable.getRecords()){
