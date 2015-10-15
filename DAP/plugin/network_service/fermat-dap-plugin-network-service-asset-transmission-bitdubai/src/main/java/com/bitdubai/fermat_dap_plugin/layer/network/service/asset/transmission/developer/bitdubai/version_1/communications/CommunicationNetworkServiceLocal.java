@@ -42,7 +42,6 @@ import java.util.Observer;
 public class CommunicationNetworkServiceLocal implements Observer, NetworkServiceLocal {
 
 
-
     /**
      * Represent the profile of the remote network service
      */
@@ -85,16 +84,15 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
 
     /**
      * (non-javadoc)
-     * @see NetworkServiceLocal#sendMessage(String, String)
      */
     public void sendMessage(final String senderIdentityPublicKey, final String messageContent) {
 
         try {
 
             FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(senderIdentityPublicKey,  //Sender NetworkService
-                                                                                                    remoteNetworkServiceProfile,   //Receiver
-                                                                                                    messageContent,                //Message Content
-                                                                                                    FermatMessageContentType.TEXT);//Type
+                    remoteNetworkServiceProfile.getIdentityPublicKey(),   //Receiver
+                    messageContent,                //Message Content
+                    FermatMessageContentType.TEXT);//Type
 
             /*
              * Configure the correct status
@@ -138,6 +136,8 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
         ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingMessage);
         eventManager.raiseEvent(fermatEvent);
 
+        System.out.println("CommunicationNetworkServiceLocal - fired event = NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION");
+
     }
 
     /**
@@ -158,10 +158,13 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
 
     /**
      * (non-javadoc)
-     *
      */
     public FermatMessage getLastMessageReceived() {
         return lastMessageReceived;
     }
 
+    @Override
+    public void sendMessage(String senderIdentityPublicKey, String receiverPublicKey, String messageContent) {
+
+    }
 }

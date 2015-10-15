@@ -72,6 +72,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloud
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -642,7 +644,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
-        if(platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.ACTOR){
+        if(platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.ACTOR_INTRA_USER){
             System.out.print("-----------------------\n" +
                     "ACTOR REGISTRADO!! -----------------------\n" +
                     "-----------------------\n A: " +platformComponentProfileRegistered.getAlias());
@@ -677,12 +679,12 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
          * Construct  profile and register
          */
                 PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
-                        //"actor_prueba_juan_public_key",
-                        "actor_prueba_robert_public_key",
+                        "actor_prueba_juan_public_key",
+                        //"actor_prueba_robert_public_key",
                         ("alias"),
                         ("name+algo mas"),
                         NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
-                        PlatformComponentType.ACTOR, // actor.INTRA_USER
+                        PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
                         getExtraData());
 
 
@@ -690,9 +692,71 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                 /*
                  * Register me
                  */
+            try {
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
+
+             platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
+                    "actor_prueba_eustacio_public_key",
+                    //"actor_prueba_robert_public_key",
+                    ("eustacio"),
+                    ("name+algo mas"),
+                    NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
+                    PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
+                    getExtraData());
 
 
+
+                /*
+                 * Register me
+                 */
+            try {
+                communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
+
+             platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
+                    "actor_prueba_ignacio_public_key",
+                    //"actor_prueba_robert_public_key",
+                    ("ignacio"),
+                    ("name+algo mas"),
+                    NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
+                    PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
+                    getExtraData());
+
+
+
+                /*
+                 * Register me
+                 */
+            try {
+                communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
+
+             platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
+                    "actor_prueba_pedro_public_key",
+                    //"actor_prueba_robert_public_key",
+                    ("pedro"),
+                    ("name+algo mas"),
+                    NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
+                    PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
+                    getExtraData());
+
+
+
+                /*
+                 * Register me
+                 */
+            try {
+                communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
 
 
         }
@@ -719,6 +783,8 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
         remoteNetworkServicesRegisteredList = platformComponentProfileRegisteredList;
 
 
+
+
         /* -----------------------------------------------------------------------
          * This is for test and example of how to use
          */
@@ -727,12 +793,12 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
             /*
              * Get a remote network service registered from the list requested
              */
-            PlatformComponentProfile remoteNetworkServiceToConnect = getRemoteNetworkServicesRegisteredList().get(0);
+            //PlatformComponentProfile remoteNetworkServiceToConnect = getRemoteNetworkServicesRegisteredList().get(0);
 
             /*
              * tell to the manager to connect to this remote network service
              */
-            communicationNetworkServiceConnectionManager.connectTo(remoteNetworkServiceToConnect);
+            //communicationNetworkServiceConnectionManager.connectTo(remoteNetworkServiceToConnect);
 
         }
 
@@ -777,7 +843,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
             /*
              * Send a message using the local representation
              */
-            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), messageContent);
+            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),null, messageContent);
 
         }
 
@@ -896,10 +962,32 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
         System.out.println(" TemplateNetworkServiceRoot - requestRemoteNetworkServicesRegisteredList");
 
-        /*
+         /*
          * Request the list of component registers
          */
-        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+        try {
+
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+
+        } catch (CantRequestListException e) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Plugin was not registered";
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+
+        }
 
     }
 
@@ -978,6 +1066,8 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
     @Override
     public List<IntraUser> getIntraUsersSuggestions(int max, int offset) throws ErrorSearchingSuggestionsException {
+
+
         //TODO Harcode
 
         List<IntraUser> intraUserList = new ArrayList<IntraUser>();
@@ -989,7 +1079,31 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
         intraUserList.add(new IntraUserNetworkService("public_key",new byte[0],"Matias"));
         intraUserList.add(new IntraUserNetworkService("public_key1",new byte[0],"Leon"));
         intraUserList.add(new IntraUserNetworkService("public_key2",new byte[0],"Luis"));
-        intraUserList.add(new IntraUserNetworkService("public_key3",new byte[0],"Rodrigo"));
+        intraUserList.add(new IntraUserNetworkService("public_key3", new byte[0], "Rodrigo"));
+
+         /*-------------------------------------------------------------------------------------------------
+             * This is for test and example of how to use
+             * Construct the filter
+             */
+        DiscoveryQueryParameters discoveryQueryParameters = constructDiscoveryQueryParamsFactory(platformComponentProfile.getPlatformComponentType(), //PlatformComponentType you want to find
+                NetworkServiceType.UNDEFINED,     //NetworkServiceType you want to find
+                null,                     // alias
+                null,                     // identityPublicKey
+                null,                     // location
+                null,                     // distance
+                null,                     // name
+                null,                     // extraData
+                null,                     // offset
+                null,                     // max
+                null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+
+
+        System.out.println(" TemplateNetworkServicePluginRoot - discoveryQueryParameters = "+discoveryQueryParameters.toJson());
+
+        requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
+
+
         return intraUserList;
     }
 
@@ -1051,17 +1165,19 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                     (actor.getName().toLowerCase()),
                     (actor.getName().toLowerCase() + "_" + this.getName()),
                     NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
-                    PlatformComponentType.ACTOR, // actor.INTRA_USER
+                    PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
                     getExtraData());
 
                 /*
                  * Register me
                  */
-            communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+            try {
+                communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+            } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            }
         }
-
-
-
-
     }
+
+
 }

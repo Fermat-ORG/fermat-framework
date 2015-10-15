@@ -5,7 +5,7 @@ package com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitduba
  * keeps constants the column names of the database.<p/>
  * <p/>
  *
- * Created by Yordin Alayn - (y.alayn@gmail.com) on 01/10/15.
+ * Created by Yordin Alayn - (y.alayn@gmail.com) on 13/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -36,5 +36,20 @@ public class BankMoneyWalletDatabaseConstants {
     static final String BANK_MONEY_STATUS_COLUMN_NAME = "status";
 
     static final String BANK_MONEY_FIRST_KEY_COLUMN = "bank_transaction_id";
+
+    /**
+     * Bank Money Total Balances database table definition.
+     */
+    static final String BANK_MONEY_TOTAL_BALANCES_TABLE_NAME = "bank_money_total_balances";
+
+    static final String BANK_MONEY_TOTAL_BALANCES_WALLET_KEY_BROKER_COLUMN_NAME = "wallet_key_broker";
+    static final String BANK_MONEY_TOTAL_BALANCES_PUBLIC_KEY_BROKER_COLUMN_NAME = "public_key_broker";
+    static final String BANK_MONEY_TOTAL_BALANCES_BANK_CURRENCY_TYPE_COLUMN_NAME = "bank_currency_type";
+    static final String BANK_MONEY_TOTAL_BALANCES_NAME_COLUMN_NAME = "name";
+    static final String BANK_MONEY_TOTAL_BALANCES_DESCRIPTION_COLUMN_NAME = "description";
+    static final String BANK_MONEY_TOTAL_BALANCES_AVAILABLE_BALANCE_COLUMN_NAME = "available_balance";
+    static final String BANK_MONEY_TOTAL_BALANCES_BOOK_BALANCE_COLUMN_NAME = "book_balance";
+
+    static final String BANK_MONEY_TOTAL_BALANCES_FIRST_KEY_COLUMN = "wallet_key_broker";
 
 }

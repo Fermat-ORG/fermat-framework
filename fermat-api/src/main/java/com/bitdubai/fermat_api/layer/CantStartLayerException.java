@@ -8,7 +8,7 @@ public class CantStartLayerException extends FermatException {
 	
 	
 	private static final long serialVersionUID = 4150733208425219871L;
-	private static final String DEFAULT_MESSAGE = "CAN'T START THE LAYER DUE TO AN EXCEPTION: ";
+	public static final String DEFAULT_MESSAGE = "CAN'T START THE LAYER DUE TO AN EXCEPTION: ";
 
 	public CantStartLayerException(final String message, final Exception cause, final String context, final String possibleReason){
 		super(DEFAULT_MESSAGE + message, cause, context, possibleReason);
