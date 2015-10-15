@@ -1,58 +1,89 @@
 :numbered:
 
 == Setting FERMAT to work. 
-=== First run
+=== Getting the application for your device
 Connect to FERMAT offical site ( http://www.fermat.org), choose the Operating System of the device where you want to install FERMAT, and download FERMAT APK (Android) or FERMAT installation file (windows)...
 
-=== Android Core
-The application written for Android that calls the platform components that are *OS INDEPENDENT*, to initialize the multi-platform system as a whole.
+=== Initialization
 
+The application written for the chosen Operating System of your device (eg. Android in FERMAT'S first release) is a bundle of software packages that alltogether build FERMAT MULTI-PLATFORM SYSTEM. Few components are OS dependant but most of them (written in JAVA) is not (i.e. OS INDEPENDENT). +
+At its core we find FERMAT CORE PLATFORM which is responsible for deploying the multiplatform infrastructure and initializing it. 
 
-=== *FERMAT Operating Systems Superlayer*
-==== layer: Multi OS
-===== File System
-===== Database System
-==== layer: Android
-===== File System
-===== Database System
-===== Logger
-===== Device Location
-===== Device Connectivity 
-===== Device Power
-===== Device Contacts
-===== Device Hardware
+NOTE: Android is a *special case* because of some programming restrictions that only allow initialization from components written in android's language. Therefore the initialization sequence in this case, begins in the module *android core* which is the first one to become active and after that, it sets FERMAT CORE to run.
 
-fermat-api
+FERMAT CORE initializes every single platform of the system and every single plug-in by collecting information about the corresponding *application public interfaces (API)* and delivering to each one a *reference* on its dependance to consume services building a "communication channel" to instantiate objects and after that giving the "start" signal to beggin running. + 
+When all the basic infrastructure is layed out and some initial plug-ins are running, then the process thread turns to the *OS application* which starts the graphic interfaces and ressources needed to interact with the user, and the application opens its "starting screen". +
+From that moment on, the activation of other dormant modules of FERMAT will follow according user's demand (depending on users activity).
 
-The modules inside each layer define the necessary interfaces to accomplish their duty inside the plug-ins. However, this interfaces bring many times too much information to the developer. This is why we define a group of reduces interfaces to export to other layers. This interfaces among other definitions can be found in this module called fermat-pip-api.+ Some other definitions are for example exceptions and enums.
+TIP: Following in this chapter the description of each platform and each layer within each platform. We recommend to visit FERMAT offcial site (http://fermat.org) to have a picture in mind when reading, to help understand the system structure. _Layers_ description follow the sequence from bottom to top (like "stacking" them), and _platforms_ from left to right. 
 
+=== FERMAT Core Platform
+This is the *core platform* of FERMAT Multiplatform System. It contains the deepest levels of layers in the layers stack. Its modules encasulapte the basics definitions and functionalities that let FERMAT operate as an _integrated system_, by determining the interactions among the isolated plug-ins and putting then to run (starting). +
+FERMAT Core Platform is written in JAVA as the most of FERMAT, therefore its *code base portability*. + 
+After initialization, this platform monitors the way the system is behaving as a whole.
 
+:numbered!: 
 
-
-
-=== *FERMAT Core Platform*  
-This is the CORE Platform of FERMAT platform stack system, corresponding at the lowest level modules, which encasulaptes the basics definitions that let FERMATs function as a whole system.
-This platform "wakes up" when receiving a call from the application (Android) or executable program (others OS) that is written in OS's specific programming language.
-Then, FERMAT CORE (written in JAVA - therefore its *code base portability*) initializes the rest of the platforms and its corresponding *plugins* .
-Its modules provide the _class_ definitions that are the representation of the entire multi-platform system. + 
-Besides initialization this CORE platform monitors the way the application is behaving as a whole.
-
-==== System-wide definitions
-One of main concept's inside FERMAT's design is that of _actors_ and _identities_
+==== _core layer_
 
 .FERMAT Core modules
-* fermat core
-* android core
+* *fermat core* +
+Initializes all system-wide plug-ins and start a platform specific core module for each platform running on FERMAT.
+* *android core* + 
+Initializes android's components that connect FERMAT to the android user's environment.
+* *platform specific core* +
+There's a *core module* for each one of the platform existent in FERMAT, which initializes all platform's specific plug-ins: _wallet production & distribution core_ / _crypto currency core_ / _digital assets core_ / etc... .
+
+==== _api layer_
+.FERMAT Api modules
+* There is an *api module* for each FERMAT platform, where *public interfaces* of each plug-in are published in order to let them comsume services from others living in the same platform.
+
+NOTE: FERMAT Plug-ins are not allowed to consume services directly among them, but referencing themselves to the corresponding platform via the platform's *api module* 
+
+:numbered: 
+
+=== FERMAT Operating Systems Superlayer
+NOTE: We call in FERMAT *Superlayer* to a group of layers whose modules offer services to be consumed system-wide, i.e. offering an infrastructure that hold the different *platforms* running over FERMAT. (it is like a "common ground" where different "towers" (the platforms) are built, sharing basics level services - like water, electricity and gas supply for a real world building-. )
+
+This superlayer allow the connectivity of OS dependant modules to the rest of FERMAT multiplatform (_OS independent_). The modules offer the necessary functions to interact with the corresponding OS. 
+ 
+:numbered!: 
+
+==== _Android layer_
+In this layer, we find the different modules to allow FERMAT function on a device running Android. The usual requirements of storing and retrieving information, managing files, managing user log-on, checking the device status, location, etc are taken by each specific modules.
+
+.Android layer modules:
+* File System
+* Database System
+* Logger
+* Device Location
+* Device Connectivity 
+* Device Power
+* Device Contacts
+* Device Hardware
+
+==== _Multi OS layer_
+
+.modules
+* File System
+* Database System
 
 
-=== *FERMAT BlockChain Superlayer*
-*** This platform  provides the conenction to cryptonetworks for transporting value.*TRANSPORT OF VALUE* 
+:numbered:
 
-=== *FERMAT P2P Network and Communication Superlayer*
+=== FERMAT BlockChain Superlayer
+*** This platform  provides the connection to cryptonetworks for transporting value.*TRANSPORT OF VALUE* 
+
+:numbered:
+=== FERMAT P2P Network and Communication Superlayer
+
 *** This layer provides connectivity between devices. FERMAT-P2P is a dumb network connecting platform network services to each other irrespective of what these services are doing. It provides the communication channels and on top of its connectivity layer network services interact with each other across different devices. Anybody can provide new network services as *plug-ins*.
 This ensures a rich *set of abstractions for wallet applications running on top of the platform*. Fermat P2P is used for transporting the information associated with the transaction. *TRANSPORT OF INFORMATION* (METADATA)
 
-=== *FERMAT Plug-ins Platform*
+:numbered:
+
+=== FERMAT Plug-ins Platform
+
 ***Fermat PIP is an open source platform running on end users’ devices . It allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment. A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way.
 
 

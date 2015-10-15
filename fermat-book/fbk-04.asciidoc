@@ -1,4 +1,5 @@
-== 
+== System-wide definitions
+One of main concept's inside FERMAT's design is that of _actors_ and _identities_
 
 
 
