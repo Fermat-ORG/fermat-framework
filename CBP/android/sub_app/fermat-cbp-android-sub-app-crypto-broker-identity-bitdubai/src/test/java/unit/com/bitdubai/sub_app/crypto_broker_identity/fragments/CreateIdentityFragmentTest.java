@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.bitdubai.sub_app.intra_user_identity.BuildConfig;
-import com.bitdubai.sub_app.intra_user_identity.R;
+import com.bitdubai.sub_app.crypto_broker_identity.BuildConfig;
+import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.fragments.CreateCryptoBrokerIdentityFragment;
 
 import org.junit.Before;
