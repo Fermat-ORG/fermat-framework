@@ -5,25 +5,11 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.exceptions.CantCreateCryptoCustomerIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces.CryptoCustomerIdentity;
-import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
-import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces.DealsWithCryptoCustomerIdentities;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CantGetCryptoBrokerListException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.exceptions.CantGetCryptoCustomerListException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.exceptions.CouldNotCreateCryptoCustomerException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.exceptions.CouldNotPublishCryptoCustomerException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.exceptions.CouldNotUnPublishCryptoCustomerException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
-import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.customers.developer.bitdubai.version_1.structure.CryptoCustomerIdentityInformationImpl;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import java.util.ArrayList;
@@ -41,13 +27,7 @@ import java.util.regex.Pattern;
 
  */
 
-public class CustomersSubAppModuleCryptoPluginRoot implements CryptoCustomerIdentityModuleManager, DealsWithCryptoCustomerIdentities, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
-
-    /**
-     * Elementos de DealsWithCryptoCustomerIdentities
-     */
-    private CryptoCustomerIdentityManager identityManager;
-
+public class CustomersSubAppModuleCryptoPluginRoot implements DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
 
     /**
      * DealsWithErrors interface member variables
@@ -183,48 +163,5 @@ public class CustomersSubAppModuleCryptoPluginRoot implements CryptoCustomerIden
              */
             return DEFAULT_LOG_LEVEL;
         }
-    }
-
-
-    @Override
-    public CryptoCustomerIdentityInformation createCryptoCustomerIdentity(String cryptoCustomerName, byte[] profileImage) throws CouldNotCreateCryptoCustomerException {
-        try {
-            CryptoCustomerIdentity identity = this.identityManager.createCryptoCustomerIdentity(cryptoCustomerName, profileImage);
-            return converIdentityToInformation(identity);
-        } catch (CantCreateCryptoCustomerIdentityException e) {
-            throw new CouldNotCreateCryptoCustomerException(CouldNotCreateCryptoCustomerException.DEFAULT_MESSAGE, e, "", "");
-        }
-    }
-
-    @Override
-    public void publishCryptoCustomerIdentity(String cryptoCustomerPublicKey) throws CouldNotPublishCryptoCustomerException {
-
-    }
-
-    @Override
-    public void unPublishCryptoCustomerIdentity(String cryptoCustomerPublicKey) throws CouldNotUnPublishCryptoCustomerException {
-
-    }
-
-    @Override
-    public List<CryptoCustomerIdentityInformation> getAllCryptoCustomersIdentities(int max, int offset) throws CantGetCryptoCustomerListException {
-        try {
-            List<CryptoCustomerIdentityInformation> cryptoCustomers = new ArrayList<>();
-            for(CryptoCustomerIdentity identity : this.identityManager.getAllCryptoCustomerFromCurrentDeviceUser()){
-                cryptoCustomers.add(converIdentityToInformation(identity));
-            }
-            return cryptoCustomers;
-        } catch (CantGetCryptoCustomerIdentityException e) {
-            throw new CantGetCryptoCustomerListException(CantGetCryptoBrokerListException.DEFAULT_MESSAGE, e, "","");
-        }
-    }
-
-    @Override
-    public void setCryptoCustomerIdentityManager(CryptoCustomerIdentityManager cryptoCustomerIdentityManager) {
-        this.identityManager = cryptoCustomerIdentityManager;
-    }
-
-    private CryptoCustomerIdentityInformation converIdentityToInformation(final CryptoCustomerIdentity identity){
-        return new CryptoCustomerIdentityInformationImpl(identity.getAlias(), identity.getPublicKey(), identity.getPublicKey(), identity.getProfileImage(), identity.getPublicKeyPublished());
     }
 }
