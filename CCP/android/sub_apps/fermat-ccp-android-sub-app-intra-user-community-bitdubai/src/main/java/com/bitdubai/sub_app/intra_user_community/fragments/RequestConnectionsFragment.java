@@ -18,7 +18,6 @@ import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserI
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.IntraUserIdentityInfoAdapter;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
@@ -82,7 +81,7 @@ public class RequestConnectionsFragment extends FermatListFragment<IntraUserInfo
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_crypto_broker_identity_list;
+        return R.layout.fragment_intra_user_identity_list;
     }
 
     @Override

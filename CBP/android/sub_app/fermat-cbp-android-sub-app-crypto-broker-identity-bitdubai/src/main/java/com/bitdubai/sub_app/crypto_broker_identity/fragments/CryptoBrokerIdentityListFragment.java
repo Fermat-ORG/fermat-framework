@@ -114,8 +114,8 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         recyclerView.addItemDecoration(itemDecoration);
 
         if(identityInformationList.isEmpty()){
-            View emptyListViewsContainer = layout.findViewById(R.id.no_broker_identities);
             recyclerView.setVisibility(View.GONE);
+            View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
     }

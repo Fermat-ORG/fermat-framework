@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -49,8 +50,9 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
 
-    // Image data
+    // data
     private Bitmap cryptoBrokerBitmap;
+    private boolean checkboxValue;
 
     // Managers
     private CryptoBrokerIdentityModuleManager moduleManager;
@@ -118,10 +120,18 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
             publishIdentityCheckBox.setChecked(false);
         }
 
+        publishIdentityCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean value) {
+                CommonLogger.debug(TAG, "IN publishIdentityCheckBox.setOnCheckedChangeListener");
+                checkboxValue = value;
+            }
+        });
+
         mBrokerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CommonLogger.debug(TAG, "Entrando en mBrokerImage.setOnClickListener");
+                CommonLogger.debug(TAG, "IN mBrokerImage.setOnClickListener");
                 registerForContextMenu(mBrokerImage);
                 getActivity().openContextMenu(mBrokerImage);
             }
@@ -130,7 +140,7 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
         mUpdateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CommonLogger.debug(TAG, "Entrando en mUpdateButton.setOnClickListener");
+                CommonLogger.debug(TAG, "IN mUpdateButton.setOnClickListener");
                 editIdentityInfo();
             }
         });

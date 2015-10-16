@@ -10,6 +10,7 @@
     <color name="update_identity_button">#ff2f14</color>
     <color name="crypto_broker_identity_name_item">#323232</color>
     <color name="crypto_broker_identity_list_divider">#9e9e9e</color>
+    <color name="no_identities_text_color">#9e9e9e</color>
     <color name="img_background">#ff2f14</color>
     <color name="broker_name_text_color">#0072bc</color>
     <color name="create_button_text">#ffffff</color>
