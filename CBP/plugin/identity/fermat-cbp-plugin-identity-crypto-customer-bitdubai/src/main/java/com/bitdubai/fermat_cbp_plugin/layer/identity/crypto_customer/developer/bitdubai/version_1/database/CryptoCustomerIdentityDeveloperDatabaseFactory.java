@@ -122,6 +122,7 @@ public class CryptoCustomerIdentityDeveloperDatabaseFactory implements DealsWith
         cryptoCustomerColumns.add(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
         cryptoCustomerColumns.add(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME);
         cryptoCustomerColumns.add(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
+        cryptoCustomerColumns.add(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_CRYPTO_CUSTOMER_PUBLIC_KEY_PUBLISHED_COLUMN_NAME);
         /**
          * Table Crypto Customer addition.
          */
