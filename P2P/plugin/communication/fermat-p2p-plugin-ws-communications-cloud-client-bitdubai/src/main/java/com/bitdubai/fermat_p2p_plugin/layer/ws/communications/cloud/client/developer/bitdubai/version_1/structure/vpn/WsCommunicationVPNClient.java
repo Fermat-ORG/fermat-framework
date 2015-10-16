@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
@@ -124,7 +124,7 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
             /*
              * Get the platformComponentProfile from the message content and decrypt
              */
-            String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(fermatPacketReceive.getMessageContent(), vpnClientIdentity.getPrivateKey());
+            String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(fermatPacketReceive.getMessageContent(), vpnClientIdentity.getPrivateKey());
 
             System.out.println("WsCommunicationVPNClient - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
@@ -186,7 +186,7 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
          /*
          * Validate the signature
          */
-        boolean isValid = AsymmectricCryptography.verifyMessageSignature(fermatPacketReceive.getSignature(), fermatPacketReceive.getMessageContent(), vpnServerIdentity);
+        boolean isValid = AsymmetricCryptography.verifyMessageSignature(fermatPacketReceive.getSignature(), fermatPacketReceive.getMessageContent(), vpnServerIdentity);
 
         System.out.println(" WsCommunicationVPNClient - isValid = " + isValid);
 
@@ -219,10 +219,10 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
          * Construct a fermat packet whit the message to transmit
          */
         FermatPacket fermatPacketRequest = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(vpnServerIdentity,                  //Destination
-                vpnClientIdentity.getPublicKey(),   //Sender
-                fermatMessage.toJson(),             //Message Content
-                FermatPacketType.MESSAGE_TRANSMIT,  //Packet type
-                vpnClientIdentity.getPrivateKey()); //Sender private key
+                                                                                                                    vpnClientIdentity.getPublicKey(),   //Sender
+                                                                                                                    fermatMessage.toJson(),             //Message Content
+                                                                                                                    FermatPacketType.MESSAGE_TRANSMIT,  //Packet type
+                                                                                                                    vpnClientIdentity.getPrivateKey()); //Sender private key
         /*
          * Send the encode packet to the server
          */

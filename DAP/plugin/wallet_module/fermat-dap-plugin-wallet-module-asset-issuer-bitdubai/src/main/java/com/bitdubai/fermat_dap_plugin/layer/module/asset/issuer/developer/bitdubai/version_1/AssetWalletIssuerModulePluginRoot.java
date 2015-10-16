@@ -14,8 +14,10 @@ import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfac
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.DealsWithAssetIssuerWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.DealsWithAssetIssuerWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.module.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -30,9 +32,11 @@ import java.util.UUID;
 /**
  * Created by Franklin on 07/09/15.
  */
-public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAssetIssuerWallet, Service, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors {
-    AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
+public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAssetIssuerWallet, Service, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, AssetIssuerWalletSupAppModuleManager {
+    //AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
     AssetIssuerWalletManager assetIssuerWalletManager;
+    //AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
+    AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
 
     UUID pluginId;
 
@@ -140,5 +144,15 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAsset
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
+    }
+
+    @Override
+    public List<AssetIssuerWalletList> getAssetIssuerWalletBalancesAvailable(String publicKey) throws CantLoadWalletException {
+        return assetIssuerWalletModuleManager.getAssetIssuerWalletBalancesAvailable(publicKey);
+    }
+
+    @Override
+    public List<AssetIssuerWalletList> getAssetIssuerWalletBalancesBook(String publicKey) throws CantLoadWalletException {
+        return assetIssuerWalletModuleManager.getAssetIssuerWalletBalancesBook(publicKey);
     }
 }

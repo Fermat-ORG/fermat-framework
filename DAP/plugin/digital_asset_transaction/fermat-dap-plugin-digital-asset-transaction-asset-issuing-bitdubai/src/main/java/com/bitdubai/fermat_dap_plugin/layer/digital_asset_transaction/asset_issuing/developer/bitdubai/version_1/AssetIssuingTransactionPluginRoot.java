@@ -22,6 +22,8 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -65,7 +67,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantD
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.AssetIssuingTransactionManager;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetMetadataVault;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetIssuingVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseFactory;
@@ -92,14 +94,14 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
  */
-public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DealsWithAssetVault, DealsWithAssetIssuerWallet, DatabaseManagerForDevelopers, DealsWithCryptoAddressBook, DealsWithCryptoVault, DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithOutgoingIntraActor, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service/*, TransactionProtocolManager*/ {
+public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DealsWithAssetVault, DealsWithAssetIssuerWallet, DealsWithBitcoinWallet, DatabaseManagerForDevelopers, DealsWithCryptoAddressBook, DealsWithCryptoVault, DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithOutgoingIntraActor, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service/*, TransactionProtocolManager*/ {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     AssetIssuingTransactionManager assetIssuingTransactionManager;
     AssetIssuingTransactionMonitorAgent assetIssuingTransactionMonitorAgent;
     AssetTransactionService assetIssuingEventRecorderService;
     AssetIssuingTransactionDao assetIssuingTransactionDao;
-    CryptoWallet cryptoWallet;
+    BitcoinWalletManager bitcoinWalletManager;
     CryptoVaultManager cryptoVaultManager;
     ErrorManager errorManager;
     EventManager eventManager;
@@ -172,44 +174,36 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     public void setEventManager(EventManager eventManager) {
         this.eventManager=eventManager;
     }
-    DigitalAssetMetadataVault digitalAssetMetadataVault;
+    DigitalAssetIssuingVault digitalAssetIssuingVault;
     @Override
     public void start() throws CantStartPluginException {
-        //delete this
-        //printSomething("Starting Asset Issuing plugin");
-
         try{
             this.assetIssuingDatabase = this.pluginDatabaseSystem.openDatabase(this.pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE);
         }catch (DatabaseNotFoundException | CantOpenDatabaseException exception) {
-            //TODO: delete this printStackTrace in production
-            //exception.printStackTrace();
-            //printSomething("CANNOT OPEN PLUGIN DATABASE: "+this.pluginId);
+
             try {
-                //printSomething("CREATING A PLUGIN DATABASE.");
                 createAssetIssuingTransactionDatabase();
             } catch (CantCreateDatabaseException innerException) {
                 throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Asset Issuing plugin - "+this.pluginId, "Cannot open or create the plugin database");
             }
         }try{
-            /*DigitalAssetMetadataVault*/ digitalAssetMetadataVault=new DigitalAssetMetadataVault(this.pluginId, this.pluginFileSystem, this.errorManager);
-            digitalAssetMetadataVault.setAssetIssuerWalletManager(this.assetIssuerWalletManager);
+            digitalAssetIssuingVault =new DigitalAssetIssuingVault(this.pluginId, this.pluginFileSystem, this.errorManager);
+            digitalAssetIssuingVault.setAssetIssuerWalletManager(this.assetIssuerWalletManager);
             this.assetIssuingTransactionDao=new AssetIssuingTransactionDao(this.pluginDatabaseSystem,this.pluginId);
-            this.assetIssuingEventRecorderService =new AssetIssuingRecorderService(assetIssuingTransactionDao);
+            this.assetIssuingEventRecorderService =new AssetIssuingRecorderService(assetIssuingTransactionDao, eventManager);
             this.assetIssuingTransactionManager=new AssetIssuingTransactionManager(this.pluginId,
                     this.cryptoVaultManager,
-                    this.cryptoWallet,
+                    this.bitcoinWalletManager,
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem,
                     this.errorManager,
                     this.assetVaultManager,
                     this.cryptoAddressBookManager,
                     this.outgoingIntraActorManager);
-            this.assetIssuingTransactionManager.setDigitalAssetMetadataVault(digitalAssetMetadataVault);
+            this.assetIssuingTransactionManager.setDigitalAssetMetadataVault(digitalAssetIssuingVault);
             this.assetIssuingTransactionManager.setAssetIssuingTransactionDao(assetIssuingTransactionDao);
-            //Start the plugin event Recorder
-            //I will comment the EventRecorderService start, because I don't need this right now, it starting without problems.
-            ((DealsWithEvents) this.assetIssuingEventRecorderService).setEventManager(this.eventManager);
             try{
+                //printSomething("Event manager:"+this.eventManager);
                 this.assetIssuingEventRecorderService.start();
             } catch(CantStartServiceException exception){
                 //This plugin must be stopped if this happens.
@@ -217,9 +211,6 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                 throw new CantStartPluginException("Event Recorded could not be started", exception, Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION.getKey(), "The plugin event recorder is not started");
             }
-
-            //Start the plugin monitor agent
-            //I will comment the MonitorAgent start, because I need to implement protocolStatus, this implement CryptoStatus
 
             checkIfExistsPendingAssets();
 
@@ -236,9 +227,9 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         }catch(CantExecuteDatabaseOperationException exception){
             this.serviceStatus=ServiceStatus.STOPPED;
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting pluginDatabaseSystem in DigitalAssetCryptoTransactionFactory", "Error in constructor method AssetIssuingTransactionDao");
-        }/*catch(CantStartAgentException exception){
+        }catch(CantStartAgentException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin", "cannot start monitor agent");
-        }*/catch(Exception exception){
+        }catch(Exception exception){
             this.serviceStatus=ServiceStatus.STOPPED;
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(exception),"Starting Asset Issuing plugin", "Unexpected exception");
         }
@@ -246,8 +237,13 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
 
     }
 
+    /**
+     * This method will start the Monitor Agent that watches the asyncronic process registered in the asset issuing plugin
+     * @throws CantGetLoggedInDeviceUserException
+     * @throws CantSetObjectException
+     * @throws CantStartAgentException
+     */
     private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
-        //printSomething("Asset Issuing monitor agent starting");
         if(this.assetIssuingTransactionMonitorAgent==null){
             String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
             this.assetIssuingTransactionMonitorAgent=new AssetIssuingTransactionMonitorAgent(this.eventManager,
@@ -256,16 +252,21 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
                     this.pluginId,
                     userPublicKey,
                     this.assetVaultManager);
-            this.assetIssuingTransactionMonitorAgent.setDigitalAssetMetadataVault(digitalAssetMetadataVault);
+            this.assetIssuingTransactionMonitorAgent.setDigitalAssetIssuingVault(digitalAssetIssuingVault);
             this.assetIssuingTransactionMonitorAgent.setLogManager(this.logManager);
             this.assetIssuingTransactionMonitorAgent.start();
         }else{
                 this.assetIssuingTransactionMonitorAgent.start();
             }
-
-
     }
 
+    /**
+     * This method will check if there pending assets to issue. In case to finad an unfinished asset, the monitor agent will start.
+     * @throws CantCheckAssetIssuingProgressException
+     * @throws CantStartAgentException
+     * @throws CantSetObjectException
+     * @throws CantGetLoggedInDeviceUserException
+     */
     private void checkIfExistsPendingAssets() throws CantCheckAssetIssuingProgressException, CantStartAgentException, CantSetObjectException, CantGetLoggedInDeviceUserException {
         boolean isPendingAssets=this.assetIssuingTransactionDao.isAnyPendingAsset();
         if(isPendingAssets){
@@ -296,7 +297,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
 
     //TODO: DELETE THIS USELESS METHOD
     private void printSomething(String information){
-        LOG.info("ASSET_ISSUING: "+information);
+        LOG.info("ASSET_ISSUING: " + information);
     }
 
     @Override
@@ -323,8 +324,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     }
 
     @Override
-    public void setCryptoWallet(CryptoWallet cryptoWallet){
-        this.cryptoWallet=cryptoWallet;
+    public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager) {
+        this.bitcoinWalletManager=bitcoinWalletManager;
     }
 
     @Override
@@ -332,6 +333,10 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         this.pluginFileSystem=pluginFileSystem;
     }
 
+    /**
+     * This method will create the plugin database
+     * @throws CantCreateDatabaseException
+     */
     private void createAssetIssuingTransactionDatabase() throws CantCreateDatabaseException {
         AssetIssuingTransactionDatabaseFactory databaseFactory = new AssetIssuingTransactionDatabaseFactory(this.pluginDatabaseSystem);
         assetIssuingDatabase = databaseFactory.createDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE);
@@ -426,6 +431,36 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         }
     }
 
+    @Override
+    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
+        this.deviceUserManager=deviceUserManager;
+    }
+
+    @Override
+    public void setAssetVaultManager(AssetVaultManager assetVaultManager) {
+        this.assetVaultManager=assetVaultManager;
+    }
+
+    @Override
+    public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager) {
+        this.cryptoAddressBookManager=cryptoAddressBookManager;
+    }
+
+    @Override
+    public void setOutgoingIntraActorManager(OutgoingIntraActorManager outgoingIntraActorManager) {
+        this.outgoingIntraActorManager = outgoingIntraActorManager;
+    }
+
+    @Override
+    public void setAssetIssuerManager(AssetIssuerWalletManager assetIssuerWalletManager) {
+        this.assetIssuerWalletManager=assetIssuerWalletManager;
+    }
+
+    /**
+     * Test methods.
+     * Todo: delete them in production
+     */
+
     private void testRaiseEvent(){
         printSomething("Start event test");
         FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER);
@@ -452,8 +487,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         LOG.info("MAP_DigitalAsset2:" + digitalAsset);
         DigitalAssetMetadata dam=new DigitalAssetMetadata(digitalAsset);
         dam.setGenesisTransaction("testGenesisTX");
-        this.digitalAssetMetadataVault.persistDigitalAssetMetadataInLocalStorage(dam);
-        LOG.info("DAM from vault:\n"+this.digitalAssetMetadataVault.getDigitalAssetMetadataFromLocalStorage("testGenesisTX").toString());
+        this.digitalAssetIssuingVault.persistDigitalAssetMetadataInLocalStorage(dam);
+        LOG.info("DAM from vault:\n" + this.digitalAssetIssuingVault.getDigitalAssetMetadataFromLocalStorage("testGenesisTX").toString());
     }
 
     private void testIssueSingleAsset() throws CantIssueDigitalAssetsException{
@@ -577,33 +612,6 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         LOG.info("MAP_END_TEST_MULTIPLE_FULL_ASSETS");
     }
 
-    @Override
-    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
-        this.deviceUserManager=deviceUserManager;
-    }
 
-    @Override
-    public void setAssetVaultManager(AssetVaultManager assetVaultManager) {
-        this.assetVaultManager=assetVaultManager;
-    }
 
-    @Override
-    public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager) {
-        this.cryptoAddressBookManager=cryptoAddressBookManager;
-    }
-
-    /*@Override
-    public void setOutgoingIntraActorManager(OutgoingIntraActorManager outgoingIntraActorManager) {
-        this.outgoingIntraActorManager = outgoingIntraActorManager;
-    }*/
-
-    @Override
-    public void setOutgoingIntraActorManager(OutgoingIntraActorManager outgoingIntraActorManager) {
-        this.outgoingIntraActorManager = outgoingIntraActorManager;
-    }
-
-    @Override
-    public void setAssetIssuerManager(AssetIssuerWalletManager assetIssuerWalletManager) {
-        this.assetIssuerWalletManager=assetIssuerWalletManager;
-    }
 }

@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
@@ -86,25 +86,29 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
         /*
          * Add the att to the header
          */
-        headers.put(JsonAttNamesConstants.HEADER_ATT_NAME_TI,  AsymmectricCryptography.encryptMessagePublicKey(jsonObject.toString(), vpnServerIdentity));
+        headers.put(JsonAttNamesConstants.HEADER_ATT_NAME_TI,  AsymmetricCryptography.encryptMessagePublicKey(jsonObject.toString(), vpnServerIdentity));
 
         /*
          * Construct the vpn client
          */
         WsCommunicationVPNClient vpnClient = new WsCommunicationVPNClient(vpnClientIdentity, serverURI, remotePlatformComponentProfile, remoteParticipantNetworkService, vpnServerIdentity, headers);
 
+
+        System.out.println("GUARDANDO LA CONEXION EN CACHE CON NS = " + remoteParticipantNetworkService.getNetworkServiceType());
+        System.out.println("GUARDANDO LA CONEXION EN CACHE CON PK = " + remotePlatformComponentProfile.getIdentityPublicKey());
+
         /*
          * Add to the vpn client active
          */
-        if (vpnClientActiveCache.containsKey(remotePlatformComponentProfile.getNetworkServiceType())){
+        if (vpnClientActiveCache.containsKey(remoteParticipantNetworkService.getNetworkServiceType())){
 
-            vpnClientActiveCache.get(remotePlatformComponentProfile.getNetworkServiceType()).put(remotePlatformComponentProfile.getIdentityPublicKey(), vpnClient);
+            vpnClientActiveCache.get(remoteParticipantNetworkService.getNetworkServiceType()).put(remotePlatformComponentProfile.getIdentityPublicKey(), vpnClient);
 
         }else {
 
             Map<String, WsCommunicationVPNClient> newMap = new HashMap<>();
             newMap.put(remotePlatformComponentProfile.getIdentityPublicKey(), vpnClient);
-            vpnClientActiveCache.put(remotePlatformComponentProfile.getNetworkServiceType(), newMap);
+            vpnClientActiveCache.put(remoteParticipantNetworkService.getNetworkServiceType(), newMap);
         }
 
         /*
@@ -174,39 +178,19 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
     }
 
     /**
-     * Add a new applicant to vpn
-     * @param applicant
-     */
-    public void addRequestedVpnConnections(PlatformComponentProfile applicant, PlatformComponentProfile remote){
-
-
-        if (requestedVpnConnections.containsKey(applicant.getNetworkServiceType())){
-
-            requestedVpnConnections.get(applicant.getNetworkServiceType()).put(remote.getIdentityPublicKey(), applicant);
-
-        }else {
-
-            Map<String, PlatformComponentProfile> newMap = new HashMap<>();
-            newMap.put(remote.getIdentityPublicKey(), applicant);
-            requestedVpnConnections.put(applicant.getNetworkServiceType(), newMap);
-        }
-
-    }
-
-    /**
      * Return the active connection
      *
-     * @param applicant
+     * @param applicantNetworkServiceType
      * @return WsCommunicationVPNClient
      */
-    public WsCommunicationVPNClient getActiveVpnConnection(PlatformComponentProfile applicant, String remotePlatformComponentProfile){
+    public WsCommunicationVPNClient getActiveVpnConnection(NetworkServiceType applicantNetworkServiceType, PlatformComponentProfile remotePlatformComponentProfile){
 
-        if (vpnClientActiveCache.containsKey(applicant.getNetworkServiceType())){
+        if (vpnClientActiveCache.containsKey(applicantNetworkServiceType)){
 
-            if (vpnClientActiveCache.get(applicant.getNetworkServiceType()).containsKey(remotePlatformComponentProfile)){
-                return vpnClientActiveCache.get(applicant.getNetworkServiceType()).get(remotePlatformComponentProfile);
+            if (vpnClientActiveCache.get(applicantNetworkServiceType).containsKey(remotePlatformComponentProfile.getIdentityPublicKey())){
+                return vpnClientActiveCache.get(applicantNetworkServiceType).get(remotePlatformComponentProfile.getIdentityPublicKey());
             }else {
-                throw new IllegalArgumentException("The remotePlatformComponentProfile is no valid, do not exist a vpn connection for this ");
+                throw new IllegalArgumentException("The applicantNetworkServiceType is no valid, do not exist a vpn connection for this ");
             }
 
         }else {

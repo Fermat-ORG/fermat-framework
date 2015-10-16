@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.BasicFermatEventListener</code>
@@ -28,9 +28,9 @@ public class BasicFermatEventListener implements FermatEventListener {
     private FermatEventMonitor eventMonitor;
 
     /**
-     * Represent the eventType
+     * Represent the p2pEventType
      */
-    private EventType eventType;
+    private P2pEventType p2pEventType;
 
     /**
      * Represent the eventHandler
@@ -40,11 +40,11 @@ public class BasicFermatEventListener implements FermatEventListener {
     /**
      * Constructor with parameters
      *
-     * @param eventType
+     * @param p2pEventType
      * @param eventMonitor
      */
-    public BasicFermatEventListener(EventType eventType, FermatEventMonitor eventMonitor){
-        this.eventType = eventType;
+    public BasicFermatEventListener(P2pEventType p2pEventType, FermatEventMonitor eventMonitor){
+        this.p2pEventType = p2pEventType;
         this.eventMonitor = eventMonitor;
     }
 
@@ -53,8 +53,8 @@ public class BasicFermatEventListener implements FermatEventListener {
      * @see FermatEventListener#getEventType()
      */
     @Override
-    public EventType getEventType() {
-        return eventType;
+    public P2pEventType getEventType() {
+        return p2pEventType;
     }
 
     /**

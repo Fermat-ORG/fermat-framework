@@ -1,12 +1,17 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import org.bitcoinj.core.ECKey;
@@ -15,6 +20,7 @@ import org.bitcoinj.store.UnreadableWalletException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -23,7 +29,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by rodrigo on 10/4/15.
  */
-public class BitcoinCryptoNetworkManager {
+public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
+
     /**
      * BitcoinJ wallet where I'm storing the public keys and transactions
      */
@@ -189,9 +196,79 @@ public class BitcoinCryptoNetworkManager {
             return true;
     }
 
+    /**
+     * instantiate if needed the dao object to access the database
+     * @return
+     */
     private BitcoinCryptoNetworkDatabaseDao getDao(){
         if (bitcoinCryptoNetworkDatabaseDao == null)
             bitcoinCryptoNetworkDatabaseDao = new BitcoinCryptoNetworkDatabaseDao(this.pluginId, this.pluginDatabaseSystem);
         return bitcoinCryptoNetworkDatabaseDao;
+    }
+
+    /**
+     * TransactionProtocolManager interface implementations
+     */
+
+    /**
+     * Confirms the reception of a transaction.
+     * This will change the ProtocolStatus of a transaction from ToBeNotified to NoActionRequired
+     * @param transactionID
+     * @throws CantConfirmTransactionException
+     */
+    @Override
+    public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
+        try {
+            getDao().confirmReception(transactionID);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantConfirmTransactionException(CantConfirmTransactionException.DEFAULT_MESSAGE, e, "Crypto Network issue confirming transaction.", "database issue");
+        }
+    }
+
+    /**
+     * Gets the list of pending transactions, which are marked as Pending_NOTIFIED
+     * @param specialist
+     * @return
+     * @throws CantDeliverPendingTransactionsException
+     */
+    @Override
+    public List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
+        /**
+         * the list to return
+         */
+        List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction> transactionList = new ArrayList<>();
+
+        /**
+         * Will get all the pendingCryptoTransactions data
+         */
+        try {
+            for (TransactionProtocolData transactionProtocolData : getPendingTransactionProtocolData()){
+                com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction transaction;
+                /**
+                 * I create the transaction protocol object and fill it with the data
+                 */
+                transaction = new com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction(
+                        transactionProtocolData.getTransactionId(),
+                        transactionProtocolData.getCryptoTransaction(),
+                        transactionProtocolData.getAction(),
+                        transactionProtocolData.getTimestamp());
+                /**
+                 * and Add it to the list
+                 */
+                transactionList.add(transaction);
+            }
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantDeliverPendingTransactionsException(CantDeliverPendingTransactionsException.DEFAULT_MESSAGE, e, "database error getting the pending transactions.", "database issue");
+        }
+
+        return transactionList;
+    }
+
+    /**
+     * Gets the pending transaction data
+     * @return
+     */
+    private List<TransactionProtocolData> getPendingTransactionProtocolData() throws CantExecuteDatabaseOperationException {
+        return getDao().getPendingTransactionProtocolData();
     }
 }

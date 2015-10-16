@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum CryptoCurrency {
     BITCOIN("BTC"),
+    CHAVEZCOIN("CHC"),
     LITECOIN("LTC");
 
     private String code;
@@ -21,6 +22,7 @@ public enum CryptoCurrency {
 
         switch (code) {
             case "BTC": return CryptoCurrency.BITCOIN;
+            case "CHC": return CryptoCurrency.CHAVEZCOIN;
             case "LTC": return CryptoCurrency.LITECOIN;
             //Modified by Manuel Perez on 03/08/2015
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the CryptoCurrency enum");

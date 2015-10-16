@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_iss
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
@@ -32,7 +33,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
 
     CryptoAddressBookManager cryptoAddressBookManager;
     CryptoVaultManager cryptoVaultManager;
-    CryptoWallet cryptoWallet;
+    BitcoinWalletManager bitcoinWalletManager;
     ErrorManager errorManager;
     UUID pluginId;
     PluginDatabaseSystem pluginDatabaseSystem;
@@ -44,7 +45,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
 
     public AssetIssuingTransactionManager(UUID pluginId,
                                           CryptoVaultManager cryptoVaultManager,
-                                          CryptoWallet cryptoWallet,
+                                          BitcoinWalletManager bitcoinWalletManager,
                                           PluginDatabaseSystem pluginDatabaseSystem,
                                           PluginFileSystem pluginFileSystem,
                                           ErrorManager errorManager,
@@ -53,18 +54,17 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
                                           OutgoingIntraActorManager outgoingIntraActorManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 
         setCryptoVaultManager(cryptoVaultManager);
-        setCryptoWallet(cryptoWallet);
+        setCryptoWallet(bitcoinWalletManager);
         setErrorManager(errorManager);
         setPluginFileSystem(pluginFileSystem);
         setPluginId(pluginId);
         setPluginDatabaseSystem(pluginDatabaseSystem);
         setAssetVaultManager(assetVaultManager);
         setCryptoAddressBookManager(cryptoAddressBookManager);
-        //TODO: when the OutgoingIntraUser is working, please, uncomment the following line
         setOutgoingIntraActorManager(outgoingIntraActorManager);
         this.digitalAssetCryptoTransactionFactory=new DigitalAssetCryptoTransactionFactory(this.pluginId,
                 this.cryptoVaultManager,
-                this.cryptoWallet,
+                this.bitcoinWalletManager,
                 this.pluginDatabaseSystem,
                 this.pluginFileSystem,
                 this.assetVaultManager,
@@ -91,23 +91,17 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         this.digitalAssetCryptoTransactionFactory.issuePendingDigitalAssets(publicKey);
     }
 
-    @Override
-    public void setCryptoWallet(CryptoWallet cryptoWallet) {
-        this.cryptoWallet=cryptoWallet;
+    public void setCryptoWallet(BitcoinWalletManager bitcoinWalletManager) {
+        this.bitcoinWalletManager=bitcoinWalletManager;
     }
-
-    /*@Override
-    public TransactionProtocolManager<CryptoTransaction> getTransactionManager() {
-        return this;
-    }*/
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager=errorManager;
     }
 
-    public void setDigitalAssetMetadataVault(DigitalAssetMetadataVault digitalAssetMetadataVault) throws CantSetObjectException {
-        this.digitalAssetCryptoTransactionFactory.setDigitalAssetMetadataVault(digitalAssetMetadataVault);
+    public void setDigitalAssetMetadataVault(DigitalAssetIssuingVault digitalAssetIssuingVault) throws CantSetObjectException {
+        this.digitalAssetCryptoTransactionFactory.setDigitalAssetIssuingVault(digitalAssetIssuingVault);
     }
 
     public void setPluginId(UUID pluginId) throws CantSetObjectException{
@@ -188,41 +182,4 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
             throw new CantExecuteDatabaseOperationException(exception, "Getting the number of issued assets","Cannot check the asset issuing progress");
         }
     }
-
-    /**
-    @Override
-    public List<Transaction> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
-return null;
-
-        try{
-            List<Transaction> txs = new ArrayList<Transaction>();
-            AssetIssuingTransactionDao assetIssuingTransactionDao= new AssetIssuingTransactionDao(this.pluginDatabaseSystem, this.pluginId);
-
-            HashMap<String, String> transactionHeaders = assetIssuingTransactionDao.getPendingTransactionsHeaders();
-            for (Map.Entry<String, String> entry : transactionHeaders.entrySet()){
-                String txId = entry.getKey();
-                String txHash = entry.getValue();
-                //TODO: finish this
-                String[] addresses = getAddressFromTransaction(txHash);
-                CryptoAddress addressFrom = new CryptoAddress(addresses[0], CryptoCurrency.BITCOIN);
-                CryptoAddress addressTo = new CryptoAddress(addresses[1], CryptoCurrency.BITCOIN);
-                long amount = getAmountFromVault(txHash);
-
-
-
-                CryptoStatus cryptoStatus = db.getCryptoStatus(txId);
-
-
-                CryptoTransaction cryptoTransaction = new CryptoTransaction(txHash, addressFrom, addressTo,CryptoCurrency.BITCOIN, amount, cryptoStatus);
-
-                com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction tx = new com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction(UUID.fromString(txId),cryptoTransaction, Action.APPLY, getTransactionTimestampFromVault(txHash));
-                txs.add(tx);
-
-                db.updateTransactionProtocolStatus(UUID.fromString(txId), ProtocolStatus.SENDING_NOTIFIED);
-            }
-            return txs;
-        } catch (Exception e){
-            throw new CantDeliverPendingTransactionsException("I couldn't deliver pending transactions",e,null,null);
-        }
-    }*/
 }

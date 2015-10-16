@@ -175,8 +175,9 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
 
             List<IntraWalletUser> intraWalletUserList1 = new ArrayList<IntraWalletUser>();
 
-            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            intraWalletUserList1 = intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser);
+            //TODO Descomentar
+           // DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
+            //intraWalletUserList1 = intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser);
 
             //TODO harcoder
 
@@ -188,10 +189,10 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
 
             return intraWalletUserList1;
 
-        } catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantListIntraWalletUsersException("CAN'T GET INTRA WALLET USER IDENTITIES", e, "Error get logged user device", "");
-        } catch (CantListIntraWalletUserIdentitiesException e) {
-            throw new CantListIntraWalletUsersException("CAN'T GET INTRA WALLET USER IDENTITIES", e, "", "");
+       // } catch (CantGetLoggedInDeviceUserException e) {
+         //   throw new CantListIntraWalletUsersException("CAN'T GET INTRA WALLET USER IDENTITIES", e, "Error get logged user device", "");
+       // } catch (CantListIntraWalletUserIdentitiesException e) {
+          //  throw new CantListIntraWalletUsersException("CAN'T GET INTRA WALLET USER IDENTITIES", e, "", "");
         } catch (Exception e) {
             throw new CantListIntraWalletUsersException("CAN'T GET INTRA WALLET USER IDENTITIES", FermatException.wrapException(e), "", "");
         }
@@ -236,6 +237,25 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
             throw new CantCreateNewIntraWalletUserException("CAN'T CREATE NEW INTRA WALLET USER IDENTITY", FermatException.wrapException(e), "", "");
         }
 
+    }
+
+    @Override
+   public boolean  hasIntraUserIdentity() throws CantListIntraWalletUsersException{
+        try {
+
+            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
+            if(intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser).size() > 0)
+                return true;
+            else
+                return false;
+        } catch (CantGetLoggedInDeviceUserException e) {
+            throw new CantListIntraWalletUsersException("CAN'T GET IF INTRA WALLET USER IDENTITIES  EXISTS", e, "Error get logged user device", "");
+        } catch (CantListIntraWalletUserIdentitiesException e) {
+            throw new CantListIntraWalletUsersException("CAN'T GET IF WALLET USER IDENTITIES EXISTS", e, "", "");
+
+        } catch (Exception e) {
+            throw new CantListIntraWalletUsersException("CAN'T GET IF INTRA WALLET USER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
+        }
     }
     /**
      * Service Interface implementation.

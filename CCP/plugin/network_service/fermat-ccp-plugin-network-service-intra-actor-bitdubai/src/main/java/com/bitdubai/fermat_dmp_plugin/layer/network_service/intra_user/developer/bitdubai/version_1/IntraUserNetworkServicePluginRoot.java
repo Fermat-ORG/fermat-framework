@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.Networ
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.enums.IntraUserNotificationDescriptor;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorAcceptIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorAskIntraUserForAcceptanceException;
@@ -93,25 +94,7 @@ import java.util.UUID;
  */
 public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDevelopers, DealsWithCommunicationLayerManager, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithEvents, DealsWithErrors, IntraUserManager, NetworkService, Service, Plugin {
 
-    @Override
-    public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
 
-    }
-
-    @Override
-    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, DiscoveryQueryParameters discoveryQueryParameters) {
-
-    }
-
-    @Override
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
-
-    }
-
-    @Override
-    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
-
-    }
 
     /**
      * DealsWithCommunicationLayerManager Interface member variables.
@@ -406,6 +389,30 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
 
 
     /**
+     * NetworkService Interface implementation.
+     */
+
+    @Override
+    public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
+
+    }
+
+    @Override
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
+
+    }
+
+    @Override
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
+
+    }
+
+    @Override
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
+
+    }
+
+    /**
      * (non-Javadoc)
      * @see DealsWithCommunicationLayerManager#setCommunicationLayerManager(CommunicationLayerManager)  No Compila (Luis)
      */
@@ -547,19 +554,19 @@ public class IntraUserNetworkServicePluginRoot  implements DatabaseManagerForDev
     public List<IntraUser> searchIntraUserByName(String intraUserAlias) throws ErrorInIntraUserSearchException {
         //TODO Harcode
 
-        List<IntraUser> intraUserList = new ArrayList<IntraUser>();
+        List<IntraUserInformation> intraUserList = new ArrayList<IntraUserInformation>();
 
         intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Nicolas") );
         intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Nora") );
         intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Natalia") );
-        return intraUserList;
+        return null;//intraUserList;
     }
 
     @Override
-    public List<IntraUser> getIntraUsersSuggestions(int max,int offset) throws ErrorSearchingSuggestionsException {
+    public List<IntraUserInformation> getIntraUsersSuggestions(int max, int offset) throws ErrorSearchingSuggestionsException {
         //TODO Harcode
 
-        List<IntraUser> intraUserList = new ArrayList<IntraUser>();
+        List<IntraUserInformation> intraUserList = new ArrayList<IntraUserInformation>();
 
         intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Matias") );
         intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Leon") );

@@ -11,6 +11,10 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantSendMessageException;
 
 
 /**
@@ -33,10 +37,23 @@ public interface CommunicationsClientConnection {
      * @param name
      * @param networkServiceType
      * @param platformComponentType
+     * @param extraData
      *
      * @return PlatformComponentProfile
      */
     public PlatformComponentProfile constructPlatformComponentProfileFactory(String identityPublicKey, String alias, String name, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType, String extraData);
+
+    /**
+     * Construct a PlatformComponentProfile instance, for use in the process
+     * of connection
+     *
+     * @param identityPublicKey
+     * @param networkServiceType
+     * @param platformComponentType
+     *
+     * @return PlatformComponentProfile
+     */
+    public PlatformComponentProfile constructBasicPlatformComponentProfileFactory(String identityPublicKey, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType);
 
     /**
      * Construct a DiscoveryQueryParameters instance, for use in the process
@@ -63,16 +80,18 @@ public interface CommunicationsClientConnection {
      * Method that register a platform component with for Communication like online
      *
      * @param platformComponentProfile
+     * @throws CantRegisterComponentException
      */
-    public void registerComponentForCommunication(PlatformComponentProfile platformComponentProfile);
+    public void registerComponentForCommunication(PlatformComponentProfile platformComponentProfile) throws CantRegisterComponentException;
 
     /**
      * Method that request to the communication cloud server the list of component registered that mathc
      * whit the discovery query params
      *
      * @param discoveryQueryParameters
+     * @throws CantRequestListException
      */
-    public void requestListComponentRegistered(DiscoveryQueryParameters discoveryQueryParameters);
+    public void requestListComponentRegistered(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException;
 
     /**
      * Method that request to the communication cloud server create a vpn connection between the applicant and
@@ -80,19 +99,21 @@ public interface CommunicationsClientConnection {
      *
      * @param applicant who is made the request
      * @param remoteDestination the remote destination component to receive message
+     * @throws CantEstablishConnectionException
      */
-    public void requestVpnConnection(PlatformComponentProfile applicant, PlatformComponentProfile remoteDestination);
+    public void requestVpnConnection(PlatformComponentProfile applicant, PlatformComponentProfile remoteDestination) throws CantEstablishConnectionException;
 
     /**
      * Method that request to the communication cloud server create a vpn connection between the applicant and
      * the remote destination component to send message, but the applicant only now a other component type identity public key
      * and the server has to discovery the component type for this identity public key that is the same type as the applicant.
      *
-     * @param identityPublicKeyRequestingParticipant the identity public key of the participant of the vpn
+     * @param applicantParticipant the applicant participant of the vpn
      * @param applicantNetworkService the profile of the network service which it makes the request
-     * @param discoveryQueryParameters have the other type component information to find the corresponding
+     * @param remoteParticipant the remote participant of the vpn
+     * @throws CantEstablishConnectionException
      */
-    public void requestDiscoveryVpnConnection(String identityPublicKeyRequestingParticipant, PlatformComponentProfile applicantNetworkService, DiscoveryQueryParameters discoveryQueryParameters);
+    public void requestDiscoveryVpnConnection(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant) throws CantEstablishConnectionException;
 
     /**
      * Method that verified is the connection is
@@ -111,9 +132,10 @@ public interface CommunicationsClientConnection {
     /**
      * Get the CommunicationsVPNConnection stablished
      *
-     * @param applicant
+     * @param networkServiceType
+     * @param remotePlatformComponentProfile
      * @return CommunicationsVPNConnection
      */
-    public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(PlatformComponentProfile applicant, String remotePlatformComponentProfile);
+    public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(NetworkServiceType networkServiceType, PlatformComponentProfile remotePlatformComponentProfile);
 
 }

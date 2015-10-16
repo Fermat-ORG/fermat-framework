@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.vpn;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
@@ -113,7 +113,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
 
             boolean isRegistered = Boolean.FALSE;
 
-            String messageContentJsonStringRepresentation =  AsymmectricCryptography.decryptMessagePrivateKey(handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI), vpnServerIdentity.getPrivateKey());
+            String messageContentJsonStringRepresentation =  AsymmetricCryptography.decryptMessagePrivateKey(handshake.getFieldValue(JsonAttNamesConstants.HEADER_ATT_NAME_TI), vpnServerIdentity.getPrivateKey());
 
             System.out.println(" WsCommunicationVPNServer - messageContentJsonStringRepresentation = " + messageContentJsonStringRepresentation);
 
@@ -180,7 +180,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
         Gson gson = new Gson();
         JsonObject packetContent = new JsonObject();
         packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN,  remotePlatformComponentProfile.toJson());
-        packetContent.addProperty(JsonAttNamesConstants.APPLICANT_VPN,  destinationPlatformComponentProfile.toJson());
+        packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN,  destinationPlatformComponentProfile.toJson());
 
 
         /*
@@ -249,7 +249,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
             /*
              * Get the FermatMessage from the message content and decrypt
              */
-            String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), vpnServerIdentity.getPrivateKey());
+            String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), vpnServerIdentity.getPrivateKey());
 
             /*
              * Construct the fermat message object

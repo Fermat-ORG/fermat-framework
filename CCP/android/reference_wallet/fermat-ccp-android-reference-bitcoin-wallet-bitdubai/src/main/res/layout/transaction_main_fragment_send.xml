@@ -201,7 +201,7 @@
                             android:paddingRight="7dip"
                             android:id="@+id/linear_send"
                             >
-                            <Button
+                            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                                 android:id="@+id/send_button"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -210,7 +210,8 @@
                                 android:padding="3dp"
                                 android:clickable="true"
                                 android:text="Send"
-
+                                android:background="#1172aa"
+                                android:textColor="#fff"
                                 />
                         </LinearLayout>
 

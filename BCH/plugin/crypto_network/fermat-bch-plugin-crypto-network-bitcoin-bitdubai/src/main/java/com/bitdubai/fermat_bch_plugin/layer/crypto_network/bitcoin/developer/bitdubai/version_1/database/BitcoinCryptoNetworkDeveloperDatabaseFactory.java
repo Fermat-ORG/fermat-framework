@@ -128,7 +128,7 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
         incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME);
         incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_VALUE_COLUMN_NAME);
         incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_FEE_COLUMN_NAME);
-        incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_TRANSMISSION_STATUS_COLUMN_NAME);
+        incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME);
         incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME);
         /**
          * Table Incoming_Transactions addition.
@@ -149,7 +149,7 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
         outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME);
         outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_VALUE_COLUMN_NAME);
         outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_FEE_COLUMN_NAME);
-        outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_TRANSMISSION_STATUS_COLUMN_NAME);
+        outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME);
         outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME);
         /**
          * Table Outgoing_Transactions addition.
@@ -197,43 +197,43 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
          * Will get the records for the given table
          */
         List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
-
-
         /**
          * I load the passed table name from the SQLite database.
          */
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
+            List<DatabaseTableRecord> records = selectedTable.getRecords();
+            for (DatabaseTableRecord row: records){
+                List<String> developerRow = new ArrayList<String>();
+                /**
+                 * for each row in the table list
+                 */
+                for (DatabaseRecord field : row.getValues()){
+                    /**
+                     * I get each row and save them into a List<String>
+                     */
+                    developerRow.add(field.getValue());
+                }
+                /**
+                 * I create the Developer Database record
+                 */
+                returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+            }
+            /**
+             * return the list of DeveloperRecords for the passed table.
+             */
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * if there was an error, I will returned an empty list.
              */
+            database.closeDatabase();
+            return returnedRecords;
+        } catch (Exception e){
+            database.closeDatabase();
             return returnedRecords;
         }
-
-        List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
-        for (DatabaseTableRecord row : records) {
-            /**
-             * for each row in the table list
-             */
-            for (DatabaseRecord field : row.getValues()) {
-                /**
-                 * I get each row and save them into a List<String>
-                 */
-                developerRow.add(field.getValue().toString());
-            }
-            /**
-             * I create the Developer Database record
-             */
-            returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
-        }
-
-
-        /**
-         * return the list of DeveloperRecords for the passed table.
-         */
+        database.closeDatabase();
         return returnedRecords;
     }
 

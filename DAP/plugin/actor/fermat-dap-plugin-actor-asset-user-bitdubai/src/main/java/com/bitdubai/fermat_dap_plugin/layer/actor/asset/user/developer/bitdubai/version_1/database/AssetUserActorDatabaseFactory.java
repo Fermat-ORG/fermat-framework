@@ -53,9 +53,15 @@ public class AssetUserActorDatabaseFactory implements DealsWithPluginDatabaseSys
              */
             table = databaseFactory.newTableFactory(ownerId, AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME);
 
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_USER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOCATION_LATITUDE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOCATION_LONGITUDE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_USER_GENDER_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_USER_AGE_COLUMN_NAME, DatabaseDataType.STRING, 5, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_USER_CRYPTO_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_USER_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_USER_MODIFIED_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
@@ -74,9 +80,15 @@ public class AssetUserActorDatabaseFactory implements DealsWithPluginDatabaseSys
              */
             table = databaseFactory.newTableFactory(ownerId, AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_TABLE_NAME);
 
-            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_LOCATION_LATITUDE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_LOCATION_LONGITUDE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_GENDER_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_AGE_COLUMN_NAME, DatabaseDataType.STRING, 5, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_CRYPTO_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_STATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_MODIFIED_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);

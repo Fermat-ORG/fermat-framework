@@ -6,8 +6,10 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
@@ -22,6 +24,10 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientPingAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteComponentConnectionRequestPacketProcessor;
@@ -31,6 +37,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.devel
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ServerHandshakeRespondPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -186,6 +193,39 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
     /**
      * (non-javadoc)
+     * @see CommunicationsClientConnection#constructBasicPlatformComponentProfileFactory(String, NetworkServiceType, PlatformComponentType)
+     */
+    @Override
+    public PlatformComponentProfile constructBasicPlatformComponentProfileFactory(String identityPublicKey, NetworkServiceType networkServiceType, PlatformComponentType platformComponentType){
+
+        try {
+
+            //Validate parameters
+            if ((identityPublicKey == null || identityPublicKey == "") ||
+                    networkServiceType == null                         ||
+                    platformComponentType == null  ){
+
+                throw new IllegalArgumentException("All argument are required, can not be null ");
+
+            }
+
+            return new PlatformComponentProfileCommunication(null,
+                                                            wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),
+                                                            identityPublicKey,
+                                                            null,
+                                                            null,
+                                                            networkServiceType,
+                                                            platformComponentType,
+                                                            null);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+
+    }
+
+
+    /**
+     * (non-javadoc)
      * @see CommunicationsClientConnection#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
     public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer offset, Integer max, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType){
@@ -207,31 +247,41 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
      * @see CommunicationsClientConnection#registerComponentForCommunication(PlatformComponentProfile)
      */
     @Override
-    public void registerComponentForCommunication(PlatformComponentProfile platformComponentProfile){
+    public void registerComponentForCommunication(PlatformComponentProfile platformComponentProfile) throws CantRegisterComponentException {
 
-        System.out.println("WsCommunicationsCloudClientConnection - registerComponentForCommunication");
+        try {
 
-        /*
-         * Validate parameter
-         */
-        if (platformComponentProfile == null){
+            System.out.println("WsCommunicationsCloudClientConnection - registerComponentForCommunication");
 
-            throw new IllegalArgumentException("The platformComponentProfile is required, can not be null");
+            /*
+             * Validate parameter
+             */
+            if (platformComponentProfile == null){
+
+                throw new IllegalArgumentException("The platformComponentProfile is required, can not be null");
+            }
+
+             /*
+             * Construct a fermat packet whit the PlatformComponentProfile
+             */
+            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
+                    wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
+                    platformComponentProfile.toJson(),                                       //Message Content
+                    FermatPacketType.COMPONENT_REGISTRATION_REQUEST,                         //Packet type
+                    wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
+
+            /*
+             * Send the encode packet to the server
+             */
+            wsCommunicationsCloudClientChannel.send(FermatPacketEncoder.encode(fermatPacketRespond));
+
+
+        }catch (Exception e){
+
+            CantRegisterComponentException pluginStartException = new CantRegisterComponentException(CantRegisterComponentException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
+            throw pluginStartException;
+
         }
-
-         /*
-         * Construct a fermat packet whit the PlatformComponentProfile
-         */
-        FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
-                                                                                                                    wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
-                                                                                                                    platformComponentProfile.toJson(),                                       //Message Content
-                                                                                                                    FermatPacketType.COMPONENT_REGISTRATION_REQUEST,                         //Packet type
-                                                                                                                    wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
-
-        /*
-         * Send the encode packet to the server
-         */
-        wsCommunicationsCloudClientChannel.send(FermatPacketEncoder.encode(fermatPacketRespond));
 
     }
 
@@ -240,31 +290,40 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
      * @see CommunicationsClientConnection#requestListComponentRegistered(DiscoveryQueryParameters)
      */
     @Override
-    public void requestListComponentRegistered(DiscoveryQueryParameters discoveryQueryParameters){
+    public void requestListComponentRegistered(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException {
 
-        System.out.println("WsCommunicationsCloudClientConnection - requestListComponentRegistered");
+        try {
 
-        /*
-         * Validate parameter
-         */
-        if (discoveryQueryParameters == null){
+                System.out.println("WsCommunicationsCloudClientConnection - requestListComponentRegistered");
 
-            throw new IllegalArgumentException("The discoveryQueryParameters is required, can not be null");
+                /*
+                 * Validate parameter
+                 */
+                if (discoveryQueryParameters == null){
+
+                    throw new IllegalArgumentException("The discoveryQueryParameters is required, can not be null");
+                }
+
+                 /*
+                 * Construct a fermat packet whit the filters
+                 */
+                FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
+                                                                                                                            wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
+                                                                                                                            discoveryQueryParameters.toJson(),                                           //Message Content
+                                                                                                                            FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED,                      //Packet type
+                                                                                                                            wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
+
+                /*
+                 * Send the encode packet to the server
+                 */
+                wsCommunicationsCloudClientChannel.send(FermatPacketEncoder.encode(fermatPacketRespond));
+
+        }catch (Exception e){
+
+            CantRequestListException pluginStartException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
+            throw pluginStartException;
+
         }
-
-         /*
-         * Construct a fermat packet whit the filters
-         */
-        FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
-                                                                                                                    wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
-                                                                                                                    discoveryQueryParameters.toJson(),                                           //Message Content
-                                                                                                                    FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED,                      //Packet type
-                                                                                                                    wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
-
-        /*
-         * Send the encode packet to the server
-         */
-        wsCommunicationsCloudClientChannel.send(FermatPacketEncoder.encode(fermatPacketRespond));
 
     }
 
@@ -273,116 +332,130 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
      * @see CommunicationsClientConnection#requestVpnConnection(PlatformComponentProfile, PlatformComponentProfile)
      */
     @Override
-    public void requestVpnConnection(PlatformComponentProfile applicant, PlatformComponentProfile remoteDestination){
+    public void requestVpnConnection(PlatformComponentProfile applicant, PlatformComponentProfile remoteDestination) throws CantEstablishConnectionException {
 
-        System.out.println("WsCommunicationsCloudClientConnection - requestVpnConnection");
 
-        /*
-         * Validate parameter
-         */
-        if (applicant == null || remoteDestination == null){
+        try{
 
-            throw new IllegalArgumentException("All parameters are required, can not be null");
+                System.out.println("WsCommunicationsCloudClientConnection - requestVpnConnection");
+
+                /*
+                 * Validate parameter
+                 */
+                if (applicant == null || remoteDestination == null){
+
+                    throw new IllegalArgumentException("All parameters are required, can not be null");
+                }
+
+                List<PlatformComponentProfile> participants = new ArrayList();
+                participants.add(applicant);
+                participants.add(remoteDestination);
+
+                /**
+                 * Validate all are the same type and NETWORK_SERVICE
+                 */
+                for (PlatformComponentProfile participant: participants) {
+
+                    if (participant.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
+                        throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE ");
+                    }
+
+                    if (participant.getNetworkServiceType() != applicant.getNetworkServiceType()){
+                        throw new IllegalArgumentException("All the PlatformComponentProfile has to be the same type of network service type ");
+                    }
+                }
+
+                /*
+                 * Construct the json object
+                 */
+                Gson gson = new Gson();
+
+                /*
+                 * Convert to json representation
+                 */
+                String jsonListRepresentation = gson.toJson(participants, new TypeToken<List<PlatformComponentProfileCommunication>>() { }.getType());
+
+                 /*
+                 * Construct a fermat packet whit the request
+                 */
+                FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
+                                                                                                                            wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
+                                                                                                                            jsonListRepresentation,                                                  //Message Content
+                                                                                                                            FermatPacketType.COMPONENT_CONNECTION_REQUEST,                           //Packet type
+                                                                                                                            wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
+                /*
+                 * Send the encode packet to the server
+                 */
+                wsCommunicationsCloudClientChannel.send(FermatPacketEncoder.encode(fermatPacketRespond));
+
+        }catch (Exception e){
+
+            CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
+            throw pluginStartException;
+
         }
-
-        List<PlatformComponentProfile> participants = new ArrayList();
-        participants.add(applicant);
-        participants.add(remoteDestination);
-
-        /**
-         * Validate all are the same type and NETWORK_SERVICE
-         */
-        for (PlatformComponentProfile participant: participants) {
-
-            if (participant.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
-                throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE ");
-            }
-
-            if (participant.getNetworkServiceType() != applicant.getNetworkServiceType()){
-                throw new IllegalArgumentException("All the PlatformComponentProfile has to be the same type of network service type ");
-            }
-        }
-
-        /*
-         * Construct the json object
-         */
-        Gson gson = new Gson();
-
-        /*
-         * Convert to json representation
-         */
-        String jsonListRepresentation = gson.toJson(participants, new TypeToken<List<PlatformComponentProfileCommunication>>() { }.getType());
-
-         /*
-         * Construct a fermat packet whit the request
-         */
-        FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
-                                                                                                                    wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
-                                                                                                                    jsonListRepresentation,                                                  //Message Content
-                                                                                                                    FermatPacketType.COMPONENT_CONNECTION_REQUEST,                           //Packet type
-                                                                                                                    wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
-        /*
-         * Send the encode packet to the server
-         */
-        wsCommunicationsCloudClientChannel.send(FermatPacketEncoder.encode(fermatPacketRespond));
-
-        /*
-         * Add the applicant to the requested list
-         */
-        //wsCommunicationVPNClientManagerAgent.addRequestedVpnConnections(applicant, remoteDestination);
 
     }
 
     /**
      * (non-javadoc)
-     * @see CommunicationsClientConnection#requestDiscoveryVpnConnection(String, PlatformComponentProfile, DiscoveryQueryParameters)
+     * @see CommunicationsClientConnection#requestDiscoveryVpnConnection(PlatformComponentProfile, PlatformComponentProfile, PlatformComponentProfile)
      */
     @Override
-    public void requestDiscoveryVpnConnection(String identityPublicKeyRequestingParticipant, PlatformComponentProfile applicantNetworkService, DiscoveryQueryParameters discoveryQueryParameters){
+    public void requestDiscoveryVpnConnection(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant) throws CantEstablishConnectionException{
 
-        System.out.println("WsCommunicationsCloudClientConnection - requestDiscoveryVpnConnection");
+        try {
 
-        /*
-         * Validate parameter
-         */
-        if (applicantNetworkService == null || discoveryQueryParameters == null){
+            System.out.println("WsCommunicationsCloudClientConnection - requestDiscoveryVpnConnection");
 
-            throw new IllegalArgumentException("All parameters are required, can not be null");
+            /*
+             * Validate parameter
+             */
+            if (applicantParticipant == null || applicantNetworkService == null || remoteParticipant == null){
+
+                throw new IllegalArgumentException("All parameters are required, can not be null");
+            }
+
+            /*
+             * Validate are the  type NETWORK_SERVICE
+             */
+            if (applicantNetworkService.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
+                throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE ");
+            }
+
+            /*
+             * Construct the json object
+             */
+            Gson gson = new Gson();
+            JsonObject packetContent = new JsonObject();
+            packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN, applicantParticipant.toJson());
+            packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN, applicantNetworkService.toJson());
+            packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remoteParticipant.toJson());
+
+            /*
+             * Convert to json representation
+             */
+            String packetContentJson = gson.toJson(packetContent);
+
+             /*
+             * Construct a fermat packet whit the request
+             */
+            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
+                                                                                                                        wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
+                                                                                                                        packetContentJson,                                                  //Message Content
+                                                                                                                        FermatPacketType.DISCOVERY_COMPONENT_CONNECTION_REQUEST,                 //Packet type
+                                                                                                                        wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
+            /*
+             * Send the encode packet to the server
+             */
+            wsCommunicationsCloudClientChannel.send(FermatPacketEncoder.encode(fermatPacketRespond));
+
+        }catch (Exception e){
+
+            CantEstablishConnectionException pluginStartException = new CantEstablishConnectionException(CantEstablishConnectionException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
+            throw pluginStartException;
+
         }
-
-        /*
-         * Validate are the  type NETWORK_SERVICE
-         */
-        if (applicantNetworkService.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
-            throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE ");
-        }
-
-        /*
-         * Construct the json object
-         */
-        Gson gson = new Gson();
-        JsonObject packetContent = new JsonObject();
-        packetContent.addProperty(JsonAttNamesConstants.APPLICANT_VPN, identityPublicKeyRequestingParticipant);
-        packetContent.addProperty(JsonAttNamesConstants.APPLICANT_NS_VPN, applicantNetworkService.toJson());
-        packetContent.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM_VPN, discoveryQueryParameters.toJson());
-
-        /*
-         * Convert to json representation
-         */
-        String packetContentJson = gson.toJson(packetContent);
-
-         /*
-         * Construct a fermat packet whit the request
-         */
-        FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
-                                                                                                                    wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
-                                                                                                                    packetContentJson,                                                  //Message Content
-                                                                                                                    FermatPacketType.DISCOVERY_COMPONENT_CONNECTION_REQUEST,                 //Packet type
-                                                                                                                    wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
-        /*
-         * Send the encode packet to the server
-         */
-        wsCommunicationsCloudClientChannel.send(FermatPacketEncoder.encode(fermatPacketRespond));
 
     }
 
@@ -397,20 +470,12 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
     /**
      * (non-javadoc)
-     * @see CommunicationsClientConnection#getCommunicationsVPNConnectionStablished(PlatformComponentProfile, String)
+     * @see CommunicationsClientConnection#getCommunicationsVPNConnectionStablished(NetworkServiceType, PlatformComponentProfile)
      */
     @Override
-    public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(PlatformComponentProfile applicant, String remotePlatformComponentProfile) {
+    public CommunicationsVPNConnection getCommunicationsVPNConnectionStablished(NetworkServiceType networkServiceType, PlatformComponentProfile remotePlatformComponentProfile) {
+        return wsCommunicationVPNClientManagerAgent.getActiveVpnConnection(networkServiceType, remotePlatformComponentProfile);
 
-        if (applicant.getPlatformComponentType() != PlatformComponentType.NETWORK_SERVICE){
-            throw new IllegalArgumentException("All the PlatformComponentProfile has to be NETWORK_SERVICE ");
-        }
-
-        if (applicant.getNetworkServiceType() != applicant.getNetworkServiceType()){
-            throw new IllegalArgumentException("All the PlatformComponentProfile has to be the same type of network service type ");
-        }
-
-        return wsCommunicationVPNClientManagerAgent.getActiveVpnConnection(applicant, remotePlatformComponentProfile);
     }
 
     /**

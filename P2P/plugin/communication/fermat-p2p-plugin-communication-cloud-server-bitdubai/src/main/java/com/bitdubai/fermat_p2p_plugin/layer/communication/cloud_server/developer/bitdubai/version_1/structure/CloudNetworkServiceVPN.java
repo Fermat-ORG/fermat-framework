@@ -118,7 +118,7 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 	private void requestUnregisteredConnection(final FMPPacket packet) throws FMPException {
 		NetworkServices networkService;
 		try{
-			networkService = NetworkServices.valueOf(AsymmectricCryptography.decryptMessagePrivateKey(packet.getMessage(), identity.getPrivateKey()));
+			networkService = NetworkServices.valueOf(AsymmetricCryptography.decryptMessagePrivateKey(packet.getMessage(), identity.getPrivateKey()));
 		} catch(Exception ex){
 			denyConnectionRequest(packet, ex.getMessage());
 			return;

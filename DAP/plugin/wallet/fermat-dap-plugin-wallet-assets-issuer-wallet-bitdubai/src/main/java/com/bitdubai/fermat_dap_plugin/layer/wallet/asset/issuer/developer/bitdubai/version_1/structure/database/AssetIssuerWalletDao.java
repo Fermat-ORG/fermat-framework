@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -8,10 +9,16 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataTyp
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
@@ -39,8 +46,20 @@ import java.util.UUID;
 /**
  * Created by franklin on 28/09/15.
  */
-public class AssetIssuerWalletDao {
+public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
     //TODO: Manejo de excepciones
+    public static final String PATH_DIRECTORY = "asset-issuer-swap/";//digital-asset-swap/"
+    PluginFileSystem pluginFileSystem;
+    UUID plugin;
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
+
+    public void setPlugin(UUID plugin){
+        this.plugin = plugin;
+    }
+
     private Database database;
 
     public AssetIssuerWalletDao(Database database){
@@ -144,10 +163,28 @@ public class AssetIssuerWalletDao {
         }
     }
 
+    public List<AssetIssuerWalletTransaction> listsTransactionsByAssetsAll(BalanceType balanceType, TransactionType transactionType, String assetPublicKey) throws CantGetTransactionsException{
+        try {
+            DatabaseTable databaseTableAssuerIssuerWallet = getAssetIssuerWalletTable();
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+
+            databaseTableAssuerIssuerWallet.loadToMemory();
+            return createTransactionList(databaseTableAssuerIssuerWallet.getRecords());
+        }
+        catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantGetTransactionsException("Get List of All Transactions", cantLoadTableToMemory, "Error load wallet table ", "");
+        }
+        catch (Exception exception){
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
+        }
+    }
+
     public List<AssetIssuerWalletTransaction> listsTransactionsByAssets(BalanceType balanceType, TransactionType transactionType, int max, int offset, String assetPublicKey) throws CantGetTransactionsException{
         try {
-            DatabaseTable databaseTableAssuerIssuerWallet = getBalancesTable();
-            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            DatabaseTable databaseTableAssuerIssuerWallet = getAssetIssuerWalletTable();
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
             databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
             databaseTableAssuerIssuerWallet.setFilterTop(String.valueOf(max));
             databaseTableAssuerIssuerWallet.setFilterOffSet(String.valueOf(offset));
@@ -216,6 +253,18 @@ public class AssetIssuerWalletDao {
         return null;
     }
 
+    public List<AssetIssuerWalletTransaction> distributeAssets(String assetPublicKey) throws CantGetTransactionsException {
+        try
+        {
+            List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions = listsTransactionsByAsset(assetPublicKey);
+            return assetIssuerWalletTransactions;
+        }
+        catch (CantGetTransactionsException e) {
+            throw new CantGetTransactionsException("Get List of Transactions", e, "Error load wallet table ", "Method: distributeAssets()");
+        }
+
+    }
+
     public void updateMemoField(UUID transactionID, String memo) throws CantStoreMemoException, CantFindTransactionException{
         try
         {
@@ -237,6 +286,22 @@ public class AssetIssuerWalletDao {
             throw new CantStoreMemoException("Transaction Memo Update Error",cantUpdateRecord,"Error update memo of Transaction " + transactionID.toString(), "");
         } catch(Exception exception){
             throw new CantStoreMemoException(CantStoreMemoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    private List<AssetIssuerWalletTransaction> listsTransactionsByAsset(String assetPublicKey) throws CantGetTransactionsException{
+        try {
+            DatabaseTable databaseTableAssuerIssuerWallet = getAssetIssuerWalletTable();
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+
+            databaseTableAssuerIssuerWallet.loadToMemory();
+            return createTransactionList(databaseTableAssuerIssuerWallet.getRecords());
+        }
+        catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantGetTransactionsException("Get List of Transactions", cantLoadTableToMemory, "Error load wallet table ", "");
+        }
+        catch (Exception exception){
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
         }
     }
 
@@ -277,38 +342,46 @@ public class AssetIssuerWalletDao {
     }
 
     private void executeTransaction(final AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord, final TransactionType transactionType, final BalanceType balanceType, final long availableRunningBalance, final long bookRunningBalance) throws CantExecuteAssetIssuerTransactionException {
-        //TODO: Falta manejo de excepciones
         try {
-            DatabaseTableRecord assetIssuerWalletRecord = constructAssetIssuerWalletRecord(assetIssuerWalletTransactionRecord, transactionType, balanceType, availableRunningBalance, bookRunningBalance);//DatabaseTableRecord balanceRecord = constructBalanceRecord(availableRunningBalance, bookRunningBalance);
+            DatabaseTableRecord assetIssuerWalletRecord = constructAssetIssuerWalletRecord(assetIssuerWalletTransactionRecord, transactionType, balanceType, availableRunningBalance, bookRunningBalance);
             DatabaseTableRecord assetBalanceRecord = constructAssetBalanceRecord(assetIssuerWalletTransactionRecord.getDigitalAsset(), availableRunningBalance, bookRunningBalance);
             DatabaseTransaction transaction = database.newTransaction();
             transaction.addRecordToInsert(getAssetIssuerWalletTable(), assetIssuerWalletRecord);
-            DatabaseTableRecord record = getBalancesByAssetRecord(assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
-            if (record == null) {
-                transaction.addRecordToInsert(getBalancesTable(), assetBalanceRecord);
-            } else {
-                transaction.addRecordToUpdate(getBalancesTable(), assetBalanceRecord);
-            }
-        }catch (Exception exception){
 
+            DatabaseTable databaseTable = getBalancesTable();
+            databaseTable.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey(), DatabaseFilterType.EQUAL );
+            databaseTable.loadToMemory();
+            if (databaseTable.getRecords().isEmpty()){
+                transaction.addRecordToInsert(databaseTable, assetBalanceRecord);
+                String digitalAssetInnerXML = assetIssuerWalletTransactionRecord.getDigitalAsset().toString();
+                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(plugin, assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey(), PATH_DIRECTORY, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                pluginTextFile.setContent(digitalAssetInnerXML);
+                pluginTextFile.persistToMedia();
+            }else{
+                transaction.addRecordToUpdate(databaseTable, assetBalanceRecord);
+            }
+
+            database.executeTransaction(transaction);
+            database.closeDatabase();
+
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new CantExecuteAssetIssuerTransactionException("Error to get balances record",e,"Can't load balance table" , "");
         }
     }
 
     private DatabaseTableRecord constructAssetBalanceRecord(DigitalAsset digitalAsset, long  availableRunningBalance, long bookRunningBalance)
     {
-        try {
-            DatabaseTableRecord record = getBalancesByAssetRecord(digitalAsset.getPublicKey()); //Si esto devuelve null, entonces creamos un registro en blanco
-            if (record == null)
-            {
-                record = getBalancesTable().getEmptyRecord();
-            }
-            record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, digitalAsset.getPublicKey());
-            record.setLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, availableRunningBalance);
-            record.setLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, bookRunningBalance);
-            return record;
-        }catch (Exception exception){
-            return  null;
-        }
+
+        DatabaseTableRecord record = getBalancesTable().getEmptyRecord();
+        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, digitalAsset.getPublicKey());
+        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_NAME_COLUMN_NAME, digitalAsset.getName());
+        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME, digitalAsset.getDescription());
+        record.setLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, availableRunningBalance);
+        record.setLongValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, bookRunningBalance);
+
+        return record;
+
     }
     private DatabaseTableRecord constructAssetIssuerWalletRecord(final AssetIssuerWalletTransactionRecord assetIssuerWalletTransactionRecord, final TransactionType transactionType, final BalanceType balanceType, final long availableRunningBalance, final long bookRunningBalance){
         DatabaseTableRecord record = getAssetIssuerWalletTable().getEmptyRecord();
@@ -355,7 +428,8 @@ public class AssetIssuerWalletDao {
     }
 
     private DatabaseTable getAssetIssuerWalletTable(){
-        return database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TABLE_NAME);
+        DatabaseTable databaseTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TABLE_NAME);
+        return databaseTable;
     }
 
     private long getCurrentAvailableBalance() throws CantGetBalanceRecordException{
@@ -444,7 +518,6 @@ public class AssetIssuerWalletDao {
         try {
             DatabaseTable balancesTable = getBalancesTable();
             balancesTable.loadToMemory();
-            //return balancesTable.getRecords().get(0);
             return balancesTable.getRecords();
         } catch (CantLoadTableToMemoryException exception) {
             throw new CantGetBalanceRecordException("Error to get balances record",exception,"Can't load balance table" , "");
@@ -453,16 +526,20 @@ public class AssetIssuerWalletDao {
 
     private DatabaseTableRecord getBalancesByAssetRecord(String assetPublicKey) throws CantGetBalanceRecordException{
         try {
-            DatabaseTable balancesTable = getBalancesTable();
-            balancesTable.getNewFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, DatabaseFilterType.EQUAL, assetPublicKey);
+            DatabaseTable balancesTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_NAME);;
+            balancesTable.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
             balancesTable.loadToMemory();
-            return balancesTable.getRecords().get(0);
+            if (!balancesTable.getRecords().isEmpty() ) {
+                return balancesTable.getRecords().get(0);
+            }
+            else return balancesTable.getEmptyRecord();
         } catch (CantLoadTableToMemoryException exception) {
             throw new CantGetBalanceRecordException("Error to get balances record",exception,"Can't load balance table" , "");
         }
     }
 
     private DatabaseTable getBalancesTable(){
-        return database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_NAME);
+        DatabaseTable databaseTable = database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_NAME);
+        return databaseTable; //database.getTable(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_NAME);
     }
 }

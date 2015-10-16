@@ -156,11 +156,11 @@ project(':fermat-pip-android-sub-app-sub-app-manager-bitdubai').projectDir = new
 
 // P2P Projects
 
-include ':fermat-p2p-plugin-communication-cloud-client-bitdubai'
-project(':fermat-p2p-plugin-communication-cloud-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai')
+//include ':fermat-p2p-plugin-communication-cloud-client-bitdubai'
+//project(':fermat-p2p-plugin-communication-cloud-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai')
 
-include ':fermat-p2p-plugin-communication-cloud-server-bitdubai'
-project(':fermat-p2p-plugin-communication-cloud-server-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai')
+//include ':fermat-p2p-plugin-communication-cloud-server-bitdubai'
+//project(':fermat-p2p-plugin-communication-cloud-server-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai')
 
 include ':fermat-p2p-plugin-ws-communications-cloud-server-bitdubai'
 project(':fermat-p2p-plugin-ws-communications-cloud-server-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-ws-communications-cloud-server-bitdubai')
@@ -377,8 +377,8 @@ include ':fermat-ccp-android-sub-app-intra-user-identity-bitdubai'
 project(':fermat-ccp-android-sub-app-intra-user-identity-bitdubai').projectDir = new File('CCP/android/sub_apps/fermat-ccp-android-sub-app-intra-user-identity-bitdubai')
 
 
-include ':fermat_ccp_android_sub_app_intra_user_community_bitdubai'
-project(':fermat_ccp_android_sub_app_intra_user_community_bitdubai').projectDir = new File('CCP/android/sub_apps/fermat_ccp_android_sub_app_intra_user_community_bitdubai')
+include ':fermat-ccp-android-sub-app-intra-user-community-bitdubai'
+project(':fermat-ccp-android-sub-app-intra-user-community-bitdubai').projectDir = new File('CCP/android/sub_apps/fermat-ccp-android-sub-app-intra-user-community-bitdubai')
 
 
 // Milestone 2 project middlware:
@@ -790,6 +790,12 @@ include ':fermat-cbp-plugin-middleware-sub-app-manager-bitdubai'
 project(':fermat-cbp-plugin-middleware-sub-app-manager-bitdubai').projectDir = new File('CBP/plugin/middleware/fermat-cbp-plugin-middleware-sub-app-manager-bitdubai')
 include ':fermat-cbp-plugin-middleware-wallet-manager-bitdubai'
 project(':fermat-cbp-plugin-middleware-wallet-manager-bitdubai').projectDir = new File('CBP/plugin/middleware/fermat-cbp-plugin-middleware-wallet-manager-bitdubai')
+
+//Negotiation
+include ':fermat-cbp-plugin-negotiation-customer-broker-purchase-bitdubai'
+project(':fermat-cbp-plugin-negotiation-customer-broker-purchase-bitdubai').projectDir = new File('CBP/plugin/negotiation/fermat-cbp-plugin-negotiation-customer-broker-purchase-bitdubai')
+include ':fermat-cbp-plugin-negotiation-customer-broker-sale-bitdubai'
+project(':fermat-cbp-plugin-negotiation-customer-broker-sale-bitdubai').projectDir = new File('CBP/plugin/negotiation/fermat-cbp-plugin-negotiation-customer-broker-sale-bitdubai')
 
 //Request
 include ':fermat-cbp-plugin-request-customer-broker-purchase-bitdubai'

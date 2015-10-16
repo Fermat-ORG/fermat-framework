@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserFactory;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantAcceptIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCancelIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraWalletUserException;
@@ -82,7 +83,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class IntraWalletUserModulePluginRoot implements  DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithCCPIntraWalletUser,DealsWithCCPIntraWalletUsers, DealsWithPluginFileSystem, LogManagerForDevelopers,  IntraUserModuleManager, Plugin, Service  {
+public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithCCPIntraWalletUser,DealsWithCCPIntraWalletUsers, DealsWithPluginFileSystem, LogManagerForDevelopers,  IntraUserModuleManager, Plugin, Service  {
 
     private static String INTRA_USER_LOGIN_FILE_NAME = "intraUsersLogin";
 
@@ -305,9 +306,9 @@ public class IntraWalletUserModulePluginRoot implements  DealsWithErrors,DealsWi
 
             List<IntraUserInformation>  intraUserInformationList = new ArrayList<IntraUserInformation>();
 
-            List<IntraUser> intraUserList =  this.intraUserNertwokServiceManager.getIntraUsersSuggestions(max,offset);
+            List<IntraUserInformation> intraUserList =  this.intraUserNertwokServiceManager.getIntraUsersSuggestions(max,offset);
 
-            for (IntraUser intraUser : intraUserList) {
+            for (IntraUserInformation intraUser : intraUserList) {
                 intraUserInformationList.add(new IntraUserModuleInformation(intraUser.getName(),intraUser.getPublicKey(),intraUser.getProfileImage()));
             }
 
@@ -581,6 +582,19 @@ public class IntraWalletUserModulePluginRoot implements  DealsWithErrors,DealsWi
         {
             throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE",FermatException.wrapException(e),"","unknown exception");
         }
+    }
+
+    /**
+     * That method returns the list of intra users waiting to be accepted
+     * or rejected by the logged in intra user
+     *
+     * @return the list of intra users waiting to be accepted or rejected by the  logged in intra user
+     * @throws CantGetIntraUsersListException
+     */
+    @Override
+    public int getIntraUsersWaitingYourAcceptanceCount() {
+       //TODO: falta que este metodo que devuelva la cantidad de request de conexion que tenes
+       return 6;
     }
 
 

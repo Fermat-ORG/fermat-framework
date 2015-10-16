@@ -85,7 +85,7 @@ public class TransactionHistoryAdapter extends FermatAdapter<CryptoWalletTransac
 
         try
         {
-            holder.getContactIcon().setImageResource(R.drawable.mati_profile);
+            //holder.getContactIcon().setImageResource(R.drawable.mati_profile);
 
             holder.getTxt_amount().setText(formatBalanceString(data.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
 

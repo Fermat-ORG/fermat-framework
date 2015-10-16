@@ -88,4 +88,19 @@ However, neither Satoshi Nakamoto nor anyone else exerts control over the bitcoi
 
 In bitcoin terms, "spending" is signing a transaction that transfers value from a previous transaction over to a new owner identified by a bitcoin address.The "puzzle" used in bitcoin is based on a cryptographic hash and exhibits similar characteristics: it is asymmetrically hard to solve but easy to verify, and its difficulty can be adjusted.
 
+chap 05
+transactions
+
+Bitcoin transactions can therefore be transmitted to the bitcoin
+network over insecure networks such as WiFi, Bluetooth, NFC, Chirp,
+barcodes, or by copying and pasting into a web form. In extreme cases,
+a bitcoin transaction could be transmitted over packet radio,
+satellite relay, or shortwave using burst transmission, spread
+spectrum, or frequency hopping to evade detection and jamming. A
+bitcoin transaction could even be encoded as smileys (emoticons) and
+posted in a public forum or sent as a text message or Skype chat
+message. Bitcoin has turned money into a data structure, making it
+virtually impossible to stop anyone from creating and executing a
+bitcoin transaction.
+
 
