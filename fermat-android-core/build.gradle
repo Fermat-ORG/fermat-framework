@@ -139,5 +139,9 @@ dependencies {
     compile 'com.google.android.gms:play-services:6.5.87'
 
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5+'
-
+    testCompile 'org.robolectric:robolectric:3.0+'
+    testCompile('org.robolectric:shadows-multidex:3.0')
+    testCompile group: 'junit', name: 'junit', version: '4.11+'
+    testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
+    testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
 }
