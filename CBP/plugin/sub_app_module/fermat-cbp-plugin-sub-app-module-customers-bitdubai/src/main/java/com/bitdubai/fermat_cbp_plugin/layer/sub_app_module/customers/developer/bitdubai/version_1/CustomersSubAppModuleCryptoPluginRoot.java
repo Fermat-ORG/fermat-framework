@@ -32,6 +32,7 @@ public class CustomersSubAppModuleCryptoPluginRoot implements DealsWithErrors, D
     /**
      * DealsWithErrors interface member variables
      */
+    
     ErrorManager errorManager;
 
     /**
