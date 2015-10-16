@@ -218,6 +218,8 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                 switch (cpr.getNotificationDescriptor()) {
 
                     case ASKFORACCEPTANCE:
+
+                        break;
                     case ACCEPTED:
                     case DISCONNECTED:
                     case RECEIVED:

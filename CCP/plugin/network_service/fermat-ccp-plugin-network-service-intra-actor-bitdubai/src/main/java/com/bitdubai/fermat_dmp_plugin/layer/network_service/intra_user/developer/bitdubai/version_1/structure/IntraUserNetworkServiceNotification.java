@@ -28,7 +28,7 @@ public class IntraUserNetworkServiceNotification implements IntraUserNotificatio
     }
 
     @Override
-    public String getPublicKeyOfTheIntraUserSendingUsANotification() {
+    public String getPublicKeyOfTheSender() {
         return this.intraUserLogedInPublicKey;
     }
 
@@ -38,12 +38,12 @@ public class IntraUserNetworkServiceNotification implements IntraUserNotificatio
     }
 
     @Override
-    public String getIntraUserToConnectAlias(){
+    public String getActorSenderAlias(){
         return this.alias;
     }
 
     @Override
-    public  byte[] getIntraUserToConnectProfileImage(){
+    public  byte[] getActorSenderProfileImage(){
         return this.profileImage;
     }
 

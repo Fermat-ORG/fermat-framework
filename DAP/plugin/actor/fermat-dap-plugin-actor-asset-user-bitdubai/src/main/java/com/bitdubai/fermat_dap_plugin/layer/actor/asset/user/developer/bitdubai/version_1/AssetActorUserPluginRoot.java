@@ -604,14 +604,14 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
 //
 //            for (IntraUserNotification notification : intraUserNotificationes) {
 //
-//                String intraUserSendingPublicKey = notification.getPublicKeyOfTheIntraUserSendingUsANotification();
+//                String intraUserSendingPublicKey = notification.getPublicKeyOfTheSender();
 //
 //                String intraUserToConnectPublicKey = notification.getPublicKeyOfTheIntraUserToConnect();
 //
 //                switch (notification.getNotificationDescriptor()) {
 //                    case ASKFORACCEPTANCE:
 //
-//                        this.askIntraWalletUserForAcceptance(intraUserSendingPublicKey, notification.getIntraUserToConnectAlias(), intraUserToConnectPublicKey, notification.getIntraUserToConnectProfileImage());
+//                        this.askIntraWalletUserForAcceptance(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserToConnectPublicKey, notification.getActorSenderProfileImage());
 //
 //                    case CANCEL:
 //                        this.cancelIntraWalletUser(intraUserSendingPublicKey, intraUserToConnectPublicKey);
@@ -627,7 +627,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
 //                        this.disconnectIntraWalletUser("", intraUserSendingPublicKey);
 //                        break;
 //                    case RECEIVED:
-//                        this.receivingIntraWalletUserRequestConnection(intraUserSendingPublicKey, notification.getIntraUserToConnectAlias(), intraUserToConnectPublicKey, notification.getIntraUserToConnectProfileImage());
+//                        this.receivingIntraWalletUserRequestConnection(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserToConnectPublicKey, notification.getActorSenderProfileImage());
 //                        /**
 //                         * fire event "INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION"
 //                         */
