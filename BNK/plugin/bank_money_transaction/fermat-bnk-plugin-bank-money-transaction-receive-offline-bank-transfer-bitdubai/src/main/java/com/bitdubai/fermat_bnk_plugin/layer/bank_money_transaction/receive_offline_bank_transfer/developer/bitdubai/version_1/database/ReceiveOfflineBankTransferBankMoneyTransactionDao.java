@@ -138,9 +138,9 @@ public class ReceiveOfflineBankTransferBankMoneyTransactionDao {
             }
             return bankMoneyStockReplenishment;
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantListReceiveOfflineBankTransferException(e.getMessage(), e, "Bank Money Stock Replenishment", "Cant load " + ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_TABLE_NAME + " table in memory.");
+            throw new CantListReceiveOfflineBankTransferException(e.getMessage(), e, "Receive Off line Bank Transfer", "Cant load " + ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
-            throw new CantListReceiveOfflineBankTransferException(e.getMessage(), FermatException.wrapException(e), "Crypto Broker Identity", "Cant get Crypto Broker Identity list, unknown failure.");
+            throw new CantListReceiveOfflineBankTransferException(e.getMessage(), FermatException.wrapException(e), "Receive Off line Bank Transfer", "Cant get Receive Off line Bank Transfer list, unknown failure.");
         }
     }
 

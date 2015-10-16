@@ -14,8 +14,8 @@ public interface ReceiveCashDeliveryManager {
     List<ReceiveCashDelivery> getAllReceiveCashDeliveryFromCurrentDeviceUser() throws CantGetReceiveCashDeliveryException;
 
     ReceiveCashDelivery createReceiveCashDelivery(
-         final String publicKeyCustomer
-        ,final String publicKeyBroker
+         final String publicKeyActorTo
+        ,final String publicKeyActorFrom
         ,final String balanceType
         ,final String transactionType
         ,final float amount
