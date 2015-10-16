@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Created by eze on 2015.07.27..
@@ -17,4 +18,6 @@ public class CantListIntraWalletUsersException extends FermatException {
     public CantListIntraWalletUsersException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
+
 }
