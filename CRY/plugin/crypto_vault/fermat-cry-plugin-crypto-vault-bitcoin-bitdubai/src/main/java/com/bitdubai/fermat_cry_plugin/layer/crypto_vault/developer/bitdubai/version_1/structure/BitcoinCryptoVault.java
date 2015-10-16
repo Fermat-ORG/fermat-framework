@@ -742,10 +742,10 @@ public class BitcoinCryptoVault implements
 
         } catch(CantLoadTableToMemoryException exception){
 
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+            throw new CantExecuteQueryException(exception, null, "Check the cause");
         } catch(Exception exception){
 
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
         }
     }
 }

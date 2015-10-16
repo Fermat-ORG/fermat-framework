@@ -27,6 +27,4 @@ import java.util.UUID;
 
     PlatformBinaryFile createBinaryFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException;
 
-    void setContext (Object context);
-
 }

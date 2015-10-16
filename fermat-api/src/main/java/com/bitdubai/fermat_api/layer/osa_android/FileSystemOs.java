@@ -13,5 +13,4 @@ public interface FileSystemOs {
 
     public PlatformFileSystem getPlatformFileSystem();
 
-    public void setContext (Object context);
 }

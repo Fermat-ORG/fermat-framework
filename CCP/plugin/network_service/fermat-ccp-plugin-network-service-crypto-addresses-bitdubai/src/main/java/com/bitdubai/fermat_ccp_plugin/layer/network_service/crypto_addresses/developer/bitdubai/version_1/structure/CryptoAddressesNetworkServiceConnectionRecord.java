@@ -3,10 +3,10 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.de
 import java.util.UUID;
 
 /**
- * The class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.structure.CryptoAddressesNetworkServiceConnectionRecord</code>
+ * The class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.structure.CryptoAddressesNetworkServiceConnectionRecord</code>
  * represents a crypto payment request network service connection.
  * <p>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 13/10/2015.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 15/10/2015.
  */
 public class CryptoAddressesNetworkServiceConnectionRecord {
 
