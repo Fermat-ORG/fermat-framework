@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.Service;
 
 import com.bitdubai.fermat_api.layer.all_definition.IntraUsers.IntraUserSettings;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -362,7 +363,7 @@ public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsW
              *Call Network Service Intra User to add request connection
              */
 
-            this.intraUserNertwokServiceManager.askIntraUserForAcceptance(this.intraUserLoggedPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage);
+            this.intraUserNertwokServiceManager.askIntraUserForAcceptance(this.intraUserLoggedPublicKey, Actors.INTRA_USER, intraUserToAddName, intraUserToAddPublicKey, Actors.INTRA_USER,profileImage);
         }
         catch(CantCreateIntraWalletUserException e)
         {
