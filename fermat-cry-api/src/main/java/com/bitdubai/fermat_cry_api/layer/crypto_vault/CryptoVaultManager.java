@@ -66,9 +66,9 @@ public interface CryptoVaultManager extends TransactionSender<CryptoTransaction>
 
     /**
      * returns the CryptoStatus of the passed transaction.
-     * @param transactionId
+     * @param txHash
      * @return
      * @throws CouldNotGetCryptoStatusException
      */
-    public CryptoStatus getCryptoStatus(UUID transactionId) throws CouldNotGetCryptoStatusException;
+    CryptoStatus getCryptoStatus(String txHash) throws CouldNotGetCryptoStatusException;
 }

@@ -10,12 +10,14 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -69,7 +71,17 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by rodrigo on 09/06/15.
  */
-public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWithBitcoinCryptoNetwork, DealsWithEvents,DealsWithErrors, DealsWithPluginIdentity, DealsWithPluginDatabaseSystem, DealsWithLogger, DealsWithPluginFileSystem, TransactionProtocolManager{
+public class BitcoinCryptoVault implements
+        BitcoinManager,
+        CryptoVault,
+        DealsWithBitcoinCryptoNetwork,
+        DealsWithEvents,
+        DealsWithErrors,
+        DealsWithPluginIdentity,
+        DealsWithPluginDatabaseSystem,
+        DealsWithLogger,
+        DealsWithPluginFileSystem,
+        TransactionProtocolManager {
 
     /**
      * BitcoinCryptoVault member variables
@@ -393,8 +405,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             // if the transaction was requested before but resent by mistake, we're not going to send it again
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Sending bitcoins...", "Address to:" + addressTo.getAddress() + "TxId: " + fermatTxId, null);
 
-            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
-            db.setVault(vault);
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, eventManager);
 
             // check if the transaction was already sent, this might be an error. we're not going to send it again.
             if (!db.isNewFermatTransaction(fermatTxId)) {
@@ -424,7 +435,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             if (isSendingMoneyToMyself(tx)) {
                 throw new InvalidSendToAddressException(
                         "Address to:" + addressTo.getAddress(),
-                        "The user entered an address given by this vault."
+                        "The user entered an address given by his own vault."
                 );
             }
 
@@ -447,6 +458,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
              * I will persist it to inform it when the confidence level changes
              */
             listenableFuture.get();
+
+            vault.saveToFile(vaultFile);
 
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: bitcoin sent!!!", "Address to: " + addressTo.getAddress(), "Amount: " + amount);
 
@@ -533,8 +546,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
          * will marked the transaction as notified
          */
         try{
-            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
-            db.setVault(vault);
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, eventManager);
             db.updateTransactionProtocolStatus(transactionID, ProtocolStatus.RECEPTION_NOTIFIED);
         } catch (Exception e){
             throw new CantConfirmTransactionException("There was an error trying to confirm reception of a transaction", e, "TransactionId: " + transactionID.toString(), "Database plugin error.");
@@ -547,13 +559,12 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
          * will return all the pending transactions
          */
         try{
-            List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction> txs = new ArrayList<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction>();
-            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
-            db.setVault(vault);
+            List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction> txs = new ArrayList<>();
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, eventManager);
             /**
              * Im getting the transaction headers which is a map with transactionID and Transaction Hash. I will use this information to access the vault.
              */
-            HashMap<String, String> transactionHeaders = db.getPendingTransactionsHeaders();
+            HashMap<String, String> transactionHeaders = db.getPendingTransactionsHeadersByTransactionType(CryptoTransactionType.INCOMING);
             for (Map.Entry<String, String> entry : transactionHeaders.entrySet()){
                 String txId = entry.getKey();
                 String txHash = entry.getValue();
@@ -573,10 +584,21 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
                  */
                 CryptoStatus cryptoStatus = db.getCryptoStatus(txId);
 
+                CryptoTransaction cryptoTransaction = new CryptoTransaction(
+                        txHash,
+                        addressFrom,
+                        addressTo,
+                        CryptoCurrency.BITCOIN,
+                        amount,
+                        cryptoStatus
+                );
 
-                CryptoTransaction cryptoTransaction = new CryptoTransaction(txHash, addressFrom, addressTo,CryptoCurrency.BITCOIN, amount, cryptoStatus);
-
-                com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction tx = new com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction(UUID.fromString(txId),cryptoTransaction, Action.APPLY, getTransactionTimestampFromVault(txHash));
+                com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction tx = new com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction(
+                        UUID.fromString(txId),
+                        cryptoTransaction,
+                        Action.APPLY,
+                        getTransactionTimestampFromVault(txHash)
+                );
                 txs.add(tx);
 
                 /**
@@ -709,19 +731,20 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         return tx.getUpdateTime().getTime();
     }
 
-    public CryptoStatus getCryptoStatus(UUID transactionId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
-        /**
-         * Last Update: 23/07/2015 for: fmarcano
-         */
-        try{
-            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
-            db.setVault(vault);
-            return db.getCryptoStatus(transactionId.toString());
-        }catch(CantExecuteQueryException exception){
+    // modified by lnacosta
+    public CryptoStatus getCryptoStatus(final String txHash) throws CantExecuteQueryException                     ,
+                                                                    UnexpectedResultReturnedFromDatabaseException {
+
+        try {
+
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, eventManager);
+            return db.getLastCryptoStatus(txHash);
+
+        } catch(CantLoadTableToMemoryException exception){
+
             throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, exception, null, "Check the cause");
-        }catch(UnexpectedResultReturnedFromDatabaseException exception){
-            throw new UnexpectedResultReturnedFromDatabaseException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, null, "Check the cause");
-        }catch(Exception exception){
+        } catch(Exception exception){
+
             throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }

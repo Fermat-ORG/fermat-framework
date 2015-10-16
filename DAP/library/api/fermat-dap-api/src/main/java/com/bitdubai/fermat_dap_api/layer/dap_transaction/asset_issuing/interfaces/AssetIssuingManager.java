@@ -31,7 +31,7 @@ public interface AssetIssuingManager /*extends TransactionProtocolManager<Crypto
      * This method must be used to set the crypto wallet to the Asset Issuing plugin
      * @param cryptoWallet
      */
-    void setCryptoWallet(CryptoWallet cryptoWallet);
+    //void setCryptoWallet(CryptoWallet cryptoWallet);
     /**
      * This method must be used from the Asset Wallet to confirm the DigitalAssetMetadata reception.
      * @param genesisTransaction is a DigitalAssetMetadata parameter.

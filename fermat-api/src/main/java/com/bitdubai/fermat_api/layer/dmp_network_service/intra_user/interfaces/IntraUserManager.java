@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.exceptions.ErrorAcceptIntraUserException;
@@ -26,7 +27,7 @@ public interface IntraUserManager {
      * @return
      * @throws ErrorInIntraUserSearchException
      */
-    public List<IntraUser> searchIntraUserByName(String intraUserAlias) throws ErrorInIntraUserSearchException;
+    public List<IntraUserInformation> searchIntraUserByName(String intraUserAlias) throws ErrorInIntraUserSearchException;
 
     /**
      * The method <code>getIntraUsersSuggestions</code> returns a list of intra users that the logged in
@@ -102,4 +103,5 @@ public interface IntraUserManager {
      */
     public void registrateActors(List<Actor> actor);
 
+    Actor contructIdentity(String publicKey, String alias,Actors actors ,byte[] profileImage);
 }

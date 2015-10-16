@@ -51,6 +51,7 @@ import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.TransactionNewAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
@@ -267,7 +268,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
                 public void onClick(View view) {
                     walletContact = new WalletContact();
                     walletContact.setName(autocompleteContacts.getText().toString());
-                    getActivity().openContextMenu(btn_give_address);
+                    getActivity().openContextMenu(autocompleteContacts);
                 }
             });
 
@@ -679,7 +680,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
             //take_picture_btn.setBackground(new RoundedDrawable(imageBitmap, take_picture_btn));
             //take_picture_btn.setImageDrawable(null);
             //contactPicture = imageBitmap;
-            lauchCreateContactDialog(true);
+            this.lauchCreateContactDialog(true);
 
         }
     }
@@ -719,7 +720,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 //                        getDrawable(R.drawable.rounded_button_green_selector));
 //                takePictureButton.setImageResource(R.drawable.ic_camera_green);
 //                contactPicture = null;
-                lauchCreateContactDialog(false);
+                this.lauchCreateContactDialog(false);
                 break;
         }
         return super.onContextItemSelected(item);

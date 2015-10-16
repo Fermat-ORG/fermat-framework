@@ -22,4 +22,6 @@ public interface AssetIssuerWalletSupAppModuleManager {
      * @see List<AssetIssuerWalletList> getAssetIssuerWalletBalancesBook(String publicKey)
      */
     List<AssetIssuerWalletList> getAssetIssuerWalletBalancesBook(String publicKey) throws CantLoadWalletException;
+
+    //void distributionAssets(String assetPublicKey, String walletPublicKey, ActorAssetUser actorAssetUser)  throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException;
 }
