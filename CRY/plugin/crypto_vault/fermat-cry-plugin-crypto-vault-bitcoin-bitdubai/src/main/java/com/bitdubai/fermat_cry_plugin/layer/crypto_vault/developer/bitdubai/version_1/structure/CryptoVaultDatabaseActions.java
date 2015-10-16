@@ -87,7 +87,7 @@ public class CryptoVaultDatabaseActions {
             throw new CantExecuteQueryException("Error trying to bring data in saveIncomingTransaction method.", e, "Transaction Hash:" + txHash, "Error in database plugin.");
         } catch(Exception exception){
 
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
         }
     }
 
@@ -113,7 +113,7 @@ public class CryptoVaultDatabaseActions {
             throw new CantExecuteQueryException("Error validating transaction in DB.", cantLoadTableToMemory, "Transaction Id:" + txId, "Error in database plugin.");
         } catch(Exception exception){
 
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
         }
     }
 
@@ -141,7 +141,7 @@ public class CryptoVaultDatabaseActions {
             throw new CantExecuteQueryException("Error with transaction type code.", invalidParameterException, "Transaction HASH:" + txHash, "Error in database plugin.");
         } catch(Exception exception){
 
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
         }
     }
 
@@ -178,7 +178,7 @@ public class CryptoVaultDatabaseActions {
             throw new CantExecuteQueryException("Error persisting in DB.", e, "Transaction Hash:" + txHash, "Error in database plugin.");
         } catch(Exception exception){
 
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
         }
     }
 
@@ -217,7 +217,7 @@ public class CryptoVaultDatabaseActions {
             throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, null, "Error in database plugin.");
         } catch(Exception exception){
 
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
         }
     }
 
@@ -261,7 +261,7 @@ public class CryptoVaultDatabaseActions {
             throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, "TxId " + txId, "Error in database plugin.");
         } catch(Exception exception){
 
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
         }
     }
 
@@ -299,7 +299,7 @@ public class CryptoVaultDatabaseActions {
             throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, "TxId " + txId, "Error in database plugin.");
         } catch(Exception exception){
 
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
         }
     }
 
@@ -324,7 +324,7 @@ public class CryptoVaultDatabaseActions {
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, null, "Error in database plugin.");
         }catch(Exception exception){
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
         }
     }
 
@@ -342,7 +342,7 @@ public class CryptoVaultDatabaseActions {
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, null, "Error in database plugin.");
         }catch(Exception exception){
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
         }
     }
 
@@ -415,7 +415,7 @@ public class CryptoVaultDatabaseActions {
             throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, null, "Error in database plugin.");
         } catch(Exception exception){
 
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
         }
     }
 
@@ -441,7 +441,7 @@ public class CryptoVaultDatabaseActions {
             throw new CantExecuteQueryException("Error executing query in DB.", e, "TxId: " + txId, "Error in database plugin.");
         } catch(Exception exception){
 
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
         }
     }
 
@@ -498,10 +498,10 @@ public class CryptoVaultDatabaseActions {
 
         } catch (DatabaseTransactionFailedException e) {
 
-            throw new CantExecuteQueryException("Error inserting new transaction because of transaction confidence changed.", e, "Transaction Hash:" + hashAsString + " CryptoStatus:" + cryptoStatus.toString(), "Error in database plugin.");
+            throw new CantExecuteQueryException(e, "Transaction Hash:" + hashAsString + " CryptoStatus:" + cryptoStatus.toString(), "Error in database plugin inserting new transaction when the transaction confidence changed.");
         } catch(Exception exception){
 
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantExecuteQueryException(exception);
         }
     }
 }
