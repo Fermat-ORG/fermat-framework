@@ -20,6 +20,7 @@ public class CryptoBrokerIdentityDatabaseConstants {
     static final String CRYPTO_BROKER_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME = "crypto_broker_public_key";
     static final String CRYPTO_BROKER_ALIAS_COLUMN_NAME = "alias";
     static final String CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME = "device_user_public_key";
+    static final String CRYPTO_BROKER_CRYPTO_BROKER_PUBLIC_KEY_PUBLISHED_COLUMN_NAME = "public_Key_published";
 
     static final String CRYPTO_BROKER_FIRST_KEY_COLUMN = "crypto_broker_public_key";
 

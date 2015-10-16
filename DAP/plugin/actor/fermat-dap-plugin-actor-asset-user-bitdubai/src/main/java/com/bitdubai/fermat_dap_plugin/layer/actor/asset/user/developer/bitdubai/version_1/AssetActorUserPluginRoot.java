@@ -599,7 +599,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
 //
 //        try {
 //
-//            List<IntraUserNotification> intraUserNotificationes = intraUserNetworkServiceManager.getNotifications();
+//            List<IntraUserNotification> intraUserNotificationes = intraUserNetworkServiceManager.getPendingNotifications();
 //
 //
 //            for (IntraUserNotification notification : intraUserNotificationes) {

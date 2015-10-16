@@ -82,12 +82,12 @@ public interface IntraUserManager {
     void cancelIntraUSer(String intraUserLoggedInPublicKey, String intraUserToCancelPublicKey) throws ErrorCancellingIntraUserException;
 
     /**
-     * The method <coda>getNotifications</coda> returns all pending notifications
+     * The method <coda>getPendingNotifications</coda> returns all pending notifications
      * of responses to requests for connection
      *
      * @return List of IntraUserNotification
      */
-    public List<IntraUserNotification> getNotifications() throws ErrorGetNotificationsIntraUserException;
+    public List<IntraUserNotification> getPendingNotifications() throws ErrorGetNotificationsIntraUserException;
 
 
     /**

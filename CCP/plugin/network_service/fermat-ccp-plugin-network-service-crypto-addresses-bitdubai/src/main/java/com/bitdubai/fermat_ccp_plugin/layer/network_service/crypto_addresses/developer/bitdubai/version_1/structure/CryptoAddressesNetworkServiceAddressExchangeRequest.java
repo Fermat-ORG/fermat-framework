@@ -103,4 +103,21 @@ public class CryptoAddressesNetworkServiceAddressExchangeRequest implements Addr
     public AddressExchangeRequestState getState() {
         return state;
     }
+
+    @Override
+    public String toString() {
+        return "CryptoAddressesNetworkServiceAddressExchangeRequest{" +
+                "requestId=" + requestId +
+                ", walletPublicKey='" + walletPublicKey + '\'' +
+                ", identityTypeRequesting=" + identityTypeRequesting +
+                ", identityTypeAccepting=" + identityTypeAccepting +
+                ", identityPublicKeyRequesting='" + identityPublicKeyRequesting + '\'' +
+                ", identityPublicKeyAccepting='" + identityPublicKeyAccepting + '\'' +
+                ", cryptoAddressFromRequest=" + cryptoAddressFromRequest +
+                ", cryptoAddressFromResponse=" + cryptoAddressFromResponse +
+                ", blockchainNetworkType=" + blockchainNetworkType +
+                ", state=" + state +
+                '}';
+    }
+
 }

@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.CryptoVaults;
@@ -178,5 +179,10 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, Da
     @Override
     public TransactionProtocolManager<CryptoTransaction> getTransactionManager() {
         return bitcoinCryptoNetworkManager;
+    }
+
+    @Override
+    public List<CryptoTransaction> getGenesisTransaction(String transactionId) throws CantGetGenesisTransactionException {
+        return null;
     }
 }

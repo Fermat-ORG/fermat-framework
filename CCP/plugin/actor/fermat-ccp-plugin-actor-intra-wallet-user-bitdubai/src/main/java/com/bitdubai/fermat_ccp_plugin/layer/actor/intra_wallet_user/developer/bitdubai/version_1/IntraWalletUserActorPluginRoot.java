@@ -604,7 +604,7 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
 
         try {
 
-            List<IntraUserNotification> intraUserNotificationes = intraUserNetworkServiceManager.getNotifications();
+            List<IntraUserNotification> intraUserNotificationes = intraUserNetworkServiceManager.getPendingNotifications();
 
 
             for (IntraUserNotification notification : intraUserNotificationes) {
