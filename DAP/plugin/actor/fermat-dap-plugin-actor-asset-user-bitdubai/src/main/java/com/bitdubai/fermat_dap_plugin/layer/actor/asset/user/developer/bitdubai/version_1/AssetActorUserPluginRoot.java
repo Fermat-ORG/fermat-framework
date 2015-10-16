@@ -15,8 +15,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -27,13 +25,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAcceptAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCancelAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDenyConnectionAssetUserActorException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDisconnectAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
@@ -43,15 +36,10 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.in
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.DealsWithAssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.developerUtils.AssetUserActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.AssetUserActorConnectionAcceptedEventHandlers;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.AssetUserActorDeniedConnectionEventHandlers;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.AssetUserActorDisconnectionEventHandlers;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.AssetUserActorRequestConnectionEventHandlers;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantAddPendingAssetUserException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUsersListException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserActorDatabaseException;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateAssetUserConnectionException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure.AssetUserActorDao;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure.AssetUserActorRecord;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -327,183 +315,183 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
         return new ArrayList<>();
     }
 
-    /**
-     * The method <code>askAssetUserActorForAcceptance</code> registers a new Asset User Actor in the list
-     * managed by this plugin with ContactState PENDING_REMOTELY_ACCEPTANCE until the other Asset User Actor
-     * accepts the connection request sent also by this method.
-     *
-     * @param assetUserActorIdentityToLinkPublicKey The public key of the Asset User Actor sending the connection request.
-     * @param assetUserActorToAddName               The name of the Asset User Actor to add
-     * @param assetUserActorToAddPublicKey          The public key of the Asset User Actor to add
-     * @param profileImage                          The profile image that the Asset User Actor has
-     * @throws CantCreateAssetUserActorException if something goes wrong.
-     */
-    @Override
-    public void askAssetUserActorForAcceptance(String assetUserActorIdentityToLinkPublicKey, String assetUserActorToAddName, String assetUserActorToAddPublicKey, byte[] profileImage) throws CantCreateAssetUserActorException {
-    //TODO ARREGLAR METODO
+//    /**
+//     * The method <code>askAssetUserActorForAcceptance</code> registers a new Asset User Actor in the list
+//     * managed by this plugin with ContactState PENDING_REMOTELY_ACCEPTANCE until the other Asset User Actor
+//     * accepts the connection request sent also by this method.
+//     *
+//     * @param assetUserActorIdentityToLinkPublicKey The public key of the Asset User Actor sending the connection request.
+//     * @param assetUserActorToAddName               The name of the Asset User Actor to add
+//     * @param assetUserActorToAddPublicKey          The public key of the Asset User Actor to add
+//     * @param profileImage                          The profile image that the Asset User Actor has
+//     * @throws CantCreateAssetUserActorException if something goes wrong.
+//     */
+//    @Override
+//    public void askAssetUserActorForAcceptance(String assetUserActorIdentityToLinkPublicKey, String assetUserActorToAddName, String assetUserActorToAddPublicKey, byte[] profileImage) throws CantCreateAssetUserActorException {
+//    //TODO ARREGLAR METODO
+////        try {
+//////            this.assetUserActorDao.createNewAssetUser(assetUserActorIdentityToLinkPublicKey, assetUserActorToAddName, assetUserActorToAddPublicKey, profileImage, ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
+////        } catch (CantAddPendingAssetUserException e) {
+////            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR CONNECTION", e, "", "");
+////        } catch (Exception e) {
+////            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR CONNECTION", FermatException.wrapException(e), "", "");
+////        }
+//    }
+//
+//    /**
+//     * The method <code>acceptAssetUserActor</code> takes the information of a connection request, accepts
+//     * the request and adds the Asset User Actor to the list managed by this plugin with ContactState CONTACT.
+//     *
+//     * @param assetUserActorLoggedInPublicKey The public key of the Asset User Actor sending the connection request.
+//     * @param assetUserActorToAddPublicKey    The public key of the Asset User Actor to add
+//     * @throws CantAcceptAssetUserActorException
+//     */
+//    @Override
+//    public void acceptAssetUserActor(String assetUserActorLoggedInPublicKey, String assetUserActorToAddPublicKey) throws CantAcceptAssetUserActorException {
 //        try {
-////            this.assetUserActorDao.createNewAssetUser(assetUserActorIdentityToLinkPublicKey, assetUserActorToAddName, assetUserActorToAddPublicKey, profileImage, ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
-//        } catch (CantAddPendingAssetUserException e) {
-//            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR CONNECTION", e, "", "");
+//            this.assetUserActorDao.updateAssetUserConnectionState(assetUserActorLoggedInPublicKey, assetUserActorToAddPublicKey, ConnectionState.CONNECTED);
+//        } catch (CantUpdateAssetUserConnectionException e) {
+//            throw new CantAcceptAssetUserActorException("CAN'T ACCEPT ASSET USER ACTOR CONNECTION", e, "", "");
 //        } catch (Exception e) {
-//            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR CONNECTION", FermatException.wrapException(e), "", "");
+//            throw new CantAcceptAssetUserActorException("CAN'T ACCEPT ASSET USER ACTOR CONNECTION", FermatException.wrapException(e), "", "");
 //        }
-    }
-
-    /**
-     * The method <code>acceptAssetUserActor</code> takes the information of a connection request, accepts
-     * the request and adds the Asset User Actor to the list managed by this plugin with ContactState CONTACT.
-     *
-     * @param assetUserActorLoggedInPublicKey The public key of the Asset User Actor sending the connection request.
-     * @param assetUserActorToAddPublicKey    The public key of the Asset User Actor to add
-     * @throws CantAcceptAssetUserActorException
-     */
-    @Override
-    public void acceptAssetUserActor(String assetUserActorLoggedInPublicKey, String assetUserActorToAddPublicKey) throws CantAcceptAssetUserActorException {
-        try {
-            this.assetUserActorDao.updateAssetUserConnectionState(assetUserActorLoggedInPublicKey, assetUserActorToAddPublicKey, ConnectionState.CONNECTED);
-        } catch (CantUpdateAssetUserConnectionException e) {
-            throw new CantAcceptAssetUserActorException("CAN'T ACCEPT ASSET USER ACTOR CONNECTION", e, "", "");
-        } catch (Exception e) {
-            throw new CantAcceptAssetUserActorException("CAN'T ACCEPT ASSET USER ACTOR CONNECTION", FermatException.wrapException(e), "", "");
-        }
-    }
-
-    /**
-     * The method <code>denyConnection</code> rejects a connection request from another Asset User Actor
-     *
-     * @param assetUserActorLoggedInPublicKey The public key of the Asset User Actor identity that is the receptor of the request
-     * @param assetUserActorToRejectPublicKey The public key of the Asset User Actor that sent the request
-     * @throws CantDenyConnectionAssetUserActorException
-     */
-    @Override
-    public void denyConnection(String assetUserActorLoggedInPublicKey, String assetUserActorToRejectPublicKey) throws CantDenyConnectionAssetUserActorException {
-        try {
-            this.assetUserActorDao.updateAssetUserConnectionState(assetUserActorLoggedInPublicKey, assetUserActorToRejectPublicKey, ConnectionState.DENIED_LOCALLY);
-        } catch (CantUpdateAssetUserConnectionException e) {
-            throw new CantDenyConnectionAssetUserActorException("CAN'T ASSET USER ACTOR CONNECTION", e, "", "");
-        } catch (Exception e) {
-            throw new CantDenyConnectionAssetUserActorException("CAN'T ASSET USER ACTOR CONNECTION", FermatException.wrapException(e), "", "");
-        }
-    }
-
-    /**
-     * The method <code>disconnectAssetUserActor</code> disconnect an Asset User Actor from the connections registry
-     *
-     * @param assetUserActorLoggedInPublicKey     The public key of the Asset User Actor identity that is the receptor of the request
-     * @param assetUserActorToDisconnectPublicKey The public key of the Asset User Actor to disconnect as connection
-     * @throws CantDisconnectAssetUserActorException
-     */
-    @Override
-    public void disconnectAssetUserActor(String assetUserActorLoggedInPublicKey, String assetUserActorToDisconnectPublicKey) throws CantDisconnectAssetUserActorException {
-        try {
-            this.assetUserActorDao.updateAssetUserConnectionState(assetUserActorLoggedInPublicKey, assetUserActorToDisconnectPublicKey, ConnectionState.DISCONNECTED_REMOTELY);
-        } catch (CantUpdateAssetUserConnectionException e) {
-            throw new CantDisconnectAssetUserActorException("CAN'T CANCEL ASSET USER ACTOR CONNECTION", e, "", "");
-        } catch (Exception e) {
-            throw new CantDisconnectAssetUserActorException("CAN'T CANCEL ASSET USER ACTOR CONNECTION", FermatException.wrapException(e), "", "");
-        }
-    }
-
-    /**
-     * The method <code>cancelAssetUserActor</code> cancels an Asset User Actor from the connections registry
-     *
-     * @param assetUserActorLoggedInPublicKey The public key of the Asset User Actor identity that is the receptor of the request
-     * @param assetUserActorToCancelPublicKey The public key of the Asset User Actor to cancel as connection
-     * @throws CantCancelAssetUserActorException
-     */
-    @Override
-    public void cancelAssetUserActor(String assetUserActorLoggedInPublicKey, String assetUserActorToCancelPublicKey) throws CantCancelAssetUserActorException {
-        try {
-            this.assetUserActorDao.updateAssetUserConnectionState(assetUserActorLoggedInPublicKey, assetUserActorToCancelPublicKey, ConnectionState.CANCELLED);
-        } catch (CantUpdateAssetUserConnectionException e) {
-            throw new CantCancelAssetUserActorException("CAN'T CANCEL ASSET USER ACTOR CONNECTION", e, "", "");
-        } catch (Exception e) {
-            throw new CantCancelAssetUserActorException("CAN'T CANCEL ASSET USER ACTOR CONNECTION", FermatException.wrapException(e), "", "");
-        }
-    }
-
-    /**
-     * The method <code>getAllAssetUserActors</code> shows the list of all Asset User Actors that are connections of the logged in one.
-     *
-     * @param assetUserActorLoggedInPublicKey the public key of the Asset User Actor logged in
-     * @param max
-     * @param offset                          @return the list of Asset User Actors the logged in Asset User Actor has as connections.
-     * @throws CantGetAssetUserActorsException
-     */
-    @Override
-    public List<ActorAssetUser> getAllAssetUserActors(String assetUserActorLoggedInPublicKey, int max, int offset) throws CantGetAssetUserActorsException {
-        try {
-            return this.assetUserActorDao.getAllAssetUsers(assetUserActorLoggedInPublicKey, max, offset);
-        } catch (CantGetAssetUsersListException e) {
-            throw new CantGetAssetUserActorsException("CAN'T LIST ASSET USER ACTOR CONNECTIONS", e, "", "");
-        } catch (Exception e) {
-            throw new CantGetAssetUserActorsException("CAN'T LIST ASSET USER ACTOR CONNECTIONS", FermatException.wrapException(e), "", "");
-        }
-    }
-
-    /**
-     * The method <code>getWaitingYourAcceptanceAssetUserActors</code> shows the list of all Asset User Actors
-     * that sent a connection request and are waiting for the acceptance of the logged in one.
-     *
-     * @param assetUserActorLoggedInPublicKey the public key of the Asset User Actor logged in
-     * @param max
-     * @param offset
-     * @return the list of Asset User Actors the logged in Asset User Actor has as connections.
-     * @throws CantGetAssetUserActorsException
-     */
-    @Override
-    public List<ActorAssetUser> getWaitingYourAcceptanceAssetUserActors(String assetUserActorLoggedInPublicKey, int max, int offset) throws CantGetAssetUserActorsException {
-        try {
-            return this.assetUserActorDao.getAllAssetUsers(assetUserActorLoggedInPublicKey, ConnectionState.PENDING_LOCALLY_ACCEPTANCE, max, offset);
-        } catch (CantGetAssetUsersListException e) {
-            throw new CantGetAssetUserActorsException("CAN'T LIST ASSET USER ACTOR ACCEPTED CONNECTIONS", e, "", "");
-        } catch (Exception e) {
-            throw new CantGetAssetUserActorsException("CAN'T LIST ASSET USER ACTOR ACCEPTED CONNECTIONS", FermatException.wrapException(e), "", "");
-        }
-    }
-
-    /**
-     * The method <code>getWaitingTheirAcceptanceAssetUserActors</code> shows the list of all Asset User Actors
-     * that the logged in one has sent connections request to and have not been answered yet..
-     *
-     * @param assetUserActorLoggedInPublicKey the public key of the Asset User Actor logged in
-     * @param max
-     * @param offset
-     * @return the list of Asset User Actors the logged in Asset User Actor has as connections.
-     * @throws CantGetAssetUserActorsException
-     */
-    @Override
-    public List<ActorAssetUser> getWaitingTheirAcceptanceAssetUserActors(String assetUserActorLoggedInPublicKey, int max, int offset) throws CantGetAssetUserActorsException {
-        try {
-            return this.assetUserActorDao.getAllAssetUsers(assetUserActorLoggedInPublicKey, ConnectionState.PENDING_REMOTELY_ACCEPTANCE, max, offset);
-        } catch (CantGetAssetUsersListException e) {
-            throw new CantGetAssetUserActorsException("CAN'T LIST IASSET USER ACTOR PENDING_HIS_ACCEPTANCE CONNECTIONS", e, "", "");
-        } catch (Exception e) {
-            throw new CantGetAssetUserActorsException("CAN'T LIST ASSET USER ACTOR PENDING_HIS_ACCEPTANCE CONNECTIONS", FermatException.wrapException(e), "", "");
-        }
-    }
-
-    /**
-     * The method <code>receivingAssetUserActorRequestConnection</code> receives connection requests Asset User Actors
-     *
-     * @param assetUserActorLoggedInPublicKey the public key of the Asset User Actor logged in
-     * @param assetUserActorToAddName         The name of the Asset User Actor to add
-     * @param assetUserActorToAddPublicKey    The public key of the Asset User Actor to add
-     * @param profileImage                    The profile image that the Asset User Actor has
-     * @throws CantCreateAssetUserActorException
-     */
-    @Override
-    public void receivingAssetUserActorRequestConnection(String assetUserActorLoggedInPublicKey, String assetUserActorToAddName, String assetUserActorToAddPublicKey, byte[] profileImage) throws CantCreateAssetUserActorException {
-    //TODO ARREGLAR METODO
+//    }
+//
+//    /**
+//     * The method <code>denyConnection</code> rejects a connection request from another Asset User Actor
+//     *
+//     * @param assetUserActorLoggedInPublicKey The public key of the Asset User Actor identity that is the receptor of the request
+//     * @param assetUserActorToRejectPublicKey The public key of the Asset User Actor that sent the request
+//     * @throws CantDenyConnectionAssetUserActorException
+//     */
+//    @Override
+//    public void denyConnection(String assetUserActorLoggedInPublicKey, String assetUserActorToRejectPublicKey) throws CantDenyConnectionAssetUserActorException {
 //        try {
-//            this.assetUserActorDao.createNewAssetUser(assetUserActorLoggedInPublicKey, assetUserActorToAddName, assetUserActorToAddPublicKey, profileImage, ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
-//        } catch (CantAddPendingAssetUserException e) {
-//            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR REQUEST CONNECTION", e, "", "");
+//            this.assetUserActorDao.updateAssetUserConnectionState(assetUserActorLoggedInPublicKey, assetUserActorToRejectPublicKey, ConnectionState.DENIED_LOCALLY);
+//        } catch (CantUpdateAssetUserConnectionException e) {
+//            throw new CantDenyConnectionAssetUserActorException("CAN'T ASSET USER ACTOR CONNECTION", e, "", "");
 //        } catch (Exception e) {
-//            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR REQUEST CONNECTION", FermatException.wrapException(e), "", "");
+//            throw new CantDenyConnectionAssetUserActorException("CAN'T ASSET USER ACTOR CONNECTION", FermatException.wrapException(e), "", "");
 //        }
-    }
+//    }
+//
+//    /**
+//     * The method <code>disconnectAssetUserActor</code> disconnect an Asset User Actor from the connections registry
+//     *
+//     * @param assetUserActorLoggedInPublicKey     The public key of the Asset User Actor identity that is the receptor of the request
+//     * @param assetUserActorToDisconnectPublicKey The public key of the Asset User Actor to disconnect as connection
+//     * @throws CantDisconnectAssetUserActorException
+//     */
+//    @Override
+//    public void disconnectAssetUserActor(String assetUserActorLoggedInPublicKey, String assetUserActorToDisconnectPublicKey) throws CantDisconnectAssetUserActorException {
+//        try {
+//            this.assetUserActorDao.updateAssetUserConnectionState(assetUserActorLoggedInPublicKey, assetUserActorToDisconnectPublicKey, ConnectionState.DISCONNECTED_REMOTELY);
+//        } catch (CantUpdateAssetUserConnectionException e) {
+//            throw new CantDisconnectAssetUserActorException("CAN'T CANCEL ASSET USER ACTOR CONNECTION", e, "", "");
+//        } catch (Exception e) {
+//            throw new CantDisconnectAssetUserActorException("CAN'T CANCEL ASSET USER ACTOR CONNECTION", FermatException.wrapException(e), "", "");
+//        }
+//    }
+//
+//    /**
+//     * The method <code>cancelAssetUserActor</code> cancels an Asset User Actor from the connections registry
+//     *
+//     * @param assetUserActorLoggedInPublicKey The public key of the Asset User Actor identity that is the receptor of the request
+//     * @param assetUserActorToCancelPublicKey The public key of the Asset User Actor to cancel as connection
+//     * @throws CantCancelAssetUserActorException
+//     */
+//    @Override
+//    public void cancelAssetUserActor(String assetUserActorLoggedInPublicKey, String assetUserActorToCancelPublicKey) throws CantCancelAssetUserActorException {
+//        try {
+//            this.assetUserActorDao.updateAssetUserConnectionState(assetUserActorLoggedInPublicKey, assetUserActorToCancelPublicKey, ConnectionState.CANCELLED);
+//        } catch (CantUpdateAssetUserConnectionException e) {
+//            throw new CantCancelAssetUserActorException("CAN'T CANCEL ASSET USER ACTOR CONNECTION", e, "", "");
+//        } catch (Exception e) {
+//            throw new CantCancelAssetUserActorException("CAN'T CANCEL ASSET USER ACTOR CONNECTION", FermatException.wrapException(e), "", "");
+//        }
+//    }
+//
+//    /**
+//     * The method <code>getAllAssetUserActors</code> shows the list of all Asset User Actors that are connections of the logged in one.
+//     *
+//     * @param assetUserActorLoggedInPublicKey the public key of the Asset User Actor logged in
+//     * @param max
+//     * @param offset                          @return the list of Asset User Actors the logged in Asset User Actor has as connections.
+//     * @throws CantGetAssetUserActorsException
+//     */
+//    @Override
+//    public List<ActorAssetUser> getAllAssetUserActors(String assetUserActorLoggedInPublicKey, int max, int offset) throws CantGetAssetUserActorsException {
+//        try {
+//            return this.assetUserActorDao.getAllAssetUsers(assetUserActorLoggedInPublicKey, max, offset);
+//        } catch (CantGetAssetUsersListException e) {
+//            throw new CantGetAssetUserActorsException("CAN'T LIST ASSET USER ACTOR CONNECTIONS", e, "", "");
+//        } catch (Exception e) {
+//            throw new CantGetAssetUserActorsException("CAN'T LIST ASSET USER ACTOR CONNECTIONS", FermatException.wrapException(e), "", "");
+//        }
+//    }
+//
+//    /**
+//     * The method <code>getWaitingYourAcceptanceAssetUserActors</code> shows the list of all Asset User Actors
+//     * that sent a connection request and are waiting for the acceptance of the logged in one.
+//     *
+//     * @param assetUserActorLoggedInPublicKey the public key of the Asset User Actor logged in
+//     * @param max
+//     * @param offset
+//     * @return the list of Asset User Actors the logged in Asset User Actor has as connections.
+//     * @throws CantGetAssetUserActorsException
+//     */
+//    @Override
+//    public List<ActorAssetUser> getWaitingYourAcceptanceAssetUserActors(String assetUserActorLoggedInPublicKey, int max, int offset) throws CantGetAssetUserActorsException {
+//        try {
+//            return this.assetUserActorDao.getAllAssetUsers(assetUserActorLoggedInPublicKey, ConnectionState.PENDING_LOCALLY_ACCEPTANCE, max, offset);
+//        } catch (CantGetAssetUsersListException e) {
+//            throw new CantGetAssetUserActorsException("CAN'T LIST ASSET USER ACTOR ACCEPTED CONNECTIONS", e, "", "");
+//        } catch (Exception e) {
+//            throw new CantGetAssetUserActorsException("CAN'T LIST ASSET USER ACTOR ACCEPTED CONNECTIONS", FermatException.wrapException(e), "", "");
+//        }
+//    }
+//
+//    /**
+//     * The method <code>getWaitingTheirAcceptanceAssetUserActors</code> shows the list of all Asset User Actors
+//     * that the logged in one has sent connections request to and have not been answered yet..
+//     *
+//     * @param assetUserActorLoggedInPublicKey the public key of the Asset User Actor logged in
+//     * @param max
+//     * @param offset
+//     * @return the list of Asset User Actors the logged in Asset User Actor has as connections.
+//     * @throws CantGetAssetUserActorsException
+//     */
+//    @Override
+//    public List<ActorAssetUser> getWaitingTheirAcceptanceAssetUserActors(String assetUserActorLoggedInPublicKey, int max, int offset) throws CantGetAssetUserActorsException {
+//        try {
+//            return this.assetUserActorDao.getAllAssetUsers(assetUserActorLoggedInPublicKey, ConnectionState.PENDING_REMOTELY_ACCEPTANCE, max, offset);
+//        } catch (CantGetAssetUsersListException e) {
+//            throw new CantGetAssetUserActorsException("CAN'T LIST IASSET USER ACTOR PENDING_HIS_ACCEPTANCE CONNECTIONS", e, "", "");
+//        } catch (Exception e) {
+//            throw new CantGetAssetUserActorsException("CAN'T LIST ASSET USER ACTOR PENDING_HIS_ACCEPTANCE CONNECTIONS", FermatException.wrapException(e), "", "");
+//        }
+//    }
+//
+//    /**
+//     * The method <code>receivingAssetUserActorRequestConnection</code> receives connection requests Asset User Actors
+//     *
+//     * @param assetUserActorLoggedInPublicKey the public key of the Asset User Actor logged in
+//     * @param assetUserActorToAddName         The name of the Asset User Actor to add
+//     * @param assetUserActorToAddPublicKey    The public key of the Asset User Actor to add
+//     * @param profileImage                    The profile image that the Asset User Actor has
+//     * @throws CantCreateAssetUserActorException
+//     */
+//    @Override
+//    public void receivingAssetUserActorRequestConnection(String assetUserActorLoggedInPublicKey, String assetUserActorToAddName, String assetUserActorToAddPublicKey, byte[] profileImage) throws CantCreateAssetUserActorException {
+//    //TODO ARREGLAR METODO
+////        try {
+////            this.assetUserActorDao.createNewAssetUser(assetUserActorLoggedInPublicKey, assetUserActorToAddName, assetUserActorToAddPublicKey, profileImage, ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
+////        } catch (CantAddPendingAssetUserException e) {
+////            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR REQUEST CONNECTION", e, "", "");
+////        } catch (Exception e) {
+////            throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR REQUEST CONNECTION", FermatException.wrapException(e), "", "");
+////        }
+//    }
 
     /**
      * The method <code>getActorByPublicKey</code> shows the information associated with the actorPublicKey
@@ -545,11 +533,11 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
         }
 
 
-        try {//TODO Escuchar EVENTO para saber cuando "buscar" la informacion
-            assetUserActorNetworkServiceManager.requestListActorAssetUserRegistered();
-        } catch (CantRequestListActorAssetUserRegisteredException e) {
-            e.printStackTrace();
-        }
+//        try {//TODO Escuchar EVENTO para saber cuando "buscar" la informacion
+//            assetUserActorNetworkServiceManager.requestListActorAssetUserRegistered();
+//        } catch (CantRequestListActorAssetUserRegisteredException e) {
+//            e.printStackTrace();
+//        }
     }
 
 //    private void testRaiseEvent() {
@@ -563,9 +551,9 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
     private void test() throws CantCreateAssetUserActorException {
 //        list.add(new AssetUserActorRecord("Thunders Asset Wallet User", UUID.randomUUID().toString(), new byte[0], 987654321, ConnectionState.CONNECTED));
 
-        System.out.println("************************************************************************");
-        System.out.println("------ Lista de Asset User Registered Actors Agregados en Table --------");
-        System.out.println("************************************************************************");
+//        System.out.println("************************************************************************");
+//        System.out.println("------ Lista de Asset User Registered Actors Agregados en Table --------");
+//        System.out.println("************************************************************************");
         for (int i = 0; i < 10; i++) {
 //            this.assetUserActorDao.createNewAssetUser(assetUserActorIdentityToLinkPublicKey, assetUserActorToAddName, assetUserActorToAddPublicKey, profileImage, ConnectionState.CONNECTED);
             try {
@@ -577,16 +565,16 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
                 String age = "25";
                 this.assetUserActorDao.createNewAssetUser(assetUserActorIdentityToLinkPublicKey, "Thunders Asset User_" + i, assetUserActorToAddPublicKey, new byte[0], genders, age, cryptoAddress, ConnectionState.CONNECTED);
 
-                System.out.println("Asset User Actor Identity Link PublicKey: " + assetUserActorIdentityToLinkPublicKey);
-                System.out.println("Asset User Actor Name: Thunders Asset User_" + i);
-                System.out.println("Asset User Actor PublicKey: " + assetUserActorToAddPublicKey);
-                System.out.println("profileImage: " + new byte[0]);
-//                System.out.println("Location: -AL: " + location.getAltitude() + " - LA: " + location.getLatitude() + " - LO: " + location.getLongitude() + " - Provider: " + LocationProvider.getByCode(location.getProvider().getCode()) + " - Time: " + location.getTime());
-                System.out.println("Genders: " + Genders.getByCode(genders.getCode()));
-                System.out.println("Age: " + age);
-                System.out.println("CryptoAddress: " + cryptoAddress.getAddress() + " " + CryptoCurrency.getByCode(cryptoAddress.getCryptoCurrency().getCode()));
-
-                System.out.println("------------------------------------------------------------------------");
+//                System.out.println("Asset User Actor Identity Link PublicKey: " + assetUserActorIdentityToLinkPublicKey);
+//                System.out.println("Asset User Actor Name: Thunders Asset User_" + i);
+//                System.out.println("Asset User Actor PublicKey: " + assetUserActorToAddPublicKey);
+//                System.out.println("profileImage: " + new byte[0]);
+////                System.out.println("Location: -AL: " + location.getAltitude() + " - LA: " + location.getLatitude() + " - LO: " + location.getLongitude() + " - Provider: " + LocationProvider.getByCode(location.getProvider().getCode()) + " - Time: " + location.getTime());
+//                System.out.println("Genders: " + Genders.getByCode(genders.getCode()));
+//                System.out.println("Age: " + age);
+//                System.out.println("CryptoAddress: " + cryptoAddress.getAddress() + " " + CryptoCurrency.getByCode(cryptoAddress.getCryptoCurrency().getCode()));
+//
+//                System.out.println("------------------------------------------------------------------------");
 
             } catch (CantAddPendingAssetUserException e) {
                 throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR", e, "", "");
@@ -594,7 +582,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
                 throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR", FermatException.wrapException(e), "", "");
             }
         }
-        System.out.println("************************************************************************");
+//        System.out.println("************************************************************************");
 
     }
     /**
@@ -611,19 +599,19 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
 //
 //        try {
 //
-//            List<IntraUserNotification> intraUserNotificationes = intraUserNetworkServiceManager.getNotifications();
+//            List<IntraUserNotification> intraUserNotificationes = intraUserNetworkServiceManager.getPendingNotifications();
 //
 //
 //            for (IntraUserNotification notification : intraUserNotificationes) {
 //
-//                String intraUserSendingPublicKey = notification.getPublicKeyOfTheIntraUserSendingUsANotification();
+//                String intraUserSendingPublicKey = notification.getPublicKeyOfTheSender();
 //
 //                String intraUserToConnectPublicKey = notification.getPublicKeyOfTheIntraUserToConnect();
 //
 //                switch (notification.getNotificationDescriptor()) {
 //                    case ASKFORACCEPTANCE:
 //
-//                        this.askIntraWalletUserForAcceptance(intraUserSendingPublicKey, notification.getIntraUserToConnectAlias(), intraUserToConnectPublicKey, notification.getIntraUserToConnectProfileImage());
+//                        this.askIntraWalletUserForAcceptance(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserToConnectPublicKey, notification.getActorSenderProfileImage());
 //
 //                    case CANCEL:
 //                        this.cancelIntraWalletUser(intraUserSendingPublicKey, intraUserToConnectPublicKey);
@@ -639,7 +627,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
 //                        this.disconnectIntraWalletUser("", intraUserSendingPublicKey);
 //                        break;
 //                    case RECEIVED:
-//                        this.receivingIntraWalletUserRequestConnection(intraUserSendingPublicKey, notification.getIntraUserToConnectAlias(), intraUserToConnectPublicKey, notification.getIntraUserToConnectProfileImage());
+//                        this.receivingIntraWalletUserRequestConnection(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserToConnectPublicKey, notification.getActorSenderProfileImage());
 //                        /**
 //                         * fire event "INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION"
 //                         */

@@ -1,10 +1,19 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.TransactionTypes;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_cry_api.layer.definition.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -23,7 +32,7 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
      * class variables
      */
     private boolean isSupossedToBeRunning;
-    private final int AGENT_DELAY = 10000; // 5 seconds of delay
+    private final int AGENT_DELAY = 30000; // 30 seconds of delay
 
     /**
      * platform variables
@@ -67,6 +76,11 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
      * Class that executes the agent
      */
     private class NetworkAgent implements Runnable{
+        /**
+         * DAO object to access the db
+         */
+        BitcoinCryptoNetworkDatabaseDao dao;
+
         @Override
         public void run() {
             /**
@@ -102,26 +116,108 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
             updateEventAgentStats(pendingIncoming, pendingOutgoing);
 
             /**
-             * raise the events
+             * if there are pending transactions then fix any missing information we may have
+             * and raise the notification events for each CryptoStatus
              */
-            if (pendingIncoming > 0)
+            if (pendingIncoming > 0){
+                fixMissingInformationFromIncomingTransactions();
                 raiseIncomingTransactionEvent();
+            }
 
-            if (pendingOutgoing > 0)
+
+            if (pendingOutgoing > 0){
                 raiseOutgoingTransactionEvent();
-
+            }
         }
 
+        /**
+         * Since the Transaction may not be complete in all cases, we need to make sure the information is
+         * accurate by getting the information from the wallet and update the values.
+         */
+        private void fixMissingInformationFromIncomingTransactions() {
+            //todo complete
+            //get tx info from vault
+            //update table information
+        }
+
+        /**
+         * will raise each event for the crypto status found in pending status
+         */
         private void raiseOutgoingTransactionEvent() {
-            //todo raise event
+            try {
+                Set<CryptoStatus> cryptoStatuses = getDao().getPendingCryptoStatus(TransactionTypes.OUTGOING);
+                for (CryptoStatus cryptoStatus : cryptoStatuses){
+                    raiseOutgoingEvent(cryptoStatus);
+                }
+            } catch (CantExecuteDatabaseOperationException e) {
+                e.printStackTrace();
+            }
+
         }
 
+        private void raiseOutgoingEvent(CryptoStatus cryptoStatus) {
+            //todo raise outgoing events - this events needs to be created
+        }
+
+        /**
+         * will get all the CryptoStatus from the pending transactions
+         */
         private void raiseIncomingTransactionEvent() {
-            //todo raise event
+            try {
+                Set<CryptoStatus> cryptoStatuses = getDao().getPendingCryptoStatus(TransactionTypes.INCOMING);
+                for (CryptoStatus cryptoStatus : cryptoStatuses){
+                    raiseIncomingEvent(cryptoStatus);
+                }
+            } catch (CantExecuteDatabaseOperationException e) {
+                e.printStackTrace();
+            }
         }
 
+        /**
+         * executes the raise of the event for incoming transactions
+         * @param cryptoStatus
+         */
+        private void raiseIncomingEvent(CryptoStatus cryptoStatus) {
+            FermatEvent event = null;
+            switch (cryptoStatus){
+                case ON_CRYPTO_NETWORK:
+                    event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
+                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
+                    break;
+                case ON_BLOCKCHAIN:
+                    event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN);
+                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
+                    break;
+                case REVERSED_ON_CRYPTO_NETWORK:
+                    event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
+                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
+                    break;
+                case REVERSED_ON_BLOCKCHAIN:
+                    event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
+                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
+                    break;
+                case IRREVERSIBLE:
+                    event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_IRREVERSIBLE);
+                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
+                    break;
+            }
+            /**
+             * I raise the event
+             */
+            eventManager.raiseEvent(event);
+        }
+
+        /**
+         * updates the statistics of the agent execution
+         * @param pendingIncoming
+         * @param pendingOutgoing
+         */
         private void updateEventAgentStats(int pendingIncoming, int pendingOutgoing) {
-            //todo update stats in database
+            try {
+                getDao().updateEventAgentStats(pendingIncoming, pendingOutgoing);
+            } catch (CantExecuteDatabaseOperationException e) {
+                e.printStackTrace();
+            }
         }
 
         /**
@@ -129,8 +225,11 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
          * @return
          */
         private int getPendingNotifiedIncomingTransactions(){
-            //todo get this from the database
-            return 0;
+            try {
+                return getDao().getPendingNotifiedTransactions(TransactionTypes.INCOMING);
+            } catch (CantExecuteDatabaseOperationException e) {
+                return 0;
+            }
         }
 
         /**
@@ -138,8 +237,22 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
          * @return
          */
         private int getPendingNotifiedOutgoingTransactions(){
-            //todo get this from the database
-            return 0;
+            try {
+                return getDao().getPendingNotifiedTransactions(TransactionTypes.OUTGOING);
+            } catch (CantExecuteDatabaseOperationException e) {
+                return 0;
+            }
+        }
+
+        /**
+         * gets an instance of the dao object to access the db
+         * @return
+         */
+        private BitcoinCryptoNetworkDatabaseDao getDao(){
+            if (dao == null)
+                dao = new BitcoinCryptoNetworkDatabaseDao(pluginId, pluginDatabaseSystem);
+
+            return dao;
         }
     }
 }

@@ -3,23 +3,30 @@ package com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CantGetCryptoBrokerListException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.common.adapters.CryptoBrokerIdentityInfoAdapter;
 import com.bitdubai.sub_app.crypto_broker_identity.common.model.CryptoBrokerIdentityInformationImp;
-import com.bitdubai.sub_app.crypto_broker_identity.common.views.DividerItemDecoration;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
 import com.melnykov.fab.FloatingActionButton;
@@ -27,16 +34,23 @@ import com.melnykov.fab.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession.IDENTITY_INFO;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoBrokerIdentityInformation>
-        implements FermatListItemListeners<CryptoBrokerIdentityInformation> {
+        implements FermatListItemListeners<CryptoBrokerIdentityInformation>, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
-
+    // Fermat Managers
     private CryptoBrokerIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
+
+    // Data
     private ArrayList<CryptoBrokerIdentityInformation> identityInformationList;
+
+    // UI
+    private SearchView mSearchView;
 
 
     public static CryptoBrokerIdentityListFragment newInstance() {
@@ -54,7 +68,30 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
             identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
+
+            if (errorManager != null) {
+                errorManager.reportUnexpectedSubAppException(
+                        SubApps.CBP_CRYPTO_BROKER_IDENTITY,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_THIS_FRAGMENT,
+                        ex);
+            }
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.crypto_broker_identity_menu, menu);
+
+        //MenuItem menuItem = new SearchView(getActivity());
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
+        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setSubmitButtonEnabled(true);
+        mSearchView.setOnCloseListener(this);
     }
 
     @Override
@@ -73,8 +110,14 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
             getActivity().getActionBar().setDisplayShowHomeEnabled(false);
         }
 
-        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
+        RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
+
+        if(identityInformationList.isEmpty()){
+            recyclerView.setVisibility(View.GONE);
+            View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
+            emptyListViewsContainer.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -102,6 +145,64 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         return true;
     }
 
+    @Override
+    public FermatAdapter getAdapter() {
+        if (adapter == null) {
+            adapter = new CryptoBrokerIdentityInfoAdapter(getActivity(), identityInformationList);
+            adapter.setFermatListEventListener(this); // setting up event listeners
+        }
+        return adapter;
+    }
+
+    @Override
+    public RecyclerView.LayoutManager getLayoutManager() {
+        if (layoutManager == null) {
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        }
+        return layoutManager;
+    }
+
+    @Override
+    public List<CryptoBrokerIdentityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        List<CryptoBrokerIdentityInformation> data = new ArrayList<>();
+        if (moduleManager == null) {
+            loadTestData(data);
+        } else {
+            try {
+                data = moduleManager.getAllCryptoBrokersIdentities(0, 0);
+            } catch (CantGetCryptoBrokerListException ex) {
+                CommonLogger.exception(TAG, ex.getMessage(), ex);
+
+                if (errorManager != null) {
+                    loadTestData(data);
+
+                    errorManager.reportUnexpectedSubAppException(
+                            SubApps.CBP_CRYPTO_BROKER_IDENTITY,
+                            UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                            ex);
+                }
+            }
+        }
+
+        return data;
+    }
+
+    private void loadTestData(List<CryptoBrokerIdentityInformation> data) {
+        for (int i = 0; i < 20; i++) {
+            data.add(new CryptoBrokerIdentityInformationImp("Broker Name " + i));
+        }
+    }
+
+    @Override
+    public void onItemClickListener(CryptoBrokerIdentityInformation data, int position) {
+        subAppsSession.setData(IDENTITY_INFO, data);
+        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY.getCode());
+    }
+
+    @Override
+    public void onLongItemClickListener(CryptoBrokerIdentityInformation data, int position) {
+
+    }
 
     @Override
     public void onPostExecute(Object... result) {
@@ -126,47 +227,17 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     }
 
     @Override
-    public FermatAdapter getAdapter() {
-        if (adapter == null) {
-            adapter = new CryptoBrokerIdentityInfoAdapter(getActivity(), identityInformationList);
-            adapter.setFermatListEventListener(this); // setting up event listeners
-        }
-        return adapter;
+    public boolean onClose() {
+        return false;
     }
 
     @Override
-    public RecyclerView.LayoutManager getLayoutManager() {
-        if (layoutManager == null) {
-            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        }
-        return layoutManager;
+    public boolean onQueryTextSubmit(String s) {
+        return false;
     }
 
     @Override
-    public List<CryptoBrokerIdentityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        List<CryptoBrokerIdentityInformation> data = new ArrayList<>();
-        if (moduleManager == null) {
-            for (int i = 0; i < 20; i++) {
-                data.add(new CryptoBrokerIdentityInformationImp("Broker Name " + i));
-            }
-        } else {
-            try {
-                data = moduleManager.getAllCryptoBrokersIdentities(0, 0);
-            } catch (CantGetCryptoBrokerListException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return data;
-    }
-
-    @Override
-    public void onItemClickListener(CryptoBrokerIdentityInformation data, int position) {
-
-    }
-
-    @Override
-    public void onLongItemClickListener(CryptoBrokerIdentityInformation data, int position) {
-
+    public boolean onQueryTextChange(String s) {
+        return false;
     }
 }

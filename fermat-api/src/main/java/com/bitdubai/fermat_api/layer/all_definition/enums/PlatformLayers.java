@@ -63,14 +63,15 @@ public enum PlatformLayers {
     // End CCP Layers
 
     // Init DAP Layers
-    BITDUBAI_DAP_ACTOR_LAYER            ("BDAPAL",  Developers.BITDUBAI),
+    BITDUBAI_DAP_ACTOR_LAYER                  ("BDAPAL",  Developers.BITDUBAI),
     BITDUBAI_DAP_ACTOR_NETWORK_SERVICE_LAYER  ("BDAPANSL",  Developers.BITDUBAI),
-    BITDUBAI_DAP_NETWORK_SERVICE_LAYER  ("BDAPNSL",  Developers.BITDUBAI),
-    BITDUBAI_DAP_IDENTITY_LAYER         ("BDAPIL",  Developers.BITDUBAI),
-    BITDUBAI_DAP_MIDDLEWARE_LAYER       ("BDAPMIL", Developers.BITDUBAI),
-    BITDUBAI_DAP_MODULE_LAYER           ("BDAPMOL", Developers.BITDUBAI),
-    BITDUBAI_DAP_TRANSACTION_LAYER      ("BDAPTL",  Developers.BITDUBAI),
-    BITDUBAI_DAP_WALLET_LAYER           ("BDAPWA",  Developers.BITDUBAI),
+    BITDUBAI_DAP_NETWORK_SERVICE_LAYER        ("BDAPNSL",  Developers.BITDUBAI),
+    BITDUBAI_DAP_IDENTITY_LAYER               ("BDAPIL",  Developers.BITDUBAI),
+    BITDUBAI_DAP_MIDDLEWARE_LAYER             ("BDAPMIL", Developers.BITDUBAI),
+    BITDUBAI_DAP_MODULE_LAYER                 ("BDAPMOL", Developers.BITDUBAI),
+    BITDUBAI_DAP_SUB_APP_MODULE_LAYER         ("BDAPSAML", Developers.BITDUBAI),
+    BITDUBAI_DAP_TRANSACTION_LAYER            ("BDAPTL",  Developers.BITDUBAI),
+    BITDUBAI_DAP_WALLET_LAYER                 ("BDAPWA",  Developers.BITDUBAI),
     // End DAP Layers
 
     // Init WPD Layers
@@ -82,6 +83,11 @@ public enum PlatformLayers {
     BITDUBAI_WPD_NETWORK_SERVICE_LAYER("BWPDNSL",  Developers.BITDUBAI),
     BITDUBAI_WPD_SUB_APP_MODULE_LAYER ("BWPDSAML", Developers.BITDUBAI),
     // End WPD Layers
+
+    //Init CBP Layers
+    BITDUBAI_CBP_IDENTITY_LAYER ("BCBPIL", Developers.BITDUBAI),
+    BITDUBAI_CBP_SUB_APP_MODULE_LAYER ("BCBPSAML", Developers.BITDUBAI),
+    //END CBP Layers
 
             ;
 
@@ -201,10 +207,11 @@ public enum PlatformLayers {
             // Init DAP Layers
             case "BDAPAL":   return BITDUBAI_DAP_ACTOR_LAYER;
             case "BDAPANSL": return BITDUBAI_DAP_ACTOR_NETWORK_SERVICE_LAYER;
-            case "BDAPNSL": return BITDUBAI_DAP_NETWORK_SERVICE_LAYER;
+            case "BDAPNSL":  return BITDUBAI_DAP_NETWORK_SERVICE_LAYER;
             case "BDAPIL":   return BITDUBAI_DAP_IDENTITY_LAYER;
             case "BDAPMIL":  return BITDUBAI_DAP_MIDDLEWARE_LAYER;
             case "BDAPMOL":  return BITDUBAI_DAP_MODULE_LAYER;
+            case "BDAPSAML": return BITDUBAI_DAP_SUB_APP_MODULE_LAYER;
             case "BDAPTL":   return BITDUBAI_DAP_TRANSACTION_LAYER;
             case "BDAPWA":   return BITDUBAI_DAP_WALLET_LAYER;
             // End  DAP Layers
@@ -218,6 +225,11 @@ public enum PlatformLayers {
             case "BWPDNSL":  return BITDUBAI_WPD_NETWORK_SERVICE_LAYER;
             case "BWPDSAML": return BITDUBAI_WPD_SUB_APP_MODULE_LAYER;
             // End  WPD Layers
+
+            //Init CBP Layers
+            case "BCBPIL": return BITDUBAI_CBP_IDENTITY_LAYER;
+            case "BCBPSAML": return BITDUBAI_CBP_SUB_APP_MODULE_LAYER;
+            //End CBP Layers
 
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the PlatformLayers enum");

@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantRegi
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.InconsistentTableStateException;
@@ -17,13 +18,17 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.deve
 
 /**
  * Created by eze on 2015.07.08..
+ * Modified by lnacosta (laion.cj91@gmail.com) on 15/10/2015.
  */
 public class TransactionHandler {
 
-    public static void handleTransaction(TransactionWrapper transaction, CryptoStatus cryptoStatus,
-                                         BitcoinWalletWallet bitcoinWallet,OutgoingExtraUserDao dao,
-                                         ErrorManager errorManager
-                                        ){
+    public static void handleTransaction(TransactionWrapper   transaction       ,
+                                         CryptoVaultManager   cryptoVaultManager,
+                                         CryptoStatus         cryptoStatus      ,
+                                         BitcoinWalletWallet  bitcoinWallet     ,
+                                         OutgoingExtraUserDao dao               ,
+                                         ErrorManager         errorManager      ){
+
         CryptoStatus oldStatus = transaction.getCryptoStatus();
 
         if(oldStatus.equals(CryptoStatus.PENDING_SUBMIT)) {
@@ -33,6 +38,8 @@ public class TransactionHandler {
                 case ON_CRYPTO_NETWORK:
                     try {
                         dao.setToCryptoStatus(transaction, CryptoStatus.ON_CRYPTO_NETWORK);
+                        cryptoVaultManager.getTransactionManager().confirmReception(transaction.getTransactionId());
+
                         return;
                     } catch (CantUpdateRecordException | CantLoadTableToMemoryException | InconsistentTableStateException e) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
@@ -46,6 +53,8 @@ public class TransactionHandler {
                         String memo = "Transaction sended to " + transaction.getAddressTo().getAddress() + " reversed";
                         bitcoinWallet.getBalance(BalanceType.AVAILABLE).credit(transaction);
                         dao.cancelTransaction(transaction, memo);
+                        cryptoVaultManager.getTransactionManager().confirmReception(transaction.getTransactionId());
+
                         return;
                     } catch (InconsistentTableStateException | CantUpdateRecordException | CantLoadTableToMemoryException | CantRegisterCreditException e) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
@@ -58,6 +67,8 @@ public class TransactionHandler {
                     try {
                         bitcoinWallet.getBalance(BalanceType.BOOK).debit(transaction);
                         dao.setToCryptoStatus(transaction, CryptoStatus.ON_BLOCKCHAIN);
+                        cryptoVaultManager.getTransactionManager().confirmReception(transaction.getTransactionId());
+
                         return;
                     } catch (CantRegisterDebitException | CantUpdateRecordException | CantLoadTableToMemoryException | InconsistentTableStateException e) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
@@ -74,6 +85,8 @@ public class TransactionHandler {
                         String memo = "Transaction sended to " + transaction.getAddressTo().getAddress() + " reversed";
                         bitcoinWallet.getBalance(BalanceType.AVAILABLE).credit(transaction);
                         dao.cancelTransaction(transaction, memo);
+                        cryptoVaultManager.getTransactionManager().confirmReception(transaction.getTransactionId());
+
                         return;
                     } catch (InconsistentTableStateException | CantUpdateRecordException | CantLoadTableToMemoryException | CantRegisterCreditException e) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
@@ -85,6 +98,8 @@ public class TransactionHandler {
                 case IRREVERSIBLE:
                     try {
                         dao.setToPIW(transaction);
+                        cryptoVaultManager.getTransactionManager().confirmReception(transaction.getTransactionId());
+
                         return;
                     } catch (CantUpdateRecordException | CantLoadTableToMemoryException | InconsistentTableStateException e) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
@@ -113,6 +128,8 @@ public class TransactionHandler {
                         String memo = "Transaction sended to " + transaction.getAddressTo().getAddress() + " reversed";
                         bitcoinWallet.getBalance(BalanceType.AVAILABLE).credit(transaction);
                         dao.cancelTransaction(transaction, memo);
+                        cryptoVaultManager.getTransactionManager().confirmReception(transaction.getTransactionId());
+
                         return;
                     } catch (InconsistentTableStateException | CantUpdateRecordException | CantLoadTableToMemoryException | CantRegisterCreditException e1) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e1);
@@ -125,6 +142,8 @@ public class TransactionHandler {
                     try {
                         bitcoinWallet.getBalance(BalanceType.BOOK).debit(transaction);
                         dao.setToCryptoStatus(transaction, CryptoStatus.ON_BLOCKCHAIN);
+                        cryptoVaultManager.getTransactionManager().confirmReception(transaction.getTransactionId());
+
                         return;
                     } catch (CantRegisterDebitException | CantUpdateRecordException | CantLoadTableToMemoryException | InconsistentTableStateException e1) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e1);
@@ -141,6 +160,8 @@ public class TransactionHandler {
                         String memo = "Transaction sended to " + transaction.getAddressTo().getAddress() + " reversed";
                         bitcoinWallet.getBalance(BalanceType.AVAILABLE).credit(transaction);
                         dao.cancelTransaction(transaction, memo);
+                        cryptoVaultManager.getTransactionManager().confirmReception(transaction.getTransactionId());
+
                         return;
                     } catch (InconsistentTableStateException | CantUpdateRecordException | CantLoadTableToMemoryException | CantRegisterCreditException e1) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e1);
@@ -152,6 +173,8 @@ public class TransactionHandler {
                 case IRREVERSIBLE:
                     try {
                         dao.setToPIW(transaction);
+                        cryptoVaultManager.getTransactionManager().confirmReception(transaction.getTransactionId());
+
                         return;
                     } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException e1) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e1);
@@ -185,6 +208,8 @@ public class TransactionHandler {
                         bitcoinWallet.getBalance(BalanceType.BOOK).credit(transaction);
                         bitcoinWallet.getBalance(BalanceType.AVAILABLE).credit(transaction);
                         dao.cancelTransaction(transaction, memo);
+                        cryptoVaultManager.getTransactionManager().confirmReception(transaction.getTransactionId());
+
                         return;
                     } catch (InconsistentTableStateException | CantUpdateRecordException | CantLoadTableToMemoryException | CantRegisterCreditException e1) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e1);
@@ -196,6 +221,8 @@ public class TransactionHandler {
                 case IRREVERSIBLE:
                     try {
                         dao.setToPIW(transaction);
+                        cryptoVaultManager.getTransactionManager().confirmReception(transaction.getTransactionId());
+
                         return;
                     } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException e1) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e1);

@@ -4,7 +4,6 @@ package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdub
  * Created by Natalia on 12/02/2015.
  */
 
-import android.content.Context;
 import android.os.Environment;
 
 import com.bitdubai.fermat_api.FermatException;
@@ -20,7 +19,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -42,7 +40,7 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
      * PlatformTextFile Interface member variables.
      */
 
-    private final Context context;
+    private final String contextPath;
     private final String directoryName;
     private final String fileName;
     private final FilePrivacy privacyLevel;
@@ -53,14 +51,14 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
     /**
      * <p>Platform implementation constructor
      *
-     * @param context Android context object
+     * @param contextPath Android context path
      * @param directoryName name of the directory where the files are saved
      * @param fileName name of file
      * @param privacyLevel level of privacy for the file, if it is public or private
      * @param lifeSpan lifetime of the file, whether it is permanent or temporary
      */
-    public AndroidPlatformTextFile(Context context, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
-        this.context = context;
+    public AndroidPlatformTextFile(String contextPath, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+        this.contextPath = contextPath;
         this.directoryName = directoryName;
         this.fileName = fileName;
         this.privacyLevel = privacyLevel;
@@ -75,9 +73,6 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
 		return lifeSpan;
 	}
 
-    public Context getContext() {
-        return context;
-    }
 
     public String getDirectoryName(){
         return directoryName;
@@ -129,7 +124,7 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
         if(privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
         else
-            path = this.context.getFilesDir().toString();
+            path = contextPath;
 
 
         if(!this.directoryName.isEmpty())
@@ -180,7 +175,7 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
         if(privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
         else
-            path = this.context.getFilesDir().toString();
+            path = contextPath;
 
         /**
          * Get the file handle.
@@ -240,7 +235,7 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
         if(privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
         else
-            path = this.context.getFilesDir().toString();
+            path = contextPath;
         return path +"/"+ this.directoryName + "/" + fileName;
     }
 

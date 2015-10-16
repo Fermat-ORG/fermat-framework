@@ -35,8 +35,11 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem,Serializabl
      * PlatformFileSystem interface member variables.
      */
 
-    private Context context;
+    private String contextPath;
 
+    public AndroidPlatformFileSystem(String contextPath) {
+        this.contextPath = contextPath;
+    }
 
     /**
      * PlatformFileSystem interface implementation.
@@ -57,7 +60,7 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem,Serializabl
     public PlatformTextFile getFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException,CantCreateFileException {
         checkContext();
         try {
-            AndroidPlatformTextFile newFile = new AndroidPlatformTextFile( this.context, directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
+            AndroidPlatformTextFile newFile = new AndroidPlatformTextFile( contextPath, directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
             newFile.loadFromMedia();
             return newFile;
         }
@@ -84,7 +87,7 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem,Serializabl
     public PlatformTextFile createFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws  CantCreateFileException{
         checkContext();
        try{
-        return new AndroidPlatformTextFile( this.context,directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
+        return new AndroidPlatformTextFile( contextPath,directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
        }catch (CantCreateFileException exception){
                throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE,exception,null,"Check the cause of this error");
            }
@@ -97,7 +100,7 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem,Serializabl
     public PlatformBinaryFile getBinaryFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException,CantCreateFileException {
         checkContext();
         try {
-            AndroidPlatformBinaryFile newFile = new AndroidPlatformBinaryFile(this.context, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
+            AndroidPlatformBinaryFile newFile = new AndroidPlatformBinaryFile(contextPath, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
             newFile.loadFromMedia();
             return newFile;
         } catch (CantLoadFileException e){
@@ -111,7 +114,7 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem,Serializabl
     public PlatformBinaryFile createBinaryFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException {
        checkContext();
         try {
-        return new AndroidPlatformBinaryFile(this.context, directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
+        return new AndroidPlatformBinaryFile(contextPath, directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
         }catch (CantCreateFileException exception){
             throw exception;
         }catch(Exception e){
@@ -119,17 +122,7 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem,Serializabl
            }
     }
 
-    /**
-     <p>This method set the os context
-     *
-     * @param context Android context object
-     */
-    @Override
-    public void setContext(Object context) {
-        this.context = (Context)context;
-    }
-
-    /**
+       /**
      *
      * Hash the file name using the algorithm SHA 256
      */
@@ -148,7 +141,7 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem,Serializabl
     }
 
     private void checkContext() throws CantCreateFileException {
-        if(context == null)
+        if(contextPath == null)
             throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, null, "Context: null", "Context can't ne Null, you need to call setContext before using the FileSystem");
     }
 }

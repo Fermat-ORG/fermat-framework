@@ -31,6 +31,4 @@ import java.util.UUID;
 
     public void deleteBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException;
 
-    void setContext (Object context);
-
 }

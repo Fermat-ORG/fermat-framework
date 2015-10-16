@@ -32,10 +32,11 @@ import java.util.UUID;
 /**
  * Created by Franklin on 07/09/15.
  */
-public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAssetIssuerWallet, Service, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithAssetIssuerWalletSubAppModule {
-    AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
-    AssetIssuerWalletSupAppModuleManager assetIssuerWalletSupAppModuleManager;
+public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAssetIssuerWallet, Service, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, AssetIssuerWalletSupAppModuleManager {
+    //AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
     AssetIssuerWalletManager assetIssuerWalletManager;
+    //AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
+    AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
 
     UUID pluginId;
 
@@ -71,7 +72,6 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAsset
     public void start() throws CantStartPluginException {
         try {
             assetIssuerWalletModuleManager = new AssetIssuerWalletModuleManager(assetIssuerWalletManager);
-
             System.out.println("******* Asset Issuer Wallet Module Init ******");
             this.serviceStatus = ServiceStatus.STARTED;
         }catch (Exception exception) {
@@ -147,7 +147,12 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAsset
     }
 
     @Override
-    public void setWalletAssetIssuerManager(AssetIssuerWalletSupAppModuleManager assetIssuerWalletSupAppModuleManager) {
-        this.assetIssuerWalletSupAppModuleManager = assetIssuerWalletSupAppModuleManager;
+    public List<AssetIssuerWalletList> getAssetIssuerWalletBalancesAvailable(String publicKey) throws CantLoadWalletException {
+        return assetIssuerWalletModuleManager.getAssetIssuerWalletBalancesAvailable(publicKey);
+    }
+
+    @Override
+    public List<AssetIssuerWalletList> getAssetIssuerWalletBalancesBook(String publicKey) throws CantLoadWalletException {
+        return assetIssuerWalletModuleManager.getAssetIssuerWalletBalancesBook(publicKey);
     }
 }

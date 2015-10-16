@@ -90,5 +90,10 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#6e6e71"/>
+
 
 </LinearLayout>

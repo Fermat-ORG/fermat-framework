@@ -1,6 +1,7 @@
 package com.bitdubai.android_core.app.common.version_1.navigation_drawer;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,9 @@ import android.widget.Toast;
 
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_api.layer.identity.common.IdentityUserInformation;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.Image;
 
 import java.util.List;
 
@@ -19,6 +23,11 @@ import java.util.List;
 public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
     private final Context context;
     private final List<String> values;
+
+
+    private ImageView icon;
+    private TextView userName;
+    private ImageView imageView_intra_users;
 
 
     public NavigationDrawerArrayAdapter(Context context, List<String> values) {
@@ -55,6 +64,15 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
 
                 rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_navigation_drawer_first_row, parent, false);
+
+                icon = (ImageView) rowView.findViewById(R.id.icon);
+
+                userName = (TextView) rowView.findViewById(R.id.label);
+
+                imageView_intra_users = (ImageView) rowView.findViewById(R.id.icon_change_profile);
+
+
+
                 /*switch (ApplicationSession.getActivityId())
                 {
                     case "DesktopActivity":
@@ -154,4 +172,13 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
         return rowView;
     }
+
+    public void changeUser(IdentityUserInformation intraUserInformation){
+        icon.setImageBitmap(BitmapFactory.decodeByteArray(intraUserInformation.getProfileImage(),0,intraUserInformation.getProfileImage().length));
+        userName.setText(intraUserInformation.getName());
+    }
+    public void setIntraUsers(List<IntraUserInformation> list){
+
+    }
+
 }

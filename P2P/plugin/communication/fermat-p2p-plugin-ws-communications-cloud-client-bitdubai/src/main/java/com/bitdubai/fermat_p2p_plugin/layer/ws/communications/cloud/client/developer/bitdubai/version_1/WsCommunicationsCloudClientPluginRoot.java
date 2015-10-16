@@ -52,10 +52,6 @@ import java.util.regex.Pattern;
 public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWithEvents, DealsWithLogger, DealsWithDeviceLocation, LogManagerForDevelopers, DealsWithErrors, DealsWithPluginFileSystem,Plugin, WsCommunicationsCloudClientManager {
 
     /**
-     * Represent the SERVER_IP
-     */
-    public static final String SERVER_IP = "52.11.156.16"; //AWS
-    /**
      * Represents the value of DISABLE_CLIENT
      */
     public static final Boolean DISABLE_CLIENT = Boolean.TRUE;
@@ -63,11 +59,21 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      * Represents the value of ENABLE_CLIENT
      */
     public static final Boolean ENABLE_CLIENT = Boolean.FALSE;
-    //public static final String SERVER_IP = "192.168.42.5";
+
     /**
      * Represent the WS_PROTOCOL
      */
     private static final String WS_PROTOCOL = "ws://";
+
+
+    /**
+     * Represent the SERVER_IP
+     */
+    public static final String SERVER_IP = "52.11.156.16"; //AWS
+
+    //public static final String SERVER_IP = "192.168.1.4";
+
+
     /**
      * Represent the DEFAULT_PORT
      */
@@ -121,8 +127,8 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      */
     public WsCommunicationsCloudClientPluginRoot(){
         super();
-        //this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.ENABLE_CLIENT;
-        this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.DISABLE_CLIENT;
+        this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.ENABLE_CLIENT;
+        //this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.DISABLE_CLIENT;
     }
 
     /**

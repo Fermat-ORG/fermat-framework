@@ -141,29 +141,6 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
      * ActorIntraWalletUserManager interface implementation.
      */
 
-//TODO: fijarse si esto va
-//    @Override
-//    public Actor createNewIntraWalletUser(String alias, byte[] profileImage) throws CantCreateIntraWalletUserException {
-//        try {
-//            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-//
-//
-//            //this.intraUserActorDao.createNewIntraUser(loggedUser.getPublicKey(), alias, "", profileImage, ContactState.CONNECTED);
-//
-//            //return new IntraUserActorRecord(loggedUser.getPublicKey(), "",alias,profileImage);
-//        }
-//        catch(CantGetLoggedInDeviceUserException e)
-//        {
-//            throw new CantCreateIntraWalletUserException("CAN'T CREATE NEW INTRA WALLET USER ACTOR", e, "Error getting current logged in device user", "");
-//        }
-////        catch (CantAddPendingIntraUserException e) {
-////            throw new CantCreateIntraWalletUserException("CAN'T CREATE NEW INTRA WALLET USER ACTOR", e, "Error add intra user on database", "");
-////        }  catch (Exception e) {
-////            throw new CantCreateIntraWalletUserException("CAN'T CREATE NEW INTRA WALLET USER ACTOR", FermatException.wrapException(e), "", "");
-////        }
-//        return null;
-//    }
-
 
     /**
      * That method registers a new intra user in the list
@@ -627,19 +604,19 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
 
         try {
 
-            List<IntraUserNotification> intraUserNotificationes = intraUserNetworkServiceManager.getNotifications();
+            List<IntraUserNotification> intraUserNotificationes = intraUserNetworkServiceManager.getPendingNotifications();
 
 
             for (IntraUserNotification notification : intraUserNotificationes) {
 
-                String intraUserSendingPublicKey = notification.getPublicKeyOfTheIntraUserSendingUsANotification();
+                String intraUserSendingPublicKey = notification.getActorSenderPublicKey();
 
-                String intraUserToConnectPublicKey = notification.getPublicKeyOfTheIntraUserToConnect();
+                String intraUserToConnectPublicKey = notification.getActorDestinationPublicKey();
 
                 switch (notification.getNotificationDescriptor()) {
                     case ASKFORACCEPTANCE:
 
-                        this.askIntraWalletUserForAcceptance(intraUserSendingPublicKey, notification.getIntraUserToConnectAlias(), intraUserToConnectPublicKey, notification.getIntraUserToConnectProfileImage());
+                        this.askIntraWalletUserForAcceptance(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserToConnectPublicKey, notification.getActorSenderProfileImage());
 
                     case CANCEL:
                         this.cancelIntraWalletUser(intraUserSendingPublicKey, intraUserToConnectPublicKey);
@@ -655,7 +632,7 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
                         this.disconnectIntraWalletUser("", intraUserSendingPublicKey);
                         break;
                     case RECEIVED:
-                        this.receivingIntraWalletUserRequestConnection(intraUserSendingPublicKey, notification.getIntraUserToConnectAlias(), intraUserToConnectPublicKey, notification.getIntraUserToConnectProfileImage());
+                        this.receivingIntraWalletUserRequestConnection(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserToConnectPublicKey, notification.getActorSenderProfileImage());
                         /**
                          * fire event "INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION"
                          */

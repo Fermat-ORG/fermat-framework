@@ -13,12 +13,13 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp">
 
-        <ImageView
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.FermatRoundedImageView
             android:id="@+id/crypto_broker_identity_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="2dp"
             android:contentDescription="@string/identity_img"
+            android:padding="2dp"
+            android:scaleType="centerInside"
             tools:src="@drawable/deniz_profile_picture" />
 
         <View
@@ -35,5 +36,6 @@
         android:layout_gravity="center_vertical"
         android:singleLine="true"
         android:textColor="@color/crypto_broker_identity_name_item"
+        android:textSize="20sp"
         tools:text="Nelson Alfonso Ramirez Noguera" />
 </LinearLayout>

@@ -9,9 +9,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
  */
 public interface DataBaseSystemOs {
 
-    public PluginDatabaseSystem getPluginDatabaseSystem();
+    PluginDatabaseSystem getPluginDatabaseSystem();
 
-    public PlatformDatabaseSystem getPlatformDatabaseSystem();
+    PlatformDatabaseSystem getPlatformDatabaseSystem();
 
-    public void setContext (Object context);
 }

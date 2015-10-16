@@ -1,8 +1,15 @@
-== Including legacy institutions and the traditional financial system
+== Marketing with Digital Assets 
 
-=== FERMAT CCM ( Crypto Commodity Money)
-=== FERMAT BNP (Bank Note Platform)
+FERMAT Marketing Platform (FERMAT-MKT) 
 
+=== VoWa (VShop wallet) 
+-> for 
+
+=== (Voucher Wallet) 
+-> for 
+
+=== DiWa (Shop wallet) 
+-> for shop owners who accept cryptocurrency in payment of their products !
 
 
 

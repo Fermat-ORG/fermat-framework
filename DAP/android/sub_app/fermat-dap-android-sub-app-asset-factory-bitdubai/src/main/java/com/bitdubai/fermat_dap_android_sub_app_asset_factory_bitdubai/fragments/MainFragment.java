@@ -191,7 +191,7 @@ public class MainFragment extends FermatFragment implements
     }
 
     public List<AssetFactory> getMoreDataAsync() throws CantGetAssetFactoryException, CantCreateFileException {
-        return manager.getAssetFactoryByState(State.DRAFT);
+        return manager.getAssetFactoryAll();
     }
 
     @Override
@@ -210,9 +210,12 @@ public class MainFragment extends FermatFragment implements
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.action_edit)
-            changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), getAssetForEdit());
-        else if (menuItem.getItemId() == R.id.action_publish) {
+        if (menuItem.getItemId() == R.id.action_edit) {
+            if (getAssetForEdit() != null && getAssetForEdit().getState() == State.DRAFT)
+                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), getAssetForEdit());
+            else
+                selectedAsset = null;
+        } else if (menuItem.getItemId() == R.id.action_publish) {
             try {
                 if (manager.isReadyToPublish(selectedAsset.getPublicKey())) {
                     final ProgressDialog dialog = new ProgressDialog(getActivity());

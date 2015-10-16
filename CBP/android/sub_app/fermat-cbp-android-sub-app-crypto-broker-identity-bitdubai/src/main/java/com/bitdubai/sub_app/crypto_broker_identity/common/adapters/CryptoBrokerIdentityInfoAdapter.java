@@ -9,7 +9,6 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.common.holders.CryptoBrokerIdentityInfoViewHolder;
-import com.bitdubai.sub_app.crypto_broker_identity.common.model.CryptoBrokerIdentityInformationImp;
 import com.bitdubai.sub_app.crypto_broker_identity.util.UtilsFuncs;
 
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ public class CryptoBrokerIdentityInfoAdapter extends FermatAdapter<CryptoBrokerI
                 BitmapFactory.decodeResource(context.getResources(), R.drawable.deniz_profile_picture) :
                 BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
 
-        Bitmap roundedBitmap = UtilsFuncs.getRoundedShape(imageBitmap);
-        holder.getIdentityImage().setImageBitmap(roundedBitmap);
+        //Bitmap roundedBitmap = UtilsFuncs.getRoundedShape(imageBitmap);
+        holder.getIdentityImage().setImageBitmap(imageBitmap);
     }
 }
