@@ -583,6 +583,12 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
             //todo: ACA DISPARO EL EVENTO CON EL SOURCE MIO Y A LA VAINA
 
+            FermatEvent eventToRaise = eventManager.getNewEvent(com.bitdubai.fermat_ccp_api.all_definition.enums.EventType.ACTOR_NETWORK_SERVICE_COMPLETE);
+            //((CryptoPaymentRequestEvent) eventToRaise).setRequestId(requestId);
+            eventToRaise.setSource(EVENT_SOURCE);
+            eventManager.raiseEvent(eventToRaise);
+
+
             //por razones de testeo, actor registration hardcoded
 
 

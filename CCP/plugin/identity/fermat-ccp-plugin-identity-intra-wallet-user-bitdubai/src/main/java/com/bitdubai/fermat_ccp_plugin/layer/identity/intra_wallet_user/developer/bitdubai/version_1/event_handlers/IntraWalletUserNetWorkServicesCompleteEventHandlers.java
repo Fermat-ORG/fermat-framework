@@ -12,12 +12,12 @@ public class IntraWalletUserNetWorkServicesCompleteEventHandlers implements Ferm
 
     private final IntraWalletUserIdentityPluginRoot intraUserIdentityPluginRoot;
 
-    public IntraWalletUserNetWorkServicesCompleteEventHandlers (final IntraWalletUserIdentityPluginRoot intraUserIdentityPluginRoot)
-    {
+    public IntraWalletUserNetWorkServicesCompleteEventHandlers (final IntraWalletUserIdentityPluginRoot intraUserIdentityPluginRoot){
         this.intraUserIdentityPluginRoot = intraUserIdentityPluginRoot;
     }
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         //add intra users identity
+        intraUserIdentityPluginRoot.registerIdentities();
     }
 }
