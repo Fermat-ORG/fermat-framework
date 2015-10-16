@@ -263,17 +263,17 @@ public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, 
 
     private void testWallet(){
         DigitalAsset digitalAsset = new DigitalAsset();
-        digitalAsset.setPublicKey("assetPublicKey");
-        digitalAsset.setName("KFC Coupon");
-        digitalAsset.setDescription("2x1");
+        digitalAsset.setPublicKey("assetPublicKeyNew1");
+        digitalAsset.setName("McDonald Coupon");
+        digitalAsset.setDescription("2x1 La Patria te Da Mas");
         CryptoAddress cryptoFromAddress = new CryptoAddress("cryptoAddresFrom", CryptoCurrency.BITCOIN);
         CryptoAddress cryptoToAddress = new CryptoAddress("cryptoAddresFrom", CryptoCurrency.BITCOIN);
 
         AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper = new AssetIssuerWalletTransactionRecordWrapper(
                 digitalAsset,
                 "",
-                "KFC Coupon",
-                "2x1",
+                "McDonald Coupon Coupon",
+                "2x1  La Patria te Da Mas",
                 cryptoFromAddress,
                 cryptoToAddress,
                 "actorFromPublicKey",
@@ -286,8 +286,34 @@ public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, 
                 "digitalAssetMetadaHash",
                 UUID.randomUUID()
                 );
+
+        DigitalAsset digitalAsset1 = new DigitalAsset();
+        digitalAsset1.setPublicKey("assetPublicKeyNew2");
+        digitalAsset1.setName("McDonald Coupon");
+        digitalAsset1.setDescription("2x1 La Patria te Da Mas");
+        CryptoAddress cryptoFromAddress1 = new CryptoAddress("cryptoAddresFrom", CryptoCurrency.BITCOIN);
+        CryptoAddress cryptoToAddress1 = new CryptoAddress("cryptoAddresFrom", CryptoCurrency.BITCOIN);
+
+        AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper3 = new AssetIssuerWalletTransactionRecordWrapper(
+                digitalAsset1,
+                "",
+                "McDonald Coupon Patriotico",
+                "2x1  La Patria te Da Mas",
+                cryptoFromAddress1,
+                cryptoToAddress1,
+                "actorFromPublicKey",
+                "actorToPublicKey",
+                Actors.ASSET_USER,
+                Actors.ASSET_USER,
+                20000,
+                0,
+                "memo",
+                "digitalAssetMetadaHash",
+                UUID.randomUUID()
+        );
         try {
             assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).credit(assetIssuerWalletTransactionRecordWrapper, BalanceType.AVAILABLE);
+            assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).credit(assetIssuerWalletTransactionRecordWrapper3, BalanceType.AVAILABLE);
 
             AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper1 = new AssetIssuerWalletTransactionRecordWrapper(
                     digitalAsset,
