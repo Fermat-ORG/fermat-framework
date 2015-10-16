@@ -254,6 +254,11 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     private ActorNetworkServiceRecordedAgent actorNetworkServiceRecordedAgent;
 
     /**
+     *  cacha identities to register
+     */
+    private List<PlatformComponentProfile> actorsToRegisterCache;
+
+    /**
      * Connections arrived
      */
     private boolean connectionArrived = false;
@@ -450,6 +455,9 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
             incomingNotificationsDao = new IncomingNotificationDao(dataBase);
 
             outgoingNotificationDao = new OutgoingNotificationDao(dataBase);
+
+
+            actorsToRegisterCache = new ArrayList<>();
 
             /*
              * Its all ok, set the new status
@@ -654,101 +662,25 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
             initializeMessagesListeners();
 
 
-            FermatEvent eventToRaise = eventManager.getNewEvent(com.bitdubai.fermat_ccp_api.all_definition.enums.EventType.ACTOR_NETWORK_SERVICE_COMPLETE);
-            //((CryptoPaymentRequestEvent) eventToRaise).setRequestId(requestId);
-            ActorNetworkServiceCompleteRegistration networkServiceCompleteRegistration = (ActorNetworkServiceCompleteRegistration)eventToRaise;
-            eventToRaise.setSource(EVENT_SOURCE);
-            eventManager.raiseEvent(networkServiceCompleteRegistration);
-
-            //por razones de testeo, actor registration hardcoded
-
+            try {
 
             CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
 
-            System.out.print("-----------------------\n" +
-                    "INTENTANDO REGISTRAR ACTOR  -----------------------\n" +
-                    "-----------------------\n A: " + getName());
 
 
-        /*
-         * Construct  profile and register
-         */
-                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
-                        "actor_prueba_juan_public_key",
-                        //"actor_prueba_robert_public_key",
-                        ("alias"),
-                        ("name+algo mas"),
-                        NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
-                        PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
-                        "");
+            for(PlatformComponentProfile platformComponentProfile : actorsToRegisterCache){
 
-
-
-                /*
-                 * Register me
-                 */
-            try {
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
-            } catch (CantRegisterComponentException e) {
-                e.printStackTrace();
+
+                System.out.print("-----------------------\n" +
+                        "INTENTANDO REGISTRAR ACTOR  -----------------------\n" +
+                        "-----------------------\n A: " + platformComponentProfile.getAlias());
+
+
             }
 
-             platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
-                    "actor_prueba_eustacio_public_key",
-                    //"actor_prueba_robert_public_key",
-                    ("eustacio"),
-                    ("name+algo mas"),
-                    NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
-                    PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
-                    "");
 
 
-
-                /*
-                 * Register me
-                 */
-            try {
-                communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
-            } catch (CantRegisterComponentException e) {
-                e.printStackTrace();
-            }
-
-             platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
-                    "actor_prueba_ignacio_public_key",
-                    //"actor_prueba_robert_public_key",
-                    ("ignacio"),
-                    ("name+algo mas"),
-                    NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
-                    PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
-                    "");
-
-
-
-                /*
-                 * Register me
-                 */
-            try {
-                communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
-            } catch (CantRegisterComponentException e) {
-                e.printStackTrace();
-            }
-
-             platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
-                    "actor_prueba_pedro_public_key",
-                    //"actor_prueba_robert_public_key",
-                    ("pedro"),
-                    ("name+algo mas"),
-                    NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
-                    PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
-                    "");
-
-
-
-                /*
-                 * Register me
-                 */
-            try {
-                communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
             } catch (CantRegisterComponentException e) {
                 e.printStackTrace();
             }
@@ -1393,14 +1325,8 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                     PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
                     getExtraData());
 
-                /*
-                 * Register me
-                 */
-            try {
-                communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
-            } catch (CantRegisterComponentException e) {
-                e.printStackTrace();
-            }
+            if(!actorsToRegisterCache.contains(platformComponentProfile)) actorsToRegisterCache.add(platformComponentProfile);
+
         }
     }
 

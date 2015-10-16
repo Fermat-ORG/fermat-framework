@@ -334,7 +334,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             try {
                 //resetThisActivity();
 
-                getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.getValueFromString(activity));
+                Activity a =  getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.getValueFromString(activity));
 
                 loadUI(getSubAppSessionManager().getSubAppsSession(getSubAppRuntimeMiddleware().getLastSubApp().getType()));
 
