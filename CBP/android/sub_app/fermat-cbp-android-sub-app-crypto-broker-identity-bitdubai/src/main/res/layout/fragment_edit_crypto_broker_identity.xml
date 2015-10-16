@@ -12,12 +12,11 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp">
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.FermatRoundedImageView
+        <ImageView
             android:id="@+id/crypto_broker_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:padding="2dp"
+            android:padding="1dp"
             android:src="@drawable/img_new_user_camera" />
 
         <View

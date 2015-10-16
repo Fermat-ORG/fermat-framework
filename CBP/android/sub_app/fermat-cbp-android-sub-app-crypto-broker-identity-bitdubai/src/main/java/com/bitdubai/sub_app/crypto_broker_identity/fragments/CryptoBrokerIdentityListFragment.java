@@ -26,7 +26,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.common.adapters.CryptoBrokerIdentityInfoAdapter;
-import com.bitdubai.sub_app.crypto_broker_identity.common.model.CryptoBrokerIdentityInformationImp;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
 import com.melnykov.fab.FloatingActionButton;
@@ -113,7 +112,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
 
-        if(identityInformationList.isEmpty()){
+        if (identityInformationList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_broker_identities);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
@@ -165,33 +164,19 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     @Override
     public List<CryptoBrokerIdentityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoBrokerIdentityInformation> data = new ArrayList<>();
-        if (moduleManager == null) {
-            loadTestData(data);
-        } else {
-            try {
-                data = moduleManager.getAllCryptoBrokersIdentities(0, 0);
-            } catch (CantGetCryptoBrokerListException ex) {
-                CommonLogger.exception(TAG, ex.getMessage(), ex);
 
-                if (errorManager != null) {
-                    loadTestData(data);
-
-                    errorManager.reportUnexpectedSubAppException(
-                            SubApps.CBP_CRYPTO_BROKER_IDENTITY,
-                            UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                            ex);
-                }
-            }
+        try {
+            data = moduleManager.getAllCryptoBrokersIdentities(0, 0);
+        } catch (CantGetCryptoBrokerListException ex) {
+            errorManager.reportUnexpectedSubAppException(
+                    SubApps.CBP_CRYPTO_BROKER_IDENTITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                    ex);
         }
 
         return data;
     }
 
-    private void loadTestData(List<CryptoBrokerIdentityInformation> data) {
-        for (int i = 0; i < 20; i++) {
-            data.add(new CryptoBrokerIdentityInformationImp("Broker Name " + i));
-        }
-    }
 
     @Override
     public void onItemClickListener(CryptoBrokerIdentityInformation data, int position) {

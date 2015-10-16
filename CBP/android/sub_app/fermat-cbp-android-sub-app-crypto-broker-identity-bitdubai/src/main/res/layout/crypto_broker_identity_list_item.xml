@@ -13,14 +13,13 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp">
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.FermatRoundedImageView
+        <ImageView
             android:id="@+id/crypto_broker_identity_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/identity_img"
-            android:padding="2dp"
-            android:scaleType="centerInside"
-            tools:src="@drawable/deniz_profile_picture" />
+            android:padding="1dp"
+            tools:src="@drawable/person" />
 
         <View
             android:layout_width="match_parent"
