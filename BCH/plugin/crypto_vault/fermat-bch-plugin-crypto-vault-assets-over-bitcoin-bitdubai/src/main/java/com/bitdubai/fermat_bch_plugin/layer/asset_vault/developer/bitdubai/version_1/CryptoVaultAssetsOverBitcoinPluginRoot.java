@@ -208,8 +208,4 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager
 
     }
 
-    @Override
-    public CryptoTransaction getGenesisTransaction(String transactionId) throws CantGetGenesisTransactionException {
-        return null;
-    }
 }
