@@ -52,6 +52,8 @@ import com.bitdubai.fermat_core.layer.wpd.network_service.WPDNetworkServiceLayer
 import com.bitdubai.fermat_core.layer.wpd.sub_app_module.WPDSubAppModuleLayer;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.DealsWithAssetIssuerWalletSubAppModule;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSupAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.DealsWithAssetUserWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.DealsWithAssetIssuerCommunitySubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
@@ -1301,6 +1303,13 @@ public class Platform implements Serializable {
                 injectPluginReferencesAndStart(assetIssuerWalletModule, Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE);
 
            /*
+            * Plugin Asset User Wallet Module
+            * -----------------------------
+            */
+                Plugin assetUserWalletModule = ((DAPModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_MODULE_LAYER)).getPluginModuleAssetUserWallet();
+                injectPluginReferencesAndStart(assetUserWalletModule, Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE);
+
+           /*
             * Plugin Asset Issuer Community Sub App Module
             * -----------------------------
             */
@@ -1741,6 +1750,9 @@ public class Platform implements Serializable {
             }
             if (plugin instanceof DealsWithAssetIssuerWalletSubAppModule) {
                 ((DealsWithAssetIssuerWalletSubAppModule) plugin).setWalletAssetIssuerManager((AssetIssuerWalletSupAppModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE));
+            }
+            if (plugin instanceof DealsWithAssetUserWalletSubAppModule) {
+                ((DealsWithAssetUserWalletSubAppModule) plugin).setWalletAssetUserManager((AssetUserWalletSupAppModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE));
             }
 
             if (plugin instanceof DealsWithWsCommunicationsCloudClientManager) {
