@@ -19,8 +19,6 @@ public interface AssetVaultManager {
      */
     CryptoAddress getNewAssetVaultCryptoAddress(BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException;
 
-    CryptoTransaction getGenesisTransaction(String transactionId) throws CantGetGenesisTransactionException;
-
     long getAvailableBalanceForTransaction (String genesisTransaction);
 
     /**
