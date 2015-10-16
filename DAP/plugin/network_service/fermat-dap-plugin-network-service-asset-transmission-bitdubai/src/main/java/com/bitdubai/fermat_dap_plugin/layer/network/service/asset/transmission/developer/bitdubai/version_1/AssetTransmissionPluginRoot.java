@@ -20,10 +20,13 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
@@ -45,6 +48,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.exceptions.CantDefineContractPropertyException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
@@ -72,6 +76,8 @@ import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.d
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.DigitalAssetMetadataTransactionImpl;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.EncodeMsjContent;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.test.MockDigitalAssetMetadataForTesting;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.test.MockIdentityAssetIssuerForTest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
@@ -687,8 +693,8 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
              */
             DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
                     getCommunicationsCloudClientConnection().
-                    constructDiscoveryQueryParamsFactory(platformComponentProfile.getPlatformComponentType(), //applicant = who made the request
-                            platformComponentProfile.getNetworkServiceType(),
+                    constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_USER, //applicant = who made the request
+                            NetworkServiceType.UNDEFINED,
                             null,                     // alias
                             null,                     // identityPublicKey
                             null,                     // location
@@ -717,12 +723,14 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
     @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
 
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
+        System.out.println(" AssetTransmissionPluginRoot - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
          /*
          * save into the cache
          */
         remoteNetworkServicesRegisteredList = platformComponentProfileRegisteredList;
+
+        System.out.println(" AssetTransmissionPluginRoot - remoteNetworkServicesRegisteredList.size() "+remoteNetworkServicesRegisteredList.size());
 
          /* -----------------------------------------------------------------------
          * This is for test and example of how to use
@@ -732,12 +740,98 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             /*
              * Get a remote network service registered from the list requested
              */
-            PlatformComponentProfile remoteNetworkServiceToConnect = getRemoteNetworkServicesRegisteredList().get(0);
+            final PlatformComponentProfile remoteToConnect = getRemoteNetworkServicesRegisteredList().get(0);
 
-            /*
-             * tell to the manager to connect to this remote network service
-             */
-            communicationNetworkServiceConnectionManager.connectTo(remoteNetworkServiceToConnect);
+            System.out.println(" AssetTransmissionPluginRoot - remoteToConnect "+remoteToConnect);
+            
+            try {
+
+                ActorAssetIssuer actorAssetIssuer = new ActorAssetIssuer() {
+                    @Override
+                    public String getPublicKey() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getName() {
+                        return null;
+                    }
+
+                    @Override
+                    public long getContactRegistrationDate() {
+                        return 0;
+                    }
+
+                    @Override
+                    public byte[] getProfileImage() {
+                        return new byte[0];
+                    }
+
+                    @Override
+                    public ConnectionState getContactState() {
+                        return null;
+                    }
+                };
+
+                ActorAssetUser actorAssetUser = new ActorAssetUser() {
+                    @Override
+                    public String getPublicKey() {
+                        return remoteToConnect.getIdentityPublicKey();
+                    }
+
+                    @Override
+                    public String getName() {
+                        return remoteToConnect.getName();
+                    }
+
+                    @Override
+                    public long getContactRegistrationDate() {
+                        return 0;
+                    }
+
+                    @Override
+                    public byte[] getProfileImage() {
+                        return new byte[0];
+                    }
+
+                    @Override
+                    public ConnectionState getConnectionState() {
+                        return null;
+                    }
+
+                    @Override
+                    public Location getLocation() {
+                        return remoteToConnect.getLocation();
+                    }
+
+                    @Override
+                    public Genders getGender() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getAge() {
+                        return null;
+                    }
+
+                    @Override
+                    public CryptoAddress getCryptoAddress() {
+                        return null;
+                    }
+                };
+
+
+                MockDigitalAssetMetadataForTesting mockDigitalAssetForTesting = new MockDigitalAssetMetadataForTesting();
+
+                sendDigitalAssetMetadata(actorAssetIssuer,actorAssetUser, mockDigitalAssetForTesting);
+
+
+            } catch (CantDefineContractPropertyException e) {
+                e.printStackTrace();
+            } catch (CantSendDigitalAssetMetadataException e) {
+                e.printStackTrace();
+            }
+
 
         }
 
@@ -767,18 +861,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
              */
             PlatformComponentProfile remoteNetworkServiceToConnect = remoteNetworkServicesRegisteredList.get(0);
 
-            /**
-             * Create the message content
-             * RECOMMENDATION: the content have to be a json string
-             */
-            String messageContent = "*********************************************************************************\n " +
-                                    "* HELLO TEAM...  This message was sent from the device of Roberto Requena Asset Transmission  Network Service... :) *\n" +
-                                    "*********************************************************************************";
 
-            /*
-             * Send a message using the local representation
-             */
-            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), messageContent);
 
         }
 
@@ -921,6 +1004,8 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
     public void sendDigitalAssetMetadata(ActorAssetIssuer actorAssetIssuerSender, ActorAssetUser actorAssetUserReceiver, DigitalAssetMetadata digitalAssetMetadataToSend) throws CantSendDigitalAssetMetadataException {
 
         try {
+
+            System.out.println(" AssetTransmissionPluginRoot - Starting method sendDigitalAssetMetadata");
 
             /*
              * ask for a previous connection
@@ -1210,4 +1295,5 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
 
         return pendingTransactions;
     }
+
 }
