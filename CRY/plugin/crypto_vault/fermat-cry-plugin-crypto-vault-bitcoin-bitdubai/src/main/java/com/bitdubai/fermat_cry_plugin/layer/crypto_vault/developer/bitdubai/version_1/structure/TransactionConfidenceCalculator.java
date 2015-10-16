@@ -10,10 +10,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_cry_api.layer.definition.DepthInBlocksThreshold;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantCalculateTransactionConfidenceException;
 
-import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionConfidence;
-import org.bitcoinj.core.Wallet;
 
 import java.util.List;
 
@@ -28,37 +26,10 @@ public class TransactionConfidenceCalculator {
     String txId;
     Transaction transaction = null;
     Database database;
-    Wallet vault;
     final int TARGET_DEPTH = DepthInBlocksThreshold.DEPTH;
 
-
-    /**
-     * Constructor
-     *
-     * @param txId with
-     */
-    public TransactionConfidenceCalculator(String txId, Database database, Wallet vault) {
-        this.txId = txId;
-        this.database = database;
-        this.vault = vault;
-    }
-
-    public TransactionConfidenceCalculator(Transaction transaction, Wallet vault) {
+    public TransactionConfidenceCalculator(Transaction transaction) {
         this.transaction = transaction;
-        this.vault = vault;
-    }
-
-    /**
-     * Searchs in the database for the Transaction Hash
-     *
-     * @return hash of the transaction
-     */
-    private String getTransactionHash() throws CantLoadTableToMemoryException {
-        DatabaseTable cryptoTransactionsTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
-        cryptoTransactionsTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, this.txId, DatabaseFilterType.EQUAL);
-        cryptoTransactionsTable.loadToMemory();
-        DatabaseTableRecord txHash = cryptoTransactionsTable.getRecords().get(0);
-        return txHash.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME);
     }
 
     private CryptoStatus getPreviousCryptoStatus(String txHash) throws CantLoadTableToMemoryException {
@@ -83,29 +54,10 @@ public class TransactionConfidenceCalculator {
         }
     }
 
-    /**
-     * Will get the transaction from the vault
-     *
-     * @return the transaction from vault
-     */
-    private Transaction getTransactionFromVault() throws CantCalculateTransactionConfidenceException {
-        String dbHash;
-        try {
-            dbHash = getTransactionHash();
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            throw new CantCalculateTransactionConfidenceException("Error calculating the confidence of transaction.", cantLoadTableToMemory, null, "error in database plugin");
-        }
-        Sha256Hash txHash = new Sha256Hash(dbHash);
-        this.transaction = vault.getTransaction(txHash);
-
-        return transaction;
-    }
-
-
     public CryptoStatus getCryptoStatus() throws CantCalculateTransactionConfidenceException {
         try {
             if (transaction == null)
-                transaction = getTransactionFromVault();
+                throw new CantCalculateTransactionConfidenceException("transaction null", "Transaction is null.");
 
             TransactionConfidence.ConfidenceType confidence = transaction.getConfidence().getConfidenceType();
 
@@ -162,11 +114,14 @@ public class TransactionConfidenceCalculator {
                 default:
                     return CryptoStatus.PENDING_SUBMIT;
             }
-            throw new CantCalculateTransactionConfidenceException(CantCalculateTransactionConfidenceException.DEFAULT_MESSAGE, null, null, null);
+            throw new CantCalculateTransactionConfidenceException();
+
         } catch (CantCalculateTransactionConfidenceException exception) {
-            throw new CantCalculateTransactionConfidenceException(CantCalculateTransactionConfidenceException.DEFAULT_MESSAGE, exception, null, null);
+
+            throw exception;
         } catch (Exception exception) {
-            throw new CantCalculateTransactionConfidenceException(CantCalculateTransactionConfidenceException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+
+            throw new CantCalculateTransactionConfidenceException(FermatException.wrapException(exception), null, "Unhandled error.");
         }
     }
 }

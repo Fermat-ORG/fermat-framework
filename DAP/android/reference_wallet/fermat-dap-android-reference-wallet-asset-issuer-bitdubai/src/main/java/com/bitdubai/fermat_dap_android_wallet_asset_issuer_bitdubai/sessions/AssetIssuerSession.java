@@ -23,10 +23,6 @@ public class AssetIssuerSession implements WalletSession {
      * Issuer Manager
      */
     private AssetIssuerWalletSupAppModuleManager manager;
-    /**
-     * SubApps type
-     */
-    private WalletSession walletSession;
 
     /**
      * Active objects in wallet session

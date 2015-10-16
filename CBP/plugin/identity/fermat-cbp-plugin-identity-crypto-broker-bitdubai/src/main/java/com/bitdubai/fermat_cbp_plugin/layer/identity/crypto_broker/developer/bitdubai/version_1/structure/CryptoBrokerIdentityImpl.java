@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.IdentityPublished;
 
 /**
  * Created by jorge on 28-09-2015.
@@ -18,13 +19,15 @@ public class CryptoBrokerIdentityImpl implements DealsWithPluginFileSystem, Cryp
     private String publicKey;
     private String privateKey;
     private byte[] profileImage;
+    private IdentityPublished publicKeyPublished;
     private PluginFileSystem pluginFileSystem;
 
-    public CryptoBrokerIdentityImpl(final String alias, String publicKey, String privateKey, final byte[] profileImage, PluginFileSystem pluginFileSystem){
+    public CryptoBrokerIdentityImpl(final String alias, String publicKey, String privateKey, final byte[] profileImage, IdentityPublished publicKeyPublished, PluginFileSystem pluginFileSystem){
         this.alias = alias;
         this.publicKey = publicKey;
         this.privateKey = privateKey;
         this.profileImage = profileImage;
+        this.publicKeyPublished = publicKeyPublished;
         this.pluginFileSystem = pluginFileSystem;
     }
 
@@ -50,6 +53,9 @@ public class CryptoBrokerIdentityImpl implements DealsWithPluginFileSystem, Cryp
 
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFile) { this.pluginFileSystem = pluginFile; }
+
+    @Override
+    public IdentityPublished getPublicKeyPublished(){ return this.publicKeyPublished; }
 
     @Override
     public String createMessageSignature(String message) throws CantCreateMessageSignatureException{
