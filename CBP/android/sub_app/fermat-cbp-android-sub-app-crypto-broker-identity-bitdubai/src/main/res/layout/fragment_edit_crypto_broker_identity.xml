@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
-            android:adjustViewBounds="true"
+            android:padding="2dp"
             android:src="@drawable/img_new_user_camera" />
 
         <View

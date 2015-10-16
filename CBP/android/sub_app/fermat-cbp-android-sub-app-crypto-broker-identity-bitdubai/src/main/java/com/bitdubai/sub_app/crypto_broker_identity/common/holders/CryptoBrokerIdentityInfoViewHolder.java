@@ -12,13 +12,13 @@ import com.bitdubai.sub_app.crypto_broker_identity.R;
  * Created by nelson on 01/09/15.
  */
 public class CryptoBrokerIdentityInfoViewHolder extends FermatViewHolder {
-    private FermatRoundedImageView identityImage;
+    private ImageView identityImage;
     private FermatTextView identityName;
 
     public CryptoBrokerIdentityInfoViewHolder(View itemView) {
         super(itemView);
 
-        identityImage = (FermatRoundedImageView) itemView.findViewById(R.id.crypto_broker_identity_image);
+        identityImage = (ImageView) itemView.findViewById(R.id.crypto_broker_identity_image);
         identityName = (FermatTextView) itemView.findViewById(R.id.crypto_broker_identity_alias);
     }
 

@@ -45,6 +45,7 @@ public class CryptoBrokerIdentityInfoAdapter extends FermatAdapter<CryptoBrokerI
                 BitmapFactory.decodeResource(context.getResources(), R.drawable.deniz_profile_picture) :
                 BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
 
+        //Bitmap roundedBitmap = UtilsFuncs.getRoundedShape(imageBitmap);
         holder.getIdentityImage().setImageBitmap(imageBitmap);
     }
 }

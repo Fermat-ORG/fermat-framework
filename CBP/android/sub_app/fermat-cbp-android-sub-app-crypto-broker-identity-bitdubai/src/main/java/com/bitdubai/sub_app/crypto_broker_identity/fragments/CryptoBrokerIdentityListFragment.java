@@ -112,6 +112,12 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
+
+        if(identityInformationList.isEmpty()){
+            View emptyListViewsContainer = layout.findViewById(R.id.no_broker_identities);
+            recyclerView.setVisibility(View.GONE);
+            emptyListViewsContainer.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
