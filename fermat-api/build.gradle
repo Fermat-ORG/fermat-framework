@@ -31,7 +31,7 @@ pmd {
 
 dependencies {
 
-
+    compile 'com.carrotsearch:java-sizeof:0.0.5'
     compile 'org.bouncycastle:bcprov-jdk15on:1.52'
     compile('org.bitcoinj:bitcoinj-core:0.13.2') {
         exclude module: 'scrypt'

@@ -112,8 +112,19 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         saveIncomingTransaction(wallet, tx);
     }
 
+    /**
+     * Registers the outgoing transaction
+     * @param wallet
+     * @param tx
+     * @param prevBalance
+     * @param newBalance
+     */
     @Override
     public void onCoinsSent(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
+        saveOutgoingTransaction(wallet, tx);
+    }
+
+    private void saveOutgoingTransaction(Wallet wallet, Transaction tx) {
         /**
          * Register the new outgoing transaction into the database
          */
@@ -125,7 +136,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                     getOutgoingTransactionAddressFrom(wallet, tx),
                     tx.getValue(wallet).getValue(),
                     tx.getFee().getValue(),
-                    ProtocolStatus.TO_BE_NOTIFIED);
+                    ProtocolStatus.NO_ACTION_REQUIRED);
         } catch (CantExecuteDatabaseOperationException e) {
             e.printStackTrace();
         }
@@ -237,7 +248,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
             /**
              * if there is an error, because this may not always be possible to get.
              */
-            cryptoAddress = new CryptoAddress("error", CryptoCurrency.BITCOIN);
+            cryptoAddress = new CryptoAddress("Empty", CryptoCurrency.BITCOIN);
         }
         return cryptoAddress;
     }
@@ -350,7 +361,6 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                     e.printStackTrace();
                 }
                 break;
-
         }
     }
 

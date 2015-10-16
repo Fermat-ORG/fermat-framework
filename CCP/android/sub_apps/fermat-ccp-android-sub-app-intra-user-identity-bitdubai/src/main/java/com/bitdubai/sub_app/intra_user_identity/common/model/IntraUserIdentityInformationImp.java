@@ -1,32 +1,49 @@
 package com.bitdubai.sub_app.intra_user_identity.common.model;
 
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantSetNewProfileImageException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantSignIntraWalletUserMessageException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
 
 /**
  * Created by nelson on 09/10/15.
  */
-public class IntraUserIdentityInformationImp implements CryptoBrokerIdentityInformation {
+public class IntraUserIdentityInformationImp implements IntraWalletUser {
 
-    private String brokerName;
+    private String intraUserName;
     private byte[] profileImage;
+    private String publicKey;
 
-    public IntraUserIdentityInformationImp(String brokerName) {
-        this.brokerName = brokerName;
-        profileImage = null;
+    public IntraUserIdentityInformationImp(String intraUserName, String publicKey,byte[] profileImage) {
+        this.intraUserName = intraUserName;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage;
+    }
+
+    @Override
+    public String getAlias() {
+        return this.intraUserName ;
     }
 
     @Override
     public String getPublicKey() {
-        return null;
+        return this.publicKey;
     }
 
-    @Override
-    public String getName() {
-        return brokerName;
-    }
+
 
     @Override
     public byte[] getProfileImage() {
-        return profileImage;
+        return this.profileImage;
+    }
+
+    @Override
+    public void setNewProfileImage(byte[] newProfileImage) throws CantSetNewProfileImageException {
+
+    }
+
+    @Override
+    public String createMessageSignature(String message) throws CantSignIntraWalletUserMessageException {
+        return null;
     }
 }

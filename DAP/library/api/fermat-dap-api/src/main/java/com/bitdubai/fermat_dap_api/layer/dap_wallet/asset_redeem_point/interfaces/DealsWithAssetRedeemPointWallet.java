@@ -4,6 +4,6 @@ package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfac
  * Created by franklin on 14/10/15.
  */
 public interface DealsWithAssetRedeemPointWallet {
-    void setAssetIssuerManager(AssetRedeemPointWalletManager assetRedeemPointWalletManager);
+    void setAssetReddemPointManager(AssetRedeemPointWalletManager assetRedeemPointWalletManager);
 
 }
