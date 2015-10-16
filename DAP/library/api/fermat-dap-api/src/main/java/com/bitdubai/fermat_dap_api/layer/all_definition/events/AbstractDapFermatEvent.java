@@ -4,27 +4,27 @@
  * You may not modify, use, reproduce or distribute this software.
 * BITDUBAI/CONFIDENTIAL
 */
-package com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.events;
+package com.bitdubai.fermat_dap_api.layer.all_definition.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.enums.DapEvenType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DapEvenType;
 
 /**
- * The Class <code>AbstractDapAssetUserActorNetworkServiceFermatEvent</code>
+ * The Class <code>AbstractDapFermatEvent</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 11/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AbstractDapAssetUserActorNetworkServiceFermatEvent implements FermatEvent {
+public class AbstractDapFermatEvent implements FermatEvent {
 
     private final DapEvenType eventType;
 
     private EventSource eventSource;
 
-    public AbstractDapAssetUserActorNetworkServiceFermatEvent(DapEvenType eventType){
+    public AbstractDapFermatEvent(DapEvenType eventType){
 
         this.eventType = eventType;
     }

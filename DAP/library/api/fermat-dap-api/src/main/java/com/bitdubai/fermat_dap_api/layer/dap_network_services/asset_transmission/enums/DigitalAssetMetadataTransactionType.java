@@ -1,22 +1,22 @@
 /*
- * @#AssetTransmissionMsjContentType.java - 2015
+ * @#DigitalAssetMetadataTransactionType.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.AssetTransmissionMsjContentType</code>
+ * The Class <code>com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType</code>
  * <p/>
- * Created by Roberto Requena - (rart3001@gmail.com) on 12/10/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 15/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public enum AssetTransmissionMsjContentType {
+public enum DigitalAssetMetadataTransactionType {
 
     /**
      * Definition types
@@ -34,7 +34,7 @@ public enum AssetTransmissionMsjContentType {
      *
      * @param code the valid code
      */
-    AssetTransmissionMsjContentType(String code) {
+    DigitalAssetMetadataTransactionType(String code) {
         this.code = code;
     }
 
@@ -52,13 +52,13 @@ public enum AssetTransmissionMsjContentType {
      * @return MessagesStatus enum
      * @throws InvalidParameterException error with is no a valid code
      */
-    public static AssetTransmissionMsjContentType getByCode(String code) throws InvalidParameterException {
+    public static DigitalAssetMetadataTransactionType getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
             case "MDT":
-                return AssetTransmissionMsjContentType.META_DATA_TRANSMIT;
+                return DigitalAssetMetadataTransactionType.META_DATA_TRANSMIT;
             case "TSU":
-                return AssetTransmissionMsjContentType.TRANSACTION_STATUS_UPDATE;
+                return DigitalAssetMetadataTransactionType.TRANSACTION_STATUS_UPDATE;
         }
 
         /**

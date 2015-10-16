@@ -1,5 +1,5 @@
 /*
- * @#DigitalAssetMetadataTransmitMessageReceiverProcessor.java - 2015
+ * @#NewTransactionStatusNotificationMessageReceiverProcessor.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -9,12 +9,12 @@ package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DapEvenType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.AssetTransmissionJsonAttNames;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.DigitalAssetMetadataTransactionImpl;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
@@ -23,22 +23,23 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatM
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.google.gson.JsonObject;
 
+import java.util.List;
+
 /**
- * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.processors.DigitalAssetMetadataTransmitMessageReceiverProcessor</code> is
- * that implement the logic when a Digital Asset Metadata Transmit Message is Receiver
- * <p/>
+ * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.processor.NewTransactionStatusNotificationMessageReceiverProcessor</code> is
+ * that implement the logic when a Transaction New Status Notification Message is Receiver<p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 12/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DigitalAssetMetadataTransmitMessageReceiverProcessor extends FermatMessageProcessor {
+public class NewTransactionStatusNotificationMessageReceiverProcessor extends FermatMessageProcessor {
 
     /**
      * Constructor with parameters
      * @param assetTransmissionPluginRoot
      */
-    public DigitalAssetMetadataTransmitMessageReceiverProcessor(AssetTransmissionPluginRoot assetTransmissionPluginRoot) {
+    public NewTransactionStatusNotificationMessageReceiverProcessor(AssetTransmissionPluginRoot assetTransmissionPluginRoot) {
         super(assetTransmissionPluginRoot);
     }
 
@@ -55,33 +56,32 @@ public class DigitalAssetMetadataTransmitMessageReceiverProcessor extends Fermat
             /*
              * Get the XML representation of the Digital Asset Metadata
              */
-            String digitalAssetMetadataXml     = jsonMsjContent.get(AssetTransmissionJsonAttNames.DIGITAL_ASSET_METADATA).getAsString();
-            PlatformComponentType senderType   = gson.fromJson(jsonMsjContent.get(AssetTransmissionJsonAttNames.SENDER_TYPE).getAsString(), PlatformComponentType.class);
-            PlatformComponentType receiverType = gson.fromJson(jsonMsjContent.get(AssetTransmissionJsonAttNames.RECEIVER_TYPE).getAsString(), PlatformComponentType.class);
+            String genesisTransaction             = jsonMsjContent.get(AssetTransmissionJsonAttNames.GENESIS_TRANSACTION).getAsString();
+            DistributionStatus distributionStatus = gson.fromJson(jsonMsjContent.get(AssetTransmissionJsonAttNames.NEW_DISTRIBUTION_STATUS).getAsString(), DistributionStatus.class);
+            PlatformComponentType senderType      = gson.fromJson(jsonMsjContent.get(AssetTransmissionJsonAttNames.SENDER_TYPE).getAsString(), PlatformComponentType.class);
+            PlatformComponentType receiverType    = gson.fromJson(jsonMsjContent.get(AssetTransmissionJsonAttNames.RECEIVER_TYPE).getAsString(), PlatformComponentType.class);
 
             /*
-             * Convert the xml to object
+             * Get the digitalAssetMetadataTransaction
              */
-            DigitalAssetMetadata digitalAssetMetadata = (DigitalAssetMetadata) XMLParser.parseXML(digitalAssetMetadataXml, DigitalAssetMetadata.class);
+            List<DigitalAssetMetadataTransactionImpl> list =  getAssetTransmissionPluginRoot().getDigitalAssetMetaDataTransactionDao().findAll(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction);
+
+            DigitalAssetMetadataTransactionImpl digitalAssetMetadataTransactionImpl = null;
+
+            if (list != null && !list.isEmpty()){
+                digitalAssetMetadataTransactionImpl = list.get(0);
+                digitalAssetMetadataTransactionImpl.setSenderId(fermatMessage.getSender());
+                digitalAssetMetadataTransactionImpl.setSenderType(senderType);
+                digitalAssetMetadataTransactionImpl.setReceiverId(fermatMessage.getReceiver());
+                digitalAssetMetadataTransactionImpl.setReceiverType(receiverType);
+                digitalAssetMetadataTransactionImpl.setDistributionStatus(distributionStatus);
+                digitalAssetMetadataTransactionImpl.setProcessed(DigitalAssetMetadataTransactionImpl.NO_PROCESSED);
+            }
 
             /*
-             * Construct a new digitalAssetMetadataTransaction
+             * Save into data base like a new transaction
              */
-            DigitalAssetMetadataTransactionImpl digitalAssetMetadataTransaction = new DigitalAssetMetadataTransactionImpl();
-            digitalAssetMetadataTransaction.setGenesisTransaction(digitalAssetMetadata.getGenesisTransaction());
-            digitalAssetMetadataTransaction.setSenderId(fermatMessage.getSender());
-            digitalAssetMetadataTransaction.setSenderType(senderType);
-            digitalAssetMetadataTransaction.setReceiverId(fermatMessage.getReceiver());
-            digitalAssetMetadataTransaction.setReceiverType(receiverType);
-            digitalAssetMetadataTransaction.setDigitalAssetMetadata(digitalAssetMetadata);
-           // digitalAssetMetadataTransaction.setDistributionStatus(DistributionStatus.CRYPTO_RECEIVED); TODO: REVISAR STATUS
-            digitalAssetMetadataTransaction.setType(DigitalAssetMetadataTransactionType.META_DATA_TRANSMIT);
-            digitalAssetMetadataTransaction.setProcessed(DigitalAssetMetadataTransactionImpl.NO_PROCESSED);
-
-            /*
-             * Save into data base for audit control
-             */
-            getAssetTransmissionPluginRoot().getDigitalAssetMetaDataTransactionDao().create(digitalAssetMetadataTransaction);
+            getAssetTransmissionPluginRoot().getDigitalAssetMetaDataTransactionDao().create(digitalAssetMetadataTransactionImpl);
 
             /*
              * Mark the message as read
@@ -92,7 +92,7 @@ public class DigitalAssetMetadataTransmitMessageReceiverProcessor extends Fermat
             /*
              * Notify to the interested
              */
-            FermatEvent event =  getAssetTransmissionPluginRoot().getEventManager().getNewEvent(DapEvenType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
+            FermatEvent event =  getAssetTransmissionPluginRoot().getEventManager().getNewEvent(DapEvenType.RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION);
             event.setSource(AssetTransmissionPluginRoot.EVENT_SOURCE);
             getAssetTransmissionPluginRoot().getEventManager().raiseEvent(event);
 

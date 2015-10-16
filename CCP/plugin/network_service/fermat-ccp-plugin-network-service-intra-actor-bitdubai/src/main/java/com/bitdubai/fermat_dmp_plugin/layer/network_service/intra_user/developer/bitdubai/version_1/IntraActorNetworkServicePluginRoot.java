@@ -275,10 +275,6 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     public IntraActorNetworkServicePluginRoot() {
         super();
         this.listenersAdded = new ArrayList<>();
-
-        /******************************************************************
-         * IMPORTANT: CHANGE THIS VALUES TO THE NEW PLUGIN TO IMPLEMENT
-         ******************************************************************/
         this.platformComponentType = PlatformComponentType.ACTOR_NETWORK_SERVICE;
         this.networkServiceType    = NetworkServiceType.INTRA_USER;
         this.name                  = "Intra actor Network Service";
@@ -997,18 +993,18 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
              * This is for test and example of how to use
              * Construct the filter
              */
-        DiscoveryQueryParameters discoveryQueryParameters = constructDiscoveryQueryParamsFactory(platformComponentProfile.getPlatformComponentType(), //PlatformComponentType you want to find
-                NetworkServiceType.UNDEFINED,     //NetworkServiceType you want to find
-                null,                     // alias
-                null,                     // identityPublicKey
-                null,                     // location
-                null,                     // distance
-                null,                     // name
-                null,                     // extraData
-                null,                     // offset
-                null,                     // max
-                null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+        DiscoveryQueryParameters discoveryQueryParameters = constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_INTRA_USER, //PlatformComponentType you want to find
+                                                                                                NetworkServiceType.UNDEFINED,     //NetworkServiceType you want to find
+                                                                                                null,                     // alias
+                                                                                                null,                     // identityPublicKey
+                                                                                                null,                     // location
+                                                                                                null,                     // distance
+                                                                                                null,                     // name
+                                                                                                null,                     // extraData
+                                                                                                null,                     // offset
+                                                                                                null,                     // max
+                                                                                                null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                                                                                null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
 
         System.out.println(" TemplateNetworkServicePluginRoot - discoveryQueryParameters = " + discoveryQueryParameters.toJson());

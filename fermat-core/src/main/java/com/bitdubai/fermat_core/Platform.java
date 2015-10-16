@@ -213,7 +213,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.inte
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 import com.carrotsearch.sizeof.RamUsageEstimator;
-
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;

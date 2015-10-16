@@ -10,7 +10,7 @@ package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException</code> is
+ * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetTransmissionNetworkServiceDatabaseException</code> is
  * throw when error occurred updating new record in a table of the data base
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 07/10/15.
@@ -18,7 +18,7 @@ import com.bitdubai.fermat_api.FermatException;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CantInitializeTemplateNetworkServiceDatabaseException extends FermatException {
+public class CantInitializeAssetTransmissionNetworkServiceDatabaseException extends FermatException {
 
     /**
      * Represent the default message
@@ -33,7 +33,7 @@ public class CantInitializeTemplateNetworkServiceDatabaseException extends Ferma
      * @param context
      * @param possibleReason
      */
-    public CantInitializeTemplateNetworkServiceDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantInitializeAssetTransmissionNetworkServiceDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
@@ -43,7 +43,7 @@ public class CantInitializeTemplateNetworkServiceDatabaseException extends Ferma
      * @param message
      * @param cause
      */
-    public CantInitializeTemplateNetworkServiceDatabaseException(final String message, final Exception cause) {
+    public CantInitializeAssetTransmissionNetworkServiceDatabaseException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }
 
@@ -52,7 +52,7 @@ public class CantInitializeTemplateNetworkServiceDatabaseException extends Ferma
      *
      * @param message
      */
-    public CantInitializeTemplateNetworkServiceDatabaseException(final String message) {
+    public CantInitializeAssetTransmissionNetworkServiceDatabaseException(final String message) {
         this(message, null);
     }
 
@@ -61,7 +61,7 @@ public class CantInitializeTemplateNetworkServiceDatabaseException extends Ferma
      *
      * @param exception
      */
-    public CantInitializeTemplateNetworkServiceDatabaseException(final Exception exception) {
+    public CantInitializeAssetTransmissionNetworkServiceDatabaseException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
@@ -69,7 +69,7 @@ public class CantInitializeTemplateNetworkServiceDatabaseException extends Ferma
     /**
      * Constructor
      */
-    public CantInitializeTemplateNetworkServiceDatabaseException() {
+    public CantInitializeAssetTransmissionNetworkServiceDatabaseException() {
         this(DEFAULT_MESSAGE);
     }
 }
