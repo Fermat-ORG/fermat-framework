@@ -266,34 +266,36 @@ public class CryptoVaultDatabaseActions {
     }
 
     /**
-     * Gets from database the current CryptoStatus of a transaction.
-     * @param txId
-     * @return
-     * @throws CantExecuteQueryException
-     * @throws UnexpectedResultReturnedFromDatabaseException
+     * Gets from database the current CryptoStatus of a specific transaction by fermat transaction id.
+     *
+     * @param txId fermat transaction id
+     *
+     * @return an element of the crypto status enum representing the status of the transaction.
+     *
+     * @throws CantExecuteQueryException                       if something goes wrong.
+     * @throws UnexpectedResultReturnedFromDatabaseException   if the transaction doesn't exists or is duplicated in database.
      */
-    public CryptoStatus getCryptoStatus (String txId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
+    public CryptoStatus getCryptoStatus (final String txId) throws CantExecuteQueryException                     ,
+                                                                   UnexpectedResultReturnedFromDatabaseException {
+
         try {
-            DatabaseTable cryptoTxTable;
-            cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+            DatabaseTable cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
 
             cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId, DatabaseFilterType.EQUAL);
 
             cryptoTxTable.loadToMemory();
 
-            DatabaseTableRecord currentRecord;
-            /**
-             * I will make sure I only get one result.
-             */
+            // will make sure I only get one result.
             if (cryptoTxTable.getRecords().size() > 1)
                 throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", null, "TxId:" + txId, "duplicated Transaction Id.");
-            else if (cryptoTxTable.getRecords().size() == 0)
+            else if (cryptoTxTable.getRecords().isEmpty())
                 throw new UnexpectedResultReturnedFromDatabaseException("No values returned when trying to get CryptoStatus from transaction in database.", null, "TxId:" + txId, "transaction not yet persisted in database.");
             else
-                currentRecord = cryptoTxTable.getRecords().get(0);
+                return CryptoStatus.getByCode(cryptoTxTable.getRecords().get(0).getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME));
 
-            return CryptoStatus.getByCode(currentRecord.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME));
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
 
+            throw e;
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
 
             throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, "TxId " + txId, "Error in database plugin.");
