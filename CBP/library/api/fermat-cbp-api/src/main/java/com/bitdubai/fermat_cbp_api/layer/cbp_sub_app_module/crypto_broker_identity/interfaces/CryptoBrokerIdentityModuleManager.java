@@ -19,8 +19,6 @@ import java.util.List;
 
 public interface CryptoBrokerIdentityModuleManager {
 
-
-
     /**
      * The method <code>createCryptoBrokerIdentity</code> is used to create a new crypto Broker identity
      *
