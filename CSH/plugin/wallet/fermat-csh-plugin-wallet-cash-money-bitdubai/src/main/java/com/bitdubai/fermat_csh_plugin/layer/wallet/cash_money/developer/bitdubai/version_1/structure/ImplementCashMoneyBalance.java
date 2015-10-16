@@ -7,22 +7,26 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.exceptions.CantRe
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.interfaces.CashMoneyBalance;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.interfaces.CashMoneyBalanceRecord;
 
+import java.util.UUID;
+
 /**
  * Created by francisco on 14/10/15.
  */
 public class ImplementCashMoneyBalance implements CashMoneyBalance{
+
+    private double amount;
+    UUID idTransaction;
     @Override
     public double getBalance() throws CantCalculateBalanceException {
         return 0;
     }
 
     @Override
-    public void debit(CashMoneyBalanceRecord CashMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterDebitException {
-
+    public void debit(CashMoneyBalanceRecord cashMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterDebitException {
+        amount= cashMoneyBalanceRecord.getAmount();
     }
-
     @Override
-    public void credit(CashMoneyBalanceRecord CashMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterCreditException {
+    public void credit(CashMoneyBalanceRecord cashMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterCreditException {
 
     }
 }
