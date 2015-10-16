@@ -33,7 +33,8 @@ public class MainFragment extends FermatWalletFragment {
 
     private AssetIssuerWalletSupAppModuleManager manager;
     private List<AssetIssuerWalletList> assetIssuerWalletList;
-    private List<DigitalAsset> bookAssets;/**
+    private List<DigitalAsset> bookAssets;
+    /**
      * UI
      */
     private View rootView;
