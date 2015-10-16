@@ -727,7 +727,7 @@ public class Platform implements Serializable {
             boolean DMP = true;//DOBLEMENTE TEMPORAL
             boolean MKT = true;
             boolean OSA = true;
-            boolean P2P = false;
+            boolean P2P = true;
             boolean PIP = true;
             boolean SHP = true;
             boolean WPD = true;
@@ -1486,7 +1486,7 @@ public class Platform implements Serializable {
         System.out.println("--------------- Lista de Tamaños en Start-Up de Plugins ---------------");
         System.out.println("************************************************************************");
         for (Map.Entry<Plugins, String> entry : pluginsSizeReport.entrySet()) {
-            System.out.println(entry.getKey().toString() + " - Start-Up time: " + entry.getValue() +".");
+            System.out.println(entry.getKey().toString() + " - Start-Up Size: " + entry.getValue() +".");
         }
         System.out.println("************************************************************************");
 
