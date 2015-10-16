@@ -49,6 +49,9 @@ public class BitcoinBasicWalletTransactionExecutor implements TransactionExecuto
                 case REVERSED_ON_BLOCKCHAIN:
                     processReversedOnBlockchainTransaction(transaction);
                     break;
+                case IRREVERSIBLE:
+                    // define what to do here.
+                    break;
                 default:
                     throw new UnexpectedTransactionException("El crypto status no es esperado", null, "El cryptoStatus es: " + transaction.getInformation().getCryptoStatus().getCode(), "");
             }
