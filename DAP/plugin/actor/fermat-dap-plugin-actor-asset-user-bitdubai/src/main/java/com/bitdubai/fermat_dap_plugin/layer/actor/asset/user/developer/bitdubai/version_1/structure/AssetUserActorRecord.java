@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user;
+package com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
