@@ -17,7 +17,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDao;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -48,7 +47,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     // counter and wait time
     private Map<String, ActorNetworkServiceConnectionIncubation> waitingPlatformComponentProfile;
 
-    private IntraUserNetworkServiceDao actorNetworkServiceDao;
+    //private IntraUserNetworkServiceDao actorNetworkServiceDao;
 
     private final CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
     private final IntraActorNetworkServicePluginRoot ActorNetworkServicePluginRoot;
@@ -105,12 +104,12 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
         try {
 
-            this.actorNetworkServiceDao = new IntraUserNetworkServiceDao(
-                    pluginDatabaseSystem,
-                    pluginFileSystem,
-                    pluginId,
-                    ActorNetworkServicePluginRoot.getDataBase()
-            );
+//            this.actorNetworkServiceDao = new IntraUserNetworkServiceDao(
+//                    pluginDatabaseSystem,
+//                    pluginFileSystem,
+//                    pluginId,
+//                    ActorNetworkServicePluginRoot.getDataBase()
+//            );
 
             //actorNetworkServiceDao.initialize();
 
@@ -148,11 +147,12 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     }
 
     private void processSend() {
-        try {
-
-            List<ActorNetworkServiceRecord> lstActorRecord = actorNetworkServiceDao.getAllRequestCacheRecord(
-                    ActorProtocolState.PROCESSING_SEND
-            );
+        //try {
+//
+//            List<ActorNetworkServiceRecord> lstActorRecord = actorNetworkServiceDao.getAllRequestCacheRecord(
+//                    ActorProtocolState.PROCESSING_SEND
+//            );
+            List<ActorNetworkServiceRecord> lstActorRecord =null;
 
             for (ActorNetworkServiceRecord cpr : lstActorRecord) {
                 switch (cpr.getNotificationDescriptor()) {
@@ -176,9 +176,9 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                 }
 
             }
-        } catch (CantExecuteDatabaseOperationException e) {
-            e.printStackTrace();
-        }
+//        } catch (CantExecuteDatabaseOperationException e) {
+//            e.printStackTrace();
+//        }
     }
 
 
@@ -207,12 +207,13 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
     public void processReceive(){
 
-        try {
+       // try {
 
-            // process notifications
-            List<ActorNetworkServiceRecord> lstActorRecord = actorNetworkServiceDao.getAllRequestCacheRecord(
-                    ActorProtocolState.PROCESSING_RECEIVE
-            );
+//            // process notifications
+//            List<ActorNetworkServiceRecord> lstActorRecord = actorNetworkServiceDao.getAllRequestCacheRecord(
+//                    ActorProtocolState.PROCESSING_RECEIVE
+//            );
+            List<ActorNetworkServiceRecord> lstActorRecord =null;
 
             for(ActorNetworkServiceRecord cpr : lstActorRecord) {
                 switch (cpr.getNotificationDescriptor()) {
@@ -239,9 +240,9 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
             }
 
 
-        } catch (CantExecuteDatabaseOperationException e) {
-            reportUnexpectedError(e);
-        }
+//        } catch (CantExecuteDatabaseOperationException e) {
+//            reportUnexpectedError(e);
+//        }
     }
 
     private void sendMessageToActor(final String jsonMessage      ,

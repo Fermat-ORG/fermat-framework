@@ -27,15 +27,6 @@ public class IntraUserNetworkServiceNotification implements IntraUserNotificatio
         this.alias = alias;
     }
 
-    @Override
-    public String getPublicKeyOfTheSender() {
-        return this.intraUserLogedInPublicKey;
-    }
-
-    @Override
-    public String getPublicKeyOfTheIntraUserToConnect(){
-        return this.intraUserToConnectPublicKey;
-    }
 
     @Override
     public String getActorSenderAlias(){
@@ -75,5 +66,10 @@ public class IntraUserNetworkServiceNotification implements IntraUserNotificatio
     @Override
     public IntraUserNotificationDescriptor getNotificationDescriptor() {
         return this.notificationDescriptor;
+    }
+
+    @Override
+    public long getSentDate() {
+        return 0;
     }
 }

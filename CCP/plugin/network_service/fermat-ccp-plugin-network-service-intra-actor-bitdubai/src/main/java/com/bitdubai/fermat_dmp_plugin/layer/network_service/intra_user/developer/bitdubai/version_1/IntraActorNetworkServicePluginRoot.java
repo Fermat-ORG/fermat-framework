@@ -58,7 +58,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDao;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
@@ -1212,26 +1211,24 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
         try {
 
 
+//            //Save request fire event to intra user
+//            UUID requestId = UUID.randomUUID();
+//            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, "", intraUserToDisconnectPublicKey, IntraUserNotificationDescriptor.DISCONNECTED,new byte[0]);
+//
+//
+//            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
+//            IntraUserActorConnectionCancelledEvent intraUserActorConnectionCancelledEvent = (IntraUserActorConnectionCancelledEvent) fermatEvent;
+//
+//            intraUserActorConnectionCancelledEvent.setIntraUserLoggedInPublicKey(intraUserLoggedInPublicKey);
+//            intraUserActorConnectionCancelledEvent.setIntraUserToAddPublicKey(intraUserToDisconnectPublicKey);
 
 
-            //Save request fire event to intra user
-            UUID requestId = UUID.randomUUID();
-            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, "", intraUserToDisconnectPublicKey, IntraUserNotificationDescriptor.DISCONNECTED,new byte[0]);
-
-
-            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
-            IntraUserActorConnectionCancelledEvent intraUserActorConnectionCancelledEvent = (IntraUserActorConnectionCancelledEvent) fermatEvent;
-
-            intraUserActorConnectionCancelledEvent.setIntraUserLoggedInPublicKey(intraUserLoggedInPublicKey);
-            intraUserActorConnectionCancelledEvent.setIntraUserToAddPublicKey(intraUserToDisconnectPublicKey);
-
-
-            eventManager.raiseEvent(intraUserActorConnectionCancelledEvent);
-        }
-        catch (CantExecuteDatabaseOperationException e) {
-            throw new ErrorDisconnectingIntraUserException("ERROR DISCONNECTING INTRAUSER ",e,"","Error to save record on database");
-        }
-        catch (Exception e) {
+            //eventManager.raiseEvent(intraUserActorConnectionCancelledEvent);
+//        }
+//        catch (CantExecuteDatabaseOperationException e) {
+//            throw new ErrorDisconnectingIntraUserException("ERROR DISCONNECTING INTRAUSER ",e,"","Error to save record on database");
+//        }
+        }catch (Exception e) {
             throw new ErrorDisconnectingIntraUserException("ERROR DISCONNECTING INTRAUSER ",e, "", "Generic Exception");
         }
 
@@ -1247,8 +1244,8 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
         //communicationNetworkServiceConnectionManager.getOutgoingMessageDao().create();
         try {
             //Save request fire event to intra user
-            UUID requestId = UUID.randomUUID();
-            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, "",intraUserToCancelPublicKey, IntraUserNotificationDescriptor.CANCEL,new byte[0]);
+//            UUID requestId = UUID.randomUUID();
+//            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, "",intraUserToCancelPublicKey, IntraUserNotificationDescriptor.CANCEL,new byte[0]);
 
 
             FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
@@ -1261,10 +1258,10 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
             eventManager.raiseEvent(intraUserActorConnectionCancelledEvent);
 
         }
-        catch (CantExecuteDatabaseOperationException e)
-        {
-            throw new ErrorCancellingIntraUserException("ERROR CANCEL CONNECTION TO INTRAUSER ",e,"","Error to save record on database");
-        }
+//        catch (CantExecuteDatabaseOperationException e)
+//        {
+//            throw new ErrorCancellingIntraUserException("ERROR CANCEL CONNECTION TO INTRAUSER ",e,"","Error to save record on database");
+//        }
         catch (Exception e)
         {
             throw new ErrorCancellingIntraUserException("ERROR CANCEL CONNECTION TO INTRAUSER ",e, "", "Generic Exception");
@@ -1275,17 +1272,17 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     @Override
     public List<IntraUserNotification> getNotifications() throws ErrorGetNotificationsIntraUserException {
 
-        try {
-            return  getIntraUserNetworkServiceDao().getAllRequestCacheRecord();
-
-        }
-        catch (CantExecuteDatabaseOperationException e) {
-            throw new ErrorGetNotificationsIntraUserException("ERROR GETING NOTIFICATIONS ",e,"","Error list records to database");
-        }
-        catch (Exception e)
-        {
-            throw new ErrorGetNotificationsIntraUserException("ERROR GETING NOTIFICATIONS  ",e, "", "Generic Exception");
-        }
+//        try {
+//            return  getIntraUserNetworkServiceDao().getAllRequestCacheRecord();
+//
+//        }
+//        catch (CantExecuteDatabaseOperationException e) {
+//            throw new ErrorGetNotificationsIntraUserException("ERROR GETING NOTIFICATIONS ",e,"","Error list records to database");
+//        }
+//        catch (Exception e)
+//        {
+//            throw new ErrorGetNotificationsIntraUserException("ERROR GETING NOTIFICATIONS  ",e, "", "Generic Exception");
+//        }
 
 //TODO Harcode
        // List<IntraUserNotification> intraUserNotificationList = new ArrayList<IntraUserNotification>();
@@ -1295,24 +1292,24 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
 
        // return intraUserNotificationList;
-
+        return null;
     }
 
     @Override
     public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey) throws ErrorConfirmNotificationsIntraUserException {
-        try
-        {
-            //delete request record for database
-            getIntraUserNetworkServiceDao().deleteRequestRecord(intraUserLogedInPublicKey,intraUserInvolvedPublicKey);
-        }
-        catch (CantExecuteDatabaseOperationException e)
-        {
-            throw new ErrorConfirmNotificationsIntraUserException("ERROR GETING NOTIFICATIONS ",e,"","Error list records to database");
-        }
-        catch (Exception e)
-        {
-            throw new ErrorConfirmNotificationsIntraUserException("ERROR GETING NOTIFICATIONS  ",e, "", "Generic Exception");
-        }
+//        try
+//        {
+//            //delete request record for database
+//            getIntraUserNetworkServiceDao().deleteRequestRecord(intraUserLogedInPublicKey,intraUserInvolvedPublicKey);
+//        }
+//        catch (CantExecuteDatabaseOperationException e)
+//        {
+//            throw new ErrorConfirmNotificationsIntraUserException("ERROR GETING NOTIFICATIONS ",e,"","Error list records to database");
+//        }
+//        catch (Exception e)
+//        {
+//            throw new ErrorConfirmNotificationsIntraUserException("ERROR GETING NOTIFICATIONS  ",e, "", "Generic Exception");
+//        }
     }
 
     @Override
@@ -1523,10 +1520,5 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
     }
 
-
-    private IntraUserNetworkServiceDao getIntraUserNetworkServiceDao() throws CantExecuteDatabaseOperationException {
-        IntraUserNetworkServiceDao intraUserNetworkServiceDao = new IntraUserNetworkServiceDao(pluginDatabaseSystem,this.pluginFileSystem, pluginId, this.dataBase);
-        return intraUserNetworkServiceDao;
-    }
 
 }

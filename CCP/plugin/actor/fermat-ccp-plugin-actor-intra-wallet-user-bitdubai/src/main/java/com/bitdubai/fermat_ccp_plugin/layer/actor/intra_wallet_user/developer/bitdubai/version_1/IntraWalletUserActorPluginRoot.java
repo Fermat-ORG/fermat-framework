@@ -609,9 +609,9 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
 
             for (IntraUserNotification notification : intraUserNotificationes) {
 
-                String intraUserSendingPublicKey = notification.getPublicKeyOfTheSender();
+                String intraUserSendingPublicKey = notification.getActorSenderPublicKey();
 
-                String intraUserToConnectPublicKey = notification.getPublicKeyOfTheIntraUserToConnect();
+                String intraUserToConnectPublicKey = notification.getActorDestinationPublicKey();
 
                 switch (notification.getNotificationDescriptor()) {
                     case ASKFORACCEPTANCE:
