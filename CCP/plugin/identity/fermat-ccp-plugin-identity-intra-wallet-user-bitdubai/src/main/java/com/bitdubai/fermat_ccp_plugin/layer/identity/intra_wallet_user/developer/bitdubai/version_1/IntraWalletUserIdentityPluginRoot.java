@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.DealsWithIntraUsersNetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.event_handlers.IntraWalletUserNetWorkServicesCompleteEventHandlers;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.DealsWithWalletManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
@@ -292,18 +293,16 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
         eventManager.addListener(cryptoAddressReceivedEventListener);
         listenersAdded.add(cryptoAddressReceivedEventListener);
 
-        try {
-            List<IntraWalletUser> lstIntraWalletUSer = intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
-            List<Actor> lstActors = new ArrayList<Actor>();
-            for(IntraWalletUser user : lstIntraWalletUSer){
-                lstActors.add(intraActorManager.contructIdentity(user.getPublicKey(), user.getAlias(), Actors.INTRA_USER,user.getProfileImage()));
-            }
-            intraActorManager.registrateActors(lstActors);
-        } catch (CantListIntraWalletUserIdentitiesException e) {
-            e.printStackTrace();
-        } catch (CantGetLoggedInDeviceUserException e) {
-            e.printStackTrace();
-        }
+
+        /**
+         * Listener Network service connection event and to register identity
+         */
+        FermatEventListener actorNetworkServicesEventListener = eventManager.getNewListener(EventType.ACTOR_NETWORK_SERVICE_COMPLETE);
+         actorNetworkServicesEventListener.setEventHandler(new IntraWalletUserNetWorkServicesCompleteEventHandlers(this));
+
+        eventManager.addListener(actorNetworkServicesEventListener);
+        listenersAdded.add(actorNetworkServicesEventListener);
+
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -365,6 +364,22 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
         IntraWalletUserIdentityDeveloperDatabaseFactory dbFactory = new IntraWalletUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return dbFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+
+    public void registerIdentities(){
+        try {
+            List<IntraWalletUser> lstIntraWalletUSer = intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
+            List<Actor> lstActors = new ArrayList<Actor>();
+            for(IntraWalletUser user : lstIntraWalletUSer){
+                lstActors.add(intraActorManager.contructIdentity(user.getPublicKey(), user.getAlias(), Actors.INTRA_USER,user.getProfileImage()));
+            }
+            intraActorManager.registrateActors(lstActors);
+        } catch (CantListIntraWalletUserIdentitiesException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (CantGetLoggedInDeviceUserException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
     }
 
     @Override

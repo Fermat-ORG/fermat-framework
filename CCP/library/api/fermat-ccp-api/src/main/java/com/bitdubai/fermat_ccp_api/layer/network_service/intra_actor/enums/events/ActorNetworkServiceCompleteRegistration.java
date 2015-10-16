@@ -11,8 +11,6 @@ import java.util.UUID;
  */
 public class ActorNetworkServiceCompleteRegistration extends AbstractCCPEvent {
 
-    private UUID requestId;
-
     public ActorNetworkServiceCompleteRegistration(FermatEventEnum eventType) {
         super(eventType);
     }
