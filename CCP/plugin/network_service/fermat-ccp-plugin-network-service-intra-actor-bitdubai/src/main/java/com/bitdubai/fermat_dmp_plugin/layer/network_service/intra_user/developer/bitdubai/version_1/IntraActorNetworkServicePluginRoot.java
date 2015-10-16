@@ -57,6 +57,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.events.ActorNetworkServiceCompleteRegistration;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
@@ -79,6 +80,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.Identity;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNSInformation;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceNotification;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.MessageType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
@@ -651,11 +653,12 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
             initializeMessagesListeners();
 
+
             FermatEvent eventToRaise = eventManager.getNewEvent(com.bitdubai.fermat_ccp_api.all_definition.enums.EventType.ACTOR_NETWORK_SERVICE_COMPLETE);
             //((CryptoPaymentRequestEvent) eventToRaise).setRequestId(requestId);
+            ActorNetworkServiceCompleteRegistration networkServiceCompleteRegistration = (ActorNetworkServiceCompleteRegistration)eventToRaise;
             eventToRaise.setSource(EVENT_SOURCE);
-            eventManager.raiseEvent(eventToRaise);
-
+            eventManager.raiseEvent(networkServiceCompleteRegistration);
 
             //por razones de testeo, actor registration hardcoded
 
@@ -1331,27 +1334,26 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     @Override
     public List<IntraUserNotification> getPendingNotifications() throws ErrorGetNotificationsIntraUserException {
 
-//        try {
-//            return  getIntraUserNetworkServiceDao().getAllRequestCacheRecord();
-//
-//        }
-//        catch (CantExecuteDatabaseOperationException e) {
-//            throw new ErrorGetNotificationsIntraUserException("ERROR GETING NOTIFICATIONS ",e,"","Error list records to database");
-//        }
-//        catch (Exception e)
-//        {
-//            throw new ErrorGetNotificationsIntraUserException("ERROR GETING NOTIFICATIONS  ",e, "", "Generic Exception");
-//        }
+     //   try {
+      //     return  getIntraUserNetworkServiceDao().getAllRequestCacheRecord();
+      //  }
+      // catch (CantExecuteDatabaseOperationException e) {
+      //      throw new ErrorGetNotificationsIntraUserException("ERROR GETING NOTIFICATIONS ",e,"","Error list records to database");
+       // }
+      //  catch (Exception e)
+       // {
+       //     throw new ErrorGetNotificationsIntraUserException("ERROR GETING NOTIFICATIONS  ",e, "", "Generic Exception");
+       // }
 
 //TODO Harcode
-       // List<IntraUserNotification> intraUserNotificationList = new ArrayList<IntraUserNotification>();
+        List<IntraUserNotification> intraUserNotificationList = new ArrayList<IntraUserNotification>();
 
-        //intraUserNotificationList.add(new IntraUserNetworkServiceNotification(UUID.randomUUID().toString(), "alias1", UUID.randomUUID().toString(), IntraUserNotificationDescriptor.ACCEPTED, new byte[0]));
-        //intraUserNotificationList.add(new IntraUserNetworkServiceNotification(UUID.randomUUID().toString(),"alias2",UUID.randomUUID().toString(),IntraUserNotificationDescriptor.CANCEL,new byte[0]));
+        intraUserNotificationList.add(new IntraUserNetworkServiceNotification(UUID.randomUUID().toString(), "alias1", UUID.randomUUID().toString(), IntraUserNotificationDescriptor.ACCEPTED, new byte[0]));
+        intraUserNotificationList.add(new IntraUserNetworkServiceNotification(UUID.randomUUID().toString(),"alias2",UUID.randomUUID().toString(),IntraUserNotificationDescriptor.CANCEL,new byte[0]));
 
 
-       // return intraUserNotificationList;
-        return null;
+        return intraUserNotificationList;
+       // return null;
     }
 
     @Override

@@ -64,6 +64,9 @@ public interface IntraWalletUserManager {
      */
     void disconnectIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToDisconnectPublicKey) throws CantDisconnectIntraWalletUserException;
 
+
+    void receivingIntraWalletUserRequestConnection(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraWalletUserException;
+
     /**
      * The method <code>cancelIntraWalletUser</code> cancels an intra user from the connections registry
      * @param intraUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
@@ -101,5 +104,5 @@ public interface IntraWalletUserManager {
      */
     List<IntraWalletUser> getWaitingTheirAcceptanceIntraWalletUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraWalletUsersException;
 
-    Actor getActorByPublicKey(String actorPublicKey) throws CantGetIntraUserException, IntraUserNotFoundException;
+
 }
