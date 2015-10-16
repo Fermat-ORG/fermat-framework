@@ -24,8 +24,14 @@ From that moment on, the activation of other dormant modules of FERMAT will foll
 TIP: Following in this chapter the description of each platform and each layer within each platform. We recommend to visit FERMAT offcial site (http://fermat.org) to have a picture in mind when reading, to help understand the system structure. _Layers_ description follow the sequence from bottom to top (like "stacking" them), and _platforms_ from left to right. 
 
 === System-wide definitions
-One of main concept's inside FERMAT's design is that of _actors_ and _identities_
+One of main concept's inside FERMAT's design is that of _actors_ and _identities_ 
++ (PLEASE CHECK ALL THIS SECTION BEFORE FIRST RELEASE!)
 
+The *real person* who wants to use FERMAT, has to install the software in at least one *device* and then let it run.
+At this stage, the real person begins to act as a *device user* and has provided certain information about himself/herself to the device operating system, which is stored in the device's memory/hard drive. + 
+When starting FERMAT, he/she is prompted by the software to choose an *identity* within FERMAT. That means to choose an _username_ (or _ alias_) and a _password_ to be recognized as a *FERMAT system user*, what we have labeled in FERMAT as _*IntraUser*_. 
+Then, the *user* chooses to run any of FERMAT's products, and this takes him to play certain role within a specific FERMAT Platform available, and to be able to do that he is required to identify himself/herself as an *actor* of the platform. As such, he/she must define an _username_ (or _ alias_) within THIS platform, which has NO RELATIONSHIP to any other created as *actor* of other platforms. + 
+This *actor* has the possibility to define several profiles for himself to control which personal information is provided to the world. These profiles will serve as unique *identities* to operate from, and only the owner will know to which *actor*  these *identities* are related. 
 
 === FERMAT Core Platform
 This is the *core platform* of FERMAT Multiplatform System. It contains the deepest levels of layers in the layers stack. Its modules encasulapte the basics definitions and functionalities that let FERMAT operate as an _integrated system_, by determining the interactions among the isolated plug-ins and putting then to run (starting). +
