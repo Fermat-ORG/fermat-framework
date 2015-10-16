@@ -26,8 +26,7 @@
             android:background="@drawable/circular_shape" />
     </FrameLayout>
 
-
-    <EditText
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/crypto_broker_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,9 +36,9 @@
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:gravity="center"
-        android:hint="@string/broker_name"
         android:textColor="@color/broker_name_text_color"
-        android:textColorHint="@android:color/darker_gray" />
+        android:textSize="30sp"
+        tools:text="Broker Name" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -63,18 +62,20 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:button="@drawable/switch_button_states"
-            tools:checked="true" />
+            tools:checked="true" />/>
     </LinearLayout>
 
+
     <Button
-        android:id="@+id/create_crypto_broker_button"
+        android:id="@+id/update_crypto_broker_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:background="@color/create_identity_button"
-        android:text="@string/create"
-        android:textColor="@color/create_button_text" />
+        android:background="@color/update_identity_button"
+        android:text="@string/update"
+        android:textColor="@android:color/white" />
+
 </RelativeLayout>
