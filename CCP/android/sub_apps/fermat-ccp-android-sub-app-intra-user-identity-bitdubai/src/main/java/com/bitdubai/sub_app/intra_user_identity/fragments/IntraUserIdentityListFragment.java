@@ -6,15 +6,14 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CantGetCryptoBrokerListException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
@@ -33,13 +32,13 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class IntraUserIdentityListFragment extends FermatListFragment<CryptoBrokerIdentityInformation>
-        implements FermatListItemListeners<CryptoBrokerIdentityInformation> {
+public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalletUser>
+        implements FermatListItemListeners<IntraWalletUser> {
 
 
     private IntraWalletUserManager moduleManager;
     private ErrorManager errorManager;
-    private ArrayList<CryptoBrokerIdentityInformation> identityInformationList;
+    private ArrayList<IntraWalletUser> identityInformationList;
 
 
     public static IntraUserIdentityListFragment newInstance() {
@@ -146,26 +145,36 @@ public class IntraUserIdentityListFragment extends FermatListFragment<CryptoBrok
     }
 
     @Override
-    public List<CryptoBrokerIdentityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        List<CryptoBrokerIdentityInformation> data = new ArrayList<>();
-        if (moduleManager == null) {
-            for (int i = 0; i < 20; i++) {
-                data.add(new IntraUserIdentityInformationImp("Broker Name " + i));
+    public List<IntraWalletUser> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        List<IntraWalletUser> data = new ArrayList<>();
+
+        try {
+            if (moduleManager == null) {
+                for (int i = 0; i < 20; i++) {
+                    data.add(new IntraUserIdentityInformationImp("Intra User Name " + i,"",new byte[0]));
+                }
+            } else {
+                data = moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser();
             }
-        } else {
-            //data = moduleManager.getAllCryptoBrokersIdentities(0, 0);
         }
+        catch(Exception e)
+        {
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+
 
         return data;
     }
 
+
     @Override
-    public void onItemClickListener(CryptoBrokerIdentityInformation data, int position) {
+    public void onItemClickListener(IntraWalletUser data, int position) {
 
     }
 
     @Override
-    public void onLongItemClickListener(CryptoBrokerIdentityInformation data, int position) {
+    public void onLongItemClickListener(IntraWalletUser data, int position) {
 
     }
 }

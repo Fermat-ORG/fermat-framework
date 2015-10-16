@@ -50,7 +50,12 @@ public enum EventType implements FermatEventEnum {
     },
     CRYPTO_PAYMENT_REQUEST_REFUSED("CRYPARE") {
         public FermatEvent getNewEvent() { return new CryptoPaymentRequestRefusedEvent(this); }
-    };
+    },
+    ACTOR_NETWORK_SERVICE_COMPLETE("ACTORNSC") {
+        public FermatEvent getNewEvent() { return new CryptoPaymentRequestRefusedEvent(this); }
+    },;
+
+
 
     private final String code;
 

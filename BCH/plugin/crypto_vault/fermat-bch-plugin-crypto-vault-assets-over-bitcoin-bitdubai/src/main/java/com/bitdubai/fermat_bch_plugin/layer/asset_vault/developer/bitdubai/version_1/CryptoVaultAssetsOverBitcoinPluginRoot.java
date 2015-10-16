@@ -20,7 +20,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.Bitco
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.DealsWithBitcoinNetwork;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory;
@@ -199,11 +199,6 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager
     }
 
     @Override
-    public CryptoTransaction getGenesisTransaction(String transactionId) throws CantGetGenesisTransactionException {
-        return assetCryptoVaultManager.getGenesisTransaction(transactionId);
-    }
-
-    @Override
     public long getAvailableBalanceForTransaction(String genesisTransaction) {
         return assetCryptoVaultManager.getAvailableBalanceForTransaction(genesisTransaction);
     }
@@ -212,4 +207,5 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager
     public void sendBitcoinAssetToUser(String genesisTransactionId, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException {
 
     }
+
 }
