@@ -132,11 +132,16 @@ public class VaultEventListeners extends AbstractWalletEventListener {
                                                    final CryptoStatus cryptoStatus,
                                                    final EventType    eventType   ) throws CantExecuteQueryException {
 
-        CryptoTransactionType type = dbActions.calculateTransactionType(hash);
-        dbActions.insertNewTransactionWithNewConfidence(hash, cryptoStatus, type);
+        if(!dbActions.transactionExists(hash, cryptoStatus)) {
 
-        if (type.equals(CryptoTransactionType.INCOMING))
-            raiseTransactionEvent(eventType);
+            CryptoTransactionType type = dbActions.calculateTransactionType(hash);
+
+            dbActions.insertNewTransactionWithNewConfidence(hash, cryptoStatus, type);
+
+            if (type.equals(CryptoTransactionType.INCOMING))
+                raiseTransactionEvent(eventType);
+        }
+
     }
 
     private void raiseTransactionEvent(final EventType eventType) {

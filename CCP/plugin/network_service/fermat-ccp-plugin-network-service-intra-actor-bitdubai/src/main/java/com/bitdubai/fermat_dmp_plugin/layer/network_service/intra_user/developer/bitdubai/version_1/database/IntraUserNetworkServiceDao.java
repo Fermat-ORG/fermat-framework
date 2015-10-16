@@ -24,10 +24,12 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUserProfileImageException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeNetworkIntraUserDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceNotification;
 
 import java.util.ArrayList;
@@ -137,6 +139,45 @@ public class IntraUserNetworkServiceDao {
         }  catch (Exception exception){
             closeDatabase();
             throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,exception, "", "Generic Error deleting request connection record on database");
+        }
+    }
+
+    public List<ActorNetworkServiceRecord> getAllRequestCacheRecord(ActorProtocolState processingSend) throws CantExecuteDatabaseOperationException {
+        try
+        {
+            List<ActorNetworkServiceRecord>  intraUserNotificationList = new ArrayList<ActorNetworkServiceRecord>();
+            database = openDatabase();
+            DatabaseTable table = this.database.getTable(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_NAME);
+
+            table.loadToMemory();
+
+            // Get request Record.
+            for (DatabaseTableRecord record : table.getRecords ()) {
+
+                //create list of IntraUserNotifications
+                byte[] profileImage = getIntraUserProfileImagePrivateKey(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_PUBLIC_KEY_COLUMN_NAME));
+
+//                ActorNetworkServiceRecord intraUserNotification = new IntraUserNetworkServiceNotification(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_LOGGED_IN_PUBLIC_KEY_COLUMN_NAME),
+//                        record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_USER_NAME_COLUMN_NAME),
+//                        record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_INTRA_USER_PUBLIC_KEY_COLUMN_NAME),
+//                        IntraUserNotificationDescriptor.getByCode(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INTRA_USER_NETWORK_SERVICE_CACHE_TABLE_DESCRIPTOR_COLUMN_NAME)),
+//                        profileImage);
+
+                //intraUserNotificationList.add(intraUserNotification) ;
+
+            }
+
+            closeDatabase();
+
+            return intraUserNotificationList;
+
+        }  catch (CantInitializeNetworkIntraUserDataBaseException e){
+            closeDatabase();
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,e,"", "Error listing request records from database");
+
+        }  catch (Exception exception){
+            closeDatabase();
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,exception, "", "Generic Error listing request records");
         }
     }
 
