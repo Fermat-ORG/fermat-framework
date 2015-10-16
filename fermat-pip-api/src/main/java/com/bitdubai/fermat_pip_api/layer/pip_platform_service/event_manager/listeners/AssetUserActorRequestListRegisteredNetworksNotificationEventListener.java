@@ -9,13 +9,14 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enum
 /**
  * Created by Nerio on 08/10/15.
  */
-public class AssetUserActorConnectionCancelledEventListener implements FermatEventListener {
+public class AssetUserActorRequestListRegisteredNetworksNotificationEventListener implements FermatEventListener {
 
     FermatEventMonitor fermatEventMonitor;
     private EventType eventType;
     private FermatEventHandler fermatEventHandler;
 
-    public AssetUserActorConnectionCancelledEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
+
+    public AssetUserActorRequestListRegisteredNetworksNotificationEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
         this.eventType = eventType;
         this.fermatEventMonitor = fermatEventMonitor;
     }

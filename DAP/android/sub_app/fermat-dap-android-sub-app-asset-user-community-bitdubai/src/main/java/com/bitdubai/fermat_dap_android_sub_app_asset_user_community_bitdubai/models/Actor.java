@@ -92,9 +92,24 @@ public class Actor implements ActorAssetUser {
      * @return the Location of the Asset user
      */
     @Override
-    public Location getLocation() {
+    public Double getLocationLatitude() {
         return null;
     }
+
+    @Override
+    public Double getLocationLongitude() {
+        return null;
+    }
+
+    /**
+     * The method <code>getLocation</code> gives us the Location of the represented Asset user
+     *
+     * @return the Location of the Asset user
+     */
+//    @Override
+//    public Location getLocation() {
+//        return null;
+//    }
 
     /**
      * The method <code>getGender</code> gives us the Gender of the represented Asset user

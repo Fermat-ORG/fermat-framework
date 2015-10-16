@@ -9,13 +9,18 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enum
 /**
  * Created by Nerio on 08/10/15.
  */
-public class AssetUserActorConnectionAcceptedEventListener implements FermatEventListener {
+public class AssetUserActorCompleteRegistrationNotificationEventListener implements FermatEventListener {
 
     FermatEventMonitor fermatEventMonitor;
     private EventType eventType;
     private FermatEventHandler fermatEventHandler;
-
-    public AssetUserActorConnectionAcceptedEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
+    /**
+     * Constructor with parameters
+     *
+     * @param eventType
+     * @param fermatEventMonitor
+     */
+    public AssetUserActorCompleteRegistrationNotificationEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
         this.eventType = eventType;
         this.fermatEventMonitor = fermatEventMonitor;
     }
@@ -33,11 +38,11 @@ public class AssetUserActorConnectionAcceptedEventListener implements FermatEven
     /**
      * Throw the method <code>setEventHandler</code> you can set a handler for the listener.
      *
-     * @param fermatEventHandler handler for the event listener.
+     * @param eventHandler handler for the event listener.
      */
     @Override
-    public void setEventHandler(FermatEventHandler fermatEventHandler) {
-        this.fermatEventHandler = fermatEventHandler;
+    public void setEventHandler(FermatEventHandler eventHandler) {
+        this.fermatEventHandler = eventHandler;
     }
 
     /**

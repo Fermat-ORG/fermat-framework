@@ -726,43 +726,20 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
-    ASSET_USER_CONNECTION_ACCEPTED("AUCA") {
+    COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION("CL_RLCRN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new AssetUserActorConnectionAcceptedEventListener(this, fermatEventMonitor);
+            return new AssetUserActorRequestListRegisteredNetworksNotificationEventListener(this, fermatEventMonitor);
         }
-
         public FermatEvent getNewEvent() {
-            return new AssetUserActorConnectionAcceptedEvent(this);
+            return new AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent(this);
         }
     },
-
-    ASSET_USER_DISCONNECTION_REQUEST_RECEIVED("AUDRR") {
+    COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION("CL_CAURN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new AssetUserActorConnectionCancelledEventListener(this, fermatEventMonitor);
+            return new AssetUserActorCompleteRegistrationNotificationEventListener(this, fermatEventMonitor);
         }
-
         public FermatEvent getNewEvent() {
-            return new AssetUserActorConnectionCancelledEvent(this);
-        }
-    },
-
-    ASSET_USER_REQUESTED_CONNECTION("AURC") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new AssetUserActorRequestConnectionEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new AssetUserActorRequestConnectionEvent(this);
-        }
-    },
-
-    ASSET_USER_CONNECTION_DENIED("AUCD") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new AssetUserActorDeniedConnectionEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new AssetUserActorConnectionDeniedEvent(this);
+            return new AssetUserActorCompleteRegistrationNotificationEvent(this);
         }
     },
 
