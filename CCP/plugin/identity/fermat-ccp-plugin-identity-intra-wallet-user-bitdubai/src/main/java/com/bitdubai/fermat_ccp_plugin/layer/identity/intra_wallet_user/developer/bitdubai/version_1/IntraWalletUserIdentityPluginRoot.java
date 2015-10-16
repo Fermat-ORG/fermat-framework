@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.DealsWithIntraUsersNetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.event_handlers.IntraWalletUserNetWorkServicesCompleteEventHandlers;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.DealsWithWalletManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
@@ -291,6 +292,17 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
         cryptoAddressReceivedEventListener.setEventHandler(new CryptoAddressRequestedEventHandler(this, cryptoAddressGenerationService));
         eventManager.addListener(cryptoAddressReceivedEventListener);
         listenersAdded.add(cryptoAddressReceivedEventListener);
+
+
+        /**
+         * Listener Network service connection event and to register identity
+         */
+        FermatEventListener actorNetworkServicesEventListener = eventManager.getNewListener(EventType.ACTOR_NETWORK_SERVICE_COMPLETE);
+         actorNetworkServicesEventListener.setEventHandler(new IntraWalletUserNetWorkServicesCompleteEventHandlers(this));
+
+        eventManager.addListener(actorNetworkServicesEventListener);
+        listenersAdded.add(actorNetworkServicesEventListener);
+
 
         try {
             List<IntraWalletUser> lstIntraWalletUSer = intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
