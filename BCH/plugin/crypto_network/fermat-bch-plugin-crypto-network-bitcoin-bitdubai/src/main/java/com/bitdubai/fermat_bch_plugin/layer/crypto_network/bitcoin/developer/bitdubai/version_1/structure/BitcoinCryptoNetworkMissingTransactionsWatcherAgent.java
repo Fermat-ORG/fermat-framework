@@ -166,6 +166,7 @@ class BitcoinCryptoNetworkMissingTransactionsWatcherAgent {
          * @param transaction
          */
         private void registerMissingTransaction(Transaction transaction) throws TransactionWatcherAgentException {
+            //this needs to be fixed.
             if (transaction.getValueSentToMe(wallet).getValue() != 0){
                 try {
                     getDao().saveNewIncomingTransaction(transaction.getHashAsString(),
@@ -174,7 +175,7 @@ class BitcoinCryptoNetworkMissingTransactionsWatcherAgent {
                             new CryptoAddress("error", CryptoCurrency.BITCOIN),
                             new CryptoAddress("error", CryptoCurrency.BITCOIN),
                             0,
-                            0,
+                            "",
                             ProtocolStatus.TO_BE_NOTIFIED);
                 } catch (CantExecuteDatabaseOperationException e) {
                     throw new TransactionWatcherAgentException(TransactionWatcherAgentException.DEFAULT_MESSAGE, e, "Cant register missing transaction.", "database error");
