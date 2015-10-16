@@ -7,7 +7,7 @@ import com.carrotsearch.sizeof.RamUsageEstimator;
  */
 public class ObjectSizeFetcher {
 
-    public static String sizeOf(Object object){
+    public static String sizeOf(final Object object){
         return RamUsageEstimator.humanSizeOf(object);
     }
 }
