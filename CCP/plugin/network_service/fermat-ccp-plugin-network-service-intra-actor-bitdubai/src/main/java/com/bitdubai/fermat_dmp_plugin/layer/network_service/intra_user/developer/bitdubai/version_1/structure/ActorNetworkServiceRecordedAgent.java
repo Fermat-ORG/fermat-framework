@@ -218,14 +218,8 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                 switch (cpr.getNotificationDescriptor()) {
 
                     case ASKFORACCEPTANCE:
-                        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.ACTOR_NETWORK_SERVICE_ASK_FOR_ACCEPTANCE);
+                        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS);
                         ActorNetworkServicePendingsNotificationEvent intraUserActorRequestConnectionEvent = (ActorNetworkServicePendingsNotificationEvent) fermatEvent;
-
-//                        intraUserActorRequestConnectionEvent.setIntraUserLoggedInPublicKey(intraUserLoggedInPublicKey);
-//                        intraUserActorRequestConnectionEvent.setIntraUserToAddPublicKey(intraUserToAddPublicKey);
-//                        intraUserActorRequestConnectionEvent.setIntraUserToAddName(intraUserLoggedInName);
-//                        intraUserActorRequestConnectionEvent.setIntraUserProfileImage(myProfileImage);
-
                         eventManager.raiseEvent(intraUserActorRequestConnectionEvent);
                         break;
                     case ACCEPTED:

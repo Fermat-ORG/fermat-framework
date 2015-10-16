@@ -957,6 +957,15 @@ public class Platform implements Serializable {
 
             }
 
+             /*
+            * Plugin Intra User NetWorkService
+            * -----------------------------
+            */
+            Plugin intraUserNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getIntraUser();
+            injectLayerReferences(intraUserNetworkService);
+            injectPluginReferencesAndStart(intraUserNetworkService, Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE);
+
+
             if (CCP) {
 
            /*
@@ -1022,13 +1031,7 @@ public class Platform implements Serializable {
             }
 
             if (DMP) {
-           /*
-            * Plugin Intra User NetWorkService
-            * -----------------------------
-            */
-                Plugin intraUserNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getIntraUser();
-                injectLayerReferences(intraUserNetworkService);
-                injectPluginReferencesAndStart(intraUserNetworkService, Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE);
+
 
            /*
             * Plugin Bank Notes Network Service
