@@ -23,6 +23,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.Actor
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeNetworkIntraUserDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.DAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.UUID;
 /**
  * Created by Matias Furszyfer on 2015.10.16..
  */
-public class OutgoingNotificationDao {
+public class OutgoingNotificationDao implements DAO {
        ;
 
 

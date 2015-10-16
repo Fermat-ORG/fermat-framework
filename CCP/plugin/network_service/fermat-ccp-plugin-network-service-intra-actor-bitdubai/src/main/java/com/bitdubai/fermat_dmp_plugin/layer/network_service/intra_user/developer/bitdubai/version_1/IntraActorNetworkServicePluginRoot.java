@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
@@ -67,11 +68,14 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.CompleteRequestListComponentRegisteredNotificationEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.FailureComponentConnectionRequestNotificationEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeNetworkIntraUserDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecordedAgent;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.Identity;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNSInformation;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService;
@@ -243,6 +247,11 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
 
     /**
+     * Agent
+     */
+    private ActorNetworkServiceRecordedAgent actorNetworkServiceRecordedAgent;
+
+    /**
      * Connections arrived
      */
     private boolean connectionArrived = false;
@@ -350,7 +359,39 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
+        /**
+         *  failure connection
+         */
+
+        fermatEventListener = eventManager.getNewListener(P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
     }
+
+
+    /**
+     * Messages listeners
+     */
+    private void initializeMessagesListeners(){
+        /*
+         * Listen and handle Complete Request List Component Registered Notification Event
+         */
+
+//        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+//        fermatEventListener.setEventHandler(new New(cryptoTransmissionAgent));
+//        eventManager.addListener(fermatEventListener);
+//        listenersAdded.add(fermatEventListener);
+
+        /**
+         *
+         */
+        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(actorNetworkServiceRecordedAgent));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+    }
+
 
 
     /**
@@ -591,6 +632,24 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
              this.register = Boolean.TRUE;
 
             //todo: ACA DISPARO EL EVENTO CON EL SOURCE MIO Y A LA VAINA
+
+            actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
+                    communicationNetworkServiceConnectionManager,
+                    this,
+                    errorManager,
+                    eventManager,
+                    pluginFileSystem,
+                    wsCommunicationsCloudClientManager);
+
+            try {
+
+                actorNetworkServiceRecordedAgent.start();
+
+            } catch (CantStartAgentException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
+            }
+
+            initializeMessagesListeners();
 
             FermatEvent eventToRaise = eventManager.getNewEvent(com.bitdubai.fermat_ccp_api.all_definition.enums.EventType.ACTOR_NETWORK_SERVICE_COMPLETE);
             //((CryptoPaymentRequestEvent) eventToRaise).setRequestId(requestId);
@@ -1089,7 +1148,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
 
 
-            connectToBetweenActors(intraUserLoggedInPublicKey,PlatformComponentType.ACTOR_INTRA_USER,intraUserToAddPublicKey,PlatformComponentType.ACTOR_INTRA_USER);
+            connectToBetweenActors(intraUserLoggedInPublicKey, PlatformComponentType.ACTOR_INTRA_USER, intraUserToAddPublicKey, PlatformComponentType.ACTOR_INTRA_USER);
 
 
            /* communicationNetworkServiceConnectionManager.getIncomingMessageDao().create(new FermatMessageCommunication(String content,
@@ -1270,7 +1329,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     }
 
     @Override
-    public List<IntraUserNotification> getNotifications() throws ErrorGetNotificationsIntraUserException {
+    public List<IntraUserNotification> getPendingNotifications() throws ErrorGetNotificationsIntraUserException {
 
 //        try {
 //            return  getIntraUserNetworkServiceDao().getAllRequestCacheRecord();
@@ -1368,6 +1427,15 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     public Database getDataBase(){
         return dataBase;
     }
+
+    public IncomingNotificationDao getIncomingNotificationsDao(){
+        return incomingNotificationsDao;
+    }
+    public OutgoingNotificationDao getOutgoingNotificationDao(){
+        return outgoingNotificationDao;
+    }
+
+
 
 
     /**
