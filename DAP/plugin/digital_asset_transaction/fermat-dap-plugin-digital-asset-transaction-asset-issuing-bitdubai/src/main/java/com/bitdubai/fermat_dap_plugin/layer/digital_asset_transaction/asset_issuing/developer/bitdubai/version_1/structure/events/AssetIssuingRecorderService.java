@@ -33,9 +33,10 @@ public class AssetIssuingRecorderService implements DealsWithEvents, AssetTransa
      */
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
-    public AssetIssuingRecorderService(AssetIssuingTransactionDao assetIssuingTransactionDao) throws CantStartServiceException {
+    public AssetIssuingRecorderService(AssetIssuingTransactionDao assetIssuingTransactionDao, EventManager eventManager) throws CantStartServiceException {
         try {
             setAssetIssuingDao(assetIssuingTransactionDao);
+            setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
             throw new CantStartServiceException(exception, "Cannot set the asset issuing database handler","The database handler is null");
         }

@@ -16,7 +16,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotGetCryptoStatusException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_actor.developer.bitdubai.version_1.database.OutgoingIntraActorDao;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException;
@@ -58,7 +58,7 @@ public class OutgoingIntraActorTransactionProcessorAgent  {
         this.errorManager                            = errorManager;
         this.cryptoVaultManager                      = cryptoVaultManager;
         this.bitcoinWalletManager                    = bitcoinWalletManager;
-        this.outgoingIntraActorDao = outgoingIntraActorDao;
+        this.outgoingIntraActorDao                   = outgoingIntraActorDao;
         this.transactionHandlerFactory               = transactionHandlerFactory;
         this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
     }
@@ -208,7 +208,7 @@ public class OutgoingIntraActorTransactionProcessorAgent  {
                                 transaction.getTransactionHash(),
                                 transaction.getMemo());
                         dao.setToSTCV(transaction);
-                    } catch (InsufficientMoneyException e) {
+                    } catch (InsufficientCryptoFundsException e) {
                         // TODO: Raise informative event
                         try {
                             dao.cancelTransaction(transaction);
@@ -247,7 +247,7 @@ public class OutgoingIntraActorTransactionProcessorAgent  {
 
                 for (OutgoingIntraActorTransactionWrapper transaction : transactionList) {
                     try {
-                        CryptoStatus cryptoStatus = this.cryptoVaultManager.getCryptoStatus(transaction.getTransactionId());
+                        CryptoStatus cryptoStatus = this.cryptoVaultManager.getCryptoStatus(transaction.getTransactionHash());
                         this.transactionHandlerFactory.getHandler(transaction.getReferenceWallet()).handleTransaction(transaction, cryptoStatus);
                     } catch (CouldNotGetCryptoStatusException | OutgoingIntraActorCantFindHandlerException | OutgoingIntraActorCantHandleTransactionException e) {
                         reportUnexpectedException(e);

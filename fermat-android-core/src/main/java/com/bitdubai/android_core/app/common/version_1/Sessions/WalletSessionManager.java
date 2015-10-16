@@ -51,9 +51,11 @@ public class WalletSessionManager implements com.bitdubai.fermat_android_api.lay
                             return walletSession;
                         case "crypto_broker_wallet":
                             walletSession = new CryptoBrokerWalletSession(installedWallet,errorManager,cryptoBrokerWalletModuleManager);
+                            lstWalletSession.put(installedWallet.getWalletPublicKey(),walletSession);
                             return walletSession;
                         case "asset_issuer":
                             walletSession = new AssetIssuerSession(installedWallet,errorManager,assetIssuerWalletManager);
+                            lstWalletSession.put(installedWallet.getWalletPublicKey(),walletSession);
                             return walletSession;
                     }
 
@@ -70,8 +72,6 @@ public class WalletSessionManager implements com.bitdubai.fermat_android_api.lay
         }else{
             walletSession= new ReferenceWalletSession(installedWallet,cryptoWalletManager,walletSettings,walletResourcesProviderManager,errorManager);
         }
-
-        walletSession= new com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSession(installedWallet,cryptoWalletManager,walletSettings,walletResourcesProviderManager,errorManager);
 
         return walletSession;
     }
