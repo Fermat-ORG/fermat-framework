@@ -48,7 +48,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
     /**
      * database Interface member variables.
      */
-    private Context context;
+    private String path;
 
     private String databaseName;
 
@@ -57,12 +57,12 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
     /**
      * <p>Plugin implementation constructor
      *
-     * @param context      Android Context Object
+     * @param path         android path
      * @param ownerId      PlugIn owner id
      * @param databaseName name database using
      */
-    public AndroidDatabase(Context context, UUID ownerId, String databaseName) {
-        this.context = context;
+    public AndroidDatabase(String path, UUID ownerId, String databaseName) {
+        this.path = path;
         this.ownerId = ownerId;
         this.databaseName = databaseName;
     }
@@ -70,11 +70,11 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
     /**
      * <p>Platform implementation constructor
      *
-     * @param context      Android Context Object
+     * @param path         Android path
      * @param databaseName name database using
      */
-    public AndroidDatabase(Context context, String databaseName) {
-        this.context = context;
+    public AndroidDatabase(String path, String databaseName) {
+        this.path = path;
         this.databaseName = databaseName;
     }
 
@@ -436,9 +436,9 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
      */
     private String getPath() {
         if (ownerId != null)
-            return context.getFilesDir().getPath() + "/databases/" + ownerId.toString();
+            return path + "/databases/" + ownerId.toString();
         else
-            return context.getFilesDir().getPath() + "/databases/";
+            return path + "/databases/";
     }
 
     /**

@@ -25,43 +25,15 @@ import java.io.Serializable;
 /**
  * Created by ciencias on 05.02.15
  * Modified by Federico Rodriguez on 01.05.15
+ * Updated by lnacosta (laion.cj91@gmail.com) on 16/10/2015.
+ *      Deleted reference to Plugin Database System.
  */
-public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlatformDatabaseSystem, ErrorManager, Service,Serializable {
-
-    /**
-     * ErrorManagerRegistry variable
-     */
-    private ErrorManagerRegistry errorManagerRegistry;
-
-    /**
-     * ErrorManagerReportAgent variable
-     */
-    private ErrorManagerReportAgent errorManagerReportAgent;
-
-    /**
-     * DealsWithPlatformDatabaseSystem Interface member variables.
-     */
-    private PlatformDatabaseSystem platformDatabaseSystem;
+public class ErrorManagerPlatformServiceAddonRoot implements Addon, ErrorManager, Service,Serializable {
 
     /**
      * Service Interface member variables.
      */
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
-    //private ErrorManagerDatabaseFactory errorManagerDatabaseFactory;
-
-    @Override
-    public void setPlatformDatabaseSystem(PlatformDatabaseSystem platformDatabaseSystem) {
-        this.platformDatabaseSystem = platformDatabaseSystem;
-    }
-
-    public PlatformDatabaseSystem getPlatformDatabaseSystem(){
-        return this.platformDatabaseSystem;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation.
-     */
 
     /**
      * ErrorManager Interface implementation.
