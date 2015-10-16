@@ -163,11 +163,30 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "couldn't start plugin because seed creation/loading failed. Key hierarchy not created.", "");
         }
 
+        /**
+         * Test
+         */
+        //generateAddress();
+
 
         /**
          * Nothing left to do.
          */
         this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    /**
+     * Test Method to generate an address at startup
+     */
+    private void generateAddress() {
+        try{
+            Thread.sleep(5000);
+            System.out.println("Asset vault address: " + this.getNewAssetVaultCryptoAddress(BlockchainNetworkType.DEFAULT).getAddress());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (GetNewCryptoAddressException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -4,6 +4,7 @@ package com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_ident
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CantGetCryptoBrokerListException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CouldNotCreateCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CouldNotPublishCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CouldNotUnPublishCryptoBrokerException;
 
 import java.util.List;
 
@@ -40,6 +41,14 @@ public interface CryptoBrokerIdentityModuleManager {
      */
     public void publishCryptoBrokerIdentity(String cryptoBrokerPublicKey) throws CouldNotPublishCryptoBrokerException;
 
+    /**
+     * The method <code>publishCryptoBrokerIdentity</code> is used to publish a Broker identity
+     *
+     * @param cryptoBrokerPublicKey the public key of the crypto Broker to publish
+     *
+     * @throws CouldNotPublishCryptoBrokerException
+     */
+    public void unPublishCryptoBrokerIdentity(String cryptoBrokerPublicKey) throws CouldNotUnPublishCryptoBrokerException;
 
     /**
      * The method <code>getAllCryptoBrokersIdentities</code> returns the list of all crypto Broker published
