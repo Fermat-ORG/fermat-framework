@@ -16,40 +16,31 @@ public class AndroidOsDataBaseSystem implements DataBaseSystemOs {
      * DataBaseSystemOs interface member variables.
      */
 
-    PlatformDatabaseSystem platformDatabaseSystem;
-    PluginDatabaseSystem pluginDatabaseSystem;
-    Context context;
+    private final PlatformDatabaseSystem platformDatabaseSystem;
+    private final PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
      * Constructor
      */
 
-    public AndroidOsDataBaseSystem()
-    {
-        this.pluginDatabaseSystem = new AndroidPluginDatabaseSystem();
-        this.platformDatabaseSystem = new AndroidPlatformDatabaseSystem();
+    public AndroidOsDataBaseSystem(String path) {
+        this.pluginDatabaseSystem = new AndroidPluginDatabaseSystem(path);
+        this.platformDatabaseSystem = new AndroidPlatformDatabaseSystem(path);
     }
 
 
     /**
      * DatBaseSystemOs Interface implementation.
      */
-    @Override
+
     public PluginDatabaseSystem getPluginDatabaseSystem() {
         return this.pluginDatabaseSystem;
     }
 
-    @Override
-    public PlatformDatabaseSystem getPlatformDatabaseSystem(){
+
+    public PlatformDatabaseSystem getPlatformDatabaseSystem() {
         return this.platformDatabaseSystem;
     }
 
-    @Override
-    public void setContext (Object context)
-    {
-        this.context = (Context)context;
-        this.pluginDatabaseSystem.setContext(context);
-        this.platformDatabaseSystem.setContext(context);
-    }
 
 }

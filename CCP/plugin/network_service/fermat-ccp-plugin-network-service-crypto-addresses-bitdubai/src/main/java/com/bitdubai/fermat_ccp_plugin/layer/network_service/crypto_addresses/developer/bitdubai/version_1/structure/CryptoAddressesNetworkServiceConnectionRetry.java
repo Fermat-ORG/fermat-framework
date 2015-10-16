@@ -3,10 +3,10 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.de
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 
 /**
- * The class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.structure.CryptoAddressesNetworkServiceConnectionRetry</code>
+ * The class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.structure.CryptoAddressesNetworkServiceConnectionRetry</code>
  * haves the specific data to retry the connection for an specific platform component profile.
  * <p>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 13/10/2015.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 15/10/2015.
  */
 public class CryptoAddressesNetworkServiceConnectionRetry {
 

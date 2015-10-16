@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.enums.IntraUserNotificationDescriptor;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserNotification;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.google.gson.Gson;
 
 import java.util.UUID;
@@ -14,44 +15,40 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
 
 
     private UUID id;
-    private String publicKeyOfTheIntraUserSendingUsANotification;
-    private String publicKeyOfTheIntraUserToConnect;
-    private String intraUserToConnectAlias;
-    private byte[] intraUserToConnectProfileImage;
-    private IntraUserNotificationDescriptor  intraUserNotificationDescriptor;
-
     private Actors actorDestinationType;
     private Actors actorSenderType;
     private String actorSenderPublicKey;
     private String actorDestinationPublicKey;
+    private String actorSenderAlias;
+    private byte[] actorSenderProfileImage;
+    private IntraUserNotificationDescriptor  intraUserNotificationDescriptor;
+    private long sentDate;
+    private ActorProtocolState actorProtocolState;
+    private boolean flagReadead;
 
 
-    public ActorNetworkServiceRecord(String publicKeyOfTheIntraUserSendingUsANotification, String publicKeyOfTheIntraUserToConnect, String intraUserToConnectAlias, byte[] intraUserToConnectProfileImage, IntraUserNotificationDescriptor intraUserNotificationDescriptor) {
-        this.publicKeyOfTheIntraUserSendingUsANotification = publicKeyOfTheIntraUserSendingUsANotification;
-        this.publicKeyOfTheIntraUserToConnect = publicKeyOfTheIntraUserToConnect;
-        this.intraUserToConnectAlias = intraUserToConnectAlias;
-        this.intraUserToConnectProfileImage = intraUserToConnectProfileImage;
+    public ActorNetworkServiceRecord(UUID id, String actorSenderAlias, byte[] actorSenderProfileImage, IntraUserNotificationDescriptor intraUserNotificationDescriptor, Actors actorDestinationType, Actors actorSenderType, String actorSenderPublicKey, String actorDestinationPublicKey,long sentDate,ActorProtocolState actorProtocolState,boolean flagReadead) {
+        this.id = id;
+        this.actorSenderAlias = actorSenderAlias;
+        this.actorSenderProfileImage = actorSenderProfileImage;
         this.intraUserNotificationDescriptor = intraUserNotificationDescriptor;
+        this.actorDestinationType = actorDestinationType;
+        this.actorSenderType = actorSenderType;
+        this.actorSenderPublicKey = actorSenderPublicKey;
+        this.actorDestinationPublicKey = actorDestinationPublicKey;
+        this.sentDate = sentDate;
+        this.actorProtocolState = actorProtocolState;
+        this.flagReadead = flagReadead;
     }
 
     @Override
-    public String getPublicKeyOfTheIntraUserSendingUsANotification() {
-        return publicKeyOfTheIntraUserSendingUsANotification;
+    public String getActorSenderAlias() {
+        return actorSenderAlias;
     }
 
     @Override
-    public String getPublicKeyOfTheIntraUserToConnect() {
-        return publicKeyOfTheIntraUserToConnect;
-    }
-
-    @Override
-    public String getIntraUserToConnectAlias() {
-        return intraUserToConnectAlias;
-    }
-
-    @Override
-    public byte[] getIntraUserToConnectProfileImage() {
-        return intraUserToConnectProfileImage;
+    public byte[] getActorSenderProfileImage() {
+        return actorSenderProfileImage;
     }
 
     @Override
@@ -82,6 +79,27 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
     @Override
     public IntraUserNotificationDescriptor getNotificationDescriptor() {
         return intraUserNotificationDescriptor;
+    }
+
+    @Override
+    public long getSentDate() {
+        return sentDate;
+    }
+
+    public IntraUserNotificationDescriptor getIntraUserNotificationDescriptor() {
+        return intraUserNotificationDescriptor;
+    }
+
+    public ActorProtocolState getActorProtocolState() {
+        return actorProtocolState;
+    }
+
+    public void changeState(ActorProtocolState actorProtocolState){
+        this.actorDestinationPublicKey = actorSenderPublicKey;
+    }
+
+    public boolean isFlagReadead() {
+        return flagReadead;
     }
 
     public String toJson() {
