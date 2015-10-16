@@ -200,6 +200,7 @@ public class OutgoingIntraActorTransactionProcessorAgent  {
                         dao.setTransactionHash(transaction, hash);
                         // TODO: The crypto vault should let us obtain the transaction hash before sending the currency. As this was never provided by the vault
                         //       we will just send the metadata in this place. This MUST be corrected.
+                        dao.setToSTCV(transaction);
                         this.cryptoTransmissionManager.sendCrypto(transaction.getTransactionId(),
                                 transaction.getAddressTo().getCryptoCurrency(),
                                 transaction.getAmount(),
@@ -207,7 +208,7 @@ public class OutgoingIntraActorTransactionProcessorAgent  {
                                 transaction.getActorToPublicKey(),
                                 transaction.getTransactionHash(),
                                 transaction.getMemo());
-                        dao.setToSTCV(transaction);
+
                     } catch (InsufficientCryptoFundsException e) {
                         // TODO: Raise informative event
                         try {
@@ -232,7 +233,8 @@ public class OutgoingIntraActorTransactionProcessorAgent  {
                         reportUnexpectedException(e);
                         // TODO: Verify what to do when the transaction has already been sent.
                     } catch (CouldNotTransmitCryptoException | OutgoingIntraActorCantSetTranactionHashException | OutgoingIntraActorCantCancelTransactionException e) {
-                        reportUnexpectedException(e);
+                        //reportUnexpectedException(e);
+                        //e.printStackTrace();
                     }
                 }
 
