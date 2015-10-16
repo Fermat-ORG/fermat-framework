@@ -34,9 +34,10 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
     List<CryptoTransaction> getGenesisTransaction(String txHash) throws CantGetGenesisTransactionException;
 
     /**
-     * Broadcast a well formed, commited and signed transaction into the network
+     * Broadcast a well formed, commited and signed transaction into the specified network
+     * @param blockchainNetworkType
      * @param tx
      * @throws CantBroadcastTransactionException
      */
-    void broadcastTransaction(Transaction tx) throws CantBroadcastTransactionException;
+    void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx) throws CantBroadcastTransactionException;
 }

@@ -196,12 +196,13 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, Da
     }
 
     /**
-     * Broadcast a well formed, commited and signed transaction into the network
+     * Broadcast a well formed, commited and signed transaction into the specified network
+     * @param blockchainNetworkType
      * @param tx
      * @throws CantBroadcastTransactionException
      */
     @Override
-    public void broadcastTransaction(Transaction tx) throws CantBroadcastTransactionException {
-
+    public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx) throws CantBroadcastTransactionException {
+       bitcoinCryptoNetworkManager.broadcastTransaction(blockchainNetworkType, tx);
     }
 }
