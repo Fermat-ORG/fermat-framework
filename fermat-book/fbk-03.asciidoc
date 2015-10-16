@@ -23,6 +23,10 @@ From that moment on, the activation of other dormant modules of FERMAT will foll
 
 TIP: Following in this chapter the description of each platform and each layer within each platform. We recommend to visit FERMAT offcial site (http://fermat.org) to have a picture in mind when reading, to help understand the system structure. _Layers_ description follow the sequence from bottom to top (like "stacking" them), and _platforms_ from left to right. 
 
+=== System-wide definitions
+One of main concept's inside FERMAT's design is that of _actors_ and _identities_
+
+
 === FERMAT Core Platform
 This is the *core platform* of FERMAT Multiplatform System. It contains the deepest levels of layers in the layers stack. Its modules encasulapte the basics definitions and functionalities that let FERMAT operate as an _integrated system_, by determining the interactions among the isolated plug-ins and putting then to run (starting). +
 FERMAT Core Platform is written in JAVA as the most of FERMAT, therefore its *code base portability*. + 
@@ -39,78 +43,10 @@ There's a *core module* for each one of the platform existent in FERMAT, which i
 
 :numbered: 
 
-=== FERMAT Operating Systems Superlayer
-NOTE: We call in FERMAT *Superlayer* to a group of layers whose modules offer services to be consumed system-wide, i.e. offering an infrastructure that hold the different *platforms* running over FERMAT. (it is like a "common ground" where different "towers" (the platforms) are built, sharing basics level services - like water, electricity and gas supply for a real world building-. )
-
-This superlayer allow the connectivity of OS dependant modules to the rest of FERMAT multiplatform (_OS independent_). The modules offer the necessary functions to interact with the corresponding OS. 
- 
-:numbered!: 
-
-==== _Android layer_
-In this layer, we find the different modules to allow FERMAT function on a device running Android. The usual requirements of storing and retrieving information, managing files, managing user log-on, checking the device status, location, etc are taken by each specific modules.
-
-.Android layer modules:
-* File System
-* Database System
-* Logger
-* Device Location
-* Device Connectivity 
-* Device Power
-* Device Contacts
-* Device Hardware
-
-==== _Multi OS layer_
-
-.modules
-* File System
-* Database System
 
 
-:numbered:
 
-=== FERMAT BlockChain Superlayer
-This superlayer provides to the entire FERMAT multiplatform system the connection to existing cryptonetworks for transporting value.*TRANSPORT OF VALUE* 
-==== _Crypto Networks layer_
-There is one module for each cryptonetwork available: Bitcoin, Litecoin, Ripple, Ethereum,  etc
-==== _Crypto Vaults layers_
-Vaults: Bitcoin, Assets over Bitcoin, Bitcoin watch only, Litecoin, Ripple, Ethereum, etc
-==== _Crypto Modules layer_
-Crypto Address Book
-==== _Crypto Router layer_
-Incoming Crypto, Outgoing Crypto
 
-:numbered:
-=== FERMAT P2P Network and Communication Superlayer
-This superlayer provides connectivity between devices. FERMAT P2P Network is a dumb network connecting platform network services to each other irrespective of what these services are doing. It provides the communication channels and on top of its connectivity layer network services interact with each other across different devices. Anybody can provide new network services as *plug-ins*.
-This ensures a rich *set of abstractions for wallet applications running on top of the platform*. + 
-Fermat P2P Network is used for transporting the information associated with the transaction. *TRANSPORT OF INFORMATION* (METADATA)
-
-==== _Communication layer_
-Cloud Server, Cloud Client, P2P, Geofenced, Near Field Communication, WiFi, Mesh, etc
-
-:numbered:
-
-=== FERMAT Plug-ins Platform
-
-FERMAT Plug-ins Platform is open source and run on end users’ devices. It allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment. A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way.
-
-.FERMAT Plug-ins Platform layers
-* Platform Services
-* Hardware
-* Users
-* Plugin
-* License
-* Network Service
-* Actor Network Service
-* Identity
-* World
-* Middleware
-* Actor
-* Desktop Module
-* Subapp Module
-* Engine
-* Desktop
-* Subapp
 
 
 

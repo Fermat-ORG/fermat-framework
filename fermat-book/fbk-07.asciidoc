@@ -1,3 +1,21 @@
-== FERMAT Bank Notes Platform
+:numbered:
+== FERMAT Plug-ins Platform
 
-This platform 
+FERMAT Plug-ins Platform is open source and run on end users’ devices. It allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment. A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way.
+
+=== _Platform Services layer_
+=== _Hardware layer_
+=== _Users layer_
+=== _Plugin layer_
+=== _License layer_
+=== _Network Service layer_
+=== _Actor Network Service layer_
+=== _Identity layer_
+=== _World layer_
+=== _Middleware layer_
+=== _Actor layer_
+=== _Desktop Module layer_
+=== _Subapp Module layer_
+=== _Engine layer_
+=== _Desktop layer_
+=== _Subapp layer_
