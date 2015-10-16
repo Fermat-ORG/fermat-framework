@@ -4,6 +4,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubApp
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.IntraWalletUserIdentityPluginRoot;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_factory.interfaces.WalletFactoryManager;
@@ -53,6 +54,7 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
                                             IntraUserModuleManager intraUserCommunityModuleManager,
                                             AssetFactoryModuleManager assetFactoryModuleManager,
                                             CryptoBrokerIdentityModuleManager cryptoBrokerIdentityModuleManager,
+                                            CryptoCustomerIdentityModuleManager cryptoCustomerIdentityModuleManager,
                                             IntraWalletUserManager intraWalletUserManager) {
 
         switch (subApps) {
@@ -91,7 +93,7 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
                 lstSubAppSession.put(subApps, cryptoBrokerIdentitySubAppSession);
                 return cryptoBrokerIdentitySubAppSession;
             case CBP_CRYPTO_CUSTOMER_IDENTITY:
-                CryptoCustomerIdentitySubAppSession cryptoCustomerIdentitySubAppSession = new CryptoCustomerIdentitySubAppSession(subApps, errorManager, null);
+                CryptoCustomerIdentitySubAppSession cryptoCustomerIdentitySubAppSession = new CryptoCustomerIdentitySubAppSession(subApps, errorManager, cryptoCustomerIdentityModuleManager);
                 lstSubAppSession.put(subApps, cryptoCustomerIdentitySubAppSession);
                 return cryptoCustomerIdentitySubAppSession;
             default:

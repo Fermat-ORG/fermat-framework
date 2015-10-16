@@ -20,4 +20,8 @@ public class CantStartAgentException extends FermatException {
         this(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
+    public CantStartAgentException(Exception cause) {
+        this(DEFAULT_MESSAGE, cause, null, null);
+    }
+
 }

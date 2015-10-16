@@ -604,19 +604,19 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
 
         try {
 
-            List<IntraUserNotification> intraUserNotificationes = intraUserNetworkServiceManager.getNotifications();
+            List<IntraUserNotification> intraUserNotificationes = intraUserNetworkServiceManager.getPendingNotifications();
 
 
             for (IntraUserNotification notification : intraUserNotificationes) {
 
-                String intraUserSendingPublicKey = notification.getPublicKeyOfTheIntraUserSendingUsANotification();
+                String intraUserSendingPublicKey = notification.getActorSenderPublicKey();
 
-                String intraUserToConnectPublicKey = notification.getPublicKeyOfTheIntraUserToConnect();
+                String intraUserToConnectPublicKey = notification.getActorDestinationPublicKey();
 
                 switch (notification.getNotificationDescriptor()) {
                     case ASKFORACCEPTANCE:
 
-                        this.askIntraWalletUserForAcceptance(intraUserSendingPublicKey, notification.getIntraUserToConnectAlias(), intraUserToConnectPublicKey, notification.getIntraUserToConnectProfileImage());
+                        this.askIntraWalletUserForAcceptance(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserToConnectPublicKey, notification.getActorSenderProfileImage());
 
                     case CANCEL:
                         this.cancelIntraWalletUser(intraUserSendingPublicKey, intraUserToConnectPublicKey);
@@ -632,7 +632,7 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
                         this.disconnectIntraWalletUser("", intraUserSendingPublicKey);
                         break;
                     case RECEIVED:
-                        this.receivingIntraWalletUserRequestConnection(intraUserSendingPublicKey, notification.getIntraUserToConnectAlias(), intraUserToConnectPublicKey, notification.getIntraUserToConnectProfileImage());
+                        this.receivingIntraWalletUserRequestConnection(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserToConnectPublicKey, notification.getActorSenderProfileImage());
                         /**
                          * fire event "INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION"
                          */

@@ -462,6 +462,11 @@ public class CryptoAddressesNetworkServicePluginRoot implements
         }
     }
 
+    /**
+     * I indicate to the NS that no more action is needed for the given request:
+     * - Action        : NONE.
+     * - Protocol State: DONE.
+     */
     @Override
     public void confirmAddressExchangeRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException,
                                                                      PendingRequestNotFoundException           {

@@ -12,18 +12,15 @@ import java.util.UUID;
 public interface IntraUserNotification {
 
     /**
-     * The method <code>getPublicKeyOfTheIntraUserSendingUsANotification</code> tells us the public key
+     * The method <code>getPublicKeyOfTheSender</code> tells us the public key
      * of the intra user sending the notification
      *
      * @return the public key
      */
-    String getPublicKeyOfTheIntraUserSendingUsANotification();
 
-    String getPublicKeyOfTheIntraUserToConnect();
+    String getActorSenderAlias();
 
-    String getIntraUserToConnectAlias();
-
-    byte[] getIntraUserToConnectProfileImage();
+    byte[] getActorSenderProfileImage();
 
     //new
 
@@ -43,4 +40,7 @@ public interface IntraUserNotification {
      * @return the descriptor of the notification
      */
     IntraUserNotificationDescriptor getNotificationDescriptor();
+
+    long getSentDate();
+
 }
