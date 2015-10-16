@@ -260,14 +260,12 @@ public class AssetUserActorDao implements Serializable {
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, "-");
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_PUBLIC_KEY_COLUMN_NAME, assetUserPublicKey);
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_NAME_COLUMN_NAME, assetUserName);
-
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_LOCATION_LATITUDE_COLUMN_NAME, locationLatitude);
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_LOCATION_LONGITUDE_COLUMN_NAME, locationLongitude);
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_GENDER_COLUMN_NAME, "-");
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_AGE_COLUMN_NAME, "-");
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_CRYPTO_ADDRESS_COLUMN_NAME, "-");
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_CRYPTO_CURRENCY_COLUMN_NAME, "-");
-
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_STATE_COLUMN_NAME, ConnectionState.CONNECTED.getCode());
                 record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_REGISTRATION_DATE_COLUMN_NAME, milliseconds);
                 record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_MODIFIED_DATE_COLUMN_NAME, milliseconds);

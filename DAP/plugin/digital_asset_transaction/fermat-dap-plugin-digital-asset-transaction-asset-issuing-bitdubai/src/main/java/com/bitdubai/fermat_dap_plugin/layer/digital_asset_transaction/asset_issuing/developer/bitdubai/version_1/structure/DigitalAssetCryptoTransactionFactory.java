@@ -9,11 +9,16 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 //import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.exceptions.CantGetOutgoingIntraUserTransactionManagerException;
 //import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.exceptions.OutgoingIntraUserCantSendFundsExceptions;
 //import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.exceptions.OutgoingIntraUserInsufficientFundsException;
 //import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_intrauser.interfaces.OutgoingIntraUserManager;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -76,9 +81,10 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     int assetsAmount;
     private AssetIssuingTransactionDao assetIssuingTransactionDao;
     AssetVaultManager assetVaultManager;
+    BitcoinWalletBalance bitcoinWalletBalance;
     BlockchainNetworkType blockchainNetworkType;
     CryptoVaultManager cryptoVaultManager;
-    CryptoWallet cryptoWallet;
+    BitcoinWalletManager bitcoinWalletManager;
     CryptoAddressBookManager cryptoAddressBookManager;
     String digitalAssetFileName;
     String digitalAssetFileStoragePath;
@@ -97,7 +103,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
     public DigitalAssetCryptoTransactionFactory(UUID pluginId,
                                                 CryptoVaultManager cryptoVaultManager,
-                                                CryptoWallet cryptoWallet,
+                                                BitcoinWalletManager bitcoinWalletManager,
                                                 PluginDatabaseSystem pluginDatabaseSystem,
                                                 PluginFileSystem pluginFileSystem,
                                                 AssetVaultManager assetVaultManager,
@@ -105,7 +111,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                                                 OutgoingIntraActorManager outgoingIntraActorManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 
         this.cryptoVaultManager=cryptoVaultManager;
-        this.cryptoWallet=cryptoWallet;
+        this.bitcoinWalletManager=bitcoinWalletManager;
         this.pluginFileSystem=pluginFileSystem;
         this.pluginId=pluginId;
         this.assetVaultManager=assetVaultManager;
@@ -232,12 +238,16 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
      * @throws CryptoWalletBalanceInsufficientException
      * @throws CantGetBalanceException
      */
-    private void checkCryptoWalletBalance() throws CryptoWalletBalanceInsufficientException, CantGetBalanceException {
+    private void checkCryptoWalletBalance() throws CantLoadWalletException, CantCalculateBalanceException, CryptoWalletBalanceInsufficientException {
 
+        if(this.bitcoinWalletBalance==null){
+            BitcoinWalletWallet bitcoinWalletWallet= this.bitcoinWalletManager.loadWallet(this.walletPublicKey);
+            this.bitcoinWalletBalance=bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE);
+        }
+        long bitcoinWalletAvailableBalance=bitcoinWalletBalance.getBalance();
         long digitalAssetGenesisAmount=this.digitalAsset.getGenesisAmount();
-        long cryptoWalletBalance=this.cryptoWallet.getBalance(BalanceType.AVAILABLE, this.walletPublicKey);
-        if(digitalAssetGenesisAmount>cryptoWalletBalance){
-            throw new CryptoWalletBalanceInsufficientException("The current balance in Wallet "+this.walletPublicKey+" is "+cryptoWalletBalance+" the amount needed is "+digitalAssetGenesisAmount);
+        if(digitalAssetGenesisAmount>bitcoinWalletAvailableBalance){
+            throw new CryptoWalletBalanceInsufficientException("The current balance in Wallet "+this.walletPublicKey+" is "+bitcoinWalletAvailableBalance+" the amount needed is "+digitalAssetGenesisAmount);
         }
 
     }
@@ -695,7 +705,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Issuing a new Digital Asset", "Cannot kept the DigitalAssetMetadata in DigitalAssetIssuingVault");
         } catch (CantCheckAssetIssuingProgressException exception) {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Cannot deliver the digital asset:" + digitalAssetMetadata,"Unexpected result in database");
-        } catch (CantGetBalanceException exception) {
+        } catch (CantCalculateBalanceException | CantLoadWalletException exception) {
             throw new CantIssueDigitalAssetException(exception, "Issuing a new Digital Asset", "Cannot get the wallet available balance");
         } catch (CryptoWalletBalanceInsufficientException exception) {
             throw new CantIssueDigitalAssetException(exception, "Issuing a new Digital Asset", "The crypto balance is insufficient");

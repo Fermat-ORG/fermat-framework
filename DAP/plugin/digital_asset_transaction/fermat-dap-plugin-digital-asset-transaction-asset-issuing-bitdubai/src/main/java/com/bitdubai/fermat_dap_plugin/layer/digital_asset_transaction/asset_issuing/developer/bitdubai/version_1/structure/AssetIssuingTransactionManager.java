@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_iss
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
@@ -32,7 +33,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
 
     CryptoAddressBookManager cryptoAddressBookManager;
     CryptoVaultManager cryptoVaultManager;
-    CryptoWallet cryptoWallet;
+    BitcoinWalletManager bitcoinWalletManager;
     ErrorManager errorManager;
     UUID pluginId;
     PluginDatabaseSystem pluginDatabaseSystem;
@@ -44,7 +45,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
 
     public AssetIssuingTransactionManager(UUID pluginId,
                                           CryptoVaultManager cryptoVaultManager,
-                                          CryptoWallet cryptoWallet,
+                                          BitcoinWalletManager bitcoinWalletManager,
                                           PluginDatabaseSystem pluginDatabaseSystem,
                                           PluginFileSystem pluginFileSystem,
                                           ErrorManager errorManager,
@@ -53,7 +54,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
                                           OutgoingIntraActorManager outgoingIntraActorManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 
         setCryptoVaultManager(cryptoVaultManager);
-        setCryptoWallet(cryptoWallet);
+        setCryptoWallet(bitcoinWalletManager);
         setErrorManager(errorManager);
         setPluginFileSystem(pluginFileSystem);
         setPluginId(pluginId);
@@ -63,7 +64,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         setOutgoingIntraActorManager(outgoingIntraActorManager);
         this.digitalAssetCryptoTransactionFactory=new DigitalAssetCryptoTransactionFactory(this.pluginId,
                 this.cryptoVaultManager,
-                this.cryptoWallet,
+                this.bitcoinWalletManager,
                 this.pluginDatabaseSystem,
                 this.pluginFileSystem,
                 this.assetVaultManager,
@@ -90,9 +91,8 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         this.digitalAssetCryptoTransactionFactory.issuePendingDigitalAssets(publicKey);
     }
 
-    @Override
-    public void setCryptoWallet(CryptoWallet cryptoWallet) {
-        this.cryptoWallet=cryptoWallet;
+    public void setCryptoWallet(BitcoinWalletManager bitcoinWalletManager) {
+        this.bitcoinWalletManager=bitcoinWalletManager;
     }
 
     @Override
