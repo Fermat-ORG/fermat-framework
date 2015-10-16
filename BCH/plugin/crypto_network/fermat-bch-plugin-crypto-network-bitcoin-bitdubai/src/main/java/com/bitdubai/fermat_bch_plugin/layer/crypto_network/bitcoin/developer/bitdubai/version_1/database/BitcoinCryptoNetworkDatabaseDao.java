@@ -650,4 +650,43 @@ public class BitcoinCryptoNetworkDatabaseDao {
         //todo define how to get the Op_Return value
         return cryptoTransaction;
     }
+
+    /**
+     * Gets both incoming and outgoing transactions hash stored in the database
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public Set<String> getStoredStransactionsHash () throws CantExecuteDatabaseOperationException{
+        Set<String> transactionsSet = new HashSet<>();
+
+        /**
+         * Loads and puts in the transactionsSet  the list of stored Hashes
+         */
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_TABLE_NAME);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error loading table in memory", "database issue");
+        }
+
+        for (DatabaseTableRecord record : databaseTable.getRecords()){
+            transactionsSet.add(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_HASH_COLUMN_NAME));
+        }
+
+        /**
+         * Loads and puts in the transactionsSet  the list of stored Hashes
+         */
+        databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_TABLE_NAME);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error loading table in memory", "database issue");
+        }
+
+        for (DatabaseTableRecord record : databaseTable.getRecords()){
+            transactionsSet.add(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_HASH_COLUMN_NAME));
+        }
+
+        return transactionsSet;
+    }
 }

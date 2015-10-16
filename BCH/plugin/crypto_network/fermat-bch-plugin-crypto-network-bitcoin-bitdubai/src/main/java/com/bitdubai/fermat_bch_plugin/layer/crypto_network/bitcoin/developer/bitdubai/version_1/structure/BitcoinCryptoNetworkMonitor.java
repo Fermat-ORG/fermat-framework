@@ -50,6 +50,21 @@ class BitcoinCryptoNetworkMonitor implements Agent {
     @Override
     public void start() throws CantStartAgentException {
         isSupposedToBeRunning = true;
+
+        /**
+         * I will also start another agent that will double check that we don't miss any transactions from the events
+         * raised by bitcoinj
+         */
+        BitcoinCryptoNetworkMissingTransactionsWatcherAgent transactionsWatcherAgent = new BitcoinCryptoNetworkMissingTransactionsWatcherAgent(this.wallet, this.pluginDatabaseSystem, this.plugId);
+        try {
+            transactionsWatcherAgent.start();
+        } catch (com.bitdubai.fermat_api.CantStartAgentException e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * Then I will start the agent that connects to the bitcoin network to get new transactions
+         */
         Thread agentThread = new Thread(new BitcoinCryptoNetworkMonitorAgent());
         agentThread.start();
     }
