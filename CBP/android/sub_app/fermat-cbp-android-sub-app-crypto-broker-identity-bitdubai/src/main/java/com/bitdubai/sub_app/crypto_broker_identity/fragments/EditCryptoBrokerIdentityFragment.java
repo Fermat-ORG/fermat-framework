@@ -26,9 +26,13 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CouldNotPublishCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CouldNotUnPublishCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.common.model.CryptoBrokerIdentityInformationImp;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
@@ -52,7 +56,7 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
 
     // data
     private Bitmap cryptoBrokerBitmap;
-    private boolean checkboxValue;
+    private boolean wantPublishIdentity;
 
     // Managers
     private CryptoBrokerIdentityModuleManager moduleManager;
@@ -109,10 +113,10 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
             mBrokerName.setText(identityInfo.getName());
 
             byte[] profileImage = identityInfo.getProfileImage();
-            if(profileImage != null){
+            if (profileImage != null) {
                 cryptoBrokerBitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
                 mBrokerImage.setImageBitmap(cryptoBrokerBitmap);
-            }else if(identityInfo instanceof CryptoBrokerIdentityInformationImp){
+            } else if (identityInfo instanceof CryptoBrokerIdentityInformationImp) {
                 mBrokerImage.setImageResource(R.drawable.deniz_profile_picture);
             }
 
@@ -124,7 +128,7 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean value) {
                 CommonLogger.debug(TAG, "IN publishIdentityCheckBox.setOnCheckedChangeListener");
-                checkboxValue = value;
+                wantPublishIdentity = value;
             }
         });
 
@@ -204,9 +208,39 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
      */
     private void editIdentityInfo() {
 
-        // TODO falta la implementacion de esta funcinalidad en el backed
+        // TODO falta la implementacion de esta funcionalidad en el backed
+
+        // TODO ejecutar publishOrUnPublishIdentity(); cuando tenga el boolean field en CryptoBrokerIdentityInformation
 
         changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode());
+    }
+
+    private void publishOrUnPublishIdentity() {
+        CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) subAppsSession.getData(IDENTITY_INFO);
+        String publicKey = identityInfo.getPublicKey();
+
+        if (false) {
+            if (wantPublishIdentity) {
+                try {
+                    moduleManager.publishCryptoBrokerIdentity(publicKey);
+                } catch (CouldNotPublishCryptoBrokerException ex) {
+                    errorManager.reportUnexpectedSubAppException(
+                            SubApps.CBP_CRYPTO_BROKER_IDENTITY,
+                            UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                            ex);
+                }
+            } else {
+                try {
+                    moduleManager.unPublishCryptoBrokerIdentity(publicKey);
+                } catch (CouldNotUnPublishCryptoBrokerException ex) {
+                    errorManager.reportUnexpectedSubAppException(
+                            SubApps.CBP_CRYPTO_BROKER_IDENTITY,
+                            UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                            ex);
+                }
+            }
+        }
+
     }
 
     private void dispatchTakePictureIntent() {
