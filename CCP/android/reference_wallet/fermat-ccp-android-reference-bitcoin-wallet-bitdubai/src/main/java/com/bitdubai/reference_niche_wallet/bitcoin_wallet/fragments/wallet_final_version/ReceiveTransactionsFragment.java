@@ -87,6 +87,8 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     public static final int CONTEXT_MENU_DELETE = 3;
     private static final int CONTEXT_MENU_NO_PHOTO = 4;
 
+    private static final int UNIQUE_FRAGMENT_GROUP_ID = 16;
+
     // TODO: preguntar de donde saco el user id
     String user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059").toString();
 
@@ -696,9 +698,9 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         menu.setHeaderTitle("Select contact picture");
         menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.ic_camera_green));
-        menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
-        menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
-        menu.add(Menu.NONE, CONTEXT_MENU_NO_PHOTO, Menu.NONE, "No photo");
+        menu.add(UNIQUE_FRAGMENT_GROUP_ID, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
+        menu.add(UNIQUE_FRAGMENT_GROUP_ID, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
+        menu.add(UNIQUE_FRAGMENT_GROUP_ID, CONTEXT_MENU_NO_PHOTO, Menu.NONE, "No photo");
 //        if(contactImageBitmap!=null)
 //            menu.add(Menu.NONE, CONTEXT_MENU_DELETE, Menu.NONE, "Delete");
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -707,22 +709,26 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     @Override
     public boolean onContextItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case CONTEXT_MENU_CAMERA:
-                dispatchTakePictureIntent();
-                break;
-            case CONTEXT_MENU_GALLERY:
-                loadImageFromGallery();
-                break;
-            case CONTEXT_MENU_NO_PHOTO:
+        //only this fragment's context menus have group ID
+        if (item.getGroupId() == UNIQUE_FRAGMENT_GROUP_ID) {
+            switch (item.getItemId()) {
+                case CONTEXT_MENU_CAMERA:
+                    dispatchTakePictureIntent();
+                    break;
+                case CONTEXT_MENU_GALLERY:
+                    loadImageFromGallery();
+                    break;
+                case CONTEXT_MENU_NO_PHOTO:
 
 //                takePictureButton.setBackground(getActivity().getResources().
 //                        getDrawable(R.drawable.rounded_button_green_selector));
 //                takePictureButton.setImageResource(R.drawable.ic_camera_green);
 //                contactPicture = null;
-                this.lauchCreateContactDialog(false);
-                break;
+                    this.lauchCreateContactDialog(false);
+                    break;
+            }
         }
+
         return super.onContextItemSelected(item);
     }
 
