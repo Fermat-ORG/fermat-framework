@@ -388,8 +388,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
             /**
              * now I will start the TransactionNotificationAgent to monitor
              */
-            transactionNotificationAgent = new TransactionNotificationAgent(eventManager, pluginDatabaseSystem, errorManager, pluginId, userPublicKey);
-            transactionNotificationAgent.setLogManager(this.logManager);
+            transactionNotificationAgent = new TransactionNotificationAgent(eventManager, errorManager, logManager, pluginDatabaseSystem, pluginId, userPublicKey);
             try {
                 transactionNotificationAgent.start();
             } catch (CantStartAgentException cantStartAgentException ) {
@@ -535,13 +534,13 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
 
     @Override
-    public CryptoStatus getCryptoStatus(UUID transactionId) throws CouldNotGetCryptoStatusException {
+    public CryptoStatus getCryptoStatus(String txHash) throws CouldNotGetCryptoStatusException {
         try {
-            return vault.getCryptoStatus(transactionId);
+            return vault.getCryptoStatus(txHash);
         } catch (CantExecuteQueryException e) {
-            throw new CouldNotGetCryptoStatusException("There was an error accesing the database to get the CryptoStatus.", e, "TransactionId: " + transactionId.toString(), "An error in the database plugin.");
+            throw new CouldNotGetCryptoStatusException("There was an error accesing the database to get the CryptoStatus.", e, "TransactionId: " + txHash, "An error in the database plugin.");
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
-            throw new CouldNotGetCryptoStatusException("There was an error getting the CryptoStatus of the transaction.", e, "TransactionId: " + transactionId.toString(), "Duplicated transaction Id in the database.");
+            throw new CouldNotGetCryptoStatusException("There was an error getting the CryptoStatus of the transaction.", e, "TransactionId: " + txHash, "Duplicated transaction Id in the database.");
         }
     }
 }

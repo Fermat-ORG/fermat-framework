@@ -114,7 +114,7 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, Da
         try {
             bitcoinCryptoNetworkEventsAgent.start();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "Cant start BitcoinCryptoNetworkEventsAgent agent.", null);
         }
 
         /**
