@@ -45,7 +45,7 @@ public abstract class DigitalAssetSwap {
 
     public boolean isDigitalAssetHashValid(DigitalAssetMetadata digitalAssetMetadata) throws CantGetGenesisTransactionException {
         String digitalAssetMetadataHash=digitalAssetMetadata.getDigitalAssetHash();
-        CryptoTransaction cryptoTransaction=this.assetVaultManager.getGenesisTransaction(digitalAssetMetadataHash);
+        CryptoTransaction cryptoTransaction=/*this.assetVaultManager.getGenesisTransaction(digitalAssetMetadataHash)*/null;
         String hashFromCryptoTransaction=cryptoTransaction.getOp_Return();
         return digitalAssetMetadataHash.equals(hashFromCryptoTransaction);
     }
