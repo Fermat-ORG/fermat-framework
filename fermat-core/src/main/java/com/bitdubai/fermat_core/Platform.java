@@ -402,7 +402,7 @@ public class Platform implements Serializable {
         ((DealWithDatabaseManagers) corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE)).setDatabaseManagers(dealsWithDatabaseManagersPlugins, dealsWithDatabaseManagersAddons);
         ((DealsWithLogManagers) corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE)).setLogManagers(dealsWithLogManagersPlugins, dealsWithLogManagersAddons);
 
-        System.err.println("Tamaño en runtime es: " + RamUsageEstimator.sizeOf(this));
+        System.err.println("Tamaño de Platform en runtime es: " + RamUsageEstimator.sizeOf(this)/1024 + "MB");
     }
 
     /**
@@ -1465,10 +1465,19 @@ public class Platform implements Serializable {
             System.out.println(entry.getKey().toString() + " - Start-Up time: " + entry.getValue() / 1000 + " seconds.");
         }
         System.out.println("************************************************************************");
+        System.out.println("************************************************************************");
+
+        System.out.println("--------------- Lista de Tamaños en Start-Up de Plugins ---------------");
+        System.out.println("************************************************************************");
+        for (Map.Entry<Plugins, String> entry : pluginsSizeReport.entrySet()) {
+            System.out.println(entry.getKey().toString() + " - Start-Up time: " + entry.getValue() +".");
+        }
+        System.out.println("************************************************************************");
 
     }
 
     Map<Plugins, Long> pluginsStartUpTime = new HashMap<>();
+    Map<Plugins, String> pluginsSizeReport = new HashMap<>();
 
     /**
      * Method that inject all references to another plugin that required a
@@ -1776,6 +1785,7 @@ public class Platform implements Serializable {
         long end = System.currentTimeMillis();
 
         pluginsStartUpTime.put(descriptor, end - init);
+        pluginsSizeReport.put(descriptor, RamUsageEstimator.humanSizeOf(plugin));
     }
 
     /**
