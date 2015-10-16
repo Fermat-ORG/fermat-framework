@@ -271,7 +271,36 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
         return record;
 
     }
+    private long getCurrentAvailableBalance() throws CantGetBalanceRecordException{
+        return getCurrentBalance(BalanceType.AVAILABLE);
+    }
 
+    private List<AssetRedeemPointWalletList> getCurrentAvailableBalanceByAssets() throws CantGetBalanceRecordException{
+        return getCurrentBalanceByAsset(BalanceType.AVAILABLE);
+    }
+    /*
+    * getBookBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
+    */
+    public long getAvailableBalance() throws CantCalculateBalanceException {
+        try{
+            return getCurrentAvailableBalance();
+        } catch (CantGetBalanceRecordException exception){
+            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+        } catch (Exception exception){
+            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
+        }
+    }
+
+
+    public List<AssetRedeemPointWalletList> getAvailableBalanceByAsset() throws CantCalculateBalanceException {
+        try{
+            return getCurrentAvailableBalanceByAssets();
+        } catch (CantGetBalanceRecordException exception){
+            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+        } catch (Exception exception){
+            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
+        }
+    }
 
     /*
  * getBookBalance must get actual Book Balance global of Asset Issuer wallet, select record from balances table
@@ -342,6 +371,52 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
         }
         catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             throw new CantGetTransactionsException("Get List of All Transactions", cantLoadTableToMemory, "Error load wallet table ", "");
+        }
+        catch (Exception exception){
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
+        }
+    }
+
+
+    public List<AssetRedeemPointWalletTransaction> getTransactionsByActor(String actorPublicKey, BalanceType balanceType, int max, int offset) throws CantGetTransactionsException
+    {
+        try {
+            DatabaseTable databaseTableRedeemPointWallet = getAssetRedeemPointWalletTable();
+
+            databaseTableRedeemPointWallet.setStringFilter(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_ACTOR_FROM_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+            databaseTableRedeemPointWallet.setStringFilter(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+            databaseTableRedeemPointWallet.setStringFilter(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+            databaseTableRedeemPointWallet.setFilterOrder(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+            databaseTableRedeemPointWallet.setFilterTop(String.valueOf(max));
+            databaseTableRedeemPointWallet.setFilterOffSet(String.valueOf(offset));
+
+            databaseTableRedeemPointWallet.loadToMemory();
+
+            return createTransactionList(databaseTableRedeemPointWallet.getRecords());
+        }
+        catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantGetTransactionsException("Get List of Transactions", cantLoadTableToMemory, "Error load wallet table ", "");
+        }
+        catch (Exception exception){
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
+        }
+
+    }
+
+    public List<AssetRedeemPointWalletTransaction> listsTransactionsByAssets(BalanceType balanceType, TransactionType transactionType, int max, int offset, String assetPublicKey) throws CantGetTransactionsException{
+        try {
+            DatabaseTable databaseTableAssuerIssuerWallet = getAssetRedeemPointWalletTable();
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+            databaseTableAssuerIssuerWallet.setFilterTop(String.valueOf(max));
+            databaseTableAssuerIssuerWallet.setFilterOffSet(String.valueOf(offset));
+
+            databaseTableAssuerIssuerWallet.loadToMemory();
+            return createTransactionList(databaseTableAssuerIssuerWallet.getRecords());
+        }
+        catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantGetTransactionsException("Get List of Transactions", cantLoadTableToMemory, "Error load wallet table ", "");
         }
         catch (Exception exception){
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
