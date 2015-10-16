@@ -202,6 +202,9 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
                     this.outgoingIntraActorManager);
             this.assetIssuingTransactionManager.setDigitalAssetMetadataVault(digitalAssetIssuingVault);
             this.assetIssuingTransactionManager.setAssetIssuingTransactionDao(assetIssuingTransactionDao);
+            this.assetIssuingTransactionManager.setUserPublicKey(this.deviceUserManager.getLoggedInDeviceUser().getPublicKey());
+            this.assetIssuingTransactionManager.setEventManager(this.eventManager);
+            this.assetIssuingTransactionManager.setLogManager(this.logManager);
             try{
                 //printSomething("Event manager:"+this.eventManager);
                 this.assetIssuingEventRecorderService.start();

@@ -5,9 +5,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
@@ -21,8 +23,11 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.events.AssetIssuingTransactionMonitorAgent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 
 import java.util.UUID;
 
@@ -42,6 +47,11 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     AssetVaultManager assetVaultManager;
     OutgoingIntraActorManager outgoingIntraActorManager;
     AssetIssuingTransactionDao assetIssuingTransactionDao;
+    AssetIssuingTransactionMonitorAgent assetIssuingTransactionMonitorAgent;
+    String userPublicKey;
+    EventManager eventManager;
+    DigitalAssetIssuingVault digitalAssetIssuingVault;
+    LogManager logManager;
 
     public AssetIssuingTransactionManager(UUID pluginId,
                                           CryptoVaultManager cryptoVaultManager,
@@ -73,9 +83,54 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         this.digitalAssetCryptoTransactionFactory.setErrorManager(errorManager);
     }
 
+    public void setUserPublicKey(String userPublicKey)throws CantSetObjectException{
+        if(userPublicKey==null){
+            throw new CantSetObjectException("UserPublicKey is null");
+        }
+        this.userPublicKey=userPublicKey;
+    }
+
+    public void setEventManager(EventManager eventManager)throws CantSetObjectException{
+        if(eventManager==null){
+            throw new CantSetObjectException("EventManager is null");
+        }
+        this.eventManager=eventManager;
+    }
+
+    public void setLogManager(LogManager logManager)throws CantSetObjectException{
+        if(logManager==null){
+            throw new CantSetObjectException("logManager is null");
+        }
+        this.logManager=logManager;
+    }
+
+    /**
+     * This method will start the Monitor Agent that watches the asyncronic process registered in the asset issuing plugin
+     * @throws CantGetLoggedInDeviceUserException
+     * @throws CantSetObjectException
+     * @throws CantStartAgentException
+     */
+    private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
+        if(this.assetIssuingTransactionMonitorAgent==null){
+            //String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+            this.assetIssuingTransactionMonitorAgent=new AssetIssuingTransactionMonitorAgent(this.eventManager,
+                    this.pluginDatabaseSystem,
+                    this.errorManager,
+                    this.pluginId,
+                    this.userPublicKey,
+                    this.assetVaultManager);
+            this.assetIssuingTransactionMonitorAgent.setDigitalAssetIssuingVault(digitalAssetIssuingVault);
+            this.assetIssuingTransactionMonitorAgent.setLogManager(this.logManager);
+            this.assetIssuingTransactionMonitorAgent.start();
+        }else{
+            this.assetIssuingTransactionMonitorAgent.start();
+        }
+    }
+
     @Override
     public void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount, String walletPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantIssueDigitalAssetsException {
         try {
+            startMonitorAgent();
             this.digitalAssetCryptoTransactionFactory.issueDigitalAssets(digitalAssetToIssue, assetsAmount, walletPublicKey, blockchainNetworkType);
         } catch (CantIssueDigitalAssetsException exception) {
             throw new CantIssueDigitalAssetsException(exception, "Creating a Digital Asset Transaction", "Check the cause");
@@ -101,6 +156,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     }
 
     public void setDigitalAssetMetadataVault(DigitalAssetIssuingVault digitalAssetIssuingVault) throws CantSetObjectException {
+        this.digitalAssetIssuingVault=digitalAssetIssuingVault;
         this.digitalAssetCryptoTransactionFactory.setDigitalAssetIssuingVault(digitalAssetIssuingVault);
     }
 

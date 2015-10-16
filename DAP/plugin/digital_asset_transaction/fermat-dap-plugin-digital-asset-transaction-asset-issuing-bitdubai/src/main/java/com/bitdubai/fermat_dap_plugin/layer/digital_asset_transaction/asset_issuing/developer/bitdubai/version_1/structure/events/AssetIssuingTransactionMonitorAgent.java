@@ -224,8 +224,8 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 
         private void doTheMainTask() throws CantCheckAssetIssuingProgressException, CantExecuteQueryException, CantDeliverDigitalAssetToAssetWalletException {
 
-            //Logger LOG = Logger.getGlobal();
-            //LOG.info("Asset Issuing monitor agent DoTheMainTask");
+            Logger LOG = Logger.getGlobal();
+            LOG.info("Asset Issuing monitor agent DoTheMainTask");
             try {
                 assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
 
@@ -233,11 +233,20 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                 CryptoStatus transactionCryptoStatus;
                 if (isTransactionToBeNotified(CryptoStatus.PENDING_SUBMIT)){
                     if(isPendingEvents()){
+                        System.out.println("AID: is pending event");
                         List<String> eventIdList=getPendingEvents();
                         for(String eventId : eventIdList){
+                            System.out.println("Id event:"+eventId);
                             transactionHashList=assetIssuingTransactionDao.getTransactionsHashByCryptoStatus(CryptoStatus.PENDING_SUBMIT);
                             for(String transactionHash: transactionHashList){
+                                System.out.println("Transaction Hash: "+transactionHash);
+                                /**
+                                 * I will hardcode the CryptoStatus update in this plugin database for testing porpoises.
+                                 * The following line will return a mocked CryptoTransaction
+                                 */
                                 transactionCryptoStatus= getGenesisTransactionFromAssetVault(transactionHash).getCryptoStatus();
+                                //transactionCryptoStatus=CryptoStatus.ON_CRYPTO_NETWORK;
+                                //TODO: implement the correct way to get the genesisTransaction from CryptoNetwork.
                                 assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, transactionCryptoStatus);
                                 assetIssuingTransactionDao.updateEventStatus(eventId);
                             }
@@ -245,14 +254,15 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     }
                 }
 
-                if (isTransactionToBeNotified(CryptoStatus.ON_BLOCKCHAIN)){
-                    transactionHashList=assetIssuingTransactionDao.getTransactionsHashByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
+                if (isTransactionToBeNotified(CryptoStatus.ON_CRYPTO_NETWORK)){
+                    transactionHashList=assetIssuingTransactionDao.getTransactionsHashByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
                     for(String transactionHash: transactionHashList){
                         //transactionCryptoStatus=getCryptoStatusFromOutgoingIntraActorPlugin(transactionHash);
+                        System.out.println("CN Transaction Hash: "+transactionHash);
                         CryptoTransaction cryptoGenesisTransaction=getGenesisTransactionFromAssetVault(transactionHash);
                         transactionCryptoStatus= cryptoGenesisTransaction.getCryptoStatus();
                         assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, transactionCryptoStatus);
-                        String genesisTransaction=assetIssuingTransactionDao.getDigitalAssetGenesisTransactionByHash(transactionHash);
+                        //String genesisTransaction=assetIssuingTransactionDao.getDigitalAssetGenesisTransactionByHash(transactionHash);
                         digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, AssetBalanceType.BOOK);
                     }
                 }
@@ -277,9 +287,10 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     }
                 }
 
-                if (isTransactionToBeNotified(CryptoStatus.IRREVERSIBLE)){
-                    transactionHashList=assetIssuingTransactionDao.getTransactionsHashByCryptoStatus(CryptoStatus.IRREVERSIBLE);
+                if (isTransactionToBeNotified(CryptoStatus.ON_BLOCKCHAIN)){
+                    transactionHashList=assetIssuingTransactionDao.getTransactionsHashByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
                     for(String transactionHash: transactionHashList){
+                        System.out.println("BCH Transaction Hash: "+transactionHash);
                         //transactionCryptoStatus=getCryptoStatusFromOutgoingIntraActorPlugin(transactionHash);
                         CryptoTransaction cryptoGenesisTransaction=getGenesisTransactionFromAssetVault(transactionHash);
                         transactionCryptoStatus= cryptoGenesisTransaction.getCryptoStatus();
@@ -373,9 +384,14 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
             return cryptoTransaction.getCryptoStatus();
         }*/
 
+        //I left working this method for testing porpoises
         private CryptoTransaction getGenesisTransactionFromAssetVault(String transactionHash) throws CantGetGenesisTransactionException {
             //CryptoTransaction cryptoTransaction=assetVaultManager.getGenesisTransaction(transactionHash);
-            return null;
+            //This mock is for testing porpoises
+            CryptoTransaction mockCryptoTransaction=new CryptoTransaction();
+            mockCryptoTransaction.setTransactionHash("d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43");
+            mockCryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
+            return mockCryptoTransaction;
         }
 
     }
