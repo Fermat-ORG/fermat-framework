@@ -6,7 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent</code> represent the event
@@ -27,10 +27,10 @@ public class NewNetworkServiceMessageSentNotificationEvent extends AbstractP2PFe
     /**
      * Constructor with parameter
      *
-     * @param eventType type of the event
+     * @param p2pEventType type of the event
      */
-    public NewNetworkServiceMessageSentNotificationEvent(EventType eventType){
-        super(eventType);
+    public NewNetworkServiceMessageSentNotificationEvent(P2pEventType p2pEventType){
+        super(p2pEventType);
     }
 
 

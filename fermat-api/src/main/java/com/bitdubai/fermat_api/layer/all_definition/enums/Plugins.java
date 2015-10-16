@@ -91,22 +91,26 @@ public enum Plugins {
     // End  CCP Plugins
 
     // Init DAP Plugins
-    BITDUBAI_DAP_ASSET_ISSUER_ACTOR                     ("BDAPAIA",   Developers.BITDUBAI),
-    BITDUBAI_DAP_ASSET_USER_ACTOR                       ("BDAPAUA",   Developers.BITDUBAI),
-    BITDUBAI_DAP_REDEEM_POINT_ACTOR                     ("BDAPRPA",   Developers.BITDUBAI),
-    BITDUBAI_DAP_ASSET_ISSUER_IDENTITY                  ("BDAPAII",   Developers.BITDUBAI),
-    BITDUBAI_DAP_ASSET_USER_IDENTITY                    ("BDAPAUI",   Developers.BITDUBAI),
-    BITDUBAI_DAP_REDEEM_POINT_IDENTITY                  ("BDAPRPI",   Developers.BITDUBAI),
-    BITDUBAI_ASSET_ISSUING_TRANSACTION                  ("BAIT",      Developers.BITDUBAI),
-    BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION             ("BADT",      Developers.BITDUBAI),
-    BITDUBAI_ASSET_RECEPTION_TRANSACTION                ("BADR",      Developers.BITDUBAI),
-    BITDUBAI_ASSET_WALLET_ISSUER                        ("BASWI",     Developers.BITDUBAI),
-    BITDUBAI_ASSET_FACTORY                              ("BASF",      Developers.BITDUBAI),
-    BITDUBAI_ASSET_FACTORY_MODULE                       ("BASFM",     Developers.BITDUBAI),
-    BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE             ("BDAIWMO",   Developers.BITDUBAI),
-    BITDUBAI_DAP_ASSET_USER_WALLET                      ("BDAPAWU",   Developers.BITDUBAI),
-    BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE       ("BDAPAUANS", Developers.BITDUBAI),
-    BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE     ("BDAPATNS",  Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_ISSUER_ACTOR                     ("BDAPAIA",    Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_USER_ACTOR                       ("BDAPAUA",    Developers.BITDUBAI),
+    BITDUBAI_DAP_REDEEM_POINT_ACTOR                     ("BDAPRPA",    Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_ISSUER_IDENTITY                  ("BDAPAII",    Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_USER_IDENTITY                    ("BDAPAUI",    Developers.BITDUBAI),
+    BITDUBAI_DAP_REDEEM_POINT_IDENTITY                  ("BDAPRPI",    Developers.BITDUBAI),
+    BITDUBAI_ASSET_ISSUING_TRANSACTION                  ("BAIT",       Developers.BITDUBAI),
+    BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION             ("BADT",       Developers.BITDUBAI),
+    BITDUBAI_ASSET_RECEPTION_TRANSACTION                ("BADR",       Developers.BITDUBAI),
+    BITDUBAI_ASSET_WALLET_ISSUER                        ("BASWI",      Developers.BITDUBAI),
+    BITDUBAI_ASSET_FACTORY                              ("BASF",       Developers.BITDUBAI),
+    BITDUBAI_ASSET_FACTORY_MODULE                       ("BASFM",      Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE             ("BDAIWMO",    Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE  ("BDAPAICSAM", Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE    ("BDAPAUCSAM", Developers.BITDUBAI),
+    BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE  ("BDAPRPCSAM", Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET              ("BDAPAWRD",   Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_USER_WALLET                      ("BDAPAWU",    Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE       ("BDAPAUANS",  Developers.BITDUBAI),
+    BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE     ("BDAPATNS",   Developers.BITDUBAI),
     // End  DAP Plugins
 
     // Init WPD Plugins
@@ -300,16 +304,20 @@ public enum Plugins {
             case "BCTNS": return BITDUBAI_CCP_CRYPTO_CRYPTO_TRANSMISSION_NETWORK_SERVICE;
 
             // Init DAP Plugins
-            case "BDAPAIA":   return BITDUBAI_DAP_ASSET_ISSUER_ACTOR;
-            case "BDAPAUA":   return BITDUBAI_DAP_ASSET_USER_ACTOR;
-            case "BDAPRPA":   return BITDUBAI_DAP_REDEEM_POINT_ACTOR;
-            case "BDAPAII":   return BITDUBAI_DAP_ASSET_ISSUER_IDENTITY;
-            case "BDAPAUI":   return BITDUBAI_DAP_ASSET_USER_IDENTITY;
-            case "BDAPRPI":   return BITDUBAI_DAP_REDEEM_POINT_IDENTITY;
-            case "BDAIWMO":   return BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE;
-            case "BDAPAWU":   return BITDUBAI_DAP_ASSET_USER_WALLET;
-            case "BDAPAUANS": return BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE;
-            case "BDAPATNS":  return BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE;
+            case "BDAPAIA":    return BITDUBAI_DAP_ASSET_ISSUER_ACTOR;
+            case "BDAPAUA":    return BITDUBAI_DAP_ASSET_USER_ACTOR;
+            case "BDAPRPA":    return BITDUBAI_DAP_REDEEM_POINT_ACTOR;
+            case "BDAPAII":    return BITDUBAI_DAP_ASSET_ISSUER_IDENTITY;
+            case "BDAPAUI":    return BITDUBAI_DAP_ASSET_USER_IDENTITY;
+            case "BDAPRPI":    return BITDUBAI_DAP_REDEEM_POINT_IDENTITY;
+            case "BDAIWMO":    return BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE;
+            case "BDAPAICSAM": return BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE;
+            case "BDAPAUCSAM": return BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE;
+            case "BDAPRPCSAM": return BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE;
+            case "BDAPAWU":    return BITDUBAI_DAP_ASSET_USER_WALLET;
+            case "BDAPAWRD":   return BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET;
+            case "BDAPAUANS":  return BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE;
+            case "BDAPATNS":   return BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE;
             // End  DAP Plugins
 
             // Init WPD Plugins

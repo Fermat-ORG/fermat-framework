@@ -19,8 +19,6 @@ import java.util.List;
 
 public interface CryptoBrokerIdentityModuleManager {
 
-
-
     /**
      * The method <code>createCryptoBrokerIdentity</code> is used to create a new crypto Broker identity
      *
@@ -41,7 +39,6 @@ public interface CryptoBrokerIdentityModuleManager {
      */
     public void publishCryptoBrokerIdentity(String cryptoBrokerPublicKey) throws CouldNotPublishCryptoBrokerException;
 
-
     /**
      * The method <code>publishCryptoBrokerIdentity</code> is used to publish a Broker identity
      *
@@ -50,7 +47,6 @@ public interface CryptoBrokerIdentityModuleManager {
      * @throws CouldNotPublishCryptoBrokerException
      */
     public void unPublishCryptoBrokerIdentity(String cryptoBrokerPublicKey) throws CouldNotUnPublishCryptoBrokerException;
-
 
     /**
      * The method <code>getAllCryptoBrokersIdentities</code> returns the list of all crypto Broker published

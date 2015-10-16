@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
@@ -228,9 +228,6 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
             //LOG.info("Asset Issuing monitor agent DoTheMainTask");
             try {
                 assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
-/**
- * If I found transactions on Crypto_Statuts  ON_CryptoNetwork and Protocol_Status PENDING_NOTIFIED, lanzo el evento
- */
 
                 List<String> transactionHashList;
                 CryptoStatus transactionCryptoStatus;
@@ -247,7 +244,6 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                         }
                     }
                 }
-
 
                 if (isTransactionToBeNotified(CryptoStatus.ON_BLOCKCHAIN)){
                     transactionHashList=assetIssuingTransactionDao.getTransactionsHashByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
@@ -378,8 +374,8 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
         }*/
 
         private CryptoTransaction getGenesisTransactionFromAssetVault(String transactionHash) throws CantGetGenesisTransactionException {
-            CryptoTransaction cryptoTransaction=assetVaultManager.getGenesisTransaction(transactionHash);
-            return cryptoTransaction;
+            //CryptoTransaction cryptoTransaction=assetVaultManager.getGenesisTransaction(transactionHash);
+            return null;
         }
 
     }

@@ -34,43 +34,26 @@ import java.util.UUID;
 
 /**
  * Created by eze on 2015.06.25..
+ * Modified by lnacosta (laion.cj91@gmail.com) on 15/1062015.
  */
-public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDatabaseSystem {
+public class OutgoingExtraUserDao {
 
-    /*
-     * DealsWithErrors Interface member variables
-     */
-    private ErrorManager errorManager;
+    private final ErrorManager         errorManager        ;
+    private final PluginDatabaseSystem pluginDatabaseSystem;
+    private final UUID                 pluginId            ;
 
-    /*
-     * DealsWithPluginDatabaseSystem Interface member variables
-     */
-    private PluginDatabaseSystem pluginDatabaseSystem;
+    private Database database;
 
-    /*
-     * OutgoingExtraUserDao member variables
-     */
-    Database database;
+    public OutgoingExtraUserDao(final ErrorManager         errorManager        ,
+                                final PluginDatabaseSystem pluginDatabaseSystem,
+                                final UUID                 pluginId            ) {
 
-
-    /*
-     * DealsWithErrors Interface methods implementation
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /*
-     * DealsWithPluginDatabaseSystem Interface methods implementation
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.errorManager         = errorManager        ;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginId             = pluginId            ;
     }
 
-
-    public void initialize(UUID pluginId) throws CantInitializeDaoException {
+    public void initialize() throws CantInitializeDaoException {
 
         try {
             this.database = this.pluginDatabaseSystem.openDatabase(pluginId, OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_DATABASE_NAME);
@@ -121,63 +104,35 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
     }
 
     public List<TransactionWrapper> getNewTransactions() throws CantLoadTableToMemoryException, InvalidParameterException {
-        List<TransactionWrapper> listAllInState = null;
         try {
-            listAllInState = getAllInState(TransactionStatus.NEW);
+            return getAllInState(TransactionStatus.NEW);
         } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
-        return listAllInState;
     }
 
     public List<TransactionWrapper> getPersistedInAvailable() throws CantLoadTableToMemoryException, InvalidParameterException {
-        List<TransactionWrapper> listAllInState = null;
-        try {
-            listAllInState = getAllInState(TransactionStatus.PERSISTED_IN_AVAILABLE);
-        } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
-            throw exception;
-        } catch (Exception exception) {
-            throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-        }
-        return listAllInState;
-    }
 
-    public List<TransactionWrapper> getDiscountedAvailableBalance() throws CantLoadTableToMemoryException, InvalidParameterException {
-        List<TransactionWrapper> listAllInState = null;
         try {
-            listAllInState = getAllInState(TransactionStatus.SENT_TO_CRYPTO_VOULT);
+            return getAllInState(TransactionStatus.PERSISTED_IN_AVAILABLE);
         } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
-        return listAllInState;
-    }
-
-    public List<TransactionWrapper> getPersistedInWalletTransactions() throws CantLoadTableToMemoryException, InvalidParameterException {
-        List<TransactionWrapper> listAllInState = null;
-        try {
-            listAllInState = getAllInState(TransactionStatus.PERSISTED_IN_WALLET);
-        } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
-            throw exception;
-        } catch (Exception exception) {
-            throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-        }
-        return listAllInState;
     }
 
     public List<TransactionWrapper> getSentToCryptoVaultTransactions() throws CantLoadTableToMemoryException, InvalidParameterException {
-        List<TransactionWrapper> listAllInState = null;
+
         try {
-            listAllInState = getAllInState(TransactionStatus.SENT_TO_CRYPTO_VOULT);
+            return getAllInState(TransactionStatus.SENT_TO_CRYPTO_VOULT);
         } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
-        return listAllInState;
     }
 
     public void cancelTransaction(TransactionWrapper bitcoinTransaction, String memo) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
@@ -194,16 +149,6 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
             throw exception;
         } catch (Exception exception) {
 
-            throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-        }
-    }
-
-    public void setToNew(TransactionWrapper bitcoinTransaction) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
-        try {
-            setToState(bitcoinTransaction, TransactionStatus.NEW);
-        } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException exception) {
-            throw exception;
-        } catch (Exception exception) {
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
@@ -239,15 +184,20 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
     }
 
 
-    public void setTransactionHash(TransactionWrapper bitcoinTransaction, String hash) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
+    public void setTransactionHash(final TransactionWrapper bitcoinTransaction,
+                                   final String             hash              ) throws CantUpdateRecordException      ,
+                                                                                       InconsistentTableStateException,
+                                                                                       CantLoadTableToMemoryException {
+
         try {
             DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
 
-            DatabaseTableRecord recordToUpdate = getByPrimaryKey(bitcoinTransaction.getTransactionId());
+            DatabaseTableRecord recordToUpdate = getByPrimaryKey(transactionTable, bitcoinTransaction.getTransactionId());
 
             recordToUpdate.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_HASH_COLUMN_NAME, hash);
 
             transactionTable.updateRecord(recordToUpdate);
+
         } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException exception) {
             throw exception;
         } catch (Exception exception) {
@@ -300,7 +250,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
     private void setToState(TransactionWrapper bitcoinTransaction, TransactionStatus status) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
         DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
 
-        DatabaseTableRecord recordToUpdate = getByPrimaryKey(bitcoinTransaction.getTransactionId());
+        DatabaseTableRecord recordToUpdate = getByPrimaryKey(transactionTable, bitcoinTransaction.getTransactionId());
 
         recordToUpdate.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME, status.getCode());
 
@@ -315,7 +265,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
 
         DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
 
-        DatabaseTableRecord recordToUpdate = getByPrimaryKey(bitcoinTransaction.getTransactionId());
+        DatabaseTableRecord recordToUpdate = getByPrimaryKey(transactionTable, bitcoinTransaction.getTransactionId());
 
         recordToUpdate.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME, status.getCode());
         recordToUpdate.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_DESCRIPTION_COLUMN_NAME       , memo            );
@@ -324,8 +274,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
     }
 
 
-    private DatabaseTableRecord getByPrimaryKey(UUID id) throws CantLoadTableToMemoryException, InconsistentTableStateException {
-        DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
+    private DatabaseTableRecord getByPrimaryKey(DatabaseTable transactionTable, UUID id) throws CantLoadTableToMemoryException, InconsistentTableStateException {
         List<DatabaseTableRecord> records;
 
         transactionTable.setStringFilter(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_ID_COLUMN_NAME, id.toString(), DatabaseFilterType.EQUAL);
@@ -343,7 +292,9 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
         List<DatabaseTableRecord> records;
 
-        transactionTable.setStringFilter(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME, transactionState.getCode(), DatabaseFilterType.EQUAL);
+        if(transactionState != null)
+            transactionTable.setStringFilter(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME, transactionState.getCode(), DatabaseFilterType.EQUAL);
+
         transactionTable.loadToMemory();
 
         records = transactionTable.getRecords();
@@ -356,7 +307,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         try {
             DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
 
-            DatabaseTableRecord recordToUpdate = getByPrimaryKey(transactionWrapper.getTransactionId());
+            DatabaseTableRecord recordToUpdate = getByPrimaryKey(transactionTable, transactionWrapper.getTransactionId());
 
             recordToUpdate.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode());
 
@@ -367,20 +318,6 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
             throw new CantLoadTableToMemoryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
-
-    /*
-    private List<TransactionWrapper> getAllInCryptoStatus(CryptoStatus cryptoStatus) throws CantLoadTableToMemoryException, InvalidParameterException {
-        DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
-        List<DatabaseTableRecord> records;
-
-        transactionTable.setStringFilter(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
-        transactionTable.loadToMemory();
-
-        records = transactionTable.getRecords();
-
-        return mapConvertToBT(records);
-    }
-    */
 
     private TransactionWrapper convertToBT(DatabaseTableRecord record) throws InvalidParameterException {
 

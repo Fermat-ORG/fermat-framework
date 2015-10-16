@@ -20,6 +20,7 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identi
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CouldNotUnPublishCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.structure.CryptoBrokerIdentityInformationImpl;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -31,10 +32,10 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
- * Created by natalia on 16.09.15.
+ * Created by Angel 16/10/2015
  */
 
-public class IdentitySubAppModuleCryptoBrokenPluginRoot implements CryptoBrokerIdentityModuleManager,DealsWithCryptoBrokerIdentities,DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class IdentitySubAppModuleCryptoBrokenPluginRoot implements CryptoBrokerIdentityModuleManager, DealsWithCryptoBrokerIdentities, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
 
     /**
      * Elementos de DealsWithCryptoBrokerIdentities
@@ -184,10 +185,6 @@ public class IdentitySubAppModuleCryptoBrokenPluginRoot implements CryptoBrokerI
         this.identityManager = cryptoBrokerIdentityManager;
     }
 
-    //public CryptoBrokerIdentity createCryptoBrokerIdentity(final String alias, final byte[] profileImage) throws CantCreateCryptoBrokerIdentityException{
-    // return this.identityManager.createCryptoBrokerIdentity(alias, profileImage);
-    //}
-
     public List<CryptoBrokerIdentity> getAllCryptoBrokersFromCurrentDeviceUser() throws CantGetCryptoBrokerIdentityException {
         return this.identityManager.getAllCryptoBrokersFromCurrentDeviceUser();
     }
@@ -226,7 +223,7 @@ public class IdentitySubAppModuleCryptoBrokenPluginRoot implements CryptoBrokerI
     }
 
     private CryptoBrokerIdentityInformation converIdentityToInformation(final CryptoBrokerIdentity identity){
-        return new com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.structure.CryptoBrokerIdentityInformationImpl(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage());
+        return new CryptoBrokerIdentityInformationImpl(identity.getAlias(), identity.getPublicKey(), identity.getPublicKey(), identity.getProfileImage(), identity.getPublicKeyPublished());
     }
 
 

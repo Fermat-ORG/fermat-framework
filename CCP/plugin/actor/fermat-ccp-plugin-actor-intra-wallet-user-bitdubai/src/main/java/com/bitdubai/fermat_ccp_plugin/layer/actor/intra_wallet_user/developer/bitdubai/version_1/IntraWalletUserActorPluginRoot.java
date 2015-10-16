@@ -141,29 +141,6 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
      * ActorIntraWalletUserManager interface implementation.
      */
 
-//TODO: fijarse si esto va
-//    @Override
-//    public Actor createNewIntraWalletUser(String alias, byte[] profileImage) throws CantCreateIntraWalletUserException {
-//        try {
-//            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-//
-//
-//            //this.intraUserActorDao.createNewIntraUser(loggedUser.getPublicKey(), alias, "", profileImage, ContactState.CONNECTED);
-//
-//            //return new IntraUserActorRecord(loggedUser.getPublicKey(), "",alias,profileImage);
-//        }
-//        catch(CantGetLoggedInDeviceUserException e)
-//        {
-//            throw new CantCreateIntraWalletUserException("CAN'T CREATE NEW INTRA WALLET USER ACTOR", e, "Error getting current logged in device user", "");
-//        }
-////        catch (CantAddPendingIntraUserException e) {
-////            throw new CantCreateIntraWalletUserException("CAN'T CREATE NEW INTRA WALLET USER ACTOR", e, "Error add intra user on database", "");
-////        }  catch (Exception e) {
-////            throw new CantCreateIntraWalletUserException("CAN'T CREATE NEW INTRA WALLET USER ACTOR", FermatException.wrapException(e), "", "");
-////        }
-//        return null;
-//    }
-
 
     /**
      * That method registers a new intra user in the list

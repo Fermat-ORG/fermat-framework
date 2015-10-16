@@ -95,7 +95,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void onTransaction(Peer peer, Transaction t) {
-
+        System.out.println("On transaction event. " + t.toString());
     }
 
     @Nullable
@@ -112,8 +112,19 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         saveIncomingTransaction(wallet, tx);
     }
 
+    /**
+     * Registers the outgoing transaction
+     * @param wallet
+     * @param tx
+     * @param prevBalance
+     * @param newBalance
+     */
     @Override
     public void onCoinsSent(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
+        saveOutgoingTransaction(wallet, tx);
+    }
+
+    private void saveOutgoingTransaction(Wallet wallet, Transaction tx) {
         /**
          * Register the new outgoing transaction into the database
          */
@@ -125,7 +136,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                     getOutgoingTransactionAddressFrom(wallet, tx),
                     tx.getValue(wallet).getValue(),
                     tx.getFee().getValue(),
-                    ProtocolStatus.TO_BE_NOTIFIED);
+                    ProtocolStatus.NO_ACTION_REQUIRED);
         } catch (CantExecuteDatabaseOperationException e) {
             e.printStackTrace();
         }
@@ -184,16 +195,20 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * @return
      */
     private CryptoStatus getTransactionCryptoStatus(Transaction tx){
-        int depth = tx.getConfidence().getDepthInBlocks();
+        try{
+            int depth = tx.getConfidence().getDepthInBlocks();
 
-        if (depth == 0)
+            if (depth == 0)
+                return CryptoStatus.ON_CRYPTO_NETWORK;
+            else if(depth == 1)
+                return CryptoStatus.ON_BLOCKCHAIN;
+            else if (depth >= 2)
+                return CryptoStatus.IRREVERSIBLE;
+            else
+                return CryptoStatus.PENDING_SUBMIT;
+        } catch (Exception e){
             return CryptoStatus.ON_CRYPTO_NETWORK;
-        else if(depth == 1)
-            return CryptoStatus.ON_BLOCKCHAIN;
-        else if (depth >= 2)
-            return CryptoStatus.IRREVERSIBLE;
-        else
-            return CryptoStatus.PENDING_SUBMIT;
+        }
     }
 
     /**
@@ -237,7 +252,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
             /**
              * if there is an error, because this may not always be possible to get.
              */
-            cryptoAddress = new CryptoAddress("error", CryptoCurrency.BITCOIN);
+            cryptoAddress = new CryptoAddress("Empty", CryptoCurrency.BITCOIN);
         }
         return cryptoAddress;
     }
@@ -350,7 +365,6 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                     e.printStackTrace();
                 }
                 break;
-
         }
     }
 

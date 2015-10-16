@@ -533,11 +533,11 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
         }
 
 
-        try {//TODO Escuchar EVENTO para saber cuando "buscar" la informacion
-            assetUserActorNetworkServiceManager.requestListActorAssetUserRegistered();
-        } catch (CantRequestListActorAssetUserRegisteredException e) {
-            e.printStackTrace();
-        }
+//        try {//TODO Escuchar EVENTO para saber cuando "buscar" la informacion
+//            assetUserActorNetworkServiceManager.requestListActorAssetUserRegistered();
+//        } catch (CantRequestListActorAssetUserRegisteredException e) {
+//            e.printStackTrace();
+//        }
     }
 
 //    private void testRaiseEvent() {

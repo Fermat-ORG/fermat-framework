@@ -20,6 +20,7 @@ public enum DistributionStatus {
     DELIVERED("DELD"),
     DELIVERING("DELV"),
     HASH_CHECKED("HASHC"),
+    INCOMING_ASSET("INA"),
     REQUEST_CONNECTION("RCONN"),
     SENDING_CRYPTO("TXBTC"),
     SENDING_CRYPTO_FAILED("FTXBTC");
@@ -61,6 +62,8 @@ public enum DistributionStatus {
                 return DistributionStatus.DELIVERING;
             case "HASHC":
                 return DistributionStatus.HASH_CHECKED;
+            case "INA":
+                return DistributionStatus.INCOMING_ASSET;
             case "RCONN":
                 return DistributionStatus.REQUEST_CONNECTION;
             case "TXBTC":

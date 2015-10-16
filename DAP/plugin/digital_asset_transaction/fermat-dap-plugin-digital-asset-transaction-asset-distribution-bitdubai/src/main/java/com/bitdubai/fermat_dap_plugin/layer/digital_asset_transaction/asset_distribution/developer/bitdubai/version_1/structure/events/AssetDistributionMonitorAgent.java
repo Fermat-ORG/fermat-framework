@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -16,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
@@ -175,8 +178,8 @@ public class AssetDistributionMonitorAgent  implements Agent,DealsWithLogger,Dea
 
                     logManager.log(AssetDistributionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
-                } catch ( CantExecuteQueryException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                } catch (CantCheckAssetDistributionProgressException | CantExecuteQueryException exception) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 }
 
             }
@@ -201,11 +204,13 @@ public class AssetDistributionMonitorAgent  implements Agent,DealsWithLogger,Dea
             }
         }
 
-        private void doTheMainTask() throws CantExecuteQueryException {
+        private void doTheMainTask() throws CantExecuteQueryException, CantCheckAssetDistributionProgressException {
 
             try {
                 assetDistributionDao=new AssetDistributionDao(pluginDatabaseSystem,pluginId);
 //TODO implement this
+                List<String> transactionHashList;
+                CryptoStatus transactionCryptoStatus;
                 if(isPendingNetworkLayerEvents()){
                     List<String> assetAcceptedGenesisTransactionList=assetDistributionDao.getGenesisTransactionByAssetAcceptedStatus();
                     for(String assetAcceptedGenesisTransaction : assetAcceptedGenesisTransactionList){
@@ -217,16 +222,35 @@ public class AssetDistributionMonitorAgent  implements Agent,DealsWithLogger,Dea
                     }
                 }
 
+                if(isTransactionToBeNotified(CryptoStatus.PENDING_SUBMIT)){
+                    if(isPendingAssetVaultEvents()){
+                        List<String> eventIdList=getPendingAssetVaultEvents();
+                        for(String eventId : eventIdList){
+                            transactionHashList=assetDistributionDao.getTransactionsHashByCryptoStatus(CryptoStatus.PENDING_SUBMIT);
+                            for(String transactionHash: transactionHashList){
+                                transactionCryptoStatus= getGenesisTransactionFromAssetVault(transactionHash).getCryptoStatus();
+                                assetDistributionDao.updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, transactionCryptoStatus);
+                                assetDistributionDao.updateEventStatus(eventId);
+                            }
+                        }
+                    }
+                }
+
             } catch (CantExecuteDatabaseOperationException exception) {
                 throw new CantExecuteQueryException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, exception, "Exception in asset distribution monitor agent","Cannot execute database operation");
-            } catch (CantCheckAssetDistributionProgressException exception) {
-                throw new CantExecuteQueryException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, exception, "Exception in asset distribution monitor agent","Cannot check the asset distribution progress");
-            } catch (CantSendAssetBitcoinsToUserException exception) {
-                throw new CantExecuteQueryException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, exception, "Exception in asset Issuing monitor agent","Cannot send the genesis amount through the asset vault");
+            }  catch (CantSendAssetBitcoinsToUserException exception) {
+                throw new CantCheckAssetDistributionProgressException(exception,"Exception in asset distribution monitor agent","Cannot send crypto currency to asset user");
             } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-                throw new CantExecuteQueryException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, exception, "Exception in asset Issuing monitor agent","Unexpected result in database query");
+                throw new CantCheckAssetDistributionProgressException(exception,"Exception in asset distribution monitor agent","Unexpected result in database query");
+            } catch (CantGetGenesisTransactionException exception) {
+                throw new CantCheckAssetDistributionProgressException(exception,"Exception in asset distribution monitor agent","Cannot get genesis transaction from asset vault");
             }
 
+        }
+
+        private boolean isTransactionToBeNotified(CryptoStatus cryptoStatus) throws CantExecuteQueryException {
+            boolean isPending =assetDistributionDao.isPendingTransactions(cryptoStatus);
+            return isPending;
         }
 
         private void updateDistributionStatus(DistributionStatus distributionStatus, String genesisTransaction) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
@@ -237,12 +261,25 @@ public class AssetDistributionMonitorAgent  implements Agent,DealsWithLogger,Dea
             return assetDistributionDao.isPendingNetworkLayerEvents();
         }
 
+        private boolean isPendingAssetVaultEvents() throws CantExecuteQueryException {
+            return assetDistributionDao.isPendingAssetVaultEvents();
+        }
+
         private void sendCryptoAmountToRemoteActor(String genesisTransaction, CryptoAddress cryptoAddressTo) throws CantSendAssetBitcoinsToUserException {
             assetVaultManager.sendBitcoinAssetToUser(genesisTransaction, cryptoAddressTo);
         }
 
+        private List<String> getPendingAssetVaultEvents() throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
+            return assetDistributionDao.getPendingAssetVaultEvents();
+        }
+
         private List<String> getPendingNetworkLayerEvents() throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
             return assetDistributionDao.getPendingNetworkLayerEvents();
+        }
+
+        private CryptoTransaction getGenesisTransactionFromAssetVault(String transactionHash) throws CantGetGenesisTransactionException {
+            //CryptoTransaction cryptoTransaction=assetVaultManager.getGenesisTransaction(transactionHash);
+            return null;
         }
 
     }
