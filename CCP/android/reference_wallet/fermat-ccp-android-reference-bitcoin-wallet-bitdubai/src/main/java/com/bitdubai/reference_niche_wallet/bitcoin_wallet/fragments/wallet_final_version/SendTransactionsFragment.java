@@ -313,11 +313,11 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
             editTextAmount.addTextChangedListener(new TextWatcher() {
                 public void afterTextChanged(Editable s) {
                     try {
-                        Long amount = Long.parseLong(editTextAmount.getText().toString());
-                        if (amount > 0) {
+                        //Long amount = Long.parseLong(editTextAmount.getText().toString());
+                        //if (amount > 0) {
                             //long actualBalance = cryptoWallet.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getWalletSessionType().getWalletPublicKey());
                             //editTextAmount.setHint("Available amount: " + actualBalance + " bits");
-                        }
+                        //}
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
