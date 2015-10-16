@@ -1818,7 +1818,7 @@ public class Platform implements Serializable {
         long end = System.currentTimeMillis();
 
         pluginsStartUpTime.put(descriptor, end - init);
-        pluginsSizeReport.put(descriptor, ObjectSizeFetcher.sizeOf(plugin));
+//        pluginsSizeReport.put(descriptor, ObjectSizeFetcher.sizeOf(plugin));
     }
 
     /**
