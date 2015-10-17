@@ -33,7 +33,7 @@ import java.util.UUID;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.AssetIssuerPluginRoot</code> is
+ * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.AssetIssuerActorNetworkServicePluginRoot</code> is
  * the responsible to initialize all component to work together, and hold all resources they needed.
  * <p/>
  *
@@ -41,7 +41,7 @@ import java.util.UUID;
  *
  * @version 1.0
  */
-public class AssetIssuerPluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
+public class AssetIssuerActorNetworkServicePluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
 
     /**
      * Service Interface member variables.
@@ -114,7 +114,7 @@ public class AssetIssuerPluginRoot implements DealsWithErrors, DealsWithEvents, 
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.AssetIssuerPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.AssetIssuerActorNetworkServicePluginRoot");
         /**
          * I return the values.
          */
@@ -136,16 +136,16 @@ public class AssetIssuerPluginRoot implements DealsWithErrors, DealsWithEvents, 
                 /**
                  * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
                  */
-                if (AssetIssuerPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                    AssetIssuerPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                    AssetIssuerPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                if (AssetIssuerActorNetworkServicePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                    AssetIssuerActorNetworkServicePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                    AssetIssuerActorNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 } else {
-                    AssetIssuerPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                    AssetIssuerActorNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 }
             }
 
         } catch (Exception exception) {
-            FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: " + AssetIssuerPluginRoot.newLoggingLevel, "Check the cause");
+            FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: " + AssetIssuerActorNetworkServicePluginRoot.newLoggingLevel, "Check the cause");
            // this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
         }
     }
