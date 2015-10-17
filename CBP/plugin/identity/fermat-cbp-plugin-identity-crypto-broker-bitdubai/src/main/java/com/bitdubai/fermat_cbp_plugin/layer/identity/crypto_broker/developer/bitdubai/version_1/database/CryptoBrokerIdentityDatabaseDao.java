@@ -27,7 +27,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentity;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.IdentityPublished;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.CryptoBrokerIdentityPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerIdentityDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
@@ -90,7 +89,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
             persistNewCryptoBrokerIdentityPrivateKeysFile(cryptoBroker.getPublicKey(), privateKey);
             DatabaseTable table = this.database.getTable(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
-            record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, cryptoBroker.getPublicKey());
+            record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, cryptoBroker.getPublicKey());
             record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME, cryptoBroker.getAlias());
             record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
             record.setIntegerValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_CRYPTO_BROKER_PUBLIC_KEY_PUBLISHED_COLUMN_NAME, cryptoBroker.isPublished() ? 1 : 0);
@@ -242,10 +241,10 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
 
     private CryptoBrokerIdentity getIdentityFromRecord(final DatabaseTableRecord record) throws CantGetCryptoBrokerIdentityPrivateKeyException, CantGetCryptoBrokerIdentityProfileImageException {
         String alias = record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME);
-        String privateKey = getCryptoBrokerIdentityPrivateKey(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME));
-        KeyPair keyPair = AsymmetricCryptography.createKeyPair(privateKey);
-        byte[] profileImage = getCryptoBrokerIdentityProfileImagePrivateKey(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME));
+        String privateKey = getCryptoBrokerIdentityPrivateKey(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME));
+        byte[] profileImage = getCryptoBrokerIdentityProfileImagePrivateKey(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME));
         boolean published = record.getIntegerValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_CRYPTO_BROKER_PUBLIC_KEY_PUBLISHED_COLUMN_NAME) == 1;
+        KeyPair keyPair = AsymmetricCryptography.createKeyPair(privateKey);
         return new CryptoBrokerIdentityImpl(alias, keyPair, profileImage, published);
     }
 
