@@ -10,17 +10,31 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
@@ -30,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 
 /**
@@ -38,15 +53,64 @@ import java.util.UUID;
  * <p/>
  *
  * Created by Roberto Requena - (rrequena) on 21/07/15.
+ * Modified by franklin on 17/10/2015
  *
  * @version 1.0
  */
 public class AssetIssuerActorNetworkServicePluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
 
     /**
+     * Represent the logManager
+     */
+    private LogManager logManager;
+    /**
+     * Represent the EVENT_SOURCE
+     */
+    public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_ACTOR_ASSET_ISSUER;
+    /**
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
+
+    /**
+     * Represent the register
+     */
+    private boolean register;
+
+    /**
+     * Represent the name
+     */
+    private String name;
+
+    /**
+     * Represent the alias
+     */
+    private String alias;
+
+    /**
+     * Represent the extraData
+     */
+    private String extraData;
+
+    /**
+     * Represent the dataBase
+     */
+    private Database dataBase;
+
+    /**
+     * Represent the identity
+     */
+    private ECCKeyPair identity;
+
+    /**
+     * Represent the networkServiceType
+     */
+    private NetworkServiceType networkServiceType;
+
+    /**
+     * Represent the platformComponentProfile
+     */
+    private PlatformComponentProfile platformComponentProfile;
     /**
      * DealsWithPlatformDatabaseSystem Interface member variables.
      */
@@ -74,6 +138,64 @@ public class AssetIssuerActorNetworkServicePluginRoot implements DealsWithErrors
      */
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+
+    /**
+     * Represent the communicationNetworkServiceConnectionManager
+     */
+    private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
+
+    /**
+     * Represent the wsCommunicationsCloudClientManager
+     */
+    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
+
+    /**
+     * Represent the platformComponentType
+     */
+    private PlatformComponentType platformComponentType;
+
+    /**
+     *  Represent the remoteNetworkServicesRegisteredList
+     */
+    private List<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
+
+    private List<PlatformComponentProfile> remoteActorNetworkServicesRegisteredListAux;
+
+    /**
+     *   Represent the communicationNetworkServiceDeveloperDatabaseFactory
+     */
+    private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
+
+    /**
+     * Represent the communicationRegistrationProcessNetworkServiceAgent
+     */
+    private CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
+
+    /**
+     * Represent the actorAssetUserRegisteredList
+     */
+    private List<ActorAssetIssuer> actorAssetIssuerRegisteredList;
+
+    /**
+     * Represent the actorAssetUserPendingToRegistration
+     */
+    private List<PlatformComponentProfile> actorAssetIssuerPendingToRegistration;
+
+
+    /**
+     * Constructor
+     */
+    public AssetIssuerActorNetworkServicePluginRoot() {
+        super();
+        this.listenersAdded = new ArrayList<>();
+        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
+        this.networkServiceType    = NetworkServiceType.ASSET_USER_ACTOR;
+        this.name                  = "Actor Network Service Asset Issuer";
+        this.alias                 = "ActorNetworkServiceAssetIssuer";
+        this.extraData             = null;
+        this.actorAssetIssuerRegisteredList = new ArrayList<>();
+        this.actorAssetIssuerPendingToRegistration = new ArrayList<>();
+    }
 
     @Override
     public void setEventManager(EventManager DealsWithEvents) {
@@ -154,9 +276,11 @@ public class AssetIssuerActorNetworkServicePluginRoot implements DealsWithErrors
     public void start() throws CantStartPluginException {
         try {
             this.serviceStatus = ServiceStatus.STARTED;
+            System.out.println("Star Plugin AssetIssuerActorNetworkService");
+            logManager.log(AssetIssuerActorNetworkServicePluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetIssuerActorNetworkService - Starting", "AssetIssuerActorNetworkServicePluginRoot - Starting", "AssetIssuerActorNetworkServicePluginRoot - Starting");
         } catch (Exception e) {
-            // errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            // throw new CantStartPluginException(e, Plugins.BITDUBAI_INTRA_USER_ACTOR);
+             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+             throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE);
         }
     }
 
@@ -178,5 +302,26 @@ public class AssetIssuerActorNetworkServicePluginRoot implements DealsWithErrors
     @Override
     public ServiceStatus getStatus() {
         return serviceStatus;
+    }
+
+    /**
+     * Static method to get the logging level from any class under root.
+     * @param className
+     * @return
+     */
+    public static LogLevel getLogLevelByClass(String className){
+        try{
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return AssetIssuerActorNetworkServicePluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e){
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
     }
 }
