@@ -4,10 +4,10 @@
  * You may not modify, use, reproduce or distribute this software.
 * BITDUBAI/CONFIDENTIAL
 */
-package com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.events;
+package com.bitdubai.fermat_dap_api.layer.all_definition.events;
 
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.enums.DapEvenType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DapEvenType;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent extends AbstractDapAssetUserActorNetworkServiceFermatEvent {
+public class CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent extends AbstractDapFermatEvent {
 
     private List<ActorAssetUser> actorAssetUserList;
 

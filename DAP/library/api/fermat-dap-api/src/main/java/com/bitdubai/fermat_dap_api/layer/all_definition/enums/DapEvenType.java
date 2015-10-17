@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
 * BITDUBAI/CONFIDENTIAL
 */
-package com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.enums;
+package com.bitdubai.fermat_dap_api.layer.all_definition.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
@@ -12,10 +12,14 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.events.CompleteClientAssetUserActorRegistrationNotificationEvent;
-import com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.events.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent;
-import com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.listeners.CompleteClientAssetUserActorRegistrationNotificationEventListener;
-import com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.listeners.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventListener;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.CompleteClientAssetUserActorRegistrationNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.ReceivedNewDigitalAssetMetadataNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.ReceivedNewTransactionStatusNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.CompleteClientAssetUserActorRegistrationNotificationEventListener;
+import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventListener;
+import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ReceivedNewDigitalAssetMetadataNotificationEventListener;
+import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ReceivedNewTransactionStatusNotificationEventListener;
 
 
 /**
@@ -28,7 +32,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_servic
  */
 public enum DapEvenType implements FermatEventEnum {
 
-    COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION("CL_RLCRN") {
+    COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION("CL_RLAURN") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
             return new CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventListener(this, eventMonitor);
         }
@@ -36,7 +40,7 @@ public enum DapEvenType implements FermatEventEnum {
             return new CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent(this);
         }
     },
-    COMPLETE_CLIENT_ASSET_USER_REGISTRATION_NOTIFICATION("CL_CAURN") {
+    COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION("CL_CAURN") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
             return new CompleteClientAssetUserActorRegistrationNotificationEventListener(this, eventMonitor);
         }
@@ -45,6 +49,23 @@ public enum DapEvenType implements FermatEventEnum {
         }
     },
 
+    RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION("RNDAMN") {
+        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
+            return new ReceivedNewDigitalAssetMetadataNotificationEventListener(this, eventMonitor);
+        }
+        public FermatEvent getNewEvent() {
+            return new ReceivedNewDigitalAssetMetadataNotificationEvent(this);
+        }
+    },
+
+    RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION("RNTSN") {
+        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
+            return new ReceivedNewTransactionStatusNotificationEventListener(this, eventMonitor);
+        }
+        public FermatEvent getNewEvent() {
+            return new ReceivedNewTransactionStatusNotificationEvent(this);
+        }
+    },
 
     ;
 
