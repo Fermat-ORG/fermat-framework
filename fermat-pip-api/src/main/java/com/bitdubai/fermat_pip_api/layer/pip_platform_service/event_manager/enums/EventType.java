@@ -726,7 +726,7 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
-    COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION("CL_RLCRN") {
+    COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION("CL_RLAURN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new AssetUserActorRequestListRegisteredNetworksNotificationEventListener(this, fermatEventMonitor);
         }
@@ -743,10 +743,50 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
+    RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION("RNDAMN") {
+        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
+            return new ReceivedNewDigitalAssetMetadataNotificationEventListener(this, eventMonitor);
+        }
+        public FermatEvent getNewEvent() {
+            return new ReceivedNewDigitalAssetMetadataNotificationEvent(this);
+        }
+    },
+
+    RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION("RNTSN") {
+        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
+            return new ReceivedNewTransactionStatusNotificationEventListener(this, eventMonitor);
+        }
+        public FermatEvent getNewEvent() {
+            return new ReceivedNewTransactionStatusNotificationEvent(this);
+        }
+    },
+
     NEW_NETWORK_SERVICE_MESSAGE_RECEIVE("NNSMR") {
         @Override
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return null;
+        }
+
+        @Override
+        public FermatEvent getNewEvent() {
+            return null;
+        }
+    },
+    ACTOR_NETWORK_SERVICE_ASK_FOR_ACCEPTANCE("ANSAFA"){
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return null;
+        }
+
+        @Override
+        public FermatEvent getNewEvent() {
+            return null;
+        }
+    },
+    ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS("ANSNN"){
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new ActorNetworkServicePendingsNotificationEventListener(this, fermatEventMonitor);
         }
 
         @Override

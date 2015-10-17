@@ -230,7 +230,11 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
 
             intraWalletUserIdentityDao.createNewUser(alias, publicKey, privateKey, loggedUser, profileImage);
 
-            return new IntraWalletUserIdentity(alias, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
+            IntraWalletUserIdentity intraWalletUserIdentity = new IntraWalletUserIdentity(alias, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
+
+            registerIdentities();
+
+            return intraWalletUserIdentity;
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateNewIntraWalletUserException("CAN'T CREATE NEW INTRA WALLET USER IDENTITY", e, "Error getting current logged in device user", "");
         } catch (CantCreateNewDeveloperException e) {
@@ -292,18 +296,9 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
         eventManager.addListener(cryptoAddressReceivedEventListener);
         listenersAdded.add(cryptoAddressReceivedEventListener);
 
-        try {
-            List<IntraWalletUser> lstIntraWalletUSer = intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
-            List<Actor> lstActors = new ArrayList<Actor>();
-            for(IntraWalletUser user : lstIntraWalletUSer){
-                lstActors.add(intraActorManager.contructIdentity(user.getPublicKey(), user.getAlias(), Actors.INTRA_USER,user.getProfileImage()));
-            }
-            intraActorManager.registrateActors(lstActors);
-        } catch (CantListIntraWalletUserIdentitiesException e) {
-            e.printStackTrace();
-        } catch (CantGetLoggedInDeviceUserException e) {
-            e.printStackTrace();
-        }
+
+        registerIdentities();
+
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -365,6 +360,22 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
         IntraWalletUserIdentityDeveloperDatabaseFactory dbFactory = new IntraWalletUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return dbFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+
+    public void registerIdentities(){
+        try {
+            List<IntraWalletUser> lstIntraWalletUSer = intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
+            List<Actor> lstActors = new ArrayList<Actor>();
+            for(IntraWalletUser user : lstIntraWalletUSer){
+                lstActors.add(intraActorManager.contructIdentity(user.getPublicKey(), user.getAlias(), Actors.INTRA_USER,user.getProfileImage()));
+            }
+            intraActorManager.registrateActors(lstActors);
+        } catch (CantListIntraWalletUserIdentitiesException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (CantGetLoggedInDeviceUserException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
     }
 
     @Override

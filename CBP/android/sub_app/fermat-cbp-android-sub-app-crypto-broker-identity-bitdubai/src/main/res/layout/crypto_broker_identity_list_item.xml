@@ -17,9 +17,9 @@
             android:id="@+id/crypto_broker_identity_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="2dp"
             android:contentDescription="@string/identity_img"
-            tools:src="@drawable/deniz_profile_picture" />
+            android:padding="1dp"
+            tools:src="@drawable/person" />
 
         <View
             android:layout_width="match_parent"
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:singleLine="true"
-        android:textSize="20sp"
         android:textColor="@color/crypto_broker_identity_name_item"
+        android:textSize="20sp"
         tools:text="Nelson Alfonso Ramirez Noguera" />
 </LinearLayout>

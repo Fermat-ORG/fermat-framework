@@ -10,7 +10,7 @@ package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.
  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants</code> is
  * throw when error occurred updating new record in a table of the data base
  * <p/>
- * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 07/10/15.
+ * Created by Roberto Requena - (rart3001@gn¡mail.com) on 15/10/2015
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -50,5 +50,25 @@ public class CommunicationNetworkServiceDatabaseConstants {
     public static final String OUTGOING_MESSAGES_STATUS_COLUMN_NAME = "status";
 
     public static final String OUTGOING_MESSAGES_FIRST_KEY_COLUMN = "id";
+
+
+    /**
+     * digital_asset_metadata_transaction database table definition.
+     */
+    public static final String DIGITAL_ASSET_METADATA_TRANSACTION_TABLE_NAME = "digital_asset_metadata_transaction";
+
+    public static final String DIGITAL_ASSET_METADATA_TRANSACTION_TRANSACTION_ID_COLUMN_NAME = "transaction_id";
+    public static final String DIGITAL_ASSET_METADATA_TRANSACTION_GENESIS_TRANSACTION_COLUMN_NAME = "genesis_transaction";
+    public static final String DIGITAL_ASSET_METADATA_TRANSACTION_SENDER_ID_COLUMN_NAME = "sender_id";
+    public static final String DIGITAL_ASSET_METADATA_TRANSACTION_SENDER_TYPE_COLUMN_NAME = "sender_type";
+    public static final String DIGITAL_ASSET_METADATA_TRANSACTION_RECEIVER_ID_COLUMN_NAME = "receiver_id";
+    public static final String DIGITAL_ASSET_METADATA_TRANSACTION_RECEIVER_TYPE_COLUMN_NAME = "receiver_type";
+    public static final String DIGITAL_ASSET_METADATA_TRANSACTION_META_DATA_XML_COLUMN_NAME = "meta_data_xml";
+    public static final String DIGITAL_ASSET_METADATA_TRANSACTION_TYPE_COLUMN_NAME = "type";
+    public static final String DIGITAL_ASSET_METADATA_TRANSACTION_DISTRIBUTION_STATUS_COLUMN_NAME = "distribution_status";
+    public static final String DIGITAL_ASSET_METADATA_TRANSACTION_TIMESTAMP_COLUMN_NAME = "timestamp";
+    public static final String DIGITAL_ASSET_METADATA_TRANSACTION_PROCESSED_COLUMN_NAME = "processed";
+
+    public static final String DIGITAL_ASSET_METADATA_TRANSACTION_FIRST_KEY_COLUMN = "transaction_id";
 
 }

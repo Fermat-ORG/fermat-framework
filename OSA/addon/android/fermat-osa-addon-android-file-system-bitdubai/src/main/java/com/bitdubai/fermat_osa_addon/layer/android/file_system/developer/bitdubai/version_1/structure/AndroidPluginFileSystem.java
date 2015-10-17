@@ -36,9 +36,12 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
      * PluginFileSystem interface member variables.
      */
     
-    private Context context;
+    private String contextPath;
 
-    /**
+    public AndroidPluginFileSystem(String contextPath) {
+        this.contextPath = contextPath;
+    }
+/**
      * PluginFileSystem interface implementation.
      */
 
@@ -59,7 +62,7 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
         checkContext();
         try {
             //execute AndroidPluginTextFile constructor
-            AndroidPluginTextFile newFile = new AndroidPluginTextFile(ownerId, this.context,directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
+            AndroidPluginTextFile newFile = new AndroidPluginTextFile(ownerId, contextPath,directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
             //load content file
             newFile.loadFromMedia();
             return newFile;
@@ -87,7 +90,7 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
     public PluginTextFile createTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException{
         checkContext();
      try{
-        return new AndroidPluginTextFile(ownerId, this.context, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
+        return new AndroidPluginTextFile(ownerId, contextPath, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
        }catch(CantCreateFileException e){
             throw e;
             // throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, FermatException.wrapException(e),"", "Check the cause of this error");
@@ -113,7 +116,7 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
     public PluginBinaryFile getBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException,CantCreateFileException{
         checkContext();
         try {
-            AndroidPluginBinaryFile newFile = new AndroidPluginBinaryFile(ownerId, this.context, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
+            AndroidPluginBinaryFile newFile = new AndroidPluginBinaryFile(ownerId, contextPath, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
             newFile.loadFromMedia();
             return newFile;
         } catch (CantLoadFileException e){
@@ -139,7 +142,7 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
     public PluginBinaryFile createBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException{
         checkContext();
        try{
-        return new AndroidPluginBinaryFile(ownerId, this.context, directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
+        return new AndroidPluginBinaryFile(ownerId, contextPath, directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
           }catch(Exception e){
             throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, FermatException.wrapException(e),"", "Check the cause of this error");
          }
@@ -149,7 +152,7 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
     public void deleteTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
         try {
             //execute AndroidPluginTextFile constructor
-            AndroidPluginTextFile newFile = new AndroidPluginTextFile(ownerId, this.context,directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
+            AndroidPluginTextFile newFile = new AndroidPluginTextFile(ownerId, contextPath,directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
             newFile.delete();
         }
         catch (Exception e){
@@ -162,24 +165,12 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
     public void deleteBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException{
         try {
             //execute AndroidPluginTextFile constructor
-            AndroidPluginBinaryFile newFile = new AndroidPluginBinaryFile(ownerId, this.context,directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
+            AndroidPluginBinaryFile newFile = new AndroidPluginBinaryFile(ownerId, contextPath,directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
             newFile.delete();
         }
         catch (Exception e){
             throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "Check the cause");
         }
-    }
-
-
-
-    /**
-     *<p>This method set the os context
-     *
-     * @param context Android context object
-     */
-    @Override
-    public void setContext(Object context) {
-        this.context = (Context) context;
     }
 
     /**
@@ -203,7 +194,7 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
     }
 
     private void checkContext() throws CantCreateFileException {
-        if(context == null)
+        if(contextPath == null)
             throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, null, "Context: null", "Context can't ne Null, you need to call setContext before using the FileSystem");
     }
 }

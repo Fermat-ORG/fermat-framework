@@ -74,10 +74,10 @@ public class CryptoCustomerIdentityDatabaseFactory implements DealsWithPluginDat
              */
             table = databaseFactory.newTableFactory(ownerId, CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_TABLE_NAME);
 
-            table.addColumn(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-
+            table.addColumn(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_CRYPTO_CUSTOMER_PUBLIC_KEY_PUBLISHED_COLUMN_NAME,DatabaseDataType.INTEGER,2, Boolean.FALSE);
             table.addIndex(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_FIRST_KEY_COLUMN);
 
             try {

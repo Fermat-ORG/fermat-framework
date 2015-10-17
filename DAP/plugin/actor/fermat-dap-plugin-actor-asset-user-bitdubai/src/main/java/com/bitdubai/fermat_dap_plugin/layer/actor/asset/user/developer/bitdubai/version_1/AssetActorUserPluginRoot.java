@@ -427,4 +427,81 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
 //        System.out.println("************************************************************************");
 
     }
+    /**
+     * Private methods
+     */
+//
+//    /**
+//     * Procces the list o f notifications from Intra User Network Services
+//     * And update intra user actor contact state
+//     *
+//     * @throws CantProcessNotificationsExceptions
+//     */
+//    private void processNotifications() throws CantProcessNotificationsExceptions {
+//
+//        try {
+//
+//            List<IntraUserNotification> intraUserNotificationes = intraUserNetworkServiceManager.getPendingNotifications();
+//
+//
+//            for (IntraUserNotification notification : intraUserNotificationes) {
+//
+//                String intraUserSendingPublicKey = notification.getPublicKeyOfTheSender();
+//
+//                String intraUserToConnectPublicKey = notification.getPublicKeyOfTheIntraUserToConnect();
+//
+//                switch (notification.getNotificationDescriptor()) {
+//                    case ASKFORACCEPTANCE:
+//
+//                        this.askIntraWalletUserForAcceptance(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserToConnectPublicKey, notification.getActorSenderProfileImage());
+//
+//                    case CANCEL:
+//                        this.cancelIntraWalletUser(intraUserSendingPublicKey, intraUserToConnectPublicKey);
+//
+//                    case ACCEPTED:
+//                        this.acceptIntraWalletUser(intraUserSendingPublicKey, intraUserToConnectPublicKey);
+//                        /**
+//                         * fire event "INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION"
+//                         */
+//                        eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION));
+//                        break;
+//                    case DISCONNECTED:
+//                        this.disconnectIntraWalletUser("", intraUserSendingPublicKey);
+//                        break;
+//                    case RECEIVED:
+//                        this.receivingIntraWalletUserRequestConnection(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserToConnectPublicKey, notification.getActorSenderProfileImage());
+//                        /**
+//                         * fire event "INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION"
+//                         */
+//                        eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION));
+//                        break;
+//                    case DENIED:
+//                        this.denyConnection(intraUserSendingPublicKey, intraUserToConnectPublicKey);
+//                        break;
+//                    default:
+//                        break;
+//
+//                }
+//
+//                /**
+//                 * I confirm the application in the Network Service
+//                 */
+//                intraUserNetworkServiceManager.confirmNotification(intraUserSendingPublicKey, intraUserToConnectPublicKey);
+//            }
+//
+//
+//        } catch (CantAcceptIntraWalletUserException e) {
+//            throw new CantProcessNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error Update Contact State to Accepted");
+//
+//        } catch (CantDisconnectIntraWalletUserException e) {
+//            throw new CantProcessNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error Update Contact State to Disconnected");
+//
+//        } catch (CantDenyConnectionException e) {
+//            throw new CantProcessNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error Update Contact State to Denied");
+//
+//        } catch (Exception e) {
+//            throw new CantProcessNotificationsExceptions("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", FermatException.wrapException(e), "", "");
+//
+//        }
+//    }
 }

@@ -120,10 +120,11 @@ public class MakeOfflineBankTransferBankMoneyTransactionDeveloperDatabaseFactory
         List<String> makeOfflineBankTransferColumns = new ArrayList<String>();
 
         makeOfflineBankTransferColumns.add(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_BANK_TRANSACTION_ID_COLUMN_NAME);
-        makeOfflineBankTransferColumns.add(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_BROKER_COLUMN_NAME);
-        makeOfflineBankTransferColumns.add(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
-        makeOfflineBankTransferColumns.add(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_STATUS_COLUMN_NAME);
+        makeOfflineBankTransferColumns.add(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_ACTOR_TO_COLUMN_NAME);
+        makeOfflineBankTransferColumns.add(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_ACTOR_FROM_COLUMN_NAME);
+        makeOfflineBankTransferColumns.add(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_BALANCE_TYPE_COLUMN_NAME);
         makeOfflineBankTransferColumns.add(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_TRANSACTION_TYPE_COLUMN_NAME);
+        makeOfflineBankTransferColumns.add(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_STATUS_COLUMN_NAME);
         makeOfflineBankTransferColumns.add(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_AMOUNT_COLUMN_NAME);
         makeOfflineBankTransferColumns.add(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_BANK_CURRENCY_TYPE_COLUMN_NAME);
         makeOfflineBankTransferColumns.add(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_BANK_OPERATION_TYPE_COLUMN_NAME);

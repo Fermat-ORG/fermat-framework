@@ -33,7 +33,7 @@ public class IntraUserIdentityInfoAdapter extends FermatAdapter<IntraWalletUser,
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.crypto_broker_identity_list_item;
+        return R.layout.intra_user_identity_list_item;
     }
 
     @Override

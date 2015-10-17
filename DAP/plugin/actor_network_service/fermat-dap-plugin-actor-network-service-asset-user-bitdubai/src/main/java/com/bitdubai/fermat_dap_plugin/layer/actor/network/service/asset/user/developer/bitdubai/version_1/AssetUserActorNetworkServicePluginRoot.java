@@ -22,8 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.AssetUserActorCompleteRegistrationNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent;
+
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -36,6 +35,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+
 
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
@@ -880,20 +880,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.ACTOR_ASSET_USER &&
                 platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.UNDEFINED){
 
-            /*
 
-
-
-            System.out.println(" Actor Network Service Asset User Registered "+platformComponentProfileRegistered.getIdentityPublicKey()+"\n Alias"+platformComponentProfileRegistered.getAlias());
-
-            try {
-                requestListActorAssetUserRegistered();
-            } catch (CantRequestListActorAssetUserRegisteredException e) {
-                e.printStackTrace();
-            }
-
-             * TODO: DISPARAR UN EVENTO NOTIFICANDO EL REGISTRO DE UN ACTOR CON EL ACTOR Q SE REGISTRO DENTRO
-             */
 
             System.out.println(" Actor  Asset User Registered "+platformComponentProfileRegistered.getIdentityPublicKey()+"\n Alias "+platformComponentProfileRegistered.getAlias());
 
@@ -910,10 +897,10 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 //            }
 //
 //
-//            FermatEvent event =  eventManager.getNewEvent(DapEvenType.COMPLETE_CLIENT_ASSET_USER_REGISTRATION_NOTIFICATION);
+//            FermatEvent event =  eventManager.getNewEvent(DapEvenType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
 //            event.setSource(EventSource.ACTOR_ASSET_USER);
 //
-//            ((AssetUserActorCompleteRegistrationNotificationEvent)event).setActorAssetUser(actorAssetUserNewRegsitered);
+//            ((CompleteClientAssetUserActorRegistrationNotificationEvent)event).setActorAssetUser(actorAssetUserNewRegsitered);
 //            eventManager.raiseEvent(event);
 
         }
@@ -925,9 +912,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleFailureComponentRegistrationNotificationEvent");
 
-        /*
-         * TODO: ANALIZAR QUE HACER AQUI
-         */
+
 
     }
 
@@ -957,12 +942,12 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
             if(remoteNetworkServiceToConnect.getNetworkServiceType()== NetworkServiceType.UNDEFINED &&  remoteNetworkServiceToConnect.getPlatformComponentType()== PlatformComponentType.ACTOR_ASSET_USER ){
 
-                List<ActorAssetUser> actorAssetUserListRemote=null;
+
 
 
                 for(PlatformComponentProfile p : platformComponentProfileRegisteredList){
 
-//
+
 //                    ReturnAssetUserActorNetworkService returnactor = new AssetUserANS();
 //
 //                    Location loca = null;
@@ -974,16 +959,13 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 //                        e.printStackTrace();
 //                    }
 //
-//                    actorAssetUserListRemote.add(actorAssetUserNew);
+//                    actorAssetUserRegisteredList.add(actorAssetUserNew);
                 }
 
-
-
-
-//                FermatEvent event =  eventManager.getNewEvent(DapEvenType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
+//                FermatEvent event =  eventManager.getNewEvent(DapEvenType.COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION);
 //                event.setSource(EventSource.ACTOR_ASSET_USER);
 //
-//                ((AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent)event).setActorAssetUserList(actorAssetUserListRemote);
+//                ((CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent)event).setActorAssetUserList(actorAssetUserRegisteredList);
 //                eventManager.raiseEvent(event);
 
 
@@ -1001,21 +983,11 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
 
 
-                /*
-                 * Construct a ActorAssetUser by each platformComponentProfile
-                 */
-                /*
-                 * TODO: CREAR LOS ACTORES CON EL CONTENIDO DEL PROFILE Y AGREGARLOS A LA LISTA
-                 */
-
         }
 
 
 
 
-        /*
-         * TODO: ENVIAR EL EVENTO QUE NOTIFICA QUE LA LISTA ESTA DISPONIBLE
-         */
 
 
     }
@@ -1206,15 +1178,15 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
     }
 
     private void initilizelistener2() {
-//
+
 //        try{
 //
-//            FermatEventListener event = eventManager.getNewListener(DapEvenType.COMPLETE_CLIENT_ASSET_USER_REGISTRATION_NOTIFICATION);
+//            FermatEventListener event = eventManager.getNewListener(DapEvenType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
 //            event.setEventHandler(new CompleteClientAssetUserActorRegistrationNotificationEventHandler(this));
 //            eventManager.addListener(event);
 //            listenersAdded.add(event);
 //
-//            event = eventManager.getNewListener(DapEvenType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
+//            event = eventManager.getNewListener(DapEvenType.COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION);
 //            event.setEventHandler(new CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventHandler(this));
 //            eventManager.addListener(event);
 //            listenersAdded.add(event);
@@ -1223,10 +1195,6 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 //
 //            e.printStackTrace();
 //        }
-
-
-
-
     }
 
 

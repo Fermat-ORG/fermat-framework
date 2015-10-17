@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
@@ -55,23 +56,31 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.events.ActorNetworkServiceCompleteRegistration;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraUserNetworkServiceDao;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.IncomingNotificationDao;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.OutgoingNotificationDao;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.CompleteRequestListComponentRegisteredNotificationEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.FailureComponentConnectionRequestNotificationEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeNetworkIntraUserDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecordedAgent;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.Identity;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNSInformation;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceNotification;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.MessageType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
@@ -91,7 +100,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IntraUserActorConnectionCancelledEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IntraUserActorConnectionDeniedEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.JsonObject;
@@ -241,11 +249,25 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
 
     /**
+     * Agent
+     */
+    private ActorNetworkServiceRecordedAgent actorNetworkServiceRecordedAgent;
+
+    /**
+     *  cacha identities to register
+     */
+    private List<PlatformComponentProfile> actorsToRegisterCache;
+
+    /**
      * Connections arrived
      */
     private boolean connectionArrived = false;
 
-    private OutgoingMessageDao outgoingMessageDao;
+    /**
+     * DAO
+     */
+    private IncomingNotificationDao incomingNotificationsDao;
+    private OutgoingNotificationDao outgoingNotificationDao;
 
     /**
      * Constructor
@@ -253,10 +275,6 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     public IntraActorNetworkServicePluginRoot() {
         super();
         this.listenersAdded = new ArrayList<>();
-
-        /******************************************************************
-         * IMPORTANT: CHANGE THIS VALUES TO THE NEW PLUGIN TO IMPLEMENT
-         ******************************************************************/
         this.platformComponentType = PlatformComponentType.ACTOR_NETWORK_SERVICE;
         this.networkServiceType    = NetworkServiceType.INTRA_USER;
         this.name                  = "Intra actor Network Service";
@@ -344,7 +362,39 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
+        /**
+         *  failure connection
+         */
+
+        fermatEventListener = eventManager.getNewListener(P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
     }
+
+
+    /**
+     * Messages listeners
+     */
+    private void initializeMessagesListeners(){
+        /*
+         * Listen and handle Complete Request List Component Registered Notification Event
+         */
+
+//        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+//        fermatEventListener.setEventHandler(new New(cryptoTransmissionAgent));
+//        eventManager.addListener(fermatEventListener);
+//        listenersAdded.add(fermatEventListener);
+
+        /**
+         *
+         */
+        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(actorNetworkServiceRecordedAgent));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+    }
+
 
 
     /**
@@ -397,7 +447,13 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
-            outgoingMessageDao = new OutgoingMessageDao(dataBase);
+            //DAO
+            incomingNotificationsDao = new IncomingNotificationDao(dataBase);
+
+            outgoingNotificationDao = new OutgoingNotificationDao(dataBase);
+
+
+            actorsToRegisterCache = new ArrayList<>();
 
             /*
              * Its all ok, set the new status
@@ -583,95 +639,44 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
             //todo: ACA DISPARO EL EVENTO CON EL SOURCE MIO Y A LA VAINA
 
-            //por razones de testeo, actor registration hardcoded
+            actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(
+                    communicationNetworkServiceConnectionManager,
+                    this,
+                    errorManager,
+                    eventManager,
+                    pluginFileSystem,
+                    wsCommunicationsCloudClientManager);
 
+            try {
+
+                actorNetworkServiceRecordedAgent.start();
+
+            } catch (CantStartAgentException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
+            }
+
+            initializeMessagesListeners();
+
+
+            try {
 
             CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
 
-            System.out.print("-----------------------\n" +
-                    "INTENTANDO REGISTRAR ACTOR  -----------------------\n" +
-                    "-----------------------\n A: " + getName());
 
 
-        /*
-         * Construct  profile and register
-         */
-                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
-                        "actor_prueba_juan_public_key",
-                        //"actor_prueba_robert_public_key",
-                        ("alias"),
-                        ("name+algo mas"),
-                        NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
-                        PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
-                        "");
+            for(PlatformComponentProfile platformComponentProfile : actorsToRegisterCache){
 
-
-
-                /*
-                 * Register me
-                 */
-            try {
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
-            } catch (CantRegisterComponentException e) {
-                e.printStackTrace();
+
+                System.out.print("-----------------------\n" +
+                        "INTENTANDO REGISTRAR ACTOR  -----------------------\n" +
+                        "-----------------------\n A: " + platformComponentProfile.getAlias());
+
+
             }
 
-             platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
-                    "actor_prueba_eustacio_public_key",
-                    //"actor_prueba_robert_public_key",
-                    ("eustacio"),
-                    ("name+algo mas"),
-                    NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
-                    PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
-                    "");
 
 
-
-                /*
-                 * Register me
-                 */
-            try {
-                communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
-            } catch (CantRegisterComponentException e) {
-                e.printStackTrace();
-            }
-
-             platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
-                    "actor_prueba_ignacio_public_key",
-                    //"actor_prueba_robert_public_key",
-                    ("ignacio"),
-                    ("name+algo mas"),
-                    NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
-                    PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
-                    "");
-
-
-
-                /*
-                 * Register me
-                 */
-            try {
-                communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
-            } catch (CantRegisterComponentException e) {
-                e.printStackTrace();
-            }
-
-             platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
-                    "actor_prueba_pedro_public_key",
-                    //"actor_prueba_robert_public_key",
-                    ("pedro"),
-                    ("name+algo mas"),
-                    NetworkServiceType.UNDEFINED, // aca iria UNDEFIND
-                    PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
-                    "");
-
-
-
-                /*
-                 * Register me
-                 */
-            try {
-                communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
             } catch (CantRegisterComponentException e) {
                 e.printStackTrace();
             }
@@ -988,18 +993,18 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
              * This is for test and example of how to use
              * Construct the filter
              */
-        DiscoveryQueryParameters discoveryQueryParameters = constructDiscoveryQueryParamsFactory(platformComponentProfile.getPlatformComponentType(), //PlatformComponentType you want to find
-                NetworkServiceType.UNDEFINED,     //NetworkServiceType you want to find
-                null,                     // alias
-                null,                     // identityPublicKey
-                null,                     // location
-                null,                     // distance
-                null,                     // name
-                null,                     // extraData
-                null,                     // offset
-                null,                     // max
-                null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+        DiscoveryQueryParameters discoveryQueryParameters = constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_INTRA_USER, //PlatformComponentType you want to find
+                                                                                                NetworkServiceType.UNDEFINED,     //NetworkServiceType you want to find
+                                                                                                null,                     // alias
+                                                                                                null,                     // identityPublicKey
+                                                                                                null,                     // location
+                                                                                                null,                     // distance
+                                                                                                null,                     // name
+                                                                                                null,                     // extraData
+                                                                                                null,                     // offset
+                                                                                                null,                     // max
+                                                                                                null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                                                                                null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
 
         System.out.println(" TemplateNetworkServicePluginRoot - discoveryQueryParameters = " + discoveryQueryParameters.toJson());
@@ -1028,7 +1033,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     }
 
     @Override
-    public void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] myProfileImage) throws ErrorAskIntraUserForAcceptanceException {
+    public void askIntraUserForAcceptance(String intraUserLoggedInPublicKey,Actors senderType, String intraUserToAddName, String intraUserToAddPublicKey,Actors destinationType, byte[] myProfileImage) throws ErrorAskIntraUserForAcceptanceException {
 
         try {
         //TODO: guardar mensaje en base de datos
@@ -1036,6 +1041,18 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
             /**
              * Guardo en mensaje en la base de datos
              */
+
+            outgoingNotificationDao.createNotification(UUID.randomUUID(),
+                    intraUserLoggedInPublicKey,
+                    senderType,intraUserToAddPublicKey,
+                    intraUserToAddName,myProfileImage,
+                    destinationType,
+                    IntraUserNotificationDescriptor.ASKFORACCEPTANCE,
+                    System.currentTimeMillis(),
+                    ActorProtocolState.PROCESSING_SEND,
+                    false);
+
+
 
             JsonObject obj=new JsonObject();
             obj.addProperty(JsonObjectConstants.SENDER_PUBLIC_HEY, intraUserLoggedInPublicKey);
@@ -1058,11 +1075,11 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
             /*
              * Save to the data base table
              */
-            outgoingMessageDao.create(fermatMessage);
+            communicationNetworkServiceConnectionManager.getOutgoingMessageDao().create(fermatMessage);
 
 
 
-            connectToBetweenActors(intraUserLoggedInPublicKey,PlatformComponentType.ACTOR_INTRA_USER,intraUserToAddPublicKey,PlatformComponentType.ACTOR_INTRA_USER);
+            connectToBetweenActors(intraUserLoggedInPublicKey, PlatformComponentType.ACTOR_INTRA_USER, intraUserToAddPublicKey, PlatformComponentType.ACTOR_INTRA_USER);
 
 
            /* communicationNetworkServiceConnectionManager.getIncomingMessageDao().create(new FermatMessageCommunication(String content,
@@ -1082,9 +1099,11 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     @Override
     public void acceptIntraUser(String intraUserLoggedInPublicKey, String intraUserToAddPublicKey) throws ErrorAcceptIntraUserException {
 
-        try
-        {
+        try {
         //TODO: guardar en la base de datos el cambio de estado a aceptado y responder
+
+
+            //incomingNotificationsDao.c;
 
             /**
              * Guardo en mensaje en la base de datos
@@ -1109,7 +1128,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
             /*
              * Save to the data base table
              */
-            outgoingMessageDao.create(fermatMessage);
+            communicationNetworkServiceConnectionManager.getOutgoingMessageDao().create(fermatMessage);
 
 
             /**
@@ -1160,7 +1179,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
             /*
              * Save to the data base table
              */
-            outgoingMessageDao.create(fermatMessage);
+            communicationNetworkServiceConnectionManager.getOutgoingMessageDao().create(fermatMessage);
 
 
             //conect
@@ -1182,26 +1201,24 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
         try {
 
 
+//            //Save request fire event to intra user
+//            UUID requestId = UUID.randomUUID();
+//            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, "", intraUserToDisconnectPublicKey, IntraUserNotificationDescriptor.DISCONNECTED,new byte[0]);
+//
+//
+//            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
+//            IntraUserActorConnectionCancelledEvent intraUserActorConnectionCancelledEvent = (IntraUserActorConnectionCancelledEvent) fermatEvent;
+//
+//            intraUserActorConnectionCancelledEvent.setIntraUserLoggedInPublicKey(intraUserLoggedInPublicKey);
+//            intraUserActorConnectionCancelledEvent.setIntraUserToAddPublicKey(intraUserToDisconnectPublicKey);
 
 
-            //Save request fire event to intra user
-            UUID requestId = UUID.randomUUID();
-            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, "", intraUserToDisconnectPublicKey, IntraUserNotificationDescriptor.DISCONNECTED,new byte[0]);
-
-
-            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
-            IntraUserActorConnectionCancelledEvent intraUserActorConnectionCancelledEvent = (IntraUserActorConnectionCancelledEvent) fermatEvent;
-
-            intraUserActorConnectionCancelledEvent.setIntraUserLoggedInPublicKey(intraUserLoggedInPublicKey);
-            intraUserActorConnectionCancelledEvent.setIntraUserToAddPublicKey(intraUserToDisconnectPublicKey);
-
-
-            eventManager.raiseEvent(intraUserActorConnectionCancelledEvent);
-        }
-        catch (CantExecuteDatabaseOperationException e) {
-            throw new ErrorDisconnectingIntraUserException("ERROR DISCONNECTING INTRAUSER ",e,"","Error to save record on database");
-        }
-        catch (Exception e) {
+            //eventManager.raiseEvent(intraUserActorConnectionCancelledEvent);
+//        }
+//        catch (CantExecuteDatabaseOperationException e) {
+//            throw new ErrorDisconnectingIntraUserException("ERROR DISCONNECTING INTRAUSER ",e,"","Error to save record on database");
+//        }
+        }catch (Exception e) {
             throw new ErrorDisconnectingIntraUserException("ERROR DISCONNECTING INTRAUSER ",e, "", "Generic Exception");
         }
 
@@ -1217,8 +1234,8 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
         //communicationNetworkServiceConnectionManager.getOutgoingMessageDao().create();
         try {
             //Save request fire event to intra user
-            UUID requestId = UUID.randomUUID();
-            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, "",intraUserToCancelPublicKey, IntraUserNotificationDescriptor.CANCEL,new byte[0]);
+//            UUID requestId = UUID.randomUUID();
+//            getIntraUserNetworkServiceDao().saveRequestCache(requestId, intraUserLoggedInPublicKey, "",intraUserToCancelPublicKey, IntraUserNotificationDescriptor.CANCEL,new byte[0]);
 
 
             FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
@@ -1231,10 +1248,10 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
             eventManager.raiseEvent(intraUserActorConnectionCancelledEvent);
 
         }
-        catch (CantExecuteDatabaseOperationException e)
-        {
-            throw new ErrorCancellingIntraUserException("ERROR CANCEL CONNECTION TO INTRAUSER ",e,"","Error to save record on database");
-        }
+//        catch (CantExecuteDatabaseOperationException e)
+//        {
+//            throw new ErrorCancellingIntraUserException("ERROR CANCEL CONNECTION TO INTRAUSER ",e,"","Error to save record on database");
+//        }
         catch (Exception e)
         {
             throw new ErrorCancellingIntraUserException("ERROR CANCEL CONNECTION TO INTRAUSER ",e, "", "Generic Exception");
@@ -1243,46 +1260,45 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     }
 
     @Override
-    public List<IntraUserNotification> getNotifications() throws ErrorGetNotificationsIntraUserException {
+    public List<IntraUserNotification> getPendingNotifications() throws ErrorGetNotificationsIntraUserException {
 
-        try {
-            return  getIntraUserNetworkServiceDao().getAllRequestCacheRecord();
-
-        }
-        catch (CantExecuteDatabaseOperationException e) {
-            throw new ErrorGetNotificationsIntraUserException("ERROR GETING NOTIFICATIONS ",e,"","Error list records to database");
-        }
-        catch (Exception e)
-        {
-            throw new ErrorGetNotificationsIntraUserException("ERROR GETING NOTIFICATIONS  ",e, "", "Generic Exception");
-        }
+     //   try {
+      //     return  getIntraUserNetworkServiceDao().getAllRequestCacheRecord();
+      //  }
+      // catch (CantExecuteDatabaseOperationException e) {
+      //      throw new ErrorGetNotificationsIntraUserException("ERROR GETING NOTIFICATIONS ",e,"","Error list records to database");
+       // }
+      //  catch (Exception e)
+       // {
+       //     throw new ErrorGetNotificationsIntraUserException("ERROR GETING NOTIFICATIONS  ",e, "", "Generic Exception");
+       // }
 
 //TODO Harcode
-       // List<IntraUserNotification> intraUserNotificationList = new ArrayList<IntraUserNotification>();
+        List<IntraUserNotification> intraUserNotificationList = new ArrayList<IntraUserNotification>();
 
-        //intraUserNotificationList.add(new IntraUserNetworkServiceNotification(UUID.randomUUID().toString(), "alias1", UUID.randomUUID().toString(), IntraUserNotificationDescriptor.ACCEPTED, new byte[0]));
-        //intraUserNotificationList.add(new IntraUserNetworkServiceNotification(UUID.randomUUID().toString(),"alias2",UUID.randomUUID().toString(),IntraUserNotificationDescriptor.CANCEL,new byte[0]));
+        intraUserNotificationList.add(new IntraUserNetworkServiceNotification(UUID.randomUUID().toString(), "alias1", UUID.randomUUID().toString(), IntraUserNotificationDescriptor.ACCEPTED, new byte[0]));
+        intraUserNotificationList.add(new IntraUserNetworkServiceNotification(UUID.randomUUID().toString(),"alias2",UUID.randomUUID().toString(),IntraUserNotificationDescriptor.CANCEL,new byte[0]));
 
 
-       // return intraUserNotificationList;
-
+        return intraUserNotificationList;
+       // return null;
     }
 
     @Override
     public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey) throws ErrorConfirmNotificationsIntraUserException {
-        try
-        {
-            //delete request record for database
-            getIntraUserNetworkServiceDao().deleteRequestRecord(intraUserLogedInPublicKey,intraUserInvolvedPublicKey);
-        }
-        catch (CantExecuteDatabaseOperationException e)
-        {
-            throw new ErrorConfirmNotificationsIntraUserException("ERROR GETING NOTIFICATIONS ",e,"","Error list records to database");
-        }
-        catch (Exception e)
-        {
-            throw new ErrorConfirmNotificationsIntraUserException("ERROR GETING NOTIFICATIONS  ",e, "", "Generic Exception");
-        }
+//        try
+//        {
+//            //delete request record for database
+//            getIntraUserNetworkServiceDao().deleteRequestRecord(intraUserLogedInPublicKey,intraUserInvolvedPublicKey);
+//        }
+//        catch (CantExecuteDatabaseOperationException e)
+//        {
+//            throw new ErrorConfirmNotificationsIntraUserException("ERROR GETING NOTIFICATIONS ",e,"","Error list records to database");
+//        }
+//        catch (Exception e)
+//        {
+//            throw new ErrorConfirmNotificationsIntraUserException("ERROR GETING NOTIFICATIONS  ",e, "", "Generic Exception");
+//        }
     }
 
     @Override
@@ -1305,14 +1321,8 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                     PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
                     getExtraData());
 
-                /*
-                 * Register me
-                 */
-            try {
-                communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
-            } catch (CantRegisterComponentException e) {
-                e.printStackTrace();
-            }
+            if(!actorsToRegisterCache.contains(platformComponentProfile)) actorsToRegisterCache.add(platformComponentProfile);
+
         }
     }
 
@@ -1341,6 +1351,15 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     public Database getDataBase(){
         return dataBase;
     }
+
+    public IncomingNotificationDao getIncomingNotificationsDao(){
+        return incomingNotificationsDao;
+    }
+    public OutgoingNotificationDao getOutgoingNotificationDao(){
+        return outgoingNotificationDao;
+    }
+
+
 
 
     /**
@@ -1493,10 +1512,5 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
     }
 
-
-    private IntraUserNetworkServiceDao getIntraUserNetworkServiceDao() throws CantExecuteDatabaseOperationException {
-        IntraUserNetworkServiceDao intraUserNetworkServiceDao = new IntraUserNetworkServiceDao(pluginDatabaseSystem,this.pluginFileSystem, pluginId, this.dataBase);
-        return intraUserNetworkServiceDao;
-    }
 
 }
