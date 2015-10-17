@@ -1672,6 +1672,9 @@
 						</mantainers>
 						<certifications>
 						</certifications>
+						<screenshots>
+							<screenshot>wallet_teens_1.png</screenshot>
+						</screenshots>
 					</android>
 					<android
 						name="Bitcoin Loss Protected"

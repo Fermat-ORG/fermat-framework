@@ -1,6 +1,16 @@
-== FERMAT DPN: Digital Private Network
-Securing your funds 
+== FERMAT Shoping Platform: + 
+Making it easy for shop owners 
 
-=== 
+=== Shop Owners 
+Shop Wallet :: -> *for shop owners who accept cryptocurrency in payment of their products !*
+
+=== Brands
+Brand Wallet :: -> *for brands owners who accept cryptocurrency in their retailers network.*
+
+=== Retailers
+Retail wallet :: -> *for* 
+
+
+
 
 
