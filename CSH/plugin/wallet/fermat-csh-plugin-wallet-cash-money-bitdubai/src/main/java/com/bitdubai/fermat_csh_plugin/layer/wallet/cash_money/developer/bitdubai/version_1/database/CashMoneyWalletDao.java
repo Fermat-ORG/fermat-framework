@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.interfaces.CashMoneyBalanceRecord;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddCashMoney;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddCashMoneyBalance;
+import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetCashMoneyBalance;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetCashMoneyRecord;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantInitializeCashMoneyWalletDatabaseException;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.structure.CashMoney;
@@ -115,21 +116,46 @@ public class CashMoneyWalletDao {
             throw new CantAddCashMoney(CantAddCashMoney.DEFAULT_MESSAGE,cantInsertRecordException,"Cant Add Cash Money","Cant Insert Record Exception");
         }
     }
-    public void addCashMoneyBalance( String cash_transaction_id, String cashMoneyDebit, String cashMoneyCredit, String cashMoneyBalance) throws CantAddCashMoneyBalance{
+    public void addCashMoneyBalance( String cash_transaction_id, String cashMoneyDebit, String cashMoneyCredit, String cashMoneyBalance, String time) throws CantAddCashMoneyBalance{
     try{
         DatabaseTable table = this.database.getTable(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_TABLE_NAME);
         DatabaseTableRecord record =  table.getEmptyRecord();
 
-        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_TRANSACTION_ID_COLUMN_NAME, cash_transaction_id);
+        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_BALANCE_ID_COLUMN_NAME, cash_transaction_id);
         record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_DEBIT_COLUMN_NAME, cashMoneyDebit);
         record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_CREDIT_COLUMN_NAME,cashMoneyCredit);
         record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_BALANCE_COLUMN_NAME,cashMoneyBalance);
+        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_TIMESTAMP_COLUMN_NAME,time);
+
 
         table.insertRecord(record);
         database.closeDatabase();
     } catch (CantInsertRecordException cantInsertRecordException) {
         throw new CantAddCashMoneyBalance(CantAddCashMoneyBalance.DEFAULT_MESSAGE,cantInsertRecordException,"Cant Add Cash Money Balance","Cant Insert Record Exception");
     }
+    }
+    public List<String> getCashMoneyBalance() throws CantGetCashMoneyBalance {
+
+        List<String> list = new ArrayList<>();
+        DatabaseTable table;
+
+        table=this.database.getTable(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_TABLE_NAME);
+        if (table==null){
+            throw new CantGetCashMoneyBalance(CantGetCashMoneyBalance.DEFAULT_MESSAGE,null,"Cant GetCash Money Record","Table is null");
+        }
+        try {
+            table.loadToMemory();
+
+            for (DatabaseTableRecord record : table.getRecords()){
+                list.add(new String(
+                        record.getStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_BALANCE_COLUMN_NAME)));
+            }
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemoryException) {
+            throw new CantGetCashMoneyBalance(CantGetCashMoneyBalance.DEFAULT_MESSAGE, cantLoadTableToMemoryException, "Cant Get Cash Money Record","Cant Load Table To Memory Exception");
+        }
+
+        return list;
     }
     public List<CashMoneyBalanceRecord> getCashMoneyRecord() throws CantGetCashMoneyRecord {
 

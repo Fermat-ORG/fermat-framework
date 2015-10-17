@@ -55,9 +55,11 @@ public class CashMoneyWalletDatabaseConstants {
      */
     static final String CASH_MONEY_BALANCE_TABLE_NAME = "cash_money_balance";
 
+    static final String CASH_MONEY_CASH_BALANCE_ID_COLUMN_NAME = "cash_transaction_id";
     static final String CASH_MONEY_BALANCE_DEBIT_COLUMN_NAME = "cash_money_balance_debit";
     static final String CASH_MONEY_BALANCE_CREDIT_COLUMN_NAME = "cash_money_balance_credit";
     static final String CASH_MONEY_BALANCE_BALANCE_COLUMN_NAME = "cash_money_balance";
+    static final String CASH_MONEY_BALANCE_TIMESTAMP_COLUMN_NAME="cash_money_timestam";
 
     /**
      *
