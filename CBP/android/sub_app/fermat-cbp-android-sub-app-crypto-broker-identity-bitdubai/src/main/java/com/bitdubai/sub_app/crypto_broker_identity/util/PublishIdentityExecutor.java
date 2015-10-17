@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.crypto_broker_identity.common.interfaces;
+package com.bitdubai.sub_app.crypto_broker_identity.util;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -16,9 +16,12 @@ import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerId
  * Created by nelson on 14/10/15.
  */
 public class PublishIdentityExecutor {
+    private static final String TAG = "PublishIdentityExecutor";
+
     public static final int SUCCESS = 1;
     public static final int DATA_NOT_CHANGED = 2;
     public static final int EXCEPTION_THROWN = 3;
+    public static final int INVALID_ENTRY_DATA = 4;
 
     private CryptoBrokerIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -38,6 +41,9 @@ public class PublishIdentityExecutor {
     }
 
     public int execute() {
+        if (identityInfo == null)
+            return INVALID_ENTRY_DATA;
+
         String publicKey = identityInfo.getPublicKey();
         boolean valueChanged = (wantToPublish != identityInfo.isPublished());
 
@@ -58,10 +64,13 @@ public class PublishIdentityExecutor {
             return SUCCESS;
 
         } catch (CouldNotPublishCryptoBrokerException ex) {
-            errorManager.reportUnexpectedSubAppException(
-                    SubApps.CBP_CRYPTO_BROKER_IDENTITY,
-                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                    ex);
+            if (errorManager != null){
+                errorManager.reportUnexpectedSubAppException(
+                        SubApps.CBP_CRYPTO_BROKER_IDENTITY,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                        ex);
+            }
+
             return EXCEPTION_THROWN;
         }
     }
@@ -72,10 +81,13 @@ public class PublishIdentityExecutor {
             return SUCCESS;
 
         } catch (CouldNotUnPublishCryptoBrokerException ex) {
-            errorManager.reportUnexpectedSubAppException(
-                    SubApps.CBP_CRYPTO_BROKER_IDENTITY,
-                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                    ex);
+            if(errorManager != null){
+                errorManager.reportUnexpectedSubAppException(
+                        SubApps.CBP_CRYPTO_BROKER_IDENTITY,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                        ex);
+            }
+
             return EXCEPTION_THROWN;
         }
     }

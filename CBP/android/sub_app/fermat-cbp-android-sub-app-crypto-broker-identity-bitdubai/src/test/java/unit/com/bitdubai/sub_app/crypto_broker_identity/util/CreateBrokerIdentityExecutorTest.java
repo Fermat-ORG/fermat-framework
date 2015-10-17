@@ -1,4 +1,4 @@
-package unit.com.bitdubai.sub_app.crypto_broker_identity.common;
+package unit.com.bitdubai.sub_app.crypto_broker_identity.util;
 
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.sub_app.crypto_broker_identity.common.interfaces.CreateIdentityExecutor;
@@ -66,7 +66,7 @@ public class CreateBrokerIdentityExecutorTest {
         assertThat(result).isEqualTo(CreateIdentityExecutor.SUCCESS);
 
         CryptoBrokerIdentityInformation identity = executor.getIdentity();
-        assertThat(identity.getName()).isEqualTo(brokerName);
+        assertThat(identity.getAlias()).isEqualTo(brokerName);
         assertThat(identity.getProfileImage()).isNotNull();
     }
 }
