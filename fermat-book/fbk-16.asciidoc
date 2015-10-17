@@ -1,10 +1,11 @@
-== Developing regional crypto ecosystems: FERMAT Crypto Distribution Network  
+== FERMAT Crypto Distribution Network : +
+Developing regional crypto ecosystems
 
 
-=== CrWh (Crypto Wholesaler) 
+=== Crypto Wholesaler 
 -> for organizations owing a certain large amount of crypto-credit to sell through a distribution chain.
 
-=== CrCu (Crypto Distributor) 
+=== Crypto Distributor 
 -> for those who form the next level in the distribution, buying to wholesalers and re-selling to Top Up Point
 
 === TUP (Top Up Point) 

@@ -1,4 +1,4 @@
-== FERMAT DPN: Digital Private Network
+== FERMAT DPN: Digital Private Network +
 Securing your funds 
 
 === 

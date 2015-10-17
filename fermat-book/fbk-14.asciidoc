@@ -1,15 +1,14 @@
-== Marketing with Digital Assets 
+== FERMAT Marketing Platform: +
+Marketing with Digital Assets 
 
-FERMAT Marketing Platform (FERMAT-MKT) 
-
-=== VoWa (VShop wallet) 
+=== Voucher Wallet
 -> for 
 
-=== (Voucher Wallet) 
+=== Coupon Wallet 
 -> for 
 
-=== DiWa (Shop wallet) 
--> for shop owners who accept cryptocurrency in payment of their products !
+=== Discount Wallet 
+-> for 
 
 
 

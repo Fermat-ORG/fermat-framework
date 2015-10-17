@@ -1,10 +1,9 @@
 :numbered:
 == FERMAT Plug-ins Platform
 
-FERMAT Plug-ins Platform is open source and run on end users’ devices. It allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment. A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way.
+*FERMAT Plug-ins Platform* is open source and run on end users’ devices. It allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment. A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way.
 
 === _Platform Services layer_
-
 Error Manager ::
 Event Manager ::
 Connectivity Subsystem ::
@@ -16,23 +15,23 @@ Platform Info :: +
 === _Hardware layer_
 
 Local Device ::
-Device Network ::
+Device Network :: +
 
 
 === _Users layer_
 
-Device User ::
+Device User :: +
 
 
 === _Plugin layer_
 
 Identity ::
-Dependency ::
+Dependency :: +
 
 
 === _License layer_
 
-Plugin ::
+Plugin :: +
 
 
 === _Network Service layer_
@@ -41,23 +40,65 @@ Sub App Resources ::
 System Monitor ::
 Error Manager ::
 Messenger ::
-Technical Support ::
+Technical Support :: +
+
 
 
 === _Actor Network Service layer_
-Developer::
+Developer:: +
 
 
 === _Identity layer_
 Developer ::
-Designer ::
+Designer :: +
 
 
 === _World layer_
+Location :: +
+
 === _Middleware layer_
+
+Intra User Technical Report ::
+Developer User Technical Report ::
+Developer Error Manager ::
+Sub App Settings ::
+Notification :: +
+
 === _Actor layer_
+Developer ::
+Designer :: +
+
+
 === _Desktop Module layer_
+Sub App Manager :: +
+
+
 === _Subapp Module layer_
+Shell ::
+Designer ::
+Developer ::
+Technical Support ::
+Sys Monitor ::
+Feedback ::
+Reviews :: +
+
 === _Engine layer_
+
+Sub App Runtime ::
+Desktop Runtime :: +
+
+
 === _Desktop layer_
+
+Sub App Manager :: +
+
+
 === _Subapp layer_
+Shell ::
+Designer ::
+Developer ::
+Technical Support ::
+Sys Monitor ::
+Feedback ::
+Reviews :: +
+

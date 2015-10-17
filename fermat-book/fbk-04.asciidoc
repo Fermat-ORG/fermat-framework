@@ -9,18 +9,16 @@ This superlayer allow the connectivity of OS dependant modules to the rest of FE
 === _Android layer_
 In this layer, we find the different modules to allow FERMAT function on a device running Android. The usual requirements of storing and retrieving information, managing files, managing user log-on, checking the device status, location, etc are taken by each specific modules.
 
-.Android layer modules:
-* File System
-* Database System
-* Logger
-* Device Location
-* Device Connectivity 
-* Device Power
-* Device Contacts
-* Device Hardware
+File System ::
+Database System ::
+Logger ::
+Device Location ::
+Device Connectivity ::
+Device Power ::
+Device Contacts ::
+Device Hardware:: +
 
 === _Multi OS layer_
 
-.modules
-* File System
-* Database System
+File System ::
+Database System ::
