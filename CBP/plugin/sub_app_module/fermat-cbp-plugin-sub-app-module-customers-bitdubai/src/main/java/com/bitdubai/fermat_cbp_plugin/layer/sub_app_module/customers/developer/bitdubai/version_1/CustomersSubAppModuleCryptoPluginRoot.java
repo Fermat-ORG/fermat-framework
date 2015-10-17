@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -21,15 +20,14 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
- * Created by natalia on 16.09.15.
+ * Created by Angel 16/10/2015
  */
 
 /**
 
  */
 
-public class CustomersSubAppModuleCryptoPluginRoot implements  DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
-
+public class CustomersSubAppModuleCryptoPluginRoot implements DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
 
     /**
      * DealsWithErrors interface member variables
@@ -166,6 +164,4 @@ public class CustomersSubAppModuleCryptoPluginRoot implements  DealsWithErrors, 
             return DEFAULT_LOG_LEVEL;
         }
     }
-
-
 }

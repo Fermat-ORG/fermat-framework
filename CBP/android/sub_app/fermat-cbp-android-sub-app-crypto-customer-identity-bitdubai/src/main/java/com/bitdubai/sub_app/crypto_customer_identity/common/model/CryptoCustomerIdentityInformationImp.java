@@ -1,5 +1,7 @@
 package com.bitdubai.sub_app.crypto_customer_identity.common.model;
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.IdentityPublished;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 
 /**
@@ -18,18 +20,23 @@ public class CryptoCustomerIdentityInformationImp implements CryptoCustomerIdent
     }
 
     @Override
-    public String getPublicKey() {
-        return null;
-    }
-
-    @Override
-    public String getName() {
+    public String getAlias() {
         return brokerName;
     }
 
     @Override
     public byte[] getProfileImage() {
-        return profileImage;
+        return new byte[0];
+    }
+
+    @Override
+    public String getPublicKey() {
+        return null;
+    }
+
+    @Override
+    public boolean isPublished() {
+        return false;
     }
 
     public int getProfileImageDrawableId() {

@@ -16,6 +16,10 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.java_websocket.WebSocket;
 
@@ -34,6 +38,24 @@ import java.util.Map;
  */
 public class ComponentRegistrationRequestPacketProcessor extends FermatPacketProcessor {
 
+    /**
+     * Represent the gson
+     */
+    private Gson gson;
+
+    /**
+     * Represent the jsonParser
+     */
+    private JsonParser jsonParser;
+
+    /**
+     * Constructor
+     */
+    public ComponentRegistrationRequestPacketProcessor() {
+        gson = new Gson();
+        jsonParser = new JsonParser();
+    }
+
 
     /**
      * (no-javadoc)
@@ -44,46 +66,83 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("ComponentRegistrationRequestPacketProcessor - processingPackage");
+        String packetContentJsonStringRepresentation = null;
 
-        /*
-         * Get the platformComponentProfile from the message content and decrypt
-         */
-        String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
+        try {
+            
+            /*
+             * Get the platformComponentProfile from the message content and decrypt
+             */
+            packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
 
-        System.out.println("ComponentRegistrationRequestPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation );
+            System.out.println("ComponentRegistrationRequestPacketProcessor - packetContentJsonStringRepresentation = "+packetContentJsonStringRepresentation );
 
-        /*
-         * Convert in platformComponentProfile
-         */
-        PlatformComponentProfile platformComponentProfileToRegister = new PlatformComponentProfileCommunication().fromJson(messageContentJsonStringRepresentation);
+            /*
+             * Convert in platformComponentProfile
+             */
+            PlatformComponentProfile platformComponentProfileToRegister = new PlatformComponentProfileCommunication().fromJson(packetContentJsonStringRepresentation);
 
-       // System.out.println("ComponentRegistrationRequestPacketProcessor - platformComponentProfileToRegister.getPlatformComponentType() = "+platformComponentProfileToRegister.getPlatformComponentType() );
-       // System.out.println("ComponentRegistrationRequestPacketProcessor - platformComponentProfileToRegister.getNetworkServiceType() = "+platformComponentProfileToRegister.getNetworkServiceType() );
+            // System.out.println("ComponentRegistrationRequestPacketProcessor - platformComponentProfileToRegister.getPlatformComponentType() = "+platformComponentProfileToRegister.getPlatformComponentType() );
+            // System.out.println("ComponentRegistrationRequestPacketProcessor - platformComponentProfileToRegister.getNetworkServiceType() = "+platformComponentProfileToRegister.getNetworkServiceType() );
 
 
-        /*
-         * Switch between platform component type
-         */
-        switch (platformComponentProfileToRegister.getPlatformComponentType()){
+            /*
+             * Switch between platform component type
+             */
+            switch (platformComponentProfileToRegister.getPlatformComponentType()){
 
-            case COMMUNICATION_CLOUD_SERVER :
-                registerCommunicationsCloudServerComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity);
-                break;
+                case COMMUNICATION_CLOUD_SERVER :
+                    registerCommunicationsCloudServerComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity);
+                    break;
 
-            case COMMUNICATION_CLOUD_CLIENT :
+                case COMMUNICATION_CLOUD_CLIENT :
                     registerCommunicationsCloudClientComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity);
-                break;
+                    break;
 
-            case NETWORK_SERVICE :
-                registerNetworkServiceComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity);
-                break;
+                case NETWORK_SERVICE :
+                    registerNetworkServiceComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity);
+                    break;
 
-            //Others
-            default :
+                //Others
+                default :
                     registerOtherComponent(platformComponentProfileToRegister, receiveFermatPacket, clientConnection, serverIdentity);
-                break;
+                    break;
 
+            }
+            
+        }catch (Exception e){
+
+            System.out.println("ComponentRegistrationRequestPacketProcessor - requested registration is no possible ");
+            e.printStackTrace();
+
+            /*
+             * Get the client connection destination
+             */
+            WebSocket clientConnectionDestination = getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().get(receiveFermatPacket.getSender());
+
+            /*
+             * Construct the json object
+             */
+            JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
+            packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "failure in registration component: "+e.getMessage());
+
+            /*
+             * Create the respond packet
+             */
+            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(), //Destination
+                                                                                                                        serverIdentity.getPublicKey(), //Sender
+                                                                                                                        gson.toJson(packetContent), //packet Content
+                                                                                                                        FermatPacketType.FAILURE_COMPONENT_REGISTRATION_REQUEST, //Packet type
+                                                                                                                        serverIdentity.getPrivateKey()); //Sender private key
+            /*
+             * Send the packet
+             */
+            clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
+            
         }
+            
+
+        
 
     }
 
@@ -245,7 +304,7 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
         System.out.println("ComponentRegistrationRequestPacketProcessor - registerOtherComponent");
 
 
-        Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfile = getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache();
+        Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfile = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache();
 
         /*
          * Validate if contain a list for the NetworkServiceType

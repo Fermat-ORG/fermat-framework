@@ -7,6 +7,11 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.events.OutgoingCryptoIrreversibleEvent;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.events.OutgoingCryptoOnBlockchainEvent;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.events.OutgoingCryptoOnCryptoNetworkEvent;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.events.OutgoingCryptoReversedOnBlockchainEvent;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.events.OutgoingCryptoReversedOnCryptoNetworkEvent;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.events.IncomingCryptoIrreversibleEvent;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.events.IncomingCryptoOnBlockchainEvent;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.events.IncomingCryptoOnCryptoNetworkEvent;
@@ -51,6 +56,31 @@ public enum EventType implements FermatEventEnum {
     INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK("ICROCN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) { return new GenericEventListener(this, fermatEventMonitor); }
         public FermatEvent getNewEvent() { return new IncomingCryptoReversedOnCryptoNetworkEvent(this); }
+    },
+
+    OUTGOING_CRYPTO_IRREVERSIBLE("OCIRR") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) { return null; }
+    public FermatEvent getNewEvent() { return new OutgoingCryptoIrreversibleEvent(this); }
+    },
+
+    OUTGOING_CRYPTO_ON_BLOCKCHAIN("OCOBC") {
+    public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) { return new GenericEventListener(this, fermatEventMonitor); }
+    public FermatEvent getNewEvent() { return new OutgoingCryptoOnBlockchainEvent(this); }
+    },
+
+    OUTGOING_CRYPTO_ON_CRYPTO_NETWORK("OCOCN") {
+    public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) { return new GenericEventListener(this, fermatEventMonitor); }
+    public FermatEvent getNewEvent() { return new OutgoingCryptoOnCryptoNetworkEvent(this); }
+    },
+
+    OUTGOING_CRYPTO_REVERSED_ON_BLOCKCHAIN("OCROBC") {
+    public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) { return new GenericEventListener(this, fermatEventMonitor); }
+    public FermatEvent getNewEvent() { return new OutgoingCryptoReversedOnBlockchainEvent(this); }
+    },
+
+    OUTGOING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK("OCROCN") {
+    public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) { return new GenericEventListener(this, fermatEventMonitor); }
+    public FermatEvent getNewEvent() { return new OutgoingCryptoReversedOnCryptoNetworkEvent(this); }
     };
 
     private final String code;

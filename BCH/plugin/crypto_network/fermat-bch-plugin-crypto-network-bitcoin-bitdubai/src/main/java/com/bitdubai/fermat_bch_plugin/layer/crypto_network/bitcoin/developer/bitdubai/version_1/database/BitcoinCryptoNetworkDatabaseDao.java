@@ -1,10 +1,15 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
@@ -24,6 +29,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.TransactionTypes;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCryptoNetworkDatabaseException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -120,11 +126,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(
-                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
-                    e,
-                    "trying to load table " + databaseTable.getTableName() + " into memory",
-                    null);
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
         DatabaseTableRecord record = null;
@@ -169,11 +171,11 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param addressTo
      * @param addressFrom
      * @param value
-     * @param fee
+     * @param op_Return
      * @param protocolStatus
      * @throws CantExecuteDatabaseOperationException
      */
-    public void saveNewIncomingTransaction(String hash, CryptoStatus cryptoStatus, int blockDepth, CryptoAddress addressTo, CryptoAddress addressFrom, long value, long fee, ProtocolStatus protocolStatus) throws CantExecuteDatabaseOperationException{
+    public void saveNewIncomingTransaction(String hash, CryptoStatus cryptoStatus, int blockDepth, CryptoAddress addressTo, CryptoAddress addressFrom, long value, String op_Return, ProtocolStatus protocolStatus) throws CantExecuteDatabaseOperationException{
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -189,7 +191,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_ADDRESS_TO_COLUMN_NAME, addressTo.getAddress());
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME, addressFrom.getAddress());
         record.setDoubleValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_VALUE_COLUMN_NAME, value);
-        record.setDoubleValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_FEE_COLUMN_NAME, fee);
+        record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_OP_RETURN_COLUMN_NAME, op_Return);
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, protocolStatus.getCode());
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME, getCurrentDateTime());
         try {
@@ -217,7 +219,19 @@ public class BitcoinCryptoNetworkDatabaseDao {
         return date;
     }
 
-    public void saveNewOutgoingTransaction(String hash, CryptoStatus cryptoStatus, int blockDepth, CryptoAddress addressTo, CryptoAddress addressFrom, long value, long fee, ProtocolStatus protocolStatus) throws CantExecuteDatabaseOperationException{
+    /**
+     * Saves and outgoing transaction into the database
+     * @param hash
+     * @param cryptoStatus
+     * @param blockDepth
+     * @param addressTo
+     * @param addressFrom
+     * @param value
+     * @param op_Return
+     * @param protocolStatus
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public void saveNewOutgoingTransaction(String hash, CryptoStatus cryptoStatus, int blockDepth, CryptoAddress addressTo, CryptoAddress addressFrom, long value, String op_Return, ProtocolStatus protocolStatus) throws CantExecuteDatabaseOperationException{
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -233,7 +247,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_ADDRESS_TO_COLUMN_NAME, addressTo.getAddress());
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME, addressFrom.getAddress());
         record.setDoubleValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_VALUE_COLUMN_NAME, value);
-        record.setDoubleValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_FEE_COLUMN_NAME, fee);
+        record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_OP_RETURN_COLUMN_NAME, op_Return);
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, protocolStatus.getCode());
         record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME, getCurrentDateTime());
         try {
@@ -259,7 +273,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Cant load IncomingTransaction table into memory", "database issue");
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
         if (databaseTable.getRecords().size() > 0)
@@ -296,7 +310,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException (CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Cant load transaction table into memory.", "database error");
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
         /**
@@ -339,7 +353,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "there was an error loading the database table to get pending transactions", "database error.");
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
         /**
@@ -365,7 +379,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "cant load EventAgent Stats table.", "database issue");
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
         if (databaseTable.getRecords().size() != 0)
@@ -419,7 +433,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
                 databaseTable.updateRecord(record);
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "cant load EventAgent Stats table.", "database issue");
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         } catch (CantInsertRecordException | CantUpdateRecordException e) {
             StringBuilder outputMessage = new StringBuilder("There was an error inserting or modifying a record. The record is:");
             outputMessage.append(System.lineSeparator());
@@ -455,7 +469,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error loading table into memory", "database error");
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
         /**
@@ -471,5 +485,290 @@ public class BitcoinCryptoNetworkDatabaseDao {
         }
 
         return cryptoStatuses;
+    }
+
+    /**
+     * Confirms a transaction by marking it to No Action Required in is Protocol Status.
+     * I will have to search this transaction in both incoming and outgoing tables
+     * @param transactionID
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public void confirmReception(UUID transactionID) throws CantExecuteDatabaseOperationException{
+        confirmIncomingTransactionReception(transactionID);
+        confirmOutgoingTransactionReception(transactionID);
+    }
+
+
+    /**
+     * Marks to RECEPTION_NOTIFIED the protocol status of this Incoming transaction if found.
+     * @param transactionID
+     */
+    private void confirmIncomingTransactionReception(UUID transactionID) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_TABLE_NAME);
+        databaseTable.setStringFilter(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_TRX_ID_COLUMN_NAME, transactionID.toString(), DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        /**
+         * set the value to RECEPTION_NOTIFIED
+         */
+        if (databaseTable.getRecords().size() > 0){
+            DatabaseTableRecord record = databaseTable.getRecords().get(0);
+            record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.RECEPTION_NOTIFIED.getCode());
+            record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME, getCurrentDateTime());
+
+            try {
+                databaseTable.updateRecord(record);
+            } catch (CantUpdateRecordException e) {
+                StringBuilder errorOutput = new StringBuilder("There was a problem setting to RECEPTION_NOTIFIED the following transaction:");
+                errorOutput.append(System.lineSeparator());
+                errorOutput.append(XMLParser.parseObject(record));
+                throw  new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, errorOutput.toString(), "database issue");
+            }
+        }
+
+    }
+
+    /**
+     * Marks to RECEPTION_NOTIFIED the protocol status of this Outgoing transaction if found.
+     * @param transactionID
+     */
+    private void confirmOutgoingTransactionReception(UUID transactionID) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_TABLE_NAME);
+        databaseTable.setStringFilter(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_TRX_ID_COLUMN_NAME, transactionID.toString(), DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        /**
+         * set the value to RECEPTION_NOTIFIED and the Last_update_time to now
+         */
+        if (databaseTable.getRecords().size() > 0){
+            DatabaseTableRecord record = databaseTable.getRecords().get(0);
+            record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.RECEPTION_NOTIFIED.getCode());
+            record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME, getCurrentDateTime());
+
+            try {
+                databaseTable.updateRecord(record);
+            } catch (CantUpdateRecordException e) {
+                StringBuilder errorOutput = new StringBuilder("There was a problem setting to RECEPTION_NOTIFIED the following transaction:");
+                errorOutput.append(System.lineSeparator());
+                errorOutput.append(XMLParser.parseObject(record));
+                throw  new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, errorOutput.toString(), "database issue");
+            }
+        }
+
+    }
+
+    /**
+     * Gets the list of Pending trasactions and forms the TransactionProtocolData object to pass to the Incoming Crypto Router
+     * Gets the data from both incoming and outgoing transactions.
+     * @return
+     */
+    public List<TransactionProtocolData> getPendingTransactionProtocolData() throws CantExecuteDatabaseOperationException {
+        List<TransactionProtocolData> transactionProtocolDataList = getPendingTransactionProtocolData(TransactionTypes.INCOMING);
+        transactionProtocolDataList.addAll(getPendingTransactionProtocolData(TransactionTypes.OUTGOING));
+        return transactionProtocolDataList;
+    }
+
+    /**
+     * Gets the pending transaction data from the specified table
+     * @param transactionType
+     * @return
+     */
+    private List<TransactionProtocolData> getPendingTransactionProtocolData(TransactionTypes transactionType) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable;
+        String transactionIdColumnName;
+
+        List<TransactionProtocolData> transactionProtocolDataList = new ArrayList<>();
+
+        if (transactionType == TransactionTypes.INCOMING){
+            databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_TABLE_NAME);
+            databaseTable.setStringFilter(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
+            transactionIdColumnName = BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_TRX_ID_COLUMN_NAME;
+        } else{
+            databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_TABLE_NAME);
+            databaseTable.setStringFilter(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
+            transactionIdColumnName = BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_TRX_ID_COLUMN_NAME;
+        }
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        /**
+         * Will form the TransactionProtocolData object from the records
+         */
+        for (DatabaseTableRecord record : databaseTable.getRecords()){
+            TransactionProtocolData transactionProtocolData = new TransactionProtocolData();
+            transactionProtocolData.setTransactionId(UUID.fromString(record.getStringValue(transactionIdColumnName)));
+            transactionProtocolData.setCryptoTransaction(getCryptoTransactionFromRecord(transactionType, record));
+            transactionProtocolData.setAction(Action.APPLY);
+            transactionProtocolData.setTimestamp(System.currentTimeMillis() / 1000L); //todo I need to convert the stored saved date to long
+
+            transactionProtocolDataList.add(transactionProtocolData);
+        }
+
+        return transactionProtocolDataList;
+
+    }
+
+    /**
+     * Creates a incoming or outgoing CryptoTransaction object from a database record
+     * @param transactionType
+     * @param record
+     * @return
+     */
+    private CryptoTransaction getCryptoTransactionFromRecord(TransactionTypes transactionType, DatabaseTableRecord record) {
+        String addressFromColumnName, addressToColumnName, transactionHashColumnName, valueColumnName, cryptoStatusColumnName;
+        if (transactionType == TransactionTypes.INCOMING){
+            transactionHashColumnName = BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_HASH_COLUMN_NAME;
+            addressFromColumnName = BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME;
+            addressToColumnName = BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_ADDRESS_TO_COLUMN_NAME;
+            valueColumnName = BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_VALUE_COLUMN_NAME;
+            cryptoStatusColumnName = BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME;
+        } else{
+            transactionHashColumnName = BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_HASH_COLUMN_NAME;
+            addressFromColumnName = BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME;
+            addressToColumnName = BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_ADDRESS_TO_COLUMN_NAME;
+            valueColumnName = BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_VALUE_COLUMN_NAME;
+            cryptoStatusColumnName = BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME;
+        }
+
+       CryptoTransaction cryptoTransaction = new CryptoTransaction();
+        cryptoTransaction.setTransactionHash(record.getStringValue(transactionHashColumnName));
+        cryptoTransaction.setCryptoCurrency(CryptoCurrency.BITCOIN);
+        try {
+            cryptoTransaction.setCryptoStatus(CryptoStatus.getByCode(record.getStringValue(cryptoStatusColumnName)));
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+        }
+        cryptoTransaction.setCryptoAmount(record.getLongValue(valueColumnName));
+        cryptoTransaction.setAddressFrom(new CryptoAddress(record.getStringValue(addressFromColumnName), CryptoCurrency.BITCOIN));
+        cryptoTransaction.setAddressTo(new CryptoAddress(record.getStringValue(addressToColumnName), CryptoCurrency.BITCOIN));
+
+        //todo define how to get the Op_Return value
+        return cryptoTransaction;
+    }
+
+    /**
+     * Gets both incoming and outgoing transactions hash stored in the database
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public Set<String> getStoredStransactionsHash () throws CantExecuteDatabaseOperationException{
+        Set<String> transactionsSet = new HashSet<>();
+
+        /**
+         * Loads and puts in the transactionsSet  the list of stored Hashes
+         */
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_TABLE_NAME);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        for (DatabaseTableRecord record : databaseTable.getRecords()){
+            transactionsSet.add(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_HASH_COLUMN_NAME));
+        }
+
+        /**
+         * Loads and puts in the transactionsSet  the list of stored Hashes
+         */
+        databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_TABLE_NAME);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        for (DatabaseTableRecord record : databaseTable.getRecords()){
+            transactionsSet.add(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_HASH_COLUMN_NAME));
+        }
+
+        return transactionsSet;
+    }
+
+    /**
+     * Gets the incoming transaction data and forms the CryptoTransaction object
+     * @param txHash
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public List<CryptoTransaction> getIncomingCryptoTransaction(String txHash)  throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_TABLE_NAME);
+        databaseTable.setStringFilter(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        List<CryptoTransaction> cryptoTransactions = new ArrayList<>();
+        for (DatabaseTableRecord record : databaseTable.getRecords()){
+
+            /**
+             * Gets all the values
+             */
+            CryptoAddress addressFrom = new CryptoAddress();
+            addressFrom.setAddress(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME));
+            addressFrom.setCryptoCurrency(CryptoCurrency.BITCOIN);
+
+            CryptoAddress addressTo = new CryptoAddress();
+            addressFrom.setAddress(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_ADDRESS_TO_COLUMN_NAME));
+            addressFrom.setCryptoCurrency(CryptoCurrency.BITCOIN);
+
+            long amount = record.getLongValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_VALUE_COLUMN_NAME);
+
+            CryptoStatus cryptoStatus = null;
+            try {
+                cryptoStatus = CryptoStatus.getByCode(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME));
+            } catch (InvalidParameterException e) {
+                e.printStackTrace();
+            }
+
+            String op_Return = record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_OP_RETURN_COLUMN_NAME);
+
+            /**
+             * Forms the CryptoTransaction object
+             */
+            CryptoTransaction cryptoTransaction = new CryptoTransaction();
+            cryptoTransaction.setTransactionHash(txHash);
+            cryptoTransaction.setAddressTo(addressTo);
+            cryptoTransaction.setAddressFrom(addressFrom);
+            cryptoTransaction.setCryptoAmount(amount);
+            cryptoTransaction.setCryptoCurrency(CryptoCurrency.BITCOIN);
+            cryptoTransaction.setCryptoStatus(cryptoStatus);
+            cryptoTransaction.setOp_Return(op_Return);
+
+            /**
+             * adds it to the list
+             */
+            cryptoTransactions.add(cryptoTransaction);
+        }
+
+        return cryptoTransactions;
+    }
+
+    /**
+     * sets and thorws the error when we coundl't load a table into memory
+     * @param e
+     * @param tableName
+     * @throws CantExecuteDatabaseOperationException
+     */
+    private void throwLoadToMemoryException(Exception e, String tableName) throws CantExecuteDatabaseOperationException{
+        String outputMessage = "There was an error loading into memory table " + tableName + ".";
+        throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, outputMessage, "Database error.");
     }
 }
