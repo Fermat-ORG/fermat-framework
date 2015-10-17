@@ -1300,13 +1300,13 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     }
 
     /**
-     * Assest issuer
+     * Assest Issuer
      */
     public AssetIssuerWalletSupAppModuleManager getAssetIssuerWalletModuleManager() {
-        return null;//(AssetIssuerWalletSupAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE);
+        return (AssetIssuerWalletSupAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE);
     }
     /**
-     *  Assets issuer community
+     *  Assets User community
      */
     public AssetUserCommunitySubAppModuleManager getAssetUserCommunitySubAppModuleManager() {
         return null;//(AssetUserCommunitySubAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.DAP);

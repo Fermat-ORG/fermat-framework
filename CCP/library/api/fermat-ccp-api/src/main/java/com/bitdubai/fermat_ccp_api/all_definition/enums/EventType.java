@@ -14,6 +14,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestDeniedEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestReceivedEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestRefusedEvent;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.events.ActorNetworkServiceCompleteRegistration;
 
 /**
  * The enum <code>com.bitdubai.fermat_cry_api.layer.definition.enums.EventType</code>
@@ -50,7 +51,12 @@ public enum EventType implements FermatEventEnum {
     },
     CRYPTO_PAYMENT_REQUEST_REFUSED("CRYPARE") {
         public FermatEvent getNewEvent() { return new CryptoPaymentRequestRefusedEvent(this); }
+    },
+    ACTOR_NETWORK_SERVICE_COMPLETE("ACTORNSC") {
+        public FermatEvent getNewEvent() { return new ActorNetworkServiceCompleteRegistration(this); }
     };
+
+
 
     private final String code;
 
