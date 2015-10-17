@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.AddressExchangeRequestState;
@@ -26,23 +27,23 @@ public interface CryptoAddressesManager {
     /**
      * The method <code>sendAddressExchangeRequest</code> sends to an actor a request for a crypto address.
      *
-     * @param walletPublicKey         wallet which is sending the request
-     * @param cryptoAddressToSend     a crypto address generated that will be sent to the actor
-     * @param actorTypeBy             actor type who wants to exchange addresses
-     * @param actorTypeTo             actor type with whom wants to exchange addresses
-     * @param requesterActorPublicKey the actor public key that is sending the request
-     * @param actorToRequestPublicKey the actor with whom we want to exchange addresses
-     * @param blockchainNetworkType   network type in which we're working
+     * @param walletPublicKey                 wallet which is sending the request
+     * @param cryptoCurrency                  type of currency that we¿re requesting.
+     * @param identityTypeRequesting          actor type who wants to exchange addresses
+     * @param identityTypeResponding          actor type with whom wants to exchange addresses
+     * @param identityPublicKeyRequesting     the actor public key that is sending the request
+     * @param identityPublicKeyResponding     the actor with whom we want to exchange addresses
+     * @param blockchainNetworkType           network type in which we're working
      *
      * @throws CantSendAddressExchangeRequestException if something goes wrong.
      */
-    void sendAddressExchangeRequest(String                walletPublicKey        ,
-                                    CryptoAddress         cryptoAddressToSend    ,
-                                    Actors                actorTypeBy            ,
-                                    Actors                actorTypeTo            ,
-                                    String                requesterActorPublicKey,
-                                    String                actorToRequestPublicKey,
-                                    BlockchainNetworkType blockchainNetworkType  ) throws CantSendAddressExchangeRequestException;
+    void sendAddressExchangeRequest(String                walletPublicKey            ,
+                                    CryptoCurrency        cryptoCurrency             ,
+                                    Actors                identityTypeRequesting     ,
+                                    Actors                identityTypeResponding     ,
+                                    String                identityPublicKeyRequesting,
+                                    String                identityPublicKeyResponding,
+                                    BlockchainNetworkType blockchainNetworkType      ) throws CantSendAddressExchangeRequestException;
 
     /**
      * The method <code>acceptAddressExchangeRequest</code> is used to accept an address exchange request-
@@ -59,17 +60,15 @@ public interface CryptoAddressesManager {
                                                                                   PendingRequestNotFoundException          ;
 
     /**
-     * The method <code>listPendingRequests</code> return the list of requests
+     * The method <code>listPendingRequests</code> return the list of requests waiting for a local action for a specific type of actor
      *
-     * @param actorType                   The public key of the actor asking for the pending requests directed to him
-     * @param addressExchangeRequestState is the State of the exchange address request that you want to list, if is null, then return all.
+     * @param actorType  type of actor asking for the pending requests.
      *
      * @return a list a request that can be handled by the actor
      *
      * @throws CantListPendingAddressExchangeRequestsException if something goes wrong.
      */
-    List<AddressExchangeRequest> listPendingRequests(Actors                      actorType                  ,
-                                                     AddressExchangeRequestState addressExchangeRequestState) throws CantListPendingAddressExchangeRequestsException;
+    List<AddressExchangeRequest> listPendingRequests(Actors actorType) throws CantListPendingAddressExchangeRequestsException;
 
     /**
      * Throw the method <code>getPendingRequest</code> brings an unique pending address exchange request by request id
