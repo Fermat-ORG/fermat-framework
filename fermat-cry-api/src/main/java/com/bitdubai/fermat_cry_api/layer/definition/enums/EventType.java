@@ -7,6 +7,11 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.events.OutgoingCryptoIrreversibleEvent;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.events.OutgoingCryptoOnBlockchainEvent;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.events.OutgoingCryptoOnCryptoNetworkEvent;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.events.OutgoingCryptoReversedOnBlockchainEvent;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.events.OutgoingCryptoReversedOnCryptoNetworkEvent;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.events.IncomingCryptoIrreversibleEvent;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.events.IncomingCryptoOnBlockchainEvent;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.events.IncomingCryptoOnCryptoNetworkEvent;
