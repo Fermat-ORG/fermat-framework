@@ -231,7 +231,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
             this.serviceStatus = ServiceStatus.STARTED;
 
             test();
-            registerActorInANS();
+//            registerActorInANS();
 //            testRaiseEvent();
 
         } catch (Exception e) {
