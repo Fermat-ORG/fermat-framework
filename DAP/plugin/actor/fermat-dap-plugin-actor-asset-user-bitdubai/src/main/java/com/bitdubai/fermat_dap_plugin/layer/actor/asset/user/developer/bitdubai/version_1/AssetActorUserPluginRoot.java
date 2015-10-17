@@ -240,7 +240,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
         }
     }
 
-        private void testRaiseEvent() {
+    private void testRaiseEvent() {
         System.out.println("Start event test");
         FermatEvent eventToRaise = eventManager.getNewEvent(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
         eventToRaise.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
@@ -345,7 +345,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
         ActorAssetUser actorAssetUser;
         try {
             actorAssetUser = this.assetUserActorDao.getActorPublicKey();
-             } catch (Exception e) {
+        } catch (Exception e) {
             throw new CantGetAssetUserActorsException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
         }
         return actorAssetUser;
@@ -382,7 +382,6 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
             e.printStackTrace();
         }
     }
-
 
 
     private void test() throws CantCreateAssetUserActorException {
