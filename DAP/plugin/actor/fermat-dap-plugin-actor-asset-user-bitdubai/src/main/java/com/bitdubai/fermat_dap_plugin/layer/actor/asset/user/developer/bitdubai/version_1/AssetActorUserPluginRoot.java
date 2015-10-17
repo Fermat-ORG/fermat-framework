@@ -15,6 +15,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -203,15 +205,15 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
             /**
              * Listener Accepted connection event
              */
-//            fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
-//            fermatEventListener.setEventHandler(new AssetUserActorCompleteRegistrationNotificationEventHandler(this));
-//            eventManager.addListener(fermatEventListener);
-//            listenersAdded.add(fermatEventListener);
-//
-//            fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
-//            fermatEventListener.setEventHandler(new AssetUserActorRequestListRegisteredNetworksNotificationEventHandler(this));
-//            eventManager.addListener(fermatEventListener);
-//            listenersAdded.add(fermatEventListener);
+            fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
+            fermatEventListener.setEventHandler(new AssetUserActorCompleteRegistrationNotificationEventHandler(this));
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
+
+            fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
+            fermatEventListener.setEventHandler(new AssetUserActorRequestListRegisteredNetworksNotificationEventHandler(this));
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
 //            fermatEventListener = eventManager.getNewListener(EventType.ASSET_USER_CONNECTION_ACCEPTED);
 //            fermatEventHandler = new AssetUserActorConnectionAcceptedEventHandlers();
@@ -230,12 +232,20 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
 
             test();
             registerActorInANS();
-//            testRaiseEvent();
+            testRaiseEvent();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR);
         }
+    }
+
+        private void testRaiseEvent() {
+        System.out.println("Start event test");
+        FermatEvent eventToRaise = eventManager.getNewEvent(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
+        eventToRaise.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
+        eventManager.raiseEvent(eventToRaise);
+        System.out.println("End event test");
     }
 
     public void handleCompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent(List<ActorAssetUser> actorAssetUserList) {
@@ -373,13 +383,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
         }
     }
 
-//    private void testRaiseEvent() {
-//        System.out.println("Start event test");
-//        FermatEvent eventToRaise = eventManager.getNewEvent(EventType.ASSET_USER_CONNECTION_ACCEPTED);
-//        eventToRaise.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
-//        eventManager.raiseEvent(eventToRaise);
-//        System.out.println("End event test");
-//    }
+
 
     private void test() throws CantCreateAssetUserActorException {
 //        list.add(new AssetUserActorRecord("Thunders Asset Wallet User", UUID.randomUUID().toString(), new byte[0], 987654321, ConnectionState.CONNECTED));
