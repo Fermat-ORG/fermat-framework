@@ -5,6 +5,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 17/10/15.
  */
-public interface DealWithAppropriationStats {
+public interface DealsWithAppropriationStats {
     void setAppropiationStatsManager(AppropriationStatsManager appropriationStatsManager) throws CantSetObjectException;
 }
