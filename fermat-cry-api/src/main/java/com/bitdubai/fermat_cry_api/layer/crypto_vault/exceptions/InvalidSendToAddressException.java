@@ -6,7 +6,14 @@ import com.bitdubai.fermat_api.FermatException;
  * Created by rodrigo on 2015.06.25..
  */
 public class InvalidSendToAddressException extends FermatException {
-    public InvalidSendToAddressException(String message, Exception cause, String context, String possibleReason) {
-        super(message, cause, context, possibleReason);
+
+    private static final String DEFAULT_MESSAGE = "Error trying to send crypto. The destination address is not correct.";
+
+    public InvalidSendToAddressException(Exception cause, String context, String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
+
+    public InvalidSendToAddressException(String context, String possibleReason) {
+        super(DEFAULT_MESSAGE, null, context, possibleReason);
     }
 }

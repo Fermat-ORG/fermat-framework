@@ -15,9 +15,9 @@ public interface CashMoneyTransaction {
 
     UUID getCashTransactionId();
 
-    String getPublicKeyCustomer();
+    String getPublicKeyActorTo();
 
-    String getPublicKeyBroker();
+    String getPublicKeyActorFrom();
 
     CashTransactionStatus getStatus();
 
@@ -30,5 +30,7 @@ public interface CashMoneyTransaction {
     CashCurrencyType getCashCurrencyType();
 
     String getCashReference();
+
+    long getTimestamp();
 
 }

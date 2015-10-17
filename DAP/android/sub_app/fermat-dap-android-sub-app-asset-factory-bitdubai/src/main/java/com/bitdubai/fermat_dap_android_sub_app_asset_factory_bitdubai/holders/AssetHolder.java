@@ -14,6 +14,7 @@ public class AssetHolder extends FermatViewHolder {
 
     public FermatTextView title;
     public FermatTextView description;
+    public FermatTextView state;
     public ImageView options;
 
     /**
@@ -25,7 +26,7 @@ public class AssetHolder extends FermatViewHolder {
         super(itemView);
         title = (FermatTextView) itemView.findViewById(R.id.title);
         description = (FermatTextView) itemView.findViewById(R.id.description);
+        state = (FermatTextView) itemView.findViewById(R.id.state);
         options = (ImageView) itemView.findViewById(R.id.options);
-
     }
 }

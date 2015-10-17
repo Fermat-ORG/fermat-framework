@@ -46,8 +46,8 @@ public class DataBaseSystemAndroidAddonRoot implements Addon,DataBaseSystemOs,Se
      */
     public DataBaseSystemAndroidAddonRoot() {
 
-        this.pluginDatabaseSystem = new AndroidPluginDatabaseSystem();
-        this.platformDatabaseSystem = new AndroidPlatformDatabaseSystem();
+        this.pluginDatabaseSystem = new AndroidPluginDatabaseSystem("");
+        this.platformDatabaseSystem = new AndroidPlatformDatabaseSystem("");
     }
 
 
@@ -63,17 +63,6 @@ public class DataBaseSystemAndroidAddonRoot implements Addon,DataBaseSystemOs,Se
     public PlatformDatabaseSystem getPlatformDatabaseSystem(){
         return this.platformDatabaseSystem;
     }
-
-    @Override
-    public void setContext (Object context)
-    {
-        //set context form plugin and platform object
-        this.context = (Context)context;
-        this.pluginDatabaseSystem.setContext(context);
-        this.platformDatabaseSystem.setContext(context);
-    }
-
-
 
     public Context getContext() {
 		return context;

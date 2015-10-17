@@ -27,7 +27,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
  */
 public class FileSystemOsAddonRoot implements Addon ,FileSystemOs,Service {
 
-    private Context context;
+    private String contextPath;
 
     /**
      * Os interface member variables.
@@ -48,12 +48,7 @@ public class FileSystemOsAddonRoot implements Addon ,FileSystemOs,Service {
 	public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
 		this.pluginFileSystem = pluginFileSystem;
 	}
-	public Context getContext() {
-		return context;
-	}
-	public void setContext(Context context) {
-		this.context = context;
-	}
+
 	public ServiceStatus getServiceStatus() {
 		return serviceStatus;
 	}
@@ -68,11 +63,11 @@ public class FileSystemOsAddonRoot implements Addon ,FileSystemOs,Service {
     /**
      *  <p>Addon implementation constructor Constructor
      */
-    public FileSystemOsAddonRoot()
+    public FileSystemOsAddonRoot(String contextPath)
     {
         //I initialize instances of the interfaces
-        this.pluginFileSystem = new AndroidPluginFileSystem();
-        this.platformFileSystem = new AndroidPlatformFileSystem();
+        this.pluginFileSystem = new AndroidPluginFileSystem(contextPath);
+        this.platformFileSystem = new AndroidPlatformFileSystem(contextPath);
 
     }
     /**
@@ -86,13 +81,6 @@ public class FileSystemOsAddonRoot implements Addon ,FileSystemOs,Service {
     @Override
     public PlatformFileSystem getPlatformFileSystem() {
         return this.platformFileSystem;
-    }
-
-    @Override
-    public void setContext (Object context){
-        this.context = (Context)context;
-        this.pluginFileSystem.setContext(context);
-        this.platformFileSystem.setContext(context);
     }
 
     /**

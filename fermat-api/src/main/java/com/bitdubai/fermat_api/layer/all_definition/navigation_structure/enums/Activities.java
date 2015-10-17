@@ -84,6 +84,7 @@ public enum Activities {
     DAP_DESKTOP("DAPD"),
     CBP_DESKTOP("CBPD"),
     DAP_MAIN("DAPM"),
+    DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN("DAUCAM"),
 
     // Crypto Broker Wallet
     CBP_CRYPTO_BROKER_WALLET_HOME("CBPCBWH"),
@@ -95,27 +96,22 @@ public enum Activities {
     // Crypto Broker Identity
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY("CBPSACBI"),
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY("CBPSACBICI"),
+    CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY("CBPSACBIEI"),
 
     // Crypto Customer Identity
     CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY("CBPSACCI"),
-    CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY("CCPSACCICI"),
+    CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY("CBPSACCICI"),
 
-    // CCP Crypto Customer Identity
-    CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY("CBPSACCI"),
-    CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY("CCPSACCICI");
+    // CCP Comunity
+    CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST("CCPSAIUCR"),
+    // CCP Identity
+    CCP_SUB_APP_INTRA_USER_IDENTITY("CCPSAISI"),
+    CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY("CCPSAIICI");
 
     private String code;
 
     Activities(String code) {
         this.code = code;
-    }
-
-    public String getCode() {
-        return this.code;
-    }
-
-    public String toString() {
-        return code;
     }
 
     public static Activities getValueFromString(String code) throws InvalidParameterException {
@@ -244,19 +240,37 @@ public enum Activities {
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS;
             case "CWRWBWBV1M":
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN;
+            case "DAUCAM":
+                return DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN;
             case "CBPSACBI":
                 return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY;
             case "CBPSACBICI":
                 return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY;
+            case "CBPSACBIEI":
+                return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY;
             case "CBPSACCI":
                 return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY;
             case "CBPSACCICI":
                 return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY;
+            case "CCPSAISI":
+                return CCP_SUB_APP_INTRA_USER_IDENTITY;
+            case "CCPSAIICI":
+                return CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY;
+            case "CCPSAIUCR":
+                return CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }
         // throw an IllegalArgumentException or return null
         //throw new IllegalArgumentException("the given number doesn't match any Status.");
         // return null;
+    }
+
+    public String getCode() {
+        return this.code;
+    }
+
+    public String toString() {
+        return code;
     }
 }

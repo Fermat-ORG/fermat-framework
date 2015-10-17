@@ -21,12 +21,9 @@ public class AndroidOsFileSystem  implements FileSystemOs {
     PlatformFileSystem platformFileSystem;
     FileSystemOs fileSystemOs;
 
+    public AndroidOsFileSystem(String contextPath) {
 
-    Context context;
-
-    public AndroidOsFileSystem() {
-
-        fileSystemOs = new FileSystemOsAddonRoot();
+        fileSystemOs = new FileSystemOsAddonRoot(contextPath);
 
 
         this.pluginFileSystem = fileSystemOs.getPlugInFileSystem();
@@ -37,31 +34,13 @@ public class AndroidOsFileSystem  implements FileSystemOs {
     /**
      * FileSystemOs interface implementation.
      */
-
     @Override
     public PluginFileSystem getPlugInFileSystem() {
         return this.pluginFileSystem;
     }
 
-
-
     @Override
     public PlatformFileSystem getPlatformFileSystem() {
         return this.platformFileSystem;
     }
-
-
-
-    @Override
-    public void setContext(Object context) {
-
-        this.context = (Context) context;
-        this.pluginFileSystem.setContext(context);
-        this.platformFileSystem.setContext(context);
-
-
-    }
-
-
-
 }
