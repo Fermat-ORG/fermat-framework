@@ -32,10 +32,9 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = profileImage != null ? profileImage.clone() : null;
+        this.profileImage = profileImage.clone();
         this.locationLatitude = location.getLatitude();
         this.locationLongitude = location.getLongitude();
-//        this.registrationDate = registrationDate;
         this.genders = Genders.INDEFINITE;
 //        this.age = age;
 //        this.cryptoAddress = cryptoAddress;
@@ -47,7 +46,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = profileImage != null ? profileImage.clone() : null;
+        this.profileImage = profileImage.clone();
         this.registrationDate = registrationDate;
 //        this.location = location;
         this.genders = genders;

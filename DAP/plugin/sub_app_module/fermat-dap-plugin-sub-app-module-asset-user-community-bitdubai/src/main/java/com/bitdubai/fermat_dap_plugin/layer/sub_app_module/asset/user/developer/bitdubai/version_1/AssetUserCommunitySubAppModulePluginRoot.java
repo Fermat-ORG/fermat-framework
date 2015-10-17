@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvide
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -49,6 +50,7 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
     AssetUserCommunitySupAppModuleManager assetUserCommunitySupAppModuleManager;
 
     ActorAssetUserManager actorAssetUserManager;
+
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
@@ -62,8 +64,8 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
     }
 
     @Override
-    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) {
-this.actorAssetUserManager = actorAssetUserManager;
+    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager)  throws CantSetObjectException {
+        this.actorAssetUserManager = actorAssetUserManager;
     }
 
     @Override
@@ -122,10 +124,9 @@ this.actorAssetUserManager = actorAssetUserManager;
 
     @Override
     public List<ActorAssetUser> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException {
-        List<ActorAssetUser> actorAssetList= new ArrayList<>();
+        List<ActorAssetUser> actorAssetList = new ArrayList<>();
 
-        Location location = new DeviceLocation(00.00, 00.00, 12345678910L, 00.00, LocationProvider.NETWORK);
-
+//        Location location = new DeviceLocation(00.00, 00.00, 12345678910L, 00.00, LocationProvider.NETWORK);
 
 //        actorAssetList.add(new AssetUserActorRecord("Rodrigo Acosta",UUID.randomUUID().toString(),new byte[0],location));
 //        actorAssetList.add(new AssetUserActorRecord("Franklin Marcano",UUID.randomUUID().toString(),new byte[0],location));
@@ -133,13 +134,12 @@ this.actorAssetUserManager = actorAssetUserManager;
 //        actorAssetList.add(new AssetUserActorRecord("Nerio Indriago",UUID.randomUUID().toString(),new byte[0],location));
 
         try {
-            actorAssetUserManager.getAllAssetUserActorRegistered();
+            actorAssetList = actorAssetUserManager.getAllAssetUserActorRegistered();
         } catch (CantAssetUserActorNotFoundException e) {
             e.printStackTrace();
         }
         return actorAssetList;
     }
-
 
 
 }

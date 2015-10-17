@@ -12,4 +12,5 @@ public interface AssetUserCommunitySubAppModuleManager {
 
     List<ActorAssetUser> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException;
 
+//    List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointRegistered() throws CantGetAssetRedeemPointActorsException;
 }
