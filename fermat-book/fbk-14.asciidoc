@@ -1,6 +1,15 @@
-== FERMAT DPN: Digital Private Network
-Securing your funds 
+== FERMAT Marketing Platform: +
+Marketing with Digital Assets 
 
-=== 
+=== Voucher Wallet
+-> for 
+
+=== Coupon Wallet 
+-> for 
+
+=== Discount Wallet 
+-> for 
+
+
 
 

@@ -1,19 +1,19 @@
-== Developing regional crypto ecosystems: FERMAT Crypto Distribution Network  
+== Blockchain beyond currency: DIGITAL ASSETS 
 
+=== FERMAT Digital Asset Platform  
 
-=== CrWh (Crypto Wholesaler) 
--> for organizations owing a certain large amount of crypto-credit to sell through a distribution chain.
+==== What is a Digital Asset ?
 
-=== CrCu (Crypto Distributor) 
--> for those who form the next level in the distribution, buying to wholesalers and re-selling to Top Up Point
+=== Asset Issuer Wallet
+-> for company or brand that issues a Digital Assets to offer to their customers*
 
-=== TUP (Top Up Point) 
--> for shops/organizations/persons who transfer crypto-credit in exchange for fiat-money (receives money - gives crypto)
+=== Asset User Wallet 
+-> for *the customer who accepts/obtain some Digital Assets according to his interests*
 
-=== COP (Cash Out Point) 
--> for shops/organizations/persons who gives out money in exchange for a transfer of crypto (receive crypto - gives money)
+=== Redeem Point Wallet
+-> for the *place/shop/person that exchanges the Asset for a certain service or product (redeems it)*
 
-
+ 
 
 
 

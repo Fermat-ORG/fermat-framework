@@ -17,16 +17,15 @@
 
 * **FERMAT segments the world population and offers a custom tailored solution for each segment.** Any developer can easily create niche wallets for a particular group of people. Brands can create their own wallets for their followers. All the heavy lifting is done by the FERMAT platform.
 
-* **FERMAT guaratees plugins and wallet developers a revenue stream.
-* **FERMAT implements an innovative business model which allows plugins and wallet developers to define a use license, and FERMAT itself enforces this license on behalf of developers. )
+* *FERMAT guaratees plugins and wallet developers a revenue stream.* FERMAT implements an innovative business model which allows plugins and wallet developers to define a use license, and FERMAT itself enforces this license on behalf of developers. )
 
 The first goal is to get very close to the *end user* offering and easy way of coming onboard the crytocurrency world by means of possesing a digital *wallet* running on his preferred device. +
-At the same time, the open source *plug-in platform* allows any skilled actor in the community to jump in and develop applications and offer services with different abstraction levels and addressing a wide range of segmented markets. In fact, as we have seen in the section about FERMAT as a master plan, the possibility of using the existent global talent and intelligence that the community already has in a clever collaborative way, can rapidily expand this technology to mass adoption. + 
+At the same time, the open source *plug-in platform* allows any skilled actor in the community to jump in and develop applications and offer services with different abstraction levels and addressing a wide range of segmented markets. In fact, as we have seen in the section about FERMAT as a _master plan_, the possibility of using the existent global talent and intelligence that the community already has in a clever collaborative way, can rapidily expand this technology to mass adoption. + 
 Instead of beginning a new project in this industry completley from scratch, the clear and firm logic of FERMAT can make it a new standard in the industry, giving the collective a strong and stabile group coherence it had never experienced before. All participants in the different sectors get , because of FERMAT's transparency, clear logic and solid foundations, a sense of trust, safety and equity, and the corresponding right to become a revenue for each one's contribution and effort.
 
 
 === What characteristics has FERMAT as a software system ?
-FERMAT is 
+*FERMAT* is 
 
 * OPEN SOURCE
 The code can be reviewed and audited by anyone.
@@ -58,11 +57,11 @@ Can be freely adopted, implemented and extended.
 
 :numbered!:
 
-FERMAT as a system is built on several overlaping architectural paradigms: 
+FERMAT as a system is built on several overlapping architectural paradigms: 
 
 At a higher level, it is a Peer to Peer system with asymetric nodes, meaning that each node even having all the code base, it specializes itself according to the profile of the end user or the way it was configured.
 
-Inside each node FERMAT features a Multi-OS architecture meaning that the lowest level OS-dependent components are wrapped in a way that can be easily replaced when running on a different OS without affecting the rest of the components consuming services from them. The upmost components, the ones facing the end user (GUI) are also OS-dependent. Everything in between is not.
+Inside each node FERMAT features a Multi-OS architecture meaning that the lowest level OS-dependent components are wrapped in a way that can be easily replaced when running on a different OS without affecting the rest of the components consuming services from them. The upmost components, the ones facing the end user (GUI) are also OS-dependent. Everything in between is *not*.
 
 At the same time it features a plugins architecture inserted into a multi-layered structure. These layers are ocasionally grouped into *Superlayers*. 
 
@@ -100,21 +99,21 @@ A *platform* consists of a group of components living in different *layers* inte
 
 
 .General overview on FERMAT'S platforms and superlayers.
-* *FERMAT Core Platform* 
-** *FERMAT Operating Systems Superlayer*
-** *FERMAT BlockChain Superlayer*
-** *FERMAT P2P Network and Communication Superlayer*
-* *FERMAT Plug-ins Platform*
-* *FERMAT Wallet Production & Distribution Platform*
-* *FERMAT Crypto Currency Platform*
-* *FERMAT Crypto Commodity Money*
-* *FERMAT Bank Notes Platform*
-* *FERMAT Shop Platform*
-* *FERMAT Digital Assets Platform*
-* *FERMAT Marketing Platform*
-* *FERMAT Crypto Brokers Platform*
-* *FERMAT Crypto Distribution Network*
-* *FERMAT Distributed Private Network*
+. *FERMAT Core Platform* 
+. *FERMAT Operating Systems Superlayer*
+. *FERMAT BlockChain Superlayer*
+. *FERMAT P2P Network and Communication Superlayer*
+. *FERMAT Plug-ins Platform*
+. *FERMAT Wallet Production & Distribution Platform*
+. *FERMAT Crypto Currency Platform*
+. *FERMAT Crypto Commodity Money*
+. *FERMAT Bank Notes Platform*
+. *FERMAT Shop Platform*
+. *FERMAT Digital Assets Platform*
+. *FERMAT Marketing Platform*
+. *FERMAT Crypto Brokers Platform*
+. *FERMAT Crypto Distribution Network*
+. *FERMAT Distributed Private Network*
 
 
 :numbered:
@@ -122,47 +121,52 @@ A *platform* consists of a group of components living in different *layers* inte
 === FERMAT'S actors
 Cryptocurrencies live in a public and distributed ledger, the *blockchain* , in a decentralized p2p network (spread in every network node). + 
 They are held and stored by their owners in specific applications called *wallets* living in a certain device which has access to the corresponding cryptonetwork. +
-*Wallets* store the owner's _privat key_ and the corresponding _public key_ to unlock the cryptocurrency amount of a given _transaction_. For a _transaction_ to take place, a *crypto address* is needed to identify both the sender of the value as well as the receiver. *Crypto addresses* are generated by the wallet derived from the _privat/public key_ pair of the wallet's owner.
-Although *wallets* are similar in relationship to their basic functionalities, the natural segmentation of the world population requires to be taken into account when designing them.   
+*Wallets* store the owner's _privat key_ and the corresponding _public key_ to unlock the cryptocurrency amount of a given *transaction*. + 
+For a *transaction* to take place, a *crypto address* is needed to identify both the sender of the value as well as the receiver. + 
+*Crypto addresses* are generated by the wallet derived from the _privat/public key_ pair of the wallet's owner. +
+Although *wallets* are similar in relationship to their basic functionalities, the _natural segmentation of the world population_ requires to be taken into account when designing them. +
+FERMAT defines different system *actors* to identify the specific needs and level of abstraction required to each actor, and consequently being able to design FERMAT's products with the appropiated _segmentation_.
+ 
 
 :numbered!:
 
 ==== segmentation 
-FERMAT understands that there exists on the world so many different tastes and preferences like humans exists on earth, because each one is unique, and therefore there are potentially so many differents ways of shaping the accessibility, appearance and functionality of applications dealing with cryptocurrencies and blockchain technology to match very specific need and scalable demand of each consumer's niche. Here begins the huge differentation between FERMAT applications and the rest ! + 
-FERMAT takes very seriously into account the actor's profile to develop attractive applications in each case. Well, for some actor's with more complex relationships world, more complexity is also wanted in ther wallets and in the wallet of kindred actor's that interdepend and interact in the same *niche*. 
+FERMAT understands that there exists on the world so many different tastes and preferences like humans exists on earth, because each one is _unique_, and therefore there are potentially a huge number of differents ways of shaping the applications being developed, considering its functionalities, accessibility, and appearance among other various customizable characteristics, although they are conceived to deal with the same tasks of managing cryptocurrencies and blockchain technology.  + 
+Here begins the huge differentation between FERMAT applications and the rest ! + 
+FERMAT takes very _seriously_ into account the _actor's profile_ to develop attractive applications in each case to match very specificaly the demand of each consumer's niche. For instance, some actors with a more complex relationships world require more complexity in their wallets and in the wallet of his partners.
 
 ==== levels of abstraction
-While certain actors need basic operations, others utilization of blockchain technology can required different levels of abstraction.
-For instance, low abstraction is needed for user that only need to see their value in *cryptocurrency*. Other may want to haver their wallets showing them their content in * fiat money*. Others might need some functionalities that prevent them for *losing value* depending on the exchange rate they purchased the currency and when they want to spend it, and some of them would like to see the profitable exchange rate as a * discount* obtained in the purchase of goods.. There are also many who will only serve themselves of the cryptonetwork not to transport value, but to issue * digital assets* that are made public through the blockchain ledger... + 
-All this different * abstraction levels* are possible within FERMAT, and FERMAT'S PLATFORM are specifically designed to match certain needs of a niche and they foster the creation of a real-world environment, linking actors offering services with those consuming them.
+On the other hand, while certain actors need basic operations, other's use of blockchain technology may demand higher levels of abstraction.
+For instance, low abstraction is needed for user that only need to see their value in *cryptocurrency*. Others may want to have their wallets showing them their content in *fiat money*. Others might need some functionalities that prevent them for *losing value* depending on the exchange rate they purchased the currency and when they want to spend it, and some of them would like even to see the profitable exchange rate as a *discount* obtained in the purchase of goods.. There are also many who will only serve themselves of the cryptonetwork not to transport value, but to issue *digital assets* instead, assets that are made public through the blockchain ledger... + 
+All this different _*abstraction levels*_ are possible within FERMAT, and FERMAT multi-platform system is specifically designed to match this increasing demand in the industry, and at the same time, the use of FERMAT'S products foster the creation real-world environments, connecting in a very efficient, secure, and scalable way, the actors offering services with those consuming them.
 
 
-==== FERMAT's products to the world.
+==== FERMAT's products and their actors
 
-* FERMAT WALLET FACTORY   -> *for marketers to re-brand any of the already existing segment specific wallets in a few steps (without the need to deal with the source code of the base wallet selected!)*
-* FERMAT WALLET PUBLISHER  -> *for wallet designers/marketing agency to offer their rebranded Wallet to the world !*
-* FERMAT WALLET STORE  -> the store where available wallets live, ready to be adopted !
-* FERMAT BITCOIN WALLET -> *for those devoted "BTC-only" users!*
-* FERMAT BITCOIN LOSS PROTECTED WALLET -> *for conservative user's caring about never selling under the purchase price ! (preserving value!)*
-* FERMAT ARGENTINE BLP WALLET -> *for citizen's of the nr.1 potential mass market for BTC (designed to match argentine culture of steady* comparison between argentine$, USD (oficial and blue!) and even Eu$!)
-* FERMAT CRYPTO COMMODITY MONEY WALLET ->
-* FERMAT DISCOUNT WALLET -> *for discount and bonus chasers! ( recommend selling when price gets convinient, and shows it as a " discount" !)*
-* FERMAT BANK NOTES  WALLET -> *for those wanting to visualize their investment in "real money traditional bank notes" of their usual fiat/currency ( rest on FERMAT, we do the "dirty work" with all the crypto stuff!)*
-* FERMAT SHOP WALLET -> *for shop owners who accept cryptocurrency in payment of their products !*
-* FERMAT BRAND WALLET -> *for brands owners who accept cryptocurrency in their retailers network.*
-* FERMAT RETAILER WALLET -> *for* 
-* FERMAT ASSET ISSUER WALLET -> for company or brand that issues a Digital Assets to offer to their customers*
-* FERMAT ASSET USER  WALLET -> for *the customer who accepts/obtain some Digital Assets according to his interests*
-* FERMAT REDEEM POINT WALLET -> for the place/shop/person that exchanges the Asset for a certain service or product (redeems it).*
-* FERMAT VOUCHER WALLET -> for 
-* FERMAT COUPON WALLET -> for 
-* FERMAT DISCOUNT WALLET -> for 
-* FERMAT CRYPTO BROKER WALLET-> for persons/organizations whose business activity is exchanging cryptocurrency for fiat-money
-* FERMAT CRYPTO BROKER'S USER WALLET ->  for customers of the cryptobroker
-* FERMAT CRYPTO WHOLESALER WALLET -> for organizations owing a certain large amount of crypto-credit to sell through a distribution chain.
-* FERMAT CRYPTO DISTRIBUTOR WALLET -> for those who form the next level in the distribution, buying to wholesalers and re-selling to Top Up Point
-* FERMAT TOP UP POINT WALLET -> for shops/organizations/persons who transfer crypto-credit in exchange for fiat-money (receives money - gives crypto)
-* FERMAT CASH OUT POINT WALLET -> for shops/organizations/persons who gives out money in exchange for a transfer of crypto (receive crypto - gives money)
+FERMAT WALLET FACTORY ::   -> for marketers to re-brand any of the already existing segment specific wallets in a few steps (without the need to deal with the source code of the base wallet selected!)
+FERMAT WALLET PUBLISHER ::  -> for wallet designers/marketing agency to offer their rebranded Wallet to the world !
+FERMAT WALLET STORE ::  -> the store where available wallets live, ready to be adopted !
+FERMAT BITCOIN WALLET :: -> for those devoted "BTC-only" users!
+FERMAT BITCOIN LOSS PROTECTED WALLET -> for conservative user's caring about never selling under the purchase price ! (preserving value!)
+FERMAT ARGENTINE BLP WALLET :: -> for citizen's of the nr.1 potential mass market for BTC (designed to match argentine culture of steady comparison between argentine$, USD (oficial and blue!) and even Eu$!)
+FERMAT CRYPTO COMMODITY MONEY WALLET :: ->
+FERMAT DISCOUNT WALLET :: -> for discount and bonus chasers! ( recommend selling when price gets convinient, and shows it as a " discount" !)*
+FERMAT BANK NOTES  WALLET :: -> for those wanting to visualize their investment in "real money traditional bank notes" of their usual fiat/currency ( rest on FERMAT, we do the "dirty work" with all the crypto stuff!)*
+FERMAT SHOP WALLET :: -> *for shop owners who accept cryptocurrency in payment of their products !*
+FERMAT BRAND WALLET :: -> *for brands owners who accept cryptocurrency in their retailers network.*
+FERMAT RETAILER WALLET :: -> *for* 
+FERMAT ASSET ISSUER WALLET :: -> for company or brand that issues a Digital Assets to offer to their customers*
+FERMAT ASSET USER  WALLET :: -> for *the customer who accepts/obtain some Digital Assets according to his interests*
+FERMAT REDEEM POINT WALLET :: -> for the place/shop/person that exchanges the Asset for a certain service or product (redeems it).*
+FERMAT VOUCHER WALLET :: -> for 
+FERMAT COUPON WALLET :: -> for 
+FERMAT DISCOUNT WALLET :: -> for 
+FERMAT CRYPTO BROKER WALLET :: -> for persons/organizations whose business activity is exchanging cryptocurrency for fiat-money
+FERMAT CRYPTO BROKER'S USER WALLET ::  ->  for customers of the cryptobroker
+FERMAT CRYPTO WHOLESALER WALLET :: -> for organizations owing a certain large amount of crypto-credit to sell through a distribution chain.
+FERMAT CRYPTO DISTRIBUTOR WALLET :: -> for those who form the next level in the distribution, buying to wholesalers and re-selling to Top Up Point
+FERMAT TOP UP POINT WALLET :: -> for shops/organizations/persons who transfer crypto-credit in exchange for fiat-money (receives money - gives crypto)
+FERMAT CASH OUT POINT WALLET :: -> for shops/organizations/persons who gives out money in exchange for a transfer of crypto (receive crypto - gives money)
 
 
 For a cool visualization of the constant growing system of platforms and superlayers visit http://fermat.org
