@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.AddressExchangeRequestState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestAction;
 
 import java.util.UUID;
