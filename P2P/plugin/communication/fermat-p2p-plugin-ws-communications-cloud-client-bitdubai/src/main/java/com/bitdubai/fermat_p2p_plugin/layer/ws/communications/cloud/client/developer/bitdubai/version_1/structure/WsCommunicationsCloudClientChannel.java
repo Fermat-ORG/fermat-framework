@@ -212,7 +212,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
             validateFermatPacketSignature(fermatPacketReceive);
         }
 
-        System.out.println(" WsCommunicationsCloudClientChannel - decode fermatPacket " + fermatPacketReceive.toJson());
+       // System.out.println(" WsCommunicationsCloudClientChannel - decode fermatPacket " + fermatPacketReceive.toJson());
 
 
         //verify is packet supported
@@ -247,8 +247,8 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationsCloudClientChannel - Starting method onClose");
         System.out.println(" WsCommunicationsCloudClientChannel -  code   = " + code + " reason = " + reason + " remote = " + remote);
-        System.out.println(" WsCommunicationsCloudClientChannel -  getReadyState() = " + getReadyState());
-        System.out.println(" WsCommunicationsCloudClientChannel -  getConnection().isFlushAndClose() = " + getConnection().isFlushAndClose());
+       // System.out.println(" WsCommunicationsCloudClientChannel -  getReadyState() = " + getReadyState());
+       // System.out.println(" WsCommunicationsCloudClientChannel -  getConnection().isFlushAndClose() = " + getConnection().isFlushAndClose());
 
         /*
          * Start the agent to try the reconnect
