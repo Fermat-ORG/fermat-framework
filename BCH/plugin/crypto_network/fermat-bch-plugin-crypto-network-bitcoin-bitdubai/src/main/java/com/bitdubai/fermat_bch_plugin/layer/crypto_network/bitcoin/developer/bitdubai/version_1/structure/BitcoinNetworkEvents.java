@@ -95,7 +95,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void onTransaction(Peer peer, Transaction t) {
-        System.out.println("On transaction event. " + t.toString());
+
     }
 
     @Nullable
@@ -121,6 +121,9 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      */
     @Override
     public void onCoinsSent(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
+        /**
+         * register the new outgoing transaction into the database
+         */
         saveOutgoingTransaction(wallet, tx);
     }
 
@@ -134,11 +137,29 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                     tx.getConfidence().getDepthInBlocks(),
                     getOutgoingTransactionAddressTo(tx),
                     getOutgoingTransactionAddressFrom(wallet, tx),
-                    tx.getValue(wallet).getValue(),
+                    getOutgoingTransactionValue(wallet,tx),
                     getTransactionOpReturn(tx),
                     ProtocolStatus.NO_ACTION_REQUIRED);
-        } catch (CantExecuteDatabaseOperationException e) {
+        } catch (Exception e) {
+            /**
+             * if there is an error in getting information from the transaction object.
+             * I will try saving the transaction with minimal information.
+             * I will complete this info in the agent that triggers the events.
+             */
             e.printStackTrace();
+            try{
+                CryptoAddress errorAddress = new CryptoAddress("error", CryptoCurrency.BITCOIN);
+                getDao().saveNewOutgoingTransaction(tx.getHashAsString(),
+                        getTransactionCryptoStatus(tx),
+                        0,
+                        errorAddress,
+                        errorAddress,
+                        0,
+                        "",
+                        ProtocolStatus.NO_ACTION_REQUIRED);
+            } catch (CantExecuteDatabaseOperationException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
@@ -441,7 +462,21 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      */
     private long getIncomingTransactionValue(Wallet wallet, Transaction tx) {
         try{
-            return tx.getValue(wallet).getValue();
+            return tx.getValueSentToMe(wallet).getValue();
+        } catch (Exception e){
+            return 0;
+        }
+    }
+
+    /**
+     * gets the value sent from me in a transaction
+     * @param wallet
+     * @param tx
+     * @return
+     */
+    private long getOutgoingTransactionValue(Wallet wallet, Transaction tx) {
+        try{
+            return tx.getValueSentFromMe(wallet).getValue();
         } catch (Exception e){
             return 0;
         }
