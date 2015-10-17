@@ -584,7 +584,7 @@ public class Platform implements Serializable {
              * -------------------
              */
             Service errorManager = (Service) ((PlatformServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PLATFORM_SERVICE_LAYER)).getErrorManager();
-            ((DealsWithPlatformDatabaseSystem) errorManager).setPlatformDatabaseSystem(databaseSystemOs.getPlatformDatabaseSystem());
+
             corePlatformContext.registerAddon((Addon) errorManager, Addons.ERROR_MANAGER);
             errorManager.start();
 
@@ -727,7 +727,7 @@ public class Platform implements Serializable {
             boolean DMP = true;//DOBLEMENTE TEMPORAL
             boolean MKT = true;
             boolean OSA = true;
-            boolean P2P = true;
+            boolean P2P = true  ;
             boolean PIP = true;
             boolean SHP = true;
             boolean WPD = true;
