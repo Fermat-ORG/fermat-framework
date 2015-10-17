@@ -1231,7 +1231,7 @@ Android is a <strong>special case</strong> because of some programming restricti
 </table>
 </div>
 <div class="paragraph">
-<p>FERMAT CORE initializes every single platform of the system and every single plug-in by collecting information about the corresponding <strong>application public interfaces (API)</strong> and delivering to each one a <strong>reference</strong> on its dependance to consume services building a "communication channel" to instantiate objects and after that giving the "start" signal to beggin running.<br></p>
+<p>FERMAT CORE initializes every single platform of the system and instantiate every single plug-in giving the "start" signal by means of an usual "service"interface (each plugin knows what "start"means in each case). Then, in a second initialization round, the core platform collects information from the corresponding <strong>application public interfaces (API)</strong>, creates a "communication channel" between each component of the system and delivers to each one the <strong>reference</strong> on its dependance to consume services from one another. <br></p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1273,40 +1273,126 @@ Following in this chapter the description of each platform and each layer within
 <div class="sect2">
 <h3 id="_system_wide_definitions">3.3. System-wide definitions</h3>
 <div class="paragraph">
-<p>One of main concept&#8217;s inside FERMAT&#8217;s design is that of <em>actors</em> and <em>identities</em>
-+ (PLEASE CHECK ALL THIS SECTION BEFORE FIRST RELEASE!)</p>
+<p>One of main concept&#8217;s inside FERMAT&#8217;s design is the distinction of different <em>levels of identities</em> depending on the realm where this <em>identities</em> are valid. These creates a hierarchical structure of <em>identities</em> and the <em>credentials</em> associated with it.
+The <strong>real person</strong> who wants to use FERMAT, has to install the software in at least one <strong>device</strong> and then let it run.
+At this stage, the real person gets an initial identity a <strong>device user</strong>, which is automatically given by FERMAT and is transparent to him (needs not to worry about it and/or decide anything about it). This is valid for all the functions that happend INSIDE the device, and it contains certain information about himself/herself that is known to the device operating system, and which is stored in the device&#8217;s memory/hard drive.<br>
+Then, to start using FERMAT, he/she is prompted by the software to choose a <strong>master identity</strong> within FERMAT. That means to choose an <em>username</em> (or _ alias_) and a <em>password</em> to be recognized as a <strong>FERMAT system user</strong>, and has certain <em>profile</em> associated with it.
+Then, the <strong>real person</strong> turned into a <strong>user</strong> of FERMAT, chooses to run any of FERMAT&#8217;s products, and this takes him to play certain role within a specific FERMAT Platform available, what turns him/she into an <strong>actor</strong> of the platform. As such, he/she must define an <em>actor identity</em>  within THIS platform, which is INDEPENDENT to any other created in other platforms, although it is related to the FERMAT system-wide <strong>master identity</strong>.<br>
+This <strong>actor</strong> has the possibility to define a set of multiple <em>wallet identities</em> to operate within each wallet, defining a <em>profile</em> for each one,  choosing the profile concepts to include (name, picture, occupation, etc) and the content of them, having total control of which information he shares with the world.<br>
+For the external world, each <em>wallet identity</em> appears to be a "different person" and there are NO RELATIONS between them. However, for the <strong>Fermat User</strong> owning his <strong>master identity</strong>, all his <strong>actor identities</strong> and <strong>wallet identities</strong> are interconnected.</p>
 </div>
-<div class="paragraph">
-<p>The <strong>real person</strong> who wants to use FERMAT, has to install the software in at least one <strong>device</strong> and then let it run.
-At this stage, the real person begins to act as a <strong>device user</strong> and has provided certain information about himself/herself to the device operating system, which is stored in the device&#8217;s memory/hard drive.<br>
-When starting FERMAT, he/she is prompted by the software to choose an <strong>identity</strong> within FERMAT. That means to choose an <em>username</em> (or _ alias_) and a <em>password</em> to be recognized as a <strong>FERMAT system user</strong>, what we have labeled in FERMAT as <em>*IntraUser*</em>.
-Then, the <strong>user</strong> chooses to run any of FERMAT&#8217;s products, and this takes him to play certain role within a specific FERMAT Platform available, and to be able to do that he is required to identify himself/herself as an <strong>actor</strong> of the platform. As such, he/she must define an <em>username</em> (or _ alias_) within THIS platform, which has NO RELATIONSHIP to any other created as <strong>actor</strong> of other platforms.<br>
-This <strong>actor</strong> has the possibility to define several profiles for himself to control which personal information is provided to the world. These profiles will serve as unique <strong>identities</strong> to operate from, and only the owner will know to which <strong>actor</strong>  these <strong>identities</strong> are related.</p>
+<div class="ulist">
+<div class="title">Example of hierarchichal identities</div>
+<ul>
+<li>
+<p><strong>master identity</strong> eg. John Doe, Colorado Springs, CO, USA.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>actor identity 1</strong> eg. "John cryptobroker"</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>wallet identity1</strong> eg. "The Commander Venezuela Cryptobroker"</p>
+</li>
+<li>
+<p><strong>wallet identity1</strong> eg. "Colorado Exchange Cryptobroker"</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>actor identity 2</strong> eg. "Alice Brenda Smith cryptocurrency owner"</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>wallet identity1</strong> eg. "Alice bitcoin wallet user"</p>
+</li>
+<li>
+<p><strong>wallet identity2</strong> eg. "A.B.S. Bitcoin Loss Protected user"</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>actor identity3</strong> eg. "Aunt Betty Muffins asset issuer"</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_fermat_core_platform">3.4. FERMAT Core Platform</h3>
 <div class="paragraph">
-<p>This is the <strong>core platform</strong> of FERMAT Multiplatform System. It contains the deepest levels of layers in the layers stack. Its modules encasulapte the basics definitions and functionalities that let FERMAT operate as an <em>integrated system</em>, by determining the interactions among the isolated plug-ins and putting then to run (starting).<br>
-FERMAT Core Platform is written in JAVA as the most of FERMAT, therefore its <strong>code base portability</strong>.<br>
+<p>This is the <strong>core platform</strong> of FERMAT Multiplatform System. It contains the deepest levels of layers in the layers stack. Its modules encasulapte the basics definitions and functionalities that let FERMAT operate as an <em>integrated system</em>.<br>
+The platform first defines a <em>plugin identity</em> for each plugin (this is done only ONCE for the whole system), which let the plugin being <strong>recognized</strong> as member of FERMAT and then access to certain data specifically owned by it (like accesing to the file system or data base systems, etc). Then it put them to run ( see [system initialization] ) and builds the pattern of relationships among the isolated plug-ins, therefore deploying all the system wide infrastructure.<br>
+FERMAT Core Platform is written in JAVA as the most of FERMAT, and that there is a JAVA implementation for each known operating system, that makes FERMAT <strong>code base portable</strong>.<br>
 After initialization, this platform monitors the way the system is behaving as a whole.</p>
 </div>
-<div class="ulist">
+<div class="dlist">
 <div class="title">FERMAT Core modules</div>
-<ul>
+<dl>
+<dt class="hdlist1">fermat core </dt>
+<dd>
+<p>Initializes all system-wide plug-ins and start a specific <strong>core module</strong> for each platform/superlayer running on FERMAT, which in turn initializes the platform/superlayer&#8217;s specific set of plugins.</p>
+</dd>
+<dt class="hdlist1">android core </dt>
+<dd>
+<p>Initializes android&#8217;s components that connect FERMAT to the android user&#8217;s environment, by giving access to the modules of <em>android layer</em> in <strong>Fermat Operating System Superlayer</strong>.</p>
+</dd>
+<dt class="hdlist1">platform specific core </dt>
+<dd>
+<p>There&#8217;s a <strong>core module</strong> for each one of the platform existent in FERMAT, which creates the <em>plugin indentity</em> and initializes all platform/superlayer&#8217;s specific plug-ins:<br></p>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p><strong>fermat core</strong><br>
-Initializes all system-wide plug-ins and start a platform specific core module for each platform running on FERMAT.</p>
+<p><em>Operating Systems core</em></p>
 </li>
 <li>
-<p><strong>android core</strong><br>
-Initializes android&#8217;s components that connect FERMAT to the android user&#8217;s environment.</p>
+<p><em>BlockChain core</em></p>
 </li>
 <li>
-<p><strong>platform specific core</strong><br>
-There&#8217;s a <strong>core module</strong> for each one of the platform existent in FERMAT, which initializes all platform&#8217;s specific plug-ins: <em>wallet production &amp; distribution core</em> / <em>crypto currency core</em> / <em>digital assets core</em> / etc&#8230; .</p>
+<p><em>P2P Network and Communication core</em></p>
 </li>
-</ul>
+<li>
+<p><em>Plug-ins Platform core</em></p>
+</li>
+<li>
+<p><em>Wallet Production &amp; Distribution core</em></p>
+</li>
+<li>
+<p><em>Crypto Currency core</em></p>
+</li>
+<li>
+<p><em>Crypto Commodity Money core</em></p>
+</li>
+<li>
+<p><em>Bank Notes core</em></p>
+</li>
+<li>
+<p><em>Shoping core</em></p>
+</li>
+<li>
+<p><em>Digital Assets core</em></p>
+</li>
+<li>
+<p><em>Marketing core</em></p>
+</li>
+<li>
+<p><em>Crypto Brokers core</em></p>
+</li>
+<li>
+<p><em>Crypto Distribution Network core</em></p>
+</li>
+<li>
+<p><em>Distributed Private Network</em></p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -1327,7 +1413,7 @@ We call in FERMAT <strong>Superlayer</strong> to a group of layers whose modules
 </table>
 </div>
 <div class="paragraph">
-<p>This superlayer allow the connectivity of OS dependant modules to the rest of FERMAT multiplatform (<em>OS independent</em>). The modules offer the necessary functions to interact with the corresponding OS.</p>
+<p>This superlayer allow the connectivity of OS dependant modul=es to the rest of FERMAT multiplatform (<em>OS independent</em>). The modules offer the necessary functions to interact with the corresponding OS. The specific layers will be added as long as FERMAT&#8217;s releases include new OS.</p>
 </div>
 <div class="sect2">
 <h3 id="__em_android_layer_em">4.1. <em>Android layer</em></h3>
@@ -1352,14 +1438,31 @@ We call in FERMAT <strong>Superlayer</strong> to a group of layers whose modules
 </div>
 <div class="sect2">
 <h3 id="__em_multi_os_layer_em">4.2. <em>Multi OS layer</em></h3>
+<div class="paragraph">
+<p>In this layer there are components that run in more than one OS at the time.</p>
+</div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">File System </dt>
 <dt class="hdlist1">Database System </dt>
 <dd>
-<p>:numbered:</p>
+<p>+</p>
 </dd>
 </dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_linux_layer_em">4.3. <em>Linux layer</em></h3>
+
+</div>
+<div class="sect2">
+<h3 id="__em_os_2_layer_em">4.4. <em>OS/2 layer</em></h3>
+
+</div>
+<div class="sect2">
+<h3 id="__em_microsoft_windows_layer_em">4.5. <em>Microsoft Windows layer</em></h3>
+<div class="paragraph">
+<p>&#8230;</p>
 </div>
 </div>
 </div>

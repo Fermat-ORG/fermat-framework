@@ -4,21 +4,31 @@
 
 NOTE: We call in FERMAT *Superlayer* to a group of layers whose modules offer services to be consumed system-wide, i.e. offering an infrastructure that hold the different *platforms* running over FERMAT. (it is like a "common ground" where different "towers" (the platforms) are built, sharing basics level services - like water, electricity and gas supply for a real world building-. )
 
-This superlayer allow the connectivity of OS dependant modules to the rest of FERMAT multiplatform (_OS independent_). The modules offer the necessary functions to interact with the corresponding OS. 
- 
+This superlayer allow the connectivity of OS dependant modul=es to the rest of FERMAT multiplatform (_OS independent_). The modules offer the necessary functions to interact with the corresponding OS. The specific layers will be added as long as FERMAT's releases include new OS.
+
 === _Android layer_
 In this layer, we find the different modules to allow FERMAT function on a device running Android. The usual requirements of storing and retrieving information, managing files, managing user log-on, checking the device status, location, etc are taken by each specific modules.
 
 File System ::
 Database System ::
-Logger ::
+Logger :: acces to the OS activity log.
 Device Location ::
-Device Connectivity ::
+Device Connectivity :: access to peripheals connecting to the device through USB Port / Bluetooh Port / etc.. 
 Device Power ::
 Device Contacts ::
 Device Hardware:: +
 
 === _Multi OS layer_
+In this layer there are components that run in more than one OS at the time (Linux / MacOs / Windows)
 
 File System ::
-Database System ::
+Database System :: +
+
+=== _Linux layer_
+=== _Mac OS layer_
+=== _Microsoft Windows layer_
+=== _I-OS _
+
+...
+
+
