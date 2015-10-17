@@ -126,6 +126,7 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
 
 
             if (pendingOutgoing > 0){
+                fixMissingInformationFromOutgoingTransactions();
                 raiseOutgoingTransactionEvent();
             }
         }
@@ -135,6 +136,16 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
          * accurate by getting the information from the wallet and update the values.
          */
         private void fixMissingInformationFromIncomingTransactions() {
+            //todo complete
+            //get tx info from vault
+            //update table information
+        }
+
+        /**
+         * Since the Transaction may not be complete in all cases, we need to make sure the information is
+         * accurate by getting the information from the wallet and update the values.
+         */
+        private void fixMissingInformationFromOutgoingTransactions() {
             //todo complete
             //get tx info from vault
             //update table information
@@ -155,8 +166,38 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
 
         }
 
+        /**
+         * Raises the appropiate outgoing events depending on the crypto status
+         * @param cryptoStatus
+         */
         private void raiseOutgoingEvent(CryptoStatus cryptoStatus) {
-            //todo raise outgoing events - this events needs to be created
+            FermatEvent event = null;
+            switch (cryptoStatus){
+                case ON_CRYPTO_NETWORK:
+                    event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_ON_CRYPTO_NETWORK);
+                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
+                    break;
+                case ON_BLOCKCHAIN:
+                    event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_ON_BLOCKCHAIN);
+                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
+                    break;
+                case REVERSED_ON_CRYPTO_NETWORK:
+                    event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
+                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
+                    break;
+                case REVERSED_ON_BLOCKCHAIN:
+                    event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
+                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
+                    break;
+                case IRREVERSIBLE:
+                    event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_IRREVERSIBLE);
+                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
+                    break;
+            }
+            /**
+             * I raise the event
+             */
+            eventManager.raiseEvent(event);
         }
 
         /**
