@@ -1,17 +1,18 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoWallet;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
+import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactException;
+import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsManager;
+import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsRegistry;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -93,7 +94,7 @@ public class CreateWalletContactTest extends TestCase {
         actorType = Actors.EXTRA_USER;
         deliveredCryptoAddress = new CryptoAddress("asdasd ", CryptoCurrency.BITCOIN);
         referenceWallet = ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET;
-        walletPublicKey = AsymmectricCryptography.derivePublicKey(AsymmectricCryptography.createPrivateKey());
+        walletPublicKey = AsymmetricCryptography.derivePublicKey(AsymmetricCryptography.createPrivateKey());
         walletModuleCryptoWallet = new CryptoWalletWalletModuleManager();
         walletModuleCryptoWallet.setErrorManager(errorManager);
         walletModuleCryptoWallet.setExtraUserManager(extraUserManager);
@@ -107,8 +108,10 @@ public class CreateWalletContactTest extends TestCase {
                 .createWalletContact(
                         anyString(),
                         anyString(),
+                        anyString(),
+                        anyString(),
                         any(Actors.class),
-                        any(CryptoAddress.class),
+                        anyList(),
                         anyString()
                 );
         walletModuleCryptoWallet.initialize();
@@ -116,17 +119,29 @@ public class CreateWalletContactTest extends TestCase {
 
     @Test
     public void testCreateWalletContact_NotNull() throws Exception {
-        CryptoWalletWalletContact walletContactRecord = walletModuleCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletPublicKey);
+        CryptoWalletWalletContact walletContactRecord = walletModuleCryptoWallet.createWalletContact(
+                deliveredCryptoAddress,
+                actressName,
+                actressName,
+                actressName,
+                actorType,
+                walletPublicKey);
         assertThat(walletContactRecord).isNotNull();
     }
 
     // CONTACTS ALREADY EXISTS TEST
     @Test(expected=ContactNameAlreadyExistsException.class)
     public void testCreateWalletContact_ContactNameAlreadyExistsException() throws Exception {
-        doReturn(walletContactRecord).when(walletContactsRegistry).getWalletContactByNameAndWalletPublicKey(anyString(), anyString());
+        doReturn(walletContactRecord).when(walletContactsRegistry).getWalletContactByAliasAndWalletPublicKey(anyString(), anyString());
         doReturn(UUID.randomUUID()).when(walletContactRecord).getContactId();
 
-        walletModuleCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletPublicKey);
+        walletModuleCryptoWallet.createWalletContact(
+                deliveredCryptoAddress,
+                actressName,
+                actressName,
+                actressName,
+                actorType,
+                walletPublicKey);
     }
 
     // TYPE OF ACTOR NOT RECOGNIZED BY THE PLUGIN
@@ -134,7 +149,13 @@ public class CreateWalletContactTest extends TestCase {
     public void testCreateWalletContact_ActorTypeNotRecognized() throws Exception {
         actorType = Actors.INTRA_USER;
 
-        walletModuleCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletPublicKey);
+        walletModuleCryptoWallet.createWalletContact(
+                deliveredCryptoAddress,
+                actressName,
+                actressName,
+                actressName,
+                actorType,
+                walletPublicKey);
     }
 
     /**
@@ -145,25 +166,43 @@ public class CreateWalletContactTest extends TestCase {
     // CANT REGISTER ACTOR ADDRESS BOOK TEST
     @Test(expected=CantCreateWalletContactException.class)
     public void testCreateWalletContact_CantRegisterActorAddressBookException() throws Exception {
-        doThrow(new com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantCreateWalletContactException("MOCK", null, null, null))
-                .when(walletContactsRegistry).createWalletContact(anyString(), anyString(), any(Actors.class), any(CryptoAddress.class), anyString());
+        doThrow(new CantCreateWalletContactException("MOCK", null, null, null))
+                .when(walletContactsRegistry).createWalletContact(anyString(),anyString(),anyString(),anyString(), any(Actors.class),anyList(),anyString());
 
-        walletModuleCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletPublicKey);
+        walletModuleCryptoWallet.createWalletContact(
+                deliveredCryptoAddress,
+                actressName,
+                actressName,
+                actressName,
+                actorType,
+                walletPublicKey);
     }
 
     // CANT GET REQUESTED CONTACT TO KNOW IF ALREADY EXISTS TEST
     @Test(expected=CantCreateWalletContactException.class)
     public void testCreateWalletContact_CantGetWalletContactException() throws Exception {
-        doThrow(new com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException("MOCK", null, null, null))
-            .when(walletContactsRegistry).getWalletContactByNameAndWalletPublicKey(anyString(), anyString());
+        doThrow(new CantGetWalletContactException("MOCK", null, null, null))
+            .when(walletContactsRegistry).getWalletContactByAliasAndWalletPublicKey(anyString(), anyString());
 
-        walletModuleCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletPublicKey);
+        walletModuleCryptoWallet.createWalletContact(
+                deliveredCryptoAddress,
+                actressName,
+                actressName,
+                actressName,
+                actorType,
+                walletPublicKey);
     }
 
     @Test
     public void testCreateWalletContact_RegistryIsNotInitialized_CantGetWalletContactException() throws Exception {
         walletModuleCryptoWallet = new CryptoWalletWalletModuleManager();
-        catchException(walletModuleCryptoWallet).createWalletContact(deliveredCryptoAddress, actressName, actorType, referenceWallet, walletPublicKey);
+        catchException(walletModuleCryptoWallet).createWalletContact(
+                deliveredCryptoAddress,
+                actressName,
+                actressName,
+                actressName,
+                actorType,
+                walletPublicKey);
         assertThat(caughtException())
                 .isNotNull()
                 .isInstanceOf(CantCreateWalletContactException.class);

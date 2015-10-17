@@ -18,4 +18,24 @@ public interface WalletManager {
     void enableWallet() throws CantEnableWalletException;
 
     InstalledWallet getInstalledWallet(String walletPublicKey) throws CantCreateNewWalletException;
+
+    /**
+     * This method create a new Intra User Identity
+     *
+     * @param alias
+     * @param profileImage
+     * @return
+     * @throws WalletCreateNewIntraUserIdentityException
+     */
+
+     void createNewIntraWalletUser(String alias, byte[] profileImage) throws WalletCreateNewIntraUserIdentityException;
+
+
+    /**
+     * This method returns if exists a Intra User Identity
+     * @return
+     * @throws CantGetIfIntraWalletUsersExistsException
+     */
+    boolean hasIntraUserIdentity() throws CantGetIfIntraWalletUsersExistsException;
+
 }

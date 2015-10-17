@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
@@ -96,12 +97,12 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
 
         try {
             Bitmap bitmap= null;
-            if(data.getInvolvedActor().getPhoto()!=null){
+            //if(data.getInvolvedActor().getPhoto()!=null){
                  bitmap  = BitmapFactory.decodeByteArray(data.getInvolvedActor().getPhoto(),0,data.getInvolvedActor().getPhoto().length);
                  holder.getContactIcon().setImageBitmap(bitmap);
-            }else{
+           // }else{
                 holder.getContactIcon().setImageResource(R.drawable.mati_profile);
-            }
+           // }
 
 
             holder.getTxt_amount().setText(formatBalanceString(data.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
@@ -285,6 +286,10 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
                 holder = new ViewHolder();
                 holder.txt_amount = (FermatTextView) convertView.findViewById(R.id.txt_amount);
                 holder.txt_date = (FermatTextView) convertView.findViewById(R.id.txt_date);
+
+                holder.txt_amount.setFont(FontType.ROBOTO_REGULAR);
+                holder.txt_date.setFont(FontType.ROBOTO_REGULAR);
+
                 convertView.setTag(holder);
             }else{
                 holder = (ViewHolder)  convertView.getTag();
@@ -297,6 +302,9 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
             holder.txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
             holder.txt_date.setText(sdf.format(cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));
+
+            holder.txt_amount.setFont(FontType.ROBOTO_REGULAR);
+            holder.txt_date.setFont(FontType.ROBOTO_REGULAR);
 
             convertView.setTag(holder);
 

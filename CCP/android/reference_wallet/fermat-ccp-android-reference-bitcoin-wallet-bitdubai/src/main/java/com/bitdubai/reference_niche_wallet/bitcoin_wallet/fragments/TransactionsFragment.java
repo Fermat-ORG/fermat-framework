@@ -592,9 +592,9 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
 //                        textView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));
 //                    }
 //                    if(textView_type!=null){
-//                        if(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType()==TransactionType.CREDIT){
+//                        if(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType()==TransactionTypes.CREDIT){
 //                            textView_type.setText(R.string.credit);
-//                        }else if(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType()==TransactionType.DEBIT){
+//                        }else if(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType()==TransactionTypes.DEBIT){
 //                            textView_type.setText(R.string.debit);
 //                        }
 //                    }

@@ -6,8 +6,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure.CryptoTransmissionAgent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.NewNetworkServiceMessageSentNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent;
 
 /**
  * Created by mati on 2015.10.09..
@@ -37,12 +38,14 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent);
+        System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent.toString());
+
+        System.out.print("NOTIFICACION EVENTO LLEGADA MENSAJE!!!!");
 
 
-        if (((Service) this.cryptoTransmissionAgent).getStatus() == ServiceStatus.STARTED) {
+        if (this.cryptoTransmissionAgent.isRunning()) {
 
-            NewNetworkServiceMessageSentNotificationEvent newNetworkServiceMessageSentNotificationEvent = (NewNetworkServiceMessageSentNotificationEvent) platformEvent;
+            NewNetworkServiceMessageReceivedNotificationEvent newNetworkServiceMessageSentNotificationEvent = (NewNetworkServiceMessageReceivedNotificationEvent) platformEvent;
 
             cryptoTransmissionAgent.handleNewMessages((FermatMessage)newNetworkServiceMessageSentNotificationEvent.getData());
 

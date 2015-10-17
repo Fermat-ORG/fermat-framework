@@ -1,10 +1,20 @@
-== Blockchain beyond currency: DIGITAL ASSETS ( FERMAT DAP )  
+:numbered:
+== FERMAT P2P Network and Communication Superlayer
+This superlayer provides connectivity between devices. FERMAT P2P Network is a dumb network connecting platform network services to each other irrespective of what these services are doing. It provides the communication channels and on top of its connectivity layer network services interact with each other across different devices. Anybody can provide new network services as *plug-ins*.
+This ensures a rich *set of abstractions for wallet applications running on top of the platform*. + 
+Fermat P2P Network is used for transporting the information associated with the transaction. *TRANSPORT OF INFORMATION* (METADATA)
 
-=== 
-=== 
-=== 
+=== _Communication layer_
+:numbered!:
 
+Cloud Server :: _description ..._
+Cloud Client :: _description ..._
+P2P :: _description ..._
+Geofenced :: _description ..._
+Near Field Communication :: _description ..._
+WiFi :: _description ..._
+Mesh :: _description ..._
 
-
+:numbered:
 
 

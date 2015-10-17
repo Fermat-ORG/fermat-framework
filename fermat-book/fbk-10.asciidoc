@@ -1,6 +1,3 @@
-== FERMAT DPN: Digital Private Network
-Securing your funds 
+== FERMAT Bank Notes Platform
 
-=== 
-
-
+This platform ....

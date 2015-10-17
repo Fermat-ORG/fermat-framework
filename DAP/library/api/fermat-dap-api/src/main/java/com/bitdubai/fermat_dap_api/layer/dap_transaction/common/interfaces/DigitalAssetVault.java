@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces;
 
+import com.bitdubai.fermat_api.layer.DAPException;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -14,7 +15,15 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeleteDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -32,6 +41,8 @@ public abstract class DigitalAssetVault {
     public UUID pluginId;
     public PluginFileSystem pluginFileSystem;
     public String digitalAssetFileStoragePath;
+    public AssetIssuerWalletManager assetIssuerWalletManager;
+    public String walletPublicKey;
 
     /**
      * Set the UUID from this plugin
@@ -55,6 +66,21 @@ public abstract class DigitalAssetVault {
             throw new CantSetObjectException("pluginFileSystem is null");
         }
         this.pluginFileSystem=pluginFileSystem;
+    }
+
+    /**
+     * This method persists the DigitalAsset XML file in local storage.
+     * @param digitalAsset
+     * @throws com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException
+     */
+    public void persistDigitalAssetInLocalStorage(DigitalAsset digitalAsset)throws CantCreateDigitalAssetFileException {
+        try{
+            String digitalAssetInnerXML = digitalAsset.toString();
+            persistXMLStringInLocalStorage(digitalAssetInnerXML, digitalAsset.getPublicKey() + "-" + digitalAssetFileName);
+        } catch (CantPersistFileException | CantCreateFileException exception) {
+            throw new CantCreateDigitalAssetFileException(exception, "Persisting the digital asset objects in local storage", "Cannot create or persist the file");
+        }
+
     }
 
     /**
@@ -107,6 +133,31 @@ public abstract class DigitalAssetVault {
     }
 
     /**
+     * This method get the XML file and cast the DigitalAsset object
+     * @param assetPublicKey
+     * @return
+     * @throws com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException
+     */
+    public DigitalAsset getDigitalAssetFromLocalStorage(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
+        String digitalAssetFileName = "digital-asset.xml";
+        try {
+            DigitalAsset digitalAssetObtainedFromFileStorage = new DigitalAsset();
+            digitalAssetFileName = assetPublicKey + "-" + digitalAssetFileName;
+            PluginTextFile digitalAssetFile = this.pluginFileSystem.getTextFile(this.pluginId, this.LOCAL_STORAGE_PATH, digitalAssetFileName, FILE_PRIVACY, FILE_LIFE_SPAN);
+            String digitalAssetXMLString = digitalAssetFile.getContent();
+            digitalAssetObtainedFromFileStorage = (DigitalAsset) XMLParser.parseXML(digitalAssetXMLString, digitalAssetObtainedFromFileStorage);
+            return digitalAssetObtainedFromFileStorage;
+        } catch (FileNotFoundException exception) {
+            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Cannot find " + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
+        } catch (CantCreateFileException exception) {
+            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Cannot create " + this.LOCAL_STORAGE_PATH + digitalAssetMetadataFileName + "' file");
+        } catch (Exception exception){
+            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage","Unexpected exception getting '"+this.LOCAL_STORAGE_PATH+digitalAssetMetadataFileName+"' file");
+        }
+
+    }
+
+    /**
      * This method delete a XML file from the local storage
      * @param genesisTransaction
      * @throws com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeleteDigitalAssetFromLocalStorageException
@@ -128,6 +179,42 @@ public abstract class DigitalAssetVault {
 
     public void setDigitalAssetLocalFilePath(String digitalAssetFileStoragePath){
         this.digitalAssetFileStoragePath=digitalAssetFileStoragePath;
+    }
+
+    public void setAssetIssuerWalletManager(AssetIssuerWalletManager assetIssuerWalletManager) throws CantSetObjectException {
+        if(assetIssuerWalletManager==null){
+            throw new CantSetObjectException("assetIssuerWalletManager is null");
+        }
+        this.assetIssuerWalletManager=assetIssuerWalletManager;
+    }
+
+    public boolean isAssetTransactionHashAvailableBalanceInAssetWallet(String genesisTransactionHash, String assetPublicKey) throws DAPException{
+        try{
+            AssetIssuerWallet assetIssuerWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
+            List<AssetIssuerWalletTransaction> assetIssuerWalletTransactionList = assetIssuerWallet.getTransactionsAll(
+                    BalanceType.AVAILABLE,
+                    TransactionType.CREDIT,
+                    assetPublicKey);
+            for(AssetIssuerWalletTransaction assetIssuerWalletTransaction : assetIssuerWalletTransactionList){
+                String transactionHashFromIssuerWallet=assetIssuerWalletTransaction.getTransactionHash();
+                if(genesisTransactionHash.equals(transactionHashFromIssuerWallet)){
+                    return true;
+                }
+            }
+            return false;
+        } catch (CantGetTransactionsException exception) {
+            throw new DAPException(exception, "Checking the available balance in Asset issuer wallet", "Cannot get the transactions from Asset Issuer wallet");
+        } catch (CantLoadWalletException exception) {
+            throw new DAPException(exception, "Checking the available balance in Asset issuer wallet", "Cannot load the Asset Issuer wallet");
+        }
+
+    }
+
+    public void setWalletPublicKey(String walletPublicKey) throws CantSetObjectException {
+        if(walletPublicKey==null){
+            throw new CantSetObjectException("walletPublicKey is null");
+        }
+        this.walletPublicKey=walletPublicKey;
     }
 
 }

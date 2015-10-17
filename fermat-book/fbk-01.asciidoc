@@ -1,3 +1,5 @@
+:numbered:
+
 == What is FERMAT? 
 
 *FERMAT* is:
@@ -8,6 +10,7 @@
 * an *invitation* to the steady growing *community* supporting the creation of sustainable collective decentralized environments. +
 * a *service* to extend this amazing technology to a whole *world* of potential users respecting their uniqueness and freedom of choice.  +
 * a *system of software platforms* to build services and create new products on top, reusing the collective inteligence to evolve more efficiently and with greater global coherence. +
+* a *decentralized financial network* based on _blockchain technology_. 
 
 === The vision
 As we firmly believe that the next decade will witness crypto currencies going mainstream and governments issuing digital currency as well, we expect paper money is going to disappear within the next 5 to 10 years. Thus a strong consumer demand for *digital wallets* will inevitably emerge. In order to meet this demand thousands of diferent wallets should be available, different not only in terms of the level of abstraction they apply (some of them showing crypto currencies while others digital fiat over crypto or even digital assets) but also with respect to their appearance and how they feel to the user, as well as differencies in their functionalities.
@@ -44,13 +47,15 @@ We believe in a vision of humanity as a COLLABORATIVE LEARNING SPECIES which can
 * To give back the souveraignity of each one's ressources respecting the freedom of choice, allowing each one to choose which currency to use and how to administrate it,  regardless of the place they live or where they were born.
 
 
-=== The project: foundations for a master plan
+=== FERMAT Project: foundations for a *master plan*
 
 We strive in FERMAT to lay foundational concepts, technologies and systems to support further developments in blockchain technology in such a way, that the *ecosystem* as a whole can evolve attaining a beautiful, efficient, fair and coherent result, integrating the resultating complexity into a well organized pattern, so as if this pattern had been previously premeditated. +
 The analogy having a big architect wanting to design a new city can serves us for comparison as long as we explore FERMAT'S basic components and their development inside the master plan.
 
 As every master plan, we have to consider that the plan has succesive phases of implementation. +
+
 :numbered!:
+
 ==== PHASE I:
 
 * First, we need the ground were to build: in this case, the ground is all the available technology available today in internet, specially the available open source software, and all the devices and network technologies that let digital communication be available at a massive level.
@@ -82,7 +87,7 @@ A more detailed description of each one of these follow in the next chapters.
 
 :numbered:
   
-=== FERMAT as a financial network
+=== FERMAT as financial network
  
 ==== What's behind money?
 In our daily live we have accepted money as something present in almost every activity of human endeavour, and most of us use it without reflecting on its origin or its deeper meaning. Making it simple, money is an agreed mean of exchanging value. By its universal adoption it allows a flow of products and services between the different actors in a producer-consumer chain ( or better, in a "web" of commercial interactions) and following this, an exchange of the value associated with each step, rewarding each actor with a portion of the entire value, what we call "profit". 

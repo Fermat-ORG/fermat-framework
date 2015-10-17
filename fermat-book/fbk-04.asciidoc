@@ -1,11 +1,24 @@
-== FERMAT CCP (crypto currency platform)
+:numbered:
 
-=== BitWa (Basic Bitcoin Wallet)  -> *for those devoted "BTC-only" users!*
-=== Argentine Bitcoin wallet -> *for citizen's of the nr.1 potential mass market for BTC (designed to match argentine culture of steady* comparison between argentine$, USD (oficial and blue!) and even Eu$!)
-=== BLP (Bitcoin Loss Protected wallet) -> *for conservative user's caring about never selling under the purchase price ! (preserving value!)*
+== FERMAT Operating Systems Superlayer
 
+NOTE: We call in FERMAT *Superlayer* to a group of layers whose modules offer services to be consumed system-wide, i.e. offering an infrastructure that hold the different *platforms* running over FERMAT. (it is like a "common ground" where different "towers" (the platforms) are built, sharing basics level services - like water, electricity and gas supply for a real world building-. )
 
+This superlayer allow the connectivity of OS dependant modules to the rest of FERMAT multiplatform (_OS independent_). The modules offer the necessary functions to interact with the corresponding OS. 
+ 
+=== _Android layer_
+In this layer, we find the different modules to allow FERMAT function on a device running Android. The usual requirements of storing and retrieving information, managing files, managing user log-on, checking the device status, location, etc are taken by each specific modules.
 
+File System ::
+Database System ::
+Logger ::
+Device Location ::
+Device Connectivity ::
+Device Power ::
+Device Contacts ::
+Device Hardware:: +
 
+=== _Multi OS layer_
 
-
+File System ::
+Database System ::

@@ -24,8 +24,8 @@ class BitcoinCryptoNetworkDatabaseConstants {
     static final String INCOMING_TRANSACTIONS_ADDRESS_TO_COLUMN_NAME = "address_to";
     static final String INCOMING_TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME = "address_from";
     static final String INCOMING_TRANSACTIONS_VALUE_COLUMN_NAME = "value";
-    static final String INCOMING_TRANSACTIONS_FEE_COLUMN_NAME = "fee";
-    static final String INCOMING_TRANSACTIONS_TRANSMISSION_STATUS_COLUMN_NAME = "transmission_status";
+    static final String INCOMING_TRANSACTIONS_OP_RETURN_COLUMN_NAME = "op_return";
+    static final String INCOMING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME = "protocol_status";
     static final String INCOMING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME = "last_update";
 
     static final String INCOMING_TRANSACTIONS_FIRST_KEY_COLUMN = "trx_id";
@@ -42,8 +42,8 @@ class BitcoinCryptoNetworkDatabaseConstants {
     static final String OUTGOING_TRANSACTIONS_ADDRESS_TO_COLUMN_NAME = "address_to";
     static final String OUTGOING_TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME = "address_from";
     static final String OUTGOING_TRANSACTIONS_VALUE_COLUMN_NAME = "value";
-    static final String OUTGOING_TRANSACTIONS_FEE_COLUMN_NAME = "fee";
-    static final String OUTGOING_TRANSACTIONS_TRANSMISSION_STATUS_COLUMN_NAME = "transmission_status";
+    static final String OUTGOING_TRANSACTIONS_OP_RETURN_COLUMN_NAME = "op_return";
+    static final String OUTGOING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME = "transmission_status";
     static final String OUTGOING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME = "last_update";
 
     static final String OUTGOING_TRANSACTIONS_FIRST_KEY_COLUMN = "trx_id";

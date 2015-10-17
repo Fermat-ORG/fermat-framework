@@ -13,6 +13,8 @@ public enum EventSource implements FermatEnum {
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
 
+    ASSETS_OVER_BITCOIN_VAULT               ("AOB"),
+    ACTOR_ASSET_USER                         ("AAU"),
     COMMUNICATION_CLOUD_PLUGIN              ("CCL"),
     CRYPTO_ADDRESS_BOOK                     ("CAB"),
     CRYPTO_NETWORK_BITCOIN_PLUGIN           ("CNB"),
@@ -57,6 +59,8 @@ public enum EventSource implements FermatEnum {
 
         switch (code) {
 
+            case "AOB":    return ASSETS_OVER_BITCOIN_VAULT;
+            case "AAU":    return ACTOR_ASSET_USER;
             case "CCL":    return COMMUNICATION_CLOUD_PLUGIN;
             case "CAB":    return CRYPTO_ADDRESS_BOOK;
             case "CNB":    return CRYPTO_NETWORK_BITCOIN_PLUGIN;

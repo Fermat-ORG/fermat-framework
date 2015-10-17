@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetActorTransactionHistoryException;
@@ -85,7 +86,7 @@ public class TransactionHistoryAdapter extends FermatAdapter<CryptoWalletTransac
 
         try
         {
-            holder.getContactIcon().setImageResource(R.drawable.mati_profile);
+            //holder.getContactIcon().setImageResource(R.drawable.mati_profile);
 
             holder.getTxt_amount().setText(formatBalanceString(data.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
 
@@ -95,6 +96,7 @@ public class TransactionHistoryAdapter extends FermatAdapter<CryptoWalletTransac
 
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
             holder.getTxt_time().setText(sdf.format(data.getBitcoinWalletTransaction().getTimestamp()));
+
 
             ActorTransactionSummary actorTransactionSummary = null;
 

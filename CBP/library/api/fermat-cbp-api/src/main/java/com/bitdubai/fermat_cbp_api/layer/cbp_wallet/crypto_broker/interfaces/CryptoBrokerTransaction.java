@@ -8,27 +8,23 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import java.util.UUID;
 
 /**
- * Created by yordin on 02/10/15.
+ * Created by Yordin Alayn on 02.10.15.
  */
 public interface CryptoBrokerTransaction {
 
     UUID getTransactionId();
 
-    UUID getMoneyTransactionId();
-
-    String getPublicKeyCustomer();
-
-    String getPublicKeyBroker();
-
-    //BankTransactionStatus getStatus();
-
     BalanceType getBalanceType();
 
     TransactionType getTransactionType();
 
-    float getAmount();
-
     CurrencyType getCurrencyType();
+
+    String getPublicKeyActorFrom();
+
+    String getPublicKeyActorTo();
+
+    float getAmount();
 
     long getTimestamp();
 

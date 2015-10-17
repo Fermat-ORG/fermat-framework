@@ -1672,6 +1672,9 @@
 						</mantainers>
 						<certifications>
 						</certifications>
+						<screenshots>
+							<screenshot>wallet_teens_1.png</screenshot>
+						</screenshots>
 					</android>
 					<android
 						name="Bitcoin Loss Protected"
@@ -2242,6 +2245,7 @@
 							<mantainer name="lnacosta"></mantainer>
 						</mantainers>
 						<certifications>
+							<certification signed-by="lnacosta" type="implementation"></certification>
 						</certifications>
 					</plugin>
 					<plugin
@@ -7000,7 +7004,7 @@
 	                  platform="CBP"
 	                  superlayer=""
 	                  component="Plugin"
-	                  layer="Module"
+	                  layer="Sub App Module"
 	                  name="Crypto Broker Community"
 	                  >
 	                <next>

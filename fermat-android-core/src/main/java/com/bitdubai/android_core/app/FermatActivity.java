@@ -76,6 +76,16 @@ import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.IntraWalletUserIdentityPluginRoot;
+import com.bitdubai.fermat_core.CorePlatformContext;
+import com.bitdubai.fermat_core.Platform;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_plugin.layer.module.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerWalletModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.SubAppSettingsManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettingsManager;
@@ -701,7 +711,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
                     // finally change the color
                     window.setStatusBarColor(Color.TRANSPARENT);
-                    window.setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/fondo.jpg"), null));
+                    //window.setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/fondo.jpg"), null));
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                     Log.d("WalletActivity", "Sdk version not compatible with status bar color");
@@ -1278,6 +1288,14 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     }
 
     /**
+     * Intra user identity
+     */
+    public IntraWalletUserManager getIntraWalletUserManager() {
+        return (IntraWalletUserManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY);
+    }
+
+
+    /**
      * DAP
      */
     public AssetFactoryModuleManager getAssetFactoryModuleManager() {
@@ -1285,11 +1303,41 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     }
 
     /**
+     * Assest Issuer
+     */
+    public AssetIssuerWalletSupAppModuleManager getAssetIssuerWalletModuleManager() {
+        return (AssetIssuerWalletSupAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE);
+    }
+    /**
+     *  Assets User community
+     */
+    public AssetUserCommunitySubAppModuleManager getAssetUserCommunitySubAppModuleManager() {
+        return null;//(AssetUserCommunitySubAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.DAP);
+    }
+
+
+    /**
      * CBP
      */
     public CryptoBrokerWalletModuleManager getCryptoBrokerWalletModuleManager() {
-//        return (CryptoBrokerWalletModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BRO);
+        //return (CryptoBrokerWalletModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BRO);
         return null;
+    }
+
+    public CryptoBrokerIdentityModuleManager getCryptoBrokerIdentityModuleManager() {
+        ApplicationSession applicationSession = (ApplicationSession) getApplication();
+        Platform platform = applicationSession.getFermatPlatform();
+        CorePlatformContext platformContext = platform.getCorePlatformContext();
+
+        return (CryptoBrokerIdentityModuleManager) platformContext.getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE);
+    }
+
+    public CryptoCustomerIdentityModuleManager getCryptoCustomerIdentityModuleManager(){
+        ApplicationSession applicationSession = (ApplicationSession) getApplication();
+        Platform platform = applicationSession.getFermatPlatform();
+        CorePlatformContext platformContext = platform.getCorePlatformContext();
+
+        return (CryptoCustomerIdentityModuleManager) platformContext.getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE);
     }
 
     /**

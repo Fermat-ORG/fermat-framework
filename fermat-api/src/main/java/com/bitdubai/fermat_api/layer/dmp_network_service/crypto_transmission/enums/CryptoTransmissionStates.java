@@ -20,7 +20,7 @@ public enum CryptoTransmissionStates {
     /**
      * Receiving states
      */
-    PROCESSING_RECEIVE("PR"),
+    SEEN_BY_OWN_NETWORK_SERVICE("SBONS"),
     SEEN_BY_OWN_VAULT("SBOV"),
     CREDITED_IN_OWN_WALLET("CIOW"),
     ;

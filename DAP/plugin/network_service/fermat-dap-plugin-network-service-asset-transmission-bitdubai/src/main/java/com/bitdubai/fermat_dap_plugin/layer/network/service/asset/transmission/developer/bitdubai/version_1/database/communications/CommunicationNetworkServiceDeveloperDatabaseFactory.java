@@ -21,7 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantInitializeAssetTransmissionNetworkServiceDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,9 +66,9 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeTemplateNetworkServiceDatabaseException
+     * @throws CantInitializeAssetTransmissionNetworkServiceDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeTemplateNetworkServiceDatabaseException {
+    public void initializeDatabase() throws CantInitializeAssetTransmissionNetworkServiceDatabaseException {
         try {
 
              /*
@@ -81,7 +81,7 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitializeAssetTransmissionNetworkServiceDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -89,18 +89,18 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            CommunicationNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            CommunicationNetworkServiceDatabaseFactory assetTransmissionNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
             try {
                   /*
                    * We create the new database
                    */
-                database = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = assetTransmissionNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeTemplateNetworkServiceDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitializeAssetTransmissionNetworkServiceDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }
@@ -111,7 +111,7 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Template", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase("Asset Transmission", this.pluginId.toString()));
         return databases;
     }
 
@@ -157,7 +157,27 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
         DeveloperDatabaseTable outgoingmessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME, outgoingmessagesColumns);
         tables.add(outgoingmessagesTable);
 
+        /**
+         * Table digital_asset_metadata_transaction columns.
+         */
+        List<String> digital_asset_metadata_transactionColumns = new ArrayList<String>();
 
+        digital_asset_metadata_transactionColumns.add(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TRANSACTION_ID_COLUMN_NAME);
+        digital_asset_metadata_transactionColumns.add(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_GENESIS_TRANSACTION_COLUMN_NAME);
+        digital_asset_metadata_transactionColumns.add(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_SENDER_ID_COLUMN_NAME);
+        digital_asset_metadata_transactionColumns.add(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_SENDER_TYPE_COLUMN_NAME);
+        digital_asset_metadata_transactionColumns.add(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_RECEIVER_ID_COLUMN_NAME);
+        digital_asset_metadata_transactionColumns.add(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_RECEIVER_TYPE_COLUMN_NAME);
+        digital_asset_metadata_transactionColumns.add(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_META_DATA_XML_COLUMN_NAME);
+        digital_asset_metadata_transactionColumns.add(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TYPE_COLUMN_NAME);
+        digital_asset_metadata_transactionColumns.add(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_DISTRIBUTION_STATUS_COLUMN_NAME);
+        digital_asset_metadata_transactionColumns.add(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TIMESTAMP_COLUMN_NAME);
+        digital_asset_metadata_transactionColumns.add(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_PROCESSED_COLUMN_NAME);
+        /**
+         * Table digital_asset_metadata_transaction addition.
+         */
+        DeveloperDatabaseTable digital_asset_metadata_transactionTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TABLE_NAME, digital_asset_metadata_transactionColumns);
+        tables.add(digital_asset_metadata_transactionTable);
 
         return tables;
     }
@@ -184,8 +204,8 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
         }
 
         List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
         for (DatabaseTableRecord row : records) {
+            List<String> developerRow = new ArrayList<String>();
             /**
              * for each row in the table list
              */

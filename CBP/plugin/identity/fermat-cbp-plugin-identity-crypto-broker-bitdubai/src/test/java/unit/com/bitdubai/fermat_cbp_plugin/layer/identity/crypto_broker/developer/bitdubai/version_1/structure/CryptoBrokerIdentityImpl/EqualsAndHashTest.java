@@ -1,6 +1,6 @@
 package unit.com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerIdentityImpl;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentity;
@@ -34,7 +34,7 @@ public class EqualsAndHashTest {
 
     @Before
     public void setUpIdentity(){
-        testKeyPair = AsymmectricCryptography.createKeyPair(TEST_PRIVATE_KEY);
+        testKeyPair = AsymmetricCryptography.createKeyPair(TEST_PRIVATE_KEY);
         testIdentity1 = new CryptoBrokerIdentityImpl(testAlias, testKeyPair, testProfileImage, mockPluginFileSystem);
     }
 
@@ -54,7 +54,7 @@ public class EqualsAndHashTest {
 
     @Test
     public void Equals_DifferentKeyPair_False(){
-        testIdentity2 = new CryptoBrokerIdentityImpl(testAlias, AsymmectricCryptography.generateECCKeyPair(), testProfileImage, mockPluginFileSystem);
+        testIdentity2 = new CryptoBrokerIdentityImpl(testAlias, AsymmetricCryptography.generateECCKeyPair(), testProfileImage, mockPluginFileSystem);
         assertThat(testIdentity1).isNotEqualTo(testIdentity2);
         assertThat(testIdentity1.hashCode()).isNotEqualTo(testIdentity2.hashCode());
     }

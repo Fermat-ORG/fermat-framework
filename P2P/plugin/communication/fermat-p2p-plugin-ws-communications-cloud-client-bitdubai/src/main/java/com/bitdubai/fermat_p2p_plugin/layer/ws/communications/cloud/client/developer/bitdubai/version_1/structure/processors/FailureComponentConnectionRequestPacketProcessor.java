@@ -6,20 +6,16 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.DiscoveryQueryParametersCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentConnectionRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -57,7 +53,7 @@ public class FailureComponentConnectionRequestPacketProcessor extends FermatPack
         /*
          * Get the filters from the message content and decrypt
          */
-        String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
+        String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
         System.out.println("FailureComponentConnectionRequestPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
@@ -65,26 +61,26 @@ public class FailureComponentConnectionRequestPacketProcessor extends FermatPack
          * Construct the json object
          */
         JsonObject packetContent = jsonParser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
-        PlatformComponentProfile networkServiceApplicant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_NS_VPN).getAsString());
-        DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(packetContent.get(JsonAttNamesConstants.DISCOVERY_PARAM_VPN).getAsString());
+        PlatformComponentProfile networkServiceApplicant = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_NS_VPN).getAsString());
+        PlatformComponentProfile remoteParticipant       = new PlatformComponentProfileCommunication().fromJson(packetContent.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString());
         System.out.println("FailureComponentConnectionRequestPacketProcessor - networkServiceApplicant "+networkServiceApplicant.toJson());
 
         /*
          * Create a new event whit the networkServiceType and remoteIdentity
          */
-        FermatEvent event = EventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION.getNewEvent();
+        FermatEvent event = P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION.getNewEvent();
         event.setSource(EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN);
 
         /*
          * Configure the values
          */
         ((FailureComponentConnectionRequestNotificationEvent)event).setNetworkServiceApplicant(networkServiceApplicant);
-        ((FailureComponentConnectionRequestNotificationEvent)event).setDiscoveryQueryParameters(discoveryQueryParameters);
+        ((FailureComponentConnectionRequestNotificationEvent)event).setRemoteParticipant(remoteParticipant);
 
         /*
          * Raise the event
          */
-        System.out.println("FailureComponentConnectionRequestPacketProcessor - Raised a event = EventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION");
+        System.out.println("FailureComponentConnectionRequestPacketProcessor - Raised a event = P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION");
         getWsCommunicationsCloudClientChannel().getEventManager().raiseEvent(event);
 
     }

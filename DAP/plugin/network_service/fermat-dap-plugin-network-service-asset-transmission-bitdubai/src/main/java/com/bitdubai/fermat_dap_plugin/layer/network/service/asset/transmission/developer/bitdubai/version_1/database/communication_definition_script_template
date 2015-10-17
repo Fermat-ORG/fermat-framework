@@ -1,7 +1,7 @@
 String developerName = "Roberto Requena"
 
 String developerMail = "rart3001@gmail.com"
-String pluginName = "Template"
+String pluginName = "Asset Transmission"
 String layerName = "Network Service"
 String packageRoot = "com.bitdubai.fermat_dmp_plugin"
 String jdkVersion = "1.7"
@@ -15,11 +15,11 @@ databaseTables << [
         ["id", "STRING", "36", "false"],
         ["sender id", "STRING", "100", "false"],
         ["receiver id", "STRING", "10", "false"],
-	["text content", "STRING", "255", "false"],
-	["type", "STRING", "100", "false"],
-	["shipping timestamp", "STRING", "100", "false"],
-	["delivery timestamp", "STRING", "255", "false"],
-	["status", "STRING", "100", "false"]
+        ["text content", "STRING", "255", "false"],
+        ["type", "STRING", "100", "false"],
+        ["shipping timestamp", "STRING", "100", "false"],
+        ["delivery timestamp", "STRING", "255", "false"],
+        ["status", "STRING", "100", "false"]
     ],
     firstKey:"id"
 ]
@@ -30,13 +30,31 @@ databaseTables << [
         ["id", "STRING", "36", "false"],
         ["sender id", "STRING", "100", "false"],
         ["receiver id", "STRING", "10", "false"],
-	["text content", "STRING", "255", "false"],
-	["type", "STRING", "100", "false"],
-	["shipping timestamp", "STRING", "100", "false"],
-	["delivery timestamp", "STRING", "255", "false"],
-	["status", "STRING", "100", "false"]
+        ["text content", "STRING", "255", "false"],
+        ["type", "STRING", "100", "false"],
+        ["shipping timestamp", "STRING", "100", "false"],
+        ["delivery timestamp", "STRING", "255", "false"],
+        ["status", "STRING", "100", "false"]
     ],
     firstKey:"id"
+]
+
+databaseTables << [
+    name: "digital_asset_metadata_transaction",
+    columns: [
+        ["transaction_id", "STRING", "255", "false"],
+        ["genesis_transaction", "STRING", "255", "false"],
+        ["sender id", "STRING", "255", "false"],
+        ["sender type", "STRING", "30", "false"],
+        ["receiver id", "STRING", "255", "false"],
+        ["receiver type", "STRING", "30", "false"],
+	    ["meta_data_xml", "STRING", "1000", "false"],
+	    ["type", "STRING", "20", "false"],
+	    ["distribution_status", "STRING", "100", "false"],
+	    ["timestamp", "STRING", "255", "false"],
+	    ["processed", "STRING", "1", "false"]
+    ],
+    firstKey:"transaction_id"
 ]
 
 /**
@@ -405,8 +423,8 @@ templateDeveloperFactory += """
         }
 
         List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
         for (DatabaseTableRecord row : records) {
+            List<String> developerRow = new ArrayList<String>();
             /**
              * for each row in the table list
              */

@@ -22,7 +22,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.devel
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.java_websocket.WebSocket;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ClientHandshake;
@@ -30,7 +29,7 @@ import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -99,9 +98,9 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
     private Map<NetworkServiceType, List<PlatformComponentProfile>> registeredNetworkServicesCache;
 
     /**
-     * Holds all the Platform Component Profile register by type
+     * Holds all other Platform Component Profile register by type
      */
-    private Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfileCache;
+    private Map<PlatformComponentType, List<PlatformComponentProfile>> registeredOtherPlatformComponentProfileCache;
 
     /**
      * Constructor with parameter
@@ -118,7 +117,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
         this.registeredCommunicationsCloudServerCache = new ConcurrentHashMap<>();
         this.registeredCommunicationsCloudClientCache = new ConcurrentHashMap<>();
         this.registeredNetworkServicesCache           = new ConcurrentHashMap<>();
-        this.registeredPlatformComponentProfileCache  = new ConcurrentHashMap<>();
+        this.registeredOtherPlatformComponentProfileCache = new ConcurrentHashMap<>();
     }
 
     /**
@@ -218,7 +217,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" WsCommunicationCloudServer - Starting method onMessage");
        // System.out.println(" WsCommunicationCloudServer - encode fermatPacket = " + fermatPacketEncode);
-        System.out.println(" WsCommunicationCloudServer - server identity for this connection = " + serverIdentityByClientCache.get(clientConnection.hashCode()).getPrivateKey());
+       // System.out.println(" WsCommunicationCloudServer - server identity for this connection = " + serverIdentityByClientCache.get(clientConnection.hashCode()).getPrivateKey());
 
         /*
          * Get the server identity for this client connection
@@ -230,7 +229,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
          */
         FermatPacket fermatPacketReceive = FermatPacketDecoder.decode(fermatPacketEncode, serverIdentity.getPrivateKey());
 
-        System.out.println(" WsCommunicationCloudServer - decode fermatPacket = " + fermatPacketReceive);
+        //System.out.println(" WsCommunicationCloudServer - decode fermatPacket = " + fermatPacketReceive.toJson());
         System.out.println(" WsCommunicationCloudServer - fermatPacket.getFermatPacketType() = " + fermatPacketReceive.getFermatPacketType());
 
 
@@ -332,16 +331,19 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
            /*
              * Clean all the caches, remove data bind whit this connection
              */
-           //TODO: REMOVE ALL COMPONENT REGISTER WITH THIS CONNECTION AND THIS IS MORE EASY IS IN DATA BASE
-           removeNetworkServiceRegisteredByClientIdentity(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
-           removePlatformComponentRegisteredByClientIdentity(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
-           pendingRegisterClientConnectionsCache.remove(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
-           registeredClientConnectionsCache.remove(clientIdentityByClientConnectionCache.get(clientConnection.hashCode()));
-           serverIdentityByClientCache.remove(clientConnection.hashCode());
-           clientIdentityByClientConnectionCache.remove(clientConnection.hashCode());
-           registeredCommunicationsCloudServerCache.remove(clientConnection.hashCode());
-           registeredCommunicationsCloudClientCache.remove(clientConnection.hashCode());
+           Integer clientConnectionHashCode  = clientConnection.hashCode();
+           System.out.println(" WsCommunicationCloudServer - clientConnectionHashCode = " + clientConnectionHashCode);
+           String clientIdentity = clientIdentityByClientConnectionCache.get(clientConnectionHashCode);
+           System.out.println(" WsCommunicationCloudServer - clientIdentity           = " + clientIdentity);
 
+           removeNetworkServiceRegisteredByClientIdentity(clientIdentity);
+           removeOtherPlatformComponentRegisteredByClientIdentity(clientIdentity);
+           pendingRegisterClientConnectionsCache.remove(clientIdentity);
+           registeredClientConnectionsCache.remove(clientIdentity);
+           serverIdentityByClientCache.remove(clientConnectionHashCode);
+           clientIdentityByClientConnectionCache.remove(clientConnectionHashCode);
+           registeredCommunicationsCloudServerCache.remove(clientConnectionHashCode);
+           registeredCommunicationsCloudClientCache.remove(clientConnectionHashCode);
 
        }catch (Exception e){
            e.printStackTrace();
@@ -354,7 +356,13 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
         System.out.println(" WsCommunicationCloudServer - registeredCommunicationsCloudServerCache.size() = " + registeredCommunicationsCloudServerCache.size());
         System.out.println(" WsCommunicationCloudServer - registeredCommunicationsCloudClientCache.size() = " + registeredCommunicationsCloudClientCache.size());
         System.out.println(" WsCommunicationCloudServer - registeredNetworkServicesCache.size()           = " + registeredNetworkServicesCache.size());
-        System.out.println(" WsCommunicationCloudServer - registeredPlatformComponentProfileCache.size()  = " + registeredPlatformComponentProfileCache.size());
+        for (NetworkServiceType networkServiceType: registeredNetworkServicesCache.keySet()) {
+            System.out.println(" WsCommunicationCloudServer - " + networkServiceType + " = " + registeredNetworkServicesCache.get(networkServiceType).size());
+        }
+        System.out.println(" WsCommunicationCloudServer - registeredOtherPlatformComponentProfileCache.size()  = " + registeredOtherPlatformComponentProfileCache.size());
+        for (PlatformComponentType platformComponentType: registeredOtherPlatformComponentProfileCache.keySet()) {
+            System.out.println(" WsCommunicationCloudServer - " + platformComponentType + " = " + registeredOtherPlatformComponentProfileCache.get(platformComponentType).size());
+        }
     }
 
 
@@ -362,39 +370,38 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
      * This method unregister network service component profile
      * register
      */
-    private void removeNetworkServiceRegisteredByClientIdentity(String clientIdentity){
+    private void removeNetworkServiceRegisteredByClientIdentity(final String clientIdentity){
 
         System.out.println(" WsCommunicationCloudServer - removeNetworkServiceRegisteredByClientIdentity ");
 
-        /*
-         * Hold references to remove
-         */
-        Map<NetworkServiceType, PlatformComponentProfile> platformComponentProfileMapToRemove = new HashMap();
+        Iterator<NetworkServiceType> iteratorNetworkServiceType = registeredNetworkServicesCache.keySet().iterator();
 
-        /*
-         * Search all the profile to remove
-         */
-        for (NetworkServiceType networkServiceType : registeredNetworkServicesCache.keySet()) {
+        while (iteratorNetworkServiceType.hasNext()){
 
-            for (PlatformComponentProfile platformComponentProfile : registeredNetworkServicesCache.get(networkServiceType)) {
+            NetworkServiceType networkServiceType = iteratorNetworkServiceType.next();
+            Iterator<PlatformComponentProfile> iterator = registeredNetworkServicesCache.get(networkServiceType).iterator();
+            while (iterator.hasNext()){
 
-                if(platformComponentProfile.getCommunicationCloudClientIdentity().equals(clientIdentity)){
+                /*
+                 * Remove the platformComponentProfileRegistered
+                 */
+                PlatformComponentProfile platformComponentProfileRegistered = iterator.next();
 
-                   // System.out.println(" WsCommunicationCloudServer - unregister = " + platformComponentProfile.getCommunicationCloudClientIdentity());
-                    platformComponentProfileMapToRemove.put(networkServiceType, platformComponentProfile);
-                    break;
-
+                if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(clientIdentity)){
+                    System.out.println("RequestListComponentRegisterPacketProcessor - removing ="+platformComponentProfileRegistered.getName());
+                    iterator.remove();
                 }
             }
 
+            if (registeredNetworkServicesCache.get(networkServiceType).isEmpty()){
+                registeredNetworkServicesCache.remove(networkServiceType);
+            }
         }
 
         /*
-         * Remove the profiles
+         * Remove the networkServiceType empty
          */
-        for (NetworkServiceType networkServiceType: platformComponentProfileMapToRemove.keySet()) {
-
-            registeredNetworkServicesCache.get(networkServiceType).remove(platformComponentProfileMapToRemove.get(networkServiceType));
+        for (NetworkServiceType networkServiceType : registeredNetworkServicesCache.keySet()) {
 
             if (registeredNetworkServicesCache.get(networkServiceType).isEmpty()){
                 registeredNetworkServicesCache.remove(networkServiceType);
@@ -408,40 +415,32 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
      * This method unregister all platform component profile
      * register
      */
-    private void removePlatformComponentRegisteredByClientIdentity(String clientIdentity){
+    private void removeOtherPlatformComponentRegisteredByClientIdentity(final String clientIdentity){
 
-        System.out.println(" WsCommunicationCloudServer - removePlatformComponentRegisterByClientIdentity ");
+        System.out.println(" WsCommunicationCloudServer - removeOtherPlatformComponentRegisteredByClientIdentity ");
 
+        Iterator<PlatformComponentType> iteratorPlatformComponentType = registeredOtherPlatformComponentProfileCache.keySet().iterator();
+        while (iteratorPlatformComponentType.hasNext()){
 
-        Map<PlatformComponentType, PlatformComponentProfile> platformComponentProfileMapToRemove = new HashMap<>();
+            PlatformComponentType platformComponentType = iteratorPlatformComponentType.next();
+            Iterator<PlatformComponentProfile> iterator = registeredOtherPlatformComponentProfileCache.get(platformComponentType).iterator();
+            while (iterator.hasNext()){
 
-        for (PlatformComponentType platformComponentType : registeredPlatformComponentProfileCache.keySet()) {
-
-            for (PlatformComponentProfile platformComponentProfile : registeredPlatformComponentProfileCache.get(platformComponentType)) {
-
-                if(platformComponentProfile.getCommunicationCloudClientIdentity().equals(clientIdentity)){
-
-                    System.out.println(" WsCommunicationCloudServer - unregister = " + platformComponentProfile.getCommunicationCloudClientIdentity());
-                    platformComponentProfileMapToRemove.put(platformComponentType, platformComponentProfile);
-                    break;
-
+                /*
+                 * Remove the platformComponentProfileRegistered
+                 */
+                PlatformComponentProfile platformComponentProfileRegistered = iterator.next();
+                if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(clientIdentity)){
+                    System.out.println("RequestListComponentRegisterPacketProcessor - removing Other ="+platformComponentProfileRegistered.getName());
+                    iterator.remove();
                 }
             }
 
-        }
-
-        /*
-         * Remove the profiles
-         */
-        for (PlatformComponentType platformComponentType: platformComponentProfileMapToRemove.keySet()) {
-
-            registeredPlatformComponentProfileCache.get(platformComponentType).remove(platformComponentProfileMapToRemove.get(platformComponentType));
-
-            if (registeredPlatformComponentProfileCache.get(platformComponentType).isEmpty()){
-
-                if (registeredPlatformComponentProfileCache.get(platformComponentType).isEmpty()){
-                    registeredPlatformComponentProfileCache.remove(platformComponentType);
-                }
+            /*
+             * Remove the platformComponentType empty
+             */
+            if (registeredOtherPlatformComponentProfileCache.get(platformComponentType).isEmpty()){
+                registeredOtherPlatformComponentProfileCache.remove(platformComponentType);
             }
         }
 
@@ -494,8 +493,8 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
      * Get the RegisteredPlatformComponentProfileCache
      * @return Map<PlatformComponentType, List<PlatformComponentProfile>>
      */
-    public Map<PlatformComponentType, List<PlatformComponentProfile>> getRegisteredPlatformComponentProfileCache() {
-        return registeredPlatformComponentProfileCache;
+    public Map<PlatformComponentType, List<PlatformComponentProfile>> getRegisteredOtherPlatformComponentProfileCache() {
+        return registeredOtherPlatformComponentProfileCache;
     }
 
     /**

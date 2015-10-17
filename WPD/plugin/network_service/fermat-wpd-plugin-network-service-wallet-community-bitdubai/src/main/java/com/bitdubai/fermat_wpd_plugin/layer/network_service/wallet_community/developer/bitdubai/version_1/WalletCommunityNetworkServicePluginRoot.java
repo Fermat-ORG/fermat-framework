@@ -175,7 +175,7 @@ public class WalletCommunityNetworkServicePluginRoot implements Service, Network
     }
 
     @Override
-    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, DiscoveryQueryParameters discoveryQueryParameters) {
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
 
     }
 

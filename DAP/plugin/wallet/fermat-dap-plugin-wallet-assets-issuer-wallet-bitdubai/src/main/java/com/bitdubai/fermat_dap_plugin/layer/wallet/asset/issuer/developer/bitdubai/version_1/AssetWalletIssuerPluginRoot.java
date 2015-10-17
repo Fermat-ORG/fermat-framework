@@ -10,7 +10,9 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -28,13 +30,20 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.DealsWithAssetDistribution;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantInitializeAssetIssuerWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransactionRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
@@ -56,9 +65,10 @@ import java.util.UUID;
 /**
  * Created by Franklin on 07/09/15.
  */
-public class AssetWalletIssuerPluginRoot implements AssetIssuerWalletManager, Plugin, Service, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, DatabaseManagerForDevelopers {
+public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, AssetIssuerWalletManager, Plugin, Service, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, DatabaseManagerForDevelopers {
     private static final String WALLET_ISSUER_FILE_NAME = "walletsIds";
     private Map<String, UUID> walletIssuer = new HashMap<>();
+    AssetDistributionManager assetDistributionManager;
 
     private UUID pluginId;
 
@@ -93,10 +103,9 @@ public class AssetWalletIssuerPluginRoot implements AssetIssuerWalletManager, Pl
     public void start() throws CantStartPluginException {
         try{
             loadWalletIssuerMap();
-            //createWalletAssetIssuer("walletPublicKeyTest");
-            //assetIssuerWallet = loadAssetIssuerWallet("walletPublicKeyTest");
-            //testWallet();
-            //System.out.println(assetIssuerWallet);
+            createWalletAssetIssuer("walletPublicKeyTest");
+            assetIssuerWallet = loadAssetIssuerWallet("walletPublicKeyTest");
+            testWallet();
             System.out.println("Star Plugin AssetWalletIssuer");
             this.serviceStatus = ServiceStatus.STARTED;
         }catch(CantStartPluginException exception){
@@ -220,7 +229,7 @@ public class AssetWalletIssuerPluginRoot implements AssetIssuerWalletManager, Pl
     public AssetIssuerWallet loadAssetIssuerWallet(String walletPublicKey) throws CantLoadWalletException {
 
         try {
-            AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
+            AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, assetDistributionManager);
 
             UUID internalAssetIssuerWalletId = walletIssuer.get(walletPublicKey);
             assetIssuerWallet.initialize(internalAssetIssuerWalletId);
@@ -238,7 +247,7 @@ public class AssetWalletIssuerPluginRoot implements AssetIssuerWalletManager, Pl
     @Override
     public void createWalletAssetIssuer(String walletPublicKey) throws CantCreateWalletException {
         try {
-            AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
+            AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, assetDistributionManager);
 
             UUID internalAssetIssuerWalletId = assetIssuerWallet.create(walletPublicKey);
 
@@ -254,44 +263,101 @@ public class AssetWalletIssuerPluginRoot implements AssetIssuerWalletManager, Pl
 
     private void testWallet(){
         DigitalAsset digitalAsset = new DigitalAsset();
-        digitalAsset.setPublicKey("assetPublicKey");
-        digitalAsset.setName("Asset de Prueba");
-        digitalAsset.setDescription("2x1");
+        digitalAsset.setPublicKey("assetPublicKeyNew1");
+        digitalAsset.setName("McDonald Coupon");
+        digitalAsset.setDescription("2x1 La Patria te Da Mas");
         CryptoAddress cryptoFromAddress = new CryptoAddress("cryptoAddresFrom", CryptoCurrency.BITCOIN);
         CryptoAddress cryptoToAddress = new CryptoAddress("cryptoAddresFrom", CryptoCurrency.BITCOIN);
 
         AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper = new AssetIssuerWalletTransactionRecordWrapper(
                 digitalAsset,
                 "",
-                "Asset de Prueba",
-                "2x1",
+                "McDonald Coupon Coupon",
+                "2x1  La Patria te Da Mas",
                 cryptoFromAddress,
                 cryptoToAddress,
                 "actorFromPublicKey",
                 "actorToPublicKey",
                 Actors.ASSET_USER,
                 Actors.ASSET_USER,
-                1,
+                10000,
                 0,
                 "memo",
                 "digitalAssetMetadaHash",
                 UUID.randomUUID()
                 );
+
+        DigitalAsset digitalAsset1 = new DigitalAsset();
+        digitalAsset1.setPublicKey("assetPublicKeyNew2");
+        digitalAsset1.setName("Coupon Patriotico");
+        digitalAsset1.setDescription("2x1 La Patria te Da Mas");
+        CryptoAddress cryptoFromAddress1 = new CryptoAddress("cryptoAddresFrom", CryptoCurrency.BITCOIN);
+        CryptoAddress cryptoToAddress1 = new CryptoAddress("cryptoAddresFrom", CryptoCurrency.BITCOIN);
+
+        AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper3 = new AssetIssuerWalletTransactionRecordWrapper(
+                digitalAsset1,
+                "",
+                "Coupon Patriotico",
+                "2x1  La Patria te Da Mas",
+                cryptoFromAddress1,
+                cryptoToAddress1,
+                "actorFromPublicKey",
+                "actorToPublicKey",
+                Actors.ASSET_USER,
+                Actors.ASSET_USER,
+                20000,
+                0,
+                "memo",
+                "digitalAssetMetadaHash",
+                UUID.randomUUID()
+        );
         try {
-            System.out.println(assetIssuerWalletTransactionRecordWrapper);
-            System.out.println("Antes de Grabar-----------------------------------------------------------");
-            System.out.println("Asset Name             : "   + assetIssuerWalletTransactionRecordWrapper.getName());
-            System.out.println("Asset Description      : "   + assetIssuerWalletTransactionRecordWrapper.getDescription());
-            System.out.println("Asset Actor From       : "   + assetIssuerWalletTransactionRecordWrapper.getActorFromPublicKey());
-            System.out.println("Asset Actor To         : "   + assetIssuerWalletTransactionRecordWrapper.getActorToPublicKey());
-            System.out.println("-------------------------------------------------------------------------");
             assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).credit(assetIssuerWalletTransactionRecordWrapper, BalanceType.AVAILABLE);
+            assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).credit(assetIssuerWalletTransactionRecordWrapper3, BalanceType.AVAILABLE);
+
+            AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper1 = new AssetIssuerWalletTransactionRecordWrapper(
+                    digitalAsset,
+                    "",
+                    "KFC Coupon",
+                    "2x1",
+                    cryptoFromAddress,
+                    cryptoToAddress,
+                    "actorFromPublicKey",
+                    "actorToPublicKey",
+                    Actors.ASSET_USER,
+                    Actors.ASSET_USER,
+                    10000,
+                    0,
+                    "memo",
+                    "digitalAssetMetadaHash",
+                    UUID.randomUUID()
+            );
+            AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper2 = new AssetIssuerWalletTransactionRecordWrapper(
+                    digitalAsset,
+                    "",
+                    "KFC Coupon",
+                    "2x1",
+                    cryptoFromAddress,
+                    cryptoToAddress,
+                    "actorFromPublicKey",
+                    "actorToPublicKey",
+                    Actors.ASSET_USER,
+                    Actors.ASSET_USER,
+                    10000,
+                    0,
+                    "memo",
+                    "digitalAssetMetadaHash",
+                    UUID.randomUUID()
+            );
+            assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).credit(assetIssuerWalletTransactionRecordWrapper1, BalanceType.AVAILABLE);
+            assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).debit (assetIssuerWalletTransactionRecordWrapper2, BalanceType.AVAILABLE);
         } catch (Exception e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             e.printStackTrace();
         }
         try {
             List<AssetIssuerWalletList> assetIssuerWalletLists = assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).getAssetIssuerWalletBalancesAvailable();
+            //List<AssetIssuerWalletList> assetIssuerWalletLists = assetIssuerWallet.getBookBalance(BalanceType.BOOK).getAssetIssuerWalletBalancesAvailable();
             System.out.println("--------LISTADO DE ASSET BALANCE---------------------------------------------");
 
             for (AssetIssuerWalletList assetIssuerWalletList : assetIssuerWalletLists){
@@ -303,9 +369,86 @@ public class AssetWalletIssuerPluginRoot implements AssetIssuerWalletManager, Pl
                 System.out.println("Asset Balance Book     : "   + assetIssuerWalletList.getBookBalance());
                 System.out.println("-------------------------------------------------------------------------");
             }
+
+            List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions = assetIssuerWallet.getTransactionsAll(BalanceType.AVAILABLE, TransactionType.CREDIT, "assetPublicKey");
+            //List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions = assetIssuerWallet.getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, 1, 1000, "assetPublicKey");
+            System.out.println("--------LISTADO DE TRANSACTIONS CREDITOS-------------------------------------");
+            for (AssetIssuerWalletTransaction assetIssuerWalletTransaction : assetIssuerWalletTransactions){
+                System.out.println("-------------------------------------------------------------------------");
+                System.out.println("Asset PublicKey        : "   + assetIssuerWalletTransaction.getAssetPublicKey());
+                System.out.println("Address From           : "   + assetIssuerWalletTransaction.getAddressFrom());
+                System.out.println("Address To             : "   + assetIssuerWalletTransaction.getAddressTo());
+                System.out.println("Amount                 : "   + assetIssuerWalletTransaction.getAmount());
+                System.out.println("Transaction Type       : "   + assetIssuerWalletTransaction.getTransactionType().getCode());
+                System.out.println("-------------------------------------------------------------------------");
+            }
+            List<AssetIssuerWalletTransaction> assetIssuerWalletTransactionsD = assetIssuerWallet.getTransactionsAll(BalanceType.AVAILABLE, TransactionType.DEBIT, "assetPublicKey");
+            System.out.println("--------LISTADO DE TRANSACTIONS DEBITOS-------------------------------------");
+            for (AssetIssuerWalletTransaction assetIssuerWalletTransaction : assetIssuerWalletTransactionsD){
+                System.out.println("-------------------------------------------------------------------------");
+                System.out.println("Asset PublicKey        : "   + assetIssuerWalletTransaction.getAssetPublicKey());
+                System.out.println("Address From           : "   + assetIssuerWalletTransaction.getAddressFrom());
+                System.out.println("Address To             : "   + assetIssuerWalletTransaction.getAddressTo());
+                System.out.println("Amount                 : "   + assetIssuerWalletTransaction.getAmount());
+                System.out.println("Transaction Type       : "   + assetIssuerWalletTransaction.getTransactionType().getCode());
+                System.out.println("-------------------------------------------------------------------------");
+            }
+            ActorAssetUser actorAssetUser = new ActorAssetUser() {
+                @Override
+                public String getPublicKey() {
+                    return "publicKeyActor";
+                }
+
+                @Override
+                public String getName() {
+                    return "mock Actor";
+                }
+
+                @Override
+                public long getContactRegistrationDate() {
+                    return 0;
+                }
+
+                @Override
+                public byte[] getProfileImage() {
+                    return new byte[0];
+                }
+
+                @Override
+                public ConnectionState getConnectionState() {
+                    return null;
+                }
+
+                @Override
+                public Location getLocation() {
+                    return null;
+                }
+
+                @Override
+                public Genders getGender() {
+                    return null;
+                }
+
+                @Override
+                public String getAge() {
+                    return null;
+                }
+
+                @Override
+                public CryptoAddress getCryptoAddress() {
+                    return null;
+                }
+            };
+            //assetIssuerWallet.distributionAssets("assetPublicKey", "walletPublicKeyTest", actorAssetUser);
+
         } catch (Exception e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void setAssetDistributionManager(AssetDistributionManager assetIssuingManager) throws CantSetObjectException {
+        this.assetDistributionManager = assetIssuingManager;
     }
 }

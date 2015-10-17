@@ -1,13 +1,13 @@
 package com.bitdubai.sub_app.wallet_store.fragments;
 
 
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,9 +16,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.wallet_store.common.adapters.ImagesAdapter;
 import com.bitdubai.sub_app.wallet_store.common.models.WalletStoreListItem;
 import com.bitdubai.sub_app.wallet_store.common.workers.InstallWalletWorker;
@@ -26,6 +27,7 @@ import com.bitdubai.sub_app.wallet_store.common.workers.InstallWalletWorkerCallb
 import com.bitdubai.sub_app.wallet_store.common.workers.UninstallWalletWorker;
 import com.bitdubai.sub_app.wallet_store.common.workers.UninstallWalletWorkerCallback;
 import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
+import com.bitdubai.sub_app.wallet_store.util.CommonLogger;
 import com.bitdubai.sub_app.wallet_store.util.UtilsFuncs;
 import com.wallet_store.bitdubai.R;
 
@@ -134,17 +136,7 @@ public class DetailsActivityFragment extends FermatFragment {
         readMoreLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                final MoreDetailsActivityFragment fragment = MoreDetailsActivityFragment.newInstance();
-                fragment.setSubAppsSession(subAppsSession);
-                fragment.setSubAppSettings(subAppSettings);
-                fragment.setSubAppResourcesProviderManager(subAppResourcesProviderManager);
-
-                final FragmentTransaction FT = getActivity().getFragmentManager().beginTransaction();
-                FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                FT.replace(R.id.activity_container, fragment);
-                FT.addToBackStack(null);
-                FT.commit();
+                changeActivity(Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getCode());
             }
         });
 
