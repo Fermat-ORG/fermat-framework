@@ -110,7 +110,7 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
         CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) subAppsSession.getData(IDENTITY_INFO);
 
         if (identityInfo != null) {
-            mBrokerName.setText(identityInfo.getName());
+            mBrokerName.setText(identityInfo.getAlias());
 
             byte[] profileImage = identityInfo.getProfileImage();
             RoundedBitmapDrawable roundedBitmap = (profileImage != null) ?

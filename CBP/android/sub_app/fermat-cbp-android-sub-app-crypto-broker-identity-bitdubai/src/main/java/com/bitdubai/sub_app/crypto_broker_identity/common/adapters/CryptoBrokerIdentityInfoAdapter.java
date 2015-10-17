@@ -38,7 +38,7 @@ public class CryptoBrokerIdentityInfoAdapter extends FermatAdapter<CryptoBrokerI
 
     @Override
     protected void bindHolder(final CryptoBrokerIdentityInfoViewHolder holder, final CryptoBrokerIdentityInformation data, final int position) {
-        holder.setText(data.getName());
+        holder.setText(data.getAlias());
         holder.setImage(data.getProfileImage());
     }
 }

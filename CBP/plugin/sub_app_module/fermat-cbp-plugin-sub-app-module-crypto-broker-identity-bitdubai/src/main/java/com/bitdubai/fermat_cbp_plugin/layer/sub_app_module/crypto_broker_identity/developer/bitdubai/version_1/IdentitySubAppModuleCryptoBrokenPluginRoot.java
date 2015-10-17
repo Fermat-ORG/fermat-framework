@@ -223,7 +223,7 @@ public class IdentitySubAppModuleCryptoBrokenPluginRoot implements CryptoBrokerI
     }
 
     private CryptoBrokerIdentityInformation converIdentityToInformation(final CryptoBrokerIdentity identity){
-        return new CryptoBrokerIdentityInformationImpl(identity.getAlias(), identity.getPublicKey(), identity.getPublicKey(), identity.getProfileImage(), identity.getPublicKeyPublished());
+        return new CryptoBrokerIdentityInformationImpl(identity.getAlias(), identity.getPublicKey(), identity.getProfileImage(), identity.isPublished());
     }
 
 
