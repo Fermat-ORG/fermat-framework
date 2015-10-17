@@ -232,7 +232,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
 
             test();
             registerActorInANS();
-            testRaiseEvent();
+//            testRaiseEvent();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -393,11 +393,12 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
 
 //            this.assetUserActorDao.createNewAssetUser(assetUserActorIdentityToLinkPublicKey, assetUserActorToAddName, assetUserActorToAddPublicKey, profileImage, ConnectionState.CONNECTED);
         try {
+            Location location = new DeviceLocation(00.00, 00.00, 12345678910L, 00.00, LocationProvider.NETWORK);
+
             for (int i = 0; i < 10; i++) {
                 String assetUserActorIdentityToLinkPublicKey = UUID.randomUUID().toString();
                 String assetUserActorToAddPublicKey = UUID.randomUUID().toString();
                 CryptoAddress cryptoAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);
-                Location location = new DeviceLocation(00.00, 00.00, 12345678910L, 00.00, LocationProvider.NETWORK);
                 Genders genders = Genders.INDEFINITE;
                 String age = "25";
                 if (i == 0) {
@@ -405,7 +406,6 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, Database
                 }
                 this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(assetUserActorIdentityToLinkPublicKey, "Thunders Asset User_" + i, new byte[0], location);
             }
-            getActorPublicKey();
 //                System.out.println("Asset User Actor Identity Link PublicKey: " + assetUserActorIdentityToLinkPublicKey);
 //                System.out.println("Asset User Actor Name: Thunders Asset User_" + i);
 //                System.out.println("Asset User Actor PublicKey: " + assetUserActorToAddPublicKey);
