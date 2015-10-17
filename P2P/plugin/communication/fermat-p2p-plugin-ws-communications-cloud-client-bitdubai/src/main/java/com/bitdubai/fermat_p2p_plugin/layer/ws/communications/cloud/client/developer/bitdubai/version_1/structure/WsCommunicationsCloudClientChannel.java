@@ -284,7 +284,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
          */
         boolean isValid = AsymmetricCryptography.verifyMessageSignature(fermatPacketReceive.getSignature(), fermatPacketReceive.getMessageContent(), getServerIdentity());
 
-        System.out.println(" WsCommunicationsCloudClientChannel - isValid = " + isValid);
+       // System.out.println(" WsCommunicationsCloudClientChannel - isValid = " + isValid);
 
         /*
          * if not valid signature
