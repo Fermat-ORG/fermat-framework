@@ -5,11 +5,11 @@ import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -34,9 +34,9 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identi
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
-import com.bitdubai.sub_app.crypto_broker_identity.common.model.CryptoBrokerIdentityInformationImp;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
+import com.bitdubai.sub_app.crypto_broker_identity.util.UtilsFuncs;
 
 import java.io.ByteArrayOutputStream;
 
@@ -110,15 +110,15 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
         CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) subAppsSession.getData(IDENTITY_INFO);
 
         if (identityInfo != null) {
-            mBrokerName.setText(identityInfo.getName());
+            mBrokerName.setText(identityInfo.getAlias());
 
             byte[] profileImage = identityInfo.getProfileImage();
-            if (profileImage != null) {
-                cryptoBrokerBitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
-                mBrokerImage.setImageBitmap(cryptoBrokerBitmap);
-            } else if (identityInfo instanceof CryptoBrokerIdentityInformationImp) {
-                mBrokerImage.setImageResource(R.drawable.deniz_profile_picture);
-            }
+            RoundedBitmapDrawable roundedBitmap = (profileImage != null) ?
+                    UtilsFuncs.getRoundedBitmap(getResources(), profileImage) :
+                    UtilsFuncs.getRoundedBitmap(getResources(), R.drawable.img_new_user_camera);
+
+            mBrokerImage.setImageDrawable(roundedBitmap);
+
 
             // TODO falta campo para saber si un broker tiene su identidad publica o no
             publishIdentityCheckBox.setChecked(false);
@@ -175,8 +175,10 @@ public class EditCryptoBrokerIdentityFragment extends FermatFragment {
                     break;
             }
 
-            if (pictureView != null && cryptoBrokerBitmap != null)
-                pictureView.setImageDrawable(new BitmapDrawable(getResources(), cryptoBrokerBitmap));
+            if (pictureView != null && cryptoBrokerBitmap != null) {
+                RoundedBitmapDrawable roundedBitmap = UtilsFuncs.getRoundedBitmap(getResources(), cryptoBrokerBitmap);
+                pictureView.setImageDrawable(roundedBitmap);
+            }
         }
     }
 
