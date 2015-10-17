@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.IdentityPublished;
@@ -10,28 +11,21 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces
 /**
  * Created by jorge on 28-09-2015.
  */
-public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity, DealsWithPluginFileSystem {
+public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity {
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 4259;
     private static final int HASH_PRIME_NUMBER_ADD = 3089;
 
     private final String alias;
-//    private final KeyPair keyPair;
-    private String publicKey;
-    private String privateKey;
+    private final KeyPair keyPair;
     private byte[] profileImage;
-    private IdentityPublished publicKeyPublished;
-    private PluginFileSystem pluginFileSystem;
+    private final boolean published;
 
-//    public CryptoCustomerIdentityImpl(final String alias, final KeyPair keyPair, final byte[] profileImage, final PluginFileSystem pluginFileSystem){
-    public CryptoCustomerIdentityImpl(final String alias, String publicKey, String privateKey, final byte[] profileImage, IdentityPublished publicKeyPublished, PluginFileSystem pluginFileSystem){
+    public CryptoCustomerIdentityImpl(final String alias, final KeyPair keyPair, final byte[] profileImage, final boolean published){
         this.alias = alias;
-//        this.keyPair = keyPair;
-        this.publicKey = publicKey;
-        this.privateKey = privateKey;
+        this.keyPair = keyPair;
         this.profileImage = profileImage;
-        this.publicKeyPublished = publicKeyPublished;
-        this.pluginFileSystem = pluginFileSystem;
+        this.published = published;
     }
 
     @Override
@@ -39,14 +33,10 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity, Deals
         return alias;
     }
 
-//    @Override
-//    public String getPublicKey() {
-//        return keyPair.getPublicKey();
-//    }
 
     @Override
     public String getPublicKey() {
-        return this.publicKey;
+        return this.keyPair.getPublicKey();
     }
 
     @Override
@@ -61,22 +51,19 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity, Deals
     }
 
     @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFile) { this.pluginFileSystem = pluginFile; }
-
-    @Override
-    public IdentityPublished getPublicKeyPublished(){ return this.publicKeyPublished; }
+    public boolean isPublished(){ return this.published; }
 
     @Override
     public String createMessageSignature(String message) throws CantCreateMessageSignatureException{
         try{
-//            return AsymmetricCryptography.createMessageSignature(message, keyPair.getPrivateKey());
-            return AsymmetricCryptography.createMessageSignature(message, this.privateKey);
+            return AsymmetricCryptography.createMessageSignature(message, keyPair.getPrivateKey());
+
         } catch(Exception ex){
             throw new CantCreateMessageSignatureException(CantCreateMessageSignatureException.DEFAULT_MESSAGE, ex, "Message: "+ message, "The message could be invalid");
         }
     }
 
-    /*@Override
+
     public boolean equals(Object o){
         if(!(o instanceof CryptoCustomerIdentity))
             return false;
@@ -90,5 +77,5 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity, Deals
         c += alias.hashCode();
         c += keyPair.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
-    }*/
+    }
 }

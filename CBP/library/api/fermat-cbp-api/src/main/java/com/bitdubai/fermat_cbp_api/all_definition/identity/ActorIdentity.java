@@ -15,7 +15,7 @@ public interface ActorIdentity {
 
     void setNewProfileImage(final byte[] imageBytes);
 
-    IdentityPublished getPublicKeyPublished();
+    boolean isPublished();
 
     String createMessageSignature(String message) throws CantCreateMessageSignatureException;
 }

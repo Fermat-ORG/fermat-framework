@@ -8,15 +8,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantInitializeMonitorAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cry_api.layer.definition.enums.EventType;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantSelectEventException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.utils.EventsSelector;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.utils.TransactionTypeAndCryptoStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -25,13 +19,10 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultTransactionNotificationAgent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.TransactionProtocolAgentMaxIterationsReachedException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseFactory;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by rodrigo on 2015.06.18..
@@ -45,31 +36,24 @@ public class TransactionNotificationAgent extends FermatAgent {
     private int iteration = 0;
 
     private Thread   agentThread;
-    private Database database   ;
 
-    private final LogManager           logManager          ;
-    private final EventManager         eventManager        ;
-    private final ErrorManager         errorManager        ;
-    private final PluginDatabaseSystem pluginDatabaseSystem;
-    private final UUID                 pluginId            ;
-    private final String               userPublicKey       ;
+    private final LogManager   logManager  ;
+    private final EventManager eventManager;
+    private final ErrorManager errorManager;
+    private final Database     database    ;
 
     /**
      * Constructor with final params...
      */
-    public TransactionNotificationAgent(final EventManager         eventManager        ,
-                                        final ErrorManager         errorManager        ,
-                                        final LogManager           logManager          ,
-                                        final PluginDatabaseSystem pluginDatabaseSystem,
-                                        final UUID                 pluginId            ,
-                                        final String               userPublicKey       ){
+    public TransactionNotificationAgent(final EventManager eventManager,
+                                        final ErrorManager errorManager,
+                                        final LogManager   logManager  ,
+                                        final Database     database    ){
 
-        this.eventManager         = eventManager        ;
-        this.errorManager         = errorManager        ;
-        this.logManager           = logManager          ;
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
-        this.userPublicKey        = userPublicKey       ;
+        this.eventManager = eventManager;
+        this.errorManager = errorManager;
+        this.logManager   = logManager  ;
+        this.database     = database    ;
 
         this.agentThread = new Thread(new Runnable() {
             @Override
@@ -79,23 +63,14 @@ public class TransactionNotificationAgent extends FermatAgent {
 
                 while (isRunning()) {
 
-                    // Increase the iteration counter
-                    iteration++;
-
                     try {
-                        Thread.sleep(SLEEP_TIME);
+                        agentThread.sleep(SLEEP_TIME);
                     } catch (InterruptedException interruptedException) {
                         return;
                     }
 
                     // Now we check if there are pending transactions to raise the events.
-                    try {
-
-                        logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iteration, null, null);
-                        doTheMainTask();
-                    } catch (Exception e) {
-                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    }
+                    doTheMainTask();
                 }
             }
         });
@@ -103,15 +78,6 @@ public class TransactionNotificationAgent extends FermatAgent {
 
     @Override
     public void start() throws CantStartAgentException {
-
-        try {
-            this.initialize();
-        } catch (CantInitializeMonitorAgentException e) {
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantStartAgentException(e);
-        }
-
         //here we start the thread to the transaction notification agent.
         this.agentThread.start();
         this.status = AgentStatus.STARTED;
@@ -123,68 +89,54 @@ public class TransactionNotificationAgent extends FermatAgent {
         this.status = AgentStatus.STOPPED;
     }
 
-    private void doTheMainTask() throws CantExecuteQueryException, TransactionProtocolAgentMaxIterationsReachedException, CantSelectEventException {
-
-        // TO CONTROL WHAT TYPE OF EVENTS I WILL RAISE, MODIFY THE CLASS EVENT SELECTOR, AND SET THE EVENT OR A NULL.
-        // NULL WILL NOT RAISE EVENTS.
-        CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, eventManager);
-
-        List<TransactionTypeAndCryptoStatus> list = db.listTransactionTypeAndCryptoStatusToBeNotified();
-
-        for(TransactionTypeAndCryptoStatus ttacs : list) {
-            CryptoTransactionType type         = ttacs.getTransactionType();
-            CryptoStatus          cryptoStatus = ttacs.getCryptoStatus();
-            EventType             eventType    = EventsSelector.getEventType(type, cryptoStatus);
-
-            if(eventType != null) {
-                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Found transactions pending to be notified in "+cryptoStatus.name()+" Status! Raising "+eventType.name()+" event.", null, null);
-
-                raiseEvent(eventType);
-
-                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iteration + " without other plugins consuming transaction.", null);
-                if (ITERATIONS_THRESHOLD < this.iteration){
-                    throw new TransactionProtocolAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached.", null,"Iteration Limit: " + ITERATIONS_THRESHOLD, "Notify developer.");
-                }
-            }
-        }
-
-        // there are no transactions pending. I will reset the counter to 0.
-        if(!list.isEmpty()) {
-            db.updateTransactionProtocolStatus(false);
-            this.iteration = 0;
-        } else {
-            this.iteration = db.updateTransactionProtocolStatus(true);
-        }
-    }
-
-    private void raiseEvent(EventType eventType) throws CantExecuteQueryException {
-        FermatEvent event = eventManager.getNewEvent(eventType);
-        event.setSource(BitcoinCryptoVaultPluginRoot.EVENT_SOURCE);
-        eventManager.raiseEvent(event);
-    }
-
-    public void initialize() throws CantInitializeMonitorAgentException {
+    private void doTheMainTask() {
 
         try {
 
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, userPublicKey);
-        } catch (DatabaseNotFoundException databaseNotFoundException) {
+            // Increase the iteration counter
+            iteration++;
 
-            CryptoVaultDatabaseFactory databaseFactory = new CryptoVaultDatabaseFactory();
-            databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iteration, null, null);
 
-            try {
+            // TO CONTROL WHAT TYPE OF EVENTS I WILL RAISE, MODIFY THE CLASS EVENT SELECTOR, AND SET THE EVENT OR A NULL.
+            // NULL WILL NOT RAISE EVENTS.
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, eventManager);
 
-                database = databaseFactory.createDatabase(pluginId, userPublicKey);
+            List<TransactionTypeAndCryptoStatus> list = db.listTransactionTypeAndCryptoStatusToBeNotified();
 
-            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+            for (TransactionTypeAndCryptoStatus ttacs : list) {
+                CryptoTransactionType type = ttacs.getTransactionType();
+                CryptoStatus cryptoStatus = ttacs.getCryptoStatus();
+                EventType eventType = EventsSelector.getEventType(type, cryptoStatus);
 
-                throw new CantInitializeMonitorAgentException();
+                if (eventType != null) {
+                    logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Found transactions pending to be notified in " + cryptoStatus.name() + " Status! Raising " + eventType.name() + " event.", null, null);
 
+                    raiseEvent(eventType);
+
+                    logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iteration + " without other plugins consuming transaction.", null);
+                    if (ITERATIONS_THRESHOLD < this.iteration) {
+                        throw new TransactionProtocolAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached.", null, "Iteration Limit: " + ITERATIONS_THRESHOLD, "Notify developer.");
+                    }
+                }
             }
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
-            throw new CantInitializeMonitorAgentException();
+            // there are no transactions pending. I will reset the counter to 0.
+            if (!list.isEmpty()) {
+                db.updateTransactionProtocolStatus(false);
+                this.iteration = 0;
+            } else {
+                this.iteration = db.updateTransactionProtocolStatus(true);
+            }
+
+        } catch(Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
+    }
+
+    private void raiseEvent(EventType eventType) {
+        FermatEvent event = eventManager.getNewEvent(eventType);
+        event.setSource(BitcoinCryptoVaultPluginRoot.EVENT_SOURCE);
+        eventManager.raiseEvent(event);
     }
 }

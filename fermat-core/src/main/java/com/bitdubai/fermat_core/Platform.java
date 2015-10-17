@@ -1488,7 +1488,7 @@ public class Platform implements Serializable {
         System.out.println("--------------- Lista de Tamaños en Start-Up de Plugins ---------------");
         System.out.println("************************************************************************");
         for (Map.Entry<Plugins, String> entry : pluginsSizeReport.entrySet()) {
-            System.out.println(entry.getKey().toString() + " - Start-Up time: " + entry.getValue() +".");
+            System.out.println(entry.getKey().toString() + " - Start-Up Size: " + entry.getValue() +".");
         }
         System.out.println("************************************************************************");
 
