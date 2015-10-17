@@ -37,7 +37,7 @@ public class CustomerIdentityInfoAdapter extends FermatAdapter<CryptoCustomerIde
 
     @Override
     protected void bindHolder(final CustomerIdentityInfoViewHolder holder, final CryptoCustomerIdentityInformation data, final int position) {
-        holder.getIdentityName().setText(data.getName());
+        holder.getIdentityName().setText(data.getAlias());
 
         if (data instanceof CryptoCustomerIdentityInformationImp) {
             CryptoCustomerIdentityInformationImp dataImp = (CryptoCustomerIdentityInformationImp) data;

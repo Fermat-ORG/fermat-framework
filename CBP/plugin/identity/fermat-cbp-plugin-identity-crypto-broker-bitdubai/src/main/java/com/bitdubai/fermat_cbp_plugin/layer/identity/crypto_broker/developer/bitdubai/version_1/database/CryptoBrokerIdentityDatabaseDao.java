@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -25,7 +27,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentity;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.IdentityPublished;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.CryptoBrokerIdentityPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerIdentityDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
@@ -80,27 +81,20 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
     }
 
     /*CREATE NEW IDENTITY*/
-    public void createNewCryptoBrokerIdentity (
-            String alias,
-            String publicKey,
-            String privateKey,
-            DeviceUser deviceUser,
-            byte[] profileImage
-    ) throws CantCreateNewDeveloperException {
+    public void createNewCryptoBrokerIdentity (final CryptoBrokerIdentity cryptoBroker, final String privateKey, final DeviceUser deviceUser) throws CantCreateNewDeveloperException {
         try {
-            if (aliasExists (alias)) {
+            if (aliasExists (cryptoBroker.getAlias())) {
                 throw new CantCreateNewDeveloperException ("Cant create new Crypto Broker Identity, alias exists.", "Crypto Broker Identity", "Cant create new Crypto Broker Identity, alias exists.");
             }
-            persistNewCryptoBrokerIdentityPrivateKeysFile(publicKey, privateKey);
+            persistNewCryptoBrokerIdentityPrivateKeysFile(cryptoBroker.getPublicKey(), privateKey);
             DatabaseTable table = this.database.getTable(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
-            IdentityPublished publicKeyPublished = IdentityPublished.UNPUBLISHED;
-            record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKey);
-            record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME, alias);
+            record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, cryptoBroker.getPublicKey());
+            record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME, cryptoBroker.getAlias());
             record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
-            record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_CRYPTO_BROKER_PUBLIC_KEY_PUBLISHED_COLUMN_NAME, publicKeyPublished.getCode());
+            record.setIntegerValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_CRYPTO_BROKER_PUBLIC_KEY_PUBLISHED_COLUMN_NAME, cryptoBroker.isPublished() ? 1 : 0);
             table.insertRecord(record);
-            persistNewCryptoBrokerIdentityProfileImage(publicKey, profileImage);
+            persistNewCryptoBrokerIdentityProfileImage(cryptoBroker.getPublicKey(), cryptoBroker.getProfileImage());
         } catch (CantInsertRecordException e){
             throw new CantCreateNewDeveloperException (e.getMessage(), e, "Crypto Broker Identity", "Cant create new Crypto Broker Identity, insert database problems.");
         } catch (CantPersistPrivateKeyException e){
@@ -123,14 +117,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
             table.loadToMemory();
 
             for (DatabaseTableRecord record : table.getRecords ()) {
-                list.add(new CryptoBrokerIdentityImpl(
-                        record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME),
-                        record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME),
-                        getCryptoBrokerIdentityPrivateKey(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME)),
-                        getCryptoBrokerIdentityProfileImagePrivateKey(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME)),
-                        IdentityPublished.getByCode(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME)),
-                        pluginFileSystem)
-                );
+                list.add(getIdentityFromRecord(record));
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantListCryptoBrokerIdentitiesException(e.getMessage(), e, "Crypto Broker Identity", "Cant load " + CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME + " table in memory.");
@@ -142,8 +129,10 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         return list;
     }
 
+
+
     /*GET PROFILE IMAGE PRIVATE KEY*/
-    public byte[] getCryptoBrokerIdentityProfileImagePrivateKey(String publicKey) throws CantGetCryptoBrokerIdentityProfileImageException {
+    private byte[] getCryptoBrokerIdentityProfileImagePrivateKey(String publicKey) throws CantGetCryptoBrokerIdentityProfileImageException {
         byte[] profileImage;
         try {
             PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
@@ -211,7 +200,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
     }
 
     /*GET PRIVATE KEY*/
-    public String getCryptoBrokerIdentityPrivateKey(String publicKey) throws CantGetCryptoBrokerIdentityPrivateKeyException {
+    private String getCryptoBrokerIdentityPrivateKey(String publicKey) throws CantGetCryptoBrokerIdentityPrivateKeyException {
         String privateKey = "";
         try {
             PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
@@ -248,6 +237,15 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
         } catch (Exception e) {
             throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Crypto Broker Identity", "unknown failure.");
         }
+    }
+
+    private CryptoBrokerIdentity getIdentityFromRecord(final DatabaseTableRecord record) throws CantGetCryptoBrokerIdentityPrivateKeyException, CantGetCryptoBrokerIdentityProfileImageException {
+        String alias = record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME);
+        String privateKey = getCryptoBrokerIdentityPrivateKey(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME));
+        byte[] profileImage = getCryptoBrokerIdentityProfileImagePrivateKey(record.getStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME));
+        boolean published = record.getIntegerValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_CRYPTO_BROKER_PUBLIC_KEY_PUBLISHED_COLUMN_NAME) == 1;
+        KeyPair keyPair = AsymmetricCryptography.createKeyPair(privateKey);
+        return new CryptoBrokerIdentityImpl(alias, keyPair, profileImage, published);
     }
 
 }
