@@ -275,7 +275,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     public IntraActorNetworkServicePluginRoot() {
         super();
         this.listenersAdded = new ArrayList<>();
-        this.platformComponentType = PlatformComponentType.ACTOR_NETWORK_SERVICE;
+        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
         this.networkServiceType    = NetworkServiceType.INTRA_USER;
         this.name                  = "Intra actor Network Service";
         this.alias                 = "IntraActorNetworkService";
@@ -628,7 +628,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
         /*
          * If the component registered have my profile and my identity public key
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.ACTOR_NETWORK_SERVICE &&
+        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
                 platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.INTRA_USER &&
                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
@@ -1321,7 +1321,16 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                     PlatformComponentType.ACTOR_INTRA_USER, // actor.INTRA_USER
                     getExtraData());
 
-            if(!actorsToRegisterCache.contains(platformComponentProfile)) actorsToRegisterCache.add(platformComponentProfile);
+
+                actorsToRegisterCache.add(platformComponentProfile);
+
+                try {
+                    communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+
+                } catch (CantRegisterComponentException e) {
+                    e.printStackTrace();
+                }
+
 
         }
     }
