@@ -31,6 +31,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interf
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.database.WalletContactsMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.event_handlers.CryptoAddressDeniedEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.event_handlers.CryptoAddressReceivedEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressDeniedEventException;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressReceivedEventException;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantInitializeWalletContactsMiddlewareDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -181,9 +182,14 @@ public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDev
                 if (request.getAction().equals(RequestAction.ACCEPT))
                     walletContactsRegistry.handleCryptoAddressReceivedEvent(request);
 
+                if (request.getAction().equals(RequestAction.DENY))
+                    walletContactsRegistry.handleCryptoAddressDeniedEvent(request);
+
             }
 
-        } catch (CantListPendingAddressExchangeRequestsException | CantHandleCryptoAddressReceivedEventException e) {
+        } catch(CantListPendingAddressExchangeRequestsException |
+                CantHandleCryptoAddressDeniedEventException     |
+                CantHandleCryptoAddressReceivedEventException   e) {
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }

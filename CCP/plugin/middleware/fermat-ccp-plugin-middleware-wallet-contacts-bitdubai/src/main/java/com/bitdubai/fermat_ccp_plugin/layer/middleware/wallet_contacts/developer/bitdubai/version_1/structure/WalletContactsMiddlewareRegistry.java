@@ -30,6 +30,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -93,6 +94,37 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                     actorLastName  ,
                     actorType      ,
                     cryptoAddresses,
+                    walletPublicKey
+            );
+
+        } catch (CantCreateWalletContactException e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (Exception e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+    }
+
+    @Override
+    public WalletContactRecord createWalletContact(String              actorPublicKey ,
+                                                   String              actorAlias     ,
+                                                   String              actorFirstName ,
+                                                   String              actorLastName  ,
+                                                   Actors              actorType      ,
+                                                   String              walletPublicKey) throws CantCreateWalletContactException {
+        try {
+
+            UUID contactId = UUID.randomUUID();
+
+            return walletContactsMiddlewareDao.createWalletContact(
+                    contactId      ,
+                    actorPublicKey ,
+                    actorAlias     ,
+                    actorFirstName ,
+                    actorLastName  ,
+                    actorType      ,
+                    new ArrayList<CryptoAddress>(),
                     walletPublicKey
             );
 
