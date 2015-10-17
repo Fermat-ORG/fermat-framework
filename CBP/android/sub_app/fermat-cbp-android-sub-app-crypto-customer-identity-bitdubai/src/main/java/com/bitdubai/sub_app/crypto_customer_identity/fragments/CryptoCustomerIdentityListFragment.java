@@ -67,6 +67,10 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
                 changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY.getCode());
             }
         });
+
+        if (getActivity().getActionBar() != null) {
+            getActivity().getActionBar().setDisplayShowHomeEnabled(false);
+        }
     }
 
     @Override

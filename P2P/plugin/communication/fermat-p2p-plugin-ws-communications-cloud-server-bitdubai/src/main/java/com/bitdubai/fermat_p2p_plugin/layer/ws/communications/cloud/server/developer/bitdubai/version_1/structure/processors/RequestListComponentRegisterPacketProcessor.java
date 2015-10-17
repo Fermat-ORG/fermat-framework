@@ -28,6 +28,7 @@ import com.google.gson.reflect.TypeToken;
 import org.java_websocket.WebSocket;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -80,6 +81,8 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
              * Get the filters from the message content and decrypt
              */
             packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
+
+            System.out.println("RequestListComponentRegisterPacketProcessor - Starting packetContentJsonStringRepresentation = "+packetContentJsonStringRepresentation);
 
             /*
              * Construct the json object
@@ -198,7 +201,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
 
             //Others
             default :
-                list = getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().get(platformComponentType);
+                list = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
                 break;
 
         }
@@ -206,10 +209,13 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         /*
          * Remove the requester from the list
          */
-        for (PlatformComponentProfile platformComponentProfileRegistered: list) {
+        Iterator<PlatformComponentProfile> iterator = list.iterator();
+        while (iterator.hasNext()){
+
+            PlatformComponentProfile platformComponentProfileRegistered = iterator.next();
             if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(receiveFermatPacket.getSender())){
                 System.out.println("RequestListComponentRegisterPacketProcessor - removing ="+platformComponentProfileRegistered.getName());
-                list.remove(platformComponentProfileRegistered);
+                iterator.remove();
                 break;
             }
         }
@@ -446,7 +452,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
 
             //Others
             default :
-                temporalList = getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().get(platformComponentType);
+                temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
                 break;
 
         }
@@ -504,7 +510,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
 
             //Others
             default :
-                temporalList = getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().get(platformComponentType);
+                temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
                 break;
 
         }

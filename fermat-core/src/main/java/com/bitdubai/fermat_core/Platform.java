@@ -217,7 +217,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.inte
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 import com.carrotsearch.sizeof.RamUsageEstimator;
-
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
@@ -961,6 +960,15 @@ public class Platform implements Serializable {
 
             }
 
+             /*
+            * Plugin Intra User NetWorkService
+            * -----------------------------
+            */
+            Plugin intraUserNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getIntraUser();
+            injectLayerReferences(intraUserNetworkService);
+            injectPluginReferencesAndStart(intraUserNetworkService, Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE);
+
+
             if (CCP) {
 
            /*
@@ -1026,13 +1034,7 @@ public class Platform implements Serializable {
             }
 
             if (DMP) {
-           /*
-            * Plugin Intra User NetWorkService
-            * -----------------------------
-            */
-                Plugin intraUserNetworkService = ((NetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER)).getIntraUser();
-                injectLayerReferences(intraUserNetworkService);
-                injectPluginReferencesAndStart(intraUserNetworkService, Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE);
+
 
            /*
             * Plugin Bank Notes Network Service
@@ -1505,7 +1507,7 @@ public class Platform implements Serializable {
         System.out.println("--------------- Lista de Tamaños en Start-Up de Plugins ---------------");
         System.out.println("************************************************************************");
         for (Map.Entry<Plugins, String> entry : pluginsSizeReport.entrySet()) {
-            System.out.println(entry.getKey().toString() + " - Start-Up time: " + entry.getValue() +".");
+            System.out.println(entry.getKey().toString() + " - Start-Up Size: " + entry.getValue() +".");
         }
         System.out.println("************************************************************************");
 

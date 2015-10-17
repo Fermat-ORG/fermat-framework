@@ -5,10 +5,13 @@ import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -22,13 +25,18 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatRoundedImageView;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.SizeUtils;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor;
+import com.bitdubai.sub_app.crypto_broker_identity.util.UtilsFuncs;
 
 import java.io.ByteArrayOutputStream;
 
@@ -93,6 +101,9 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
 
+        RoundedBitmapDrawable roundedBitmap = UtilsFuncs.getRoundedBitmap(getResources(), R.drawable.img_new_user_camera);
+        mBrokerImage.setImageDrawable(roundedBitmap);
+
         mBrokerName.requestFocus();
 
         mBrokerImage.setOnClickListener(new View.OnClickListener() {
@@ -131,15 +142,17 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
                             cryptoBrokerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
                             cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                    } catch (Exception ex) {
+                        errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, ex);
+                        Toast.makeText(getActivity(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
 
-            if (pictureView != null && cryptoBrokerBitmap != null)
-                pictureView.setImageDrawable(new BitmapDrawable(getResources(), cryptoBrokerBitmap));
+            if (pictureView != null && cryptoBrokerBitmap != null) {
+                RoundedBitmapDrawable roundedBitmap = UtilsFuncs.getRoundedBitmap(getResources(), cryptoBrokerBitmap);
+                pictureView.setImageDrawable(roundedBitmap);
+            }
         }
     }
 
