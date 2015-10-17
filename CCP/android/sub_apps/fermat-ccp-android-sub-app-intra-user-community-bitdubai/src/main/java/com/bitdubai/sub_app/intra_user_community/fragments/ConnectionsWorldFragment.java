@@ -3,6 +3,8 @@ package com.bitdubai.sub_app.intra_user_community.fragments;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -50,13 +52,19 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
 import com.bitdubai.sub_app.intra_user_community.common.adapters.IntraUserConnectionsAdapter;
+import com.bitdubai.sub_app.intra_user_community.common.concurrent.CallbackMati;
+import com.bitdubai.sub_app.intra_user_community.common.concurrent.MyThread;
 import com.bitdubai.sub_app.intra_user_community.common.models.IntraUserConnectionListItem;
 import com.bitdubai.sub_app.intra_user_community.fragmentFactory.IntraUserFragmentsEnumType;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 import com.bitdubai.sub_app.intra_user_community.R;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -64,7 +72,11 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Matias Furszyfer on 15/09/15.
  */
-public class ConnectionsWorldFragment  extends FermatFragment implements SearchView.OnCloseListener, SearchView.OnQueryTextListener, ActionBar.OnNavigationListener,AdapterView.OnItemClickListener {
+public class ConnectionsWorldFragment  extends FermatFragment implements SearchView.OnCloseListener,
+        SearchView.OnQueryTextListener,
+        ActionBar.OnNavigationListener,
+        AdapterView.OnItemClickListener,
+        CallbackMati{
 
     /**
      * ContactsFragment member variables.Fragment
@@ -94,6 +106,11 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
     private AppListAdapter adapter;
     private boolean isStartList;
 
+    ExecutorService executor;
+
+
+    private ProgressDialog mDialog;
+
     /**
      * Create a new instance of this fragment
      *
@@ -115,10 +132,20 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
 
             mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
 
+            executor = Executors.newFixedThreadPool(2);
 
             // TODO: display unread notifications.
             // Run a task to fetch the notifications count
             new FetchCountTask().execute();
+
+            FetchUsersTask fetchUsersTask = new FetchUsersTask(this);
+            fetchUsersTask.execute();
+
+
+            mDialog = new ProgressDialog(getActivity());
+            mDialog.setMessage("Please wait...");
+            mDialog.setCancelable(false);
+            mDialog.show();
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -133,14 +160,17 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         GridView gridView = new GridView(getActivity());
-        try
-        {
-            IntraUserSearch intraUserSearch = moduleManager.searchIntraUser();
+        try {
+//            IntraUserSearch intraUserSearch = moduleManager.searchIntraUser();
+//
+//            intraUserSearch.setNameToSearch("");
+//            lstIntraUserInformations = intraUserSearch.getResult();
 
-            intraUserSearch.setNameToSearch("");
-            lstIntraUserInformations = intraUserSearch.getResult();
 
-            //moduleManager.getSuggestionsToContact(MAX, offset);
+            // execute the Runnable
+
+
+            lstIntraUserInformations = new ArrayList<>();
 
             Configuration config = getResources().getConfiguration();
             if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -357,6 +387,23 @@ Updates the count of notifications in the ActionBar.
 
 
 
+    @Override
+    public void onPostExecute(List<IntraUserInformation> lst) {
+        mDialog.dismiss();
+        lstIntraUserInformations = lst;
+        adapter.addAll(lstIntraUserInformations);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onException(Exception e) {
+        e.printStackTrace();
+    }
+
+
+
+
+
     /*
     Sample AsyncTask to fetch the notifications count
     */
@@ -372,6 +419,43 @@ Updates the count of notifications in the ActionBar.
         @Override
         public void onPostExecute(Integer count) {
             updateNotificationsBadge(count);
+        }
+    }
+
+    class FetchUsersTask extends AsyncTask<Void, Void, List<IntraUserInformation>> {
+
+        private final ConnectionsWorldFragment fragment;
+
+        public FetchUsersTask(ConnectionsWorldFragment connectionsWorldFragment) {
+            this.fragment = connectionsWorldFragment;
+        }
+
+        @Override
+        protected List<IntraUserInformation> doInBackground(Void... params) {
+            // example count. This is where you'd
+
+            MyThread myThread = new MyThread(getActivity(),fragment) {
+                @Override
+                public List<IntraUserInformation> mainTask() {
+                    try {
+                        return moduleManager.getSuggestionsToContact(MAX, offset);
+                    } catch (CantGetIntraUsersListException e) {
+                        e.printStackTrace();
+                        System.out.println("-------------------------------------------\n+" +
+                                "EXCEPCION+\n--------------------------------------------");
+                        return null;
+                    }
+                }
+            };
+
+            executor.execute(myThread);
+            // query your data store for the actual count.
+            return null;
+        }
+
+        @Override
+        public void onPostExecute(List<IntraUserInformation> count) {
+            //updateUsers(count);
         }
     }
 

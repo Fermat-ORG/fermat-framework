@@ -109,6 +109,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 
@@ -241,7 +243,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     /**
      *  Represent the remoteNetworkServicesRegisteredList
      */
-    private List<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
+    private CopyOnWriteArrayList<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
 
     /**
      *   Represent the communicationNetworkServiceDeveloperDatabaseFactory
@@ -261,7 +263,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     /**
      * Connections arrived
      */
-    private boolean connectionArrived = false;
+    private AtomicBoolean connectionArrived;
 
     /**
      * DAO
@@ -454,6 +456,10 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
 
             actorsToRegisterCache = new ArrayList<>();
+
+            remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
+
+            connectionArrived = new AtomicBoolean(false);
 
             /*
              * Its all ok, set the new status
@@ -703,11 +709,19 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
         /*
          * save into the cache
          */
-        remoteNetworkServicesRegisteredList = platformComponentProfileRegisteredList;
+        remoteNetworkServicesRegisteredList.addAll( platformComponentProfileRegisteredList);
 
+
+        System.out.println("--------------------------------------\n" +
+                "REGISTRO DE USUARIOS INTRA USER CONECTADOS");
+        for (PlatformComponentProfile platformComponentProfile : platformComponentProfileRegisteredList){
+            System.out.println(platformComponentProfile.getAlias()+"\n");
+        }
+        System.out.println("--------------------------------------\n" +
+                "FIN DE REGISTRO DE USUARIOS INTRA USER CONECTADOS");
 
         if(!remoteNetworkServicesRegisteredList.isEmpty()){
-            connectionArrived = true;
+            connectionArrived.set(true);
         }
 
         /* -----------------------------------------------------------------------
@@ -975,61 +989,59 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     @Override
     public List<IntraUserInformation> getIntraUsersSuggestions(int max, int offset) throws ErrorSearchingSuggestionsException {
 
+        List<IntraUserInformation> lstIntraUser = new ArrayList<>();
 
-        //TODO Harcode
-
-        List<IntraUserInformation> intraUserList = new ArrayList<IntraUserInformation>();
-
-//        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Matias") );
-//        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Leon") );
-//        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Natalia") );
-//        intraUserList.add(new IntraUserNetworkService(UUID.randomUUID().toString(),new byte[0] ,"Ezequiel") );
-//        intraUserList.add(new IntraUserNetworkService("public_key",new byte[0],"Matias"));
-//        intraUserList.add(new IntraUserNetworkService("public_key1",new byte[0],"Leon"));
-//        intraUserList.add(new IntraUserNetworkService("public_key2",new byte[0],"Luis"));
-//        intraUserList.add(new IntraUserNetworkService("public_key3", new byte[0], "Rodrigo"));
+        try {
 
          /*-------------------------------------------------------------------------------------------------
              * This is for test and example of how to use
              * Construct the filter
              */
-        DiscoveryQueryParameters discoveryQueryParameters = constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_INTRA_USER, //PlatformComponentType you want to find
-                                                                                                NetworkServiceType.UNDEFINED,     //NetworkServiceType you want to find
-                                                                                                null,                     // alias
-                                                                                                null,                     // identityPublicKey
-                                                                                                null,                     // location
-                                                                                                null,                     // distance
-                                                                                                null,                     // name
-                                                                                                null,                     // extraData
-                                                                                                null,                     // offset
-                                                                                                null,                     // max
-                                                                                                null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                                                                                null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+            DiscoveryQueryParameters discoveryQueryParameters = constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_INTRA_USER, //PlatformComponentType you want to find
+                    NetworkServiceType.UNDEFINED,     //NetworkServiceType you want to find
+                    null,                     // alias
+                    null,                     // identityPublicKey
+                    null,                     // location
+                    null,                     // distance
+                    null,                     // name
+                    null,                     // extraData
+                    null,                     // offset
+                    null,                     // max
+                    null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                    null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
 
-        System.out.println(" TemplateNetworkServicePluginRoot - discoveryQueryParameters = " + discoveryQueryParameters.toJson());
+            System.out.println(" TemplateNetworkServicePluginRoot - discoveryQueryParameters = " + discoveryQueryParameters.toJson());
 
-        requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
+            requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
 
-        List<IntraUserInformation> lstIntraUser = new ArrayList<>();
-        while(!connectionArrived){
 
-            if(!remoteNetworkServicesRegisteredList.isEmpty()) {
-                for (PlatformComponentProfile platformComponentProfile : remoteNetworkServicesRegisteredList) {
-                    JsonObject jsonObject = new JsonObject();
-                    jsonObject = jsonObject.getAsJsonObject(platformComponentProfile.getExtraData());
-                    byte[] image = jsonObject.get("image").getAsString().getBytes();
+            while (!connectionArrived.get()) {
 
-                    IntraUserInformation intraUser = new IntraUserNSInformation(platformComponentProfile.getAlias(), platformComponentProfile.getIdentityPublicKey(), image);
+                if(remoteNetworkServicesRegisteredList!=null) {
 
-                    lstIntraUser.add(intraUser);
+                    if (remoteNetworkServicesRegisteredList.size() > 0) {
+                        for (PlatformComponentProfile platformComponentProfile : remoteNetworkServicesRegisteredList) {
+                            //JsonObject jsonObject = new JsonObject();
+                            //jsonObject = jsonObject.getAsJsonObject(platformComponentProfile.getExtraData());
+                            //byte[] image = jsonObject.get("image").getAsString().getBytes();
+
+                            IntraUserInformation intraUser = new IntraUserNSInformation(platformComponentProfile.getAlias(), platformComponentProfile.getIdentityPublicKey(), null);
+
+                            lstIntraUser.add(intraUser);
+                        }
+                        //remoteNetworkServicesRegisteredList.clear();
+                    }
                 }
-                remoteNetworkServicesRegisteredList.clear();
             }
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println("-------------------------------------------\n+" +
+                    "EXCEPCION EN EL BUCLE!!!+\n--------------------------------------------");
         }
 
 
-        return intraUserList;
+        return lstIntraUser;
     }
 
     @Override
