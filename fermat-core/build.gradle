@@ -142,6 +142,7 @@ dependencies {
     compile project(':fermat-bch-plugin-crypto-network-bitcoin-bitdubai')
     compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
     compile project(':fermat-dap-plugin-wallet-module-asset-user-bitdubai')
+    compile project(':fermat-dap-plugin-wallet-module-redeem-point-bitdubai')
 
 //    compile project(':fermat-dap-android-sub-app-asset-issuer-community-bitdubai')
 //    compile project(':fermat-dap-android-sub-app-asset-user-community-bitdubai')
