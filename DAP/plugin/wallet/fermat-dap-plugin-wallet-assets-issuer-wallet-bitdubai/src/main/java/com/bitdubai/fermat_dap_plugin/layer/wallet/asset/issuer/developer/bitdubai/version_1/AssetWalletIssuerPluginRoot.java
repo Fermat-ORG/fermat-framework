@@ -289,7 +289,7 @@ public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, 
 
         DigitalAsset digitalAsset1 = new DigitalAsset();
         digitalAsset1.setPublicKey("assetPublicKeyNew2");
-        digitalAsset1.setName("McDonald Coupon");
+        digitalAsset1.setName("Coupon Patriotico");
         digitalAsset1.setDescription("2x1 La Patria te Da Mas");
         CryptoAddress cryptoFromAddress1 = new CryptoAddress("cryptoAddresFrom", CryptoCurrency.BITCOIN);
         CryptoAddress cryptoToAddress1 = new CryptoAddress("cryptoAddresFrom", CryptoCurrency.BITCOIN);
@@ -297,7 +297,7 @@ public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, 
         AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper3 = new AssetIssuerWalletTransactionRecordWrapper(
                 digitalAsset1,
                 "",
-                "McDonald Coupon Patriotico",
+                "Coupon Patriotico",
                 "2x1  La Patria te Da Mas",
                 cryptoFromAddress1,
                 cryptoToAddress1,
