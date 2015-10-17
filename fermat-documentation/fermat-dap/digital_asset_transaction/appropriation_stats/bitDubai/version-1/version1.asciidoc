@@ -1,4 +1,4 @@
-[[digital-asset-transaction-appropiation-stats-BitDubai-V1]]
+[[digital-asset-transaction-appropriation-stats-BitDubai-V1]]
 = Version 1
 
 == Plug-in Description
@@ -18,7 +18,7 @@ La transacción Appropiation stats ejecuta los siguientes pasos:
 
 1) Escucha los eventos del asset transmission.
 
-2) si existe un evento con el DistributionStatus.ASSET_APPROPIATED, este plugin debe activarse y verificar que actor generó este evento.
+2) si existe un evento con el DistributionStatus.ASSET_APPROPRIATED, este plugin debe activarse y verificar que actor generó este evento.
 
 3) Con la verificación del actor se puede identificarr el digital asset que le fue distribuido al Asset user.
 

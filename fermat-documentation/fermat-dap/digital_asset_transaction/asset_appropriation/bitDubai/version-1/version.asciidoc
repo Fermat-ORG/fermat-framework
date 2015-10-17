@@ -1,4 +1,4 @@
-[[digital-asset-transaction-asset-appropiation-BitDubai-V1]]
+[[digital-asset-transaction-asset-appropriation-BitDubai-V1]]
 = Version 1
 
 == Plug-in Description
@@ -16,10 +16,10 @@ En la Asset user Reference Wallet el usuario tiene la posibilidad de tomar la ge
 de transferir ese monto a la bitcoin wallet de su preferencia, eliminando el digital asset de la Asset User reference wallet, así como también, la posibilidad de
 intercambiar el digital asset por el servicio asociado al mismo.
 
-Para apropiarse la genesis amount del digital asset, el usuario debera presionar el boton "Appropiate" para poner en marcha el proceso descrito anteriormente. Otra condición
+Para apropiarse la genesis amount del digital asset, el usuario debera presionar el boton "Appropriate" para poner en marcha el proceso descrito anteriormente. Otra condición
 para que se ejecute la transacción, es que el contrato del digital asset esté vencido.
 
-La transacción Asset Appropiation ejecuta los siguientes pasos:
+La transacción Asset Appropriation ejecuta los siguientes pasos:
 
 1) Verifica que el Digital Asset sigue siendo válido y no fue modificado.
 
