@@ -103,6 +103,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.even
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1041,8 +1042,8 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                         for (PlatformComponentProfile platformComponentProfile : remoteNetworkServicesRegisteredList) {
                             if (platformComponentProfile.getExtraData() != null) {
                                 JsonObject jsonObject = new JsonObject();
-                                jsonObject = jsonObject.getAsJsonObject(platformComponentProfile.getExtraData());
-                                image = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).toString().getBytes();
+                                jsonObject =new JsonParser().parse(platformComponentProfile.getExtraData()).getAsJsonObject();
+                                image = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString().getBytes();
                             }
 
 

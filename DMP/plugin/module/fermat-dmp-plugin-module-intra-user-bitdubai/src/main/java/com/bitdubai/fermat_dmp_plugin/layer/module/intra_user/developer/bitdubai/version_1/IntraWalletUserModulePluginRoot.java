@@ -312,7 +312,7 @@ public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsW
             for (IntraUserInformation intraUser : intraUserList) {
 
                 //byte[] image = intraUser.getProfileImage();
-                intraUserInformationList.add(new IntraUserModuleInformation(intraUser.getName(),intraUser.getPublicKey(), null));
+                intraUserInformationList.add(new IntraUserModuleInformation(intraUser.getName(),intraUser.getPublicKey(), intraUser.getProfileImage()));
             }
 
             return intraUserInformationList;
