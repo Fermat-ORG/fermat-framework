@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources;
 
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantGetLanguageFileException;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantGetManifestException;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantGetSkinFileException;
@@ -12,7 +13,7 @@ import java.util.UUID;
  *
  * @author Created by natalia on 2015.07.28..
  */
-public interface SubAppResources {
+public interface SubAppResources extends ResourceProviderManager {
 
     /**
      * This method returns the resourcesId

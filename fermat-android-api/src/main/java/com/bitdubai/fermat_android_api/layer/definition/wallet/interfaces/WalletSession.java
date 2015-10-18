@@ -9,33 +9,13 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public interface WalletSession {
+public interface WalletSession extends FermatSession{
 
     /**
      *
      * @return
      */
     public InstalledWallet getWalletSessionType();
-
-    /**
-     *
-     * @param key
-     * @param object
-     */
-    public void setData (String key,Object object);
-
-    /**
-     *
-     * @param key
-     * @return
-     */
-    public Object getData (String key);
-
-    /**
-     *
-     * @return
-     */
-    public ErrorManager getErrorManager();
 
     /**
      *
