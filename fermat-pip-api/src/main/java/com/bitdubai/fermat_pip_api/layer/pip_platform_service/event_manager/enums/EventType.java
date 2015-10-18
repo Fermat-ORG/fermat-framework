@@ -776,6 +776,28 @@ public enum EventType implements FermatEventEnum {
         public FermatEvent getNewEvent() {
             return null;
         }
+    },
+    ACTOR_NETWORK_SERVICE_ASK_FOR_ACCEPTANCE("ANSAFA"){
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return null;
+        }
+
+        @Override
+        public FermatEvent getNewEvent() {
+            return null;
+        }
+    },
+    ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS("ANSNN"){
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new ActorNetworkServicePendingsNotificationEventListener(this, fermatEventMonitor);
+        }
+
+        @Override
+        public FermatEvent getNewEvent() {
+            return null;
+        }
     };
 
 

@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.exceptions.CouldNotCreateCryptoCustomerException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
@@ -88,6 +89,7 @@ public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
 
     /**
      * Inicializa las vistas de este Fragment
+     *
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
@@ -111,8 +113,7 @@ public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
             public void onClick(View view) {
                 CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
 
-                // TODO ejecutar createNewIdentity(); cuando ya tenga una referencia del Module Manager
-                int resultKey = CREATE_IDENTITY_SUCCESS;
+                int resultKey = createNewIdentity();
                 switch (resultKey) {
                     case CREATE_IDENTITY_SUCCESS:
                         changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode());
@@ -203,8 +204,11 @@ public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
         if (dataIsValid) {
             if (moduleManager != null) {
                 try {
-                    moduleManager.createCryptoCustomerIdentity(brokerNameText, brokerImageByteArray);
+                    CryptoCustomerIdentityInformation identity = moduleManager.createCryptoCustomerIdentity(brokerNameText, brokerImageByteArray);
+                    if (identity == null)
+                        return CREATE_IDENTITY_FAIL_MODULE_EXCEPTION;
                     return CREATE_IDENTITY_SUCCESS;
+
                 } catch (CouldNotCreateCryptoCustomerException ex) {
                     CommonLogger.exception(TAG, ex.getMessage(), ex);
                     return CREATE_IDENTITY_FAIL_MODULE_EXCEPTION;
@@ -237,7 +241,7 @@ public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
             return false;
         if (brokerImageBytes == null)
             return false;
-        if (brokerImageBytes.length > 0)
+        if (brokerImageBytes.length <= 0)
             return false;
 
         return true;

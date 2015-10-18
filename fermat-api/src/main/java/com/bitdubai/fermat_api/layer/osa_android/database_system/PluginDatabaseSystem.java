@@ -26,6 +26,4 @@ import java.util.UUID;
 
     Database createDatabase (UUID ownerId, String databaseName) throws CantCreateDatabaseException;
 
-    void setContext (Object context);
-
 }

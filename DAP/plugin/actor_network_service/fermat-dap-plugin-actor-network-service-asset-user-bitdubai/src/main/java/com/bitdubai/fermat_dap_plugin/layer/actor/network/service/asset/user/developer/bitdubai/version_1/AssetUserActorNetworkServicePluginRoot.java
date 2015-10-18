@@ -22,8 +22,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
-import com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.events.CompleteClientAssetUserActorRegistrationNotificationEvent;
-import com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.events.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.CompleteClientAssetUserActorRegistrationNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -37,7 +37,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 
-import com.bitdubai.fermat_dap_api.layer.all_definition.dap_actor_network_service.asset_user.enums.DapEvenType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DapEvenType;
 
 
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserANS;
@@ -243,7 +243,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
         super();
         this.listenersAdded = new ArrayList<>();
         this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
-        this.networkServiceType    = NetworkServiceType.ASSET_USER_ACTOR_NETWORK_SERVICE;
+        this.networkServiceType    = NetworkServiceType.ASSET_USER_ACTOR;
         this.name                  = "Actor Network Service Asset User";
         this.alias                 = "ActorNetworkServiceAssetUser";
         this.extraData             = null;
@@ -824,7 +824,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
          * If the component registered have my profile and my identity public key
          */
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.ASSET_USER_ACTOR_NETWORK_SERVICE &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.ASSET_USER_ACTOR &&
                 platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
             /*
@@ -887,20 +887,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.ACTOR_ASSET_USER &&
                 platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.UNDEFINED){
 
-            /*
 
-
-
-            System.out.println(" Actor Network Service Asset User Registered "+platformComponentProfileRegistered.getIdentityPublicKey()+"\n Alias"+platformComponentProfileRegistered.getAlias());
-
-            try {
-                requestListActorAssetUserRegistered();
-            } catch (CantRequestListActorAssetUserRegisteredException e) {
-                e.printStackTrace();
-            }
-
-             * TODO: DISPARAR UN EVENTO NOTIFICANDO EL REGISTRO DE UN ACTOR CON EL ACTOR Q SE REGISTRO DENTRO
-             */
 
             System.out.println(" Actor  Asset User Registered "+platformComponentProfileRegistered.getIdentityPublicKey()+"\n Alias "+platformComponentProfileRegistered.getAlias());
 
@@ -917,7 +904,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
             }
 
 
-            FermatEvent event =  eventManager.getNewEvent(DapEvenType.COMPLETE_CLIENT_ASSET_USER_REGISTRATION_NOTIFICATION);
+            FermatEvent event =  eventManager.getNewEvent(DapEvenType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
             event.setSource(EventSource.ACTOR_ASSET_USER);
 
             ((CompleteClientAssetUserActorRegistrationNotificationEvent)event).setActorAssetUser(actorAssetUserNewRegsitered);
@@ -932,9 +919,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleFailureComponentRegistrationNotificationEvent");
 
-        /*
-         * TODO: ANALIZAR QUE HACER AQUI
-         */
+
 
     }
 
@@ -964,7 +949,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
             if(remoteNetworkServiceToConnect.getNetworkServiceType()== NetworkServiceType.UNDEFINED &&  remoteNetworkServiceToConnect.getPlatformComponentType()== PlatformComponentType.ACTOR_ASSET_USER ){
 
-                List<ActorAssetUser> actorAssetUserListRemote=null;
+
 
 
                 for(PlatformComponentProfile p : platformComponentProfileRegisteredList){
@@ -981,20 +966,20 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
                         e.printStackTrace();
                     }
 
-                    actorAssetUserListRemote.add(actorAssetUserNew);
+                    actorAssetUserRegisteredList.add(actorAssetUserNew);
                 }
 
 
 
 
-                FermatEvent event =  eventManager.getNewEvent(DapEvenType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
+                FermatEvent event =  eventManager.getNewEvent(DapEvenType.COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION);
                 event.setSource(EventSource.ACTOR_ASSET_USER);
 
-                ((CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent)event).setActorAssetUserList(actorAssetUserListRemote);
+                ((CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent)event).setActorAssetUserList(actorAssetUserRegisteredList);
                 eventManager.raiseEvent(event);
 
 
-            }else if(remoteNetworkServiceToConnect.getNetworkServiceType()== NetworkServiceType.ASSET_USER_ACTOR_NETWORK_SERVICE &&  remoteNetworkServiceToConnect.getPlatformComponentType()== PlatformComponentType.NETWORK_SERVICE ){
+            }else if(remoteNetworkServiceToConnect.getNetworkServiceType()== NetworkServiceType.ASSET_USER_ACTOR &&  remoteNetworkServiceToConnect.getPlatformComponentType()== PlatformComponentType.NETWORK_SERVICE ){
 
                 /*
                  * save into the cache
@@ -1008,21 +993,11 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
 
 
-                /*
-                 * Construct a ActorAssetUser by each platformComponentProfile
-                 */
-                /*
-                 * TODO: CREAR LOS ACTORES CON EL CONTENIDO DEL PROFILE Y AGREGARLOS A LA LISTA
-                 */
-
         }
 
 
 
 
-        /*
-         * TODO: ENVIAR EL EVENTO QUE NOTIFICA QUE LA LISTA ESTA DISPONIBLE
-         */
 
 
     }
@@ -1216,12 +1191,12 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
         try{
 
-            FermatEventListener event = eventManager.getNewListener(DapEvenType.COMPLETE_CLIENT_ASSET_USER_REGISTRATION_NOTIFICATION);
+            FermatEventListener event = eventManager.getNewListener(DapEvenType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
             event.setEventHandler(new CompleteClientAssetUserActorRegistrationNotificationEventHandler(this));
             eventManager.addListener(event);
             listenersAdded.add(event);
 
-            event = eventManager.getNewListener(DapEvenType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
+            event = eventManager.getNewListener(DapEvenType.COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION);
             event.setEventHandler(new CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventHandler(this));
             eventManager.addListener(event);
             listenersAdded.add(event);

@@ -74,10 +74,10 @@ public class CryptoBrokerIdentityDatabaseFactory implements DealsWithPluginDatab
              */
             table = databaseFactory.newTableFactory(ownerId, CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
 
-            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-
+            table.addColumn(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_CRYPTO_BROKER_PUBLIC_KEY_PUBLISHED_COLUMN_NAME,DatabaseDataType.INTEGER,2, Boolean.FALSE);
             table.addIndex(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_FIRST_KEY_COLUMN);
 
             try {

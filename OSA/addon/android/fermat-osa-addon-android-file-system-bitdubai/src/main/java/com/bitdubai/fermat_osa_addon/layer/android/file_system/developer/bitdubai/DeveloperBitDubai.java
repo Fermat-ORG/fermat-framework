@@ -30,7 +30,7 @@ public class DeveloperBitDubai implements AddonDeveloper {
          * it is easy to choose.
          */
 
-        addon = new FileSystemOsAddonRoot();
+        addon = new FileSystemOsAddonRoot("");
 
 
     }

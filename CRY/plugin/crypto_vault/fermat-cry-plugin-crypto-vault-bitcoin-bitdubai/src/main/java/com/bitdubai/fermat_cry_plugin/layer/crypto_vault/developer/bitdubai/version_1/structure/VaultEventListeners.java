@@ -103,7 +103,8 @@ public class VaultEventListeners extends AbstractWalletEventListener {
                     insertNewTransactionAndRaiseEvent(tx.getHashAsString(), cryptoStatus, EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
                     break;
                 case IRREVERSIBLE:
-                    insertNewTransactionAndRaiseEvent(tx.getHashAsString(), cryptoStatus, EventType.INCOMING_CRYPTO_IRREVERSIBLE);
+                    // NOW WE'RE NOT SAVING THIS TYPE IF TRANSACTIONS
+                    raiseTransactionEvent(EventType.INCOMING_CRYPTO_IRREVERSIBLE);
                     break;
                 default:
                     throw new UnexpectedCryptoStatusException(
@@ -132,11 +133,16 @@ public class VaultEventListeners extends AbstractWalletEventListener {
                                                    final CryptoStatus cryptoStatus,
                                                    final EventType    eventType   ) throws CantExecuteQueryException {
 
-        CryptoTransactionType type = dbActions.calculateTransactionType(hash);
-        dbActions.insertNewTransactionWithNewConfidence(hash, cryptoStatus, type);
+        if(!dbActions.transactionExists(hash, cryptoStatus)) {
 
-        if (type.equals(CryptoTransactionType.INCOMING))
-            raiseTransactionEvent(eventType);
+            CryptoTransactionType type = dbActions.calculateTransactionType(hash);
+
+            dbActions.insertNewTransactionWithNewConfidence(hash, cryptoStatus, type);
+
+            if (type.equals(CryptoTransactionType.INCOMING))
+                raiseTransactionEvent(eventType);
+        }
+
     }
 
     private void raiseTransactionEvent(final EventType eventType) {
