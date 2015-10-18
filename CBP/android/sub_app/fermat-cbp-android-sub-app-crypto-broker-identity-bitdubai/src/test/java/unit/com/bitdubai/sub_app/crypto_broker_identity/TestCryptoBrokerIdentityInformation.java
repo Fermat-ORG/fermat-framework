@@ -5,7 +5,7 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identi
 /**
  * Created by nelson on 14/10/15.
  */
-class TestCryptoBrokerIdentityInformation implements CryptoBrokerIdentityInformation {
+public class TestCryptoBrokerIdentityInformation implements CryptoBrokerIdentityInformation {
     private String name;
     private byte[] img;
     private boolean isPublished;

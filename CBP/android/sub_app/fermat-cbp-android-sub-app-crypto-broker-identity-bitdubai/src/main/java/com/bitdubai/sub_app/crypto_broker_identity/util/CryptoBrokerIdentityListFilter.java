@@ -24,7 +24,6 @@ public class CryptoBrokerIdentityListFilter extends Filter {
 
     @Override
     protected FilterResults performFiltering(CharSequence constraint) {
-        // NOTE: this function is *always* called from a background thread, and not the UI thread.
         FilterResults result = new FilterResults();
 
         if (constraint != null && constraint.toString().length() > 0) {
@@ -33,13 +32,14 @@ public class CryptoBrokerIdentityListFilter extends Filter {
 
             synchronized (this) {
                 for (CryptoBrokerIdentityInformation item : listOfIdentities) {
-                    if (item.getAlias().toLowerCase(Locale.getDefault()).contains(constraintStr)) {
+                    String alias = item.getAlias().toLowerCase(Locale.getDefault());
+                    if (alias.contains(constraintStr))
                         filterItems.add(item);
-                    }
                 }
                 result.count = filterItems.size();
                 result.values = filterItems;
             }
+
         } else {
             synchronized (this) {
                 result.count = listOfIdentities.size();
