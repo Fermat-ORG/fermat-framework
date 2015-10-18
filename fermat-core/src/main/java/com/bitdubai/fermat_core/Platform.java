@@ -1200,7 +1200,7 @@ public class Platform implements Serializable {
             * ----------------------------------------
             */
                 Plugin assetIssuerActorNetworkService = ((DAPActorNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_ACTOR_NETWORK_SERVICE_LAYER)).getAssetIssuerActorNetwokService();
-                injectLayerReferences(assetUserActorNetworkService);
+                injectLayerReferences(assetIssuerActorNetworkService);
                 injectPluginReferencesAndStart(assetIssuerActorNetworkService, Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE);
            /*
 
