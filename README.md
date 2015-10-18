@@ -66,7 +66,7 @@ Mission / Purpose
 ------------------------------------------------
 
 
-> To get crypto currencies maass adopted as soon as possible and by doing so, empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way. And at the same time allow them to choose which currency to use, regardless of the place they live or where they were born.
+> To get crypto currencies mass adopted as soon as possible and by doing so, empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way. And at the same time allow them to choose which currency to use, regardless of the place they live or where they were born.
 
 
 Fermat Principles
