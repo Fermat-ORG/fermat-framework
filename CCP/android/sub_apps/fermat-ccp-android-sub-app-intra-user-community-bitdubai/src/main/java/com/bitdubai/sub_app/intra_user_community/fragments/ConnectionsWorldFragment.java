@@ -9,6 +9,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
@@ -138,15 +139,6 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
             // Run a task to fetch the notifications count
             new FetchCountTask().execute();
 
-            FetchUsersTask fetchUsersTask = new FetchUsersTask(this);
-            fetchUsersTask.execute();
-
-
-            mDialog = new ProgressDialog(getActivity());
-            mDialog.setMessage("Please wait...");
-            mDialog.setCancelable(false);
-            mDialog.show();
-
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY,UnexpectedUIExceptionSeverity.CRASH,ex);
@@ -169,6 +161,24 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
 
             // execute the Runnable
 
+            mDialog = new ProgressDialog(getActivity());
+                mDialog.setMessage("Please wait...");
+                mDialog.setCancelable(false);
+                mDialog.show();
+
+            MyThread myThread = new MyThread(getActivity(), this) {
+                @Override
+                public List<IntraUserInformation> mainTask() {
+                    try {
+                        return moduleManager.getSuggestionsToContact(MAX, offset);
+                    } catch (CantGetIntraUsersListException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                }
+            };
+
+            executor.execute(myThread);
 
             lstIntraUserInformations = new ArrayList<>();
 
@@ -422,43 +432,6 @@ Updates the count of notifications in the ActionBar.
         }
     }
 
-    class FetchUsersTask extends AsyncTask<Void, Void, List<IntraUserInformation>> {
-
-        private final ConnectionsWorldFragment fragment;
-
-        public FetchUsersTask(ConnectionsWorldFragment connectionsWorldFragment) {
-            this.fragment = connectionsWorldFragment;
-        }
-
-        @Override
-        protected List<IntraUserInformation> doInBackground(Void... params) {
-            // example count. This is where you'd
-
-            MyThread myThread = new MyThread(getActivity(),fragment) {
-                @Override
-                public List<IntraUserInformation> mainTask() {
-                    try {
-                        return moduleManager.getSuggestionsToContact(MAX, offset);
-                    } catch (CantGetIntraUsersListException e) {
-                        e.printStackTrace();
-                        System.out.println("-------------------------------------------\n+" +
-                                "EXCEPCION+\n--------------------------------------------");
-                        return null;
-                    }
-                }
-            };
-
-            executor.execute(myThread);
-            // query your data store for the actual count.
-            return null;
-        }
-
-        @Override
-        public void onPostExecute(List<IntraUserInformation> count) {
-            //updateUsers(count);
-        }
-    }
-
 //    private static final String TITLE = "title";
 //    private static final String ICON = "icon";
 //
@@ -507,60 +480,75 @@ Updates the count of notifications in the ActionBar.
 
             holder.name.setText(item.getName());
 
+            byte[] profileImage=null;
             try {
+               profileImage  = item.getProfileImage();
+            }catch (Exception e){
 
-                switch (position){
-                    case 0:
-                        holder.Photo.setImageResource(R.drawable.piper_profile_picture);
-                        break;
-                    case 1:
-                        holder.Photo.setImageResource(R.drawable.luis_profile_picture);
-                        break;
-                    case 2:
-                        holder.Photo.setImageResource(R.drawable.brant_profile_picture);
-                        break;
-                    case 3:
-                        holder.Photo.setImageResource(R.drawable.louis_profile_picture);
-                        break;
-                    case 4:
-                        holder.Photo.setImageResource(R.drawable.madaleine_profile_picture);
-                        break;
-                    case 5:
-                        holder.Photo.setImageResource(R.drawable.adrian_profile_picture);
-                        break;
-                    case 6:
-                        holder.Photo.setImageResource(R.drawable.deniz_profile_picture);
-                        break;
-                    case 7:
-                        holder.Photo.setImageResource(R.drawable.dea_profile_picture);
-                        break;
-                    case 8:
-                        holder.Photo.setImageResource(R.drawable.florence_profile_picture);
-                        break;
-                     case 9:
-                         holder.Photo.setImageResource(R.drawable.alexandra_profile_picture);
-                         break;
-                    case 10:
-                        holder.Photo.setImageResource(R.drawable.simon_profile_picture);
-                        break;
-                    case 11:
-                        holder.Photo.setImageResource(R.drawable.victoria_profile_picture);
-                        break;
-                    default:
-                        holder.Photo.setImageResource(R.drawable.robert_profile_picture);
-                        break;
-                }
-
-                /**
-                 * falta poner si la conexion está activa
-                 *
-                 * */
-
-
-            } catch (Exception ex) {
-                CommonLogger.exception(TAG, ex.getMessage(), ex);
             }
 
+            if(profileImage!=null){
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPurgeable = true;
+                Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length, options);
+                holder.Photo.setImageBitmap(bitmap);
+            }else {
+
+                try {
+
+                    switch (position) {
+                        case 0:
+                            holder.Photo.setImageResource(R.drawable.piper_profile_picture);
+                            break;
+                        case 1:
+                            holder.Photo.setImageResource(R.drawable.luis_profile_picture);
+                            break;
+                        case 2:
+                            holder.Photo.setImageResource(R.drawable.brant_profile_picture);
+                            break;
+                        case 3:
+                            holder.Photo.setImageResource(R.drawable.louis_profile_picture);
+                            break;
+                        case 4:
+                            holder.Photo.setImageResource(R.drawable.madaleine_profile_picture);
+                            break;
+                        case 5:
+                            holder.Photo.setImageResource(R.drawable.adrian_profile_picture);
+                            break;
+                        case 6:
+                            holder.Photo.setImageResource(R.drawable.deniz_profile_picture);
+                            break;
+                        case 7:
+                            holder.Photo.setImageResource(R.drawable.dea_profile_picture);
+                            break;
+                        case 8:
+                            holder.Photo.setImageResource(R.drawable.florence_profile_picture);
+                            break;
+                        case 9:
+                            holder.Photo.setImageResource(R.drawable.alexandra_profile_picture);
+                            break;
+                        case 10:
+                            holder.Photo.setImageResource(R.drawable.simon_profile_picture);
+                            break;
+                        case 11:
+                            holder.Photo.setImageResource(R.drawable.victoria_profile_picture);
+                            break;
+                        default:
+                            holder.Photo.setImageResource(R.drawable.robert_profile_picture);
+                            break;
+                    }
+
+
+                    /**
+                     * falta poner si la conexion está activa
+                     *
+                     * */
+
+
+                } catch (Exception ex) {
+                    CommonLogger.exception(TAG, ex.getMessage(), ex);
+                }
+            }
             return convertView;
         }
         /**

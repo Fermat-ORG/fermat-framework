@@ -310,7 +310,9 @@ public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsW
             List<IntraUserInformation> intraUserList =  this.intraUserNertwokServiceManager.getIntraUsersSuggestions(max,offset);
 
             for (IntraUserInformation intraUser : intraUserList) {
-                intraUserInformationList.add(new IntraUserModuleInformation(intraUser.getName(),intraUser.getPublicKey(),intraUser.getProfileImage()));
+
+                //byte[] image = intraUser.getProfileImage();
+                intraUserInformationList.add(new IntraUserModuleInformation(intraUser.getName(),intraUser.getPublicKey(), null));
             }
 
             return intraUserInformationList;
