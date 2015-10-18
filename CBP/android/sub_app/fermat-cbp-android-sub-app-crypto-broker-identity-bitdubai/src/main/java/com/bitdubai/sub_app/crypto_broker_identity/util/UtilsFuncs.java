@@ -1,34 +1,37 @@
 package com.bitdubai.sub_app.crypto_broker_identity.util;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.view.View;
 
 /**
  * Created by nelson on 12/10/15.
  */
 public class UtilsFuncs {
 
-    public static Bitmap getRoundedShape(Bitmap srcBitmap) {
-        int targetWidth = 50, targetHeight = 50;
+    public static RoundedBitmapDrawable getRoundedBitmap(Resources res, Bitmap srcBitmap) {
+        RoundedBitmapDrawable bitmapDrawable = RoundedBitmapDrawableFactory.create(res, srcBitmap);
 
-        Bitmap targetBitmap = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888);
+        int radius = Math.min(srcBitmap.getWidth(), srcBitmap.getHeight());
+        bitmapDrawable.setCornerRadius(radius);
+        bitmapDrawable.setAntiAlias(true);
 
-        float x = ((float) targetWidth - 1) / 2;
-        float y = ((float) targetHeight - 1) / 2;
-        float radius = Math.min((float) targetWidth, (float) targetHeight) / 2;
+        return bitmapDrawable;
+    }
 
-        Path path = new Path();
-        path.addCircle(x, y, radius, Path.Direction.CCW);
+    public static RoundedBitmapDrawable getRoundedBitmap(Resources res, int drawableId) {
+        Bitmap srcBitmap = BitmapFactory.decodeResource(res, drawableId);
+        return getRoundedBitmap(res, srcBitmap);
+    }
 
-        Rect src = new Rect(0, 0,  srcBitmap.getWidth(),  srcBitmap.getHeight());
-        Rect dst = new Rect(0, 0, targetWidth, targetHeight);
-
-        Canvas canvas = new Canvas(targetBitmap);
-        canvas.clipPath(path);
-        canvas.drawBitmap( srcBitmap, src, dst, null);
-
-        return targetBitmap;
+    public static RoundedBitmapDrawable getRoundedBitmap(Resources res, byte[] imgInBytes) {
+        Bitmap srcBitmap = BitmapFactory.decodeByteArray(imgInBytes, 0, imgInBytes.length);
+        return getRoundedBitmap(res, srcBitmap);
     }
 }

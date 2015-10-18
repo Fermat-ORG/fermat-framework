@@ -1,0 +1,29 @@
+include ':fermat-api'
+project(':fermat-api').projectDir = new File('../../fermat-api')
+
+include ':fermat-pip-api'
+project(':fermat-pip-api').projectDir = new File('../../fermat-pip-api')
+
+include ':fermat-cry-api'
+project(':fermat-cry-api').projectDir = new File('../../fermat-cry-api')
+
+include ':fermat-ccp-api'
+project(':fermat-ccp-api').projectDir = new File('../../CCP/library/api/fermat-ccp-api')
+
+include ':fermat-bch-api'
+project(':fermat-bch-api').projectDir = new File('../../BCH/library/api/fermat-bch-api')
+
+include ':fermat-wpd-api'
+project(':fermat-wpd-api').projectDir = new File('../../WPD/library/api/fermat-wpd-api')
+
+include ':fermat-dap-api'
+project(':fermat-dap-api').projectDir = new File('../../DAP/library/api/fermat-dap-api')
+
+// DAP Projects
+
+// identity
+include ':fermat-dap-plugin-identity-asset-issuer-bitdubai'
+project(':fermat-dap-plugin-identity-asset-issuer-bitdubai').projectDir = new File('../../DAP/plugin/identity/fermat-dap-plugin-identity-asset-issuer-bitdubai')
+
+include ':fermat-dap-plugin-identity-asset-user-bitdubai'
+project(':fermat-dap-plugin-identity-asset-user-bitdubai').projectDir = new File('../../DAP/plugin/identity/fermat-dap-plugin-identity-asset-user-bitdubai')

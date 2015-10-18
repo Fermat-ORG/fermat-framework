@@ -1,9 +1,14 @@
-== FERMAT for developers 2: Superlayers
+== FERMAT Marketing Platform: +
+Marketing with Digital Assets 
 
-=== FERMAT OSA 
-=== FERMAT BCH
-=== FERMAT P2P
+=== Voucher Wallet
+-> for 
 
+=== Coupon Wallet 
+-> for 
+
+=== Discount Wallet 
+-> for 
 
 
 

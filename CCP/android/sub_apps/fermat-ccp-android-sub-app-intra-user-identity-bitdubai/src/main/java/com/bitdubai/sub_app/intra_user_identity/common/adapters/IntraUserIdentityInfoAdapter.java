@@ -6,9 +6,9 @@ import android.graphics.BitmapFactory;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
 import com.bitdubai.sub_app.intra_user_identity.R;
-import com.bitdubai.sub_app.intra_user_identity.common.holders.CryptoBrokerIdentityInfoViewHolder;
+import com.bitdubai.sub_app.intra_user_identity.common.holders.IntraUserIdentityInfoViewHolder;
 import com.bitdubai.sub_app.intra_user_identity.util.UtilsFuncs;
 
 import java.util.ArrayList;
@@ -19,28 +19,28 @@ import java.util.ArrayList;
  *
  * @author Nelson Ramirez
  */
-public class IntraUserIdentityInfoAdapter extends FermatAdapter<CryptoBrokerIdentityInformation, CryptoBrokerIdentityInfoViewHolder> {
+public class IntraUserIdentityInfoAdapter extends FermatAdapter<IntraWalletUser, IntraUserIdentityInfoViewHolder> {
 
 
-    public IntraUserIdentityInfoAdapter(Context context, ArrayList<CryptoBrokerIdentityInformation> dataSet) {
+    public IntraUserIdentityInfoAdapter(Context context, ArrayList<IntraWalletUser> dataSet) {
         super(context, dataSet);
     }
 
     @Override
-    protected CryptoBrokerIdentityInfoViewHolder createHolder(View itemView, int type) {
-        return new CryptoBrokerIdentityInfoViewHolder(itemView);
+    protected IntraUserIdentityInfoViewHolder createHolder(View itemView, int type) {
+        return new IntraUserIdentityInfoViewHolder(itemView);
     }
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.crypto_broker_identity_list_item;
+        return R.layout.intra_user_identity_list_item;
     }
 
     @Override
-    protected void bindHolder(final CryptoBrokerIdentityInfoViewHolder holder, final CryptoBrokerIdentityInformation data, final int position) {
-        holder.getIdentityName().setText(data.getName());
+    protected void bindHolder(final IntraUserIdentityInfoViewHolder holder, final IntraWalletUser data, final int position) {
+        holder.getIdentityName().setText(data.getAlias());
 
-        byte[] profileImage = data.getProfileImage();
+        byte[] profileImage = null;  //data.getProfileImage();
         Bitmap imageBitmap = profileImage == null ?
                 BitmapFactory.decodeResource(context.getResources(), R.drawable.deniz_profile_picture) :
                 BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
