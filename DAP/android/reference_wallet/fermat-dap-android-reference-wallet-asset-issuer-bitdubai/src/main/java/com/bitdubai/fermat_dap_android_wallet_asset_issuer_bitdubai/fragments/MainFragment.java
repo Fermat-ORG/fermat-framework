@@ -171,6 +171,7 @@ public class MainFragment extends FermatWalletFragment
                                 Toast.LENGTH_SHORT).show();
                 }
             });
+            task.execute();
             return true;
         }
         return false;
