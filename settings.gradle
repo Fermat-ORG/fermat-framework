@@ -19,7 +19,9 @@ project(':fermat-dap-api').projectDir = new File('DAP/library/api/fermat-dap-api
 
 
 include ':fermat-pip-api'
+
 include ':fermat-p2p-api'
+project(':fermat-p2p-api').projectDir = new File('P2P/library/api/fermat-p2p-api')
 
 include ':fermat-bch-api'
 project(':fermat-bch-api').projectDir = new File('BCH/library/api/fermat-bch-api')
