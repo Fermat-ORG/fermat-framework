@@ -89,7 +89,6 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
         mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         mSearchView.setOnQueryTextListener(this);
-        mSearchView.setSubmitButtonEnabled(true);
         mSearchView.setOnCloseListener(this);
     }
 
@@ -121,7 +120,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override

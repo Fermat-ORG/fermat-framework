@@ -233,8 +233,7 @@ public class OutgoingIntraActorTransactionProcessorAgent  {
                         reportUnexpectedException(e);
                         // TODO: Verify what to do when the transaction has already been sent.
                     } catch (CouldNotTransmitCryptoException | OutgoingIntraActorCantSetTranactionHashException | OutgoingIntraActorCantCancelTransactionException e) {
-                        //reportUnexpectedException(e);
-                        //e.printStackTrace();
+                        reportUnexpectedException(e);
                     }
                 }
 
