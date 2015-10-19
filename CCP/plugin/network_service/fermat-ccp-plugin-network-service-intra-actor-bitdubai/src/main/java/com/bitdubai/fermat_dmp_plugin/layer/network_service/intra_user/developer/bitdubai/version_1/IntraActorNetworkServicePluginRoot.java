@@ -1341,6 +1341,8 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
         //TODO: deberia cambiaresto para que venga el tipo de actor a registrar
 
+
+
         CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
 
 
@@ -1364,12 +1366,15 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
                 actorsToRegisterCache.add(platformComponentProfile);
 
+            if(register){
                 try {
                     communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
 
                 } catch (CantRegisterComponentException e) {
                     e.printStackTrace();
                 }
+            }
+
 
 
         }
