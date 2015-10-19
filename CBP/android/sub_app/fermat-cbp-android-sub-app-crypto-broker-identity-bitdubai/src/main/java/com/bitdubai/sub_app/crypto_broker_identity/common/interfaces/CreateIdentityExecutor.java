@@ -16,13 +16,5 @@ public abstract class CreateIdentityExecutor {
         this.identityName = identityName;
     }
 
-    public abstract int createNewIdentity();
-
-    public void setImageInBytes(byte[] imageInBytes){
-        this.imageInBytes = imageInBytes;
-    }
-
-    public void setIdentityName(String identityName) {
-        this.identityName = identityName;
-    }
+    public abstract int execute();
 }
