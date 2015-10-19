@@ -124,8 +124,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
     public void closeConnection(String remoteNetworkServicePublicKey) {
 
         //Remove the instance and stop his threads
-        //TODO:Implementar
-        //communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
+        communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
     }
 
     @Override
@@ -134,8 +133,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
         for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
 
             //Remove the instance and stop his threads
-            //TODO:Implementar
-            //communicationNetworkServiceRemoteAgentsCache.remove(key).stop();
+            communicationNetworkServiceRemoteAgentsCache.remove(key).stop();
         }
     }
 
@@ -143,5 +141,51 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
     public NetworkServiceLocal getNetworkServiceLocalInstance(String remoteNetworkServicePublicKey) {
         //return the instance
         return communicationNetworkServiceLocalsCache.get(remoteNetworkServicePublicKey);
+    }
+
+    /**
+     * Pause the manager
+     */
+    public void pause() {
+
+        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
+
+            //Remove the instance and stop his threads
+            communicationNetworkServiceRemoteAgentsCache.get(key).pause();
+        }
+
+    }
+
+    public ECCKeyPair getIdentity() {
+        return identity;
+    }
+
+    /**
+     * Resume the manager
+     */
+    public void resume() {
+
+        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
+
+            //Remove the instance and stop his threads
+            communicationNetworkServiceRemoteAgentsCache.get(key).resume();
+        }
+
+    }
+
+    /**
+     * Get the OutgoingMessageDao
+     * @return OutgoingMessageDao
+     */
+    public OutgoingMessageDao getOutgoingMessageDao() {
+        return outgoingMessageDao;
+    }
+
+    /**
+     * Get the IncomingMessageDao
+     * @return IncomingMessageDao
+     */
+    public IncomingMessageDao getIncomingMessageDao() {
+        return incomingMessageDao;
     }
 }
