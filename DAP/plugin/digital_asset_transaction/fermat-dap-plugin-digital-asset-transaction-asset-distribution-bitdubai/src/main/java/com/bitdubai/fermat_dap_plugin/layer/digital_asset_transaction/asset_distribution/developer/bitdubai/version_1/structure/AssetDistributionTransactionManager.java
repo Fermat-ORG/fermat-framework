@@ -8,9 +8,9 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 24/09/15.
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 24/09/15
  */
 public class AssetDistributionTransactionManager implements AssetDistributionManager {
 
@@ -109,6 +109,5 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
         } catch(Exception exception){
             throw new CantDistributeDigitalAssetsException(exception, "Setting wallet public key in asset distribution process", "Unexpected exception");
         }
-
     }
 }
