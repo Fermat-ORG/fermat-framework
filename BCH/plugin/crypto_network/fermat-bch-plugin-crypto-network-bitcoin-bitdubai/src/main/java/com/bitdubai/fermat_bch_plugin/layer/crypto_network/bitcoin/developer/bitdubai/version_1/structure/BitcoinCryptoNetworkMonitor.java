@@ -92,6 +92,12 @@ class BitcoinCryptoNetworkMonitor implements Agent {
     @Override
     public void stop() {
         isSupposedToBeRunning = false;
+        /**
+         * will wait until the peer agent stops.
+         */
+        while(bitcoinCryptoNetworkMonitorAgent.getPeerGroup().isRunning()){
+
+        }
 
     }
 
@@ -196,6 +202,14 @@ class BitcoinCryptoNetworkMonitor implements Agent {
                 throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, e, null, null);
             }
 
+        }
+
+        /**
+         * gets the peer group
+         * @return
+         */
+        public PeerGroup getPeerGroup() {
+            return peerGroup;
         }
     }
 }
