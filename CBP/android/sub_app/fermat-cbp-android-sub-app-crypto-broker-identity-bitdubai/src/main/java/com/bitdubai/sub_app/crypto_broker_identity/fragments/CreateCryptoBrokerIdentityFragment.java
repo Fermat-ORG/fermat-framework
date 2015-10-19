@@ -5,13 +5,10 @@ import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -25,8 +22,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatRoundedImageView;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.SizeUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
@@ -194,7 +189,7 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
         byte[] imgInBytes = toByteArray(cryptoBrokerBitmap);
 
         CreateBrokerIdentityExecutor executor = new CreateBrokerIdentityExecutor(subAppsSession, brokerNameText, imgInBytes);
-        int resultKey = executor.createNewIdentity();
+        int resultKey = executor.execute();
 
         switch (resultKey) {
             case SUCCESS:
