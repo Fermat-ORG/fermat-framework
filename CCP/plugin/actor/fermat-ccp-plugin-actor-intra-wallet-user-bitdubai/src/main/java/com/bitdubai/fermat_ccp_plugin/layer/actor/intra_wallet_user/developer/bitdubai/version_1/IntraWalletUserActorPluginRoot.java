@@ -268,7 +268,7 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
         try {
             //TODO verificar si se usa
 
-         //   ActorIntraUser actor = intraUserActorDao.getIntraUser(actorPublicKey);
+//            ActorIntraUser actor = intraUserActorDao.getIntraUser(actorPublicKey);
 
             //not found actor
            // if(actor == null)

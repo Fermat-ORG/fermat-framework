@@ -9,7 +9,6 @@ package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DapEvenType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionPluginRoot;
@@ -21,6 +20,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.google.gson.JsonObject;
 
 import java.util.List;
@@ -92,7 +92,7 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
             /*
              * Notify to the interested
              */
-            FermatEvent event =  getAssetTransmissionPluginRoot().getEventManager().getNewEvent(DapEvenType.RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION);
+            FermatEvent event =  getAssetTransmissionPluginRoot().getEventManager().getNewEvent(EventType.RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION);
             event.setSource(AssetTransmissionPluginRoot.EVENT_SOURCE);
             getAssetTransmissionPluginRoot().getEventManager().raiseEvent(event);
 

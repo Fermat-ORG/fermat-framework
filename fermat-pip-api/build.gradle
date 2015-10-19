@@ -38,6 +38,7 @@ dependencies {
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
     deployerJars "org.apache.maven.wagon:wagon-webdav:1.0-beta-2"
     compile project(':fermat-wpd-api')
+    compile project(':fermat-dap-api')
 }
 
 test {

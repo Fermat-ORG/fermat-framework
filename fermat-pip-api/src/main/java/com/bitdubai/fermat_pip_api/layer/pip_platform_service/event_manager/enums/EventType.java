@@ -726,43 +726,38 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
-    ASSET_USER_CONNECTION_ACCEPTED("AUCA") {
+    COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION("CL_RLAURN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new AssetUserActorConnectionAcceptedEventListener(this, fermatEventMonitor);
+            return new AssetUserActorRequestListRegisteredNetworksNotificationEventListener(this, fermatEventMonitor);
         }
-
         public FermatEvent getNewEvent() {
-            return new AssetUserActorConnectionAcceptedEvent(this);
+            return new AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent(this);
+        }
+    },
+    COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION("CL_CAURN") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new AssetUserActorCompleteRegistrationNotificationEventListener(this, fermatEventMonitor);
+        }
+        public FermatEvent getNewEvent() {
+            return new AssetUserActorCompleteRegistrationNotificationEvent(this);
         }
     },
 
-    ASSET_USER_DISCONNECTION_REQUEST_RECEIVED("AUDRR") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new AssetUserActorConnectionCancelledEventListener(this, fermatEventMonitor);
+    RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION("RNDAMN") {
+        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
+            return new ReceivedNewDigitalAssetMetadataNotificationEventListener(this, eventMonitor);
         }
-
         public FermatEvent getNewEvent() {
-            return new AssetUserActorConnectionCancelledEvent(this);
+            return new ReceivedNewDigitalAssetMetadataNotificationEvent(this);
         }
     },
 
-    ASSET_USER_REQUESTED_CONNECTION("AURC") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new AssetUserActorRequestConnectionEventListener(this, fermatEventMonitor);
+    RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION("RNTSN") {
+        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
+            return new ReceivedNewTransactionStatusNotificationEventListener(this, eventMonitor);
         }
-
         public FermatEvent getNewEvent() {
-            return new AssetUserActorRequestConnectionEvent(this);
-        }
-    },
-
-    ASSET_USER_CONNECTION_DENIED("AUCD") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new AssetUserActorDeniedConnectionEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new AssetUserActorConnectionDeniedEvent(this);
+            return new ReceivedNewTransactionStatusNotificationEvent(this);
         }
     },
 

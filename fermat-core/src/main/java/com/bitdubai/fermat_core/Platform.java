@@ -49,6 +49,8 @@ import com.bitdubai.fermat_core.layer.wpd.identity.WPDIdentityLayer;
 import com.bitdubai.fermat_core.layer.wpd.middleware.WPDMiddlewareLayer;
 import com.bitdubai.fermat_core.layer.wpd.network_service.WPDNetworkServiceLayer;
 import com.bitdubai.fermat_core.layer.wpd.sub_app_module.WPDSubAppModuleLayer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.DealsWithAssetIssuerActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.DealsWithAssetIssuerWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSupAppModule;
@@ -725,11 +727,11 @@ public class Platform implements Serializable {
             boolean CCP = true;
             boolean CRY = true;
             boolean CSH = true;
-            boolean DAP = false;
+            boolean DAP = true;
             boolean DMP = true;//DOBLEMENTE TEMPORAL
             boolean MKT = true;
             boolean OSA = true;
-            boolean P2P = false;
+            boolean P2P = true  ;
             boolean PIP = true;
             boolean SHP = true;
             boolean WPD = true;
@@ -1184,21 +1186,30 @@ public class Platform implements Serializable {
 
 
             if (DAP) {
-                /*
-//            * Plugin Asset User Actor Network Service
-//            * ----------------------------------------
-//            */
-//                Plugin assetUserActorNetworkService = ((DAPActorNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_ACTOR_NETWORK_SERVICE_LAYER)).getAssetUserActorNetworService();
-//                injectLayerReferences(assetUserActorNetworkService);
-//                injectPluginReferencesAndStart(assetUserActorNetworkService, Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE);
-//
-//           /*
-//            * Plugin Asset Transmission Network Service
-//            * ----------------------------------------
-//            */
-//                Plugin assetTransmissionNetworkService = ((DAPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_NETWORK_SERVICE_LAYER)).getAssetTransmissionNetworService();
-//                injectLayerReferences(assetTransmissionNetworkService);
-//                injectPluginReferencesAndStart(assetTransmissionNetworkService, Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE);
+            /*
+            * Plugin Asset User Actor Network Service
+            * ----------------------------------------
+            */
+                Plugin assetUserActorNetworkService = ((DAPActorNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_ACTOR_NETWORK_SERVICE_LAYER)).getAssetUserActorNetworService();
+                injectLayerReferences(assetUserActorNetworkService);
+                injectPluginReferencesAndStart(assetUserActorNetworkService, Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE);
+
+            /*
+            * Plugin Asset Issuer Actor Network Service
+            * ----------------------------------------
+            */
+                Plugin assetIssuerActorNetworkService = ((DAPActorNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_ACTOR_NETWORK_SERVICE_LAYER)).getAssetIssuerActorNetwokService();
+                injectLayerReferences(assetIssuerActorNetworkService);
+                injectPluginReferencesAndStart(assetIssuerActorNetworkService, Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE);
+           /*
+
+
+            * Plugin Asset Transmission Network Service
+            * ----------------------------------------assetIssuerActorNetworkService
+            */
+                Plugin assetTransmissionNetworkService = ((DAPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_NETWORK_SERVICE_LAYER)).getAssetTransmissionNetworService();
+                injectLayerReferences(assetTransmissionNetworkService);
+                injectPluginReferencesAndStart(assetTransmissionNetworkService, Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE);
 
            /*
             * Plugin Asset Wallet Asset Issuer
@@ -1716,6 +1727,10 @@ public class Platform implements Serializable {
 
             if (plugin instanceof DealsWithIdentityAssetUser) {
                 ((DealsWithIdentityAssetUser) plugin).setIdentityAssetUserManager((IdentityAssetUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY));
+            }
+
+            if (plugin instanceof DealsWithAssetIssuerActorNetworkServiceManager) {
+                ((DealsWithAssetIssuerActorNetworkServiceManager) plugin).setAssetIssuerActorNetworkServiceManager((AssetIssuerActorNetworkServiceManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE));
             }
 
             if (plugin instanceof DealsWithAssetUserActorNetworkServiceManager) {
