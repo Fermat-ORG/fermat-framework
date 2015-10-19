@@ -1,4 +1,4 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils;
+package com.bitdubai.fermat_android_api.layer.definition.wallet.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

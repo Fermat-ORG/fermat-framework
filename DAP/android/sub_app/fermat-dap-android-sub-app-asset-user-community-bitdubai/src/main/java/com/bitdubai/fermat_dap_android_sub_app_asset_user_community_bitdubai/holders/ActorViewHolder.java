@@ -5,7 +5,7 @@ import android.view.View;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.views.SquareImageView;
+import com.bitdubai.fermat_android_api.ui.Views.SquareImageView;
 
 /**
  * Created by francisco on 14/10/15.
@@ -24,5 +24,6 @@ public class ActorViewHolder extends FermatViewHolder {
         super(itemView);
         thumbnail = (SquareImageView) itemView.findViewById(R.id.thumbnail);
         name = (FermatTextView) itemView.findViewById(R.id.name);
+
     }
 }
