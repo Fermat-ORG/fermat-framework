@@ -201,7 +201,7 @@ public class IdentitySubAppModuleCryptoCustomerPluginRoot implements CryptoCusto
 
     @Override
     public void publishCryptoCustomerIdentity(String cryptoCustomerPublicKey) throws CouldNotPublishCryptoCustomerException {
-
+        
     }
 
     @Override
