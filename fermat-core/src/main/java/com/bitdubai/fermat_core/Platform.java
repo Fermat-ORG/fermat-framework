@@ -34,6 +34,7 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.Crypt
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.DealsWithCryptoPayment;
 import com.bitdubai.fermat_core.layer.cbp.identity.CBPIdentityLayer;
 import com.bitdubai.fermat_core.layer.cbp.sub_app_module.CBPSubAppModuleLayer;
+import com.bitdubai.fermat_core.layer.ccm.actor.intra_wallet_user.CCMActorLayer;
 import com.bitdubai.fermat_core.layer.ccp.actor.CCPActorLayer;
 import com.bitdubai.fermat_core.layer.ccp.request.CCPRequestLayer;
 import com.bitdubai.fermat_core.layer.dap_actor_network_service.DAPActorNetworkServiceLayer;
@@ -497,6 +498,10 @@ public class Platform implements Serializable {
             corePlatformContext.registerPlatformLayer(new CCPTransactionLayer(), PlatformLayers.BITDUBAI_CCP_TRANSACTION_LAYER);
             // End  CCP Layers
 
+            // Init CCM Layers
+            corePlatformContext.registerPlatformLayer(new CCMActorLayer(), PlatformLayers.BITDUBAI_CCM_ACTOR_LAYER);
+
+
             // Init DAP Layers
             corePlatformContext.registerPlatformLayer(new DAPActorLayer(), PlatformLayers.BITDUBAI_DAP_ACTOR_LAYER);
             corePlatformContext.registerPlatformLayer(new DAPActorNetworkServiceLayer(), PlatformLayers.BITDUBAI_DAP_ACTOR_NETWORK_SERVICE_LAYER);
@@ -731,7 +736,7 @@ public class Platform implements Serializable {
             boolean DMP = true;//DOBLEMENTE TEMPORAL
             boolean MKT = true;
             boolean OSA = true;
-            boolean P2P = true;
+            boolean P2P = false;
             boolean PIP = true;
             boolean SHP = true;
             boolean WPD = true;
@@ -762,7 +767,6 @@ public class Platform implements Serializable {
                 injectPluginReferencesAndStart(wsCommunicationCloudServer, Plugins.BITDUBAI_WS_COMMUNICATION_CLOUD_SERVER);
 
             }
-
 
 
             if (PIP) {
@@ -1031,6 +1035,17 @@ public class Platform implements Serializable {
             */
                 Plugin intraUserActor = ((CCPActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_ACTOR_LAYER)).getIntraWalletUserPlugin();
                 injectPluginReferencesAndStart(intraUserActor, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR);
+
+            }
+
+            if (CCM)
+            {
+                  /*
+            * Plugin Intra User Actor
+            * -----------------------------
+            */
+                Plugin intraWalletUserActor = ((CCMActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCM_ACTOR_LAYER)).getIntraWalletUserPlugin();
+            injectPluginReferencesAndStart(intraWalletUserActor, Plugins.BITDUBAI_CCM_INTRA_WALLET_USER_ACTOR);
 
             }
 
