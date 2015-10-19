@@ -732,6 +732,10 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
     @Override
     public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
+        System.out.println("----------------------------------\n" +
+                "FAILED CONNECTION WITH "+remoteParticipant.getAlias()+"\n" +
+                "--------------------------------------------------------");
+        actorNetworkServiceRecordedAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
 
     }
 
@@ -805,9 +809,10 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
-        NetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
 
-        communicationNetworkServiceLocal.sendMessage(platformComponentProfile.getIdentityPublicKey(), remoteComponentProfile.getIdentityPublicKey(), "Leon la puta que te pario");
+        //NetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
+
+        //communicationNetworkServiceLocal.sendMessage(platformComponentProfile.getIdentityPublicKey(), remoteComponentProfile.getIdentityPublicKey(), "Leon la puta que te pario");
 
         if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
 
