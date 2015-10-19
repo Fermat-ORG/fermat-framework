@@ -1,10 +1,10 @@
-package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.enums;
+package com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * The class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.enums.RequestAction</code>
+ * The class <code>com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestAction</code>
  * enumerates the different types of actions that we can make in the crypto addresses network service ccp plugin.
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/10/2015.
@@ -12,6 +12,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum RequestAction implements FermatEnum {
 
     ACCEPT ("ACC"),
+    DENY   ("DEN"),
+    NONE   ("NON"),
     REQUEST("REQ"),
 
     ;
@@ -27,6 +29,8 @@ public enum RequestAction implements FermatEnum {
         switch (code) {
 
             case "ACC": return ACCEPT ;
+            case "DEN": return DENY   ;
+            case "NON": return NONE   ;
             case "REQ": return REQUEST;
 
             default:

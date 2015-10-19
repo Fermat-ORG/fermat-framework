@@ -73,12 +73,12 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
 
             try {
                 InstalledWallet wallet = walletManagerManager.getDefaultWallet(
-                        request.getCryptoAddressFromRequest().getCryptoCurrency(),
+                        request.getCryptoCurrency(),
                         actorType,
                         request.getBlockchainNetworkType()
                 );
 
-                CryptoCurrencyVault cryptoCurrencyVault = CryptoCurrencyVault.getByCryptoCurrency(request.getCryptoAddressFromRequest().getCryptoCurrency());
+                CryptoCurrencyVault cryptoCurrencyVault = CryptoCurrencyVault.getByCryptoCurrency(request.getCryptoCurrency());
 
                 CryptoVaultManager vault = vaultAdministrator.getVault(cryptoCurrencyVault);
 
@@ -88,8 +88,8 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
 
                 cryptoAddressBookManager.registerCryptoAddress(
                         cryptoAddress,
-                        request.getIdentityPublicKeyAccepting(),
-                        request.getIdentityTypeAccepting(),
+                        request.getIdentityPublicKeyResponding(),
+                        request.getIdentityTypeResponding(),
                         request.getIdentityPublicKeyRequesting(),
                         request.getIdentityTypeRequesting(),
                         wallet.getPlatform(),

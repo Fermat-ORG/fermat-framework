@@ -33,7 +33,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.AddressExchangeRequestState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDao;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDeveloperDatabaseFactory;
@@ -306,8 +305,7 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
     private void executePendingAddressExchangeRequests(IntraWalletUserIdentityCryptoAddressGenerationService cryptoAddressGenerationService) {
         try {
             List<AddressExchangeRequest> addressExchangeRequestList = cryptoAddressesManager.listPendingRequests(
-                    IntraWalletUserIdentityCryptoAddressGenerationService.actorType,
-                    AddressExchangeRequestState.PENDING_LOCAL_RESPONSE
+                    IntraWalletUserIdentityCryptoAddressGenerationService.actorType
             );
 
             for (AddressExchangeRequest request : addressExchangeRequestList) {

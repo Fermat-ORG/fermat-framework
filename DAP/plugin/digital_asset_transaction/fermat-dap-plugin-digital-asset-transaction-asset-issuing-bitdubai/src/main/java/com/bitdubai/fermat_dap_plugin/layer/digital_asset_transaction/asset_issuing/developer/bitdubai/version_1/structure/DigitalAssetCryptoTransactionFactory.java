@@ -83,7 +83,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     AssetVaultManager assetVaultManager;
     BitcoinWalletBalance bitcoinWalletBalance;
     BlockchainNetworkType blockchainNetworkType;
-    CryptoVaultManager cryptoVaultManager;
+    //CryptoVaultManager cryptoVaultManager;
     BitcoinWalletManager bitcoinWalletManager;
     CryptoAddressBookManager cryptoAddressBookManager;
     String digitalAssetFileName;
@@ -102,7 +102,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     Logger LOG = Logger.getGlobal();
 
     public DigitalAssetCryptoTransactionFactory(UUID pluginId,
-                                                CryptoVaultManager cryptoVaultManager,
+                                                //CryptoVaultManager cryptoVaultManager,
                                                 BitcoinWalletManager bitcoinWalletManager,
                                                 PluginDatabaseSystem pluginDatabaseSystem,
                                                 PluginFileSystem pluginFileSystem,
@@ -110,7 +110,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                                                 CryptoAddressBookManager cryptoAddressBookManager,
                                                 OutgoingIntraActorManager outgoingIntraActorManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 
-        this.cryptoVaultManager=cryptoVaultManager;
+        //this.cryptoVaultManager=cryptoVaultManager;
         this.bitcoinWalletManager=bitcoinWalletManager;
         this.pluginFileSystem=pluginFileSystem;
         this.pluginId=pluginId;
