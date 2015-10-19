@@ -1,50 +1,4 @@
 <fermat>
-	<layers>
-		<layer name="Core" language="java"></layer>
-		<layer name="Niche Wallet" language="java-android"></layer>
-		<layer name="Reference Wallet" language="java-android"></layer>
-		<layer name="Sub App" language="java-android"></layer>
-		<layer name="Desktop" language="java-android"></layer>
-		<!-- separator or empty layer -->
-		<layer name="Engine" language="java"></layer>
-		<layer name="Wallet Module" language="java"></layer>
-		<layer name="Sub App Module" language="java"></layer>
-		<layer name="Desktop Module" language="java"></layer>
-		<layer name="Agent" language="java"></layer>
-		<layer name="Actor" language="java"></layer>
-		<layer name="Middleware" language="java"></layer>
-		<layer name="Request" language="java"></layer>
-		<layer name="Business Transaction" language="java"></layer>
-		<layer name="Digital Asset Transaction" language="java"></layer>
-		<layer name="Crypto Money Transaction" language="java"></layer>
-		<layer name="Cash Money Transaction" language="java"></layer>
-		<layer name="Bank Money Transaction" language="java"></layer>
-		<layer name="Contract" language="java"></layer>
-		<layer name="Composite Wallet" language="java"></layer>
-		<layer name="Wallet" language="java"></layer>
-		<layer name="World" language="java"></layer>
-		<layer name="Identity" language="java"></layer>
-		<layer name="Actor Network Service" language="java"></layer>
-		<layer name="Network Service" language="java"></layer>
-		<!-- separator or empty layer -->
-		<layer name="Communication" language="java" super_layer="P2P"></layer>
-		<!-- separator or empty layer -->
-		<layer name="Crypto Router" language="java" super_layer="BCH"></layer>
-		<layer name="Crypto Module" language="java" super_layer="BCH"></layer>
-		<layer name="Crypto Vault" language="java" super_layer="BCH"></layer>
-		<layer name="Crypto Network" language="java" super_layer="BCH"></layer>
-		<!-- separator or empty layer -->
-		<layer name="License" language="java"></layer>
-		<layer name="Plugin" language="java"></layer>
-		<layer name="User" language="java"></layer>
-		<layer name="Hardware" language="java"></layer>
-		<layer name="Platform Service" language="java"></layer>
-		<!-- separator or empty layer -->
-		<layer name="Multi OS" language="java" super_layer="OSA"></layer>
-		<layer name="Android" language="java" super_layer="OSA"></layer>
-		<!-- separator or empty layer -->		
-		<layer name="Api" language="java">
-	</layers>
 	<platforms>
 		<platform code="COR" name="Core And Api" logo="COR_logo.png" dependsOn="OSA">
 
@@ -6978,6 +6932,53 @@
 
 		</super_layer>
 	</super_layers>
+
+	<layers>
+		<layer name="Core" language="java"></layer>
+		<layer name="Niche Wallet" language="java-android"></layer>
+		<layer name="Reference Wallet" language="java-android"></layer>
+		<layer name="Sub App" language="java-android"></layer>
+		<layer name="Desktop" language="java-android"></layer>
+		<!-- separator or empty layer -->
+		<layer name="Engine" language="java"></layer>
+		<layer name="Wallet Module" language="java"></layer>
+		<layer name="Sub App Module" language="java"></layer>
+		<layer name="Desktop Module" language="java"></layer>
+		<layer name="Agent" language="java"></layer>
+		<layer name="Actor" language="java"></layer>
+		<layer name="Middleware" language="java"></layer>
+		<layer name="Request" language="java"></layer>
+		<layer name="Business Transaction" language="java"></layer>
+		<layer name="Digital Asset Transaction" language="java"></layer>
+		<layer name="Crypto Money Transaction" language="java"></layer>
+		<layer name="Cash Money Transaction" language="java"></layer>
+		<layer name="Bank Money Transaction" language="java"></layer>
+		<layer name="Contract" language="java"></layer>
+		<layer name="Composite Wallet" language="java"></layer>
+		<layer name="Wallet" language="java"></layer>
+		<layer name="World" language="java"></layer>
+		<layer name="Identity" language="java"></layer>
+		<layer name="Actor Network Service" language="java"></layer>
+		<layer name="Network Service" language="java"></layer>
+		<!-- separator or empty layer -->
+		<layer name="Communication" language="java" super_layer="P2P"></layer>
+		<!-- separator or empty layer -->
+		<layer name="Crypto Router" language="java" super_layer="BCH"></layer>
+		<layer name="Crypto Module" language="java" super_layer="BCH"></layer>
+		<layer name="Crypto Vault" language="java" super_layer="BCH"></layer>
+		<layer name="Crypto Network" language="java" super_layer="BCH"></layer>
+		<!-- separator or empty layer -->
+		<layer name="License" language="java"></layer>
+		<layer name="Plugin" language="java"></layer>
+		<layer name="User" language="java"></layer>
+		<layer name="Hardware" language="java"></layer>
+		<layer name="Platform Service" language="java"></layer>
+		<!-- separator or empty layer -->
+		<layer name="Multi OS" language="java" super_layer="OSA"></layer>
+		<layer name="Android" language="java" super_layer="OSA"></layer>
+		<!-- separator or empty layer -->		
+		<layer name="Api" language="java">
+	</layers>
 
 	<processes>
 	    <process platform="CBP" 
