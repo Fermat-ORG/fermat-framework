@@ -114,7 +114,7 @@ public class CreateContactFragmentDialog extends Dialog implements
 //        user_address_wallet= getWalletAddress(walletContact.actorPublicKey);
 //
 //        showQRCodeAndAddress();
-        tf = Typeface.createFromAsset(getOwnerActivity().getAssets(), "fonts/Roboto.ttf");
+
 
     }
 
