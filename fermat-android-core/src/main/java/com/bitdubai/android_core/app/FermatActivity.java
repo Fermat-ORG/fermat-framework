@@ -524,10 +524,13 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             }
 
-            //((FrameLayout)findViewById(R.id.header_container)).setVisibility((header!=null) ? View.VISIBLE : View.GONE);
 
+            //TODO: tengo que agregar el header en los 4 xml base para que esto no se caiga cuando no lo tiene
+            try {
+                ((RelativeLayout) findViewById(R.id.container_header_balance)).setVisibility((header != null) ? View.VISIBLE : View.GONE);
+            }catch (Exception e){
 
-            ((RelativeLayout) findViewById(R.id.container_header_balance)).setVisibility((header != null) ? View.VISIBLE : View.GONE);
+            }
 
 
             //RelativeLayout container_header_balance = getActivityHeader();
