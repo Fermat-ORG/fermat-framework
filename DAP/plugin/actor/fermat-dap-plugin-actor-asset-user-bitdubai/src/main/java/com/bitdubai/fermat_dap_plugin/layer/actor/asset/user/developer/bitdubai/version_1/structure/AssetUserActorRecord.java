@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user;
+package com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
@@ -16,8 +16,8 @@ public class AssetUserActorRecord implements ActorAssetUser {
     private String name;
     private byte[] profileImage;
     private Location location;
-    private String locationLatitude;
-    private String locationLongitude;
+    private Double locationLatitude;
+    private Double locationLongitude;
     private long registrationDate;
     private ConnectionState connectionState;
     private Genders genders;
@@ -32,10 +32,9 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = profileImage != null ? profileImage.clone() : null;
-        this.location = location;
-
-//        this.registrationDate = registrationDate;
+        this.profileImage = profileImage.clone();
+        this.locationLatitude = location.getLatitude();
+        this.locationLongitude = location.getLongitude();
         this.genders = Genders.INDEFINITE;
 //        this.age = age;
 //        this.cryptoAddress = cryptoAddress;
@@ -47,7 +46,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = profileImage != null ? profileImage.clone() : null;
+        this.profileImage = profileImage.clone();
         this.registrationDate = registrationDate;
 //        this.location = location;
         this.genders = genders;
@@ -57,7 +56,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     }
 
-    public AssetUserActorRecord(String linkedIdentity, String publicKey, String name, String locationLatitude, String locationLongitude, Genders genders, String age){
+    public AssetUserActorRecord(String linkedIdentity, String publicKey, String name, Double locationLatitude, Double locationLongitude, Genders genders, String age){
 
         this.linkedIdentity = linkedIdentity;
         this.publicKey = publicKey;
@@ -130,9 +129,24 @@ public class AssetUserActorRecord implements ActorAssetUser {
      * @return the Location of the Asset user
      */
     @Override
-    public Location getLocation() {
-        return this.location;
+    public Double getLocationLatitude() {
+        return this.locationLatitude;
     }
+
+    @Override
+    public Double getLocationLongitude() {
+        return this.locationLongitude;
+    }
+
+    /**
+     * The method <code>getLocation</code> gives us the Location of the represented Asset user
+     *
+     * @return the Location of the Asset user
+     */
+//    @Override
+//    public Location getLocation() {
+//        return this.location;
+//    }
 
     /**
      * The method <code>getGender</code> gives us the Gender of the represented Asset user
