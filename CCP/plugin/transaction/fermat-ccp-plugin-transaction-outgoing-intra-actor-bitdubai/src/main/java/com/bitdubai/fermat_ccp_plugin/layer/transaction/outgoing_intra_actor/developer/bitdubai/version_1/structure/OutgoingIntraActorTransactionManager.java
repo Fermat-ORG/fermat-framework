@@ -95,7 +95,16 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
     }
 
     @Override
-    public void sendCrypto(String walletPublicKey, CryptoAddress destinationAddress, long cryptoAmount, String op_Return, String description, String senderPublicKey, String receptorPublicKey, Actors senderActorType, Actors receptorActorType, ReferenceWallet referenceWallet) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
+    public void sendCrypto(String           walletPublicKey,
+                           CryptoAddress    destinationAddress,
+                           long             cryptoAmount,
+                           String           op_Return,
+                           String           description,
+                           String           senderPublicKey,
+                           String           receptorPublicKey,
+                           Actors           senderActorType,
+                           Actors           receptorActorType,
+                           ReferenceWallet  referenceWallet) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
             //BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
 
             //long funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();

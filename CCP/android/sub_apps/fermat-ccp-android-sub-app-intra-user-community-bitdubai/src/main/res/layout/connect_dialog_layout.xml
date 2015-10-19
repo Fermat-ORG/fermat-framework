@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_person_to_connect"
+        android:text="Do you want to connect with Matias?"
+        android:gravity="center"
+        android:textSize="17dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Connect"
+            android:id="@+id/btn_connect"
+            android:layout_weight="1"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_close"
+            android:text="Cancel"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+</LinearLayout>
