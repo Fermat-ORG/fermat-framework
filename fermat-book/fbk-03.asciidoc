@@ -1,71 +1,60 @@
+:numbered:
+
+== Setting FERMAT to work. 
+=== Getting the application for your device
+Connect to FERMAT offical site ( http://www.fermat.org), choose the Operating System of the device where you want to install FERMAT, and download FERMAT APK (Android) or FERMAT installation file (windows)...
+
+=== Initialization
+
+The application written for the chosen Operating System of your device (eg. Android in FERMAT'S first release) is a bundle of software packages that alltogether build FERMAT MULTI-PLATFORM SYSTEM. Few components are OS dependant but most of them (written in JAVA) is not (i.e. OS INDEPENDENT). +
+At its core we find FERMAT CORE PLATFORM which is responsible for deploying the multiplatform infrastructure and initializing it. 
+
+NOTE: Android is a *special case* because of some programming restrictions that only allow initialization from components written in android's language. Therefore the initialization sequence in this case, begins in the module *android core* which is the first one to become active and after that, it sets FERMAT CORE to run.
+
+FERMAT CORE initializes every single platform of the system and every single plug-in by collecting information about the corresponding *application public interfaces (API)* and delivering to each one a *reference* on its dependance to consume services building a "communication channel" to instantiate objects and after that giving the "start" signal to beggin running. + 
+
+NOTE: FERMAT Plug-ins are not allowed to consume services directly among them, but referencing themselves to the corresponding platform via the platform's *api module* 
+
+.FERMAT Api modules
+* There is an *api module* for each FERMAT platform, where *public interfaces* of each plug-in are published in order to let them comsume services from others living in the same platform.
+
+When all the basic infrastructure is layed out and some initial plug-ins are running, then the process thread turns to the *OS application* which starts the graphic interfaces and ressources needed to interact with the user, and the application opens its "starting screen". +
+From that moment on, the activation of other dormant modules of FERMAT will follow according user's demand (depending on users activity).
+
+TIP: Following in this chapter the description of each platform and each layer within each platform. We recommend to visit FERMAT offcial site (http://fermat.org) to have a picture in mind when reading, to help understand the system structure. _Layers_ description follow the sequence from bottom to top (like "stacking" them), and _platforms_ from left to right. 
+
+=== System-wide definitions
+One of main concept's inside FERMAT's design is that of _actors_ and _identities_ 
++ (PLEASE CHECK ALL THIS SECTION BEFORE FIRST RELEASE!)
+
+The *real person* who wants to use FERMAT, has to install the software in at least one *device* and then let it run.
+At this stage, the real person begins to act as a *device user* and has provided certain information about himself/herself to the device operating system, which is stored in the device's memory/hard drive. + 
+When starting FERMAT, he/she is prompted by the software to choose an *identity* within FERMAT. That means to choose an _username_ (or _ alias_) and a _password_ to be recognized as a *FERMAT system user*, what we have labeled in FERMAT as _*IntraUser*_. 
+Then, the *user* chooses to run any of FERMAT's products, and this takes him to play certain role within a specific FERMAT Platform available, and to be able to do that he is required to identify himself/herself as an *actor* of the platform. As such, he/she must define an _username_ (or _ alias_) within THIS platform, which has NO RELATIONSHIP to any other created as *actor* of other platforms. + 
+This *actor* has the possibility to define several profiles for himself to control which personal information is provided to the world. These profiles will serve as unique *identities* to operate from, and only the owner will know to which *actor*  these *identities* are related. 
+
+=== FERMAT Core Platform
+This is the *core platform* of FERMAT Multiplatform System. It contains the deepest levels of layers in the layers stack. Its modules encasulapte the basics definitions and functionalities that let FERMAT operate as an _integrated system_, by determining the interactions among the isolated plug-ins and putting then to run (starting). +
+FERMAT Core Platform is written in JAVA as the most of FERMAT, therefore its *code base portability*. + 
+After initialization, this platform monitors the way the system is behaving as a whole.
+
+.FERMAT Core modules
+* *fermat core* +
+Initializes all system-wide plug-ins and start a platform specific core module for each platform running on FERMAT.
+* *android core* + 
+Initializes android's components that connect FERMAT to the android user's environment.
+* *platform specific core* +
+There's a *core module* for each one of the platform existent in FERMAT, which initializes all platform's specific plug-ins: _wallet production & distribution core_ / _crypto currency core_ / _digital assets core_ / etc... .
+
+
 :numbered: 
-== FERMAT WPD: Wallet Factory & Wallet Production Line
-
-In the cryptocurrency environment, value is held in specific applications/programs called *WALLET*.
-The main and basic functions of a Wallet is to send and receive money as a result of a transaction between two wallet' s owners.
-Regarding one of FERMAT'S target,i.e. allowing a great segmentation and abstraction levels and at the same time offering the user a pleasant, safe and easy-to-use exprience, the first job is to offer a number of *reference Wallets* for each *niche* discovered, wallets that can be adopted to inmediate use and also which can be taken as a " template" to build other more customized and complex wallets reusing the most of the components available in the platform at the time of the new development.
-
-For the first distribution of FERMAT, we have chosen Android as operative system, and a couple of reference wallets and services.
-
-These reference wallets allow the basic functiones of any wallet:
-
-* Transactions Log: (transactions in both status: Book balance & Available balance)
-* Contacts: manager of contact's info and their cryptoaddresses
-* Send: send money to a given crytoaddress
-* Receive: creates a valid cryptoaddress to let others send cryptocurrency to the wallet's owner.
-* Balance: yout count status!
-
- 
-.Reference Wallets included in version 1.0
-* *BitWa (Basic Bitcoin Wallet)*
-* *BLP (Bitcoin Loss Protected wallet)*
-* *DiWa (Discount Wallet)*
 
 
-The first service, really an innovation introduced by FERMAT, is the FERMAT WPD, FERMAT' S Wallet Factory and Production Line.
-
-TIP: Beforing exploring this fascinating environment, we need to introduce two distincts 
-gatherings of the components of a certain wallet: + 
-* components oriented towards the user (what he sees and how hi manages the wallet), called *front-end* modules.
-* components that perform each function of the wallet at operational level, called *back-end* modules.
-
- 
-=== FERMAT Wallet Factory
-
-Once we have at least one *Niche Reference Wallet* (e.g.*Bitcoin Reference Wallet*), we can realize that in the *front-end* there are two disctint tasks taking place: on one hand, there exist a *navigation structure* (available menus, tabs, buttons, etc) that provides the means by which the user operates the wallet, an on the other hand, there exists a set of *resources* (multimedia files, images, etc) used for the visualization of each element of the wallet.
-At the *back-end* , where the really action is occuring, we have a lot of modules acting to provide the necessary functions, like: +
-
-* sending and receiving the cryptocurrency
-* keeping track of the balance of the wallet
-* managing the contacts ( register, identification, etc)
-
-If someone having the required programmer's skills wants to build a Wallet, he would necessary have to build every and each one of the modules needed for the wallet to run begin to write the code from zero. However, if you remember that FERMAT is an open system allowing third part developers and actors in general to form part, developers of new wallet can use any of the available *reference niche wallet* to reutilize the COMPLETE back-end ( all the programming code stuff!), and concentrate his endeavour only to the *front-end*making his job a lot easier and allowing all his creativity to be channeled in a better and more attractive result for the end user. ( not only for a nice look but also for improved and more efficient functionalities!).
-
-==== Inside the Wallet Factory
-
-The first step to create a wallet is to join FERMAT an get an identification as DEVELOPER. 
-Then, the new registered *developer* installs the WaFa-module (Wallet Factory) and logs-in. + 
-After entering, he choses a *reference niche wallet* to import, gives his walletś project a new name and saves it as a new WFP-file (WALLET FACTORY PROJECT FILE). +
-Once he has his *own project* he will re-define the *navigation structure* (functionalities of the wallet) and then he will assign which *wallet ressources* he will choose to give his wallet an unique appearance. +
-The last step is to runthe project and test how it works until he is satisfied with the result. + 
-To give birth the new wallet into the world, he will have to *publish* it using FERMAT WALLET PUBLISHER.
 
 
-=== FERMAT Wallet Publisher
-
-The main task of the WaPu-module (WALLET PUBLISHER) is to make the new wallet designed and held into a WFP-file to be *published* in the Wa-Sto ( WALLET STORE) and therefore become available to the rest of the FERMAT community to use it. +
-This module also has the responsability of notifying the release of new updates for each version or upgrades to new versions of the existing wallets.
- 
-=== FERMAT Wallet Store
-
-The Wa-St module (Wallet Store) is inside FERMAT  a DAPP (Distributed Application), i.e. and undetermined amount of nodes collaborate bewteen them to provide the functionality of the app inside the whole system. + 
-The Wallet Store functions in a similar way of known app-stores, and it serves to show the user the wallet that may be attractive to him. Itis a *distributed catalog* of wallets. +
-When one new wallet is chosen, the Wallet Store notifies the Wa-Ma (Wallet Manager) app to make it available to the user. +
-Internally, the Wa-St module keeps the identity of the wallet, of its developer, and of the ressources used by it.
 
 
-=== FERMAT Wallet Manager
 
-The Wa-Ma module ( Wallet Manager) lets install the chosen wallet in the user's device, collecting from the distributed network, the necessary components: te walletś navigation structure and the wallet's ressources. 
+
 
 
