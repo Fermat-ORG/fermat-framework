@@ -3,7 +3,6 @@ package com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purcha
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSale;
 
 import java.util.Collection;
 
@@ -13,8 +12,8 @@ import java.util.Collection;
 public interface CustomerBrokerPurchaseManager {
 
     CustomerBrokerPurchase createCustomerBrokerPurchaseNegotiation(String publicKeyCustomer, String publicKeyBroker) throws CantCreateCustomerBrokerPurchaseException;
-    void cancelNegotiation(CustomerBrokerSale negotiation);
-    void closeNegotiation(CustomerBrokerSale negotiation);
+    void cancelNegotiation(CustomerBrokerPurchase negotiation);
+    void closeNegotiation(CustomerBrokerPurchase negotiation);
 
     Collection<CustomerBrokerPurchase> getNegotiations();
     Collection<CustomerBrokerPurchase> getNegotiations(NegotiationStatus status);
