@@ -2,7 +2,6 @@ package com.bitdubai.sub_app.crypto_broker_identity.util;
 
 import android.widget.Filter;
 
-import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.sub_app.crypto_broker_identity.common.adapters.CryptoBrokerIdentityInfoAdapter;
 
@@ -16,15 +15,19 @@ import java.util.Locale;
 public class CryptoBrokerIdentityListFilter extends Filter {
     private List<CryptoBrokerIdentityInformation> listOfIdentities;
     private CryptoBrokerIdentityInfoAdapter adapter;
+    private String constraint;
 
     public CryptoBrokerIdentityListFilter(List<CryptoBrokerIdentityInformation> listOfIdentities, CryptoBrokerIdentityInfoAdapter adapter) {
         this.listOfIdentities = listOfIdentities;
         this.adapter = adapter;
+        constraint = "";
     }
 
     @Override
     protected FilterResults performFiltering(CharSequence constraint) {
         FilterResults result = new FilterResults();
+
+        this.constraint = (constraint == null) ? "" : constraint.toString();
 
         if (constraint != null && constraint.length() > 0) {
             String constraintStr = constraint.toString().toLowerCase(Locale.getDefault());
@@ -57,4 +60,7 @@ public class CryptoBrokerIdentityListFilter extends Filter {
         adapter.changeDataSet(filteredList);
     }
 
+    public String getConstraint() {
+        return constraint;
+    }
 }

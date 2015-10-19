@@ -3,6 +3,10 @@ package com.bitdubai.sub_app.crypto_broker_identity.common.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -15,6 +19,8 @@ import com.bitdubai.sub_app.crypto_broker_identity.util.CryptoBrokerIdentityList
 import com.bitdubai.sub_app.crypto_broker_identity.util.UtilsFuncs;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created on 22/08/15.
@@ -38,7 +44,15 @@ public class CryptoBrokerIdentityInfoAdapter
 
     @Override
     protected void bindHolder(final CryptoBrokerIdentityInfoViewHolder holder, final CryptoBrokerIdentityInformation data, final int position) {
-        holder.setText(data.getAlias());
+        filter = (CryptoBrokerIdentityListFilter) getFilter();
+
+        SpannableString spannedText = UtilsFuncs.getSpannedText(
+                context.getResources(),
+                R.color.spanned_text,
+                data.getAlias(),
+                filter.getConstraint());
+
+        holder.setText(spannedText);
         holder.setImage(data.getProfileImage());
     }
 
@@ -60,4 +74,6 @@ public class CryptoBrokerIdentityInfoAdapter
 
         return filter;
     }
+
+
 }
