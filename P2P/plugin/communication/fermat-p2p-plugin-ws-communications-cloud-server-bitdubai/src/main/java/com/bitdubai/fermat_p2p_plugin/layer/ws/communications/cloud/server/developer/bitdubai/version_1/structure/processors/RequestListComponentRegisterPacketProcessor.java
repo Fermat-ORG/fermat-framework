@@ -217,7 +217,6 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
             if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(receiveFermatPacket.getSender())){
                 System.out.println("RequestListComponentRegisterPacketProcessor - removing ="+platformComponentProfileRegistered.getName());
                 iterator.remove();
-                break;
             }
         }
 
