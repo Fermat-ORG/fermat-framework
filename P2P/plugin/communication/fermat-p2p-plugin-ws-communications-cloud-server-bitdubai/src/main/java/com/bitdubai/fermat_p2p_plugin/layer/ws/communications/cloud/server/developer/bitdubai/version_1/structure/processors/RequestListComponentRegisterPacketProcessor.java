@@ -213,10 +213,10 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         while (iterator.hasNext()){
 
             PlatformComponentProfile platformComponentProfileRegistered = iterator.next();
+            //TODO: ROBERTO, no se porque carajo haces esto, me estas borrando los actores al registrarlos y querer buscarlos
             if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(receiveFermatPacket.getSender())){
                 System.out.println("RequestListComponentRegisterPacketProcessor - removing ="+platformComponentProfileRegistered.getName());
                 iterator.remove();
-                break;
             }
         }
 

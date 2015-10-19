@@ -25,7 +25,7 @@ public class DetailedCatalogItemLoader extends AsyncTask<Void, Void, Boolean> {
      * @param moduleManager  objeto module manager que contiene los metodos para traer el detalle del catalog item
      * @param subAppsSession la sesion de la subapp donde se va a almacenar la informacion del detalle
      * @param data           la data basica de Catalog Item, entre ellas su UUID
-     * @param listener       listener que se ejecuta cuando termine el procesamiento, permite ejecutar instrucciones en el UI Thread
+     * @param listener       listener que se ejecuta cuando termine el procesamiento, permite ejecutar instrucciones en el UI MyThread
      */
     public DetailedCatalogItemLoader(final IntraUserModuleManager moduleManager,
                                      final SubAppsSession subAppsSession,

@@ -30,6 +30,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import org.java_websocket.WebSocketImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -101,11 +103,6 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
      * DealsWithPluginIdentity Interface member variables.
      */
     private UUID pluginId;
-
-    /*
-     * Represent the executorService
-     */
-    private ExecutorService executorService;
 
     /**
      * Represent the disableServerFlag
