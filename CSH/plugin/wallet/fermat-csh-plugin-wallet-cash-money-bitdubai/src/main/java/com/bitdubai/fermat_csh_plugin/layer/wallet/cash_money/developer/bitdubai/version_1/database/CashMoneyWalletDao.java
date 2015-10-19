@@ -121,10 +121,10 @@ public class CashMoneyWalletDao {
         DatabaseTableRecord record =  table.getEmptyRecord();
 
         record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_BALANCE_ID_COLUMN_NAME, cash_transaction_id);
-        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_DEBIT_COLUMN_NAME, cashMoneyDebit);
-        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_CREDIT_COLUMN_NAME,cashMoneyCredit);
-        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_BALANCE_COLUMN_NAME,cashMoneyBalance);
-        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_TIMESTAMP_COLUMN_NAME,time);
+        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_BALANCE_DEBIT_COLUMN_NAME, cashMoneyDebit);
+        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_BALANCE_CREDIT_COLUMN_NAME,cashMoneyCredit);
+        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_BALANCE_BALANCE_COLUMN_NAME,cashMoneyBalance);
+        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_BALANCE_TIMESTAMP_COLUMN_NAME,time);
 
 
         table.insertRecord(record);
@@ -147,7 +147,7 @@ public class CashMoneyWalletDao {
 
             for (DatabaseTableRecord record : table.getRecords()){
                 list.add(new String(
-                        record.getStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_BALANCE_COLUMN_NAME)));
+                        record.getStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_BALANCE_BALANCE_COLUMN_NAME)));
             }
             database.closeDatabase();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemoryException) {
