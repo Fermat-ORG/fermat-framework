@@ -30,7 +30,7 @@ public class PaymentHistoryItemViewHolder extends FermatViewHolder {
     public PaymentHistoryItemViewHolder(View itemView) {
         super(itemView);
 
-        contactIcon = (ImageView) itemView.findViewById(R.id.contactIcon);
+        contactIcon = (ImageView) itemView.findViewById(R.id.profile_Image);
         txt_contactName = (TextView) itemView.findViewById(R.id.txt_contactName);
         txt_amount = (TextView) itemView.findViewById(R.id.txt_amount);
         txt_notes = (TextView) itemView.findViewById(R.id.txt_notes);
