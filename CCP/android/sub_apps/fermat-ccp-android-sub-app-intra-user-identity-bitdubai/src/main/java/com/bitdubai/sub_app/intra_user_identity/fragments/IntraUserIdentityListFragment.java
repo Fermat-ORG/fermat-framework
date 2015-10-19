@@ -86,7 +86,7 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalle
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_crypto_broker_identity_list;
+        return R.layout.fragment_intra_user_identity_list;
     }
 
     @Override

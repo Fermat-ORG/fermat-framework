@@ -19,13 +19,14 @@ public class GiveCashOnHandCashMoneyTransactionDatabaseConstants {
 
     static final String GIVE_CASH_ON_HAND_CASH_TRANSACTION_ID_COLUMN_NAME = "cash_transaction_id";
     static final String GIVE_CASH_ON_HAND_STATUS_COLUMN_NAME = "status";
-    static final String GIVE_CASH_ON_HAND_PUBLIC_KEY_BROKER_COLUMN_NAME = "public_key_broker";
-    static final String GIVE_CASH_ON_HAND_PUBLIC_KEY_CUSTOMER_COLUMN_NAME = "public_key_customer";
+    static final String GIVE_CASH_ON_HAND_PUBLIC_KEY_ACTOR_TO_COLUMN_NAME = "public_key_broker";
+    static final String GIVE_CASH_ON_HAND_PUBLIC_KEY_ACTOR_FROM_COLUMN_NAME = "public_key_customer";
     static final String GIVE_CASH_ON_HAND_BALANCE_TYPE_COLUMN_NAME = "balance_type";
     static final String GIVE_CASH_ON_HAND_TRANSACTION_TYPE_COLUMN_NAME = "transaction_type";
     static final String GIVE_CASH_ON_HAND_AMOUNT_COLUMN_NAME = "amount";
     static final String GIVE_CASH_ON_HAND_CASH_CURRENCY_TYPE_COLUMN_NAME = "cash_currency_type";
     static final String GIVE_CASH_ON_HAND_CASH_REFERENCE_COLUMN_NAME = "cash_reference";
+    static final String GIVE_CASH_ON_HAND_TIMESTAMP_COLUMN_NAME = "timestamp";
 
     static final String GIVE_CASH_ON_HAND_FIRST_KEY_COLUMN = "cash_transaction_id";
 

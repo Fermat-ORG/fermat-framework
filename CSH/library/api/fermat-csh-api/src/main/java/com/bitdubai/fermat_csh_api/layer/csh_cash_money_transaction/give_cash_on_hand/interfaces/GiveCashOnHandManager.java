@@ -14,8 +14,8 @@ public interface GiveCashOnHandManager {
     List<GiveCashOnHand> getAllGiveCashOnHandFromCurrentDeviceUser() throws CantGetGiveCashOnHandException;
 
     GiveCashOnHand createGiveCashOnHand(
-         final String publicKeyBroker
-        ,final String publicKeyCustomer
+         final String publicKeyActorTo
+        ,final String publicKeyActorFrom
         ,final String balanceType
         ,final String transactionType
         ,final float amount

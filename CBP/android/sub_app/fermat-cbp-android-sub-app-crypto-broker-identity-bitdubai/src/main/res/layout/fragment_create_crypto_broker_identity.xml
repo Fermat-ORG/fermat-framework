@@ -3,29 +3,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/create_identity_fragment_background">
+    android:background="@color/sub_app_background">
 
-    <ImageView
-        android:id="@+id/crypto_broker_image"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_gravity="center_horizontal"
-        android:adjustViewBounds="true"
-        android:background="@android:color/darker_gray"
-        android:src="@android:drawable/ic_menu_camera" />
+    <FrameLayout
+        android:id="@+id/img_container"
+        android:layout_width="182dp"
+        android:layout_height="182dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp">
+
+        <ImageView
+            android:id="@+id/crypto_broker_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="1dp"
+            android:src="@drawable/img_new_user_camera" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/circular_shape" />
+    </FrameLayout>
+
 
     <EditText
         android:id="@+id/crypto_broker_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/crypto_broker_image"
+        android:layout_below="@+id/img_container"
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:gravity="center"
         android:hint="@string/broker_name"
-        android:textColor="@android:color/black"
+        android:textColor="@color/broker_name_text_color"
         android:textColorHint="@android:color/darker_gray" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_below="@+id/crypto_broker_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="4dp"
+            android:gravity="center_vertical"
+            android:text="@string/publish_identity"
+            android:textColor="@android:color/secondary_text_light"
+            android:textSize="18sp" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox
+            android:id="@+id/publish_identity"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:button="@drawable/switch_button_states"
+            tools:checked="true" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/create_crypto_broker_button"
@@ -35,7 +73,7 @@
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:background="@color/create_identity_button"
+        android:background="@color/create_broker_identity_button"
         android:text="@string/create"
-        android:textColor="@android:color/white" />
+        android:textColor="@color/create_button_text" />
 </RelativeLayout>

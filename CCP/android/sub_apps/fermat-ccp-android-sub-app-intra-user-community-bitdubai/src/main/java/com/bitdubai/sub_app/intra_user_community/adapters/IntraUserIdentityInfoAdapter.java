@@ -7,7 +7,6 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.common.UtilsFuncs;
 import com.bitdubai.sub_app.intra_user_community.holders.CryptoBrokerIdentityInfoViewHolder;
@@ -35,7 +34,7 @@ public class IntraUserIdentityInfoAdapter extends FermatAdapter<IntraUserInforma
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.crypto_broker_identity_list_item;
+        return R.layout.intra_user_identity_list_item;
     }
 
     @Override
