@@ -64,7 +64,7 @@ public class MainFragment extends FermatWalletFragment {
             protected Object doInBackground() throws Exception {
                 if (manager == null)
                     throw new NullPointerException("AssetIssuerWalletModuleManager is null");
-                assetIssuerWalletList = manager.getAssetIssuerWalletBalancesBook("public_key");
+                assetIssuerWalletList = manager.getAssetIssuerWalletBalancesBook("walletPublicKeyTest");
                 if (assetIssuerWalletList != null && !assetIssuerWalletList.isEmpty()) {
                     bookAssets = new ArrayList<>();
                     for (AssetIssuerWalletList assetIssuerWallet : assetIssuerWalletList) {

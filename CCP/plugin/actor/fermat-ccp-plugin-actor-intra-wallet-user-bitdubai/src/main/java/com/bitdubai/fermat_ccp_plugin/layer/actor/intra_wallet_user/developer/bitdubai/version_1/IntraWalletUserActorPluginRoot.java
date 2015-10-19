@@ -42,6 +42,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bi
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.event_handlers.IntraWalletUserConnectionAcceptedEventHandlers;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.event_handlers.IntraWalletUserDeniedConnectionEventHandlers;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.event_handlers.IntraWalletUserDisconnectionEventHandlers;
+import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.event_handlers.IntraWalletUserNewNotificationsEventHandlers;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.event_handlers.IntraWalletUserRequestConnectionEventHandlers;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantAddPendingIntraWalletUserException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantGetIntraWalletUsersListException;
@@ -267,7 +268,7 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
         try {
             //TODO verificar si se usa
 
-         //   ActorIntraUser actor = intraUserActorDao.getIntraUser(actorPublicKey);
+//            ActorIntraUser actor = intraUserActorDao.getIntraUser(actorPublicKey);
 
             //not found actor
            // if(actor == null)
@@ -327,6 +328,7 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
         }
     }
 
+    @Override
     public void receivingIntraWalletUserRequestConnection(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraWalletUserException {
         try {
             this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
@@ -456,6 +458,18 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
+
+            /**
+             * Listener NetWorkService New Notifications event
+             */
+            fermatEventListener = eventManager.getNewListener(EventType.ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS);
+            fermatEventHandler = new IntraWalletUserNewNotificationsEventHandlers();
+            ((IntraWalletUserNewNotificationsEventHandlers) fermatEventHandler).setIntraWalletUserManager(this);
+            ((IntraWalletUserNewNotificationsEventHandlers) fermatEventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
             /**
              * I ask the list of pending requests to the Network Service to execute
@@ -600,7 +614,7 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
      *
      * @throws CantProcessNotificationsExceptions
      */
-    private void processNotifications() throws CantProcessNotificationsExceptions {
+    public void processNotifications() throws CantProcessNotificationsExceptions {
 
         try {
 

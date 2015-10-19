@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.intra_user_community.session;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public class IntraUserSubAppSession implements SubAppsSession {
+public class IntraUserSubAppSession implements SubAppsSession{
     public static final String BASIC_DATA = "catalog item";
     public static final String PREVIEW_IMGS = "preview images";
     public static final String DEVELOPER_NAME = "developer name";
@@ -103,6 +104,7 @@ public class IntraUserSubAppSession implements SubAppsSession {
     public ErrorManager getErrorManager() {
         return errorManager;
     }
+
 
     /**
      * Return the Wallet Store Module

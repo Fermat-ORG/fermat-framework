@@ -48,7 +48,7 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
 
     @Override
     public byte[] getActorSenderProfileImage() {
-        return actorSenderProfileImage;
+        return (actorSenderProfileImage!=null) ? (byte[] )this.actorSenderProfileImage.clone() : null;
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressDeniedEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressReceivedEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressRequestedEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestApprovedEvent;
@@ -31,6 +32,9 @@ public enum EventType implements FermatEventEnum {
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
 
+    CRYPTO_ADDRESS_DENIED ("CRYADEN") {
+        public FermatEvent getNewEvent() { return new CryptoAddressDeniedEvent(this); }
+    },
     CRYPTO_ADDRESS_RECEIVED ("CRYARVD") {
         public FermatEvent getNewEvent() { return new CryptoAddressReceivedEvent(this); }
     },
@@ -75,6 +79,7 @@ public enum EventType implements FermatEventEnum {
 
         switch (code){
 
+            case "CRYAden": return CRYPTO_ADDRESS_DENIED                     ;
             case "CRYARVD": return CRYPTO_ADDRESS_RECEIVED                   ;
             case "CRYAREQ": return CRYPTO_ADDRESS_REQUESTED                  ;
             case "CRYPAAP": return CRYPTO_PAYMENT_REQUEST_APPROVED           ;

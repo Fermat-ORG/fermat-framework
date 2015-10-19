@@ -9,7 +9,9 @@ package com.bitdubai.fermat_core.layer.dap_actor_network_service;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
+import com.bitdubai.fermat_core.layer.dap_actor_network_service.actor_issuer.AssetIssuerActorNetworkServiceSubsystem;
 import com.bitdubai.fermat_core.layer.dap_actor_network_service.asset_user.AssetUserActorNetworkServiceSubsystem;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.DAPAssetIssuerActorNetworkServiceSubsystem;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.DAPAssetUserActorNetworkServiceSubsystem;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantStartSubsystemException;
 
@@ -24,12 +26,16 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.ex
  */
 public class DAPActorNetworkServiceLayer  implements PlatformLayer {
 
-    private Plugin assetUserActorNetworService;
+    private Plugin   assetUserActorNetworService;
+    private Plugin assetIssuerActorNetwokService;
 
     public Plugin getAssetUserActorNetworService() {
         return assetUserActorNetworService;
     }
 
+    public Plugin getAssetIssuerActorNetwokService(){
+        return assetIssuerActorNetwokService;
+    }
 
     private Plugin getPlugin(DAPAssetUserActorNetworkServiceSubsystem dAPAssetUserActorNetworkServiceSubsystem) throws CantStartLayerException{
         try{
@@ -44,11 +50,19 @@ public class DAPActorNetworkServiceLayer  implements PlatformLayer {
         }
     }
 
-
-
+    private Plugin getPlugin(DAPAssetIssuerActorNetworkServiceSubsystem dapAssetIssuerActorNetworkServiceSubsystem) throws CantStartLayerException{
+        try
+        {
+            dapAssetIssuerActorNetworkServiceSubsystem.start();
+            return dapAssetIssuerActorNetworkServiceSubsystem.getPlugin();
+        }catch(com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantStartSubsystemException e){
+            throw new CantStartLayerException();
+        }
+    }
 
     @Override
     public void start() throws CantStartLayerException {
-        assetUserActorNetworService = getPlugin(new AssetUserActorNetworkServiceSubsystem());
+        assetUserActorNetworService   = getPlugin(new AssetUserActorNetworkServiceSubsystem());
+        assetIssuerActorNetwokService = getPlugin(new AssetIssuerActorNetworkServiceSubsystem());
     }
 }

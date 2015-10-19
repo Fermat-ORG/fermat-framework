@@ -258,7 +258,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
 
             //Others
             default :
-                temporalList = getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().get(platformComponentType);
+                temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
                 break;
 
         }
@@ -316,7 +316,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
 
             //Others
             default :
-                temporalList = getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().get(platformComponentType);
+                temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
                 break;
 
         }
