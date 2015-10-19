@@ -352,20 +352,20 @@ public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsW
      */
 
     @Override
-    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantStartRequestException {
+    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage,String identityPublicKey) throws CantStartRequestException {
 
         try
         {
             /**
              *Call Actor Intra User to add request connection
              */
-            this.intraWalletUserManager.askIntraWalletUserForAcceptance(this.intraUserLoggedPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage);
+            this.intraWalletUserManager.askIntraWalletUserForAcceptance(identityPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage);
 
             /**
              *Call Network Service Intra User to add request connection
              */
 
-            this.intraUserNertwokServiceManager.askIntraUserForAcceptance(this.intraUserLoggedPublicKey, Actors.INTRA_USER, intraUserToAddName, intraUserToAddPublicKey, Actors.INTRA_USER,profileImage);
+            this.intraUserNertwokServiceManager.askIntraUserForAcceptance(identityPublicKey, Actors.INTRA_USER, intraUserToAddName, intraUserToAddPublicKey, Actors.INTRA_USER,profileImage);
         }
         catch(CantCreateIntraWalletUserException e)
         {
@@ -642,12 +642,11 @@ public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsW
             List<com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser> intraWalletUserList = this.intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
 
             for (com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser intraWalletUser : intraWalletUserList) {
-
-                if(intraWalletUser.getPublicKey().equals(intraUserLoggedPublicKey))
-                {
+                //TODO: Naty lo saqué esto porque el intraUserLoggedPublicKey está siempre en null, hay que darle valor.
+                //if(intraWalletUser.getPublicKey().equals(intraUserLoggedPublicKey)) {
                     intraUserLoginIdentity =  new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getProfileImage());
                     break;
-                }
+                //}
              }
 
             return intraUserLoginIdentity;

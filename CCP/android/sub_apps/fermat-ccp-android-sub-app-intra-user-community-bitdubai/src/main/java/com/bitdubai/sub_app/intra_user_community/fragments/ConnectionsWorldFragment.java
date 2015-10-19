@@ -48,6 +48,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantLoginIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantShowLoginIdentitiesException;
@@ -114,7 +115,6 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
     private AppListAdapter adapter;
     private boolean isStartList;
 
-    ExecutorService executor;
 
     private ProgressDialog mDialog;
 
@@ -150,8 +150,6 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
             errorManager = subAppsSession.getErrorManager();
 
             mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
-
-            executor = Executors.newFixedThreadPool(2);
 
             // TODO: display unread notifications.
             // Run a task to fetch the notifications count
@@ -328,34 +326,6 @@ Updates the count of notifications in the ActionBar.
     }
 
 
-
-
-//    /**
-//     * onItem click listener event
-//     *
-//     * @param data
-//     * @param position
-//     */
-//    @Override
-//    public void onItemClickListener(IntraUserConnectionListItem data, int position) {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        builder.setTitle("Hubo un problema");
-//        builder.setMessage("No se pudieron obtener los detalles de la connexión seleccionada");
-//        builder.setPositiveButton("OK", null);
-//        builder.show();
-//    }
-//
-//    /**
-//     * On Long item Click Listener
-//     *
-//     * @param data
-//     * @param position
-//     */
-//    @Override
-//    public void onLongItemClickListener(IntraUserConnectionListItem data, int position) {
-//
-//    }
-
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
@@ -447,8 +417,14 @@ Updates the count of notifications in the ActionBar.
 
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
-        ConnectDialog connectDialog = new ConnectDialog(getActivity(),(IntraUserSubAppSession)subAppsSession,subAppResourcesProviderManager,data);
-        connectDialog.show();
+        ConnectDialog connectDialog = null;
+        try {
+            connectDialog = new ConnectDialog(getActivity(),(IntraUserSubAppSession)subAppsSession,subAppResourcesProviderManager,data,moduleManager.getActiveIntraUserIdentity());
+            connectDialog.show();
+        } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

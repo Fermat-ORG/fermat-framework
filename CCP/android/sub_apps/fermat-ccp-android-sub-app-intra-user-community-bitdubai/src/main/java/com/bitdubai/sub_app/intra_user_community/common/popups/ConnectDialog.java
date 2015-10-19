@@ -17,6 +17,7 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantStartRequestException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResources;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
@@ -41,11 +42,14 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
 
     IntraUserInformation intraUserInformation;
 
+    IntraUserLoginIdentity identity;
 
 
-    public ConnectDialog(Activity a,IntraUserSubAppSession intraUserSubAppSession,SubAppResourcesProviderManager subAppResources,IntraUserInformation intraUserInformation) {
+
+    public ConnectDialog(Activity a,IntraUserSubAppSession intraUserSubAppSession,SubAppResourcesProviderManager subAppResources,IntraUserInformation intraUserInformation,IntraUserLoginIdentity identity) {
         super(a, intraUserSubAppSession, subAppResources);
         this.intraUserInformation = intraUserInformation;
+        this.identity = identity;
     }
 
 
@@ -80,7 +84,7 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
         if (i == R.id.btn_connect) {
             try {
                 //image null
-                ((IntraUserSubAppSession)getSession()).getIntraUserModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(),intraUserInformation.getPublicKey(),null);
+                ((IntraUserSubAppSession)getSession()).getIntraUserModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(),intraUserInformation.getPublicKey(),intraUserInformation.getProfileImage(),identity.getPublicKey());
             } catch (CantStartRequestException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
                 Toast.makeText(getOwnerActivity(), "Oooops! recovering from system error - " + e.getMessage(), Toast.LENGTH_SHORT).show();
