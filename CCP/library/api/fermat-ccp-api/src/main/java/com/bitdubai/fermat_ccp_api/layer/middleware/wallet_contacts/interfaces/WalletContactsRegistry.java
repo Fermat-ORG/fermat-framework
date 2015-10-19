@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantDeleteCryptoAddressException;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactException;
@@ -43,6 +44,14 @@ public interface WalletContactsRegistry {
                                             Actors               actorType,
                                             List<CryptoAddress>  cryptoAddresses,
                                             String               walletPublicKey) throws CantCreateWalletContactException;
+
+    // create wallet contact without addresses
+    WalletContactRecord createWalletContact(String actorPublicKey,
+                                            String actorAlias,
+                                            String actorFirstName,
+                                            String actorLastName,
+                                            Actors actorType,
+                                            String walletPublicKey) throws CantCreateWalletContactException;
 
     /**
      * Throw the method <code>addCryptoAddressToWalletContact</code> you can add a crypto address to an existent contact.

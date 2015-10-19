@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dis
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -57,6 +58,10 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
 
     public void setDigitalAssetDistributionVault(DigitalAssetDistributionVault digitalAssetDistributionVault) throws CantSetObjectException{
         this.digitalAssetDistributor.setDigitalAssetDistributionVault(digitalAssetDistributionVault);
+    }
+
+    public void setBitcoinManager(BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager){
+        this.digitalAssetDistributor.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
     }
 
     public void setPluginId(UUID pluginId) throws CantSetObjectException{

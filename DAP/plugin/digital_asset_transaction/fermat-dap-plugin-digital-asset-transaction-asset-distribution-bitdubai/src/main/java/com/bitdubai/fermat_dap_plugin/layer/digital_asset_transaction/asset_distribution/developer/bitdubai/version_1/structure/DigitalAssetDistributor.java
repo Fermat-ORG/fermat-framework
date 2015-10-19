@@ -1,11 +1,12 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.DAPException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
@@ -72,7 +73,7 @@ public class DigitalAssetDistributor extends DigitalAssetSwap {
             String genesisTransactionFromDigitalAssetMetadata=digitalAssetMetadata.getGenesisTransaction();
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CHECKING_HASH,genesisTransactionFromDigitalAssetMetadata);
             String digitalAssetMetadataHash=digitalAssetMetadata.getDigitalAssetHash();
-            CryptoTransaction cryptoTransaction = assetVaultManager.getGenesisTransaction(digitalAssetMetadataHash);
+            CryptoTransaction cryptoTransaction = /*assetVaultManager.getGenesisTransaction(digitalAssetMetadataHash)*/null;
             //This won't work until I can get the CryptoTransaction from AssetVault
             String op_ReturnFromAssetVault=cryptoTransaction.getOp_Return();
             if(!digitalAssetMetadataHash.equals(op_ReturnFromAssetVault)){
@@ -82,11 +83,11 @@ public class DigitalAssetDistributor extends DigitalAssetSwap {
                         "digitalAssetMetadata:"+digitalAssetMetadata);
             }
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED, genesisTransactionFromDigitalAssetMetadata);
-        } catch (CantGetGenesisTransactionException exception) {
+        } /*catch (CantGetGenesisTransactionException exception) {
             throw new CantDeliverDigitalAssetException(exception,
                     "Delivering the Digital Asset \n"+digitalAssetMetadata,
                     "Cannot get the genesis transaction from Asset vault");
-        } catch (CantExecuteQueryException exception) {
+        }*/ catch (CantExecuteQueryException exception) {
             throw new CantDeliverDigitalAssetException(exception,
                     "Delivering the Digital Asset \n"+digitalAssetMetadata,
                     "Cannot execute a database operation");
@@ -137,6 +138,8 @@ public class DigitalAssetDistributor extends DigitalAssetSwap {
             throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Unexpected result in database");
         } catch (CantSendDigitalAssetMetadataException exception) {
             throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "There is an error delivering the digital asset through the network layer");
+        } catch (DAPException exception) {
+            throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Generic DAP Exception");
         }
     }
 
@@ -145,9 +148,9 @@ public class DigitalAssetDistributor extends DigitalAssetSwap {
     private void deliverToRemoteActor(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser remoteActorAssetUser)throws CantSendDigitalAssetMetadataException{
         String genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
         try {
-            //TODO: saqué esto porque estaba dando problemas, fijarse que falta
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.DELIVERING,genesisTransaction);
-            this.assetTransmissionNetworkServiceManager.sendDigitalAssetMetadata(null,null,null);//digitalAssetMetadata, remoteActorAssetUser);
+            //TODO: set the correct ActorSender to the next method
+            this.assetTransmissionNetworkServiceManager.sendDigitalAssetMetadata(null,remoteActorAssetUser,digitalAssetMetadata);
         } catch (CantExecuteQueryException exception) {
             throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE,exception,"Delivering Digital Asset Metadata to Remote Actor", "There is an error executing a query in database");
         } catch (UnexpectedResultReturnedFromDatabaseException exception) {

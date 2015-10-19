@@ -260,7 +260,7 @@ public class RegisterIntraUserFragment extends FermatFragment {
         try {
             editContactName = (EditText) rootView.findViewById(R.id.contact_name);
 
-            //Thread thread = new Thread();
+            //MyThread thread = new MyThread();
 
             progressBar.setVisibility(View.VISIBLE);
             // Start lengthy operation in a background thread
@@ -289,7 +289,7 @@ public class RegisterIntraUserFragment extends FermatFragment {
 ////                    }
 //                }
 //            };
-//            //Thread thread = new Thread();
+//            //MyThread thread = new MyThread();
 //
 //            getActivity().runOnUiThread(runnable);
 

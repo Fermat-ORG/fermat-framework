@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_actor.developer.bitdubai.version_1.enums.TransactionState;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException;
+import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantGetTransactionHashException;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantInsertRecordException;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantSetTranactionHashException;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_actor.developer.bitdubai.version_1.util.OutgoingIntraActorTransactionWrapper;
@@ -75,20 +76,21 @@ public class OutgoingIntraActorDao {
     }
 
 
-    public void registerNewTransaction(String          walletPublicKey,
-                                       CryptoAddress   destinationAddress,
-                                       long            cryptoAmount,
-                                       String          op_Return,
-                                       String          notes,
-                                       String          deliveredByActorPublicKey,
-                                       Actors          deliveredByActorType,
-                                       String          deliveredToActorPublicKey,
-                                       Actors          deliveredToActorType,
-                                       ReferenceWallet referenceWallet) throws OutgoingIntraActorCantInsertRecordException {
+    public void registerNewTransaction( UUID            transactionId,
+                                        String          walletPublicKey,
+                                        CryptoAddress   destinationAddress,
+                                        long            cryptoAmount,
+                                        String          op_Return,
+                                        String          notes,
+                                        String          deliveredByActorPublicKey,
+                                        Actors          deliveredByActorType,
+                                        String          deliveredToActorPublicKey,
+                                        Actors          deliveredToActorType,
+                                        ReferenceWallet referenceWallet) throws OutgoingIntraActorCantInsertRecordException {
         try {
             DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
             DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
-            loadRecordAsNew(recordToInsert, walletPublicKey, destinationAddress, cryptoAmount, op_Return, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet);
+            loadRecordAsNew(recordToInsert, transactionId, walletPublicKey, destinationAddress, cryptoAmount, op_Return, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet);
             transactionTable.insertRecord(recordToInsert);
         } catch (CantInsertRecordException e) {
             throw new OutgoingIntraActorCantInsertRecordException("An exception happened",e,"","");
@@ -192,6 +194,7 @@ public class OutgoingIntraActorDao {
 
 
     private void loadRecordAsNew(DatabaseTableRecord databaseTableRecord,
+                                 UUID                trxId,
                                  String              walletPublicKey,
                                  CryptoAddress       destinationAddress,
                                  long                cryptoAmount,
@@ -203,7 +206,7 @@ public class OutgoingIntraActorDao {
                                  Actors              deliveredToActorType,
                                  ReferenceWallet     referenceWallet) {
 
-        UUID transactionId = UUID.randomUUID();
+        UUID transactionId = trxId;
 
         databaseTableRecord.setUUIDValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, transactionId);
         databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_WALLET_ID_TO_DEBIT_FROM_COLUMN_NAME, walletPublicKey);
@@ -357,5 +360,30 @@ public class OutgoingIntraActorDao {
         } catch (Exception e) {
             throw new OutgoingIntraActorCantGetCryptoStatusException("An unexpected exception happened",FermatException.wrapException(e),"","");
         }
+    }
+
+    /**
+     * Gets the transaction Hash of the specified transaction
+     * @param transactionId
+     * @return
+     * @throws OutgoingIntraActorCantGetTransactionHashException
+     */
+    public String getSendCryptoTransactionHash(UUID transactionId) throws OutgoingIntraActorCantGetTransactionHashException {
+        try{
+            DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
+            transactionTable.setUUIDFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+
+            transactionTable.loadToMemory();
+            List<DatabaseTableRecord> records = transactionTable.getRecords();
+            transactionTable.clearAllFilters();
+
+            if (records.size() != 0)
+                return records.get(0).getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_HASH_COLUMN_NAME);
+            else
+                return null;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new OutgoingIntraActorCantGetTransactionHashException("There was an error getting the transaction hash of the transaction.", e, null, "database issue");
+        }
+
     }
 }

@@ -10,6 +10,7 @@ include ':fermat-ccm-api'
 include ':fermat-cbp-api'
 project(':fermat-cbp-api').projectDir = new File('CBP/library/api/fermat-cbp-api')
 include ':fermat-ccp-api'
+project(':fermat-ccp-api').projectDir = new File('CCP/library/api/fermat-ccp-api')
 include ':fermat-cry-api'
 include ':fermat-csh-api'
 project(':fermat-csh-api').projectDir = new File('CSH/library/api/fermat-csh-api')
@@ -814,6 +815,11 @@ include ':fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai'
 project(':fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai').projectDir = new File('CBP/plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai')
 include ':fermat-cbp-plugin-sub-app-module-customers-bitdubai'
 project(':fermat-cbp-plugin-sub-app-module-customers-bitdubai').projectDir = new File('CBP/plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-customers-bitdubai')
+
+//Wallet
+
+include ':fermat-cbp-plugin-wallet-crypto-broker-bitdubai'
+project(':fermat-cbp-plugin-wallet-crypto-broker-bitdubai').projectDir = new File('CBP/plugin/wallet/fermat-cbp-plugin-wallet-crypto-broker-bitdubai')
 
 //Wallet Module
 include ':fermat-cbp-plugin-wallet-module-crypto-broker-bitdubai'

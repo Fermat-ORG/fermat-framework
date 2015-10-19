@@ -121,6 +121,9 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      */
     @Override
     public void onCoinsSent(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
+        /**
+         * register the new outgoing transaction into the database
+         */
         saveOutgoingTransaction(wallet, tx);
     }
 
@@ -134,12 +137,52 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                     tx.getConfidence().getDepthInBlocks(),
                     getOutgoingTransactionAddressTo(tx),
                     getOutgoingTransactionAddressFrom(wallet, tx),
-                    tx.getValue(wallet).getValue(),
-                    tx.getFee().getValue(),
+                    getOutgoingTransactionValue(wallet,tx),
+                    getTransactionOpReturn(tx),
                     ProtocolStatus.NO_ACTION_REQUIRED);
-        } catch (CantExecuteDatabaseOperationException e) {
+        } catch (Exception e) {
+            /**
+             * if there is an error in getting information from the transaction object.
+             * I will try saving the transaction with minimal information.
+             * I will complete this info in the agent that triggers the events.
+             */
             e.printStackTrace();
+            try{
+                CryptoAddress errorAddress = new CryptoAddress("error", CryptoCurrency.BITCOIN);
+                getDao().saveNewOutgoingTransaction(tx.getHashAsString(),
+                        getTransactionCryptoStatus(tx),
+                        0,
+                        errorAddress,
+                        errorAddress,
+                        0,
+                        "",
+                        ProtocolStatus.NO_ACTION_REQUIRED);
+            } catch (CantExecuteDatabaseOperationException e1) {
+                e1.printStackTrace();
+            }
         }
+    }
+
+    /**
+     * Extracts from the outputs, the ones used to generate the op_Return and the value with in it.
+     * if it doesn't has any, returns and empty string.
+     * @param tx
+     * @return
+     */
+    private String getTransactionOpReturn(Transaction tx) {
+        String hash = "";
+        try{
+            for (TransactionOutput output : tx.getOutputs()){
+                /**
+                 * if this is an OP_RETURN output, I will get the hash
+                 */
+                if (output.getScriptPubKey().isOpReturn())
+                    hash = output.getScriptPubKey().getPubKeyHash().toString();
+            }
+        } catch (Exception e){
+            return "";
+        }
+        return hash;
     }
 
     @Override
@@ -195,16 +238,20 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * @return
      */
     private CryptoStatus getTransactionCryptoStatus(Transaction tx){
-        int depth = tx.getConfidence().getDepthInBlocks();
+        try{
+            int depth = tx.getConfidence().getDepthInBlocks();
 
-        if (depth == 0)
+            if (depth == 0)
+                return CryptoStatus.ON_CRYPTO_NETWORK;
+            else if(depth == 1)
+                return CryptoStatus.ON_BLOCKCHAIN;
+            else if (depth >= 2)
+                return CryptoStatus.IRREVERSIBLE;
+            else
+                return CryptoStatus.PENDING_SUBMIT;
+        } catch (Exception e){
             return CryptoStatus.ON_CRYPTO_NETWORK;
-        else if(depth == 1)
-            return CryptoStatus.ON_BLOCKCHAIN;
-        else if (depth >= 2)
-            return CryptoStatus.IRREVERSIBLE;
-        else
-            return CryptoStatus.PENDING_SUBMIT;
+        }
     }
 
     /**
@@ -300,7 +347,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
          * Also get the current CryptoStatus that triggered the event.
          */
         CryptoStatus currentCryptoStatus = getTransactionCryptoStatus(tx);
-        CryptoStatus cryptoStatusToSet;
+
 
         /**
          * if the stored CryptoStatus is the same as the current one (for example IRREVERSIBLE)
@@ -309,6 +356,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         if (storedCryptoStatus == currentCryptoStatus)
             return;
 
+        CryptoStatus cryptoStatusToSet = null;
         switch (storedCryptoStatus) {
             case ON_BLOCKCHAIN:
                 /**
@@ -348,18 +396,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                 /**
                  * Register the new incoming transaction into the database
                  */
-                try {
-                    getDao().saveNewOutgoingTransaction(tx.getHashAsString(),
-                            cryptoStatusToSet,
-                            tx.getConfidence().getDepthInBlocks(),
-                            getIncomingTransactionAddressTo(wallet, tx),
-                            getIncomingTransactionAddressFrom(tx),
-                            tx.getValue(wallet).getValue(),
-                            tx.getFee().getValue(),
-                            ProtocolStatus.TO_BE_NOTIFIED);
-                } catch (CantExecuteDatabaseOperationException e) {
-                    e.printStackTrace();
-                }
+               saveOutgoingTransaction(wallet,tx);
                 break;
         }
     }
@@ -391,7 +428,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                     getIncomingTransactionAddressTo(wallet, tx),
                     getIncomingTransactionAddressFrom(tx),
                     getIncomingTransactionValue(wallet, tx),
-                    getIncomingTransactionFee(tx),
+                    getTransactionOpReturn(tx),
                     ProtocolStatus.TO_BE_NOTIFIED);
         }  catch (Exception e){
             /**
@@ -408,7 +445,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                         errorAddress,
                         errorAddress,
                         0,
-                        0,
+                        "",
                         ProtocolStatus.TO_BE_NOTIFIED);
             } catch (CantExecuteDatabaseOperationException e1) {
                 e1.printStackTrace();
@@ -416,18 +453,6 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         }
     }
 
-    /**
-     * gets the fee of the incoming transaction
-     * @param tx
-     * @return
-     */
-    private long getIncomingTransactionFee(Transaction tx) {
-        try{
-            return tx.getFee().getValue();
-        } catch (Exception e){
-            return 0;
-        }
-    }
 
     /**
      * gets the value sent to me in a transaction
@@ -437,7 +462,21 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      */
     private long getIncomingTransactionValue(Wallet wallet, Transaction tx) {
         try{
-            return tx.getValue(wallet).getValue();
+            return tx.getValueSentToMe(wallet).getValue();
+        } catch (Exception e){
+            return 0;
+        }
+    }
+
+    /**
+     * gets the value sent from me in a transaction
+     * @param wallet
+     * @param tx
+     * @return
+     */
+    private long getOutgoingTransactionValue(Wallet wallet, Transaction tx) {
+        try{
+            return tx.getValueSentFromMe(wallet).getValue();
         } catch (Exception e){
             return 0;
         }

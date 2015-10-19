@@ -26,6 +26,10 @@ public class CryptoBrokerIdentityInfoAdapter extends FermatAdapter<CryptoBrokerI
         super(context, dataSet);
     }
 
+    public CryptoBrokerIdentityInfoAdapter(Context context) {
+        super(context);
+    }
+
     @Override
     protected CryptoBrokerIdentityInfoViewHolder createHolder(View itemView, int type) {
         return new CryptoBrokerIdentityInfoViewHolder(itemView);
@@ -38,14 +42,7 @@ public class CryptoBrokerIdentityInfoAdapter extends FermatAdapter<CryptoBrokerI
 
     @Override
     protected void bindHolder(final CryptoBrokerIdentityInfoViewHolder holder, final CryptoBrokerIdentityInformation data, final int position) {
-        holder.getIdentityName().setText(data.getName());
-
-        byte[] profileImage = data.getProfileImage();
-        Bitmap imageBitmap = profileImage == null ?
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.deniz_profile_picture) :
-                BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
-
-        Bitmap roundedBitmap = UtilsFuncs.getRoundedShape(imageBitmap);
-        holder.getIdentityImage().setImageBitmap(roundedBitmap);
+        holder.setText(data.getAlias());
+        holder.setImage(data.getProfileImage());
     }
 }

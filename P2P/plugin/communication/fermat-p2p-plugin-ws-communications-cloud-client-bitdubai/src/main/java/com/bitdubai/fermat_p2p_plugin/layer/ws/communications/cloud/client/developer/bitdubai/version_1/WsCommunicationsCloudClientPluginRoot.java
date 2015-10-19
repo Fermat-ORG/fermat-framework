@@ -65,13 +65,13 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      */
     private static final String WS_PROTOCOL = "ws://";
 
-
     /**
      * Represent the SERVER_IP
      */
-    //public static final String SERVER_IP = "52.11.156.16"; //AWS
 
-    public static final String SERVER_IP = "192.168.1.4";
+    public static final String SERVER_IP = "52.11.156.16"; //AWS
+
+    //public static final String SERVER_IP = "192.168.1.4";
 
 
     /**

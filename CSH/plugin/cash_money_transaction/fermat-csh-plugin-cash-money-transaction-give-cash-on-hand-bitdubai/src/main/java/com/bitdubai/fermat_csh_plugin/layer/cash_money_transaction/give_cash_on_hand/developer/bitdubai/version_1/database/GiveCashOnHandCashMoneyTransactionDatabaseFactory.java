@@ -76,13 +76,14 @@ public class GiveCashOnHandCashMoneyTransactionDatabaseFactory implements DealsW
 
             table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_CASH_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_PUBLIC_KEY_BROKER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_PUBLIC_KEY_ACTOR_TO_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_PUBLIC_KEY_ACTOR_FROM_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_BALANCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_AMOUNT_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_CASH_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_CASH_REFERENCE_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
+            table.addColumn(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
             table.addIndex(GiveCashOnHandCashMoneyTransactionDatabaseConstants.GIVE_CASH_ON_HAND_FIRST_KEY_COLUMN);
 

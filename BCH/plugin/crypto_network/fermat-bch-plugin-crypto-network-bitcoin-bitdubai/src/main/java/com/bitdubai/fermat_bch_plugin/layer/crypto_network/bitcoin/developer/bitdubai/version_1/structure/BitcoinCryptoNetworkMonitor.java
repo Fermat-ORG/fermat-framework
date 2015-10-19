@@ -3,14 +3,17 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
+import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
 import org.bitcoinj.params.RegTestParams;
@@ -29,7 +32,13 @@ class BitcoinCryptoNetworkMonitor implements Agent {
      * agent execution flag
      */
     private boolean isSupposedToBeRunning = false;
+
+    /**
+     * class variables
+     */
     Wallet wallet;
+    BitcoinCryptoNetworkMonitorAgent bitcoinCryptoNetworkMonitorAgent;
+
 
     /**
      * Platform variables
@@ -47,10 +56,36 @@ class BitcoinCryptoNetworkMonitor implements Agent {
         this.plugId = pluginId;
     }
 
+    /**
+     * Broadcast a well formed, commited and signed transaction into the network
+     * @param tx
+     * @throws CantBroadcastTransactionException
+     */
+    public void broadcastTransaction(Transaction tx) throws CantBroadcastTransactionException {
+        bitcoinCryptoNetworkMonitorAgent.broadcastTransaction(tx);
+    }
+
     @Override
     public void start() throws CantStartAgentException {
         isSupposedToBeRunning = true;
-        Thread agentThread = new Thread(new BitcoinCryptoNetworkMonitorAgent());
+
+        /**
+         * I will also start another agent that will double check that we don't miss any transactions from the events
+         * raised by bitcoinj
+         * //todo this agent still needs some work.
+         */
+        BitcoinCryptoNetworkMissingTransactionsWatcherAgent transactionsWatcherAgent = new BitcoinCryptoNetworkMissingTransactionsWatcherAgent(this.wallet, this.pluginDatabaseSystem, this.plugId);
+        try {
+            transactionsWatcherAgent.start();
+        } catch (com.bitdubai.fermat_api.CantStartAgentException e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * Then I will start the agent that connects to the bitcoin network to get new transactions
+         */
+        bitcoinCryptoNetworkMonitorAgent = new BitcoinCryptoNetworkMonitorAgent();
+        Thread agentThread = new Thread(bitcoinCryptoNetworkMonitorAgent);
         agentThread.start();
     }
 
@@ -72,7 +107,15 @@ class BitcoinCryptoNetworkMonitor implements Agent {
      * Class that generates all the objects needed to connect to the network with the passed wallet.
      */
     private class BitcoinCryptoNetworkMonitorAgent implements Runnable{
+        /**
+         * sets this agent network type
+         */
         final NetworkParameters NETWORK_PARAMETERS = wallet.getNetworkParameters();
+
+        /**
+         * class variables.
+         */
+        PeerGroup peerGroup;
 
         @Override
         public void run(){
@@ -101,7 +144,7 @@ class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * creates the peerGroup object
              */
-            PeerGroup peerGroup = new PeerGroup(NETWORK_PARAMETERS, blockChain);
+            peerGroup = new PeerGroup(NETWORK_PARAMETERS, blockChain);
             peerGroup.addWallet(wallet);
 
             /**
@@ -139,6 +182,20 @@ class BitcoinCryptoNetworkMonitor implements Agent {
 
             }
             peerGroup.stop();
+        }
+
+        /**
+         * Broadcast a well formed, commited and signed transaction into the network
+         * @param tx
+         * @throws CantBroadcastTransactionException
+         */
+        public void broadcastTransaction(Transaction tx) throws CantBroadcastTransactionException {
+            try{
+                peerGroup.broadcastTransaction(tx);
+            } catch (Exception e){
+                throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, e, null, null);
+            }
+
         }
     }
 }

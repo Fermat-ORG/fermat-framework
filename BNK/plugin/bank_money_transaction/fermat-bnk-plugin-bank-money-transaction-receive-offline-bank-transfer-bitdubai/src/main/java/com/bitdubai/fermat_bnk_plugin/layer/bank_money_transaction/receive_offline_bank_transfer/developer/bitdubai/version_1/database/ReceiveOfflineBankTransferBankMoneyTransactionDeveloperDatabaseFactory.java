@@ -120,8 +120,9 @@ public class ReceiveOfflineBankTransferBankMoneyTransactionDeveloperDatabaseFact
         List<String> receiveOfflineBankTransferColumns = new ArrayList<String>();
 
         receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_TRANSACTION_ID_COLUMN_NAME);
-        receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_BROKER_COLUMN_NAME);
-        receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
+        receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_ACTOR_TO_COLUMN_NAME);
+        receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_ACTOR_FROM_COLUMN_NAME);
+        receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BALANCE_TYPE_COLUMN_NAME);
         receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_STATUS_COLUMN_NAME);
         receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_TRANSACTION_TYPE_COLUMN_NAME);
         receiveOfflineBankTransferColumns.add(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_AMOUNT_COLUMN_NAME);

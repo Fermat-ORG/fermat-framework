@@ -75,8 +75,9 @@ public class ReceiveOfflineBankTransferBankMoneyTransactionDatabaseFactory imple
             table = databaseFactory.newTableFactory(ownerId, ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_TABLE_NAME);
 
             table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BANK_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_BROKER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_ACTOR_TO_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_ACTOR_FROM_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_BALANCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants.RECEIVE_OFFLINE_BANK_TRANSFER_AMOUNT_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
