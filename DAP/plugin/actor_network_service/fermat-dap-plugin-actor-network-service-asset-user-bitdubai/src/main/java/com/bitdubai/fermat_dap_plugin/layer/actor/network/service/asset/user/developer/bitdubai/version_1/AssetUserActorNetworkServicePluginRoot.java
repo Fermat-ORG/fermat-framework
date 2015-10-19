@@ -61,8 +61,9 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.dev
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers_asset_user.CompleteClientAssetUserActorRegistrationNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers_asset_user.CompleteAssetUserRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers_asset_user.CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers_asset_user.NewReceiveMessagesAssetUserRemoteNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
@@ -896,7 +897,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
 
 
-            System.out.println(" Actor  Asset User Registered "+platformComponentProfileRegistered.getIdentityPublicKey()+"\n Alias "+platformComponentProfileRegistered.getAlias());
+            System.out.println(" Actor Asset User Registered "+platformComponentProfileRegistered.getIdentityPublicKey()+"\n Alias "+platformComponentProfileRegistered.getAlias());
 
             ReturnAssetUserActorNetworkService returnactor = new AssetUserANS();
 
@@ -1017,14 +1018,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
 
 
-
-
-
         }
-
-
-
-
 
 
     }
@@ -1032,7 +1026,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
-        System.out.println(" TemplateNetworkServiceRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
+        System.out.println(" AssetUserActorNetworkServiceRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
 
         /*
          * Tell the manager to handler the new connection stablished
@@ -1210,16 +1204,16 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
         }
 
-
-
     }
+
+    /*  Code for Nerio */
 
     private void initilizelistener2() {
 
         try{
 
             FermatEventListener event = eventManager.getNewListener(DapEvenType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
-            event.setEventHandler(new CompleteClientAssetUserActorRegistrationNotificationEventHandler(this));
+            event.setEventHandler(new CompleteAssetUserRegistrationNotificationEventHandler(this));
             eventManager.addListener(event);
             listenersAdded.add(event);
 
@@ -1228,13 +1222,15 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
             eventManager.addListener(event);
             listenersAdded.add(event);
 
+            event = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+            event.setEventHandler(new NewReceiveMessagesAssetUserRemoteNotificationEventHandler(this));
+            eventManager.addListener(event);
+            listenersAdded.add(event);
+
         }catch(Exception e){
 
             e.printStackTrace();
         }
-
-
-
 
     }
 
@@ -1256,5 +1252,30 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
         System.out.println("==========================================================");
 
     }
+
+    @Override
+    public void handleRequestCryptoAddresFromRemoteAssetUserEvent(ActorAssetUser actorAssetUser) {
+
+        System.out.println("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
+
+        System.out.println("handleRequestCryptoAddresFromRemoteAssetUserEvent FROM "+actorAssetUser.getPublicKey());
+
+        System.out.println("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
+
+    }
+
+    @Override
+    public void handleDeliveredCryptoAddresFromRemoteAssetUserEvent(ActorAssetUser actorAssetUser, String cryptoAddress) {
+
+        System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
+
+        System.out.println("Crypto Addres From Remote Asset User "+cryptoAddress);
+
+        System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
+
+    }
+
+    /* Code for Nerio */
+
 }
 

@@ -15,18 +15,18 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.CompleteClientAssetUserActorRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.ActorNetworkServiceAssetUser;
 /**
- * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers_asset_user.CompleteClientAssetUserActorRegistrationNotificationEventHandler</code>
+ * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers_asset_user.CompleteAssetUserRegistrationNotificationEventHandler</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 12/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CompleteClientAssetUserActorRegistrationNotificationEventHandler implements FermatEventHandler {
+public class CompleteAssetUserRegistrationNotificationEventHandler implements FermatEventHandler {
 
     private ActorNetworkServiceAssetUser actorNetworkServiceAssetUser;
 
-    public CompleteClientAssetUserActorRegistrationNotificationEventHandler(ActorNetworkServiceAssetUser actorNetworkServiceAssetUser){
+    public CompleteAssetUserRegistrationNotificationEventHandler(ActorNetworkServiceAssetUser actorNetworkServiceAssetUser){
 
         this.actorNetworkServiceAssetUser=actorNetworkServiceAssetUser;
     }
