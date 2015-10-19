@@ -12,7 +12,7 @@ import java.util.Collection;
  */
 public interface CustomerBrokerPurchaseManager {
 
-    CustomerBrokerPurchase createNegotiation() throws CantCreateCustomerBrokerPurchaseException;
+    CustomerBrokerPurchase createCustomerBrokerPurchaseNegotiation(String publicKeyCustomer, String publicKeyBroker) throws CantCreateCustomerBrokerPurchaseException;
     void cancelNegotiation(CustomerBrokerSale negotiation);
     void closeNegotiation(CustomerBrokerSale negotiation);
 
