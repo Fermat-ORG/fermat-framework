@@ -308,9 +308,19 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
                 }
 
                 @Override
-                public Location getLocation() {
+                public Double getLocationLatitude() {
                     return null;
                 }
+
+                @Override
+                public Double getLocationLongitude() {
+                    return null;
+                }
+
+//                @Override
+//                public Location getLocation() {
+//                    return null;
+//                }
 
                 @Override
                 public Genders getGender() {

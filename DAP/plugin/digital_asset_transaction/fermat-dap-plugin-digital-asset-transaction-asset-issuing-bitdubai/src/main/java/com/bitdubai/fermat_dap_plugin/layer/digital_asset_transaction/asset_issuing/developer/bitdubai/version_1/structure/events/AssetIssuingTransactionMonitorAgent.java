@@ -235,7 +235,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
         private void doTheMainTask() throws CantCheckAssetIssuingProgressException, CantExecuteQueryException, CantDeliverDigitalAssetToAssetWalletException {
 
             Logger LOG = Logger.getGlobal();
-            LOG.info("Asset Issuing monitor agent DoTheMainTask");
+            //LOG.info("Asset Issuing monitor agent DoTheMainTask");
             try {
                 assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
 
@@ -390,7 +390,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 //            }
 
             if (isTransactionToBeNotified(CryptoStatus.ON_BLOCKCHAIN)){
-                genesisTransactionList=assetIssuingTransactionDao.getTransactionsHashByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
+                genesisTransactionList=assetIssuingTransactionDao.getGenesisTransactionsByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
                 for(String genesisTransaction: genesisTransactionList){
                     System.out.println("BCH Transaction Hash: "+genesisTransaction);
                     //transactionCryptoStatus=getCryptoStatusFromOutgoingIntraActorPlugin(transactionHash);
@@ -398,7 +398,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     //transactionCryptoStatus= cryptoGenesisTransaction.getCryptoStatus();
                     //assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, transactionCryptoStatus);
                     assetIssuingTransactionDao.updateDigitalAssetTransactionStatusByGenesisTransaction(genesisTransaction, TransactionStatus.DELIVERING);
-                    String publicKey=this.assetIssuingTransactionDao.getPublicKeyByGeneistransaction(genesisTransaction);
+                    String publicKey=this.assetIssuingTransactionDao.getPublicKeyByGenesisTransaction(genesisTransaction);
                     this.assetIssuingTransactionDao.updateAssetsGeneratedCounter(publicKey);
                     digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, AssetBalanceType.AVAILABLE);
                 }
@@ -472,6 +472,16 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 
         private List<CryptoTransaction> getCryptoTransactionsByCryptoStatus(CryptoStatus cryptoStatus){
             List<CryptoTransaction> transactionList=new ArrayList<>();
+            /**
+             * Mock for testing
+             */
+            CryptoTransaction mockCryptoTransaction=new CryptoTransaction();
+            mockCryptoTransaction.setTransactionHash("d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43");
+            mockCryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
+            transactionList.add(mockCryptoTransaction);
+            /**
+             * End of mocking
+             */
             //TODO: change this line when is implemented in crypto network
             List<CryptoTransaction> transactionListFromCryptoNetwork=new ArrayList<>();
             for(CryptoTransaction cryptoTransaction : transactionListFromCryptoNetwork){
