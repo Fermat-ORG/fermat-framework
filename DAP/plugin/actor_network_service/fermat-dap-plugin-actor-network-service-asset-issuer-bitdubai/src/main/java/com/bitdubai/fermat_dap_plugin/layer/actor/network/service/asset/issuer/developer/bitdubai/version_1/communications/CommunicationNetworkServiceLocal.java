@@ -84,12 +84,11 @@ public class CommunicationNetworkServiceLocal  implements Observer, NetworkServi
             /*
              * Save to the data base table
              */
-            //TODO:Implementar
-            //outgoingMessageDao.create(fermatMessage);
+            outgoingMessageDao.create(fermatMessage);
 
         } catch (Exception e) {
             e.printStackTrace();
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message. Error reason: " + e.getMessage()));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message. Error reason: " + e.getMessage()));
         }
 
     }
