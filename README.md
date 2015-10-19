@@ -65,8 +65,10 @@ You can learn more and see some cool visualizations of Fermat's architecture and
 Mission / Purpose
 ------------------------------------------------
 
+> To get cryptocurrencies mass adopted as soon as possible, and by doing this, to empower every person in the world with the appropriate tools to save and move their money in a digital format in an
+efficient, secure an private way.
 
-> To get crypto currencies mass adopted as soon as possible and by doing so, empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way. And at the same time allow them to choose which currency to use, regardless of the place they live or where they were born.
+> To give back the souveraignity over each one's own ressources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.
 
 
 Fermat Principles
