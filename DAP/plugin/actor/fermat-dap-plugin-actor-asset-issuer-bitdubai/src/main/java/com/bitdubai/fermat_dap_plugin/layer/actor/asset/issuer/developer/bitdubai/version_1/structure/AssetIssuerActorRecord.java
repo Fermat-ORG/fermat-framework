@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 
 /**
@@ -12,18 +14,36 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     private String publicKey;
     private byte[] profileImage ;
     private long registrationDate;
-    private ConnectionState contactState;
+    private Double locationLatitude;
+    private Double locationLongitude;
+    private ConnectionState connectionState;
+    private Genders genders;
+
 
     /**
      * Constructor
      */
-    public AssetIssuerActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, ConnectionState contactState){
+    public AssetIssuerActorRecord(String name, String publicKey, byte[] profileImage, Location location) {
 
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = (byte[])profileImage.clone();
+        this.profileImage = profileImage.clone();
+        this.locationLatitude = location.getLatitude();
+        this.locationLongitude = location.getLongitude();
+        this.genders = Genders.INDEFINITE;
+//        this.age = age;
+//        this.cryptoAddress = cryptoAddress;
+        this.connectionState = ConnectionState.CONNECTED;
+
+    }
+
+    public AssetIssuerActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, ConnectionState connectionState){
+
+        this.name = name;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage.clone();
         this.registrationDate = registrationDate;
-        this.contactState = contactState;
+        this.connectionState = connectionState;
 
     }
 
@@ -68,13 +88,23 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         return this.profileImage.clone();
     }
 
+    @Override
+    public Double getLocationLatitude() {
+        return this.locationLatitude;
+    }
+
+    @Override
+    public Double getLocationLongitude() {
+        return this.locationLongitude;
+    }
+
     /**
-     * The method <code>getContactState</code> gives us the contact state of the represented Asset Issuer
+     * The method <code>getConnectionState</code> gives us the contact state of the represented Asset Issuer
      *
-     * @return the contact state
+     * @return the connection state
      */
     @Override
-    public ConnectionState getContactState() {
-        return this.contactState;
+    public ConnectionState getConnectionState() {
+        return this.connectionState;
     }
 }

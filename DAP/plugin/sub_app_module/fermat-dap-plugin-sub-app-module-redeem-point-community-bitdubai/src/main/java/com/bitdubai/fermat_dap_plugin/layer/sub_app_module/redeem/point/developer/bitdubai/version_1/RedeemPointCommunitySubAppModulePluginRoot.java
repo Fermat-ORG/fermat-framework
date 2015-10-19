@@ -9,6 +9,14 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.DealsWithActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
+import com.bitdubai.fermat_dap_plugin.layer.sub_app_module.redeem.point.developer.bitdubai.version_1.structure.RedeemPointCommunitySupAppModuleManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +27,7 @@ import java.util.UUID;
 /**
  * Created by Nerio on 13/10/15.
  */
-public class RedeemPointCommunitySubAppModulePluginRoot implements DealsWithLogger, LogManagerForDevelopers, Plugin, Service {
+public class RedeemPointCommunitySubAppModulePluginRoot implements RedeemPointCommunitySubAppModuleManager, DealsWithActorAssetRedeemPoint, DealsWithLogger, LogManagerForDevelopers, Plugin, Service {
 
     UUID pluginId;
 
@@ -36,6 +44,10 @@ public class RedeemPointCommunitySubAppModulePluginRoot implements DealsWithLogg
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
+    RedeemPointCommunitySupAppModuleManager redeemPointCommunitySupAppModuleManager;
+
+    ActorAssetRedeemPointManager actorAssetRedeemPointManager;
+
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
@@ -43,7 +55,14 @@ public class RedeemPointCommunitySubAppModulePluginRoot implements DealsWithLogg
 
     @Override
     public void start() throws CantStartPluginException {
+        redeemPointCommunitySupAppModuleManager = new RedeemPointCommunitySupAppModuleManager(actorAssetRedeemPointManager);
+
         this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    @Override
+    public void setActorAssetRedeemPointManager(ActorAssetRedeemPointManager actorAssetRedeemPointManager) throws CantSetObjectException {
+        this.actorAssetRedeemPointManager = actorAssetRedeemPointManager;
     }
 
     @Override
@@ -98,5 +117,19 @@ public class RedeemPointCommunitySubAppModulePluginRoot implements DealsWithLogg
                 RedeemPointCommunitySubAppModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
+    }
+
+    @Override
+    public List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointRegistered() throws CantGetAssetRedeemPointActorsException {
+        List<ActorAssetRedeemPoint> actorAssetList = new ArrayList<>();
+
+//        Location location = new DeviceLocation(00.00, 00.00, 12345678910L, 00.00, LocationProvider.NETWORK);
+
+//        actorAssetList.add(new RedeemPointActorRecord("Rodrigo Acosta",UUID.randomUUID().toString(),new byte[0],location));
+//        actorAssetList.add(new RedeemPointActorRecord("Franklin Marcano",UUID.randomUUID().toString(),new byte[0],location));
+//        actorAssetList.add(new RedeemPointActorRecord("Manuel Colmenares",UUID.randomUUID().toString(),new byte[0],location));
+//        actorAssetList.add(new RedeemPointActorRecord("Nerio Indriago",UUID.randomUUID().toString(),new byte[0],location));
+
+        return actorAssetList;
     }
 }
