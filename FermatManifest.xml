@@ -2275,23 +2275,6 @@
 			<layer name="Reference Wallet">
 				<androids>
 					<android
-						name="Crypto Commodity Money"
-						description=""
-						difficulty="8"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="furszy" scope="implementation" percentage="100"></author>
-						</authors>
-						<mantainers>
-							<mantainer name="furszy"></mantainer>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</android>
-					<android
 						name="Discount Wallet"
 						description=""
 						difficulty="8"
