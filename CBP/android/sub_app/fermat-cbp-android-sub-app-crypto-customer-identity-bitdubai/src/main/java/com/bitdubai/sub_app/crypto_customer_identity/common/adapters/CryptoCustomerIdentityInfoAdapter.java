@@ -9,7 +9,7 @@ import android.widget.Filterable;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
-import com.bitdubai.sub_app.crypto_customer_identity.common.holders.CustomerIdentityInfoViewHolder;
+import com.bitdubai.sub_app.crypto_customer_identity.common.holders.CryptoCustomerIdentityInfoViewHolder;
 import com.bitdubai.sub_app.crypto_customer_identity.common.model.CryptoCustomerIdentityInformationImp;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CryptoCustomerIdentityListFilter;
 
@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * @author Nelson Ramirez
  */
 public class CryptoCustomerIdentityInfoAdapter
-        extends FermatAdapter<CryptoCustomerIdentityInformation, CustomerIdentityInfoViewHolder>
+        extends FermatAdapter<CryptoCustomerIdentityInformation, CryptoCustomerIdentityInfoViewHolder>
         implements Filterable {
 
     CryptoCustomerIdentityListFilter filter;
@@ -32,8 +32,8 @@ public class CryptoCustomerIdentityInfoAdapter
     }
 
     @Override
-    protected CustomerIdentityInfoViewHolder createHolder(View itemView, int type) {
-        return new CustomerIdentityInfoViewHolder(itemView);
+    protected CryptoCustomerIdentityInfoViewHolder createHolder(View itemView, int type) {
+        return new CryptoCustomerIdentityInfoViewHolder(itemView);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class CryptoCustomerIdentityInfoAdapter
     }
 
     @Override
-    protected void bindHolder(final CustomerIdentityInfoViewHolder holder, final CryptoCustomerIdentityInformation data, final int position) {
+    protected void bindHolder(final CryptoCustomerIdentityInfoViewHolder holder, final CryptoCustomerIdentityInformation data, final int position) {
         holder.getIdentityName().setText(data.getAlias());
 
         if (data instanceof CryptoCustomerIdentityInformationImp) {
