@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
@@ -94,7 +96,10 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
     private TextView txt_notes;
     private LinearLayout linear_address;
 
-
+    /**
+     * Fragment Style
+     */
+    Typeface tf;
 
     /**
      * Create a new instance of this fragment
@@ -108,7 +113,7 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
+        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
         referenceWalletSession = (ReferenceWalletSession)walletSession;
 
         super.onCreate(savedInstanceState);
@@ -160,7 +165,7 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
 
             autocompleteContacts = (AutoCompleteTextView) rootView.findViewById(R.id.contact_name);
 
-
+            autocompleteContacts.setTypeface(tf);
             contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
 
             autocompleteContacts.setAdapter(contactsAdapter);
@@ -215,18 +220,21 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
 
             editTextAddress = (EditText) rootView.findViewById(R.id.address);
             editTextAddress.setText("");
+            editTextAddress.setTypeface(tf);
 
             /**
              * Notes line
              */
 
             txt_notes = (TextView) rootView.findViewById(R.id.notes);
+            txt_notes.setTypeface(tf);
 
             /**
              * Amount
              */
 
             editTextAmount = (EditText) rootView.findViewById(R.id.amount);
+            editTextAmount.setTypeface(tf);
             /**
              *  Amount observer
              */
@@ -252,6 +260,8 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
 
 
             FermatButton send_button = (FermatButton) rootView.findViewById(R.id.send_button);
+
+            send_button.setFont(FontType.ROBOTO_REGULAR);
             send_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
