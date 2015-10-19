@@ -2,19 +2,22 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchas
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantCreateCustomerBrokerBankMoneyPurchaseException;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseClausesDaoException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseLogsDaoException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseNegotiationDaoException;
-
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.structure.CustomerBrokerPurchaseNegotiation;
 
 import java.util.UUID;
 
@@ -53,8 +56,8 @@ public class CustomerBrokerPurchaseNegotiationDao {
         public CustomerBrokerPurchase createCustomerBrokerPurchaseNegotiation(
                 String publicKeyCustomer,
                 String publicKeyBroker,
-                String startDataTime
-        ) throws CantCreateCustomerBrokerBankMoneyPurchaseException {
+                long startDataTime
+        ) throws CantCreateCustomerBrokerPurchaseException {
 
             try {
                 DatabaseTable PurchaseNegotiationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
@@ -72,9 +75,42 @@ public class CustomerBrokerPurchaseNegotiationDao {
 
                 PurchaseNegotiationTable.insertRecord(recordToInsert);
 
-                return null;
+                return newCustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, NegotiationStatus.OPEN.getCode());
+
             } catch (CantInsertRecordException e) {
-                throw new CantCreateCustomerBrokerBankMoneyPurchaseException("An exception happened",e,"","");
+                throw new CantCreateCustomerBrokerPurchaseException("An exception happened",e,"","");
+            }
+
+        }
+
+        public void cancelNegotiation(CustomerBrokerPurchase negotiation) throws CantUpdateCustomerBrokerPurchaseException {
+            try {
+                DatabaseTable PurchaseNegotiationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
+                DatabaseTableRecord recordToUpdate   = PurchaseNegotiationTable.getEmptyRecord();
+
+                PurchaseNegotiationTable.setUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME, negotiation.getNegotiationId(), DatabaseFilterType.EQUAL);
+
+                recordToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_STATUS_COLUMN_NAME, NegotiationStatus.CANCELLED.getCode());
+
+                PurchaseNegotiationTable.updateRecord(recordToUpdate);
+            } catch (CantUpdateRecordException e) {
+                new CantUpdateCustomerBrokerPurchaseException("An exception happened",e,"","");
+            }
+
+        }
+
+        public void closeNegotiation(CustomerBrokerPurchase negotiation) throws CantUpdateCustomerBrokerPurchaseException {
+            try {
+                DatabaseTable PurchaseNegotiationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
+                DatabaseTableRecord recordToUpdate   = PurchaseNegotiationTable.getEmptyRecord();
+
+                PurchaseNegotiationTable.setUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME, negotiation.getNegotiationId(), DatabaseFilterType.EQUAL);
+
+                recordToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_STATUS_COLUMN_NAME, NegotiationStatus.CLOSED.getCode());
+
+                PurchaseNegotiationTable.updateRecord(recordToUpdate);
+            } catch (CantUpdateRecordException e) {
+                new CantUpdateCustomerBrokerPurchaseException("An exception happened",e,"","");
             }
 
         }
@@ -107,17 +143,27 @@ public class CustomerBrokerPurchaseNegotiationDao {
             }
         }
 
-        private void loadRecordAsNew(DatabaseTableRecord databaseTableRecord,
-                                     UUID   negotiationId,
-                                     String publicKeyCustomer,
-                                     String publicKeyBroker,
-                                     String startDataTime) {
-
+        private void loadRecordAsNew(
+                DatabaseTableRecord databaseTableRecord,
+                UUID   negotiationId,
+                String publicKeyCustomer,
+                String publicKeyBroker,
+                long startDataTime
+        ) {
             databaseTableRecord.setUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME, negotiationId);
             databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKeyCustomer);
             databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKeyBroker);
-            databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME, startDataTime);
+            databaseTableRecord.setLongValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME, startDataTime);
             databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, NegotiationStatus.OPEN.getCode());
-
         }
+
+    private CustomerBrokerPurchase newCustomerBrokerPurchaseNegotiation(
+            UUID   negotiationId,
+            String publicKeyCustomer,
+            String publicKeyBroker,
+            long startDataTime,
+            String statusNegotiation
+    ){
+        return new CustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation);
+    }
 }
