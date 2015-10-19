@@ -17,7 +17,7 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_iden
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
-import com.bitdubai.sub_app.crypto_customer_identity.common.adapters.CustomerIdentityInfoAdapter;
+import com.bitdubai.sub_app.crypto_customer_identity.common.adapters.CryptoCustomerIdentityInfoAdapter;
 import com.bitdubai.sub_app.crypto_customer_identity.common.model.CryptoCustomerIdentityInformationImp;
 import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CommonLogger;
@@ -124,7 +124,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new CustomerIdentityInfoAdapter(getActivity(), identityInformationList);
+            adapter = new CryptoCustomerIdentityInfoAdapter(getActivity(), identityInformationList);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
