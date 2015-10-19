@@ -2,12 +2,9 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +20,8 @@ import android.widget.TextView;
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.util.MemoryUtils;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.Crypto;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.FermatListViewFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.HeaderTypes;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.ImagesUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

@@ -4,7 +4,7 @@
     android:layout_height="120dp"
     android:padding="2dp"
     >
-    <ImageView android:id="@+id/profile_Image"
+    <com.bitdubai.fermat_android_api.ui.Views.SquareImageView android:id="@+id/profile_Image"
         android:layout_width="match_parent"
         android:src="@drawable/kid_3"
         android:scaleType="centerCrop"
@@ -15,7 +15,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:paddingTop="3dip">
-        <TextView
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:background="@color/black_overlay"
             android:id="@+id/community_name"
             android:layout_width="match_parent"

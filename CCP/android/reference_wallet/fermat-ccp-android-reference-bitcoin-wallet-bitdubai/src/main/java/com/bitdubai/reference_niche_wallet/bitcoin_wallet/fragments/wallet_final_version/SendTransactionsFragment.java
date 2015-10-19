@@ -218,14 +218,6 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                         Fx.slide_down(getActivity(), linear_layout_send_form);
                         empty.setVisibility(View.GONE);
                     }
-//                    if (lstCryptoWalletTransactionsBook.isEmpty() && BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()).equals(BalanceType.BOOK)) {
-//                        empty.setVisibility(View.VISIBLE);
-//                    }else if (lstCryptoWalletTransactionsAvailable.isEmpty() && BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()).equals(BalanceType.AVAILABLE)){
-//                        empty.setVisibility(View.VISIBLE);
-//                    }else{
-//                        empty.setVisibility(View.GONE);
-//                    }
-
 
                 }
             });
@@ -381,10 +373,6 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                 empty.setVisibility(View.VISIBLE);
             }
 
-
-            //tv = (TextView) convertView.findViewById(R.id.new_contact_name);
-
-
             return rootView;
         }catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error",
@@ -446,24 +434,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
 
         updateTransactions();
-//        List<CryptoWalletTransaction> lstTransactions  = new ArrayList<CryptoWalletTransaction>();
-//
-//       try {
-//           lstTransactions = cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionTypes.DEBIT,referenceWalletSession.getWalletSessionType().getWalletPublicKey(),MAX_TRANSACTIONS,offset);
-//           offset+=lstTransactions.size();
-//       }
-//       catch (Exception e) {
-//           referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
-//                   UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//            e.printStackTrace();
-//            // data = RequestPaymentListItem.getTestData(getResources());
-//        }
-       /* CryptoWalletTransactionsTest cryptoWalletTransactionsTest = new CryptoWalletTransactionsTest();
-        lstTransactions.add(cryptoWalletTransactionsTest);
-         cryptoWalletTransactionsTest = new CryptoWalletTransactionsTest();
-        lstTransactions.add(cryptoWalletTransactionsTest);
-         cryptoWalletTransactionsTest = new CryptoWalletTransactionsTest();
-        lstTransactions.add(cryptoWalletTransactionsTest);*/
+
         return null;
     }
 
