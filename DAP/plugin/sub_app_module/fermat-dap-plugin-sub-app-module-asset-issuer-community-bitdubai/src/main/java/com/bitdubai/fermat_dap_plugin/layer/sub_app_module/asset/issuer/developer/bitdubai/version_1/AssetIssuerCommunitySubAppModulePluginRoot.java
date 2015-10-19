@@ -9,6 +9,14 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.DealsWithActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
+import com.bitdubai.fermat_dap_plugin.layer.sub_app_module.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerCommunitySupAppModuleManager;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +26,7 @@ import java.util.UUID;
 /**
  * Created by Nerio on 13/10/15.
  */
-public class AssetIssuerCommunitySubAppModulePluginRoot implements DealsWithLogger, LogManagerForDevelopers, Plugin, Service {
+public class AssetIssuerCommunitySubAppModulePluginRoot implements AssetIssuerCommunitySubAppModuleManager, DealsWithActorAssetIssuer, DealsWithLogger, LogManagerForDevelopers, Plugin, Service {
 
     UUID pluginId;
 
@@ -35,6 +43,10 @@ public class AssetIssuerCommunitySubAppModulePluginRoot implements DealsWithLogg
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
+    AssetIssuerCommunitySupAppModuleManager assetIssuerCommunitySubAppModuleManager;
+
+    ActorAssetIssuerManager actorAssetIssuerManager;
+
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
@@ -42,7 +54,14 @@ public class AssetIssuerCommunitySubAppModulePluginRoot implements DealsWithLogg
 
     @Override
     public void start() throws CantStartPluginException {
+        assetIssuerCommunitySubAppModuleManager = new AssetIssuerCommunitySupAppModuleManager(actorAssetIssuerManager);
+
         this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    @Override
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
+        this.actorAssetIssuerManager = actorAssetIssuerManager;
     }
 
     @Override
@@ -96,5 +115,19 @@ public class AssetIssuerCommunitySubAppModulePluginRoot implements DealsWithLogg
                 AssetIssuerCommunitySubAppModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
+    }
+
+    @Override
+    public List<ActorAssetIssuer> getAllActorAssetIssuerRegistered() throws CantGetAssetIssuerActorsException {
+        List<ActorAssetIssuer> actorAssetList = new ArrayList<>();
+
+//        Location location = new DeviceLocation(00.00, 00.00, 12345678910L, 00.00, LocationProvider.NETWORK);
+
+//        actorAssetList.add(new AssetIssuerActorRecord("Rodrigo Acosta",UUID.randomUUID().toString(),new byte[0],location));
+//        actorAssetList.add(new AssetIssuerActorRecord("Franklin Marcano",UUID.randomUUID().toString(),new byte[0],location));
+//        actorAssetList.add(new AssetIssuerActorRecord("Manuel Colmenares",UUID.randomUUID().toString(),new byte[0],location));
+//        actorAssetList.add(new AssetIssuerActorRecord("Nerio Indriago",UUID.randomUUID().toString(),new byte[0],location));
+
+        return actorAssetList;
     }
 }
