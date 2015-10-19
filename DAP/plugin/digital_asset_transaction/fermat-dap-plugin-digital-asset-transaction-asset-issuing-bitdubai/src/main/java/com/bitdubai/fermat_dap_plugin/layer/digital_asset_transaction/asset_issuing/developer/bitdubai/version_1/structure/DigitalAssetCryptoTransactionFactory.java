@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
@@ -630,6 +631,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                     Actors.INTRA_USER,
                     Actors.ASSET_ISSUER,
                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
+            this.assetIssuingTransactionDao.updateTransactionProtocolStatus(genesisTransaction, ProtocolStatus.TO_BE_NOTIFIED);
             return genesisTransaction;
         }  catch (CantExecuteQueryException exception) {
             throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "Cannot update the database: "+transactionId);
