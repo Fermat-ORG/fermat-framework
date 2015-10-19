@@ -52,13 +52,36 @@ public class RedeemPointActorDatabaseFactory implements DealsWithPluginDatabaseS
              * Create Asset Issuer database table.
              */
             table = databaseFactory.newTableFactory(ownerId, RedeemPointActorDatabaseConstants.REDEEM_POINT_TABLE_NAME);
-
+            //PUBLIC KEYS
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_NAME_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+
+            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_CONTACT_INFORMATION_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+
+            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_HOURS_OF_OPERATION_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            //COLUMNAS DE ADDRESS
+            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_COUNTRY_NAME_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_POSTAL_CODE_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_PROVINCE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_CITY_NAME_COLUMN_NAME  , DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_STREET_NAME_COLUMN_NAME  , DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_HOUSE_NUMBER_COLUMN_NAME  , DatabaseDataType.STRING, 256, Boolean.FALSE);
+
+            //COLUMAS DE CRYPTOADDRESS
+            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            //COLUMNAS DE LOCATION
+            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOCATION_LATITUDE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOCATION_LONGITUDE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+
+
 
             table.addIndex(RedeemPointActorDatabaseConstants.REDEEM_POINT_FIRST_KEY_COLUMN);
 

@@ -16,6 +16,18 @@ public class RedeemPointActorDatabaseConstants {
     public static final String REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME = "publicKey";
     public static final String REDEEM_POINT_NAME_COLUMN_NAME = "name";
     public static final String REDEEM_POINT_STATE_COLUMN_NAME = "redeem_point_state";
+    public static final String REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME = "crypto_address";
+    public static final String REDEEM_POINT_CRYPTO_CURRENCY_COLUMN_NAME = "crypto_currency";
+    public static final String REDEEM_POINT_LOCATION_LATITUDE_COLUMN_NAME = "location_latitude";
+    public static final String REDEEM_POINT_LOCATION_LONGITUDE_COLUMN_NAME = "location_longitude";
+    public static final String REDEEM_POINT_ADDRESS_COUNTRY_NAME_COLUMN_NAME = "address_country_name";
+    public static final String REDEEM_POINT_ADDRESS_PROVINCE_NAME_COLUMN_NAME = "address_province_name";
+    public static final String REDEEM_POINT_ADDRESS_CITY_NAME_COLUMN_NAME = "address_city_name";
+    public static final String REDEEM_POINT_ADDRESS_POSTAL_CODE_COLUMN_NAME = "address_postal_code";
+    public static final String REDEEM_POINT_ADDRESS_STREET_NAME_COLUMN_NAME = "address_street_name";
+    public static final String REDEEM_POINT_ADDRESS_HOUSE_NUMBER_COLUMN_NAME = "address_house_number";
+    public static final String REDEEM_POINT_HOURS_OF_OPERATION_COLUMN_NAME = "hours_of_operation";
+    public static final String REDEEM_POINT_CONTACT_INFORMATION_COLUMN_NAME = "contact_information";
     public static final String REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME = "registration_date";
     public static final String REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME = "modified_date";
 
