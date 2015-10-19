@@ -132,10 +132,7 @@ public class CreateContactFragmentDialog extends Dialog implements
             txt_address = (EditText) findViewById(R.id.txt_address);
             contact_name.setText(walletContact.name);
 
-            save_contact_btn.setTypeface(tf);
-            cancel_btn.setTypeface(tf);
-            contact_name.setTypeface(tf);
-            txt_address.setTypeface(tf);
+          
 
             cancel_btn.setOnClickListener(this);
             save_contact_btn.setOnClickListener(this);

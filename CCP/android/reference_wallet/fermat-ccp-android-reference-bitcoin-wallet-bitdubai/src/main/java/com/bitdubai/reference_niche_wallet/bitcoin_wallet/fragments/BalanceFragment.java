@@ -123,7 +123,7 @@ public class BalanceFragment extends FermatWalletFragment {
          */
         try {
 
-            tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto.ttf");
+            tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
             balanceAvailable = 0;
             bookBalance = 0;
             cryptoWalletManager = referenceWalletSession.getCryptoWalletManager();

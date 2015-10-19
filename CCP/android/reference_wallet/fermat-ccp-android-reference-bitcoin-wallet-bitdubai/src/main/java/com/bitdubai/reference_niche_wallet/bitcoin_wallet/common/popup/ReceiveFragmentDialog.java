@@ -121,15 +121,10 @@ public class ReceiveFragmentDialog extends Dialog implements
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.popup);
 
-
         share_btn = (Button) findViewById(R.id.share_btn);
         back_btn = (Button) findViewById(R.id.back_btn);
         txtAddress = (TextView) findViewById(R.id.txtAddress);
         imageView_qr_code = (ImageView) findViewById(R.id.imageView_qr_code);
-
-        share_btn.setTypeface(tf);
-        back_btn.setTypeface(tf);
-        txtAddress.setTypeface(tf);
 
         back_btn.setOnClickListener(this);
         share_btn.setOnClickListener(this);
