@@ -249,7 +249,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
         super();
         this.listenersAdded = new ArrayList<>();
         this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
-        this.networkServiceType    = NetworkServiceType.ASSET_USER_ACTOR_NETWORK_SERVICE;
+        this.networkServiceType    = NetworkServiceType.ASSET_USER_ACTOR;
         this.name                  = "Actor Network Service Asset User";
         this.alias                 = "ActorNetworkServiceAssetUser";
         this.extraData             = null;
@@ -832,7 +832,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
          * If the component registered have my profile and my identity public key
          */
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.ASSET_USER_ACTOR_NETWORK_SERVICE &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.ASSET_USER_ACTOR &&
                 platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
             /*
@@ -1007,7 +1007,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
                 eventManager.raiseEvent(event);
 
 
-            }else if(remoteNetworkServiceToConnect.getNetworkServiceType()== NetworkServiceType.ASSET_USER_ACTOR_NETWORK_SERVICE &&  remoteNetworkServiceToConnect.getPlatformComponentType()== PlatformComponentType.NETWORK_SERVICE ){
+            }else if(remoteNetworkServiceToConnect.getNetworkServiceType()== NetworkServiceType.ASSET_USER_ACTOR &&  remoteNetworkServiceToConnect.getPlatformComponentType()== PlatformComponentType.NETWORK_SERVICE ){
 
                 /*
                  * save into the cache

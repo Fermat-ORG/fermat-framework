@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
@@ -9,15 +10,13 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -25,18 +24,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CoultNotCreateCryptoTransaction;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -63,15 +55,6 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.developerUtils.DeveloperDatabaseFactory;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent;
 
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.AddressFormatException;
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionInput;
-import org.bitcoinj.core.TransactionOutput;
-import org.bitcoinj.core.Wallet;
-import org.bitcoinj.params.RegTestParams;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -84,6 +67,8 @@ import java.util.regex.Pattern;
  */
 public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DatabaseManagerForDevelopers, DealsWithBitcoinCryptoNetwork, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUser, DealsWithLogger, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
 
+
+    public static final EventSource EVENT_SOURCE = EventSource.CRYPTO_VAULT;
 
     /**
      * BitcoinCryptoVaultPluginRoot member variables
@@ -406,8 +391,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
             /**
              * now I will start the TransactionNotificationAgent to monitor
              */
-            transactionNotificationAgent = new TransactionNotificationAgent(eventManager, pluginDatabaseSystem, errorManager, pluginId, userPublicKey);
-            transactionNotificationAgent.setLogManager(this.logManager);
+            transactionNotificationAgent = new TransactionNotificationAgent(eventManager, errorManager, logManager, pluginDatabaseSystem, pluginId, userPublicKey);
             try {
                 transactionNotificationAgent.start();
             } catch (CantStartAgentException cantStartAgentException ) {
@@ -515,12 +499,12 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     // changed wallet id from UUID to Strubg representing a public key
     // Ezequiel Postan August 15th 2015
     @Override
-    public String sendBitcoins(String walletPublicKey, UUID FermatTrId, CryptoAddress addressTo, long satoshis) throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
+    public String sendBitcoins(String walletPublicKey, UUID FermatTrId, CryptoAddress addressTo, long satoshis) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
         return vault.sendBitcoins(FermatTrId, addressTo, satoshis);
     }
 
     @Override
-    public String sendBitcoins(String walletPublicKey, UUID FermatTrId, CryptoAddress addressTo, long satoshis, String op_Return) throws InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
+    public String sendBitcoins(String walletPublicKey, UUID FermatTrId, CryptoAddress addressTo, long satoshis, String op_Return) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
         return vault.sendBitcoins(FermatTrId, addressTo, satoshis);
     }
 
@@ -553,13 +537,13 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
 
     @Override
-    public CryptoStatus getCryptoStatus(UUID transactionId) throws CouldNotGetCryptoStatusException {
+    public CryptoStatus getCryptoStatus(String txHash) throws CouldNotGetCryptoStatusException {
         try {
-            return vault.getCryptoStatus(transactionId);
+            return vault.getCryptoStatus(txHash);
         } catch (CantExecuteQueryException e) {
-            throw new CouldNotGetCryptoStatusException("There was an error accesing the database to get the CryptoStatus.", e, "TransactionId: " + transactionId.toString(), "An error in the database plugin.");
+            throw new CouldNotGetCryptoStatusException("There was an error accesing the database to get the CryptoStatus.", e, "TransactionId: " + txHash, "An error in the database plugin.");
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
-            throw new CouldNotGetCryptoStatusException("There was an error getting the CryptoStatus of the transaction.", e, "TransactionId: " + transactionId.toString(), "Duplicated transaction Id in the database.");
+            throw new CouldNotGetCryptoStatusException("There was an error getting the CryptoStatus of the transaction.", e, "TransactionId: " + txHash, "Duplicated transaction Id in the database.");
         }
     }
 }
