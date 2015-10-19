@@ -106,34 +106,6 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
 //                mDialog.setMessage("Please wait...");
 //                mDialog.setCancelable(false);
 //////                    mDialog.show();
-//                AlphaAnimation fadeOut = new AlphaAnimation( 1.0f , 0.0f ) ;
-//                AlphaAnimation fadeIn = new AlphaAnimation(0.0f , 1.0f ) ;
-//                imageView_fermat.startAnimation(fadeIn);
-//                imageView_fermat.startAnimation(fadeOut);
-//                imageView_fermat.getAnimation().setRepeatCount(Animation.INFINITE);
-//                fadeIn.setDuration(1200);
-//                fadeOut.setDuration(1200);
-//                imageView_fermat.getAnimation().setDuration(1500);
-
-//                Animation fadeIn = new AlphaAnimation(0, 1);
-//                fadeIn.setInterpolator(new DecelerateInterpolator()); // add this
-//                fadeIn.setDuration(1000);
-//
-//                Animation fadeOut = new AlphaAnimation(1, 0);
-//                fadeOut.setInterpolator(new AccelerateInterpolator()); // and this
-//                //fadeOut.setStartOffset(fadeInDuration + timeBetween);
-//                fadeOut.setDuration(1000);
-//
-//                AnimationSet animation = new AnimationSet(false); // change to false
-//                animation.addAnimation(fadeIn);
-//                animation.addAnimation(fadeOut);
-//                animation.setRepeatCount(Animation.INFINITE);
-//                imageView_fermat.setAnimation(animation);
-//                imageView_fermat.animate();
-//                imageView_fermat.getAnimation().start();
-//                imageView_fermat.getAnimation().setDuration(Animation.INFINITE);
-                //fadeOut.setStartOffset(1200+fadeIn.getStartOffset()+1200);
-//                measurement_index = AppSettings.getMeasureUnit(this);
 
 
                 animation1 = new AlphaAnimation(0.0f, 1.0f);
@@ -241,7 +213,7 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
      */
     @Override
     public void onErrorOccurred(Exception ex) {
-        mDialog.dismiss();
+        //mDialog.dismiss();
         ex.printStackTrace();
         Toast.makeText(getApplicationContext(), "Application crash, re open the app please",
                 Toast.LENGTH_LONG).show();
@@ -270,12 +242,11 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
 
 
                 //set Os Addons in platform
-                fileSystemOs = new AndroidOsFileSystem();
-                fileSystemOs.setContext(context);
+                fileSystemOs = new AndroidOsFileSystem(context.getFilesDir().getPath());
+
                 platform.setFileSystemOs(fileSystemOs);
 
-                databaseSystemOs = new AndroidOsDataBaseSystem();
-                databaseSystemOs.setContext(context);
+                databaseSystemOs = new AndroidOsDataBaseSystem(context.getFilesDir().getPath());
                 platform.setDataBaseSystemOs(databaseSystemOs);
 
            locationSystemOs = new AndroidOsLocationSystem();

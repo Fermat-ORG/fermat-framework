@@ -184,7 +184,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     @Override
     public AssetIssuerWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException {
         try {
-            return new AssetIssuerWallletBalanceImpl(database);
+            return new AssetIssuerWallletBalanceImpl(database, pluginId, pluginFileSystem);
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
@@ -276,7 +276,6 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         return null;
     }
 
-    //TODO: Implementar este metodo en la interfaz AssetIssuerWallet
     public void distributionAssets(String assetPublicKey, String walletPublicKey, ActorAssetUser actorAssetUser)  throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException {
         try{
             //Buscar el Asset Balance con la data para traerse las propiedades del Digital Asset que me entrego el Issuing en su momento.
@@ -309,9 +308,19 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
                 }
 
                 @Override
-                public Location getLocation() {
+                public Double getLocationLatitude() {
                     return null;
                 }
+
+                @Override
+                public Double getLocationLongitude() {
+                    return null;
+                }
+
+//                @Override
+//                public Location getLocation() {
+//                    return null;
+//                }
 
                 @Override
                 public Genders getGender() {

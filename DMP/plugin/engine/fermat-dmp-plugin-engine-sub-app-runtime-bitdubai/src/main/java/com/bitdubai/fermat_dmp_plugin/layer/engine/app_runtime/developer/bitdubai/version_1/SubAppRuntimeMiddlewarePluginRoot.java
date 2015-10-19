@@ -827,11 +827,11 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getKey());
 
             /**
-             * Start Intra user sub app
+             * Start Intra user community sub app
              */
             RuntimeSubApp subAppIntraUser = new RuntimeSubApp();
-            subAppIntraUser.setType(SubApps.CWP_INTRA_USER);
-            listSubApp.put(SubApps.CWP_INTRA_USER, subAppIntraUser);
+            subAppIntraUser.setType(SubApps.CCP_INTRA_USER_COMMUNITY);
+            listSubApp.put(SubApps.CCP_INTRA_USER_COMMUNITY, subAppIntraUser);
 
 
             //Activity 1
@@ -920,6 +920,32 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeFragment.setType(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT.getKey(), runtimeFragment);
 
+            // Activity: List of irequest
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST);
+            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST.getCode());
+            runtimeActivity.setColor("#03A9F4");
+            runtimeSubApp.addActivity(runtimeActivity);
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Crypto Customer Identity");
+            runtimeTitleBar.setColor("#FFFFFF");
+            runtimeTitleBar.setLabelSize(16);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#0288D1");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT.getKey());
+            runtimeSubApp.addActivity(runtimeActivity);
+
+            /**
+             * End of community intra user CCP
+             */
 
             // DAP
             RuntimeSubApp dapFactory = new RuntimeSubApp();
@@ -970,10 +996,11 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
-            runtimeActivity.setColor("#FF0B46F0");
+            runtimeActivity.setColor("#0072bc");
 
             statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-            statusBar.setColor("#FF0B46F0");
+            statusBar.setColor("#0072bc");
+
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Asset User Community");
             runtimeActivity.setTitleBar(runtimeTitleBar);
@@ -986,7 +1013,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             listSubApp.put(SubApps.DAP_ASSETS_COMMUNITY_USER, dapUserCommunity);
 
             /**
-             * End of intra user sub app
+             * End of DAP
              */
 
             /**
@@ -1023,7 +1050,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY);
             runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode());
             runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
-            runtimeActivity.setColor("#03A9F4");
+            runtimeActivity.setColor("#1189a5");
             runtimeSubApp.addActivity(runtimeActivity);
 
             runtimeTitleBar = new TitleBar();
@@ -1040,6 +1067,29 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+            // Activity: Edit Identity
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY);
+            runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY.getCode());
+            runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
+            runtimeActivity.setColor("#1189a5");
+            runtimeSubApp.addActivity(runtimeActivity);
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Edit Identity");
+            runtimeTitleBar.setColor("#FFFFFF");
+            runtimeTitleBar.setLabelSize(16);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#0288D1");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
 
             listSubApp.put(SubApps.CBP_CRYPTO_BROKER_IDENTITY, runtimeSubApp);
 
@@ -1098,18 +1148,18 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             listSubApp.put(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY, runtimeSubApp);
 
             /**
-             * CCP CRYPTO CUSTOMER IDENTITY
+             * CCP INTRA USER IDENTITY
              */
             runtimeSubApp = new RuntimeSubApp();
-            runtimeSubApp.setType(SubApps.CCP_CRYPTO_CUSTOMER_IDENTITY);
+            runtimeSubApp.setType(SubApps.CWP_INTRA_USER_IDENTITY);
 
             // Activity: List of identities
             runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
-            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode());
+            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode());
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.setStartActivity(Activities.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
+            runtimeSubApp.setStartActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Crypto Customer Identity");
@@ -1128,9 +1178,9 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             // Activity: Create New Identity
             runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY);
-            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY.getCode());
-            runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
+            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
+            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
+            runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
 
@@ -1149,7 +1199,8 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity.addFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
-            listSubApp.put(SubApps.CCP_CRYPTO_CUSTOMER_IDENTITY, runtimeSubApp);
+            listSubApp.put(SubApps.CWP_INTRA_USER_IDENTITY, runtimeSubApp);
+
 
         } catch (Exception e) {
             String message = CantFactoryResetException.DEFAULT_MESSAGE;

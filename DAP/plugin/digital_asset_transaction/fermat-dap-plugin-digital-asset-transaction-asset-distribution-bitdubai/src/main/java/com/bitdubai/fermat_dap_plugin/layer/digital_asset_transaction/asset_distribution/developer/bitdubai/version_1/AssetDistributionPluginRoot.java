@@ -23,6 +23,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.DealsWithAssetVault;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -55,7 +57,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/09/15.
  */
-public class AssetDistributionPluginRoot implements AssetDistributionManager, DealsWithAssetIssuerWallet, DealsWithAssetTransmissionNetworkServiceManager, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
+public class AssetDistributionPluginRoot implements AssetDistributionManager, DealsWithAssetIssuerWallet, DealsWithAssetTransmissionNetworkServiceManager, DealsWithBitcoinCryptoNetwork, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     AssetDistributionTransactionManager assetDistributionTransactionManager;
@@ -68,6 +70,7 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
     UUID pluginId;
     ServiceStatus serviceStatus= ServiceStatus.CREATED;
     PluginFileSystem pluginFileSystem;
+    BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
     //TODO: Delete this log object
     Logger LOG = Logger.getGlobal();
 
@@ -124,6 +127,7 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
             this.assetDistributionTransactionManager.setDigitalAssetDistributionVault(digitalAssetDistributionVault);
             this.assetDistributionTransactionManager.setAssetDistributionDatabaseDao(assetDistributionDao);
             this.assetDistributionTransactionManager.setAssetTransmissionNetworkServiceManager(this.assetTransmissionNetworkServiceManager);
+            this.assetDistributionTransactionManager.setBitcoinManager(this.bitcoinCryptoNetworkManager);
         }catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Distribution plugin", "Cannot set an object, probably is null");
         } catch (CantExecuteDatabaseOperationException exception) {
@@ -249,5 +253,10 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
     @Override
     public void setAssetTransmissionNetworkServiceManager(AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager) {
         this.assetTransmissionNetworkServiceManager=assetTransmissionNetworkServiceManager;
+    }
+
+    @Override
+    public void setBitcoinCryptoNetworkManager(BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager) {
+        this.bitcoinCryptoNetworkManager=bitcoinCryptoNetworkManager;
     }
 }

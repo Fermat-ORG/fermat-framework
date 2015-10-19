@@ -10,14 +10,14 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Discov
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
 
 import java.util.List;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent</code> is
- * the  representation of the event for the <code>com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION</code>.
+ * the  representation of the event for the <code>com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION</code>.
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 20/09/15.
  *
@@ -45,10 +45,10 @@ public class CompleteRequestListComponentRegisteredNotificationEvent extends Abs
     /**
      * Constructor with parameter
      *
-     * @param eventType
+     * @param p2pEventType
      */
-    public CompleteRequestListComponentRegisteredNotificationEvent(EventType eventType) {
-        super(eventType);
+    public CompleteRequestListComponentRegisteredNotificationEvent(P2pEventType p2pEventType) {
+        super(p2pEventType);
     }
 
     /**

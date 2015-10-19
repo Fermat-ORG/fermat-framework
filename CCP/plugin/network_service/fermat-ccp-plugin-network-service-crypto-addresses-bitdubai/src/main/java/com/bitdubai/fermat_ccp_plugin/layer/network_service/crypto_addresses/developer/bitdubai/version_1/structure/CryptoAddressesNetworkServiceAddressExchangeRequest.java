@@ -2,8 +2,11 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.de
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.AddressExchangeRequestState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.ProtocolState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestType;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestAction;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
 
 import java.util.UUID;
@@ -23,84 +26,106 @@ public class CryptoAddressesNetworkServiceAddressExchangeRequest implements Addr
     private final UUID                        requestId                  ;
     private final String                      walletPublicKey            ;
     private final Actors                      identityTypeRequesting     ;
-    private final Actors                      identityTypeAccepting      ;
+    private final Actors                      identityTypeResponding     ;
     private final String                      identityPublicKeyRequesting;
-    private final String                      identityPublicKeyAccepting ;
-    private final CryptoAddress               cryptoAddressFromRequest   ;
-    private final CryptoAddress               cryptoAddressFromResponse  ;
+    private final String identityPublicKeyResponding;
+    private final CryptoCurrency              cryptoCurrency             ;
+    private final CryptoAddress               cryptoAddress              ;
+    private final ProtocolState               state                      ;
+    private final RequestType                 type                       ;
+    private final RequestAction               action                     ;
     private final BlockchainNetworkType       blockchainNetworkType      ;
-    private final AddressExchangeRequestState state                      ;
 
-    public CryptoAddressesNetworkServiceAddressExchangeRequest(UUID                        requestId                  ,
-                                                               String                      walletPublicKey            ,
-                                                               Actors                      identityTypeRequesting     ,
-                                                               Actors                      identityTypeAccepting      ,
-                                                               String                      identityPublicKeyRequesting,
-                                                               String                      identityPublicKeyAccepting ,
-                                                               CryptoAddress               cryptoAddressFromRequest   ,
-                                                               CryptoAddress               cryptoAddressFromResponse  ,
-                                                               BlockchainNetworkType       blockchainNetworkType      ,
-                                                               AddressExchangeRequestState state                      ) {
+    public CryptoAddressesNetworkServiceAddressExchangeRequest(final UUID                        requestId                  ,
+                                                               final String                      walletPublicKey            ,
+                                                               final Actors                      identityTypeRequesting     ,
+                                                               final Actors                      identityTypeResponding     ,
+                                                               final String                      identityPublicKeyRequesting,
+                                                               final String                      identityPublicKeyResponding,
+                                                               final CryptoCurrency              cryptoCurrency             ,
+                                                               final CryptoAddress               cryptoAddress              ,
+                                                               final ProtocolState               state                      ,
+                                                               final RequestType                 type                       ,
+                                                               final RequestAction               action                     ,
+                                                               final BlockchainNetworkType       blockchainNetworkType      ) {
 
         this.requestId                   = requestId                  ;
         this.walletPublicKey             = walletPublicKey            ;
         this.identityTypeRequesting      = identityTypeRequesting     ;
-        this.identityTypeAccepting       = identityTypeAccepting      ;
+        this.identityTypeResponding      = identityTypeResponding     ;
         this.identityPublicKeyRequesting = identityPublicKeyRequesting;
-        this.identityPublicKeyAccepting  = identityPublicKeyAccepting ;
-        this.cryptoAddressFromRequest    = cryptoAddressFromRequest   ;
-        this.cryptoAddressFromResponse   = cryptoAddressFromResponse  ;
-        this.blockchainNetworkType       = blockchainNetworkType      ;
+        this.identityPublicKeyResponding = identityPublicKeyResponding;
+        this.cryptoCurrency              = cryptoCurrency             ;
+        this.cryptoAddress               = cryptoAddress              ;
         this.state                       = state                      ;
+        this.type                        = type                       ;
+        this.action                      = action                     ;
+        this.blockchainNetworkType       = blockchainNetworkType      ;
     }
 
-    @Override
     public UUID getRequestId() {
         return requestId;
     }
 
-    @Override
     public String getWalletPublicKey() {
         return walletPublicKey;
     }
 
-    @Override
     public Actors getIdentityTypeRequesting() {
         return identityTypeRequesting;
     }
 
-    @Override
-    public Actors getIdentityTypeAccepting() {
-        return identityTypeAccepting;
+    public Actors getIdentityTypeResponding() {
+        return identityTypeResponding;
     }
 
-    @Override
     public String getIdentityPublicKeyRequesting() {
         return identityPublicKeyRequesting;
     }
 
-    @Override
-    public String getIdentityPublicKeyAccepting() {
-        return identityPublicKeyAccepting;
+    public String getIdentityPublicKeyResponding() {
+        return identityPublicKeyResponding;
     }
 
-    @Override
-    public CryptoAddress getCryptoAddressFromRequest() {
-        return cryptoAddressFromRequest;
+    public CryptoCurrency getCryptoCurrency() {
+        return cryptoCurrency;
     }
 
-    @Override
-    public CryptoAddress getCryptoAddressFromResponse() {
-        return cryptoAddressFromResponse;
+    public CryptoAddress getCryptoAddress() {
+        return cryptoAddress;
     }
 
-    @Override
+    public ProtocolState getState() {
+        return state;
+    }
+
+    public RequestType getType() {
+        return type;
+    }
+
+    public RequestAction getAction() {
+        return action;
+    }
+
     public BlockchainNetworkType getBlockchainNetworkType() {
         return blockchainNetworkType;
     }
 
     @Override
-    public AddressExchangeRequestState getState() {
-        return state;
+    public String toString() {
+        return "CryptoAddressesNetworkServiceAddressExchangeRequest{" +
+                "requestId=" + requestId +
+                ", walletPublicKey='" + walletPublicKey + '\'' +
+                ", identityTypeRequesting=" + identityTypeRequesting +
+                ", identityTypeResponding=" + identityTypeResponding +
+                ", identityPublicKeyRequesting='" + identityPublicKeyRequesting + '\'' +
+                ", identityPublicKeyResponding='" + identityPublicKeyResponding + '\'' +
+                ", cryptoCurrency=" + cryptoCurrency +
+                ", cryptoAddress=" + cryptoAddress +
+                ", state=" + state +
+                ", type=" + type +
+                ", action=" + action +
+                ", blockchainNetworkType=" + blockchainNetworkType +
+                '}';
     }
 }

@@ -22,7 +22,6 @@ dependencies {
     compile project(':fermat-api')
     compile project(':fermat-dap-api')
     compile project(':fermat-android-api')
-
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     /* support dependencies */
@@ -37,5 +36,6 @@ dependencies {
     //noinspection GradleDependency
     compile 'com.android.support:recyclerview-v7:21.0.3'
     compile 'com.github.shell-software:fab:1.0.5'
+    compile 'com.squareup.picasso:picasso:2.3.2'
 }
 

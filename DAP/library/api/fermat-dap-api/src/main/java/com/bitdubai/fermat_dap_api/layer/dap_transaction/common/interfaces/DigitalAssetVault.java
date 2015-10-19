@@ -90,11 +90,15 @@ public abstract class DigitalAssetVault {
      */
     public void persistDigitalAssetMetadataInLocalStorage(DigitalAssetMetadata digitalAssetMetadata)throws CantCreateDigitalAssetFileException {
         DigitalAsset digitalAsset=digitalAssetMetadata.getDigitalAsset();
+        String genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
+        System.out.println("Persisting path: "+this.LOCAL_STORAGE_PATH+"digital-asset-metadata/"+genesisTransaction+".xml");
         try{
             String digitalAssetInnerXML=digitalAsset.toString();
-            persistXMLStringInLocalStorage(digitalAssetInnerXML, digitalAssetFileName);
+            setDigitalAssetLocalFilePath(this.LOCAL_STORAGE_PATH+"digital-asset/");
+            persistXMLStringInLocalStorage(digitalAssetInnerXML, genesisTransaction+".xml");
             String digitalAssetMetadataInnerXML=digitalAssetMetadata.toString();
-            persistXMLStringInLocalStorage(digitalAssetMetadataInnerXML, digitalAssetMetadataFileName);
+            setDigitalAssetLocalFilePath(this.LOCAL_STORAGE_PATH+"digital-asset-metadata/");
+            persistXMLStringInLocalStorage(digitalAssetMetadataInnerXML, genesisTransaction+".xml");
         } catch (CantPersistFileException | CantCreateFileException exception) {
             throw new CantCreateDigitalAssetFileException(exception, "Persisting the digital asset objects in local storage", "Cannot create or persist the file");
         }
@@ -118,7 +122,7 @@ public abstract class DigitalAssetVault {
         try {
             DigitalAssetMetadata digitalAssetMetadataObtainedFromFileStorage = new DigitalAssetMetadata();
             digitalAssetMetadataFileName = genesisTransaction + ".xml";
-            PluginTextFile digitalAssetMetadataFile = this.pluginFileSystem.getTextFile(this.pluginId, this.LOCAL_STORAGE_PATH, digitalAssetMetadataFileName, FILE_PRIVACY, FILE_LIFE_SPAN);
+            PluginTextFile digitalAssetMetadataFile = this.pluginFileSystem.getTextFile(this.pluginId, this.LOCAL_STORAGE_PATH+"digital-asset-metadata/", digitalAssetMetadataFileName, FILE_PRIVACY, FILE_LIFE_SPAN);
             String digitalAssetMetadataXMLString = digitalAssetMetadataFile.getContent();
             digitalAssetMetadataObtainedFromFileStorage = (DigitalAssetMetadata) XMLParser.parseXML(digitalAssetMetadataXMLString, digitalAssetMetadataObtainedFromFileStorage);
             return digitalAssetMetadataObtainedFromFileStorage;

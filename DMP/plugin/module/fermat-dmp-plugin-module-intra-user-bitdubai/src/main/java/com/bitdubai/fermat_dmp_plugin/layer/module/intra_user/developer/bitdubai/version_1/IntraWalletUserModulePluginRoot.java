@@ -7,9 +7,11 @@ import com.bitdubai.fermat_api.Service;
 
 import com.bitdubai.fermat_api.layer.all_definition.IntraUsers.IntraUserSettings;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserFactory;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantAcceptIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCancelIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraWalletUserException;
@@ -82,7 +84,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class IntraWalletUserModulePluginRoot implements  DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithCCPIntraWalletUser,DealsWithCCPIntraWalletUsers, DealsWithPluginFileSystem, LogManagerForDevelopers,  IntraUserModuleManager, Plugin, Service  {
+public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithCCPIntraWalletUser,DealsWithCCPIntraWalletUsers, DealsWithPluginFileSystem, LogManagerForDevelopers,  IntraUserModuleManager, Plugin, Service  {
 
     private static String INTRA_USER_LOGIN_FILE_NAME = "intraUsersLogin";
 
@@ -305,10 +307,12 @@ public class IntraWalletUserModulePluginRoot implements  DealsWithErrors,DealsWi
 
             List<IntraUserInformation>  intraUserInformationList = new ArrayList<IntraUserInformation>();
 
-            List<IntraUser> intraUserList =  this.intraUserNertwokServiceManager.getIntraUsersSuggestions(max,offset);
+            List<IntraUserInformation> intraUserList =  this.intraUserNertwokServiceManager.getIntraUsersSuggestions(max,offset);
 
-            for (IntraUser intraUser : intraUserList) {
-                intraUserInformationList.add(new IntraUserModuleInformation(intraUser.getName(),intraUser.getPublicKey(),intraUser.getProfileImage()));
+            for (IntraUserInformation intraUser : intraUserList) {
+
+                //byte[] image = intraUser.getProfileImage();
+                intraUserInformationList.add(new IntraUserModuleInformation(intraUser.getName(),intraUser.getPublicKey(), intraUser.getProfileImage()));
             }
 
             return intraUserInformationList;
@@ -348,20 +352,20 @@ public class IntraWalletUserModulePluginRoot implements  DealsWithErrors,DealsWi
      */
 
     @Override
-    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantStartRequestException {
+    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage,String identityPublicKey) throws CantStartRequestException {
 
         try
         {
             /**
              *Call Actor Intra User to add request connection
              */
-            this.intraWalletUserManager.askIntraWalletUserForAcceptance(this.intraUserLoggedPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage);
+            this.intraWalletUserManager.askIntraWalletUserForAcceptance(identityPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage);
 
             /**
              *Call Network Service Intra User to add request connection
              */
 
-            this.intraUserNertwokServiceManager.askIntraUserForAcceptance(this.intraUserLoggedPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage);
+            this.intraUserNertwokServiceManager.askIntraUserForAcceptance(identityPublicKey, Actors.INTRA_USER, intraUserToAddName, intraUserToAddPublicKey, Actors.INTRA_USER,profileImage);
         }
         catch(CantCreateIntraWalletUserException e)
         {
@@ -638,12 +642,11 @@ public class IntraWalletUserModulePluginRoot implements  DealsWithErrors,DealsWi
             List<com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser> intraWalletUserList = this.intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
 
             for (com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser intraWalletUser : intraWalletUserList) {
-
-                if(intraWalletUser.getPublicKey().equals(intraUserLoggedPublicKey))
-                {
+                //TODO: Naty lo saqué esto porque el intraUserLoggedPublicKey está siempre en null, hay que darle valor.
+                //if(intraWalletUser.getPublicKey().equals(intraUserLoggedPublicKey)) {
                     intraUserLoginIdentity =  new IntraUserModuleLoginIdentity(intraWalletUser.getAlias(), intraWalletUser.getPublicKey(), intraWalletUser.getProfileImage());
                     break;
-                }
+                //}
              }
 
             return intraUserLoginIdentity;

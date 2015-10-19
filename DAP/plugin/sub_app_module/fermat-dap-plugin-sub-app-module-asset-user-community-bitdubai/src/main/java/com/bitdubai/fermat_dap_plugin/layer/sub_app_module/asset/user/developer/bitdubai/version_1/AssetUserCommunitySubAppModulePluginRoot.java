@@ -6,11 +6,18 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.DealsWithActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import com.bitdubai.fermat_dap_plugin.layer.sub_app_module.asset.user.developer.bitdubai.version_1.structure.AssetUserCommunitySupAppModuleManager;
 
@@ -23,7 +30,7 @@ import java.util.UUID;
 /**
  * Created by Nerio on 13/10/15.
  */
-public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommunitySubAppModuleManager, DealsWithLogger, LogManagerForDevelopers, Plugin, Service {
+public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommunitySubAppModuleManager, DealsWithActorAssetUser, DealsWithLogger, LogManagerForDevelopers, Plugin, Service {
 
     UUID pluginId;
 
@@ -42,6 +49,8 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
 
     AssetUserCommunitySupAppModuleManager assetUserCommunitySupAppModuleManager;
 
+    ActorAssetUserManager actorAssetUserManager;
+
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
@@ -49,9 +58,14 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
 
     @Override
     public void start() throws CantStartPluginException {
-        assetUserCommunitySupAppModuleManager = new AssetUserCommunitySupAppModuleManager();
+        assetUserCommunitySupAppModuleManager = new AssetUserCommunitySupAppModuleManager(actorAssetUserManager);
 
         this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    @Override
+    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager)  throws CantSetObjectException {
+        this.actorAssetUserManager = actorAssetUserManager;
     }
 
     @Override
@@ -109,7 +123,23 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
     }
 
     @Override
-    public List<AssetUserActorRecord> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException {
-        return null;
+    public List<ActorAssetUser> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException {
+        List<ActorAssetUser> actorAssetList = new ArrayList<>();
+
+//        Location location = new DeviceLocation(00.00, 00.00, 12345678910L, 00.00, LocationProvider.NETWORK);
+
+//        actorAssetList.add(new AssetUserActorRecord("Rodrigo Acosta",UUID.randomUUID().toString(),new byte[0],location));
+//        actorAssetList.add(new AssetUserActorRecord("Franklin Marcano",UUID.randomUUID().toString(),new byte[0],location));
+//        actorAssetList.add(new AssetUserActorRecord("Manuel Colmenares",UUID.randomUUID().toString(),new byte[0],location));
+//        actorAssetList.add(new AssetUserActorRecord("Nerio Indriago",UUID.randomUUID().toString(),new byte[0],location));
+
+        try {
+            actorAssetList = actorAssetUserManager.getAllAssetUserActorRegistered();
+        } catch (CantAssetUserActorNotFoundException e) {
+            e.printStackTrace();
+        }
+        return actorAssetList;
     }
+
+
 }

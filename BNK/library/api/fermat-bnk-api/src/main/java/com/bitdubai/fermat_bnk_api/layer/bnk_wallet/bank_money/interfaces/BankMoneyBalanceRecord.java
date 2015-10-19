@@ -16,15 +16,15 @@ public interface BankMoneyBalanceRecord {
 
     UUID getBankTransactionId();
 
-    String getPublicKeyActorFrom();
-
-    String getPublicKeyActorTo();
-
     BankTransactionStatus getStatus();
 
     BalanceType getBalanceType();
 
     TransactionType getTransactionType();
+
+    String getPublicKeyActorFrom();
+
+    String getPublicKeyActorTo();
 
     float getAmount();
 

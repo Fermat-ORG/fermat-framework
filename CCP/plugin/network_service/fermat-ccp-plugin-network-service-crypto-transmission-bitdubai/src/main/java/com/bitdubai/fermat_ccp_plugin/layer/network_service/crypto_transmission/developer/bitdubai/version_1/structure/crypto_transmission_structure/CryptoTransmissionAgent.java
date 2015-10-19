@@ -195,13 +195,6 @@ public class CryptoTransmissionAgent {
             }
         });
 
-
-
-
-
-
-
-
     }
 
     /**
@@ -299,13 +292,6 @@ public class CryptoTransmissionAgent {
          * Read all pending CryptoTransmissionMetadata from database
          */
             List<CryptoTransmissionMetadata> lstCryptoTransmissionMetadata = cryptoTransmissionMetadataDAO.findAll(filters);
-
-
-            /*
-             * Por cada mensaje en la base de datos que se encuetra en estado de procesado
-             * y que no se encuentra conectado (me tengo que fijar en el cryptoTransmissionNetworkServiceConnectionManager que la conexion para enviar la metadata no esté activa)
-             * hago un discovery por cada metadata a enviar y cargo el remoteNetworkServicesRegisteredList con la lista de conexiones entrantes
-             */
 
 
                 for (CryptoTransmissionMetadata cryptoTransmissionMetadata : lstCryptoTransmissionMetadata) {

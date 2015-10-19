@@ -172,6 +172,10 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
+
+    /**
+     * Asset Issuer Incoming Crypto Events
+     */
     INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER("IAOCNWTAI") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEventListener(fermatEventMonitor);
@@ -181,7 +185,75 @@ public enum EventType implements FermatEventEnum {
             return new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEvent();
         }
     },
-    //End of fix
+    INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER("IAOBCWTAI") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetOnBlockchainWaitingTransferenceAssetIssuerEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetOnBlockchainWaitingTransferenceAssetIssuerEvent();
+        }
+    },
+    INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER("IAROCNWTAI") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetIssuerEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceAssetIssuerEvent();
+        }
+    },
+    INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER("IAROBCWTAI") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetReversedOnBlockchainWaitingTransferenceAssetIssuerEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetReversedOnBlockchainWaitingTransferenceAssetIssuerEvent();
+        }
+    },
+
+
+    /**
+     * Asset User Incoming Crypto Events
+     */
+    INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER("IAOCNWTAU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent();
+        }
+    },
+    INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER("IAOBCWTAU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetOnBlockchainWaitingTransferenceAssetUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetOnBlockchainWaitingTransferenceAssetUserEvent();
+        }
+    },
+    INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER("IAROCNWTAU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceAssetUserEvent();
+        }
+    },
+    INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER("IAROBCWTAU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEvent();
+        }
+    },
+
     INCOMING_CRYPTO_RECEIVED("ICR") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new IncomingCryptoReceivedEventListener(this, fermatEventMonitor);
@@ -654,43 +726,38 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
-    ASSET_USER_CONNECTION_ACCEPTED("AUCA") {
+    COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION("CL_RLAURN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new AssetUserActorConnectionAcceptedEventListener(this, fermatEventMonitor);
+            return new AssetUserActorRequestListRegisteredNetworksNotificationEventListener(this, fermatEventMonitor);
         }
-
         public FermatEvent getNewEvent() {
-            return new AssetUserActorConnectionAcceptedEvent(this);
+            return new AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent(this);
+        }
+    },
+    COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION("CL_CAURN") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new AssetUserActorCompleteRegistrationNotificationEventListener(this, fermatEventMonitor);
+        }
+        public FermatEvent getNewEvent() {
+            return new AssetUserActorCompleteRegistrationNotificationEvent(this);
         }
     },
 
-    ASSET_USER_DISCONNECTION_REQUEST_RECEIVED("AUDRR") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new AssetUserActorConnectionCancelledEventListener(this, fermatEventMonitor);
+    RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION("RNDAMN") {
+        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
+            return new ReceivedNewDigitalAssetMetadataNotificationEventListener(this, eventMonitor);
         }
-
         public FermatEvent getNewEvent() {
-            return new AssetUserActorConnectionCancelledEvent(this);
+            return new ReceivedNewDigitalAssetMetadataNotificationEvent(this);
         }
     },
 
-    ASSET_USER_REQUESTED_CONNECTION("AURC") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new AssetUserActorRequestConnectionEventListener(this, fermatEventMonitor);
+    RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION("RNTSN") {
+        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
+            return new ReceivedNewTransactionStatusNotificationEventListener(this, eventMonitor);
         }
-
         public FermatEvent getNewEvent() {
-            return new AssetUserActorRequestConnectionEvent(this);
-        }
-    },
-
-    ASSET_USER_CONNECTION_DENIED("AUCD") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new AssetUserActorDeniedConnectionEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new AssetUserActorConnectionDeniedEvent(this);
+            return new ReceivedNewTransactionStatusNotificationEvent(this);
         }
     },
 
@@ -698,6 +765,28 @@ public enum EventType implements FermatEventEnum {
         @Override
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return null;
+        }
+
+        @Override
+        public FermatEvent getNewEvent() {
+            return null;
+        }
+    },
+    ACTOR_NETWORK_SERVICE_ASK_FOR_ACCEPTANCE("ANSAFA"){
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return null;
+        }
+
+        @Override
+        public FermatEvent getNewEvent() {
+            return null;
+        }
+    },
+    ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS("ANSNN"){
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new ActorNetworkServicePendingsNotificationEventListener(this, fermatEventMonitor);
         }
 
         @Override

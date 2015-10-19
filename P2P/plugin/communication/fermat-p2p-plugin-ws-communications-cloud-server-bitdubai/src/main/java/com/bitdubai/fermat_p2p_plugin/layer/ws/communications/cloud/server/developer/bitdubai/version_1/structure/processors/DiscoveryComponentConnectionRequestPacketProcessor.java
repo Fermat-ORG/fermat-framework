@@ -67,13 +67,16 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - Starting processingPackage");
 
-        /*
-         * Get the packet content from the message content and decrypt
-         */
-        String packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
-        System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - packetContentJsonStringRepresentation = "+packetContentJsonStringRepresentation);
+        String packetContentJsonStringRepresentation = null;
 
         try {
+
+            /*
+             * Get the packet content from the message content and decrypt
+             */
+            packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
+            System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - packetContentJsonStringRepresentation = "+packetContentJsonStringRepresentation);
+
 
             /*
              * Construct the json object
@@ -142,9 +145,10 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
 
         }catch (Exception e){
 
+            System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - requested connection is no possible ");
             e.printStackTrace();
 
-             /*
+            /*
              * Get the client connection destination
              */
             WebSocket clientConnectionDestination = getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().get(receiveFermatPacket.getSender());
@@ -254,7 +258,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
 
             //Others
             default :
-                temporalList = getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().get(platformComponentType);
+                temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
                 break;
 
         }
@@ -312,7 +316,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
 
             //Others
             default :
-                temporalList = getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache().get(platformComponentType);
+                temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
                 break;
 
         }

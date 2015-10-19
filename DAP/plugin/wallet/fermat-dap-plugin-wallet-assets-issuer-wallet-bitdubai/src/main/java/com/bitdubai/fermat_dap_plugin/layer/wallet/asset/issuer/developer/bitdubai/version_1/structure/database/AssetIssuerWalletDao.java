@@ -48,7 +48,7 @@ import java.util.UUID;
  */
 public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
     //TODO: Manejo de excepciones
-    public static final String PATH_DIRECTORY = "assetissuer/assets";
+    public static final String PATH_DIRECTORY = "asset-issuer-swap/";//digital-asset-swap/"
     PluginFileSystem pluginFileSystem;
     UUID plugin;
     @Override
@@ -162,18 +162,19 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
             throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
         }
     }
-    //TODO: Este Metodo para Manuel listsTransactionsByAssetsAll() que liste pero sin el paginado para que el pueda saber cual asset ya esta registrado
+
     public List<AssetIssuerWalletTransaction> listsTransactionsByAssetsAll(BalanceType balanceType, TransactionType transactionType, String assetPublicKey) throws CantGetTransactionsException{
         try {
             DatabaseTable databaseTableAssuerIssuerWallet = getAssetIssuerWalletTable();
             databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
             databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+            databaseTableAssuerIssuerWallet.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
 
             databaseTableAssuerIssuerWallet.loadToMemory();
             return createTransactionList(databaseTableAssuerIssuerWallet.getRecords());
         }
         catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            throw new CantGetTransactionsException("Get List of Transactions", cantLoadTableToMemory, "Error load wallet table ", "");
+            throw new CantGetTransactionsException("Get List of All Transactions", cantLoadTableToMemory, "Error load wallet table ", "");
         }
         catch (Exception exception){
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
