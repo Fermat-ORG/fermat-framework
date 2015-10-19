@@ -10,7 +10,6 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.interfaces.CashMo
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.database.CashMoneyWalletDao;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddCashMoneyBalance;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddCashMoneyBalanceDatabase;
-import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetCashMoneyBalance;
 
 import java.util.Date;
 import java.util.UUID;
@@ -32,6 +31,7 @@ public class ImplementCashMoneyBalance implements CashMoneyBalance{
     UUID idTransaction;
 
     CashMoneyWalletDao cashMoneyWalletDao = new CashMoneyWalletDao(pluginDatabaseSystem);
+    implementCashMoneyBalanceRecord implementCashMoneyBalanceRecord = new implementCashMoneyBalanceRecord();
     @Override
     public double getBalance() throws CantCalculateBalanceException {
         return 0;
@@ -46,7 +46,7 @@ public class ImplementCashMoneyBalance implements CashMoneyBalance{
     @Override
     public void debit(CashMoneyBalanceRecord cashMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterDebitException {
         amountDebit = cashMoneyBalanceRecord.getAmount();
-        amountDebit = amountDebit - BalanceCalculate();
+        amountDebit = implementCashMoneyBalanceRecord.getAmount() - amountDebit;
         Date date = new Date();
         time = date.getTime();
         stringTime= String.valueOf(time);
@@ -66,7 +66,7 @@ public class ImplementCashMoneyBalance implements CashMoneyBalance{
     @Override
     public void credit(CashMoneyBalanceRecord cashMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterCreditException {
         amountCredit = cashMoneyBalanceRecord.getAmount();
-        amountCredit= amountCredit+BalanceCalculate();
+        amountCredit= implementCashMoneyBalanceRecord.getAmount() + amountCredit;
         Date date = new Date();
         time = date.getTime();
         stringTime= String.valueOf(time);
@@ -95,19 +95,5 @@ public class ImplementCashMoneyBalance implements CashMoneyBalance{
             throw new CantAddCashMoneyBalanceDatabase(CantAddCashMoneyBalanceDatabase.DEFAULT_MESSAGE,cantAddCashMoneyBalance,"Cant Add Cash Money Balance","Cant Register Debit Exception");
         }
     }
-    public double BalanceCalculate(){
-        try {
-            if (cashMoneyWalletDao.getCashMoneyBalance().size() !=0 ){
-                int lastIndex = cashMoneyWalletDao.getCashMoneyBalance().size()-1;
-                amountBalance = Double.parseDouble(cashMoneyWalletDao.getCashMoneyBalance().get(lastIndex).toString());
-            }
-            else  {
-                amountBalance=0;
-            }
-        } catch (CantGetCashMoneyBalance cantGetCashMoneyBalance) {
-            cantGetCashMoneyBalance.printStackTrace();
-        }
 
-        return amountBalance;
-    }
 }

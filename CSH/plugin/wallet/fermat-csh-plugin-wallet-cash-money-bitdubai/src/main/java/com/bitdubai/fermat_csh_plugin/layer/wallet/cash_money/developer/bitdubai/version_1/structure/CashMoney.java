@@ -1,96 +1,82 @@
 package com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_csh_api.all_definition.enums.CashCurrencyType;
-import com.bitdubai.fermat_csh_api.all_definition.enums.CashTransactionStatus;
-import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.interfaces.CashMoneyBalanceRecord;
-
-import java.util.UUID;
-
 /**
  * Created by francisco on 15/10/15.
  */
-public class CashMoney implements CashMoneyBalanceRecord {
+public class CashMoney {
 
-    private String cash_transaction_id;
-    private String public_key_customer;
-    private String public_key_broker;
-    private String balance_type;
-    private String transaction_type;
-    private String amount;
-    private String cash_currency_type;
-    private String cash_reference;
-    private String running_book_balance;
-    private String running_available_balance;
-    private String status;
+    private String getCashTransactionId;
+    private String getPublicKeyActorFrom;
+    private String getPublicKeyActorTo;
+    private String getStatus;
+    private String getBalanceType;
+    private String getTransactionType;
+    private String getAmount;
+    private String getCashCurrencyType;
+    private String getCashReference;
+    private String getTimestamp;
+    private String getMemo;
 
-    public CashMoney(String cash_transaction_id, String public_key_customer, String public_key_broker, String balance_type, String transaction_type, String amount, String cash_currency_type, String cash_reference, String running_book_balance, String running_available_balance, String status) {
-        this.cash_transaction_id = cash_transaction_id;
-        this.public_key_customer = public_key_customer;
-        this.public_key_broker = public_key_broker;
-        this.balance_type = balance_type;
-        this.transaction_type = transaction_type;
-        this.amount = amount;
-        this.cash_currency_type = cash_currency_type;
-        this.cash_reference = cash_reference;
-        this.running_book_balance = running_book_balance;
-        this.running_available_balance = running_available_balance;
-        this.status = status;
+    public CashMoney() {
+
     }
 
-    @Override
-    public UUID getCashTransactionId() {
-        return null;
+    public String getGetCashTransactionId() {
+        return getCashTransactionId;
     }
 
-    @Override
-    public String getPublicKeyActorFrom() {
-        return null;
+    public String getGetPublicKeyActorFrom() {
+        return getPublicKeyActorFrom;
     }
 
-    @Override
-    public String getPublicKeyActorTo() {
-        return null;
+    public String getGetPublicKeyActorTo() {
+        return getPublicKeyActorTo;
     }
 
-    @Override
-    public CashTransactionStatus getStatus() {
-        return null;
+    public String getGetStatus() {
+        return getStatus;
     }
 
-    @Override
-    public BalanceType getBalanceType() {
-        return null;
+    public String getGetBalanceType() {
+        return getBalanceType;
     }
 
-    @Override
-    public TransactionType getTransactionType() {
-        return null;
+    public String getGetTransactionType() {
+        return getTransactionType;
     }
 
-    @Override
-    public double getAmount() {
-        return 0;
+    public String getGetAmount() {
+        return getAmount;
     }
 
-    @Override
-    public CashCurrencyType getCashCurrencyType() {
-        return null;
+    public String getGetCashCurrencyType() {
+        return getCashCurrencyType;
     }
 
-    @Override
-    public String getCashReference() {
-        return null;
+    public String getGetCashReference() {
+        return getCashReference;
     }
 
-    @Override
-    public long getTimestamp() {
-        return 0;
+    public String getGetTimestamp() {
+        return getTimestamp;
     }
 
-    @Override
-    public String getMemo() {
-        return null;
+    public String getGetMemo() {
+        return getMemo;
     }
+
+    public CashMoney(String getCashTransactionId, String getPublicKeyActorFrom, String getPublicKeyActorTo, String getStatus, String getBalanceType, String getTransactionType, String getAmount, String getCashCurrencyType, String getCashReference, String getTimestamp, String getMemo) {
+        this.getCashTransactionId = getCashTransactionId;
+        this.getPublicKeyActorFrom = getPublicKeyActorFrom;
+        this.getPublicKeyActorTo = getPublicKeyActorTo;
+        this.getStatus = getStatus;
+        this.getBalanceType = getBalanceType;
+        this.getTransactionType = getTransactionType;
+        this.getAmount = getAmount;
+        this.getCashCurrencyType = getCashCurrencyType;
+        this.getCashReference = getCashReference;
+        this.getTimestamp = getTimestamp;
+        this.getMemo = getMemo;
+    }
+
 }
