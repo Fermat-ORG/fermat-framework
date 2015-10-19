@@ -26,6 +26,10 @@ public class CryptoBrokerIdentityInfoAdapter extends FermatAdapter<CryptoBrokerI
         super(context, dataSet);
     }
 
+    public CryptoBrokerIdentityInfoAdapter(Context context) {
+        super(context);
+    }
+
     @Override
     protected CryptoBrokerIdentityInfoViewHolder createHolder(View itemView, int type) {
         return new CryptoBrokerIdentityInfoViewHolder(itemView);
@@ -38,7 +42,7 @@ public class CryptoBrokerIdentityInfoAdapter extends FermatAdapter<CryptoBrokerI
 
     @Override
     protected void bindHolder(final CryptoBrokerIdentityInfoViewHolder holder, final CryptoBrokerIdentityInformation data, final int position) {
-        holder.setText(data.getName());
+        holder.setText(data.getAlias());
         holder.setImage(data.getProfileImage());
     }
 }

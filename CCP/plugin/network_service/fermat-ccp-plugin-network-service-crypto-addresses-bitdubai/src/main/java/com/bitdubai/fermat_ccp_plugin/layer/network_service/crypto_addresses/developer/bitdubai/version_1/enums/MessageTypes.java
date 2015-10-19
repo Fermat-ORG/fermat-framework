@@ -11,7 +11,9 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum MessageTypes implements FermatEnum {
 
-    INFORMATION("INF"),
+    ACCEPT   ("ACC"),
+    DENY     ("DEN"),
+    REQUEST  ("REQ"),
 
     ;
 
@@ -25,7 +27,9 @@ public enum MessageTypes implements FermatEnum {
 
         switch (code) {
 
-            case "INF": return INFORMATION;
+            case "ACC": return ACCEPT ;
+            case "DEN": return DENY   ;
+            case "REQ": return REQUEST;
 
             default:
                 throw new InvalidParameterException(

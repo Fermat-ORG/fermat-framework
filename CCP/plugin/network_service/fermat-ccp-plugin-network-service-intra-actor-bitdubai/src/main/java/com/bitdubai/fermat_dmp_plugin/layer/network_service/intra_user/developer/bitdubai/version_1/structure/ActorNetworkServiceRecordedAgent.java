@@ -103,6 +103,10 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
         try {
 
+            toSend.start();
+
+            toReceive.start();
+
             this.status = AgentStatus.STARTED;
 
         } catch (Exception exception) {
@@ -160,6 +164,11 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                                 cpr.getActorSenderType()
                         );
 
+                        System.out.print("-----------------------\n" +
+                                "ENVIANDO MENSAJE A OTRO INTRA USER!!!!! -----------------------\n" +
+                                "-----------------------\n DESDE: " + cpr.getActorSenderAlias());
+
+
                         toWaitingResponse(cpr.getId(),actorNetworkServicePluginRoot.getOutgoingNotificationDao());
                         break;
 
@@ -206,6 +215,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
     public void processReceive(){
 
+
        try {
 
             // process notifications
@@ -218,14 +228,8 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                 switch (cpr.getNotificationDescriptor()) {
 
                     case ASKFORACCEPTANCE:
-                        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.ACTOR_NETWORK_SERVICE_ASK_FOR_ACCEPTANCE);
+                        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS);
                         ActorNetworkServicePendingsNotificationEvent intraUserActorRequestConnectionEvent = (ActorNetworkServicePendingsNotificationEvent) fermatEvent;
-
-//                        intraUserActorRequestConnectionEvent.setIntraUserLoggedInPublicKey(intraUserLoggedInPublicKey);
-//                        intraUserActorRequestConnectionEvent.setIntraUserToAddPublicKey(intraUserToAddPublicKey);
-//                        intraUserActorRequestConnectionEvent.setIntraUserToAddName(intraUserLoggedInName);
-//                        intraUserActorRequestConnectionEvent.setIntraUserProfileImage(myProfileImage);
-
                         eventManager.raiseEvent(intraUserActorRequestConnectionEvent);
                         break;
                     case ACCEPTED:
@@ -397,6 +401,8 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     }
 
     public void handleNewMessages(FermatMessage fermatMessage){
-
+        System.out.println("---------------------------\n" +
+                "Llegaron mensajes!!!!\n" +
+                "-----------------------------------------");
     }
 }

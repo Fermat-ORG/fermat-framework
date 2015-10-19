@@ -36,12 +36,16 @@ public interface ActorAssetIssuer {
      */
     public byte[] getProfileImage();
 
+    public Double getLocationLatitude();
+
+    public Double getLocationLongitude();
+
     /**
      * The method <code>getContactState</code> gives us the contact state of the represented Asset
      * Issuer
      *
      * @return the contact state
      */
-    public ConnectionState getContactState();
+    public ConnectionState getConnectionState();
 
 }

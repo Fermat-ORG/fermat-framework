@@ -95,6 +95,7 @@ dependencies {
     compile project(':fermat-dap-plugin-wallet-assets-user-wallet-bitdubai')
     compile project(':fermat-dap-plugin-wallet-redeem-point-wallet-bitdubai')
     compile project(':fermat-dap-plugin-actor-network-service-asset-user-bitdubai')
+    compile project(':fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai')
     compile project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai')
     // CRY Projects
     compile project(':fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
@@ -141,6 +142,8 @@ dependencies {
     compile project(':fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai')
     compile project(':fermat-bch-plugin-crypto-network-bitcoin-bitdubai')
     compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
+    compile project(':fermat-dap-plugin-wallet-module-asset-user-bitdubai')
+    compile project(':fermat-dap-plugin-wallet-module-redeem-point-bitdubai')
 
 //    compile project(':fermat-dap-android-sub-app-asset-issuer-community-bitdubai')
 //    compile project(':fermat-dap-android-sub-app-asset-user-community-bitdubai')

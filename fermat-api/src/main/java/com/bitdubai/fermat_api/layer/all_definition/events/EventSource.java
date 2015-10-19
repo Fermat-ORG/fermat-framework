@@ -30,6 +30,7 @@ public enum EventSource implements FermatEnum {
     MIDDLEWARE_WALLET_PLUGIN                ("MW0"),
     MODULE_WALLET_MANAGER_PLUGIN            ("MWM"),
     NETWORK_SERVICE_ACTOR_ASSET_USER        ("NSAAU"),
+    NETWORK_SERVICE_ACTOR_ASSET_ISSUER      ("NSAIU"),
     NETWORK_SERVICE_ASSET_TRANSMISSION      ("NSAT"),
     NETWORK_SERVICE_CRYPTO_ADDRESSES        ("NSCAD"),
     NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST  ("NSCPR"),
@@ -76,6 +77,7 @@ public enum EventSource implements FermatEnum {
             case "MW0":    return MIDDLEWARE_WALLET_PLUGIN;
             case "MWM":    return MODULE_WALLET_MANAGER_PLUGIN;
             case "NSAAU":  return NETWORK_SERVICE_ACTOR_ASSET_USER;
+            case "NSAIU":  return NETWORK_SERVICE_ACTOR_ASSET_ISSUER;
             case "NSAT":   return NETWORK_SERVICE_ASSET_TRANSMISSION;
             case "NSCAD":  return NETWORK_SERVICE_CRYPTO_ADDRESSES;
             case "NSCPR":  return NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST;

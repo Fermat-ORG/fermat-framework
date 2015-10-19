@@ -10,21 +10,19 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identi
  */
 public class CryptoBrokerIdentityInformationImpl implements CryptoBrokerIdentityInformation {
 
-    private static final int HASH_PRIME_NUMBER_PRODUCT = 7681;
-    private static final int HASH_PRIME_NUMBER_ADD = 3581;
+    private static final int HASH_PRIME_NUMBER_PRODUCT = 3307;
+    private static final int HASH_PRIME_NUMBER_ADD = 4153;
 
     private final String alias;
-    private String publicKey;
-    private String privateKey;
-    private byte[] profileImage;
-    private IdentityPublished publicKeyPublished;
+    private final String publicKey;
+    private final byte[] profileImage;
+    private final boolean published;
 
-    public CryptoBrokerIdentityInformationImpl(final String alias, String publicKey, String privateKey, final byte[] profileImage, IdentityPublished publicKeyPublished){
+    public CryptoBrokerIdentityInformationImpl(final String alias, final String publicKey, final byte[] profileImage, final boolean published){
         this.alias = alias;
         this.publicKey = publicKey;
-        this.privateKey = privateKey;
         this.profileImage = profileImage;
-        this.publicKeyPublished = publicKeyPublished;
+        this.published = published;
     }
 
     @Override
@@ -43,20 +41,20 @@ public class CryptoBrokerIdentityInformationImpl implements CryptoBrokerIdentity
     }
 
     @Override
-    public void setNewProfileImage(byte[] imageBytes) {
-        this.profileImage = imageBytes;
+    public boolean isPublished(){ return this.published; }
+
+    public boolean equals(Object o){
+        if(!(o instanceof CryptoBrokerIdentityInformation))
+            return false;
+        CryptoBrokerIdentityInformation compare = (CryptoBrokerIdentityInformation) o;
+        return alias.equals(compare.getAlias()) && this.publicKey.equals(compare.getPublicKey());
     }
 
     @Override
-    public IdentityPublished getPublicKeyPublished(){ return this.publicKeyPublished; }
-
-    @Override
-    public String createMessageSignature(String message) throws CantCreateMessageSignatureException{
-        try{
-            return AsymmetricCryptography.createMessageSignature(message, this.privateKey);
-        } catch(Exception ex){
-            throw new CantCreateMessageSignatureException(CantCreateMessageSignatureException.DEFAULT_MESSAGE, ex, "Message: "+ message, "The message could be invalid");
-        }
+    public int hashCode(){
+        int c = 0;
+        c += alias.hashCode();
+        c += publicKey.hashCode();
+        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
-
 }

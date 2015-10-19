@@ -223,6 +223,6 @@ public class IdentitySubAppModuleCryptoCustomerPluginRoot implements CryptoCusto
     }
 
     private CryptoCustomerIdentityInformation converIdentityToInformation(final CryptoCustomerIdentity identity){
-        return new CryptoCustomerIdentityInformationImpl(identity.getAlias(), identity.getPublicKey(), identity.getPublicKey(), identity.getProfileImage(), identity.getPublicKeyPublished());
+        return new CryptoCustomerIdentityInformationImpl(identity.getAlias(), identity.getPublicKey(), identity.getProfileImage(), identity.isPublished());
     }
 }

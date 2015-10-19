@@ -304,7 +304,7 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
         System.out.println("ComponentRegistrationRequestPacketProcessor - registerOtherComponent");
 
 
-        Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfile = getWsCommunicationCloudServer().getRegisteredPlatformComponentProfileCache();
+        Map<PlatformComponentType, List<PlatformComponentProfile>> registeredPlatformComponentProfile = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache();
 
         /*
          * Validate if contain a list for the NetworkServiceType
