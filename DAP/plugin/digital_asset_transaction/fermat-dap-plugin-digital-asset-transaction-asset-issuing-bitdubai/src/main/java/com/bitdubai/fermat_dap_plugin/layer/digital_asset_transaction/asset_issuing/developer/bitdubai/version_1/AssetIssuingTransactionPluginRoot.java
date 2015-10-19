@@ -233,7 +233,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             checkIfExistsPendingAssets();
 
             //For testing, please, clean up your database or change the asset public key
-            testWalletDeliverAssetToAssetIssuerWallet();
+            //testWalletDeliverAssetToAssetIssuerWallet();
             //testIssueSingleAsset();
             //testIssueMultipleAssetsWithNoIdentity();
             //testIssueMultipleFullAssets();
@@ -486,6 +486,21 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
      * Todo: delete them in production
      */
 
+    /**
+     * This method implement a delivering test to asset issuer wallet, mocking an event raise and transactions
+     * @throws CantDefineContractPropertyException
+     * @throws CantCreateDigitalAssetFileException
+     * @throws CantPersistDigitalAssetException
+     * @throws CantSetObjectException
+     * @throws CantExecuteQueryException
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantPersistsGenesisTransactionException
+     * @throws CantCheckAssetIssuingProgressException
+     * @throws CantStartAgentException
+     * @throws CantGetLoggedInDeviceUserException
+     * @throws CantCreateFileException
+     * @throws CantPersistFileException
+     */
     private void testWalletDeliverAssetToAssetIssuerWallet() throws CantDefineContractPropertyException,
             CantCreateDigitalAssetFileException,
             CantPersistDigitalAssetException,
