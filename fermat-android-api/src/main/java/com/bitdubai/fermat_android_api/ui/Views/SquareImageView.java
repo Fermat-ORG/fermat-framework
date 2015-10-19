@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.views;
+package com.bitdubai.fermat_android_api.ui.Views;
 
 import android.annotation.TargetApi;
 import android.content.Context;

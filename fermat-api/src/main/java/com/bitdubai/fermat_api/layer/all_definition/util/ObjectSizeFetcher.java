@@ -8,8 +8,6 @@ import com.carrotsearch.sizeof.RamUsageEstimator;
 public class ObjectSizeFetcher {
 
     public static String sizeOf(final Object object){
-
-        //TODO: Lo comenté porque está tirando un outOfMemory en mi maquena que es poderosa, no quiero pensar en las maquinas de los demas. MAti
         return null;//RamUsageEstimator.humanSizeOf(object);
     }
 }

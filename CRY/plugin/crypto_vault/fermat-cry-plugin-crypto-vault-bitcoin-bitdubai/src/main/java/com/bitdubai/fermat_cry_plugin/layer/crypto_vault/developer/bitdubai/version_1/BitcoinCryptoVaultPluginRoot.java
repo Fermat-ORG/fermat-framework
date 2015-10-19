@@ -391,7 +391,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
             /**
              * now I will start the TransactionNotificationAgent to monitor
              */
-            transactionNotificationAgent = new TransactionNotificationAgent(eventManager, errorManager, logManager, pluginDatabaseSystem, pluginId, userPublicKey);
+            transactionNotificationAgent = new TransactionNotificationAgent(eventManager, errorManager, logManager, database);
             try {
                 transactionNotificationAgent.start();
             } catch (CantStartAgentException cantStartAgentException ) {
@@ -505,7 +505,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
     @Override
     public String sendBitcoins(String walletPublicKey, UUID FermatTrId, CryptoAddress addressTo, long satoshis, String op_Return) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
-        return vault.sendBitcoins(FermatTrId, addressTo, satoshis);
+        return vault.sendBitcoins(FermatTrId, addressTo, satoshis, op_Return);
     }
 
     @Override

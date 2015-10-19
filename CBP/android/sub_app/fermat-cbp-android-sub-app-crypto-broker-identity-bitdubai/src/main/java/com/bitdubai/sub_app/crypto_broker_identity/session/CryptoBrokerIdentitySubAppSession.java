@@ -12,6 +12,7 @@ import java.util.Map;
  * Created by Matias Furszyfer on 2015.07.20..
  */
 public class CryptoBrokerIdentitySubAppSession implements SubAppsSession {
+    public static final String IDENTITY_INFO = "CRYPTO_IDENTITY_INFO";
 
     /**
      * SubApps type

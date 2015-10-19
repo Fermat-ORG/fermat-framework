@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Discov
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -25,7 +26,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.AddressExchangeRequestState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.ProtocolState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestAction;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantAcceptAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantConfirmAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantDenyAddressExchangeRequestException;
@@ -48,10 +51,16 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.dev
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.event_handlers.NewReceiveMessagesNotificationEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantCreateRequestException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantInitializeCryptoAddressesNetworkServiceDatabaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.InformationMessage;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantReceiveAcceptanceException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantReceiveDenialException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantReceiveRequestException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.AcceptMessage;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.DenyMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.NetworkServiceMessage;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.structure.CryptoAddressesExecutorAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
@@ -369,33 +378,47 @@ public class CryptoAddressesNetworkServicePluginRoot implements
         return this.serviceStatus;
     }
 
-
-
+    /**
+     * I indicate to the Agent the action that it must take:
+     * - Protocol State: PROCESSING_SEND.
+     * - Action        : REQUEST.
+     * - Type          : SENT.
+     */
     @Override
-    public void sendAddressExchangeRequest(String                walletPublicKey        ,
-                                           CryptoAddress         cryptoAddressToSend    ,
-                                           Actors                actorTypeBy            ,
-                                           Actors                actorTypeTo            ,
-                                           String                requesterActorPublicKey,
-                                           String                actorToRequestPublicKey,
-                                           BlockchainNetworkType blockchainNetworkType  ) throws CantSendAddressExchangeRequestException {
+    public void sendAddressExchangeRequest(final String                walletPublicKey            ,
+                                           final CryptoCurrency        cryptoCurrency             ,
+                                           final Actors                identityTypeRequesting     ,
+                                           final Actors                identityTypeResponding     ,
+                                           final String                identityPublicKeyRequesting,
+                                           final String                identityPublicKeyResponding,
+                                           final BlockchainNetworkType blockchainNetworkType      ) throws CantSendAddressExchangeRequestException {
 
         try {
 
-            cryptoAddressesNetworkServiceDao.sendAddressExchangeRequest(
+            UUID newId = UUID.randomUUID();
+
+            ProtocolState state  = ProtocolState.PROCESSING_SEND;
+            RequestType   type   = RequestType  .SENT           ;
+            RequestAction action = RequestAction.REQUEST        ;
+
+            cryptoAddressesNetworkServiceDao.createAddressExchangeRequest(
+                    newId,
                     walletPublicKey,
-                    cryptoAddressToSend,
-                    actorTypeBy,
-                    actorTypeTo,
-                    requesterActorPublicKey,
-                    actorToRequestPublicKey,
+                    cryptoCurrency,
+                    identityTypeRequesting,
+                    identityTypeResponding,
+                    identityPublicKeyRequesting,
+                    identityPublicKeyResponding,
+                    state,
+                    type,
+                    action,
                     blockchainNetworkType
             );
 
-        } catch (CantSendAddressExchangeRequestException e){
+        } catch (CantCreateRequestException e){
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw e;
+            throw new CantSendAddressExchangeRequestException(e, null, "Error trying to create the request.");
         } catch (Exception e){
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -403,15 +426,25 @@ public class CryptoAddressesNetworkServicePluginRoot implements
         }
     }
 
+    /**
+     * I update the record with the new address an then, i indicate the ns agent the action that it must take:
+     * - Action        : ACCEPT.
+     * - Protocol State: PROCESSING_SEND.
+     */
     @Override
-    public void acceptAddressExchangeRequest(UUID          requestId            ,
-                                             CryptoAddress cryptoAddressReceived) throws CantAcceptAddressExchangeRequestException,
-                                                                                         PendingRequestNotFoundException          {
+    public void acceptAddressExchangeRequest(final UUID          requestId    ,
+                                             final CryptoAddress cryptoAddress) throws CantAcceptAddressExchangeRequestException,
+                                                                                       PendingRequestNotFoundException          {
 
         try {
 
-            // TODO send to the other part the acceptance with the crypto address
+            ProtocolState protocolState = ProtocolState.PROCESSING_SEND;
+            cryptoAddressesNetworkServiceDao.acceptAddressExchangeRequest(requestId, cryptoAddress, protocolState);
 
+        } catch (CantAcceptAddressExchangeRequestException | PendingRequestNotFoundException e){
+            // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
         } catch (Exception e){
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -419,15 +452,20 @@ public class CryptoAddressesNetworkServicePluginRoot implements
         }
     }
 
+    /**
+     * we'll return to the actor all the pending requests pending a local action.
+     * State : PENDING_ACTION.
+     *
+     * @param actorType  type of actor asking for pending requests
+     *
+     * @throws CantListPendingAddressExchangeRequestsException      if something goes wrong.
+     */
     @Override
-    public List<AddressExchangeRequest> listPendingRequests(Actors                      actorType                  ,
-                                                            AddressExchangeRequestState addressExchangeRequestState) throws CantListPendingAddressExchangeRequestsException {
+    public List<AddressExchangeRequest> listPendingRequests(Actors actorType) throws CantListPendingAddressExchangeRequestsException {
+
         try {
 
-            return cryptoAddressesNetworkServiceDao.listPendingRequests(
-                    actorType                  ,
-                    addressExchangeRequestState
-            );
+            return cryptoAddressesNetworkServiceDao.listPendingRequestsByActorType(actorType);
 
         } catch (CantListPendingAddressExchangeRequestsException e){
 
@@ -463,9 +501,14 @@ public class CryptoAddressesNetworkServicePluginRoot implements
     }
 
     /**
-     * I indicate to the NS that no more action is needed for the given request:
-     * - Action        : NONE.
-     * - Protocol State: DONE.
+     * when i confirm a request i put it in the final state, indicating:
+     * State : DONE.
+     * Action: NONE.
+     *
+     * @param requestId id of the address exchange request we want to confirm.
+     *
+     * @throws CantConfirmAddressExchangeRequestException   if something goes wrong.
+     * @throws PendingRequestNotFoundException              if i can't find the record.
      */
     @Override
     public void confirmAddressExchangeRequest(UUID requestId) throws CantConfirmAddressExchangeRequestException,
@@ -486,23 +529,30 @@ public class CryptoAddressesNetworkServicePluginRoot implements
         }
     }
 
+    /**
+     * when i deny a request i indicate the ns agent to do the next action:
+     * State : PROCESSING_SEND.
+     * Action: DENY.
+     *
+     * @param requestId id of the address exchange request we want to confirm.
+     *
+     * @throws CantDenyAddressExchangeRequestException      if something goes wrong.
+     * @throws PendingRequestNotFoundException              if i can't find the record.
+     */
     @Override
     public void denyAddressExchangeRequest(UUID requestId) throws CantDenyAddressExchangeRequestException,
                                                                   PendingRequestNotFoundException        {
 
         try {
 
-            // TODO send to the other part the denial
-            cryptoAddressesNetworkServiceDao.confirmAddressExchangeRequest(requestId);
+            ProtocolState protocolState = ProtocolState.PROCESSING_SEND;
+            cryptoAddressesNetworkServiceDao.denyAddressExchangeRequest(requestId, protocolState);
 
-        } catch (PendingRequestNotFoundException e){
+        } catch(PendingRequestNotFoundException |
+                CantDenyAddressExchangeRequestException e){
             // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (CantConfirmAddressExchangeRequestException e){
-            // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantDenyAddressExchangeRequestException(FermatException.wrapException(e), null, "Can' confirm the request.");
         } catch (Exception e){
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -788,12 +838,27 @@ public class CryptoAddressesNetworkServicePluginRoot implements
             NetworkServiceMessage networkServiceMessage = gson.fromJson(jsonMessage, NetworkServiceMessage.class);
 
             switch (networkServiceMessage.getMessageType()) {
-                case INFORMATION:
-                    // update the request to processing receive state with the given action.
-                    InformationMessage informationMessage = gson.fromJson(jsonMessage, InformationMessage.class);
-                    System.out.println(" CADD NS - Information Message Received: "+informationMessage.toString());
+
+                case ACCEPT:
+                    AcceptMessage acceptMessage = gson.fromJson(jsonMessage, AcceptMessage.class);
+                    receiveAcceptance(acceptMessage);
                     break;
 
+                case DENY:
+                    DenyMessage denyMessage = gson.fromJson(jsonMessage, DenyMessage.class);
+                    receiveDenial(denyMessage);
+                    break;
+
+                case REQUEST:
+                    // update the request to processing receive state with the given action.
+                    RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
+                    receiveRequest(requestMessage);
+                    break;
+                default:
+                    throw new CantHandleNewMessagesException(
+                            "message type: " +networkServiceMessage.getMessageType().name(),
+                            "Message type not handled."
+                    );
             }
 
 
@@ -801,6 +866,103 @@ public class CryptoAddressesNetworkServicePluginRoot implements
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * I indicate to the Agent the action that it must take:
+     * - Protocol State: PROCESSING_RECEIVE.
+     * - Action        : REQUEST           .
+     */
+    private void receiveRequest(RequestMessage requestMessage) throws CantReceiveRequestException {
+
+        try {
+
+            ProtocolState protocolState = ProtocolState.PROCESSING_RECEIVE;
+            RequestType   type          = RequestType  .RECEIVED          ;
+            RequestAction action        = RequestAction.REQUEST           ;
+
+            cryptoAddressesNetworkServiceDao.createAddressExchangeRequest(
+                    requestMessage.getRequestId()                  ,
+                    null                                           ,
+                    requestMessage.getCryptoCurrency()             ,
+                    requestMessage.getIdentityTypeRequesting()     ,
+                    requestMessage.getIdentityTypeResponding()     ,
+                    requestMessage.getIdentityPublicKeyRequesting(),
+                    requestMessage.getIdentityPublicKeyResponding(),
+                    protocolState                                  ,
+                    type                                           ,
+                    action                                         ,
+                    requestMessage.getBlockchainNetworkType()
+            );
+
+        } catch(CantCreateRequestException e) {
+            // i inform to error manager the error.
+            reportUnexpectedException(e);
+            throw new CantReceiveRequestException(e, "", "Error in Crypto Payment Request NS Dao.");
+        } catch(Exception e) {
+
+            reportUnexpectedException(e);
+            throw new CantReceiveRequestException(e, "", "Unhandled Exception.");
+        }
+    }
+
+    /**
+     * I update the record with the new address an then, i indicate the ns agent the action that it must take:
+     * - Action        : ACCEPT.
+     * - Protocol State: PROCESSING_RECEIVE.
+     */
+    private void receiveAcceptance(AcceptMessage acceptMessage) throws CantReceiveAcceptanceException {
+
+        try {
+
+            ProtocolState protocolState = ProtocolState.PROCESSING_RECEIVE;
+
+            cryptoAddressesNetworkServiceDao.acceptAddressExchangeRequest(
+                    acceptMessage.getRequestId(),
+                    acceptMessage.getCryptoAddress(),
+                    protocolState
+            );
+
+        } catch (CantAcceptAddressExchangeRequestException | PendingRequestNotFoundException e){
+            // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
+            reportUnexpectedException(e);
+            throw new CantReceiveAcceptanceException(e, "", "Error in crypto addresses DAO");
+        } catch (Exception e){
+
+            reportUnexpectedException(e);
+            throw new CantReceiveAcceptanceException(FermatException.wrapException(e), null, "Unhandled Exception.");
+        }
+    }
+
+    /**
+     * I update the record with the new address an then, i indicate the ns agent the action that it must take:
+     * - Action        : DENY.
+     * - Protocol State: PROCESSING_RECEIVE.
+     */
+    private void receiveDenial(DenyMessage denyMessage) throws CantReceiveDenialException {
+
+        try {
+
+            ProtocolState protocolState = ProtocolState.PROCESSING_RECEIVE;
+
+            cryptoAddressesNetworkServiceDao.denyAddressExchangeRequest(
+                    denyMessage.getRequestId(),
+                    protocolState
+            );
+
+        } catch (CantDenyAddressExchangeRequestException | PendingRequestNotFoundException e){
+            // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
+            reportUnexpectedException(e);
+            throw new CantReceiveDenialException(e, "", "Error in crypto addresses DAO");
+        } catch (Exception e){
+
+            reportUnexpectedException(e);
+            throw new CantReceiveDenialException(FermatException.wrapException(e), null, "Unhandled Exception.");
+        }
+    }
+
+    private void reportUnexpectedException(Exception e) {
+        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
     }
 
     @Override

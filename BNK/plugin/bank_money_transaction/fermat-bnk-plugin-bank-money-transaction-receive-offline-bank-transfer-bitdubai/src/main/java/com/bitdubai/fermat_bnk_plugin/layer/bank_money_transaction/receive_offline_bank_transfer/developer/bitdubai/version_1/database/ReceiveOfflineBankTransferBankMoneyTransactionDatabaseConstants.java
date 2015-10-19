@@ -18,10 +18,11 @@ public class ReceiveOfflineBankTransferBankMoneyTransactionDatabaseConstants {
     static final String RECEIVE_OFFLINE_BANK_TRANSFER_TABLE_NAME = "receive_offline_bank_transfer";
 
     static final String RECEIVE_OFFLINE_BANK_TRANSFER_BANK_TRANSACTION_ID_COLUMN_NAME = "bank_transaction_id";
-    static final String RECEIVE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_BROKER_COLUMN_NAME = "public_key_broker";
-    static final String RECEIVE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_CUSTOMER_COLUMN_NAME = "public_key_customer";
-    static final String RECEIVE_OFFLINE_BANK_TRANSFER_STATUS_COLUMN_NAME = "status";
+    static final String RECEIVE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_ACTOR_TO_COLUMN_NAME = "public_key_actor_to";
+    static final String RECEIVE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_ACTOR_FROM_COLUMN_NAME = "public_key_actor_from";
+    static final String RECEIVE_OFFLINE_BANK_TRANSFER_BALANCE_TYPE_COLUMN_NAME = "balance_type";
     static final String RECEIVE_OFFLINE_BANK_TRANSFER_TRANSACTION_TYPE_COLUMN_NAME = "transaction_type";
+    static final String RECEIVE_OFFLINE_BANK_TRANSFER_STATUS_COLUMN_NAME = "status";
     static final String RECEIVE_OFFLINE_BANK_TRANSFER_AMOUNT_COLUMN_NAME = "amount";
     static final String RECEIVE_OFFLINE_BANK_TRANSFER_BANK_CURRENCY_TYPE_COLUMN_NAME = "bank_currency_type";
     static final String RECEIVE_OFFLINE_BANK_TRANSFER_BANK_OPERATION_TYPE_COLUMN_NAME = "bank_operation_type";

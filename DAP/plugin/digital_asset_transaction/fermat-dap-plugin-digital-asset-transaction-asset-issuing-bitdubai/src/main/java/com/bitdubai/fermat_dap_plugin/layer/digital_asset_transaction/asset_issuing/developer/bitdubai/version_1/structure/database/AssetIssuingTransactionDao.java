@@ -260,6 +260,10 @@ public class AssetIssuingTransactionDao {
         return getStringValueFromAssetIssuingTableByFieldCode(transactionHash, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PUBLIC_KEY_COLUMN_NAME, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_DIGITAL_ASSET_HASH_COLUMN_NAME);
     }
 
+    public String getPublicKeyByGeneistransaction(String genesisTransaction) throws CantCheckAssetIssuingProgressException, UnexpectedResultReturnedFromDatabaseException {
+        return getStringValueFromAssetIssuingTableByFieldCode(genesisTransaction, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PUBLIC_KEY_COLUMN_NAME, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME);
+    }
+
     private String getStringFieldFromAssetIssuingTableById(String transactionId, String fieldCode) throws UnexpectedResultReturnedFromDatabaseException, CantCheckAssetIssuingProgressException {
         return getStringValueFromAssetIssuingTableByFieldCode(transactionId, fieldCode, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TRANSACTION_ID_COLUMN_NAME);
     }
@@ -783,6 +787,34 @@ public class AssetIssuingTransactionDao {
             this.database.closeDatabase();
             throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Trying to get "+fieldCode, "Unexpected exception");
         }
+    }
+
+    public List<String> getGenesisTransactionsByCryptoStatus(CryptoStatus cryptoStatus)throws CantCheckAssetIssuingProgressException{
+
+        try{
+            this.database=openDatabase();
+            DatabaseTable databaseTable;
+            List<String> transactionsHashList=new ArrayList<>();
+            databaseTable = database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
+            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            for (DatabaseTableRecord record : databaseTable.getRecords()){
+                transactionsHashList.add(record.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_GENESIS_TRANSACTION_COLUMN_NAME));
+            }
+            this.database.closeDatabase();
+            return transactionsHashList;
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception, "Getting genesis transaction.", "Cannot load table to memory");
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception, "Getting genesis transaction.", "Cannot open or find the Asset Issuing database");
+        } catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Getting transactions hash.", "Unexpected exception");
+        }
+
     }
 
     public List<String> getTransactionsHashByCryptoStatus(CryptoStatus cryptoStatus)throws CantCheckAssetIssuingProgressException{

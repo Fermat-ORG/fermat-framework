@@ -81,7 +81,7 @@ class BitcoinCryptoNetworkDatabaseFactory implements DealsWithPluginDatabaseSyst
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_VALUE_COLUMN_NAME, DatabaseDataType.MONEY, 10, Boolean.FALSE);
-            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_FEE_COLUMN_NAME, DatabaseDataType.MONEY, 10, Boolean.FALSE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_OP_RETURN_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
 
@@ -104,7 +104,7 @@ class BitcoinCryptoNetworkDatabaseFactory implements DealsWithPluginDatabaseSyst
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_VALUE_COLUMN_NAME, DatabaseDataType.MONEY, 10, Boolean.FALSE);
-            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_FEE_COLUMN_NAME, DatabaseDataType.MONEY, 10, Boolean.FALSE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_OP_RETURN_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
 

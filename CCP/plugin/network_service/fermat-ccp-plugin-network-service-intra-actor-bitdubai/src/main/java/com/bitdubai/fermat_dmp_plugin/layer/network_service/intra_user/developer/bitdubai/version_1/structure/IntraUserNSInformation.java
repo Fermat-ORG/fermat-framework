@@ -48,6 +48,6 @@ public class IntraUserNSInformation implements IntraUserInformation {
      */
     @Override
     public byte[] getProfileImage() {
-        return (byte[] )this.profileImage.clone();
+        return (profileImage!=null) ? (byte[] )this.profileImage.clone() : null;
     }
 }
