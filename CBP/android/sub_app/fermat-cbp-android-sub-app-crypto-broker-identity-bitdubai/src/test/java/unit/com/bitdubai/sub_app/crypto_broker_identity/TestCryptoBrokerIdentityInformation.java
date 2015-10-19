@@ -5,13 +5,20 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identi
 /**
  * Created by nelson on 14/10/15.
  */
-class TestCryptoBrokerIdentityInformation implements CryptoBrokerIdentityInformation {
+public class TestCryptoBrokerIdentityInformation implements CryptoBrokerIdentityInformation {
     private String name;
     private byte[] img;
+    private boolean isPublished;
 
-    public TestCryptoBrokerIdentityInformation(String name, byte[] img) {
+    public TestCryptoBrokerIdentityInformation(String name, byte[] img, boolean isPublished) {
         this.name = name;
         this.img = img;
+        this.isPublished = isPublished;
+    }
+
+    @Override
+    public String getAlias() {
+        return name;
     }
 
     @Override
@@ -20,12 +27,12 @@ class TestCryptoBrokerIdentityInformation implements CryptoBrokerIdentityInforma
     }
 
     @Override
-    public String getName() {
-        return name;
+    public byte[] getProfileImage() {
+        return img;
     }
 
     @Override
-    public byte[] getProfileImage() {
-        return img;
+    public boolean isPublished() {
+        return isPublished;
     }
 }

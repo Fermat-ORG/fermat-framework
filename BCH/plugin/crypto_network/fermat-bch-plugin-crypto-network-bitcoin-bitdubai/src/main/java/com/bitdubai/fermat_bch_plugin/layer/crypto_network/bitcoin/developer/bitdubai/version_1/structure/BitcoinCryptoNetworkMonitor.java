@@ -72,6 +72,7 @@ class BitcoinCryptoNetworkMonitor implements Agent {
         /**
          * I will also start another agent that will double check that we don't miss any transactions from the events
          * raised by bitcoinj
+         * //todo this agent still needs some work.
          */
         BitcoinCryptoNetworkMissingTransactionsWatcherAgent transactionsWatcherAgent = new BitcoinCryptoNetworkMissingTransactionsWatcherAgent(this.wallet, this.pluginDatabaseSystem, this.plugId);
         try {
