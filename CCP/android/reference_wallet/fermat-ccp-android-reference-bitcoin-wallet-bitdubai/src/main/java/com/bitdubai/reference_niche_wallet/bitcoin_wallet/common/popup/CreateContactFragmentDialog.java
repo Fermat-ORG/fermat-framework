@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -85,7 +86,7 @@ public class CreateContactFragmentDialog extends Dialog implements
     private Bitmap contactPicture;
     private EditText txt_address;
 
-
+   private Typeface tf;
     /**
      *
      * @param a
@@ -113,7 +114,7 @@ public class CreateContactFragmentDialog extends Dialog implements
 //        user_address_wallet= getWalletAddress(walletContact.actorPublicKey);
 //
 //        showQRCodeAndAddress();
-
+        tf = Typeface.createFromAsset(getOwnerActivity().getAssets(), "fonts/Roboto.ttf");
 
     }
 
@@ -129,10 +130,12 @@ public class CreateContactFragmentDialog extends Dialog implements
             contact_name = (EditText) findViewById(R.id.contact_name);
             take_picture_btn = (ImageView) findViewById(R.id.take_picture_btn);
             txt_address = (EditText) findViewById(R.id.txt_address);
-
-
             contact_name.setText(walletContact.name);
 
+            save_contact_btn.setTypeface(tf);
+            cancel_btn.setTypeface(tf);
+            contact_name.setTypeface(tf);
+            txt_address.setTypeface(tf);
 
             cancel_btn.setOnClickListener(this);
             save_contact_btn.setOnClickListener(this);

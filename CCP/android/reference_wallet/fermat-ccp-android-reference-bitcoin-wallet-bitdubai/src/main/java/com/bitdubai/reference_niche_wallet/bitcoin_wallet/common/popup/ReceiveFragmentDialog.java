@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -85,7 +86,7 @@ public class ReceiveFragmentDialog extends Dialog implements
      */
     static public int MARGIN_AUTOMATIC = -1;
 
-
+    private Typeface tf;
     /**
      *
      * @param a
@@ -113,7 +114,7 @@ public class ReceiveFragmentDialog extends Dialog implements
         user_address_wallet= getWalletAddress(walletContact.actorPublicKey);
 
         showQRCodeAndAddress();
-
+        tf = Typeface.createFromAsset(getOwnerActivity().getAssets(), "fonts/Roboto.ttf");
 
     }
 
@@ -127,6 +128,9 @@ public class ReceiveFragmentDialog extends Dialog implements
         txtAddress = (TextView) findViewById(R.id.txtAddress);
         imageView_qr_code = (ImageView) findViewById(R.id.imageView_qr_code);
 
+        share_btn.setTypeface(tf);
+        back_btn.setTypeface(tf);
+        txtAddress.setTypeface(tf);
 
         back_btn.setOnClickListener(this);
         share_btn.setOnClickListener(this);
