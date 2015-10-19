@@ -6964,7 +6964,7 @@
 		<layer name="Multi OS" language="java" super_layer="OSA"></layer>
 		<layer name="Android" language="java" super_layer="OSA"></layer>
 		<!-- separator or empty layer -->		
-		<layer name="Api" language="java">
+		<layer name="Api" language="java"></layer>
 	</layers>
 
 	<processes>
