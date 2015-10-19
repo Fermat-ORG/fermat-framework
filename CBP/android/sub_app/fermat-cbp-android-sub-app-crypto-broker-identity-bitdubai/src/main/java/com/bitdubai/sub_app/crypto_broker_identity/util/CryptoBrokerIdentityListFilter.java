@@ -26,7 +26,7 @@ public class CryptoBrokerIdentityListFilter extends Filter {
     protected FilterResults performFiltering(CharSequence constraint) {
         FilterResults result = new FilterResults();
 
-        if (constraint != null && constraint.toString().length() > 0) {
+        if (constraint != null && constraint.length() > 0) {
             String constraintStr = constraint.toString().toLowerCase(Locale.getDefault());
             ArrayList<CryptoBrokerIdentityInformation> filterItems = new ArrayList<>();
 

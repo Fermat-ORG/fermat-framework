@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Filter;
 import android.widget.SearchView;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -221,7 +222,10 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     }
 
     @Override
-    public boolean onQueryTextChange(String s) {
-        return false;
+    public boolean onQueryTextChange(String text) {
+        Filter filter = ((CryptoBrokerIdentityInfoAdapter) adapter).getFilter();
+        filter.filter(text);
+
+        return true;
     }
 }
