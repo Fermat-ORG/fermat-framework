@@ -38,6 +38,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.RequestedListNotReadyRecevivedException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.ActorNetworkServiceAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
@@ -61,6 +62,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -572,6 +574,76 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
     @Override
     public void registerActorAssetIssuer(ActorAssetIssuer actorAssetIssuerToRegister) throws CantRegisterActorAssetIssuerException {
 
+        try {
+
+            CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+
+            /*
+             * If register
+             */
+            if(this.isRegister()){
+
+                System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+
+                System.out.println("Registrar Datos "+ actorAssetIssuerToRegister.getName());
+
+                System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+
+                /*
+                 * Construct the profile
+                 */
+                PlatformComponentProfile platformComponentProfileAssetUser =  communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetIssuerToRegister.getPublicKey(),
+                        actorAssetIssuerToRegister.getName().toLowerCase().trim(),
+                        actorAssetIssuerToRegister.getName(),
+                        NetworkServiceType.UNDEFINED,
+                        PlatformComponentType.ACTOR_ASSET_USER,
+                        Arrays.toString(actorAssetIssuerToRegister.getProfileImage()));
+                /*
+                 * ask to the communication cloud client to register
+                 */
+                communicationsClientConnection.registerComponentForCommunication(platformComponentProfileAssetUser);
+
+            }else{
+
+                /*
+                 * Construct the profile
+                 */
+                PlatformComponentProfile platformComponentProfileAssetUser =  communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetIssuerToRegister.getPublicKey(),
+                        actorAssetIssuerToRegister.getName().toLowerCase().trim(),
+                        actorAssetIssuerToRegister.getName(),
+                        NetworkServiceType.UNDEFINED,
+                        PlatformComponentType.ACTOR_ASSET_ISSUER,
+                        Arrays.toString(actorAssetIssuerToRegister.getProfileImage()));
+                /*
+                 * Add to the list of pending to register
+                 */
+                actorAssetIssuerPendingToRegistration.add(platformComponentProfileAssetUser);
+
+            }
+
+        }catch (Exception e){
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Plugin was not registered";
+
+            CantRegisterActorAssetIssuerException pluginStartException = new CantRegisterActorAssetIssuerException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+
+            throw pluginStartException;
+
+        }
     }
 
     @Override
@@ -581,22 +653,46 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
 
     @Override
     public void requestListActorAssetIssuerRegistered() throws CantRequestListActorAssetIssuerRegisteredException {
+        /*
+         * Construct the discovery query parameters
+         */
+        DiscoveryQueryParameters discoveryQueryParametersAssetIssuer = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_ISSUER, //applicant = who made the request
+                        NetworkServiceType.UNDEFINED,
+                        null,                     // alias
+                        null,                     // identityPublicKey
+                        null,                     // location
+                        null,                     // distance
+                        null,                     // name
+                        null,                     // extraData
+                        null,                     // offset
+                        null,                     // max
+                        null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                        null);
 
+        /*
+         * request the list to the server
+         */
+        requestRemoteNetworkServicesRegisteredList(discoveryQueryParametersAssetIssuer);
     }
 
     @Override
     public List<ActorAssetIssuer> getListActorAssetIssuerRegistered() throws RequestedListNotReadyRecevivedException {
-        return null;
+        return actorAssetIssuerRegisteredList;
     }
 
     @Override
     public void handleCompleteRequestListRegisteredAssetIssuerActorNetworksNotificationEvent(List<ActorAssetIssuer> actorAssetIssuerList) {
-
+        System.out.println("Satisfactoriamente llego la lista remota de asset issuer actor");
     }
 
     @Override
     public void handleCompleteClientAssetIssuerActorRegistrationNotificationEvent(ActorAssetIssuer actorAssetIssuerList) {
+        System.out.println("==========================================================");
 
+        System.out.println("Satisfactoriamente se Registro "+actorAssetIssuerList.getName());
+
+        System.out.println("==========================================================");
     }
 
     @Override
