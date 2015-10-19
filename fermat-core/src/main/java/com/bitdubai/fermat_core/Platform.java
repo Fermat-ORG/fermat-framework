@@ -1237,6 +1237,13 @@ public class Platform implements Serializable {
                 injectPluginReferencesAndStart(assetDistributionTransaction, Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION);
 
            /*
+            * Plugin Asset Appropriation Transaction
+            * -----------------------------
+            */
+                Plugin assetAppropriationTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetDistributionPlugin();
+                injectPluginReferencesAndStart(assetAppropriationTransaction, Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION);
+
+           /*
             * Plugin Asset Reception Transaction
             * -----------------------------
             */

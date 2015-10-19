@@ -6,8 +6,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.Ass
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropiation.exceptions.CantAppropiateDigitalAssetsException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropiation.exceptions.CantExecuteAppropiationTransactionException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantExecuteAppropriationTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -18,28 +17,23 @@ import java.util.UUID;
 /**
  * Created by frank on 16/10/15.
  */
-public class AssetAppropiationTransactionManager implements AssetAppropriationManager {
+public class AssetAppropriationTransactionManager implements AssetAppropriationManager {
 
     AssetVaultManager assetVaultManager;
     ErrorManager errorManager;
     UUID pluginId;
     PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
-    DigitalAssetAppropiator digitalAssetAppropiator;
 
-    public AssetAppropiationTransactionManager(AssetVaultManager assetVaultManager,
-                                               ErrorManager errorManager,
-                                               UUID pluginId,
-                                               PluginDatabaseSystem pluginDatabaseSystem,
-                                               PluginFileSystem pluginFileSystem) throws CantSetObjectException, CantExecuteDatabaseOperationException {
+    public AssetAppropriationTransactionManager(AssetVaultManager assetVaultManager,
+                                                ErrorManager errorManager,
+                                                UUID pluginId,
+                                                PluginDatabaseSystem pluginDatabaseSystem,
+                                                PluginFileSystem pluginFileSystem) throws CantSetObjectException, CantExecuteDatabaseOperationException {
         setErrorManager(errorManager);
         setPluginId(pluginId);
         setPluginDatabaseSystem(pluginDatabaseSystem);
         setPluginFileSystem(pluginFileSystem);
-        this.digitalAssetAppropiator = new DigitalAssetAppropiator(assetVaultManager,
-                errorManager,
-                pluginId,
-                pluginFileSystem);
     }
 
     public void setPluginId(UUID pluginId) throws CantSetObjectException{
@@ -78,14 +72,7 @@ public class AssetAppropiationTransactionManager implements AssetAppropriationMa
     }
 
     @Override
-    public void appropiateAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToAppropiate, String walletPublicKey) throws CantExecuteAppropiationTransactionException {
-        try {
-            //this.digitalAssetAppropiator.setWalletPublicKey(walletPublicKey);
-            this.digitalAssetAppropiator.appropiateAssets(digitalAssetsToAppropiate);
-        } /*catch (CantSetObjectException exception) {
-            throw new CantAppropiateDigitalAssetsException(exception, "Setting wallet public key in asset appropiation process", "The wallet public key is null");
-        } */catch(CantAppropiateDigitalAssetsException e){
-            throw new CantExecuteAppropiationTransactionException(e, "Setting wallet public key in asset appropiation process", "Unexpected exception");
-        }
+    public void appropriateAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToAppropriate, String walletPublicKey) throws CantExecuteAppropriationTransactionException {
+        //TODO implement
     }
 }

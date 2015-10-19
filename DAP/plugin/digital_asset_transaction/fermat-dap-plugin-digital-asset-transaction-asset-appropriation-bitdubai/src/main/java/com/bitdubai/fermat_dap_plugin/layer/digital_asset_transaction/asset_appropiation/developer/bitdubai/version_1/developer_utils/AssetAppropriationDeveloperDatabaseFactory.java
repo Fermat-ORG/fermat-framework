@@ -3,5 +3,5 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_app
 /**
  * Created by frank on 19/10/15.
  */
-public class AssetAppropiationDeveloperDatabaseFactory {
+public class AssetAppropriationDeveloperDatabaseFactory {
 }
