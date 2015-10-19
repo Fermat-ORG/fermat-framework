@@ -768,9 +768,20 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                     }
 
                     @Override
-                    public ConnectionState getContactState() {
+                    public Double getLocationLatitude() {
                         return null;
                     }
+
+                    @Override
+                    public Double getLocationLongitude() {
+                        return null;
+                    }
+
+                    @Override
+                    public ConnectionState getConnectionState() {
+                        return null;
+                    }
+
                 };
 
                 ActorAssetUser actorAssetUser = new ActorAssetUser() {
@@ -800,9 +811,15 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                     }
 
                     @Override
-                    public Location getLocation() {
-                        return remoteToConnect.getLocation();
+                    public Double getLocationLatitude() {
+                        return null;
                     }
+
+                    @Override
+                    public Double getLocationLongitude() {
+                        return null;
+                    }
+
 
                     @Override
                     public Genders getGender() {
