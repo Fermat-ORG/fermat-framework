@@ -53,10 +53,8 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
 
     private Bitmap cryptoBrokerBitmap;
 
-    private CryptoBrokerIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
 
-    private Button createButton;
     private EditText mBrokerName;
     private ImageView mBrokerImage;
 
@@ -70,7 +68,6 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoBrokerIdentitySubAppSession) subAppsSession).getModuleManager();
             errorManager = subAppsSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -94,28 +91,25 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        createButton = (Button) layout.findViewById(R.id.create_crypto_broker_button);
+
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
-        mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
-
-        RoundedBitmapDrawable roundedBitmap = UtilsFuncs.getRoundedBitmap(getResources(), R.drawable.img_new_user_camera);
-        mBrokerImage.setImageDrawable(roundedBitmap);
-
         mBrokerName.requestFocus();
 
+        mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
+        RoundedBitmapDrawable roundedBitmap = UtilsFuncs.getRoundedBitmap(getResources(), R.drawable.img_new_user_camera);
+        mBrokerImage.setImageDrawable(roundedBitmap);
         mBrokerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CommonLogger.debug(TAG, "Entrando en mBrokerImage.setOnClickListener");
                 registerForContextMenu(mBrokerImage);
                 getActivity().openContextMenu(mBrokerImage);
             }
         });
 
+        Button createButton = (Button) layout.findViewById(R.id.create_crypto_broker_button);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
                 createNewIdentity();
             }
         });
@@ -155,10 +149,10 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.setHeaderTitle("Choose mode");
+        menu.setHeaderTitle(R.string.title_photo_context_menu);
         menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.ic_camera_green));
-        menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
-        menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
+        menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, R.string.camera_option_context_menu);
+        menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, R.string.gallery_option_context_menu);
 
         super.onCreateContextMenu(menu, view, menuInfo);
     }
@@ -178,12 +172,6 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
 
     /**
      * Crea una nueva identidad para un crypto broker
-     *
-     * @return key con el resultado de la operacion:<br/><br/>
-     * <code>CREATE_IDENTITY_SUCCESS</code>: Se creo exitosamente una identidad <br/>
-     * <code>CREATE_IDENTITY_FAIL_MODULE_EXCEPTION</code>: Se genero una excepcion cuando se ejecuto el metodo para crear la identidad en el Module Manager <br/>
-     * <code>CREATE_IDENTITY_FAIL_MODULE_IS_NULL</code>: No se tiene una referencia al Module Manager <br/>
-     * <code>CREATE_IDENTITY_FAIL_NO_VALID_DATA</code>: Los datos ingresados para crear la identidad no son validos (faltan datos, no tiene el formato correcto, etc) <br/>
      */
     private void createNewIdentity() {
 
