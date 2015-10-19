@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 
 /**
@@ -24,6 +25,15 @@ public interface NetworkServiceConnectionManager {
      * @param remotePlatformComponentProfile the remote PlatformComponentProfile
      */
     public void connectTo(PlatformComponentProfile remotePlatformComponentProfile);
+
+    /**
+     * Create a new connection to from another platform component type, it is mean tha the who made the request is not a network service
+     *
+     * @param applicantParticipant the applicant participant of the vpn
+     * @param applicantNetworkService the profile of the network service which it makes the request
+     * @param remoteParticipant the remote participant of the vpn
+     */
+    public void connectTo(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant);
 
 
     /**

@@ -18,6 +18,8 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDao;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.interfaces.DealsWithWalletManagerDesktopModule;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
@@ -75,6 +77,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * Created by rodrigo on 9/7/15.
@@ -120,6 +123,8 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
     AssetFactoryMiddlewareManager assetFactoryMiddlewareManager;
 
     WalletManagerManager walletManagerManager;
+
+    AssetFactoryMiddlewareDao assetFactoryMiddlewareDao;
 
     @Override
     public void setId(UUID pluginId) {
@@ -204,9 +209,12 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
                 System.out.println("******* Metodo testAssetFactory, issuerAsset, Error. Franklin ******" );
                 e.printStackTrace();
             }*/
+            //Check Assets in Draft for star Agent
+            checkAssetDraft();
+
             database.closeDatabase();
         }
-        catch (CantOpenDatabaseException | DatabaseNotFoundException e)
+        catch (CantOpenDatabaseException | DatabaseNotFoundException | CantLoadTableToMemoryException e)
         {
             try
             {
@@ -274,18 +282,43 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
         }
     }
 
+    public static LogLevel getLogLevelByClass(String className){
+        try{
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return AssetFactoryMiddlewarePluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e){
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
+    }
+
+    public void checkAssetDraft() throws CantLoadTableToMemoryException {
+        boolean isCheckAssetDraft = assetFactoryMiddlewareManager.checkAssetDraft();
+        if (isCheckAssetDraft){
+            //TODO: Implementar
+            //startMonitorAgent();
+        }
+    }
+
     public void testSaveAssetFactory()
     {
         try {
             java.util.Date date= new java.util.Date();
             System.out.println(new Timestamp(date.getTime()));
             AssetFactory assetFactory = assetFactoryMiddlewareManager.getNewAssetFactory();
+            System.out.println(assetFactory.getPublicKey());
             //assetFactory.setPublicKey("ASD-125412541-BS-854");
             assetFactory.setDescription("Asset de Prueba");
             assetFactory.setAssetBehavior(AssetBehavior.RECUPERATION_BITCOINS);
             assetFactory.setAmount(1);
             assetFactory.setFee(1);
-            assetFactory.setIsRedeemable(true);
+            assetFactory.setIsRedeemable(false);
             assetFactory.setName("Asset de Mcdonald - modificado");
             assetFactory.setCreationTimestamp(new Timestamp(date.getTime()));
             assetFactory.setExpirationDate(new Timestamp(date.getTime()));
@@ -293,16 +326,16 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
             assetFactory.setQuantity(2);
             assetFactory.setState(State.DRAFT);
             assetFactory.setWalletPublicKey(new ECCKeyPair().getPublicKey());
-            Resource resource = new Resource();
-            List<Resource> resources = new ArrayList<>();
-            resource.setId(UUID.randomUUID());
-            resource.setName("Foto 1");
-            resource.setFileName("imagen2.png");
-            resource.setResourceType(ResourceType.IMAGE);
-            resource.setResourceDensity(ResourceDensity.HDPI);
-            resource.setResourceBinayData(new byte[]{0xa, 0x2, 0xf, (byte) 0xff, (byte) 0xff, (byte) 0xff});
-            resources.add(resource);
-            assetFactory.setResources(resources);
+//            Resource resource = new Resource();
+//            List<Resource> resources = new ArrayList<>();
+//            resource.setId(UUID.randomUUID());
+//            resource.setName("Foto 1");
+//            resource.setFileName("imagen2.png");
+//            resource.setResourceType(ResourceType.IMAGE);
+//            resource.setResourceDensity(ResourceDensity.HDPI);
+//            resource.setResourceBinayData(new byte[]{0xa, 0x2, 0xf, (byte) 0xff, (byte) 0xff, (byte) 0xff});
+//            resources.add(resource);
+            assetFactory.setResources(null);
             AssetIssuerIdentity assetIssuerIdentity = new AssetIssuerIdentity();
             assetIssuerIdentity.setAlias("Franklin Marcano");
             assetIssuerIdentity.setPublicKey("ASDS-10087982");

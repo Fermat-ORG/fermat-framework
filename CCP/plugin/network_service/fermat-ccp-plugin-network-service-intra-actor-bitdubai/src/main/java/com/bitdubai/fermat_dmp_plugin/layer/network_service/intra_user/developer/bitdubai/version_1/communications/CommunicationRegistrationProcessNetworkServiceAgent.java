@@ -25,6 +25,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
      * Represent the sleep time for the read or send (5000 milliseconds)
      */
     private static final long SLEEP_TIME = 5000;
+    private static final long MAX_SLEEP_TIME = 20000;
 
     /**
      * Represent the templateNetworkServicePluginRoot
@@ -60,52 +61,62 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     public void run() {
 
         while (active){
+            try{
 
-            if (communicationsClientConnection.isRegister() && !templateNetworkServicePluginRoot.isRegister()){
+                if (communicationsClientConnection.isRegister() && !templateNetworkServicePluginRoot.isRegister()){
 
-                /*
-                 * Construct my profile and register me
-                 */
-                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(templateNetworkServicePluginRoot.getIdentityPublicKey(),
-                                                                                                                                            (templateNetworkServicePluginRoot.getAlias().toLowerCase()+"_"+templateNetworkServicePluginRoot.getId().toString()),
-                                                                                                                                            (templateNetworkServicePluginRoot.getName()+" ("+templateNetworkServicePluginRoot.getId()+")"),
-                                                                                                                                             templateNetworkServicePluginRoot.getNetworkServiceType(),
-                                                                                                                                             templateNetworkServicePluginRoot.getPlatformComponentType(),
-                                                                                                                                             templateNetworkServicePluginRoot.getExtraData());
+                    /*
+                     * Construct my profile and register me
+                     */
+                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(templateNetworkServicePluginRoot.getIdentityPublicKey(),
+                                                                                                                                                (templateNetworkServicePluginRoot.getAlias().toLowerCase()+"_"+templateNetworkServicePluginRoot.getId().toString()),
+                                                                                                                                                (templateNetworkServicePluginRoot.getName()+" ("+templateNetworkServicePluginRoot.getId()+")"),
+                                                                                                                                                 templateNetworkServicePluginRoot.getNetworkServiceType(),
+                                                                                                                                                 templateNetworkServicePluginRoot.getPlatformComponentType(),
+                                                                                                                                                 templateNetworkServicePluginRoot.getExtraData());
 
-                /*
-                 * Register me
-                 */
-                communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+                    /*
+                     * Register me
+                     */
+                    communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
 
-                /*
-                 * Configure my new profile
-                 */
-                templateNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
+                    /*
+                     * Configure my new profile
+                     */
+                    templateNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
 
-                /*
-                 * Initialize the connection manager
-                 */
-                templateNetworkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
+                    /*
+                     * Initialize the connection manager
+                     */
+                    templateNetworkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
 
-                /*
-                 * Stop the agent
-                 */
-                active = Boolean.FALSE;
+                    /*
+                     * Stop the agent
+                     */
+                    active = Boolean.FALSE;
 
-            }else if (!templateNetworkServicePluginRoot.isRegister()){
+                }else if (!templateNetworkServicePluginRoot.isRegister()){
 
-                try {
-                    sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    try {
+                        sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        active = Boolean.FALSE;
+                    }
+
+                }else if (!templateNetworkServicePluginRoot.isRegister()){
                     active = Boolean.FALSE;
                 }
 
-            }else if (!templateNetworkServicePluginRoot.isRegister()){
-                active = Boolean.FALSE;
+            }catch (Exception e){
+                try {
+                    e.printStackTrace();
+                    sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                    active = Boolean.FALSE;
+                }
             }
-
         }
     }
 

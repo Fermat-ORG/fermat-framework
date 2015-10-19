@@ -7,9 +7,9 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 
 /**
  * Created by jorgeejgonzalez on 27/04/15.
@@ -47,7 +47,7 @@ public class ConnectionRegisterTest extends CloudNetworkServiceManagerIntegratio
 		setUpConnections(4);
 		requestConnection();
 		FMPPacket response = registerConnection();
-		String decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(response.getMessage(), MockFMPPacketsFactory.MOCK_PRIVATE_KEY);		
+		String decryptedMessage = AsymmetricCryptography.decryptMessagePrivateKey(response.getMessage(), MockFMPPacketsFactory.MOCK_PRIVATE_KEY);
 		assertThat(decryptedMessage).isEqualTo("REGISTERED");
 	}
 
@@ -57,7 +57,7 @@ public class ConnectionRegisterTest extends CloudNetworkServiceManagerIntegratio
 		setUpConnections(6);
 		requestConnection();
 		FMPPacket response = registerConnection();
-		boolean signatureVerification = AsymmectricCryptography.verifyMessageSignature(response.getSignature(), response.getMessage(), response.getSender());
+		boolean signatureVerification = AsymmetricCryptography.verifyMessageSignature(response.getSignature(), response.getMessage(), response.getSender());
 		assertThat(signatureVerification).isTrue();
 	}
 

@@ -1,8 +1,26 @@
-== Developing regional crypto ecosystems: FERMAT CBP & FERMAT CDN 
+:numbered:
 
-=== FERMAT CBP
-=== FERMAT CDN
+== FERMAT BlockChain Superlayer
+This superlayer provides to the entire FERMAT multiplatform system the necessary functionalities to manage blockchain technology.
 
+=== _Crypto Networks layer_
+This layer builds the interface between FERMAT and each cryptonetwork available. + 
+There is one module for each cryptocurrency: Bitcoin, Litecoin, Ripple, Ethereum,  etc
+The main _responsibility_ for each module is to handle every outgoing/incoming request to/from the corresponding cryptonetwork.
+
+=== _Crypto Vaults layers_
+
+Bitcoin Vault ::
+Assets over Bitcoin :: 
+Bitcoin watch only vault ::
+...
+
+=== _Crypto Modules layer_
+Crypto Address Book ::
+
+=== _Crypto Router layer_
+Incoming Crypto ::
+Outgoing Crypto ::
 
 
 

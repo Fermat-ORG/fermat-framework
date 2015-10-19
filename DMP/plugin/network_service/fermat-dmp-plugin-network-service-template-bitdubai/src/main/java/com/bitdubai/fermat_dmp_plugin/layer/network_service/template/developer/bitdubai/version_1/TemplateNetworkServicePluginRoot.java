@@ -50,12 +50,13 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.b
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -209,7 +210,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         /******************************************************************
          * IMPORTANT: CHANGE THIS VALUES TO THE NEW PLUGIN TO IMPLEMENT
          ******************************************************************/
-        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE_COMPONENT;
+        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
         this.networkServiceType    = NetworkServiceType.TEMPLATE;
         this.name                  = "Template Network Service";
         this.alias                 = "TemplateNetworkService";
@@ -275,7 +276,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
          /*
          * Listen and handle Complete Component Registration Notification Event
          */
-        FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
+        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
@@ -283,7 +284,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
          /*
          * Listen and handle Complete Request List Component Registered Notification Event
          */
-        fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
+        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
@@ -291,7 +292,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         /*
          * Listen and handle Complete Request List Component Registered Notification Event
          */
-        fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteComponentConnectionRequestNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
@@ -543,7 +544,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             return TemplateNetworkServicePluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e){
             /**
-             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             * If I couldn't get the correct login level, then I will set it to minimal.
              */
             return DEFAULT_LOG_LEVEL;
         }
@@ -624,12 +625,12 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      */
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
 
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
+        System.out.println(" TemplateNetworkServicePluginRoot - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
         /*
          * If the component registered have my profile and my identity public key
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT  &&
+        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
                 platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.TEMPLATE &&
                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
@@ -643,19 +644,22 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
              * This is for test and example of how to use
              * Construct the filter
              */
-            DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
-                                                                getCommunicationsCloudClientConnection().
-                                                                constructDiscoveryQueryParamsFactory(platformComponentProfile, //applicant = who made the request
-                                                                        null,                     // alias
-                                                                        null,                     // identityPublicKey
-                                                                        null,                     // location
-                                                                        null,                     // distance
-                                                                        null,                     // name
-                                                                        null,                     // extraData
-                                                                        null,                     // offset
-                                                                        null,                     // max
-                                                                        null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                                                        null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+            DiscoveryQueryParameters discoveryQueryParameters = constructDiscoveryQueryParamsFactory(platformComponentProfile.getPlatformComponentType(), //PlatformComponentType you want to find
+                                                                                                    platformComponentProfile.getNetworkServiceType(),     //NetworkServiceType you want to find
+                                                                                                    null,                     // alias
+                                                                                                    null,                     // identityPublicKey
+                                                                                                    null,                     // location
+                                                                                                    null,                     // distance
+                                                                                                    null,                     // name
+                                                                                                    null,                     // extraData
+                                                                                                    null,                     // offset
+                                                                                                    null,                     // max
+                                                                                                    null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                                                                                    null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+
+
+            System.out.println(" TemplateNetworkServicePluginRoot - discoveryQueryParameters = "+discoveryQueryParameters.toJson());
+
 
             /*
              * Request the list of component registers
@@ -667,17 +671,24 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
     }
 
+    /**
+     * (non-Javadoc)
+     * @see NetworkService#handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile, PlatformComponentProfile)
+     */
+    @Override
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
 
-
+        System.out.println(" TemplateNetworkServicePluginRoot - Starting method handleFailureComponentRegistrationNotificationEvent");
+    }
 
     /**
      * (non-Javadoc)
-     * @see NetworkService#
+     * @see NetworkService#handleCompleteRequestListComponentRegisteredNotificationEvent(List, DiscoveryQueryParameters)
      */
     @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
 
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
+        System.out.println(" TemplateNetworkServicePluginRoot - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
 
         /*
          * save into the cache
@@ -695,10 +706,11 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
              */
             PlatformComponentProfile remoteNetworkServiceToConnect = getRemoteNetworkServicesRegisteredList().get(0);
 
+
             /*
              * tell to the manager to connect to this remote network service
              */
-            communicationNetworkServiceConnectionManager.connectTo(remoteNetworkServiceToConnect);
+            communicationNetworkServiceConnectionManager.connectTo(platformComponentProfile, platformComponentProfile, remoteNetworkServiceToConnect);
 
         }
 
@@ -706,9 +718,9 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
     /**
      * (non-Javadoc)
-     * @see NetworkService#handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile)
+     * @see NetworkService#handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile, PlatformComponentProfile)
      */
-    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile){
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile){
 
         System.out.println(" TemplateNetworkServiceRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
 
@@ -726,11 +738,6 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
              */
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
 
-            /*
-             * Get a remote network service registered from the list requested
-             */
-            PlatformComponentProfile remoteNetworkServiceToConnect = remoteNetworkServicesRegisteredList.get(0);
-
             /**
              * Create the message content
              * RECOMMENDATION: the content have to be a json string
@@ -742,7 +749,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             /*
              * Send a message using the local representation
              */
-            communicationNetworkServiceLocal.sendMessage(messageContent, identity);
+            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), messageContent);
 
         }
 
@@ -837,11 +844,11 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
     /**
      * (non-javadoc)
-     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentProfile, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
+     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
     @Override
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(applicant, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
+        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentType, networkServiceType, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
     }
 
     /**
@@ -863,7 +870,29 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
         /*
          * Request the list of component registers
          */
-        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+        try {
+
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+
+        } catch (CantRequestListException e) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Plugin was not registered";
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+
+        }
 
     }
 

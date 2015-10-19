@@ -82,6 +82,7 @@ public class CustomerBrokerCashSaleBusinessTransactionDatabaseFactory implements
             table.addColumn(CustomerBrokerCashSaleBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_SALE_PAYMENT_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CustomerBrokerCashSaleBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_SALE_PAYMENT_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CustomerBrokerCashSaleBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_SALE_MERCHANDISE_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
+            table.addColumn(CustomerBrokerCashSaleBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_SALE_MERCHANDISE_AMOUNT_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(CustomerBrokerCashSaleBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_SALE_EXECUTION_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CustomerBrokerCashSaleBusinessTransactionDatabaseConstants.CUSTOMER_BROKER_CASH_SALE_CASH_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 

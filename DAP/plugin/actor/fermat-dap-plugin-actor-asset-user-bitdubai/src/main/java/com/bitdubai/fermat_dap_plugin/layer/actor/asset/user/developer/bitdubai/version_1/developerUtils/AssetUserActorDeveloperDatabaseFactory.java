@@ -111,9 +111,15 @@ public class AssetUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
          */
         List<String> assetUserActorColumns = new ArrayList<String>();
 
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME);
         assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_NAME_COLUMN_NAME);
-        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOGGED_PUBLIC_KEY_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOCATION_LATITUDE_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOCATION_LONGITUDE_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_GENDER_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_AGE_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_CRYPTO_ADDRESS_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_CRYPTO_CURRENCY_COLUMN_NAME);
         assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME);
         assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME);
         assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_MODIFIED_DATE_COLUMN_NAME);
@@ -122,6 +128,31 @@ public class AssetUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
          */
         DeveloperDatabaseTable assetUserActorTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME, assetUserActorColumns);
         tables.add(assetUserActorTable);
+
+        /**
+         * Asset User Registered Table database columns.
+         */
+        List<String> assetUserRegisteredColumns = new ArrayList<String>();
+
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_PUBLIC_KEY_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_NAME_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_LOCATION_LATITUDE_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_LOCATION_LONGITUDE_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_GENDER_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_AGE_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_CRYPTO_ADDRESS_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_CRYPTO_CURRENCY_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_STATE_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_REGISTRATION_DATE_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_MODIFIED_DATE_COLUMN_NAME);
+
+        /**
+         * Asset User Registered database addition.
+         */
+        DeveloperDatabaseTable assetUserRegisteredTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_TABLE_NAME, assetUserRegisteredColumns);
+        tables.add(assetUserRegisteredTable);
+
 
         /**
          * Asset User Relation Asset Issuer database columns.
@@ -162,36 +193,37 @@ public class AssetUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
-            database.closeDatabase();
+            List<DatabaseTableRecord> records = selectedTable.getRecords();
+            for (DatabaseTableRecord row: records){
+                List<String> developerRow = new ArrayList<String>();
+                /**
+                 * for each row in the table list
+                 */
+                for (DatabaseRecord field : row.getValues()){
+                    /**
+                     * I get each row and save them into a List<String>
+                     */
+                    developerRow.add(field.getValue());
+                }
+                /**
+                 * I create the Developer Database record
+                 */
+                returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+            }
+            /**
+             * return the list of DeveloperRecords for the passed table.
+             */
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-
             /**
              * if there was an error, I will returned an empty list.
              */
             database.closeDatabase();
             return returnedRecords;
+        } catch (Exception e){
+            database.closeDatabase();
+            return returnedRecords;
         }
-
-        List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
-        for (DatabaseTableRecord row : records) {
-            /**
-             * for each row in the table list
-             */
-            for (DatabaseRecord field : row.getValues()) {
-                /**
-                 * I get each row and save them into a List<String>
-                 */
-                developerRow.add(field.getValue());
-            }
-            /**
-             * I create the Developer Database record
-             */
-            returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
-        }
-        /**
-         * return the list of DeveloperRecords for the passed table.
-         */
+        database.closeDatabase();
         return returnedRecords;
     }
 

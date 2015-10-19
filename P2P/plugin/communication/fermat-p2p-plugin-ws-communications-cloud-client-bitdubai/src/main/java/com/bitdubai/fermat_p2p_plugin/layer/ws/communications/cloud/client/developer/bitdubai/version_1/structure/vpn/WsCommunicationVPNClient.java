@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
@@ -48,9 +48,14 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
     private ECCKeyPair vpnClientIdentity;
 
     /**
-     * Represent the participant of the vpn
+     * Represent the remoteParticipant of the vpn
      */
-    private PlatformComponentProfile participant;
+    private PlatformComponentProfile remoteParticipant;
+
+    /**
+     * Represent the remoteParticipantNetworkService of the vpn
+     */
+    private PlatformComponentProfile remoteParticipantNetworkService;
 
     /**
      * Represent the vpnServerIdentity
@@ -71,10 +76,11 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
      * Constructor with parameters
      * @param serverURI
      */
-    public WsCommunicationVPNClient(ECCKeyPair vpnClientIdentity, URI serverURI, PlatformComponentProfile participant, String vpnServerIdentity, Map<String, String> headers) {
+    public WsCommunicationVPNClient(ECCKeyPair vpnClientIdentity, URI serverURI, PlatformComponentProfile remoteParticipant, PlatformComponentProfile remoteParticipantNetworkService, String vpnServerIdentity, Map<String, String> headers) {
         super(serverURI , new Draft_17(), headers , WsCommunicationVPNClient.DEFAULT_CONNECTION_TIMEOUT);
         this.vpnClientIdentity = vpnClientIdentity;
-        this.participant       = participant;
+        this.remoteParticipant = remoteParticipant;
+        this.remoteParticipantNetworkService = remoteParticipantNetworkService;
         this.vpnServerIdentity = vpnServerIdentity;
         this.pendingIncomingMessages = new ArrayList<>();
     }
@@ -118,7 +124,7 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
             /*
              * Get the platformComponentProfile from the message content and decrypt
              */
-            String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(fermatPacketReceive.getMessageContent(), vpnClientIdentity.getPrivateKey());
+            String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(fermatPacketReceive.getMessageContent(), vpnClientIdentity.getPrivateKey());
 
             System.out.println("WsCommunicationVPNClient - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
 
@@ -180,7 +186,7 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
          /*
          * Validate the signature
          */
-        boolean isValid = AsymmectricCryptography.verifyMessageSignature(fermatPacketReceive.getSignature(), fermatPacketReceive.getMessageContent(), vpnServerIdentity);
+        boolean isValid = AsymmetricCryptography.verifyMessageSignature(fermatPacketReceive.getSignature(), fermatPacketReceive.getMessageContent(), vpnServerIdentity);
 
         System.out.println(" WsCommunicationVPNClient - isValid = " + isValid);
 
@@ -297,8 +303,9 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
     }
 
     /**
-     * Get the isActive
-     * @return boolean
+     * (non-Javadoc)
+     *
+     * @see CommunicationsVPNConnection#isActive()
      */
     @Override
     public boolean isActive() {
@@ -311,5 +318,23 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
      */
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
+    }
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see CommunicationsVPNConnection#getRemoteParticipant()
+     */
+    public PlatformComponentProfile getRemoteParticipant() {
+        return remoteParticipant;
+    }
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see CommunicationsVPNConnection#getRemoteParticipantNetworkService()
+     */
+    public PlatformComponentProfile getRemoteParticipantNetworkService() {
+        return remoteParticipantNetworkService;
     }
 }

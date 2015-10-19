@@ -28,8 +28,13 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.FermatCryptoTransaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.enums.CryptoTransmissionStates;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CantAcceptCryptoRequestException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.crypto_transmission.exceptions.CantGetTransactionStateException;
@@ -49,10 +54,14 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionConnectionsDAO;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.dao.CryptoTransmissionMetadataDAO;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantGetCryptoTransmissionMetadataException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.exceptions.CantSaveCryptoTransmissionMetadatatException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
@@ -60,18 +69,20 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.event_handlers.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure.CryptoTransmissionAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.structure.crypto_transmission_structure.CryptoTransmissionMetadataRecord;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.EventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -87,11 +98,9 @@ import java.util.regex.Pattern;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot</code> is
- * the responsible to initialize all component to work together, and hold all resources they needed.
  * <p/>
  *
- * Created by Roberto Requena - (rrequena) on 21/07/15.
+ * Created by Matias Furszyfer - matiasfurszyfer@gmail.com  on 7/09/15.
  *
  * @version 1.0
  */
@@ -187,6 +196,10 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
      * Represent the dataBase
      */
     private Database dataBase;
+    /**
+     *
+     */
+    private Database cryptoTrasmissionDatabase;
 
     /**
      * Represent the identity
@@ -230,12 +243,17 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
     CryptoTransmissionAgent cryptoTransmissionAgent;
 
     /**
+     * DB
+     */
+    private Database cryptoTRansmissionDatabase;
+
+    /**
      * Constructor
      */
     public CryptoTransmissionNetworkServicePluginRoot() {
         super();
         this.listenersAdded = new ArrayList<>();
-        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE_COMPONENT;
+        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
         this.networkServiceType    = NetworkServiceType.CRYPTO_TRANSMISSION;
         this.name                  = "Crypto Transmission Network Service";
         this.alias                 = "CryptoTransmissionNetworkService";
@@ -301,7 +319,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
          /*
          * Listen and handle Complete Component Registration Notification Event
          */
-        FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
+        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
@@ -309,7 +327,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
          /*
          * Listen and handle Complete Request List Component Registered Notification Event
          */
-        fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
+        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
@@ -317,11 +335,35 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
         /*
          * Listen and handle Complete Request List Component Registered Notification Event
          */
-        fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteComponentConnectionRequestNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
+
+
+    }
+
+    /**
+     * Messages listeners
+     */
+    private void initializeMessagesListeners(){
+        /*
+         * Listen and handle Complete Request List Component Registered Notification Event
+         */
+
+//        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+//        fermatEventListener.setEventHandler(new New(cryptoTransmissionAgent));
+//        eventManager.addListener(fermatEventListener);
+//        listenersAdded.add(fermatEventListener);
+
+        /**
+         *
+         */
+        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(cryptoTransmissionAgent));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
     }
 
     /**
@@ -374,6 +416,56 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
     }
 
 
+    /**
+     * This method initialize the database
+     *
+     * @throws CantInitializeTemplateNetworkServiceDatabaseException
+     */
+    private void initializeCryptoTransmissionDb() throws CantInitializeTemplateNetworkServiceDatabaseException {
+
+        try {
+            /*
+             * Open new database connection
+             */
+            this.cryptoTRansmissionDatabase = this.pluginDatabaseSystem.openDatabase(pluginId, CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME);
+
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+
+            /*
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+        } catch (DatabaseNotFoundException e) {
+
+            /*
+             * The database no exist may be the first time the plugin is running on this device,
+             * We need to create the new database
+             */
+            CryptoTransmissionNetworkServiceDatabaseFactory cryptoTransmissionNetworkServiceDatabaseFactory = new CryptoTransmissionNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+
+            try {
+
+                /*
+                 * We create the new database
+                 */
+                this.cryptoTRansmissionDatabase = cryptoTransmissionNetworkServiceDatabaseFactory.createDatabase(pluginId,CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME);
+
+            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
+
+                /*
+                 * The database cannot be created. I can not handle this situation.
+                 */
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
+            }
+        }
+
+    }
+
+
 
     /**
      * (non-Javadoc)
@@ -401,6 +493,11 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
              */
             initializeDb();
 
+            /**
+             * Initialize crypto db
+             */
+            initializeCryptoTransmissionDb();
+
             /*
              * Initialize Developer Database Factory
              */
@@ -425,6 +522,8 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
+            initializeCommunicationNetworkServiceConnectionManager();
+
             /**
              * Initialice CryptoTransmission databases
              */
@@ -434,21 +533,10 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
             /**
              * Initialice DAO
              */
-            cryptoTransmissionMetadataDAO = new CryptoTransmissionMetadataDAO(pluginDatabaseSystem,pluginId);
+            cryptoTransmissionMetadataDAO = new CryptoTransmissionMetadataDAO(pluginDatabaseSystem,pluginId,cryptoTrasmissionDatabase);
 
             cryptoTransmissionConnectionsDAO = new CryptoTransmissionConnectionsDAO(pluginDatabaseSystem,pluginId);
 
-            /**
-             * Inicialice de main agent
-             */
-            cryptoTransmissionAgent = new CryptoTransmissionAgent(
-                    cryptoTransmissionConnectionsDAO,
-                    cryptoTransmissionMetadataDAO,
-                    communicationNetworkServiceConnectionManager,
-                    errorManager,
-                    new ArrayList<PlatformComponentProfile>(),
-                    identity
-                    );
 
 
             /*
@@ -533,6 +621,11 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
 
         //set to not register
         register = Boolean.FALSE;
+
+        /**
+         * Stop agent
+         */
+        cryptoTransmissionAgent.stop();
 
         /*
          * Set the new status
@@ -684,11 +777,13 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
+
+
         /*
          * If the component registered have my profile and my identity public key
          */
-        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE_COMPONENT  &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.TEMPLATE &&
+        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.CRYPTO_TRANSMISSION &&
                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
             /*
@@ -696,7 +791,40 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
              */
              this.register = Boolean.TRUE;
 
+            System.out.print("-----------------------\n" +
+                    "CRYPTO TRANSMISSION REGISTRADO  -----------------------\n" +
+                    "-----------------------\n A: " + getName());
+
+            /**
+             * Inicialice de main agent
+             */
+            cryptoTransmissionAgent = new CryptoTransmissionAgent(
+                    this,
+                    cryptoTransmissionConnectionsDAO,
+                    cryptoTransmissionMetadataDAO,
+                    communicationNetworkServiceConnectionManager,
+                    wsCommunicationsCloudClientManager,
+                    platformComponentProfile,
+                    errorManager,
+                    new ArrayList<PlatformComponentProfile>(),
+                    identity
+            );
+
+            // Initialize messages handlers
+            initializeMessagesListeners();
+
+            // start main threads
+            cryptoTransmissionAgent.start();
+
+
         }
+
+    }
+
+    @Override
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
+
+        cryptoTransmissionAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
 
     }
 
@@ -708,30 +836,40 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
 
         System.out.println(" CryptoTransmissionNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
 
+        System.out.print("-----------------------\n" +
+                "CRYPTO TRANSMISSION CONEXION EXITOSA!!!!  -----------------------\n" +
+                "-----------------------\n A: " + getName());
 
         /*
          * save into the cache
          */
-        remoteNetworkServicesRegisteredList = platformComponentProfileRegisteredList;
+        remoteNetworkServicesRegisteredList.addAll( platformComponentProfileRegisteredList);
 
 
 
         cryptoTransmissionAgent.addRemoteNetworkServicesRegisteredList(platformComponentProfileRegisteredList);
 
         // por ahora guardo solo el primero para saber cuales estan conectados
-        cacheConnections.put(discoveryQueryParameters.getIdentityPublicKey(),platformComponentProfileRegisteredList.get(0));
+        cacheConnections.put(discoveryQueryParameters.getIdentityPublicKey(), platformComponentProfileRegisteredList.get(0));
 
     }
 
+
+
+
     /**
-     * (non-Javadoc)
-     * @see NetworkService#handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile)
+     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
+     * @param remoteComponentProfile
      */
-    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile){
+    @Override
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
-        System.out.println(" TemplateNetworkServiceRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
+        System.out.println(" CryptoTransmissionNetworkServiceRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
 
-        //TODO: acá podría mandarle al otro network service un mensaje diciendo que que le voy a mandar la metadata
+
+
+        //if(cryptoTransmissionAgent.isConnection(remoteComponentProfile.getIdentityPublicKey())) {
+            //TODO: acá podría mandarle al otro network service un mensaje diciendo que que le voy a mandar la metadata
 
         /*
          * Tell the manager to handler the new connection stablished
@@ -739,8 +877,29 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
 
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
+        System.out.print("-----------------------\n" +
+                "CRYPTO TRANSMISSION CONEXION ENTRANTE  -----------------------\n" +
+                "-----------------------\n A: " + remoteComponentProfile.getAlias());
 
         if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
+
+            remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
+
+
+            System.out.print("-----------------------\n" +
+                    "CRYPTO TRANSMISSION CONEXION ENTRANTE  -----------------------\n" +
+                    "-----------------------\n A: " + remoteComponentProfile.getAlias());
+        }
+
+//        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
+//
+//            remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
+//
+//            cryptoTransmissionAgent.addRemoteNetworkServicesRegisteredList(remoteNetworkServicesRegisteredList);
+//
+//            System.out.print("-----------------------\n" +
+//                    "CRYPTO TRANSMISSION CONEXION ENTRANTE AGREGADA AL AGENTE  -----------------------\n" +
+//                    "-----------------------\n A: " + remoteComponentProfile.getAlias());
 
             /* -------------------------------------------------------------------------------------------------
              * This is for test and example of how to use
@@ -766,12 +925,12 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
              */
             //templateNetworkServiceLocal.sendMessage(messageContent, identity);
 
-        }
-//=======
-//        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
-//>>>>>>> f91b418ff30cb95d25cd3d3ea2c17212e4fc851f
+       // }
 
-        System.out.println("NETWORK SERVICE CRYPTO TRANSMISSION, Estoy conectado Roberto ;) ");
+
+//        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
+
+     //   System.out.println("NETWORK SERVICE CRYPTO TRANSMISSION, Estoy conectado Roberto ;) ");
 
     }
 
@@ -864,11 +1023,12 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
 
     /**
      * (non-javadoc)
-     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentProfile, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
+     * @see NetworkService#constructDiscoveryQueryParamsFactory(PlatformComponentType, NetworkServiceType, String, String, Location, Double, String, String, Integer, Integer, PlatformComponentType, NetworkServiceType)
      */
     @Override
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(applicant, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
+        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(platformComponentType                ,
+                networkServiceType, alias, identityPublicKey, location, distance, name, extraData, firstRecord, numRegister, fromOtherPlatformComponentType, fromOtherNetworkServiceType);
     }
 
     /**
@@ -887,10 +1047,32 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
 
         System.out.println(" TemplateNetworkServiceRoot - requestRemoteNetworkServicesRegisteredList");
 
-        /*
+         /*
          * Request the list of component registers
          */
-        wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+        try {
+
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+
+        } catch (CantRequestListException e) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Plugin was not registered";
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+
+        }
 
     }
 
@@ -957,7 +1139,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
                 associatedCryptoTransactionHash,
                 cryptoAmount,
                 cryptoCurrency,
-                destinationPublicKey,
+                "actor_prueba_robert_public_key",
                 paymentDescription,
                 null,
                 senderPublicKey
@@ -976,6 +1158,64 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
 
     @Override
     public TransactionProtocolManager<FermatCryptoTransaction> getTransactionManager() {
+
+
+//        TransactionProtocolManager<FermatCryptoTransaction> fermatCryptoTransactionTransactionProtocolManager = new FermatCryptoTransaction(
+//                false,
+//                null,
+//
+//        );
+        TransactionProtocolManager<FermatCryptoTransaction> transactionTransactionProtocolManager = new TransactionProtocolManager<FermatCryptoTransaction>() {
+            @Override
+            public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
+                try {
+
+                    cryptoTransmissionMetadataDAO.confirmReception(transactionID);
+
+
+
+                } catch (CantUpdateRecordDataBaseException e) {
+                    e.printStackTrace();
+                } catch (PendingRequestNotFoundException e) {
+                    e.printStackTrace();
+                } catch (CantGetCryptoTransmissionMetadataException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public List<Transaction<FermatCryptoTransaction>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
+                List<Transaction<FermatCryptoTransaction>> lst = new ArrayList<>();
+                try {
+
+                    for(CryptoTransmissionMetadata cryptoTransmissionMetadata : cryptoTransmissionMetadataDAO.getPendings()){
+
+                        FermatCryptoTransaction fermatCryptoTransaction = new FermatCryptoTransaction(
+                                false,
+                                null,
+                                cryptoTransmissionMetadata.getSenderPublicKey(),
+                                cryptoTransmissionMetadata.getDestinationPublicKey(),
+                                cryptoTransmissionMetadata.getAssociatedCryptoTransactionHash(),
+                                cryptoTransmissionMetadata.getPaymentDescription());
+
+                        Transaction transaction = new Transaction(
+                                cryptoTransmissionMetadata.getTransactionId(),
+                                fermatCryptoTransaction,
+                                Action.APPLY,
+                                System.currentTimeMillis()
+                                );
+
+
+                        lst.add(transaction);
+                    }
+
+                } catch (CantReadRecordDataBaseException e) {
+                    e.printStackTrace();
+                }
+                return lst;
+            }
+        };
+
         return null;
     }
 

@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
@@ -49,7 +49,7 @@ public class ServerHandshakeRespondPacketProcessor extends FermatPacketProcessor
         /*
          * Decrypt the message content
          */
-        String jsonRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getTemporalIdentity().getPrivateKey());
+        String jsonRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getTemporalIdentity().getPrivateKey());
 
         /*
          * Construct the json object
@@ -60,7 +60,7 @@ public class ServerHandshakeRespondPacketProcessor extends FermatPacketProcessor
         /*
          * Get the server identity and set into the communication cloud client
          */
-        getWsCommunicationsCloudClientChannel().setServerIdentity(serverIdentity.get(JsonAttNamesConstants.JSON_ATT_NAME_SERVER_IDENTITY).getAsString());
+        getWsCommunicationsCloudClientChannel().setServerIdentity(serverIdentity.get(JsonAttNamesConstants.SERVER_IDENTITY).getAsString());
 
 
         System.out.println("ServerHandshakeRespondPacketProcessor - ServerIdentity = "+ getWsCommunicationsCloudClientChannel().getServerIdentity());
@@ -68,7 +68,7 @@ public class ServerHandshakeRespondPacketProcessor extends FermatPacketProcessor
         /*
          * Construct a Communications Cloud Client Profile for this component and send and fermat packet type FermatPacketType.COMPONENT_REGISTRATION_REQUEST
          */
-        PlatformComponentProfile communicationsCloudClientProfile = getWsCommunicationsCloudClientChannel().getWsCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getWsCommunicationsCloudClientChannel().getClientIdentity().getPublicKey(), "WsCommunicationsCloudClientChannel",  "Web Socket Communications Cloud Client", NetworkServiceType.UNDEFINED, PlatformComponentType.COMMUNICATION_CLOUD_CLIENT_COMPONENT, null);
+        PlatformComponentProfile communicationsCloudClientProfile = getWsCommunicationsCloudClientChannel().getWsCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getWsCommunicationsCloudClientChannel().getClientIdentity().getPublicKey(), "WsCommunicationsCloudClientChannel",  "Web Socket Communications Cloud Client", NetworkServiceType.UNDEFINED, PlatformComponentType.COMMUNICATION_CLOUD_CLIENT, null);
         getWsCommunicationsCloudClientChannel().setPlatformComponentProfile(communicationsCloudClientProfile);
 
         /* ------------------------------------

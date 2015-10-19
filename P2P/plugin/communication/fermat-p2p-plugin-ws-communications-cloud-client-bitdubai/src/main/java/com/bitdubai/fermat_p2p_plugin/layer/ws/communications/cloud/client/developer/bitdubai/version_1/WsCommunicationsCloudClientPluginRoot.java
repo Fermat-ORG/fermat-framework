@@ -45,13 +45,20 @@ import java.util.regex.Pattern;
  * the responsible to initialize all component to work together, and hold all resources they needed.
  * <p/>
  *
- * Created by loui on 26/04/15.
- * Update by Jorge Gonzales
- * Update by Roberto Requena - (rart3001@gmail.com) on 03/06/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 03/09/15.
  *
  * @version 1.0
  */
 public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWithEvents, DealsWithLogger, DealsWithDeviceLocation, LogManagerForDevelopers, DealsWithErrors, DealsWithPluginFileSystem,Plugin, WsCommunicationsCloudClientManager {
+
+    /**
+     * Represents the value of DISABLE_CLIENT
+     */
+    public static final Boolean DISABLE_CLIENT = Boolean.TRUE;
+    /**
+     * Represents the value of ENABLE_CLIENT
+     */
+    public static final Boolean ENABLE_CLIENT = Boolean.FALSE;
 
     /**
      * Represent the WS_PROTOCOL
@@ -59,56 +66,39 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     private static final String WS_PROTOCOL = "ws://";
 
     /**
+     * Represent the SERVER_IP
+     */
+    public static final String SERVER_IP = "52.11.156.16"; //AWS
+    //public static final String SERVER_IP = "192.168.1.2";
+
+    /**
      * Represent the DEFAULT_PORT
      */
     private static final int DEFAULT_PORT = 9090;
-
-    /**
-     * Represent the SERVER_IP
-     */
-    //public static final String SERVER_IP = "52.11.156.16"; //AWS
-    public static final String SERVER_IP = "192.168.1.8";
-
-    /**
-     * Represents the value of DISABLE_CLIENT
-     */
-    public static final Boolean DISABLE_CLIENT = Boolean.TRUE;
-
-    /**
-     * Represents the value of ENABLE_CLIENT
-     */
-    public static final Boolean ENABLE_CLIENT = Boolean.FALSE;
-
-    /**
-     * Represent the status of this service
-     */
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
-    /**
-     * Represent the errorManager
-     */
-    private ErrorManager errorManager;
-
-    /**
-     * Represent the eventManager
-     */
-    private EventManager eventManager;
-    
-    /**
-     * Represent the logManager
-     */
-    private LogManager logManager;
-
-    /**
-     * Represent the locationManager
-     */
-    private LocationManager locationManager;
-
     /**
      * Represent the newLoggingLevel
      */
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-
+    /**
+     * Represent the status of this service
+     */
+    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    /**
+     * Represent the errorManager
+     */
+    private ErrorManager errorManager;
+    /**
+     * Represent the eventManager
+     */
+    private EventManager eventManager;
+    /**
+     * Represent the logManager
+     */
+    private LogManager logManager;
+    /**
+     * Represent the locationManager
+     */
+    private LocationManager locationManager;
     /*
      * Hold the list of event listeners
      */
@@ -138,6 +128,27 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
         //this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.DISABLE_CLIENT;
     }
 
+    /**
+     * Static method to get the logging level from any class under root.
+     *
+     * @param className
+     * @return
+     */
+    public static LogLevel getLogLevelByClass(String className) {
+        try {
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return WsCommunicationsCloudClientPluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e) {
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
+    }
 
     /**
      * This method validate is all required resource are injected into
@@ -276,7 +287,6 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
         return this.serviceStatus;
     }
 
-
     /**
      * (non-Javadoc)
      *
@@ -324,27 +334,6 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
             } else {
                 WsCommunicationsCloudClientPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
-        }
-    }
-
-    /**
-     * Static method to get the logging level from any class under root.
-     * @param className
-     * @return
-     */
-    public static LogLevel getLogLevelByClass(String className){
-        try{
-            /**
-             * sometimes the classname may be passed dinamically with an $moretext
-             * I need to ignore whats after this.
-             */
-            String[] correctedClass = className.split((Pattern.quote("$")));
-            return WsCommunicationsCloudClientPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e){
-            /**
-             * If I couldn't get the correct loggin level, then I will set it to minimal.
-             */
-            return DEFAULT_LOG_LEVEL;
         }
     }
 

@@ -158,6 +158,49 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
         DeveloperDatabaseTable outgoingmessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME, outgoingmessagesColumns);
         tables.add(outgoingmessagesTable);
 
+        /**
+         * Table outgoing messages columns.
+         */
+        List<String> outgoingNotificationsColumns = new ArrayList<String>();
+
+        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME);
+        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME);
+        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME);
+        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME);
+        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME);
+        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
+        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
+        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME);
+        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME);
+        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
+
+        /**
+         * Table outgoing messages addition.
+         */
+        DeveloperDatabaseTable outgoingNotificationsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TABLE_NAME, outgoingmessagesColumns);
+        tables.add(outgoingNotificationsTable);
+
+        /**
+         * Table outgoing messages columns.
+         */
+        List<String> incomingNotificationsColumns = new ArrayList<String>();
+
+        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME);
+        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME);
+        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME);
+        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME);
+        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME);
+        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
+        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
+        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME);
+        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME);
+        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
+        /**
+         * Table outgoing messages addition.
+         */
+        DeveloperDatabaseTable incomingNotificationsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TABLE_NAME, outgoingmessagesColumns);
+        tables.add(incomingNotificationsTable);
+
 
 
         return tables;
@@ -169,43 +212,43 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
          * Will get the records for the given table
          */
         List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
-
-
         /**
          * I load the passed table name from the SQLite database.
          */
         DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
             selectedTable.loadToMemory();
+            List<DatabaseTableRecord> records = selectedTable.getRecords();
+            for (DatabaseTableRecord row: records){
+                List<String> developerRow = new ArrayList<String>();
+                /**
+                 * for each row in the table list
+                 */
+                for (DatabaseRecord field : row.getValues()){
+                    /**
+                     * I get each row and save them into a List<String>
+                     */
+                    developerRow.add(field.getValue());
+                }
+                /**
+                 * I create the Developer Database record
+                 */
+                returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+            }
+            /**
+             * return the list of DeveloperRecords for the passed table.
+             */
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * if there was an error, I will returned an empty list.
              */
+            database.closeDatabase();
+            return returnedRecords;
+        } catch (Exception e){
+            database.closeDatabase();
             return returnedRecords;
         }
-
-        List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
-        for (DatabaseTableRecord row : records) {
-            /**
-             * for each row in the table list
-             */
-            for (DatabaseRecord field : row.getValues()) {
-                /**
-                 * I get each row and save them into a List<String>
-                 */
-                developerRow.add(field.getValue().toString());
-            }
-            /**
-             * I create the Developer Database record
-             */
-            returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
-        }
-
-
-        /**
-         * return the list of DeveloperRecords for the passed table.
-         */
+        database.closeDatabase();
         return returnedRecords;
     }
 

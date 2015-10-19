@@ -7,11 +7,11 @@ import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantSignExt
  */
 public interface DAPActor {
 
-    String getActorUserPublicKey();
+    String getActorPublicKey();
 
-    String getActorIssuerPublicKey();
-
-    String getActorRedeemPointPublicKey();
+//    String getActorIssuerPublicKey();
+//
+//    String getActorRedeemPointPublicKey();
 
     String getName();
 

@@ -11,8 +11,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum CryptoPaymentType implements FermatEnum {
 
-    OWN      ("OWN"),
-    RECEIVED ("RVD");
+    SENT     ("SENT"),
+    RECEIVED ("RVD" );
 
     private String code;
 
@@ -24,8 +24,8 @@ public enum CryptoPaymentType implements FermatEnum {
 
         switch (code){
 
-            case "OWN": return OWN     ;
-            case "RVD": return RECEIVED;
+            case "SENT": return SENT    ;
+            case "RVD":  return RECEIVED;
 
             default: throw new InvalidParameterException(
                     InvalidParameterException.DEFAULT_MESSAGE,

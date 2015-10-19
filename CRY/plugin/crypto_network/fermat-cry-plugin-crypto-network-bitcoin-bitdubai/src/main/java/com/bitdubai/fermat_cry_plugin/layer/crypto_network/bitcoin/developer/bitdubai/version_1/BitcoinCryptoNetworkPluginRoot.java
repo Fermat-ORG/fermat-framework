@@ -198,10 +198,12 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
     public void connectToBitcoinNetwork(CryptoVault cryptoVault) throws CantConnectToBitcoinNetwork {
         this.cryptoVault = cryptoVault;
         this.connectToBitcoinNetwork();
+
     }
 
     @Override
     public void connectToBitcoinNetwork() throws CantConnectToBitcoinNetwork {
+        System.out.println("Bitcoin Crypto Network Connected.");
         bitcoinCryptoNetworkMonitoringAgent = new BitcoinCryptoNetworkMonitoringAgent((Wallet) cryptoVault.getWallet(), cryptoVault.getUserPublicKey());
         bitcoinCryptoNetworkMonitoringAgent.setPluginFileSystem(pluginFileSystem);
         bitcoinCryptoNetworkMonitoringAgent.setLogManager(this.logManager);

@@ -3,6 +3,11 @@ package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
@@ -15,12 +20,15 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.Bitco
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.DealsWithBitcoinNetwork;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.exceptions.GetNewCryptoAddressException;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure.AssetCryptoVaultManager;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -33,7 +41,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager, DealsWithBitcoinNetwork, DealsWithDeviceUser,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service {
+public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager, DatabaseManagerForDevelopers, DealsWithBitcoinNetwork, DealsWithDeviceUser,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service {
 
     AssetCryptoVaultManager assetCryptoVaultManager;
 
@@ -44,6 +52,46 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager
     @Override
     public void setBitcoinNetworkManager(BitcoinNetworkManager bitcoinNetworkManager) {
         this.bitcoinNetworkManager = bitcoinNetworkManager;
+    }
+
+    /**
+     * DatabaseManagerForDevelopers interface implementation
+     */
+
+    /**
+     * Gets the plugin database List for the Developer sub app
+     * @param developerObjectFactory
+     * @return
+     */
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory developerDatabaseFactory = new AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return developerDatabaseFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    /**
+     * Gets the plugin table list for the Developer sub app
+     * @param developerObjectFactory
+     * @param developerDatabase
+     * @return
+     */
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory developerDatabaseFactory = new AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return developerDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    /**
+     * Gets the records from the table for the Developer sub app
+     * @param developerObjectFactory
+     * @param developerDatabase
+     * @param developerDatabaseTable
+     * @return
+     */
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory developerDatabaseFactory = new AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return developerDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
     /**
@@ -116,9 +164,29 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager
         }
 
         /**
+         * Test
+         */
+        //generateAddress();
+
+
+        /**
          * Nothing left to do.
          */
         this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    /**
+     * Test Method to generate an address at startup
+     */
+    private void generateAddress() {
+        try{
+            Thread.sleep(5000);
+            System.out.println("Asset vault address: " + this.getNewAssetVaultCryptoAddress(BlockchainNetworkType.DEFAULT).getAddress());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (GetNewCryptoAddressException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -150,12 +218,13 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager
     }
 
     @Override
-    public CryptoTransaction getGenesisTransaction(String transactionId) throws CantGetGenesisTransactionException {
-        return assetCryptoVaultManager.getGenesisTransaction(transactionId);
-    }
-
-    @Override
     public long getAvailableBalanceForTransaction(String genesisTransaction) {
         return assetCryptoVaultManager.getAvailableBalanceForTransaction(genesisTransaction);
     }
+
+    @Override
+    public void sendBitcoinAssetToUser(String genesisTransactionId, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException {
+
+    }
+
 }

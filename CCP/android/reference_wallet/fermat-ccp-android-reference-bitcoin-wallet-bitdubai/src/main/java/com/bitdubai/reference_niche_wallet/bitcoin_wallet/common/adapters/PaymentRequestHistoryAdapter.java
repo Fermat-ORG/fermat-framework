@@ -86,19 +86,15 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
 
 
         holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
-        holder.getTxt_amount().setTextColor(Color.BLACK);
 
         holder.getTxt_contactName().setText("Mati");//data.getContact().getActorName());
-        holder.getTxt_contactName().setTextColor(Color.BLACK);
 
         holder.getTxt_notes().setText(data.getReason());
-        holder.getTxt_notes().setTextColor(Color.BLACK);
 
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
         holder.getTxt_time().setText(data.getDate());
-        holder.getTxt_time().setTextColor(Color.BLACK);
 
         holder.getTxt_state().setText(data.getState());//data.getState());
-        holder.getTxt_state().setTextColor(Color.BLACK);
+
     }
 }

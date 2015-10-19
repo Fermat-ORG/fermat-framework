@@ -4,16 +4,26 @@ Readme
 Welcome to Fermat! 
 -------------------
 
-As we firmly believe that the next decade will witness crypto currencies going mainstream and governments issuing digital currency as well, we expect paper money is going to disappear within the next 5 to 10 years. Thus a strong consumer demand for digital wallets will inevitably emerge. In order to meet this demand thousands of wallets, different in terms of not only the level of abstraction they apply (some of them showing crypto currencies while others digital fiat over crypto or even digital assets) but also with respect to their look and feel and their functionalities, should be available. Such a wide variety of wallets is indispensable owing to the diversity characterizing the world's population. 
+In the last 20 years virtually everything went digital: pictures, music, videos, mails, etc. Nevertheless we still have cash as paper money. Why isn't cash money digital yet?
+
+The reason is that digital information can be cloned, and if digital cash could be cloned it would render it useless. When bitcoin was invented it brought with it the solution to the last barrier preventing money to be digital: the solution to the double spend problem. 
+
+So now we firmly believe that the next decade will witness governments issuing digital currency based on bitcoin technology. We expect paper money is going to disappear within the next 5 to 10 years. Thus a strong consumer demand for digital wallets will inevitably emerge. 
+
+We believe crypto currencies will expand worldwide while that happens and tons of crypto wallets will be needed for different use cases. Our mission is to make this happen as soon as possible.
+
+In order to meet this demand thousands of wallets, different in terms of not only the level of abstraction they apply (some of them showing govermet issued digital money others crypto currencies, and others digital fiat over crypto or even digital assets) but also with respect to their look and feel and their functionalities, should be available. Such a wide variety of wallets is indispensable owing to the diversity characterizing the world's population. 
+
+Fermat is a master plan to avoid getting to that future through waiting for independent entrepreneurs to build each of these wallets one at the time, repeating every time all the math, accounting, cryptography and algorithms that are common to all these wallets. The Fermat system is a master platform that handles all that and by doing  the heavy lifting enables any developer in the world to easily create niche wallets on top of its shared infraestructure.
 
 We believe the open source community collectively has more talent than any of us individually. We believe it is important to build on top of services that others took time and effort to build. We believe in decentralization. 
 
-We believe in people with passion who are crazy enough to think they can change the world. We do believe we are going to change this world and move it forward.
+We believe in people with passion who are crazy enough to think they can change the world. We do believe we are going to change this world.
 
 How will we do it?
 ---------------------
 
-Not stopping until we reach our goal and finding the answers to the following questions:
+With a lot of hard work and not stopping until we reach our goal. Also finding the answers to the following questions:
 
 * How can we isolate ordinary people from the perceived complexity? 
 * How can we use the collective intelligence of the developer community? 
@@ -21,16 +31,16 @@ Not stopping until we reach our goal and finding the answers to the following qu
 * How do we integrate legacy financial institutions in a way they feel comfortable? 
 * How do we integrate merchants, retailers and brands of all sizes in a clever way?
 
-The answers to each of these questions are addressed within the Fermat platform.
+The answers to each of these questions are addressed within Fermat.
 
 What is Fermat? 
 ----------------------
 
-Fermat is a platform for experimentation on what needs to be done to get crypto currencies mass adopted.
+Fermat is a system for experimentation on what needs to be done to get crypto currencies mass adopted.
 
 Technically Fermat is an open-source P2P system built on a plug-ins architecture that handles a stack of platforms and runs on multiple OS including Android, Linux, iOS, OSX and Windows.
 
-What makes Fermat different from other wallet platforms or services?
+What makes Fermat different from other wallet systems or services?
 
 * **Fermat is P2P.** This makes it censorship resistent and difficult to be attacked.
 
@@ -38,9 +48,9 @@ What makes Fermat different from other wallet platforms or services?
 
 * **Fermat runs on end users' devices.** This enables users to hold their own money eliminating the need to trust a third party. 
 
-* **Fermat is inclusive.** By creating their own plugins, current industry members can integrate with Fermat to offer their services and products to Fermat user base. 
+* **Fermat is inclusive.** By creating their own plugins, current industry members can integrate with Fermat to offer their services and products to Fermat's user base. 
 
-* **Fermat segments the world population and offers a custom tailored solution for each segment.** Any developer can easily create niche wallets for a particular group of people. Brands can create their own wallets for their followers. All the heavy lifting is done by the Fermat platform.
+* **Fermat segments the world population and offers a custom tailored solution for each segment.** Any developer can easily create niche wallets for a particular group of people. Brands can create their own wallets for their followers. All the heavy lifting is done by the Fermat underlaying technology.
 
 * **Fermat guaratees plugins and wallet developers a revenue stream.** Fermat implements an innovative business model which allows plugins and wallet developers to define a use license, and Fermat itself enforces this license on behalf of developers. 
 
@@ -48,15 +58,17 @@ Fermat is moving towards version 1, but we're not stopping there. We have many f
 [documentation](https://github.com/bitDubai/fermat/tree/master/fermat-documentation) that we're anxious to add. 
 So take Fermat out for a spin and let us know how we can make it your favorite platform to launch your own digital wallet. 
 
-You can see some cool visualizations of Fermat and its P2P network at 
+You can learn more and see some cool visualizations of Fermat's architecture and its P2P network at 
 [Fermat.org](http://www.fermat.org).
 
 
 Mission / Purpose
 ------------------------------------------------
 
+> To get cryptocurrencies mass adopted as soon as possible, and by doing this, to empower every person in the world with the appropriate tools to save and move their money in a digital format in an
+efficient, secure an private way.
 
-> Empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way. And at the same time allow them to choose which currency to use, regardless of the place they live or where they were born.
+> To give back the souveraignity over each one's own ressources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.
 
 
 Fermat Principles

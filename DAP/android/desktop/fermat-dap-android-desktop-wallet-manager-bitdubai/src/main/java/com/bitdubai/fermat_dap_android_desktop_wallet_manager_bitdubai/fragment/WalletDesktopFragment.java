@@ -44,7 +44,6 @@ import java.util.List;
 public class WalletDesktopFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
-    private static final String CWP_WALLET_BASIC_ALL_MAIN = Activities.CWP_WALLET_BASIC_ALL_MAIN.getCode();
 
     Typeface tf;
 

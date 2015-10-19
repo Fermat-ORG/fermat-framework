@@ -1,6 +1,8 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +12,10 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetActorTransactionHistoryException;
@@ -92,21 +96,24 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
     protected void bindHolder(final TransactionItemViewHolder holder, final CryptoWalletTransaction data, int position) {
 
         try {
+            Bitmap bitmap= null;
+            //if(data.getInvolvedActor().getPhoto()!=null){
+                 bitmap  = BitmapFactory.decodeByteArray(data.getInvolvedActor().getPhoto(),0,data.getInvolvedActor().getPhoto().length);
+                 holder.getContactIcon().setImageBitmap(bitmap);
+           // }else{
+                holder.getContactIcon().setImageResource(R.drawable.mati_profile);
+           // }
 
-            holder.getContactIcon().setImageResource(R.drawable.mati_profile);
 
             holder.getTxt_amount().setText(formatBalanceString(data.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
-            holder.getTxt_amount().setTextColor(Color.BLACK);
 
             holder.getTxt_contactName().setText(data.getInvolvedActor().getName());//data.getContact().getActorName());
-            holder.getTxt_contactName().setTextColor(Color.BLACK);
 
             holder.getTxt_notes().setText(data.getBitcoinWalletTransaction().getMemo());
-            holder.getTxt_notes().setTextColor(Color.BLACK);
+
 
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
             holder.getTxt_time().setText(sdf.format(data.getBitcoinWalletTransaction().getTimestamp()));
-            holder.getTxt_time().setTextColor(Color.BLACK);
 
             ActorTransactionSummary actorTransactionSummary = null;
 
@@ -117,19 +124,11 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
                 e.printStackTrace();
             }
 
-            if(actorTransactionSummary!=null){
+            if(actorTransactionSummary!=null) {
                 holder.getTxt_total_number_transactions().setText(String.valueOf(actorTransactionSummary.getReceivedTransactionsNumber()));
 
                 holder.getTxt_total_balance().setText(formatBalanceString(actorTransactionSummary.getReceivedAmount(), referenceWalletSession.getTypeAmount()));
-            }else{
-                holder.getTxt_total_number_transactions().setText("16");
-                holder.getTxt_total_number_transactions().setTextColor(Color.BLACK);
-
-                holder.getTxt_total_balance().setText("19 BTC");
-                holder.getTxt_total_balance().setTextColor(Color.BLACK);
             }
-            holder.getTxt_total_balance().setTextColor(Color.BLACK);
-            holder.getTxt_total_number_transactions().setTextColor(Color.BLACK);
 
 
 
@@ -287,6 +286,10 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
                 holder = new ViewHolder();
                 holder.txt_amount = (FermatTextView) convertView.findViewById(R.id.txt_amount);
                 holder.txt_date = (FermatTextView) convertView.findViewById(R.id.txt_date);
+
+                holder.txt_amount.setFont(FontType.ROBOTO_REGULAR);
+                holder.txt_date.setFont(FontType.ROBOTO_REGULAR);
+
                 convertView.setTag(holder);
             }else{
                 holder = (ViewHolder)  convertView.getTag();
@@ -299,6 +302,9 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
             holder.txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
             holder.txt_date.setText(sdf.format(cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));
+
+            holder.txt_amount.setFont(FontType.ROBOTO_REGULAR);
+            holder.txt_date.setFont(FontType.ROBOTO_REGULAR);
 
             convertView.setTag(holder);
 

@@ -12,9 +12,13 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.DealsWithIntraUsersNetworkService;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.DealsWithWalletManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
@@ -29,7 +33,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.AddressExchangeRequestState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDao;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDeveloperDatabaseFactory;
@@ -89,6 +92,7 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
                                                           DealsWithPluginDatabaseSystem,
                                                           DealsWithPluginFileSystem,
                                                           DealsWithWalletManager,
+                                                          DealsWithIntraUsersNetworkService,
                                                           IntraWalletUserManager,
                                                           LogManagerForDevelopers,
                                                           Service,
@@ -158,6 +162,10 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
     public static final String INTRA_WALLET_USERS_PROFILE_IMAGE_FILE_NAME = "intraWalletUserIdentityProfileImage";
     public static final String INTRA_WALLET_USERS_PRIVATE_KEYS_FILE_NAME = "intraWalletUserIdentityPrivateKey";
 
+
+    private IntraUserManager intraActorManager;
+
+
     /**
      * List Intra Users linked to current Device User
      * <p/>
@@ -173,11 +181,17 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
 
         try {
 
+            List<IntraWalletUser> intraWalletUserList1 = new ArrayList<IntraWalletUser>();
+
+
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            return intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser);
+            intraWalletUserList1 = intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser);
+
+
+            return intraWalletUserList1;
 
         } catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantListIntraWalletUsersException("CAN'T GET INTRA WALLET USER IDENTITIES", e, "Error get logged user device", "");
+          throw new CantListIntraWalletUsersException("CAN'T GET INTRA WALLET USER IDENTITIES", e, "Error get logged user device", "");
         } catch (CantListIntraWalletUserIdentitiesException e) {
             throw new CantListIntraWalletUsersException("CAN'T GET INTRA WALLET USER IDENTITIES", e, "", "");
         } catch (Exception e) {
@@ -210,12 +224,16 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
             ECCKeyPair keyPair = new ECCKeyPair();
-            String publicKey = keyPair.getPublicKey();
+           String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
             intraWalletUserIdentityDao.createNewUser(alias, publicKey, privateKey, loggedUser, profileImage);
 
-            return new IntraWalletUserIdentity(alias, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
+            IntraWalletUserIdentity intraWalletUserIdentity = new IntraWalletUserIdentity(alias, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
+
+            registerIdentities();
+
+            return intraWalletUserIdentity;
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateNewIntraWalletUserException("CAN'T CREATE NEW INTRA WALLET USER IDENTITY", e, "Error getting current logged in device user", "");
         } catch (CantCreateNewDeveloperException e) {
@@ -224,6 +242,25 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
             throw new CantCreateNewIntraWalletUserException("CAN'T CREATE NEW INTRA WALLET USER IDENTITY", FermatException.wrapException(e), "", "");
         }
 
+    }
+
+    @Override
+   public boolean  hasIntraUserIdentity() throws CantListIntraWalletUsersException{
+        try {
+
+            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
+            if(intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(loggedUser).size() > 0)
+                return true;
+            else
+                return false;
+        } catch (CantGetLoggedInDeviceUserException e) {
+            throw new CantListIntraWalletUsersException("CAN'T GET IF INTRA WALLET USER IDENTITIES  EXISTS", e, "Error get logged user device", "");
+        } catch (CantListIntraWalletUserIdentitiesException e) {
+            throw new CantListIntraWalletUsersException("CAN'T GET IF WALLET USER IDENTITIES EXISTS", e, "", "");
+
+        } catch (Exception e) {
+            throw new CantListIntraWalletUsersException("CAN'T GET IF INTRA WALLET USER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
+        }
     }
     /**
      * Service Interface implementation.
@@ -251,12 +288,18 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
                 walletManagerManager
         );
 
-        executePendingAddressExchangeRequests(cryptoAddressGenerationService);
+        registerIdentities();
+        //TODO: LEON LPM, tu NS me estaba tirando el mio
+        //executePendingAddressExchangeRequests(cryptoAddressGenerationService);
 
         FermatEventListener cryptoAddressReceivedEventListener = eventManager.getNewListener(EventType.CRYPTO_ADDRESS_REQUESTED);
         cryptoAddressReceivedEventListener.setEventHandler(new CryptoAddressRequestedEventHandler(this, cryptoAddressGenerationService));
         eventManager.addListener(cryptoAddressReceivedEventListener);
         listenersAdded.add(cryptoAddressReceivedEventListener);
+
+
+
+
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -264,8 +307,7 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
     private void executePendingAddressExchangeRequests(IntraWalletUserIdentityCryptoAddressGenerationService cryptoAddressGenerationService) {
         try {
             List<AddressExchangeRequest> addressExchangeRequestList = cryptoAddressesManager.listPendingRequests(
-                    IntraWalletUserIdentityCryptoAddressGenerationService.actorType,
-                    AddressExchangeRequestState.PENDING_LOCAL_RESPONSE
+                    IntraWalletUserIdentityCryptoAddressGenerationService.actorType
             );
 
             for (AddressExchangeRequest request : addressExchangeRequestList) {
@@ -318,6 +360,22 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
         IntraWalletUserIdentityDeveloperDatabaseFactory dbFactory = new IntraWalletUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return dbFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+
+    public void registerIdentities(){
+        try {
+            List<IntraWalletUser> lstIntraWalletUSer = intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
+            List<Actor> lstActors = new ArrayList<Actor>();
+            for(IntraWalletUser user : lstIntraWalletUSer){
+                lstActors.add(intraActorManager.contructIdentity(user.getPublicKey(), user.getAlias(), Actors.INTRA_USER,user.getProfileImage()));
+            }
+            intraActorManager.registrateActors(lstActors);
+        } catch (CantListIntraWalletUserIdentitiesException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (CantGetLoggedInDeviceUserException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
     }
 
     @Override
@@ -435,5 +493,10 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
     @Override
     public void setWalletManagerManager(WalletManagerManager walletManagerManager) {
         this.walletManagerManager = walletManagerManager;
+    }
+
+    @Override
+    public void setIntraUserNetworkServiceManager(IntraUserManager intraUserManager) {
+        this.intraActorManager = intraUserManager;
     }
 }

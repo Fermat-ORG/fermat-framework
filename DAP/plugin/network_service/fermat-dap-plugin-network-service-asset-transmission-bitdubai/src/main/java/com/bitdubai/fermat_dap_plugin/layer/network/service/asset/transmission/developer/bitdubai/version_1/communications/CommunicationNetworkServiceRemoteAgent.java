@@ -7,22 +7,27 @@
 package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.AssetTransmissionNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communication.IncomingMessageDao;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communication.OutgoingMessageDao;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionPluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.IncomingMessageDao;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,19 +51,24 @@ import java.util.Observable;
 public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
     /*
-     * Represent the sleep time for the read or send (2000 milliseconds)
-     */
+   * Represent the sleep time for the read or send (2000 milliseconds)
+   */
     private static final long SLEEP_TIME = 2000;
 
     /**
      * Represent the communicationsVPNConnection
      */
-    CommunicationsVPNConnection communicationsVPNConnection;
+    private CommunicationsVPNConnection communicationsVPNConnection;
 
     /**
      * DealsWithErrors Interface member variables.
      */
     private ErrorManager errorManager;
+
+    /**
+     * DealWithEvents Interface member variables.
+     */
+    private EventManager eventManager;
 
     /**
      * Represent the incomingMessageDao
@@ -91,25 +101,19 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
     private ECCKeyPair eccKeyPair;
 
     /**
-     * Represent the public key of the remote network service
-     */
-    private String remoteNetworkServicePublicKey;
-
-    /**
      * Constructor with parameters
      *
      * @param eccKeyPair from the plugin root
-     * @param remoteNetworkServicePublicKey the public key
      * @param errorManager  instance
      * @param incomingMessageDao instance
      * @param outgoingMessageDao instance
      */
-    public CommunicationNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, CommunicationsVPNConnection communicationsVPNConnection, String remoteNetworkServicePublicKey, ErrorManager errorManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao) {
+    public CommunicationNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, CommunicationsVPNConnection communicationsVPNConnection, ErrorManager errorManager, EventManager eventManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao) {
 
         super();
         this.eccKeyPair                          = eccKeyPair;
-        this.remoteNetworkServicePublicKey       = remoteNetworkServicePublicKey;
         this.errorManager                        = errorManager;
+        this.eventManager                        = eventManager;
         this.running                             = Boolean.FALSE;
         this.incomingMessageDao                  = incomingMessageDao;
         this.outgoingMessageDao                  = outgoingMessageDao;
@@ -176,7 +180,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         toSend.interrupt();
 
         //Disconnect from the service
-        //serviceToServiceOnlineConnection.disconnect();
+        communicationsVPNConnection.close();
     }
 
     /**
@@ -188,14 +192,14 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-            System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
+            //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.isActive() = "+communicationsVPNConnection.isActive());
 
             /**
              * Verified the status of the connection
              */
             if (communicationsVPNConnection.isActive()){
 
-                System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.getUnreadMessagesCount());
+                //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.getUnreadMessagesCount() = "+communicationsVPNConnection.getUnreadMessagesCount());
 
                 /**
                  * process all pending messages
@@ -207,16 +211,15 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                      */
                     FermatMessage message = communicationsVPNConnection.readNextMessage();
 
-
                     /*
                      * Validate the message signature
                      */
-                    AsymmectricCryptography.verifyMessageSignature(message.getSignature(), message.getContent(), remoteNetworkServicePublicKey);
+                    AsymmetricCryptography.verifyMessageSignature(message.getSignature(), message.getContent(), communicationsVPNConnection.getRemoteParticipantNetworkService().getIdentityPublicKey());
 
                     /*
                      * Decrypt the message content
                      */
-                    ((FermatMessageCommunication) message).setContent(AsymmectricCryptography.decryptMessagePrivateKey(message.getContent(), eccKeyPair.getPrivateKey()));
+                    ((FermatMessageCommunication) message).setContent(AsymmetricCryptography.decryptMessagePrivateKey(message.getContent(), eccKeyPair.getPrivateKey()));
 
                     /*
                      * Change to the new status
@@ -247,9 +250,9 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
             toReceive.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
 
         } catch (InterruptedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
         } catch (CantInsertRecordDataBaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
         }
 
     }
@@ -263,61 +266,71 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-                try {
+            try {
 
-                    Map<String, Object> filters = new HashMap<>();
-                    filters.put(AssetTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
-                    filters.put(AssetTransmissionNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, remoteNetworkServicePublicKey);
+                Map<String, Object> filters = new HashMap<>();
+                filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
+                filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, communicationsVPNConnection.getRemoteParticipant().getIdentityPublicKey());
 
                     /*
                      * Read all pending message from database
                      */
-                    List<FermatMessage> messages = outgoingMessageDao.findAll(filters);
+                List<FermatMessage> messages = outgoingMessageDao.findAll(filters);
                     /*
                      * For each message
                      */
-                    for (FermatMessage message: messages){
+                for (FermatMessage message: messages){
 
 
-                        if (communicationsVPNConnection.isActive() && (message.getFermatMessagesStatus() != FermatMessagesStatus.SENT)) {
+                    if (communicationsVPNConnection.isActive() && (message.getFermatMessagesStatus() != FermatMessagesStatus.SENT)) {
 
                             /*
-                             * Encrypt the content of the message whit the remote public key
+                             * Encrypt the content of the message whit the remote network service public key
                              */
-                            ((FermatMessageCommunication) message).setContent(AsymmectricCryptography.encryptMessagePublicKey(message.getContent(), remoteNetworkServicePublicKey));
+                        ((FermatMessageCommunication) message).setContent(AsymmetricCryptography.encryptMessagePublicKey(message.getContent(), communicationsVPNConnection.getRemoteParticipantNetworkService().getIdentityPublicKey()));
 
                             /*
                              * Sing the message
                              */
-                            String signature = AsymmectricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
-                            ((FermatMessageCommunication) message).setSignature(signature);
+                        String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
+                        ((FermatMessageCommunication) message).setSignature(signature);
+
 
                             /*
                              * Send the message
                              */
-                            communicationsVPNConnection.sendMessage(message);
+                        communicationsVPNConnection.sendMessage(message);
 
                             /*
                              * Change the message and update in the data base
                              */
-                            ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
-                            outgoingMessageDao.update(message);
-                        }
-                    }
 
-                } catch (CantUpdateRecordDataBaseException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: "+e.getMessage()));
-                } catch (CantReadRecordDataBaseException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: " + e.getMessage()));
+                        ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
+                        outgoingMessageDao.update(message);
+
+
+                            /*
+                             * Put the message on a event and fire new event
+                             */
+                        FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+                        fermatEvent.setSource(AssetTransmissionPluginRoot.EVENT_SOURCE);
+                        ((NewNetworkServiceMessageSentNotificationEvent) fermatEvent).setData(message);
+                        eventManager.raiseEvent(fermatEvent);
+                    }
                 }
+
+            } catch (CantUpdateRecordDataBaseException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: "+e.getMessage()));
+            } catch (CantReadRecordDataBaseException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: " + e.getMessage()));
+            }
 
             //Sleep for a time
             toSend.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
 
         } catch (InterruptedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
         }
 
     }
-
 }

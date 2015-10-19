@@ -1,6 +1,7 @@
 package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version1.structure.actor_asset_distributor_user;
 
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;//quitar
+//import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
 /**
@@ -28,7 +29,9 @@ public class MockActorAssetUser implements ActorAssetUser {
     }
 
     @Override
-    public ContactState getContactState() {
-        return ContactState.PENDING_REMOTELY_ACCEPTANCE;
+    public ConnectionState getConnectionState() {
+        return null;
     }
+
+
 }

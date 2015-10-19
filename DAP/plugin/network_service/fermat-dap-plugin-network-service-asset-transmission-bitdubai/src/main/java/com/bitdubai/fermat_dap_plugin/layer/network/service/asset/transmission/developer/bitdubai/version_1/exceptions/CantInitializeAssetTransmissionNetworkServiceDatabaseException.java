@@ -10,10 +10,10 @@ package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantInitializeAssetTransmissionNetworkServiceDatabaseException</code> is
- * throw when error occurred initialize the data base
+ * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetTransmissionNetworkServiceDatabaseException</code> is
+ * throw when error occurred updating new record in a table of the data base
  * <p/>
- * Created by Roberto Requena - (rart3001@gmail.com) on 21/07/15.
+ * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 07/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -23,7 +23,7 @@ public class CantInitializeAssetTransmissionNetworkServiceDatabaseException exte
     /**
      * Represent the default message
      */
-    public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE NETWORK INTRAUSER DATABASE";
+    public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE  NETWORK SERVICE ASSET TRANSMISSION  DATABASE";
 
     /**
      * Constructor with parameters

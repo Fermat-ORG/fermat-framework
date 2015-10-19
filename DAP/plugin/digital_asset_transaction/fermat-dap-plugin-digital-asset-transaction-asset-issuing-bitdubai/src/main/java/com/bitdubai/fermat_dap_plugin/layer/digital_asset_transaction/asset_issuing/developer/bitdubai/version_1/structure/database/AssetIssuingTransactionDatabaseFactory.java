@@ -79,8 +79,9 @@ public class AssetIssuingTransactionDatabaseFactory implements DealsWithPluginDa
             table.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_TO_GENERATE_COLUMN_NAME, DatabaseDataType.INTEGER, 4, Boolean.FALSE);
             table.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_GENERATED_COLUMN_NAME, DatabaseDataType.INTEGER, 4, Boolean.FALSE);
             table.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, DatabaseDataType.STRING,100, Boolean.FALSE);
+            table.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_WALLET_PUBLIC_KEY_COLUMN_NAME,DatabaseDataType.STRING,100,Boolean.FALSE);
 
-            table.addIndex(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_FIRST_KEY_COLUMN);
+                    table.addIndex(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -89,19 +90,19 @@ public class AssetIssuingTransactionDatabaseFactory implements DealsWithPluginDa
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating "+AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME+" table", "Exception not handled by the plugin, There is a problem and I cannot create the table.");
             }
 
-            DatabaseTableFactory transitionProtocolTable = databaseFactory.newTableFactory(ownerId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME);
+            DatabaseTableFactory eventsRecorderTable = databaseFactory.newTableFactory(ownerId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME);
 
-            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_ID_COLUMN, DatabaseDataType.STRING,36, Boolean.TRUE);
-            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_EVENT_COLUMN, DatabaseDataType.STRING,10, Boolean.FALSE);
-            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_SOURCE_COLUMN,DatabaseDataType.STRING,10, Boolean.FALSE);
-            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_STATUS_COLUMN, DatabaseDataType.STRING,10, Boolean.FALSE);
-            transitionProtocolTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TIMESTAMP_COLUMN,DatabaseDataType.LONG_INTEGER,100, Boolean.FALSE);
+            eventsRecorderTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_ID_COLUMN, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            eventsRecorderTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_EVENT_COLUMN, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            eventsRecorderTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_SOURCE_COLUMN, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            eventsRecorderTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_STATUS_COLUMN, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            eventsRecorderTable.addColumn(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TIMESTAMP_COLUMN, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
 
-            transitionProtocolTable.addIndex(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN);
+            eventsRecorderTable.addIndex(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
-                databaseFactory.createTable(ownerId, transitionProtocolTable);
+                databaseFactory.createTable(ownerId, eventsRecorderTable);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating "+AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME +" table", "Exception not handled by the plugin, There is a problem and I cannot create the table.");
             }

@@ -75,10 +75,10 @@ public class MakeOfflineBankTransferBankMoneyTransactionDatabaseFactory implemen
             table = databaseFactory.newTableFactory(ownerId, MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_TABLE_NAME);
 
             table.addColumn(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_BANK_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_BROKER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_PUBLIC_KEY_ACTOR_TO_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_BALANCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_AMOUNT_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_BANK_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(MakeOfflineBankTransferBankMoneyTransactionDatabaseConstants.MAKE_OFFLINE_BANK_TRANSFER_BANK_OPERATION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);

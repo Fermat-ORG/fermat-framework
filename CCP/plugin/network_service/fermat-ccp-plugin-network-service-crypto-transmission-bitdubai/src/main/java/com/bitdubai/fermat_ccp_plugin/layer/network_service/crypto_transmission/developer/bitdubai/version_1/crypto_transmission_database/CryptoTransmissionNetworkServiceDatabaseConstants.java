@@ -12,6 +12,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission
  */
 public class CryptoTransmissionNetworkServiceDatabaseConstants {
 
+    public static final String DATABASE_NAME = "crypto_transmission_database";
+
     /**
      * CRYPTO TRANSMISSION METADATA database table definition.
      */
@@ -27,6 +29,8 @@ public class CryptoTransmissionNetworkServiceDatabaseConstants {
     public static final String CRYPTO_TRANSMISSION_METADATA_PAYMENT_DESCRIPTION_COLUMN_NAME = "payment_description";
     public static final String CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME = "status";
     public static final String CRYPTO_TRANSMISSION_METADATA_TYPE_COLUMN_NAME = "type";
+    public static final String CRYPTO_TRANSMISSION_METADATA_PENDING_FLAG_COLUMN_NAME = "pending_flag";
+    public static final String CRYPTO_TRANSMISSION_METADATA_TIMESTAMP_COLUMN_NAME = "timestamp";
 
    public static final String CRYPTO_TRANSMISSION_METADATA_FIRST_KEY_COLUMN = "transmission_id";
 
@@ -41,5 +45,6 @@ public class CryptoTransmissionNetworkServiceDatabaseConstants {
     public static final String COMPONENT_VERSIONS_DETAILS_LAST_CONNECTION_COLUMN_NAME = "last_connection";
 
    public static final String COMPONENT_VERSIONS_DETAILS_FIRST_KEY_COLUMN = "id";
+
 
 }

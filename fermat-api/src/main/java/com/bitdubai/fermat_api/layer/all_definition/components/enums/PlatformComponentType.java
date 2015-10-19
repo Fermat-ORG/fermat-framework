@@ -6,25 +6,28 @@
  */
 package com.bitdubai.fermat_api.layer.all_definition.components.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+
 /**
  * The enum <code>com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType</code> define
- * all types that a platform component cam be
+ * all types that a platform component can be
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 02/09/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public enum PlatformComponentType {
+public enum PlatformComponentType implements FermatEnum {
 
     // Definition types
 
-    COMMUNICATION_CLOUD_CLIENT_COMPONENT ("COM_CLD_CLI_COMP"),
-    COMMUNICATION_CLOUD_SERVER_COMPONENT ("COM_CLD_SER_COMP"),
-    NETWORK_SERVICE_COMPONENT            ("NS_COMP"),
-    ACTOR_COMPONENT                      ("A_COMP"),
-    ACTOR_NETWORK_SERVICE_COMPONENT      ("ANS_COMP");
-
+    ACTOR_ASSET_USER            ("ACT_ASU"),
+    ACTOR_ASSET_ISSUER          ("ACT_ASI"),
+    ACTOR_INTRA_USER            ("ACT_IU"),
+    ACTOR_NETWORK_SERVICE       ("ANS"),
+    COMMUNICATION_CLOUD_CLIENT  ("COM_CLD_CLI"),
+    COMMUNICATION_CLOUD_SERVER  ("COM_CLD_SER"),
+    NETWORK_SERVICE             ("NS"),;
 
     /**
      * Represent the code
@@ -36,7 +39,7 @@ public enum PlatformComponentType {
      *
      * @param code
      */
-    private PlatformComponentType(String code){
+    PlatformComponentType(String code){
         this.code = code;
     }
 
@@ -59,11 +62,14 @@ public enum PlatformComponentType {
 
         switch (code){
 
-            case "COM_CLD_CLI_COMP" : return PlatformComponentType.COMMUNICATION_CLOUD_CLIENT_COMPONENT;
-            case "COM_CLD_SER_COMP" : return PlatformComponentType.COMMUNICATION_CLOUD_SERVER_COMPONENT;
-            case "NS_COMP"          : return PlatformComponentType.NETWORK_SERVICE_COMPONENT;
-            case "ANSC" : return ACTOR_NETWORK_SERVICE_COMPONENT;
-            case "ANS_COMP"         : return PlatformComponentType.ACTOR_NETWORK_SERVICE_COMPONENT;
+            case "ACT_IU"      : return ACTOR_INTRA_USER;
+            case "ACT_ASU"     : return ACTOR_ASSET_USER;
+            case "ACT_ASI"     : return ACTOR_ASSET_ISSUER;
+            case "ANS"         : return ACTOR_NETWORK_SERVICE;
+            case "COM_CLD_CLI" : return COMMUNICATION_CLOUD_CLIENT;
+            case "COM_CLD_SER" : return COMMUNICATION_CLOUD_SERVER;
+            case "NS"          : return NETWORK_SERVICE;
+
             default: throw new IllegalArgumentException();
         }
     }

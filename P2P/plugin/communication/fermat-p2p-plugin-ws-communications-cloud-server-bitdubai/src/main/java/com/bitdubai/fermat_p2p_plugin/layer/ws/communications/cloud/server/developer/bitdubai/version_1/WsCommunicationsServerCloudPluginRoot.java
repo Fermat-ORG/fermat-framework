@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationCloudServer;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentConnectionRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentRegistrationRequestPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.DiscoveryComponentConnectionRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -29,6 +30,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import org.java_websocket.WebSocketImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -100,11 +103,6 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
      * DealsWithPluginIdentity Interface member variables.
      */
     private UUID pluginId;
-
-    /*
-     * Represent the executorService
-     */
-    private ExecutorService executorService;
 
     /**
      * Represent the disableServerFlag
@@ -216,11 +214,10 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
                         WsCommunicationCloudServer wsCommunicationCloudServer = new WsCommunicationCloudServer(inetSocketAddress);
                         wsCommunicationCloudServer.registerFermatPacketProcessor(new ComponentRegistrationRequestPacketProcessor());
                         wsCommunicationCloudServer.registerFermatPacketProcessor(new ComponentConnectionRequestPacketProcessor());
-                        //wsCommunicationCloudServer.registerFermatPacketProcessor(new MessageTransmitPacketProcessor()); DEPRECATE
+                        wsCommunicationCloudServer.registerFermatPacketProcessor(new DiscoveryComponentConnectionRequestPacketProcessor());
                         wsCommunicationCloudServer.registerFermatPacketProcessor(new RequestListComponentRegisterPacketProcessor());
 
                         wsCommunicationCloudServer.start();
-
 
                         System.out.println("New CommunicationChannelAddress linked on " + networkInterface.getName());
                         System.out.println("Host = " + inetSocketAddress.getHostString());

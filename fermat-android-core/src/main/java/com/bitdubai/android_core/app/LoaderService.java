@@ -97,12 +97,10 @@ public class LoaderService extends Service {
 
 
             //set Os Addons in platform
-            fileSystemOs = new AndroidOsFileSystem();
-            fileSystemOs.setContext(context);
+            fileSystemOs = new AndroidOsFileSystem(context.getFilesDir().getPath());
             platform.setFileSystemOs(fileSystemOs);
 
-            databaseSystemOs = new AndroidOsDataBaseSystem();
-            databaseSystemOs.setContext(context);
+             databaseSystemOs = new AndroidOsDataBaseSystem(context.getFilesDir().getPath());
             platform.setDataBaseSystemOs(databaseSystemOs);
 
             //    locationSystemOs = new AndroidOsLocationSystem();

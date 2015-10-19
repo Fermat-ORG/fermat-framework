@@ -1,6 +1,9 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
 /**
@@ -8,24 +11,66 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
  */
 public class AssetUserActorRecord implements ActorAssetUser {
 
-    private String name;
+    private String linkedIdentity;
     private String publicKey;
-    private byte[] profileImage ;
+    private String name;
+    private byte[] profileImage;
+    private Location location;
+    private Double locationLatitude;
+    private Double locationLongitude;
     private long registrationDate;
-    private ConnectionState contactState;
+    private ConnectionState connectionState;
+    private Genders genders;
+    private String age;
+    private CryptoAddress cryptoAddress;
 
     /**
      * Constructor
      */
-    public AssetUserActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, ConnectionState contactState){
+
+    public AssetUserActorRecord(String name, String publicKey, byte[] profileImage, Location location) {
 
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = (byte[])profileImage.clone();
-        this.registrationDate = registrationDate;
-        this.contactState = contactState;
+        this.profileImage = profileImage.clone();
+        this.locationLatitude = location.getLatitude();
+        this.locationLongitude = location.getLongitude();
+        this.genders = Genders.INDEFINITE;
+//        this.age = age;
+//        this.cryptoAddress = cryptoAddress;
+        this.connectionState = ConnectionState.CONNECTED;
 
     }
+
+    public AssetUserActorRecord(String name, String publicKey, byte[] profileImage, long registrationDate, Genders genders, String age) {
+
+        this.name = name;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage.clone();
+        this.registrationDate = registrationDate;
+//        this.location = location;
+        this.genders = genders;
+        this.age = age;
+//        this.cryptoAddress = cryptoAddress;
+        this.connectionState = ConnectionState.CONNECTED;
+
+    }
+
+    public AssetUserActorRecord(String linkedIdentity, String publicKey, String name, Double locationLatitude, Double locationLongitude, Genders genders, String age){
+
+        this.linkedIdentity = linkedIdentity;
+        this.publicKey = publicKey;
+        this.name = name;
+        this.profileImage = profileImage.clone();
+        this.locationLatitude = locationLatitude;
+        this.locationLongitude = locationLongitude;
+        this.genders = genders;
+        this.age = age;
+//        this.cryptoAddress = cryptoAddress;
+        this.connectionState = ConnectionState.CONNECTED;
+
+    }
+
 
     /**
      * The metho <code>getPublicKey</code> gives us the public key of the represented Asset User
@@ -74,7 +119,62 @@ public class AssetUserActorRecord implements ActorAssetUser {
      * @return the contact state
      */
     @Override
-    public ConnectionState getContactState() {
-        return this.contactState;
+    public ConnectionState getConnectionState() {
+        return this.connectionState;
+    }
+
+    /**
+     * The method <code>getLocation</code> gives us the Location of the represented Asset user
+     *
+     * @return the Location of the Asset user
+     */
+    @Override
+    public Double getLocationLatitude() {
+        return this.locationLatitude;
+    }
+
+    @Override
+    public Double getLocationLongitude() {
+        return this.locationLongitude;
+    }
+
+    /**
+     * The method <code>getLocation</code> gives us the Location of the represented Asset user
+     *
+     * @return the Location of the Asset user
+     */
+//    @Override
+//    public Location getLocation() {
+//        return this.location;
+//    }
+
+    /**
+     * The method <code>getGender</code> gives us the Gender of the represented Asset user
+     *
+     * @return the Gender of the Asset user
+     */
+    @Override
+    public Genders getGender() {
+        return this.genders;
+    }
+
+    /**
+     * The method <code>getAge</code> gives us the Age of the represented Asset user
+     *
+     * @return the Location of the Asset user
+     */
+    @Override
+    public String getAge() {
+        return this.age;
+    }
+
+    /**
+     * returns the crypto address to which it belongs
+     *
+     * @return CryptoAddress instance.
+     */
+    @Override
+    public CryptoAddress getCryptoAddress() {
+        return this.cryptoAddress;
     }
 }

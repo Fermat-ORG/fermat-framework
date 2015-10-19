@@ -1,14 +1,14 @@
 package com.bitdubai.fermat_core.layer.dmp_network_service.crypto_transmission;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.dmp_network_service.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkSubsystem;
+import com.bitdubai.fermat_ccp_api.layer.network_service.NetworkServiceSubsystem;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_ccp_api.layer.network_service.CantStartSubsystemException;
 
 /**
- * Created by natalia on 03/08/15.
+ * Created by Matias Furszyfer on 08/09/15.
  */
-public class CryptoTransmissionSubsystem implements NetworkSubsystem {
+public class CryptoTransmissionSubsystem implements NetworkServiceSubsystem {
 
     Plugin plugin;
 
@@ -29,7 +29,7 @@ public class CryptoTransmissionSubsystem implements NetworkSubsystem {
             plugin = developerBitDubai.getPlugin();
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
-            throw new CantStartSubsystemException();
+            throw new CantStartSubsystemException(e,null,null);
         }
     }
 }

@@ -68,7 +68,8 @@ public interface NetworkService {
      * of the discovery query to search all component register in the communication
      * cloud server that match with the params
      *
-     * @param applicant
+     * @param platformComponentType
+     * @param networkServiceType
      * @param alias
      * @param identityPublicKey
      * @param location
@@ -81,7 +82,7 @@ public interface NetworkService {
      * @param fromOtherNetworkServiceType
      * @return DiscoveryQueryParameters
      */
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentProfile applicant, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType);
+    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType);
 
 
     /**
@@ -91,6 +92,14 @@ public interface NetworkService {
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered);
 
     /**
+     * Handles the events FailureComponentConnectionRequestNotificationEvent
+     * @param networkServiceApplicant
+     * @param discoveryQueryParameters
+     */
+    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remo);
+
+
+    /**
      * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
      * @param platformComponentProfileRegisteredList
      */
@@ -98,9 +107,8 @@ public interface NetworkService {
 
     /**
      * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
-     * @param remoteComponentProfile
+     * @param applicantComponentProfile
      */
-    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile remoteComponentProfile);
-
+    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile);
 
 }

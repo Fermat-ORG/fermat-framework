@@ -68,17 +68,20 @@ public class IntraUserModuleSearch implements IntraUserSearch {
             /**
              * search intra users by name from intra user network service
              */
-            List<IntraUser> intraUserList = this.intraUserNSManager.searchIntraUserByName(this.nameToSearch);
+            List<IntraUserInformation> intraUserList = this.intraUserNSManager.searchIntraUserByName(this.nameToSearch);
 
             /**
              * search Device User intra users  from intra user identity
              */
+
+        //TODO Harcoder
             List<IntraWalletUser> intraWalletUserList = this.intraWalletUserManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+
 
             /**
              * I only add intra users belonging to the Device User log
              */
-            for (IntraUser intraUser : intraUserList) {
+            for (IntraUserInformation intraUser : intraUserList) {
 
                 for (IntraWalletUser intraWalletUser : intraWalletUserList) {
                    if(intraWalletUser.getPublicKey().equals(intraUser.getPublicKey()) )

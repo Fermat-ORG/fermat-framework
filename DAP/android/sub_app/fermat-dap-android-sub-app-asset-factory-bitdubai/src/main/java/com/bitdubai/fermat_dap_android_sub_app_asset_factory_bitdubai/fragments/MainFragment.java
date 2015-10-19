@@ -33,6 +33,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantPublishAssetFactoy;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
@@ -172,7 +173,7 @@ public class MainFragment extends FermatFragment implements
                 adapter.changeDataSet(dataSet);
                 if (dataSet == null || dataSet.isEmpty()) {
                     /* create new asset */
-                    changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), getAssetForEdit());
+                    //changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), getAssetForEdit());
                 }
             } else if (result != null) {
                 dataSet = new ArrayList<>();
@@ -190,7 +191,7 @@ public class MainFragment extends FermatFragment implements
     }
 
     public List<AssetFactory> getMoreDataAsync() throws CantGetAssetFactoryException, CantCreateFileException {
-        return manager.getAssetFactoryByState(State.DRAFT);
+        return manager.getAssetFactoryAll();
     }
 
     @Override
@@ -209,9 +210,12 @@ public class MainFragment extends FermatFragment implements
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.action_edit)
-            changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), getAssetForEdit());
-        else if (menuItem.getItemId() == R.id.action_publish) {
+        if (menuItem.getItemId() == R.id.action_edit) {
+            if (getAssetForEdit() != null && getAssetForEdit().getState() == State.DRAFT)
+                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), getAssetForEdit());
+            else
+                selectedAsset = null;
+        } else if (menuItem.getItemId() == R.id.action_publish) {
             try {
                 if (manager.isReadyToPublish(selectedAsset.getPublicKey())) {
                     final ProgressDialog dialog = new ProgressDialog(getActivity());
@@ -222,7 +226,13 @@ public class MainFragment extends FermatFragment implements
                     FermatWorker worker = new FermatWorker() {
                         @Override
                         protected Object doInBackground() throws Exception {
+                            // for test
+                            for (InstalledWallet wallet : manager.getInstallWallets()) {
+                                selectedAsset.setWalletPublicKey(wallet.getWalletPublicKey());
+                                break;
+                            }
                             manager.publishAsset(getAssetForEdit(), BlockchainNetworkType.TEST);
+                            selectedAsset = null;
                             return true;
                         }
                     };
@@ -231,6 +241,7 @@ public class MainFragment extends FermatFragment implements
                         @Override
                         public void onPostExecute(Object... result) {
                             dialog.dismiss();
+                            selectedAsset = null;
                             if (getActivity() != null) {
                                 onRefresh();
                             }
@@ -240,6 +251,7 @@ public class MainFragment extends FermatFragment implements
                         @Override
                         public void onErrorOccurred(Exception ex) {
                             dialog.dismiss();
+                            selectedAsset = null;
                             if (getActivity() != null) {
                                 Toast.makeText(getActivity(), "Ups, some error occurred publishing this asset", Toast.LENGTH_SHORT).show();
                                 onRefresh();

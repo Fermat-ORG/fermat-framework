@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
@@ -46,7 +46,7 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
         /*
          * Get the message content and decrypt
          */
-        String messageContentJsonStringRepresentation = AsymmectricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
+        String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), getWsCommunicationsCloudClientChannel().getClientIdentity().getPrivateKey());
 
 
         System.out.println("ComponentConnectionRespondPacketProcessor - messageContentJsonStringRepresentation = "+messageContentJsonStringRepresentation);
@@ -61,11 +61,11 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
         try {
 
             //Get all values
-            URI vpnServerUri = new URI(respond.get(JsonAttNamesConstants.JSON_ATT_NAME_VPN_URI).getAsString());
-            String vpnServerIdentity = respond.get(JsonAttNamesConstants.JSON_ATT_NAME_VPN_SERVER_IDENTITY).getAsString();
-            String participantIdentity = respond.get(JsonAttNamesConstants.JSON_ATT_NAME_REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
-            PlatformComponentProfile remotePlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.JSON_ATT_NAME_REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
-
+            URI vpnServerUri = new URI(respond.get(JsonAttNamesConstants.VPN_URI).getAsString());
+            String vpnServerIdentity = respond.get(JsonAttNamesConstants.VPN_SERVER_IDENTITY).getAsString();
+            String participantIdentity = respond.get(JsonAttNamesConstants.REGISTER_PARTICIPANT_IDENTITY_VPN).getAsString();
+            PlatformComponentProfile remotePlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
+            PlatformComponentProfile remoteNsPlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_NS_VPN).getAsString(), PlatformComponentProfileCommunication.class);
 
             /*
              * TEMPORAL:
@@ -86,10 +86,10 @@ public class ComponentConnectionRespondPacketProcessor extends FermatPacketProce
              */
             WsCommunicationVPNClientManagerAgent wsCommunicationVPNClientManagerAgent = getWsCommunicationsCloudClientChannel().getWsCommunicationsCloudClientConnection().getWsCommunicationVPNClientManagerAgent();
 
-            /**
+            /*
              * Create a new VPN client
              */
-            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantIdentity, remotePlatformComponentProfile);
+            wsCommunicationVPNClientManagerAgent.createNewWsCommunicationVPNClient(vpnServerUri, vpnServerIdentity, participantIdentity, remotePlatformComponentProfile, remoteNsPlatformComponentProfile);
 
             /*
              * Is not running

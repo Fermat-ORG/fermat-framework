@@ -3,12 +3,15 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dis
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
@@ -25,7 +28,7 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
     UUID pluginId;
     PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
-    DigitalAssetTransmissionVault digitalAssetTransmissionVault;
+    //DigitalAssetDistributionVault digitalAssetDistributionVault;
 
     public AssetDistributionTransactionManager(AssetVaultManager assetVaultManager,
                                                ErrorManager errorManager,
@@ -39,12 +42,26 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
         this.digitalAssetDistributor=new DigitalAssetDistributor(assetVaultManager,
                 errorManager,
                 pluginId,
-                pluginDatabaseSystem,
                 pluginFileSystem);
     }
 
-    public void setDigitalAssetTransmissionVault(DigitalAssetTransmissionVault digitalAssetTransmissionVault) throws CantSetObjectException{
-        this.digitalAssetDistributor.setDigitalAssetTransmissionVault(digitalAssetTransmissionVault);
+    public void setAssetTransmissionNetworkServiceManager(AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager) throws CantSetObjectException{
+        if(assetTransmissionNetworkServiceManager==null){
+            throw new CantSetObjectException("assetTransmissionNetworkServiceManager is null");
+        }
+        this.digitalAssetDistributor.setAssetTransmissionNetworkServiceManager(assetTransmissionNetworkServiceManager);
+    }
+
+    public void setAssetDistributionDatabaseDao(AssetDistributionDao assetDistributionDatabaseDao) throws CantSetObjectException {
+        this.digitalAssetDistributor.setAssetDistributionDao(assetDistributionDatabaseDao);
+    }
+
+    public void setDigitalAssetDistributionVault(DigitalAssetDistributionVault digitalAssetDistributionVault) throws CantSetObjectException{
+        this.digitalAssetDistributor.setDigitalAssetDistributionVault(digitalAssetDistributionVault);
+    }
+
+    public void setBitcoinManager(BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager){
+        this.digitalAssetDistributor.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
     }
 
     public void setPluginId(UUID pluginId) throws CantSetObjectException{
@@ -83,7 +100,15 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
     }
 
     @Override
-    public void distributeAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute) throws CantDistributeDigitalAssetsException {
-        this.digitalAssetDistributor.distributeAssets(digitalAssetsToDistribute);
+    public void distributeAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute, String walletPublicKey) throws CantDistributeDigitalAssetsException {
+        try {
+            this.digitalAssetDistributor.setWalletPublicKey(walletPublicKey);
+            this.digitalAssetDistributor.distributeAssets(digitalAssetsToDistribute);
+        } catch (CantSetObjectException exception) {
+            throw new CantDistributeDigitalAssetsException(exception, "Setting wallet public key in asset distribution process", "The wallet public key is null");
+        } catch(Exception exception){
+            throw new CantDistributeDigitalAssetsException(exception, "Setting wallet public key in asset distribution process", "Unexpected exception");
+        }
+
     }
 }

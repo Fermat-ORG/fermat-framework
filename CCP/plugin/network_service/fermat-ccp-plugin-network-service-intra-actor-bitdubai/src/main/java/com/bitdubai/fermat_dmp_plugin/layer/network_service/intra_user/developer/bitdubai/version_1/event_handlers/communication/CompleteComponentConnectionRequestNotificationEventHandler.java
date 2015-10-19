@@ -58,15 +58,15 @@ public class CompleteComponentConnectionRequestNotificationEventHandler implemen
             CompleteComponentConnectionRequestNotificationEvent completeComponentConnectionRequestNotificationEvent = (CompleteComponentConnectionRequestNotificationEvent) platformEvent;
 
 
-            if (completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getPlatformComponentType()  == networkService.getPlatformComponentType() &&
-                    completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getNetworkServiceType() == networkService.getNetworkServiceType()){
+//            if (completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getPlatformComponentType()  == networkService.getPlatformComponentType() &&
+//                    completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getNetworkServiceType() == networkService.getNetworkServiceType()){
 
                 /*
                  *  networkService make the job
                  */
-                this.networkService.handleCompleteComponentConnectionRequestNotificationEvent(completeComponentConnectionRequestNotificationEvent.getRemoteComponent());
+                this.networkService.handleCompleteComponentConnectionRequestNotificationEvent(completeComponentConnectionRequestNotificationEvent.getApplicantComponent(), completeComponentConnectionRequestNotificationEvent.getRemoteComponent());
 
-            }
+            //}
 
 
         }

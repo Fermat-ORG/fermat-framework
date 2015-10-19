@@ -88,6 +88,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
              /*
               * Open new database connection
               */
+
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_DATABASE_NAME);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeIntraWalletUserIdentityDatabaseException(CantInitializeIntraWalletUserIdentityDatabaseException.DEFAULT_MESSAGE, cantOpenDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
@@ -145,6 +146,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
 
             table.insertRecord(record);
 
+            if(profileImage!=null)
             persistNewUserProfileImage(publicKey, profileImage);
 
         } catch (CantInsertRecordException e){
@@ -195,8 +197,8 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
 
                 // Add records to list.
                 list.add(new IntraWalletUserIdentity(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_ALIAS_COLUMN_NAME),
-                        record.getStringValue (IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME),
-                        getIntraUserIdentiyPrivateKey(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)),
+                        record.getStringValue (IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME),
+                        getIntraUserIdentityPrivateKey(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
                         getIntraUserProfileImagePrivateKey(record.getStringValue(IntraWalletUserIdentityDatabaseConstants.INTRA_WALLET_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)),
                         pluginFileSystem,
                         pluginId));
@@ -237,7 +239,9 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
 
         }
         catch (FileNotFoundException |CantCreateFileException e) {
-            throw new CantGetIntraWalletUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error getting developer identity private keys file.", null);
+            //Not image found return byte null
+            profileImage = new byte[0];
+           // throw new CantGetIntraWalletUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error getting developer identity private keys file.", null);
         }
         catch (Exception e) {
             throw  new CantGetIntraWalletUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ",FermatException.wrapException(e),"", "");
@@ -310,7 +314,7 @@ public class IntraWalletUserIdentityDao implements DealsWithPluginDatabaseSystem
     }
 
 
-    public String getIntraUserIdentiyPrivateKey(String publicKey) throws CantGetIntraWalletUserIdentityPrivateKeyException {
+    public String getIntraUserIdentityPrivateKey(String publicKey) throws CantGetIntraWalletUserIdentityPrivateKeyException {
         String privateKey = "";
         try {
             PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,

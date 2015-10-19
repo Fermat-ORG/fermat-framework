@@ -13,6 +13,8 @@ public enum EventSource implements FermatEnum {
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
 
+    ASSETS_OVER_BITCOIN_VAULT               ("AOB"),
+    ACTOR_ASSET_USER                         ("AAU"),
     COMMUNICATION_CLOUD_PLUGIN              ("CCL"),
     CRYPTO_ADDRESS_BOOK                     ("CAB"),
     CRYPTO_NETWORK_BITCOIN_PLUGIN           ("CNB"),
@@ -27,6 +29,9 @@ public enum EventSource implements FermatEnum {
     MIDDLEWARE_WALLET_CONTACTS_PLUGIN       ("MWC"),
     MIDDLEWARE_WALLET_PLUGIN                ("MW0"),
     MODULE_WALLET_MANAGER_PLUGIN            ("MWM"),
+    NETWORK_SERVICE_ACTOR_ASSET_USER        ("NSAAU"),
+    NETWORK_SERVICE_ACTOR_ASSET_ISSUER      ("NSAIU"),
+    NETWORK_SERVICE_ASSET_TRANSMISSION      ("NSAT"),
     NETWORK_SERVICE_CRYPTO_ADDRESSES        ("NSCAD"),
     NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST  ("NSCPR"),
     NETWORK_SERVICE_CRYPTO_TRANSMISSION     ("NCT"),
@@ -55,6 +60,8 @@ public enum EventSource implements FermatEnum {
 
         switch (code) {
 
+            case "AOB":    return ASSETS_OVER_BITCOIN_VAULT;
+            case "AAU":    return ACTOR_ASSET_USER;
             case "CCL":    return COMMUNICATION_CLOUD_PLUGIN;
             case "CAB":    return CRYPTO_ADDRESS_BOOK;
             case "CNB":    return CRYPTO_NETWORK_BITCOIN_PLUGIN;
@@ -69,6 +76,9 @@ public enum EventSource implements FermatEnum {
             case "MWC":    return MIDDLEWARE_WALLET_CONTACTS_PLUGIN;
             case "MW0":    return MIDDLEWARE_WALLET_PLUGIN;
             case "MWM":    return MODULE_WALLET_MANAGER_PLUGIN;
+            case "NSAAU":  return NETWORK_SERVICE_ACTOR_ASSET_USER;
+            case "NSAIU":  return NETWORK_SERVICE_ACTOR_ASSET_ISSUER;
+            case "NSAT":   return NETWORK_SERVICE_ASSET_TRANSMISSION;
             case "NSCAD":  return NETWORK_SERVICE_CRYPTO_ADDRESSES;
             case "NSCPR":  return NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST;
             case "NCT":    return NETWORK_SERVICE_CRYPTO_TRANSMISSION;

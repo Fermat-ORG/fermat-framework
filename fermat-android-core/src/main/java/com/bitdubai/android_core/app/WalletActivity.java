@@ -283,6 +283,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                     Toast.LENGTH_LONG).show();
         }
     }
+
     private void setOneFragmentInScreen(){
         WalletNavigationStructure walletRuntime= getWalletRuntimeManager().getLastWallet();
         String walletPublicKey = walletRuntime.getPublicKey();
@@ -314,6 +315,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         }
 
     }
+
     private WalletSession createOrCallWalletSession(){
         WalletSession walletSession = null;
         try {
@@ -329,7 +331,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                     walletSession = getWalletSessionManager().getWalletSession(lastWallet.getWalletPublicKey());
                 } else {
                     WalletSettings walletSettings = getWalletSettingsManager().getSettings(lastWallet.getWalletPublicKey());
-                    walletSession = getWalletSessionManager().openWalletSession(lastWallet, getCryptoWalletManager(),walletSettings, getWalletResourcesProviderManager(), getErrorManager(),getCryptoBrokerWalletModuleManager());
+                    walletSession = getWalletSessionManager().openWalletSession(lastWallet, getCryptoWalletManager(),walletSettings, getWalletResourcesProviderManager(), getErrorManager(),getCryptoBrokerWalletModuleManager(),getAssetIssuerWalletModuleManager());
                 }
             }
         }catch (Exception e){

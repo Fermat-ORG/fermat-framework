@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.database.IncomingMessageDao;
@@ -92,6 +94,26 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
     /**
      * (non-javadoc)
+     * @see NetworkServiceConnectionManager#connectTo(PlatformComponentProfile, PlatformComponentProfile, PlatformComponentProfile)
+     */
+    @Override
+    public void connectTo(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant) {
+
+        try {
+
+            /*
+             * ask to the communicationLayerManager to connect to other network service
+             */
+            communicationsClientConnection.requestDiscoveryVpnConnection(applicantParticipant, applicantNetworkService, remoteParticipant);
+
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
+        }
+    }
+
+    /**
+     * (non-javadoc)
      * @see NetworkServiceConnectionManager# closeConnection(PlatformComponentProfile)
      */
     public void closeConnection(String remoteNetworkServicePublicKey) {
@@ -128,7 +150,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
             /*
              * Get the active connection
              */
-            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile, remoteComponentProfile.getIdentityPublicKey());
+            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(NetworkServiceType.CRYPTO_PAYMENT_REQUEST, remoteComponentProfile);
 
             //Validate the connection
             if (communicationsVPNConnection != null &&
@@ -220,5 +242,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
         return incomingMessageDao;
     }
 
-
+    public ECCKeyPair getIdentity() {
+        return identity;
+    }
 }
