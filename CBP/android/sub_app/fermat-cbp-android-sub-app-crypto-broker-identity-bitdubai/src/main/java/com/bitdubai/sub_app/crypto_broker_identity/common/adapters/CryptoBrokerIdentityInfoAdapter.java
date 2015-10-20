@@ -1,14 +1,16 @@
 package com.bitdubai.sub_app.crypto_broker_identity.common.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.text.SpannableString;
 import android.view.View;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.common.holders.CryptoBrokerIdentityInfoViewHolder;
+import com.bitdubai.sub_app.crypto_broker_identity.util.CryptoBrokerIdentityListFilter;
 import com.bitdubai.sub_app.crypto_broker_identity.util.UtilsFuncs;
 
 import java.util.ArrayList;
@@ -19,8 +21,11 @@ import java.util.ArrayList;
  *
  * @author Nelson Ramirez
  */
-public class CryptoBrokerIdentityInfoAdapter extends FermatAdapter<CryptoBrokerIdentityInformation, CryptoBrokerIdentityInfoViewHolder> {
+public class CryptoBrokerIdentityInfoAdapter
+        extends FermatAdapter<CryptoBrokerIdentityInformation, CryptoBrokerIdentityInfoViewHolder>
+        implements Filterable {
 
+    CryptoBrokerIdentityListFilter filter;
 
     public CryptoBrokerIdentityInfoAdapter(Context context, ArrayList<CryptoBrokerIdentityInformation> dataSet) {
         super(context, dataSet);
@@ -28,6 +33,20 @@ public class CryptoBrokerIdentityInfoAdapter extends FermatAdapter<CryptoBrokerI
 
     public CryptoBrokerIdentityInfoAdapter(Context context) {
         super(context);
+    }
+
+    @Override
+    protected void bindHolder(final CryptoBrokerIdentityInfoViewHolder holder, final CryptoBrokerIdentityInformation data, final int position) {
+        filter = (CryptoBrokerIdentityListFilter) getFilter();
+
+        SpannableString spannedText = UtilsFuncs.getSpannedText(
+                context.getResources(),
+                R.color.spanned_text,
+                data.getAlias(),
+                filter.getConstraint());
+
+        holder.setText(spannedText);
+        holder.setImage(data.getProfileImage());
     }
 
     @Override
@@ -40,9 +59,14 @@ public class CryptoBrokerIdentityInfoAdapter extends FermatAdapter<CryptoBrokerI
         return R.layout.crypto_broker_identity_list_item;
     }
 
+
     @Override
-    protected void bindHolder(final CryptoBrokerIdentityInfoViewHolder holder, final CryptoBrokerIdentityInformation data, final int position) {
-        holder.setText(data.getAlias());
-        holder.setImage(data.getProfileImage());
+    public Filter getFilter() {
+        if (filter == null)
+            filter = new CryptoBrokerIdentityListFilter(dataSet, this);
+
+        return filter;
     }
+
+
 }

@@ -28,6 +28,7 @@ import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.common.adapters.CryptoBrokerIdentityInfoAdapter;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
+import com.bitdubai.sub_app.crypto_broker_identity.util.CryptoBrokerIdentityListFilter;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -49,7 +50,8 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     private ArrayList<CryptoBrokerIdentityInformation> identityInformationList;
 
     // UI
-    private SearchView mSearchView;
+    private View noMatchView;
+    private CryptoBrokerIdentityListFilter filter;
 
 
     public static CryptoBrokerIdentityListFragment newInstance() {
@@ -83,11 +85,9 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
 
         inflater.inflate(R.menu.crypto_broker_identity_menu, menu);
 
-        //MenuItem menuItem = new SearchView(getActivity());
-
         MenuItem searchItem = menu.findItem(R.id.action_search);
         MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
-        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        SearchView mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setOnCloseListener(this);
     }
@@ -107,6 +107,8 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         if (getActivity().getActionBar() != null) {
             getActivity().getActionBar().setDisplayShowHomeEnabled(false);
         }
+
+        noMatchView = layout.findViewById(R.id.no_matches_crypto_broker_identity);
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
@@ -221,7 +223,16 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     }
 
     @Override
-    public boolean onQueryTextChange(String s) {
-        return false;
+    public boolean onQueryTextChange(String text) {
+        if (filter == null) {
+            CryptoBrokerIdentityInfoAdapter infoAdapter = (CryptoBrokerIdentityInfoAdapter) this.adapter;
+
+            filter = (CryptoBrokerIdentityListFilter) infoAdapter.getFilter();
+            filter.setNoMatchViews(noMatchView, recyclerView);
+        }
+
+        filter.filter(text);
+
+        return true;
     }
 }
