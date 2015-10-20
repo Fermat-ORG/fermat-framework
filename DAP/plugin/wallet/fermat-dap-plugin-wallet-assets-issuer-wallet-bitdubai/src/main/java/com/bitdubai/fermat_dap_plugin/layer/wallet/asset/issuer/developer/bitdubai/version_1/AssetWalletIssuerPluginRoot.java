@@ -105,7 +105,7 @@ public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, 
             loadWalletIssuerMap();
             createWalletAssetIssuer("walletPublicKeyTest");
             assetIssuerWallet = loadAssetIssuerWallet("walletPublicKeyTest");
-            testWallet();
+            //testWallet();
             System.out.println("Star Plugin AssetWalletIssuer");
             this.serviceStatus = ServiceStatus.STARTED;
         }catch(CantStartPluginException exception){
