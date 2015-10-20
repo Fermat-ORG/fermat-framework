@@ -13,7 +13,7 @@ public class AssetUserANS implements ReturnAssetUserActorNetworkService {
     @Override
     public ActorAssetUser creatActorAssetUser(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage, Location assetUserActorlocation) throws CantCreateAssetUserActorException {
 
-        AssetUserActorRecord assetUserActorRecord = new AssetUserActorRecord(assetUserActorPublicKey, assetUserActorName, assetUserActorprofileImage, assetUserActorlocation);
+        AssetUserActorRecord assetUserActorRecord = new AssetUserActorRecord(assetUserActorName,assetUserActorPublicKey, assetUserActorprofileImage, assetUserActorlocation);
 
         return assetUserActorRecord;
     }
