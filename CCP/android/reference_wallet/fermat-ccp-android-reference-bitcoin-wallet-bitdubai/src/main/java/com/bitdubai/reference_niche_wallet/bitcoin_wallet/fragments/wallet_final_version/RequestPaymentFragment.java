@@ -4,11 +4,14 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 
+import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterNew;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragmentNew;
+import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_ccp_api.layer.crypto_wallet.interfaces.CryptoWallet;
@@ -74,6 +77,12 @@ public class RequestPaymentFragment extends FermatListFragmentNew<PaymentRequest
             cryptoWallet = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
 
             lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
+
+             viewInflater = new ViewInflater(getActivity(),null);
+
+            View rootView = viewInflater.inflate("layout",null);
+
+
         } catch (Exception ex) {
             //CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
