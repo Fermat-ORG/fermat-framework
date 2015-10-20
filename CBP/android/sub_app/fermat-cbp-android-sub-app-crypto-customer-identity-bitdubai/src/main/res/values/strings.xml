@@ -7,4 +7,5 @@
     <string name="customer_name">Customer name</string>
     <string name="create">CREATE</string>
     <string name="identity_img">customer_img</string>
+    <string name="update">UPDATE</string>
 </resources>
