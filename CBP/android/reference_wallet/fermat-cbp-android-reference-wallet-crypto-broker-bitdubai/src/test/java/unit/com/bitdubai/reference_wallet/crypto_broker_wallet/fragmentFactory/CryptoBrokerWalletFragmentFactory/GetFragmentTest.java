@@ -14,7 +14,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.contracts.Co
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.deals.DealsActivityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenContractsTabFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenDealsTabFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.RequestTabFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.MarketRateStatisticsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockStatisticsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsActivityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.stock.StockPreferencesActivityFragment;
@@ -58,7 +58,7 @@ public class GetFragmentTest {
     @Test
     public void fragmentsObjectsMatchTheirCodes() throws Exception {
         Fragment actualFragment = fragmentFactory.getFragment("CBPCBWHART", session, settings, providerManager);
-        assertThat(actualFragment).isInstanceOf(RequestTabFragment.class);
+        assertThat(actualFragment).isInstanceOf(MarketRateStatisticsFragment.class);
 
         actualFragment = fragmentFactory.getFragment("CBPCBWHAODT", session, settings, providerManager);
         assertThat(actualFragment).isInstanceOf(OpenDealsTabFragment.class);

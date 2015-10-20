@@ -14,7 +14,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.contracts.Co
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.deals.DealsActivityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenContractsTabFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenDealsTabFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.RequestTabFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.MarketRateStatisticsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockStatisticsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsActivityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.stock.StockPreferencesActivityFragment;
@@ -25,7 +25,7 @@ import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory
 import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_DEAL_DETAILS;
 import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB;
 import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_OPEN_DEALS_TAB;
-import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_REQUEST_TAB;
+import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_MARKET_RATE_STATISTICS;
 import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_SETTINGS;
 import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_STOCK_PREFERENCE;
 import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS;
@@ -41,8 +41,8 @@ public class CryptoBrokerWalletFragmentFactory implements WalletFragmentFactory 
     public Fragment getFragment(String code, WalletSession walletSession, WalletSettings WalletSettings, WalletResourcesProviderManager walletResourcesProviderManager) throws FragmentNotFoundException {
         CryptoBrokerWalletFragmentsEnumType fragment = CryptoBrokerWalletFragmentsEnumType.getValue(code);
 
-        if (fragment == CBP_CRYPTO_BROKER_WALLET_REQUEST_TAB)
-            return RequestTabFragment.newInstance();
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_MARKET_RATE_STATISTICS)
+            return MarketRateStatisticsFragment.newInstance();
         if (fragment == CBP_CRYPTO_BROKER_WALLET_OPEN_DEALS_TAB)
             return OpenDealsTabFragment.newInstance();
         if (fragment == CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB)

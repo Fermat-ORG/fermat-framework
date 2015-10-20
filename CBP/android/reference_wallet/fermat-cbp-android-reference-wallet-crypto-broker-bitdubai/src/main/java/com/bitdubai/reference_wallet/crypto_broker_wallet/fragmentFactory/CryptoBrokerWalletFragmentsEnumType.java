@@ -8,7 +8,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 
 public enum CryptoBrokerWalletFragmentsEnumType implements FermatFragmentsEnumType<CryptoBrokerWalletFragmentsEnumType> {
 
-    CBP_CRYPTO_BROKER_WALLET_REQUEST_TAB("CBPCBWHART"),
+    CBP_CRYPTO_BROKER_WALLET_MARKET_RATE_STATISTICS("CBPCBWMRS"),
     CBP_CRYPTO_BROKER_WALLET_OPEN_DEALS_TAB("CBPCBWHAODT"),
     CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB("CBPCBWHAOCT"),
     CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS("CBPCBWHASS"),

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Header;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
@@ -97,6 +98,8 @@ public class NavigationStructureFactory {
         statusBar.setColor("#0288D1");
         activity.setStatusBar(statusBar);
 
+        Header header = new Header();
+        header.setLabel("Market rate");
 
         TabStrip tabStrip = new TabStrip();
         tabStrip.setTabsColor("#0288D1");
@@ -106,19 +109,10 @@ public class NavigationStructureFactory {
         activity.setTabStrip(tabStrip);
 
         Tab tab = new Tab();
-        tab.setLabel("Request");
-        tab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_REQUEST_TAB);
-        tabStrip.addTab(tab);
-        tabStrip.setStartItem(1);
-        Fragment fragment = new Fragment();
-        fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_REQUEST_TAB.getKey());
-        activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_REQUEST_TAB.getKey(), fragment);
-
-        tab = new Tab();
         tab.setLabel("Deals");
         tab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_DEALS_TAB);
         tabStrip.addTab(tab);
-        fragment = new Fragment();
+        Fragment fragment = new Fragment();
         fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_DEALS_TAB.getKey());
         activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_DEALS_TAB.getKey(), fragment);
 

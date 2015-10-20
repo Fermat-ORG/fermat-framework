@@ -436,19 +436,10 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         activity.setTabStrip(tabStrip);
 
         Tab tab = new Tab();
-        tab.setLabel("Request");
-        tab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_REQUEST_TAB);
-        tabStrip.addTab(tab);
-        tabStrip.setStartItem(1);
-        Fragment fragment = new Fragment();
-        fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_REQUEST_TAB.getKey());
-        activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_REQUEST_TAB.getKey(), fragment);
-
-        tab = new Tab();
         tab.setLabel("Deals");
         tab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_DEALS_TAB);
         tabStrip.addTab(tab);
-        fragment = new Fragment();
+        Fragment fragment = new Fragment();
         fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_DEALS_TAB.getKey());
         activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_DEALS_TAB.getKey(), fragment);
 
