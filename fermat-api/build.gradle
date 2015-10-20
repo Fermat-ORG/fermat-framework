@@ -33,6 +33,7 @@ pmd {
 }
 
 dependencies {
+
     compile files('libs/jcabi-github-1.0-SNAPSHOT-jar-with-dependencies.jar')
     compile 'com.carrotsearch:java-sizeof:0.0.5'
     compile 'org.bouncycastle:bcprov-jdk15on:1.52'

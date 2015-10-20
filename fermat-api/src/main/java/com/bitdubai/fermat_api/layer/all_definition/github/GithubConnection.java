@@ -27,8 +27,6 @@ import java.io.StringWriter;
 public class GithubConnection {
 
     String mainRepository;
-
-
     Repo repo;
 
     public GithubConnection() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
