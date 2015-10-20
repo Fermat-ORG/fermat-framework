@@ -107,7 +107,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
             wallet = getWallet(blockchainNetworkType);
 
             /**
-             * add new keys (if any) and reset the wallet.
+             * add new keys (if any).
              */
             boolean isWalletReset = false;
             if (areNewKeysAdded(wallet, keyList)){
@@ -117,7 +117,11 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                wallet.reset();
+                /**
+                 * I do not need to reset the wallet because I will
+                 * always be importing fresh (unused) keys.
+                 */
+                //wallet.reset();
                 isWalletReset = true;
             }
 

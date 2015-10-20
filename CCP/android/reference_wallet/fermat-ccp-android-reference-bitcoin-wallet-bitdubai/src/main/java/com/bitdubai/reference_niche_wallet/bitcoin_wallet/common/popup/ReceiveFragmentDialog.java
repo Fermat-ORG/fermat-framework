@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -85,7 +86,7 @@ public class ReceiveFragmentDialog extends Dialog implements
      */
     static public int MARGIN_AUTOMATIC = -1;
 
-
+    private Typeface tf;
     /**
      *
      * @param a
@@ -114,19 +115,16 @@ public class ReceiveFragmentDialog extends Dialog implements
 
         showQRCodeAndAddress();
 
-
     }
 
     private void setUpScreenComponents(){
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.popup);
 
-
         share_btn = (Button) findViewById(R.id.share_btn);
         back_btn = (Button) findViewById(R.id.back_btn);
         txtAddress = (TextView) findViewById(R.id.txtAddress);
         imageView_qr_code = (ImageView) findViewById(R.id.imageView_qr_code);
-
 
         back_btn.setOnClickListener(this);
         share_btn.setOnClickListener(this);

@@ -611,42 +611,8 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
      */
     private List<WalletContact> getWalletContactList() {
         List<WalletContact> contacts = new ArrayList<>();
-
-//        new FermatWorker(getActivity(), new FermatWorkerCallBack() {
-//            @SuppressWarnings("unchecked")
-//            @Override
-//            public void onPostExecute(Object... result) {
-//                if (isAttached) {
-//                    if (adapter != null) {
-//                        intraUserItemList = (ArrayList<IntraUserConnectionListItem>) result[0];
-//                        adapter.changeDataSet(intraUserItemList);
-//                        isStartList = true;
-//
-//                    }
-//                    showEmpty();
-//                }
-//            }
-//
-//            @Override
-//            public void onErrorOccurred(Exception ex) {
-//                if (isAttached) {
-//                    dialog.dismiss();
-//                    dialog = null;
-//                    Toast.makeText(getActivity(), "Some Error Occurred: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
-//                    showEmpty();
-//                }
-//            }
-//        }) {
-//
-//            @Override
-//            protected Object doInBackground() throws Exception {
-//
-//                return getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
-//
-//            }
-//        }.execute();
         try {
-            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listWalletContacts("reference_wallet"/*referenceWalletSession.getWalletSessionType().getWalletPublicKey()*/);
+            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getWalletSessionType().getWalletPublicKey());
             for (CryptoWalletWalletContact wcr : walletContactRecords) {
                 contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), wcr.getReceivedCryptoAddress().get(0).getAddress()));
             }
