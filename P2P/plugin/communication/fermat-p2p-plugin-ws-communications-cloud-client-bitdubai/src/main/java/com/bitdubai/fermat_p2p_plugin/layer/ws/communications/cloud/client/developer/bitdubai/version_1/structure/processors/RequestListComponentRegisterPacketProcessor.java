@@ -81,7 +81,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          * configure the event
          */
         ((CompleteRequestListComponentRegisteredNotificationEvent)event).setRegisteredComponentList(receivedList);
-        ((CompleteRequestListComponentRegisteredNotificationEvent)event).setNetworkServiceType(networkServiceType);
+        ((CompleteRequestListComponentRegisteredNotificationEvent)event).setNetworkServiceTypeApplicant(networkServiceType);
         ((CompleteRequestListComponentRegisteredNotificationEvent)event).setPlatformComponentType(platformComponentType);
 
         /*
