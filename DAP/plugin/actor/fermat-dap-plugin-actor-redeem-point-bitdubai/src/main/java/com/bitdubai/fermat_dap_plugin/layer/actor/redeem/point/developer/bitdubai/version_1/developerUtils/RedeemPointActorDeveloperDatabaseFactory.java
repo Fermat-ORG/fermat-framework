@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.database.RedeemPointActorDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.database.RedeemPointActorDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantInitializeReddemPointActorDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantInitializeRedeemPointActorDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,9 +54,9 @@ public class RedeemPointActorDeveloperDatabaseFactory implements DealsWithPlugin
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeReddemPointActorDatabaseException
+     * @throws CantInitializeRedeemPointActorDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeReddemPointActorDatabaseException {
+    public void initializeDatabase() throws CantInitializeRedeemPointActorDatabaseException {
         try {
              /*
               * Open new database connection
@@ -68,7 +68,7 @@ public class RedeemPointActorDeveloperDatabaseFactory implements DealsWithPlugin
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeReddemPointActorDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitializeRedeemPointActorDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException exception) {
 
@@ -88,7 +88,7 @@ public class RedeemPointActorDeveloperDatabaseFactory implements DealsWithPlugin
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeReddemPointActorDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitializeRedeemPointActorDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }
@@ -116,6 +116,19 @@ public class RedeemPointActorDeveloperDatabaseFactory implements DealsWithPlugin
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATE_COLUMN_NAME);
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME);
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME);
+        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_CONTACT_INFORMATION_COLUMN_NAME);
+        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_HOURS_OF_OPERATION_COLUMN_NAME);
+        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_COUNTRY_NAME_COLUMN_NAME);
+        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_POSTAL_CODE_COLUMN_NAME);
+        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_PROVINCE_NAME_COLUMN_NAME);
+        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_CITY_NAME_COLUMN_NAME);
+        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_STREET_NAME_COLUMN_NAME);
+        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_HOUSE_NUMBER_COLUMN_NAME);
+        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME);
+        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_CURRENCY_COLUMN_NAME);
+        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOCATION_LATITUDE_COLUMN_NAME);
+        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOCATION_LONGITUDE_COLUMN_NAME);
+
         /*
          * Redeem Point database addition.
          */
