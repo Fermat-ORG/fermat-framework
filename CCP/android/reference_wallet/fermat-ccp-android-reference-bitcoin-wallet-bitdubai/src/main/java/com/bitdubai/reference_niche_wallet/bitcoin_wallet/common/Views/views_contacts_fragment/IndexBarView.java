@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
+import com.bitdubai.fermat_ccp_api.layer.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.ContactIndexStrucs;
 
 import java.util.ArrayList;

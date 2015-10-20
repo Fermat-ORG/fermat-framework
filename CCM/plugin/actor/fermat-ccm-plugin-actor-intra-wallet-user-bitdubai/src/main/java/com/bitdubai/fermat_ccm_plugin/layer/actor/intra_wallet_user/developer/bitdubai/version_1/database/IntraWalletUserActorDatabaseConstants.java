@@ -15,9 +15,9 @@ public class IntraWalletUserActorDatabaseConstants {
     /**
      * Intra User database table definition.
      */
-    public static final String INTRA_WALLET_USER_DATABASE_NAME                          = "intra_wallet_user_actor"   ;
+    public static final String INTRA_WALLET_USER_DATABASE_NAME                          = "ccm_intra_wallet_user_actor"   ;
 
-    public static final String INTRA_WALLET_USER_TABLE_NAME                             = "intra_wallet_user"         ;
+    public static final String INTRA_WALLET_USER_TABLE_NAME                             = "ccm_intra_wallet_user"         ;
 
     public static final String INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "linked_identity_public_key";
     public static final String INTRA_WALLET_USER_NAME_COLUMN_NAME                       = "name"                      ;
