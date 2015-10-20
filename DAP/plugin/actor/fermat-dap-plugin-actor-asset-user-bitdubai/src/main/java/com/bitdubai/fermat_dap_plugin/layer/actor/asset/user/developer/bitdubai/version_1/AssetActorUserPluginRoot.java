@@ -129,6 +129,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
      * DealsWithCryptoAddressBook interface member variable
      */
     CryptoAddressBookManager cryptoAddressBookManager;
+
     /**
      * DealsWithIntraWalletUsersNetworkService Interface implementation.
      */
@@ -266,9 +267,12 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
             this.serviceStatus = ServiceStatus.STARTED;
 
             blockchainNetworkType = BlockchainNetworkType.REG_TEST;
+            CryptoAddress genesisAddress;
             test();
-            registerActorInANS();
-            obtenerGenesisAddress();
+//            registerActorInANS();
+            genesisAddress = obtenerGenesisAddress();
+            registerGenesisAddressInCryptoAddressBook(genesisAddress);
+
 //            testRaiseEvent();
 
         } catch (Exception e) {
@@ -285,31 +289,31 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         System.out.println("End event test");
     }
 
-    private void obtenerGenesisAddress() throws CantGetGenesisAddressException, CantRegisterCryptoAddressBookRecordException {
+    private CryptoAddress obtenerGenesisAddress() throws CantGetGenesisAddressException {
         try {
-            System.out.println("La BlockChain es: "+ blockchainNetworkType);
+//            System.out.println("La BlockChain es: " + blockchainNetworkType);
 
             CryptoAddress genesisAddress = this.assetVaultManager.getNewAssetVaultCryptoAddress(this.blockchainNetworkType);
-            System.out.println("Genesis Address Actor Asset User: " + genesisAddress.getAddress() + " Currency: "+genesisAddress.getCryptoCurrency());
+            System.out.println("Genesis Address Actor Asset User: " + genesisAddress.getAddress() + " Currency: " + genesisAddress.getCryptoCurrency());
 //            LOG.info("MAP_GENESIS ADDRESS GENERATED:"+genesisAddress.getAddress());
-//            return genesisAddress;
-            registerGenesisAddressInCryptoAddressBook(genesisAddress);
+            return genesisAddress;
         } catch (GetNewCryptoAddressException exception) {
-            throw new CantGetGenesisAddressException(exception, "Requesting a genesis address","Cannot get a new crypto address from asset vault");
+            throw new CantGetGenesisAddressException(exception, "Requesting a genesis address", "Cannot get a new crypto address from asset vault");
         }
     }
 
     /**
      * This method register the genesis address in crypto address book.
+     *
      * @param genesisAddress
      * @throws CantRegisterCryptoAddressBookRecordException
      */
-    private void registerGenesisAddressInCryptoAddressBook(CryptoAddress genesisAddress) throws CantRegisterCryptoAddressBookRecordException{
+    private void registerGenesisAddressInCryptoAddressBook(CryptoAddress genesisAddress) throws CantRegisterCryptoAddressBookRecordException {
         //TODO: solicitar los publickeys de los actors, la publicKey de la wallet
         //I'm gonna harcode the actors publicKey
         this.cryptoAddressBookManager.registerCryptoAddress(genesisAddress,
                 "testDeliveredByActorPublicKey",
-                Actors.INTRA_USER,
+                Actors.ASSET_USER,
                 "testDeliveredToActorPublicKey",
                 Actors.ASSET_ISSUER,
                 Platforms.DIGITAL_ASSET_PLATFORM,
