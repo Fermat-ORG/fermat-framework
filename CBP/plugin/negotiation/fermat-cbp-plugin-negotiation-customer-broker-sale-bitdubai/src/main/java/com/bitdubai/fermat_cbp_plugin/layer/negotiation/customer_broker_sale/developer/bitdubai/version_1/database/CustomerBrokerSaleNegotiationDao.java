@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantUpdateCustomerBrokerSaleException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSale;
@@ -153,6 +154,25 @@ public class CustomerBrokerSaleNegotiationDao {
                 resultados.add(constructCustomerBrokerSaleFromRecord(record));
             }
     
+            return resultados;
+        }
+
+        public Collection<CustomerBrokerSale> getNegotiationsByCustomer(ActorIdentity customer) throws CantLoadTableToMemoryException, InvalidParameterException {
+            DatabaseTable identityTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
+
+            identityTable.setStringFilter(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, customer.getPublicKey(), DatabaseFilterType.EQUAL);
+
+            identityTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = identityTable.getRecords();
+            identityTable.clearAllFilters();
+
+            Collection<CustomerBrokerSale> resultados = new ArrayList<CustomerBrokerSale>();
+
+            for (DatabaseTableRecord record : records) {
+                resultados.add(constructCustomerBrokerSaleFromRecord(record));
+            }
+
             return resultados;
         }
 
