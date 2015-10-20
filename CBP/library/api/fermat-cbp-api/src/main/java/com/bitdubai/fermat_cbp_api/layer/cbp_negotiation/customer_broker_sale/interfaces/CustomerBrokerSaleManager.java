@@ -17,7 +17,7 @@ public interface CustomerBrokerSaleManager {
     void closeNegotiation(CustomerBrokerSale negotiation);
 
     Collection<CustomerBrokerSale> getNegotiations() throws CantListSaleNegotianionsException;
-    Collection<CustomerBrokerSale> getNegotiations(NegotiationStatus status);
+    Collection<CustomerBrokerSale> getNegotiations(NegotiationStatus status) throws CantListSaleNegotianionsException;
     Collection<CustomerBrokerSale> getNegotiationsByCustomer(ActorIdentity customer);
     Collection<CustomerBrokerSale> getNegotiationsByBroker(ActorIdentity broker);
 }

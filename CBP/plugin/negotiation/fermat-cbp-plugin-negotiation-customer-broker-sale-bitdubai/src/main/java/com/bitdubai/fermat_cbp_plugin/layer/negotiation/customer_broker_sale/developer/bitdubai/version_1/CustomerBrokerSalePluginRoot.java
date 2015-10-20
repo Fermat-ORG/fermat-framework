@@ -147,8 +147,16 @@ public class CustomerBrokerSalePluginRoot implements CustomerBrokerSaleManager, 
     }
 
     @Override
-    public Collection<CustomerBrokerSale> getNegotiations(NegotiationStatus status) {
-        return null;
+    public Collection<CustomerBrokerSale> getNegotiations(NegotiationStatus status) throws CantListSaleNegotianionsException {
+        try {
+            Collection<CustomerBrokerSale> negotiations = new ArrayList<CustomerBrokerSale>();
+            negotiations = customerBrokerSaleNegotiationDao.getNegotiations(status);
+            return negotiations;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantListSaleNegotianionsException(CantListSaleNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+        } catch (InvalidParameterException e) {
+            throw new CantListSaleNegotianionsException(CantListSaleNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+        }
     }
 
     @Override
