@@ -14,10 +14,6 @@ public interface CryptoBrokerBalance {
 
     long getBalance()  throws CantCalculateBalanceException;
 
-    List<CryptoBroker> getBankMoneyBalancesAvailable() throws CantCalculateBalanceException;
-
-    List<CryptoBroker> getBankMoneyBalancesBook() throws CantCalculateBalanceException;
-
     void debit(CryptoBrokerBalanceRecord BankMoneyTransactionRecord, BalanceType balanceType) throws CantRegisterDebitException;
 
     void credit(CryptoBrokerBalanceRecord BankMoneyTransactionRecord, BalanceType balanceType)  throws CantRegisterCreditException;
