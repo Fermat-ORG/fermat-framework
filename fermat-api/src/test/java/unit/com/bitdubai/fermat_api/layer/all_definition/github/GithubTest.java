@@ -18,7 +18,7 @@ public class GithubTest {
     final String PASSWORD ="";
     final String REPOSITORY ="guillermo20/testFermat";
 
-
+    @Ignore
     @Test
     public void testCreateFile() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
         GithubConnection githubConnection = new GithubConnection(REPOSITORY, USERNAME, PASSWORD);
