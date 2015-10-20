@@ -126,7 +126,8 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
                     this.errorManager,
                     this.pluginId,
                     this.userPublicKey,
-                    this.assetVaultManager);
+                    this.assetVaultManager,
+                    this.outgoingIntraActorManager);
             this.assetIssuingTransactionMonitorAgent.setDigitalAssetIssuingVault(digitalAssetIssuingVault);
             this.assetIssuingTransactionMonitorAgent.setLogManager(this.logManager);
             this.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);

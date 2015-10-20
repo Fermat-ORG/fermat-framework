@@ -79,6 +79,7 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issu
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.mocks.MockIdentityAssetIssuerForTest;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsTransactionUUIDException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.AssetIssuingTransactionManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetIssuingVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
@@ -233,7 +234,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             checkIfExistsPendingAssets();
 
             //For testing, please, clean up your database or change the asset public key
-            //testWalletDeliverAssetToAssetIssuerWallet();
+            testWalletDeliverAssetToAssetIssuerWallet();
             //testIssueSingleAsset();
             //testIssueMultipleAssetsWithNoIdentity();
             //testIssueMultipleFullAssets();
@@ -270,7 +271,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
                     this.errorManager,
                     this.pluginId,
                     userPublicKey,
-                    this.assetVaultManager);
+                    this.assetVaultManager,
+                    this.outgoingIntraActorManager);
             this.assetIssuingTransactionMonitorAgent.setDigitalAssetIssuingVault(digitalAssetIssuingVault);
             this.assetIssuingTransactionMonitorAgent.setLogManager(this.logManager);
             this.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
@@ -508,7 +510,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             CantExecuteQueryException,
             UnexpectedResultReturnedFromDatabaseException,
             CantPersistsGenesisTransactionException,
-            CantCheckAssetIssuingProgressException, CantStartAgentException, CantGetLoggedInDeviceUserException, CantCreateFileException, CantPersistFileException {
+            CantCheckAssetIssuingProgressException, CantStartAgentException, CantGetLoggedInDeviceUserException, CantCreateFileException, CantPersistFileException, CantPersistsTransactionUUIDException {
         printSomething("Start deliver to Asset wallet test");
         String genesisTransaction="d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43";
         MockDigitalAssetMetadataForTesting mockDigitalAssetMetadataForTesting=new MockDigitalAssetMetadataForTesting();
@@ -518,7 +520,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
 //        digitalAssetFile.setContent(digitalAssetInnerXML);
 //        digitalAssetFile.persistToMedia();
         this.digitalAssetIssuingVault.setWalletPublicKey("walletPublicKeyTest");
-        this.digitalAssetIssuingVault.persistDigitalAssetMetadataInLocalStorage(mockDigitalAssetMetadataForTesting,"testId");
+        this.digitalAssetIssuingVault.persistDigitalAssetMetadataInLocalStorage(mockDigitalAssetMetadataForTesting, "testId");
         this.assetIssuingTransactionDao.persistDigitalAsset(
                 mockDigitalAssetForTesting.getPublicKey(),
                 "testLocalPath",
@@ -528,8 +530,9 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         this.assetIssuingTransactionDao.persistDigitalAssetTransactionId(mockDigitalAssetForTesting.getPublicKey(), "testId");
         this.assetIssuingTransactionDao.persistDigitalAssetHash("testId", mockDigitalAssetMetadataForTesting.getDigitalAssetHash());
         this.assetIssuingTransactionDao.persistGenesisTransaction("testId", genesisTransaction);
+        this.assetIssuingTransactionDao.persistOutgoingIntraActorUUID("testId", UUID.fromString("testUUIDId"));
         this.assetIssuingTransactionDao.updateTransactionProtocolStatus(genesisTransaction, ProtocolStatus.TO_BE_NOTIFIED);
-        this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus("testId", TransactionStatus.SENDING_CRYPTO);
+        this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus("testId", TransactionStatus.ISSUING);
         this.assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(mockDigitalAssetMetadataForTesting.getDigitalAssetHash(), CryptoStatus.PENDING_SUBMIT);
         testRaiseEvent();
         startMonitorAgent();

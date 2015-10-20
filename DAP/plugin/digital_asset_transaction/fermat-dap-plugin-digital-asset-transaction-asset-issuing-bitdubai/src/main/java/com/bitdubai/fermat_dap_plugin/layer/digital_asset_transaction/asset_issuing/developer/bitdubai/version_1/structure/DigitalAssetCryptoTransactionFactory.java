@@ -65,6 +65,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantP
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisAddressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsTransactionUUIDException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -622,7 +623,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             //I will remove the genesisTransaction from this method, now I cannot get this parameter in a syncronic way
             //String genesisTransaction="d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43";
             //this.assetIssuingTransactionDao.persistGenesisTransaction(transactionId, genesisTransaction);
-            this.outgoingIntraActorManager.getTransactionManager().sendCrypto(this.walletPublicKey,
+            UUID outgoingId=this.outgoingIntraActorManager.getTransactionManager().sendCrypto(this.walletPublicKey,
                     genesisAddress,
                     this.digitalAsset.getGenesisAmount(),
                     digitalAssetHash,
@@ -632,6 +633,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                     Actors.INTRA_USER,
                     Actors.ASSET_ISSUER,
                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
+            this.assetIssuingTransactionDao.persistOutgoingIntraActorUUID(transactionId, outgoingId);
             //this.assetIssuingTransactionDao.updateTransactionProtocolStatus(genesisTransaction, ProtocolStatus.TO_BE_NOTIFIED);
             //return genesisTransaction;
         }  catch (CantExecuteQueryException exception) {
@@ -646,6 +648,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "The sendToAddress is invalid: "+genesisAddress);
         } catch (CantCheckAssetIssuingProgressException exception) {
             throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "Cannot update the transaction CryptoStatus");
+        } catch (CantPersistsTransactionUUIDException exception) {
+            throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "Cannot persists Transaction UUID");
         }
     }
 
