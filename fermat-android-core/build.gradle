@@ -27,7 +27,7 @@ android {
         multiDexEnabled true
     }
 
-   dexOptions{ javaMaxHeapSize "4g"}
+   dexOptions{ javaMaxHeapSize "5g"}
 
     sourceSets {
         main {
