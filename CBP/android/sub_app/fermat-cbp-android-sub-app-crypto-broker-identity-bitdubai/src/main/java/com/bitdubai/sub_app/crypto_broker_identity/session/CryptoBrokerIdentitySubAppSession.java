@@ -56,6 +56,7 @@ public class CryptoBrokerIdentitySubAppSession implements SubAppsSession {
      */
     public CryptoBrokerIdentitySubAppSession(SubApps subApps) {
         this.subApps = subApps;
+        data = new HashMap<String, Object>();
     }
 
 

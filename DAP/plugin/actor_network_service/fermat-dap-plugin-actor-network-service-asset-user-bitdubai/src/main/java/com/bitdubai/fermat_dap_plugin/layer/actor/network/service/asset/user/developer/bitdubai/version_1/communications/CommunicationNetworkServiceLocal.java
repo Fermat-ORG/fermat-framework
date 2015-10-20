@@ -82,7 +82,7 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
 
     /**
      * (non-javadoc)
-     * @see NetworkServiceLocal#sendMessage(String, String)
+     * @see NetworkServiceLocal#sendMessage(String, String, String)
      */
     public void sendMessage(final String senderIdentityPublicKey, String pk,final String messageContent) {
 
