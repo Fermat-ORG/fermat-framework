@@ -140,7 +140,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
         try {
 
             errorManager = walletSession.getErrorManager();
-            tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+            tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
 
             cryptoWalletManager = walletSession.getCryptoWalletManager();
             cryptoWallet = cryptoWalletManager.getCryptoWallet();

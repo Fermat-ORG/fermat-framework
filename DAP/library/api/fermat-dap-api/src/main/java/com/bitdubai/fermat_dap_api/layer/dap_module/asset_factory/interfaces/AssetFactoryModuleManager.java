@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
@@ -24,7 +25,7 @@ import java.util.List;
 /**
  * Created by franklin on 11/09/15.
  */
-public interface AssetFactoryModuleManager {
+public interface AssetFactoryModuleManager extends ModuleManager {
     //Implementa solo los metodos que utiliza la sup app
     IdentityAssetIssuer getLoggedIdentityAssetIssuer();
 

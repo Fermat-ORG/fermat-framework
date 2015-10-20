@@ -288,7 +288,9 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
                 walletManagerManager
         );
 
-        executePendingAddressExchangeRequests(cryptoAddressGenerationService);
+        registerIdentities();
+        //TODO: LEON LPM, tu NS me estaba tirando el mio
+        //executePendingAddressExchangeRequests(cryptoAddressGenerationService);
 
         FermatEventListener cryptoAddressReceivedEventListener = eventManager.getNewListener(EventType.CRYPTO_ADDRESS_REQUESTED);
         cryptoAddressReceivedEventListener.setEventHandler(new CryptoAddressRequestedEventHandler(this, cryptoAddressGenerationService));
@@ -296,7 +298,7 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
         listenersAdded.add(cryptoAddressReceivedEventListener);
 
 
-        registerIdentities();
+
 
 
         this.serviceStatus = ServiceStatus.STARTED;

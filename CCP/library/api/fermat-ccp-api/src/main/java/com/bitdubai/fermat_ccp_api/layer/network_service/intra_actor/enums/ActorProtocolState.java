@@ -13,9 +13,8 @@ public enum ActorProtocolState implements FermatEnum {
     PENDING_ACTION     ("PEA"), // pending local action, is given after raise a crypto payment request event.
     PROCESSING_RECEIVE ("PCR"), // when an action from the network service is needed receiving.
     PROCESSING_SEND    ("PCS"), // when an action from the network service is needed sending.
-    WAITING_RESPONSE   ("WRE")  // waiting response from the counterpart.
-
-    ;
+    WAITING_RESPONSE   ("WRE"),  // waiting response from the counterpart.
+    SENT("SENT");
 
     private String code;
 
@@ -32,6 +31,7 @@ public enum ActorProtocolState implements FermatEnum {
             case "PCR": return PROCESSING_RECEIVE ;
             case "PCS": return PROCESSING_SEND    ;
             case "WRE": return WAITING_RESPONSE   ;
+            case "SENT": return SENT;
 
             default:
                 throw new InvalidParameterException(

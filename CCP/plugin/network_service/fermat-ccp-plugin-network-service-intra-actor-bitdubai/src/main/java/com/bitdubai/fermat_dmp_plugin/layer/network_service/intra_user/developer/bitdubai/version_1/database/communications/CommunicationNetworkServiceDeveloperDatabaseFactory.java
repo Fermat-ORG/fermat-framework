@@ -178,7 +178,7 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
          * Table outgoing messages addition.
          */
         DeveloperDatabaseTable outgoingNotificationsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TABLE_NAME, outgoingmessagesColumns);
-        tables.add(outgoingmessagesTable);
+        tables.add(outgoingNotificationsTable);
 
         /**
          * Table outgoing messages columns.
@@ -199,7 +199,7 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
          * Table outgoing messages addition.
          */
         DeveloperDatabaseTable incomingNotificationsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TABLE_NAME, outgoingmessagesColumns);
-        tables.add(outgoingmessagesTable);
+        tables.add(incomingNotificationsTable);
 
 
 

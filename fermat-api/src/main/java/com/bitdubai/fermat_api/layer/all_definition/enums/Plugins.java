@@ -90,6 +90,10 @@ public enum Plugins {
 
     // End  CCP Plugins
 
+    //CCM Plugins
+
+    BITDUBAI_CCM_INTRA_WALLET_USER_ACTOR                    ("BCCMIWUA" , Developers.BITDUBAI),
+
     // Init DAP Plugins
     BITDUBAI_DAP_ASSET_ISSUER_ACTOR                       ("BDAPAIA",    Developers.BITDUBAI),
     BITDUBAI_DAP_ASSET_USER_ACTOR                         ("BDAPAUA",    Developers.BITDUBAI),

@@ -7,6 +7,8 @@ public class JsonObjectConstants {
 
     public static final String SENDER_PUBLIC_HEY="sender_public_key";
 
+    public static final String SENDER_NAME = "sender_name";
+
     public static final String DESTINATION_NAME="destination_name";
 
     public static final String DESTINATION_PUBLIC_KEY= "destination_public_key";
@@ -18,6 +20,7 @@ public class JsonObjectConstants {
     // this type will be used in case of chat or other things
 
     public static final String MESSAGE_TYPE = "message_type";
+
 
 
 }
