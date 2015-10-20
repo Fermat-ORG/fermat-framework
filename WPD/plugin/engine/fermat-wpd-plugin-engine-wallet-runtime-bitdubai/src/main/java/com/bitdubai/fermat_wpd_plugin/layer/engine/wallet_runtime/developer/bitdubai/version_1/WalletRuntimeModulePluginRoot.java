@@ -8,10 +8,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Header;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Header;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
@@ -23,14 +24,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletN
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.XML;
-import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.DealsWithWalletResources;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesInstalationManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -41,20 +35,25 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
+import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.XML;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectNavigationStructureException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.DealsWithWalletResources;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesInstalationManager;
 import com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletClosedEventHandler;
 import com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletInstalledEventHandler;
 import com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletNavigationStructureDownloadedHandler;
 import com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletOpenedEventHandler;
 import com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.event_handlers.WalletUnnInstalledEventHandler;
 import com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.exceptions.CantFactoryReset;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,12 +64,12 @@ import java.util.UUID;
  * Created by Matias Furszyfer on 23.07.15.
  */
 
-public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeManager,XML, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,DealsWithWalletResources, Plugin {
+public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeManager, XML, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, DealsWithWalletResources, Plugin {
 
     /**
      * Path of xml files
      */
-    final String NAVIGATION_STRUCTURE_FILE_PATH ="navigation_structure";
+    final String NAVIGATION_STRUCTURE_FILE_PATH = "navigation_structure";
 
     /**
      * PlatformService Interface member variables.
@@ -129,7 +128,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
      */
 
     @Override
-    public void start() throws CantStartPluginException{
+    public void start() throws CantStartPluginException {
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
@@ -178,12 +177,12 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
          * * *
          *
          */
-        try{
+        try {
 
             loadLastWalletNavigationStructure();
             factoryReset();
 
-        }catch(CantFactoryReset ex){
+        } catch (CantFactoryReset ex) {
             String message = CantStartPluginException.DEFAULT_MESSAGE;
             FermatException cause = ex;
             String context = "WalletNavigationStructure Runtime Start";
@@ -234,7 +233,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
      */
 
     @Override
-    public void recordNavigationStructure(String xmlText,String linkToRepo,String name,UUID skinId,String walletPublicKey) throws CantCheckResourcesException {
+    public void recordNavigationStructure(String xmlText, String linkToRepo, String name, UUID skinId, String walletPublicKey) throws CantCheckResourcesException {
         //TODO: pido el navigationStrucutre del network service que sea y lo mando ahí
         //setNavigationStructureXml(walletNavigationStructure);
 
@@ -248,7 +247,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         PluginTextFile layoutFile = null;
 
         //String filename= skinId.toString()+"_"+name;
-        String navigationStructureName=walletPublicKey+".xml";
+        String navigationStructureName = walletPublicKey + ".xml";
 
         try {
 
@@ -300,7 +299,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     }
 
     /**
-     *DealWithErrors Interface implementation.
+     * DealWithErrors Interface implementation.
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
@@ -317,8 +316,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     }
 
 
-
-
     @Override
     public WalletNavigationStructure getLastWallet() {
         return walletNavigationStructureOpen;
@@ -328,11 +325,11 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     @Override
     public WalletNavigationStructure getWallet(String publicKey) throws WalletRuntimeExceptions {
         //TODO: acá hay que poner una excepcion si no encuentra la wallet
-        try{
-            walletNavigationStructureOpen=getNavigationStructure(publicKey);
+        try {
+            walletNavigationStructureOpen = getNavigationStructure(publicKey);
             return walletNavigationStructureOpen;
-        }catch (Exception e){
-            throw new WalletRuntimeExceptions("WALLET RUNTIME GET WALLET",e,"wallet runtime not found the navigation structure for: "+publicKey,"");
+        } catch (Exception e) {
+            throw new WalletRuntimeExceptions("WALLET RUNTIME GET WALLET", e, "wallet runtime not found the navigation structure for: " + publicKey, "");
         }
 
     }
@@ -341,7 +338,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
      * Here is where I actually generate the factory structure of the APP. This method is also useful to reset to the
      * factory structure.
      */
-    private void factoryReset() throws CantFactoryReset{
+    private void factoryReset() throws CantFactoryReset {
 
         Activity runtimeActivity;
         Fragment runtimeFragment;
@@ -365,12 +362,12 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeWalletNavigationStructure = new WalletNavigationStructure();
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
-        publicKey="asset_issuer";
+        publicKey = "asset_issuer";
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
         //listWallets.put(publicKey, runtimeWalletNavigationStructure);
 
 
-        runtimeActivity= new Activity();
+        runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeActivity.setColor("#8bba9e");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
@@ -477,7 +474,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey(), fragment);
 
 
-
         SideMenu sideMenu = new SideMenu();
 
         MenuItem menuItem = new MenuItem();
@@ -486,18 +482,13 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         sideMenu.addMenuItem(menuItem);
 
         menuItem = new MenuItem();
-        menuItem.setLabel("Deals");
-        menuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_DEALS);
+        menuItem.setLabel("Contracts History");
+        menuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY);
         sideMenu.addMenuItem(menuItem);
 
         menuItem = new MenuItem();
-        menuItem.setLabel("Contracts");
-        menuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS);
-        sideMenu.addMenuItem(menuItem);
-
-        menuItem = new MenuItem();
-        menuItem.setLabel("Stock Preference");
-        menuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_STOCK_PREFERENCE);
+        menuItem.setLabel("Earnings");
+        menuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS);
         sideMenu.addMenuItem(menuItem);
 
         menuItem = new MenuItem();
@@ -511,8 +502,8 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         navigationStructure.setStartActivity(activity.getType());
 
         activity = new Activity();
-        activity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_DEALS);
-        activity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_DEALS.getCode());
+        activity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY);
+        activity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getCode());
         activity.setColor("#03A9F4");
 
 
@@ -541,13 +532,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         navigationStructure.addActivity(activity);
 
 
-
-        activity = new Activity();
-        activity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS);
-        activity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS.getCode());
-        activity.setColor("#03A9F4");
-
-
         titleBar = new TitleBar();
         titleBar.setLabel("Contracts History");
         titleBar.setColor("#FFFFFF");
@@ -572,10 +556,9 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         navigationStructure.addActivity(activity);
 
         activity = new Activity();
-        activity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_STOCK_PREFERENCE);
-        activity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_STOCK_PREFERENCE.getCode());
+        activity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS);
+        activity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS.getCode());
         activity.setColor("#03A9F4");
-
 
         titleBar = new TitleBar();
         titleBar.setLabel("Stock Preferences");
@@ -620,7 +603,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         navigationStructure.addActivity(activity);
 
         setNavigationStructureXml(navigationStructure);
-
 
 
         /**
@@ -1412,7 +1394,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     }
 
 
-
     private void loadLastWalletNavigationStructure() throws CantFactoryReset {
         String walletCategory = null;
         String walletType = null;
@@ -1421,7 +1402,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         String skinName = null;
         String languageName = null;
 
-        String publicKey="reference_wallet";
+        String publicKey = "reference_wallet";
 
 //        try {
 //
@@ -1432,20 +1413,20 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 //        }
 
 
-        try{
+        try {
             /**
              * Esto es hasta que tengamos las cosas andando y conectadas
              */
 
 
 //            WalletNavigationStructure walletNavigationStructure = getNavigationStructure(publicKey);
-  //          if(walletNavigationStructure==null){
-                setNavigationStructureXml(startWalletNavigationStructure());
-                WalletNavigationStructure walletNavigationStructure= getNavigationStructure(publicKey);
-    //        }
+            //          if(walletNavigationStructure==null){
+            setNavigationStructureXml(startWalletNavigationStructure());
+            WalletNavigationStructure walletNavigationStructure = getNavigationStructure(publicKey);
+            //        }
             //listWallets.put(publicKey, walletNavigationStructure);
             //walletNavigationStructureOpen=walletNavigationStructure;
-        }catch(Exception e){
+        } catch (Exception e) {
             String message = CantFactoryReset.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(e);
             String context = "Error on method Factory Reset, setting the structure of the apps";
@@ -1455,7 +1436,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         }
     }
 
-    private void removeNavigationStructureXml(String publicKey){
+    private void removeNavigationStructureXml(String publicKey) {
         if (publicKey != null) {
             String navigationStructureName = publicKey + ".xml";
             try {
@@ -1468,25 +1449,24 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     }
 
     /**
-     *
      * @param walletPublicKey
      * @return
      * @throws CantGetWalletFactoryProjectNavigationStructureException
      */
     @Override
     public WalletNavigationStructure getNavigationStructure(String walletPublicKey) {
-        WalletNavigationStructure walletNavigationStructure =null;
+        WalletNavigationStructure walletNavigationStructure = null;
         if (walletPublicKey != null) {
-            String navigationStructureName=walletPublicKey+".xml";
+            String navigationStructureName = walletPublicKey + ".xml";
 
             try {
 
-                PluginTextFile pluginTextFile= pluginFileSystem.getTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 pluginTextFile.loadFromMedia();
-                String xml= pluginTextFile.getContent();
+                String xml = pluginTextFile.getContent();
 
 
-                walletNavigationStructure =(WalletNavigationStructure)XMLParser.parseXML(xml, walletNavigationStructure);
+                walletNavigationStructure = (WalletNavigationStructure) XMLParser.parseXML(xml, walletNavigationStructure);
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -1501,8 +1481,8 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     }
 
     @Override
-    public String parseNavigationStructureXml(WalletNavigationStructure walletNavigationStructure)  {
-        String xml=null;
+    public String parseNavigationStructureXml(WalletNavigationStructure walletNavigationStructure) {
+        String xml = null;
         if (walletNavigationStructure != null) {
             xml = XMLParser.parseObject(walletNavigationStructure);
         }
@@ -1510,13 +1490,12 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     }
 
 
-
     @Override
-    public void setNavigationStructureXml(WalletNavigationStructure walletNavigationStructure){
-        String publiKey=walletNavigationStructure.getPublicKey();
+    public void setNavigationStructureXml(WalletNavigationStructure walletNavigationStructure) {
+        String publiKey = walletNavigationStructure.getPublicKey();
         try {
             String navigationStructureXml = parseNavigationStructureXml(walletNavigationStructure);
-            String navigationStructureName=publiKey+".xml";
+            String navigationStructureName = publiKey + ".xml";
             try {
                 PluginTextFile newFile = pluginFileSystem.createTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 newFile.setContent(navigationStructureXml);
@@ -1534,14 +1513,13 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
     }
 
 
-
     /**
-     *  Meanwhile
+     * Meanwhile
      *
      * @return
      */
 
-    private WalletNavigationStructure startWalletNavigationStructure(){
+    private WalletNavigationStructure startWalletNavigationStructure() {
 
         Activity runtimeActivity;
         Fragment runtimeFragment;
@@ -1561,12 +1539,12 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeWalletNavigationStructure = new WalletNavigationStructure();
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
-        publicKey="reference_wallet";
+        publicKey = "reference_wallet";
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
         //listWallets.put(publicKey, runtimeWalletNavigationStructure);
-        walletNavigationStructureOpen=runtimeWalletNavigationStructure;
+        walletNavigationStructureOpen = runtimeWalletNavigationStructure;
 
-        runtimeActivity= new Activity();
+        runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeActivity.setColor("#12aca1");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
@@ -1598,7 +1576,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
 
         runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
-
 
 
         runtimeTab = new Tab();
@@ -1636,9 +1613,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 //        runtimeTabStrip.addTab(runtimeTab);
 
 
-
-
-
         runtimeTabStrip.setDividerColor(0x72af9c);
         //runtimeTabStrip.setBackgroundColor("#72af9c");
         runtimeActivity.setTabStrip(runtimeTabStrip);
@@ -1651,12 +1625,12 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND.getKey());
         runtimeFragment.setBack(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND.getKey(),runtimeFragment);
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND.getKey(), runtimeFragment);
 
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE.getKey(),runtimeFragment);
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE.getKey(), runtimeFragment);
 
 //        runtimeFragment = new Fragment();
 //        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
@@ -1667,7 +1641,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST.getKey());
         runtimeFragment.setBack(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST.getKey(), runtimeFragment);
-
 
 
         runtimeFragment = new Fragment();
@@ -1683,7 +1656,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         //Navigation
 
         runtimeSideMenu = new SideMenu();
-
 
 
         runtimeMenuItem = new MenuItem();
@@ -1747,7 +1719,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
          * Transaction Activity
          */
 
-        runtimeActivity= new Activity();
+        runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
 
@@ -1802,7 +1774,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeSideMenu = new SideMenu();
 
 
-
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
         runtimeMenuItem.setIcon("Home");
@@ -1836,13 +1807,11 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         //fin navigation
 
 
-
-
         /**
          * Payment request Activity
          */
 
-        runtimeActivity= new Activity();
+        runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
         runtimeActivity.setColor("#8bba9e");
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
@@ -1898,7 +1867,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeSideMenu = new SideMenu();
 
 
-
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
         runtimeMenuItem.setIcon("Home");
@@ -1932,12 +1900,11 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         //fin navigation
 
 
-
         /**
          * Contacts Activity
          */
 
-        runtimeActivity= new Activity();
+        runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
         runtimeActivity.setColor("#12aca1");
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
@@ -1967,7 +1934,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeSideMenu = new SideMenu();
 
 
-
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
         runtimeMenuItem.setIcon("Home");
@@ -2001,17 +1967,12 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         //fin navigation
 
 
-
-
-
-
-
         return runtimeWalletNavigationStructure;
     }
 
 
     @Override
     public void setWalletResourcesManager(WalletResourcesInstalationManager walletResources) {
-        this.walletResourcesManger=walletResources;
+        this.walletResourcesManger = walletResources;
     }
 }

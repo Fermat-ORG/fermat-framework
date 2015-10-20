@@ -20,7 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
  */
 public class NavigationStructureFactory {
 
-    public static WalletNavigationStructure createNavigationStructure(){
+    public static WalletNavigationStructure createNavigationStructure() {
         WalletNavigationStructure navigationStructure = new WalletNavigationStructure();
         navigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         navigationStructure.setWalletType(WalletType.REFERENCE.getCode());
@@ -34,10 +34,6 @@ public class NavigationStructureFactory {
         navigationStructure.setStartActivity(activity.getType());
 
         activity = createDealsActivity();
-        activity.setSideMenu(sideMenu);
-        navigationStructure.addActivity(activity);
-
-        activity = createContractsActivity();
         activity.setSideMenu(sideMenu);
         navigationStructure.addActivity(activity);
 
@@ -67,18 +63,13 @@ public class NavigationStructureFactory {
         sideMenu.addMenuItem(menuItem);
 
         menuItem = new MenuItem();
-        menuItem.setLabel("Deals");
-        menuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_DEALS);
+        menuItem.setLabel("Contracts History");
+        menuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY);
         sideMenu.addMenuItem(menuItem);
 
         menuItem = new MenuItem();
-        menuItem.setLabel("Contracts");
-        menuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS);
-        sideMenu.addMenuItem(menuItem);
-
-        menuItem = new MenuItem();
-        menuItem.setLabel("Stock Preference");
-        menuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_STOCK_PREFERENCE);
+        menuItem.setLabel("Earnings");
+        menuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS);
         sideMenu.addMenuItem(menuItem);
 
         menuItem = new MenuItem();
@@ -160,8 +151,8 @@ public class NavigationStructureFactory {
 
     private static Activity createDealsActivity() {
         Activity activity = new Activity();
-        activity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_DEALS);
-        activity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_DEALS.getCode());
+        activity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY);
+        activity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getCode());
         activity.setColor("#03A9F4");
 
 
@@ -189,41 +180,11 @@ public class NavigationStructureFactory {
         return activity;
     }
 
-    private static Activity createContractsActivity() {
-        Activity activity = new Activity();
-        activity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS);
-        activity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS.getCode());
-        activity.setColor("#03A9F4");
-
-
-        TitleBar titleBar = new TitleBar();
-        titleBar.setLabel("Contracts History");
-        titleBar.setColor("#FFFFFF");
-        titleBar.setLabelSize(16);
-        activity.setTitleBar(titleBar);
-
-
-        StatusBar statusBar = new StatusBar();
-        statusBar.setColor("#0288D1");
-        activity.setStatusBar(statusBar);
-
-
-        Fragment fragment = new Fragment();
-        fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACTS.getKey());
-        activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACTS.getKey(), fragment);
-
-        fragment = new Fragment();
-        fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS.getKey());
-        fragment.setBack(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACTS.getKey());
-        activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS.getKey(), fragment);
-
-        return activity;
-    }
 
     private static Activity createStockPreferenceActivity() {
         Activity activity = new Activity();
-        activity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_STOCK_PREFERENCE);
-        activity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_STOCK_PREFERENCE.getCode());
+        activity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS);
+        activity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS.getCode());
         activity.setColor("#03A9F4");
 
 

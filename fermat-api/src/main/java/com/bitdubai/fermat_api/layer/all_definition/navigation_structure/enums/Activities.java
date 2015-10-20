@@ -88,9 +88,8 @@ public enum Activities {
 
     // Crypto Broker Wallet
     CBP_CRYPTO_BROKER_WALLET_HOME("CBPCBWH"),
-    CBP_CRYPTO_BROKER_WALLET_DEALS("CBPCBWD"),
-    CBP_CRYPTO_BROKER_WALLET_CONTRACTS("CBPCBWC"),
-    CBP_CRYPTO_BROKER_WALLET_STOCK_PREFERENCE("CBPCBWSP"),
+    CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY("CBPCBCH"),
+    CBP_CRYPTO_BROKER_WALLET_EARNINGS("CBPCBWE"),
     CBP_CRYPTO_BROKER_WALLET_SETTINGS("CBPCBWS"),
 
     // Crypto Broker Identity
@@ -243,6 +242,14 @@ public enum Activities {
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN;
             case "DAUCAM":
                 return DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN;
+            case "CBPCBWH":
+                return CBP_CRYPTO_BROKER_WALLET_HOME;
+            case "CBPCBCH":
+                return CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY;
+            case "CBPCBWE":
+                return CBP_CRYPTO_BROKER_WALLET_EARNINGS;
+            case "CBPCBWS":
+                return CBP_CRYPTO_BROKER_WALLET_SETTINGS;
             case "CBPSACBI":
                 return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY;
             case "CBPSACBICI":
