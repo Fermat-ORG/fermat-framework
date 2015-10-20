@@ -18,6 +18,6 @@ public interface CustomerBrokerSaleManager {
 
     Collection<CustomerBrokerSale> getNegotiations() throws CantListSaleNegotianionsException;
     Collection<CustomerBrokerSale> getNegotiations(NegotiationStatus status) throws CantListSaleNegotianionsException;
-    Collection<CustomerBrokerSale> getNegotiationsByCustomer(ActorIdentity customer);
+    Collection<CustomerBrokerSale> getNegotiationsByCustomer(ActorIdentity customer) throws CantListSaleNegotianionsException;
     Collection<CustomerBrokerSale> getNegotiationsByBroker(ActorIdentity broker);
 }

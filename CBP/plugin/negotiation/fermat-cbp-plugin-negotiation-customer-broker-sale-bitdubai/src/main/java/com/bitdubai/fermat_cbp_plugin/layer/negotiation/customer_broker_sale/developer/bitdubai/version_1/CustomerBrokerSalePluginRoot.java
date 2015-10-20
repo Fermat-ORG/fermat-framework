@@ -160,8 +160,16 @@ public class CustomerBrokerSalePluginRoot implements CustomerBrokerSaleManager, 
     }
 
     @Override
-    public Collection<CustomerBrokerSale> getNegotiationsByCustomer(ActorIdentity customer) {
-        return null;
+    public Collection<CustomerBrokerSale> getNegotiationsByCustomer(ActorIdentity customer) throws CantListSaleNegotianionsException {
+        try {
+            Collection<CustomerBrokerSale> negotiations = new ArrayList<CustomerBrokerSale>();
+            negotiations = customerBrokerSaleNegotiationDao.getNegotiationsByCustomer(customer);
+            return negotiations;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantListSaleNegotianionsException(CantListSaleNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+        } catch (InvalidParameterException e) {
+            throw new CantListSaleNegotianionsException(CantListSaleNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+        }
     }
 
     @Override
