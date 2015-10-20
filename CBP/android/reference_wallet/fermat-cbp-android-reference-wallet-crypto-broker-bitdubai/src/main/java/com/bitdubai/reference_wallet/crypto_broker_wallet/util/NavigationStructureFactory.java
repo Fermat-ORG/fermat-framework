@@ -135,6 +135,7 @@ public class NavigationStructureFactory {
         fragment.setBack(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB.getKey());
         activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS.getKey(), fragment);
 
+        // TODO falta agregar un footer a navigation structure
         fragment = new Fragment();
         fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey());
         activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey(), fragment);
