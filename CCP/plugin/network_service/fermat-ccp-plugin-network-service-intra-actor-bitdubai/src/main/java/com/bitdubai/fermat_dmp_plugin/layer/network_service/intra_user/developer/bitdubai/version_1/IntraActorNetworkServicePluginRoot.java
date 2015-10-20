@@ -1358,6 +1358,8 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
         for(Actor actor:actors){
 
+
+
         /*
          * Construct  profile and register
          */
@@ -1374,6 +1376,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                     jsonObject.toString());
 
 
+            if(!actorsToRegisterCache.contains(platformComponentProfile))
                 actorsToRegisterCache.add(platformComponentProfile);
 
             if(register){
