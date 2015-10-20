@@ -27,7 +27,7 @@ public class AssetIssuerActorDatabaseConstants {
     public static final String ASSET_ISSUER_FIRST_KEY_COLUMN = ASSET_ISSUER_ISSUER_PUBLIC_KEY_COLUMN_NAME;
 
     //ASSET ISSUER REGISTERED TABLE.
-    public static final String ASSET_ISSUER_REGISTERED_TABLE_NAME = "register_ASSET_ISSUER_REGISTERED_actor";
+    public static final String ASSET_ISSUER_REGISTERED_TABLE_NAME = "register_asset_issuer_actor";
 
     public static final String ASSET_ISSUER_REGISTERED_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "register_linked_identity_publicKey";
     public static final String ASSET_ISSUER_REGISTERED_ISSUER_PUBLIC_KEY_COLUMN_NAME = "register_publicKey";
