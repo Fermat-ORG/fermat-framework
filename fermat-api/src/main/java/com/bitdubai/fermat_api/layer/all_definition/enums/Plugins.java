@@ -100,6 +100,7 @@ public enum Plugins {
     BITDUBAI_ASSET_ISSUING_TRANSACTION                  ("BAIT",       Developers.BITDUBAI),
     BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION             ("BADT",       Developers.BITDUBAI),
     BITDUBAI_ASSET_RECEPTION_TRANSACTION                ("BADR",       Developers.BITDUBAI),
+    BITDUBAI_ASSET_APPROPRIATION_TRANSACTION            ("BAAT",       Developers.BITDUBAI),
     BITDUBAI_ASSET_WALLET_ISSUER                        ("BASWI",      Developers.BITDUBAI),
     BITDUBAI_ASSET_FACTORY                              ("BASF",       Developers.BITDUBAI),
     BITDUBAI_ASSET_FACTORY_MODULE                       ("BASFM",      Developers.BITDUBAI),
@@ -286,6 +287,8 @@ public enum Plugins {
                 return BITDUBAI_ASSET_RECEPTION_TRANSACTION;
             case "BADT":
                 return BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION;
+            case "BAAT":
+                return BITDUBAI_ASSET_APPROPRIATION_TRANSACTION;
             case "BASF":
                 return BITDUBAI_ASSET_FACTORY;
             case "BASFM":
