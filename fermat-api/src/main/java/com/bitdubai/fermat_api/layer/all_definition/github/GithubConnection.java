@@ -9,17 +9,19 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHu
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
-import com.jcabi.github.*;
+import org.kohsuke.github.GHContent;
+import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHub;
+import org.kohsuke.github.GitHubBuilder;
 
-import javax.json.Json;
-import javax.json.JsonObject;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.Properties;
+
 /**
  *  Class used for Fermat connection with Github
  */
@@ -29,7 +31,8 @@ public class GithubConnection {
     String mainRepository;
 
 
-    Repo repo;
+    Properties properties;
+    GHRepository ghRepository;
 
     public GithubConnection() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
         mainRepository="furszy/fermat";
@@ -43,29 +46,37 @@ public class GithubConnection {
 
 
     private void setUpConnection() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
+        properties = new Properties();
+        properties.setProperty("login", "MALOTeam");
+        properties.setProperty("password", "fermat123456");
+        try {
 
-        try{
-            String user="MALOTeam";
-            String password="fermat123456";
-            String vec[] = mainRepository.split("/");
-            Github github = new RtGithub(user,password);
-            repo = github.repos().get(new Coordinates.Simple(vec[0], vec[1]));
+            GitHub gitHub = GitHubBuilder.fromProperties(properties).build();
+            ghRepository = gitHub.getRepository(mainRepository);
 
-        } catch (Exception e) {
+
+        } catch (java.io.FileNotFoundException e) {
+            throw new GitHubRepositoryNotFoundException(GitHubRepositoryNotFoundException.DEFAULT_MESSAGE, e, "Check the name of the repository.", "");
+        } catch (IOException e) {
             throw new GitHubNotAuthorizedException(GitHubNotAuthorizedException.DEFAULT_MESSAGE, e, "Check your credentials or access to this repository.", "");
         }
     }
 
     private void setUpConnection(String user,String password) throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
-        try{
-            String vec[] = mainRepository.split("/");
-            Github github = new RtGithub(user,password);
-            repo = github.repos().get(new Coordinates.Simple(vec[0],vec[1]));
+        properties = new Properties();
+        properties.setProperty("login", user);
+        properties.setProperty("password", password);
+        try {
 
-        } catch (Exception e) {
+            GitHub gitHub = GitHubBuilder.fromProperties(properties).build();
+            ghRepository = gitHub.getRepository(mainRepository);
+
+
+        } catch (java.io.FileNotFoundException e) {
+            throw new GitHubRepositoryNotFoundException(GitHubRepositoryNotFoundException.DEFAULT_MESSAGE, e, "Check the name of the repository.", "");
+        } catch (IOException e) {
             throw new GitHubNotAuthorizedException(GitHubNotAuthorizedException.DEFAULT_MESSAGE, e, "Check your credentials or access to this repository.", "");
         }
-
     }
 
 
@@ -78,11 +89,12 @@ public class GithubConnection {
      * @throws IOException
      */
 
+
     public String getFile(String path) throws IOException {
 
-        Content content;
-        content=repo.contents().get(path);
-        InputStream inputStream = content.raw();
+        GHContent ghContent= ghRepository.getFileContent(path);
+
+        InputStream inputStream = ghContent.read();
 
         StringWriter writer = new StringWriter();
         IOUtils.copy(inputStream, writer, "UTF-8");
@@ -99,13 +111,12 @@ public class GithubConnection {
      * @return
      * @throws IOException
      */
+
     public byte[] getImage(String path) throws IOException {
 
-        Content content;
-        content=repo.contents().get(path);
-        //GHContent ghContent= ghRepository.getFileContent(path);
+        GHContent ghContent= ghRepository.getFileContent(path);
 
-        InputStream inputStream = content.raw();
+        InputStream inputStream = ghContent.read();
 
         BufferedInputStream in = new BufferedInputStream(inputStream);
         ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
@@ -119,7 +130,6 @@ public class GithubConnection {
 
     }
 
-
     /**
      *
      *  Push image file to github repository
@@ -129,15 +139,14 @@ public class GithubConnection {
      * @param commitMessage
      */
 
-
     public void createGitHubImageFile(String path, byte[] commitContent, String commitMessage) {
         try {
-            JsonObject json= Json.createObjectBuilder().add("path", path).add("message", commitMessage).add("content",new String(Base64.encodeBase64(commitContent))).build();
-            repo.contents().create(json);
+            ghRepository.createContent(commitContent,commitMessage, path);
         } catch (IOException e) {
             System.out.println(getJsonMessage(e.getMessage()));
         }
     }
+
     /**
      *
      *  Push text file to github repository
@@ -149,8 +158,7 @@ public class GithubConnection {
      */
     public void createGitHubTextFile(String path, String commitContent, String commitMessage) {
         try {
-            JsonObject json= Json.createObjectBuilder().add("path", path).add("message", commitMessage).add("content",new String(Base64.encodeBase64(commitContent.getBytes()))).build();
-            repo.contents().create(json);
+            ghRepository.createContent(commitContent,commitMessage, path);
         } catch (IOException e) {
             System.out.println(getJsonMessage(e.getMessage()));
         }
