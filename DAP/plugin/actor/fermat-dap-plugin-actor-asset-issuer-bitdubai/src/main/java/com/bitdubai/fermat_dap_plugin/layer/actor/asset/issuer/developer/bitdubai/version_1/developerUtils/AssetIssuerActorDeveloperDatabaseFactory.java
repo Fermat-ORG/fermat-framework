@@ -116,6 +116,13 @@ public class AssetIssuerActorDeveloperDatabaseFactory  implements DealsWithPlugi
         assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_STATE_COLUMN_NAME);
         assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_REGISTRATION_DATE_COLUMN_NAME);
         assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_MODIFIED_DATE_COLUMN_NAME);
+        assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME);
+        assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME);
+        assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_LOCATION_LATITUDE_COLUMN_NAME);
+        assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME);
+        assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_DESCRIPTION_COLUMN_NAME);
+
+
         /*
          * Redeem Point database addition.
          */

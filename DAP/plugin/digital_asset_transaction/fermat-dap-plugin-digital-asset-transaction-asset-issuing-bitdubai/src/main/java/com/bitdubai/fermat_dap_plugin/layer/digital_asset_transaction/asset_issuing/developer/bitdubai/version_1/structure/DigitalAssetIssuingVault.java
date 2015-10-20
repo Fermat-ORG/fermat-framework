@@ -69,6 +69,10 @@ public class DigitalAssetIssuingVault extends DigitalAssetVault {
     }
 
     private void deliverDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException {
+        /////////////////////////////////////////////
+        // TODO: Coloque esto porque es la wallet qye tengo hardcore para la wallet y para hacer las pruebas
+        this.walletPublicKey = "walletPublicKeyTest";
+        /////////////////////////////////////////////
         AssetIssuerWallet assetIssuerWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
         AssetIssuerWalletBalance assetIssuerWalletBalance= assetIssuerWallet.getBookBalance(balanceType);
         com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper=new com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetIssuerWalletTransactionRecordWrapper(
