@@ -13,6 +13,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.even
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceAssetUserEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.ReceivedNewDigitalAssetMetadataNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
@@ -83,7 +84,12 @@ public class AssetDistributionRecorderService implements DealsWithEvents, AssetT
         //LOG.info("CHECK THE DATABASE");
     }
 
-
+    public void receivedNewDigitalAssetMetadataNotificationrEvent(ReceivedNewDigitalAssetMetadataNotificationEvent event) throws CantSaveEventException {
+        //Logger LOG = Logger.getGlobal();
+        //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
+        this.assetDistributionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+        //LOG.info("CHECK THE DATABASE");
+    }
 
     @Override
     public void start() throws CantStartServiceException {
@@ -118,6 +124,13 @@ public class AssetDistributionRecorderService implements DealsWithEvents, AssetT
             fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER);
             fermatEventHandler = new IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventHandler();
             ((IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventHandler) fermatEventHandler).setAssetDistributionRecorderService(this);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
+
+            fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
+            fermatEventHandler = new ReceivedNewDigitalAssetMetadataNotificationrEventHandler();
+            ((ReceivedNewDigitalAssetMetadataNotificationrEventHandler) fermatEventHandler).setAssetDistributionRecorderService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
