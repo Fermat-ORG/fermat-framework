@@ -1,9 +1,5 @@
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric;
 
-import java.math.BigInteger;
-
-import javax.crypto.BadPaddingException;
-
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.PrivateKey;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.PublicKey;
@@ -11,6 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.RandomBigIntegerGenerator;
 
 import org.bitcoinj.core.ECKey;
+
+import java.math.BigInteger;
 
 public class AsymmetricCryptography {
 	
