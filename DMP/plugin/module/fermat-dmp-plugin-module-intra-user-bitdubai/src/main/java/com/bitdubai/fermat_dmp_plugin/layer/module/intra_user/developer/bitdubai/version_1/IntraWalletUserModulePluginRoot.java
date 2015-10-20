@@ -352,7 +352,7 @@ public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsW
      */
 
     @Override
-    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage,String identityPublicKey) throws CantStartRequestException {
+    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage,String identityPublicKey,String identityAlias) throws CantStartRequestException {
 
         try
         {
@@ -365,7 +365,7 @@ public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsW
              *Call Network Service Intra User to add request connection
              */
 
-            this.intraUserNertwokServiceManager.askIntraUserForAcceptance(identityPublicKey, Actors.INTRA_USER, intraUserToAddName, intraUserToAddPublicKey, Actors.INTRA_USER,profileImage);
+            this.intraUserNertwokServiceManager.askIntraUserForAcceptance(identityPublicKey,identityAlias, Actors.INTRA_USER, intraUserToAddName, intraUserToAddPublicKey, Actors.INTRA_USER,profileImage);
         }
         catch(CantCreateIntraWalletUserException e)
         {

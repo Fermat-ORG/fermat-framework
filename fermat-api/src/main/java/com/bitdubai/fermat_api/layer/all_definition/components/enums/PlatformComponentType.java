@@ -39,7 +39,7 @@ public enum PlatformComponentType implements FermatEnum {
      *
      * @param code
      */
-    private PlatformComponentType(String code){
+    PlatformComponentType(String code){
         this.code = code;
     }
 

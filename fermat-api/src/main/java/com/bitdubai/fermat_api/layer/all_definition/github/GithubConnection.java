@@ -27,6 +27,9 @@ import java.io.StringWriter;
 public class GithubConnection {
 
     String mainRepository;
+
+
+
     Repo repo;
 
     public GithubConnection() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
@@ -53,6 +56,7 @@ public class GithubConnection {
             throw new GitHubNotAuthorizedException(GitHubNotAuthorizedException.DEFAULT_MESSAGE, e, "Check your credentials or access to this repository.", "");
         }
     }
+
 
     private void setUpConnection(String user,String password) throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
         try{
@@ -126,8 +130,6 @@ public class GithubConnection {
      * @param commitContent
      * @param commitMessage
      */
-
-
     public void createGitHubImageFile(String path, byte[] commitContent, String commitMessage) {
         try {
             JsonObject json= Json.createObjectBuilder().add("path", path).add("message", commitMessage).add("content",new String(Base64.encodeBase64(commitContent))).build();

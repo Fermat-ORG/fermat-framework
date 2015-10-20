@@ -48,7 +48,7 @@ public class IncomingNotificationDao implements DAO {
         return database.getTable(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TABLE_NAME);
     }
 
-    public void createNotification(        UUID                        notificationId        ,
+    public ActorNetworkServiceRecord createNotification(        UUID                        notificationId        ,
                                            String                      senderPublicKey,
                                            Actors                      senderType     ,
                                            String                      destinationPublicKey   ,
@@ -82,6 +82,22 @@ public class IncomingNotificationDao implements DAO {
             );
 
             cryptoPaymentRequestTable.insertRecord(buildDatabaseRecord(entityRecord, cryptoPaymentRequestRecord));
+
+            return cryptoPaymentRequestRecord;
+
+        } catch (CantInsertRecordException e) {
+
+            throw new CantCreateIntraUserException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+        }
+    }
+    public void createNotification(ActorNetworkServiceRecord actorNetworkServiceRecord) throws CantCreateIntraUserException {
+
+        try {
+            DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
+
+            DatabaseTableRecord entityRecord = cryptoPaymentRequestTable.getEmptyRecord();
+
+            cryptoPaymentRequestTable.insertRecord(buildDatabaseRecord(entityRecord, actorNetworkServiceRecord));
 
         } catch (CantInsertRecordException e) {
 

@@ -10,7 +10,9 @@ public enum Actors {
     SHOP("SHP"),
     ASSET_ISSUER("ASIS"),
     ASSET_USER("ASUS"),
-    REDEEM_POINT("REPO"),;
+    REDEEM_POINT("REPO"),
+    CCP_INTRA_WALLET_USER ("CCPIU"),
+    CCM_INTRA_WALLET_USER ("CCMIU");
 
     private String code;
 
@@ -39,6 +41,10 @@ public enum Actors {
                 return Actors.ASSET_USER;
             case "REPO":
                 return Actors.REDEEM_POINT;
+            case "CCPIU":
+                return Actors.CCP_INTRA_WALLET_USER;
+            case "CCMIU":
+                return Actors.CCM_INTRA_WALLET_USER;
             //Modified by Manuel Perez on 03/08/2015
             //default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Actors enum");
         }

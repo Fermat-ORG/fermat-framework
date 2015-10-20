@@ -99,7 +99,6 @@ public class PaymentRequestHomeAdapter extends FermatAdapter<PaymentRequest, Pay
 
         holder.getTxt_contactName().setText("unknown");//data.getContact().getActorName());
 
-
         holder.getTxt_notes().setText(data.getReason());
 
 

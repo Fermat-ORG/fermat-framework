@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces;
 
+
+import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -15,7 +17,7 @@ import java.util.List;
 /**
  * Created by franklin on 11/09/15.
  */
-public interface AssetIssuerWalletSupAppModuleManager {
+public interface AssetIssuerWalletSupAppModuleManager extends ModuleManager {
 
     /**
      * (non-Javadoc)

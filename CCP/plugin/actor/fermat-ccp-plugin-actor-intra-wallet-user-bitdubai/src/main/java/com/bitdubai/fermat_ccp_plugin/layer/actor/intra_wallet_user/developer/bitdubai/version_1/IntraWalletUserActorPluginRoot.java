@@ -410,54 +410,6 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
             FermatEventHandler fermatEventHandler;
 
 
-            /**
-             * Listener Accepted connection event
-             */
-            fermatEventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_ACCEPTED);
-            fermatEventHandler = new IntraWalletUserConnectionAcceptedEventHandlers();
-            ((IntraWalletUserConnectionAcceptedEventHandlers) fermatEventHandler).setIntraWalletUserManager(this);
-            ((IntraWalletUserConnectionAcceptedEventHandlers) fermatEventHandler).setEventManager(eventManager);
-            ((IntraWalletUserConnectionAcceptedEventHandlers) fermatEventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
-
-            /**
-             * Listener Cancelled connection event
-             */
-            fermatEventListener = eventManager.getNewListener(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
-            fermatEventHandler = new IntraWalletUserDisconnectionEventHandlers();
-            ((IntraWalletUserDisconnectionEventHandlers) fermatEventHandler).setIntraWalletUserManager(this);
-            ((IntraWalletUserDisconnectionEventHandlers) fermatEventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
-
-            /**
-             * Listener Request connection event
-             */
-            fermatEventListener = eventManager.getNewListener(EventType.INTRA_USER_REQUESTED_CONNECTION);
-            fermatEventHandler = new IntraWalletUserRequestConnectionEventHandlers();
-            ((IntraWalletUserRequestConnectionEventHandlers) fermatEventHandler).setIntraWalletUserManager(this);
-            ((IntraWalletUserRequestConnectionEventHandlers) fermatEventHandler).setEventManager(this.eventManager);
-            ((IntraWalletUserRequestConnectionEventHandlers) fermatEventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
-
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
-
-            /**
-             * Listener Denied connection event
-             */
-            fermatEventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_DENIED);
-            fermatEventHandler = new IntraWalletUserDeniedConnectionEventHandlers();
-            ((IntraWalletUserDeniedConnectionEventHandlers) fermatEventHandler).setActorIntraUserManager(this);
-            ((IntraWalletUserDeniedConnectionEventHandlers) fermatEventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
-
 
             /**
              * Listener NetWorkService New Notifications event

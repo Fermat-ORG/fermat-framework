@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces;
 
 
+import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CantGetCryptoBrokerListException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CouldNotCreateCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.exceptions.CouldNotPublishCryptoBrokerException;
@@ -17,7 +18,7 @@ import java.util.List;
  * provides the methods for the Crypto Broker Identity sub app.
  */
 
-public interface CryptoBrokerIdentityModuleManager {
+public interface CryptoBrokerIdentityModuleManager extends ModuleManager {
 
     /**
      * The method <code>createCryptoBrokerIdentity</code> is used to create a new crypto Broker identity
