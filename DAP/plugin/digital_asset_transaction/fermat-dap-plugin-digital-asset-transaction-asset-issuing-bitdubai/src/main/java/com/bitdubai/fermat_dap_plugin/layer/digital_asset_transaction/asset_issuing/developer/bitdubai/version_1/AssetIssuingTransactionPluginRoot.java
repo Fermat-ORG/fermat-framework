@@ -234,7 +234,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             checkIfExistsPendingAssets();
 
             //For testing, please, clean up your database or change the asset public key
-            testWalletDeliverAssetToAssetIssuerWallet();
+            //testWalletDeliverAssetToAssetIssuerWallet();
             //testIssueSingleAsset();
             //testIssueMultipleAssetsWithNoIdentity();
             //testIssueMultipleFullAssets();
