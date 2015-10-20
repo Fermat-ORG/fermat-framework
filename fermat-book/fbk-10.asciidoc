@@ -1,14 +1,3 @@
-== Including legacy institutions and the traditional financial system
+== FERMAT Bank Notes Platform
 
-=== FERMAT CCM ( Crypto Commodity Money)
-** CCM (Crypto Commodity Money Wallet)
-** DiWa (Discount Wallet) -> *for discount and bonus chasers! ( recommend selling when price gets convinient, and shows it as a " discount" !)*
-
-=== FERMAT BNP (Bank Note Platform)
-* FERMAT BNK (Bank Notes)
-** BaNo (Bank Notes Wallet) -> *for those wanting to visualize their investment in "real money traditional bank notes" of their usual fiat/currency ( rest on FERMAT, we do the "dirty work" with all the crypto stuff!)*
-
-
-
-
-
+This platform ....

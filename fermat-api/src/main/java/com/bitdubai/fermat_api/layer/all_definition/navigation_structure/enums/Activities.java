@@ -101,6 +101,7 @@ public enum Activities {
     // Crypto Customer Identity
     CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY("CBPSACCI"),
     CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY("CBPSACCICI"),
+    CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY("CBPSACCIEI"),
 
     // CCP Comunity
     CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST("CCPSAIUCR"),
@@ -252,6 +253,8 @@ public enum Activities {
                 return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY;
             case "CBPSACCICI":
                 return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY;
+            case "CBPSACCIEI":
+                return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY;
             case "CCPSAISI":
                 return CCP_SUB_APP_INTRA_USER_IDENTITY;
             case "CCPSAIICI":

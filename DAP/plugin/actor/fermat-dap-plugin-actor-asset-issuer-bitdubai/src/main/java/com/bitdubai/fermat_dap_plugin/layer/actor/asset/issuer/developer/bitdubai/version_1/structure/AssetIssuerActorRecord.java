@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 
 /**
@@ -9,22 +11,21 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.Actor
 public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
     private String name;
+    private String description;
     private String publicKey;
     private byte[] profileImage ;
     private long registrationDate;
     private ConnectionState contactState;
+    private Location location;
+    private CryptoAddress cryptoAddress;
 
     /**
      * Constructor
      */
-    public AssetIssuerActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, ConnectionState contactState){
 
+    public AssetIssuerActorRecord(String name, String publicKey) {
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = (byte[])profileImage.clone();
-        this.registrationDate = registrationDate;
-        this.contactState = contactState;
-
     }
 
     /**
@@ -76,5 +77,56 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     @Override
     public ConnectionState getContactState() {
         return this.contactState;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     */
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public Location getLocation() {
+        return location;
+    }
+
+    @Override
+    public CryptoAddress getCryptoAddress() {
+        return cryptoAddress;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    public void setProfileImage(byte[] profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public void setRegistrationDate(long registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public void setContactState(ConnectionState contactState) {
+        this.contactState = contactState;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public void setCryptoAddress(CryptoAddress cryptoAddress) {
+        this.cryptoAddress = cryptoAddress;
     }
 }

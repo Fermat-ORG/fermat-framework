@@ -19,7 +19,6 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.DealsWithIntraUsersNetworkService;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
-import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.event_handlers.IntraWalletUserNetWorkServicesCompleteEventHandlers;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.DealsWithWalletManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
@@ -34,7 +33,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.AddressExchangeRequestState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDao;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDeveloperDatabaseFactory;
@@ -231,7 +229,11 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
 
             intraWalletUserIdentityDao.createNewUser(alias, publicKey, privateKey, loggedUser, profileImage);
 
-            return new IntraWalletUserIdentity(alias, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
+            IntraWalletUserIdentity intraWalletUserIdentity = new IntraWalletUserIdentity(alias, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
+
+            registerIdentities();
+
+            return intraWalletUserIdentity;
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateNewIntraWalletUserException("CAN'T CREATE NEW INTRA WALLET USER IDENTITY", e, "Error getting current logged in device user", "");
         } catch (CantCreateNewDeveloperException e) {
@@ -286,7 +288,9 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
                 walletManagerManager
         );
 
-        executePendingAddressExchangeRequests(cryptoAddressGenerationService);
+        registerIdentities();
+        //TODO: LEON LPM, tu NS me estaba tirando el mio
+        //executePendingAddressExchangeRequests(cryptoAddressGenerationService);
 
         FermatEventListener cryptoAddressReceivedEventListener = eventManager.getNewListener(EventType.CRYPTO_ADDRESS_REQUESTED);
         cryptoAddressReceivedEventListener.setEventHandler(new CryptoAddressRequestedEventHandler(this, cryptoAddressGenerationService));
@@ -294,14 +298,7 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
         listenersAdded.add(cryptoAddressReceivedEventListener);
 
 
-        /**
-         * Listener Network service connection event and to register identity
-         */
-        FermatEventListener actorNetworkServicesEventListener = eventManager.getNewListener(EventType.ACTOR_NETWORK_SERVICE_COMPLETE);
-         actorNetworkServicesEventListener.setEventHandler(new IntraWalletUserNetWorkServicesCompleteEventHandlers(this));
 
-        eventManager.addListener(actorNetworkServicesEventListener);
-        listenersAdded.add(actorNetworkServicesEventListener);
 
 
         this.serviceStatus = ServiceStatus.STARTED;
@@ -310,8 +307,7 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
     private void executePendingAddressExchangeRequests(IntraWalletUserIdentityCryptoAddressGenerationService cryptoAddressGenerationService) {
         try {
             List<AddressExchangeRequest> addressExchangeRequestList = cryptoAddressesManager.listPendingRequests(
-                    IntraWalletUserIdentityCryptoAddressGenerationService.actorType,
-                    AddressExchangeRequestState.PENDING_LOCAL_RESPONSE
+                    IntraWalletUserIdentityCryptoAddressGenerationService.actorType
             );
 
             for (AddressExchangeRequest request : addressExchangeRequestList) {

@@ -20,14 +20,22 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.template.TemplateManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -40,28 +48,36 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.exceptions.CantDefineContractPropertyException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendTransactionNewStatusNotificationException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DigitalAssetMetadataTransaction;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.DigitalAssetMetaDataTransactionDao;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.event_handlers.NewSentMessagesNotificationEventHandler;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantInitializeAssetTransmissionNetworkServiceDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.DigitalAssetMetadataTransactionImpl;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.EncodeMsjContent;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.test.MockDigitalAssetMetadataForTesting;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.test.MockIdentityAssetIssuerForTest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
@@ -96,7 +112,7 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServiceManager,TemplateManager, Service, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, DatabaseManagerForDevelopers {
+public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServiceManager, Service, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, DatabaseManagerForDevelopers {
 
     /**
      * Represent the EVENT_SOURCE
@@ -132,7 +148,6 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
      * Represent the extraData
      */
     private String extraData;
-
 
     /**
      * Represent the dataBase
@@ -217,6 +232,11 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
     private CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
 
     /**
+     * Represent the digitalAssetMetaDataTransactionDao
+     */
+    private DigitalAssetMetaDataTransactionDao digitalAssetMetaDataTransactionDao;
+
+    /**
      * Constructor
      */
     public AssetTransmissionPluginRoot() {
@@ -290,7 +310,6 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
     public void initializeCommunicationNetworkServiceConnectionManager(){
         this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(platformComponentProfile, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
     }
-
 
     /**
      * DealsWithErrors Interface implementation.
@@ -448,7 +467,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
          * Listen and handle new message receive notification
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
-        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler());
+        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
@@ -506,7 +525,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             */
             this.serviceStatus = ServiceStatus.STARTED;
 
-        } catch (CantInitializeTemplateNetworkServiceDatabaseException exception) {
+        } catch (CantInitializeAssetTransmissionNetworkServiceDatabaseException exception) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -674,8 +693,8 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
              */
             DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.
                     getCommunicationsCloudClientConnection().
-                    constructDiscoveryQueryParamsFactory(platformComponentProfile.getPlatformComponentType(), //applicant = who made the request
-                            platformComponentProfile.getNetworkServiceType(),
+                    constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_USER, //applicant = who made the request
+                            NetworkServiceType.UNDEFINED,
                             null,                     // alias
                             null,                     // identityPublicKey
                             null,                     // location
@@ -704,12 +723,14 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
     @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
 
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
+        System.out.println(" AssetTransmissionPluginRoot - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
          /*
          * save into the cache
          */
         remoteNetworkServicesRegisteredList = platformComponentProfileRegisteredList;
+
+        System.out.println(" AssetTransmissionPluginRoot - remoteNetworkServicesRegisteredList.size() "+remoteNetworkServicesRegisteredList.size());
 
          /* -----------------------------------------------------------------------
          * This is for test and example of how to use
@@ -719,16 +740,123 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             /*
              * Get a remote network service registered from the list requested
              */
-            PlatformComponentProfile remoteNetworkServiceToConnect = getRemoteNetworkServicesRegisteredList().get(0);
+            final PlatformComponentProfile remoteToConnect = getRemoteNetworkServicesRegisteredList().get(0);
 
-            /*
-             * tell to the manager to connect to this remote network service
-             */
-            communicationNetworkServiceConnectionManager.connectTo(remoteNetworkServiceToConnect);
+            System.out.println(" AssetTransmissionPluginRoot - remoteToConnect "+remoteToConnect);
+            
+            try {
+
+                ActorAssetIssuer actorAssetIssuer = new ActorAssetIssuer() {
+                    @Override
+                    public String getPublicKey() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getName() {
+                        return null;
+                    }
+
+                    @Override
+                    public long getContactRegistrationDate() {
+                        return 0;
+                    }
+
+                    @Override
+                    public byte[] getProfileImage() {
+                        return new byte[0];
+                    }
+
+                    @Override
+                    public ConnectionState getContactState() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getDescription() {
+                        return null;
+                    }
+
+                    @Override
+                    public Location getLocation() {
+                        return null;
+                    }
+
+                    @Override
+                    public CryptoAddress getCryptoAddress() {
+                        return null;
+                    }
+
+
+                };
+
+                ActorAssetUser actorAssetUser = new ActorAssetUser() {
+                    @Override
+                    public String getPublicKey() {
+                        return remoteToConnect.getIdentityPublicKey();
+                    }
+
+                    @Override
+                    public String getName() {
+                        return remoteToConnect.getName();
+                    }
+
+                    @Override
+                    public long getContactRegistrationDate() {
+                        return 0;
+                    }
+
+                    @Override
+                    public byte[] getProfileImage() {
+                        return new byte[0];
+                    }
+
+                    @Override
+                    public ConnectionState getConnectionState() {
+                        return null;
+                    }
+
+                    @Override
+                    public Double getLocationLatitude() {
+                        return null;
+                    }
+
+                    @Override
+                    public Double getLocationLongitude() {
+                        return null;
+                    }
+
+
+                    @Override
+                    public Genders getGender() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getAge() {
+                        return null;
+                    }
+
+                    @Override
+                    public CryptoAddress getCryptoAddress() {
+                        return null;
+                    }
+                };
+
+
+                MockDigitalAssetMetadataForTesting mockDigitalAssetForTesting = new MockDigitalAssetMetadataForTesting();
+
+                sendDigitalAssetMetadata(actorAssetIssuer,actorAssetUser, mockDigitalAssetForTesting);
+
+
+            } catch (CantDefineContractPropertyException e) {
+                e.printStackTrace();
+            } catch (CantSendDigitalAssetMetadataException e) {
+                e.printStackTrace();
+            }
+
 
         }
-
-
 
     }
 
@@ -756,18 +884,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
              */
             PlatformComponentProfile remoteNetworkServiceToConnect = remoteNetworkServicesRegisteredList.get(0);
 
-            /**
-             * Create the message content
-             * RECOMMENDATION: the content have to be a json string
-             */
-            String messageContent = "*********************************************************************************\n " +
-                    "* HELLO TEAM...  This message was sent from the device of Roberto Requena Asset Transmission  Network Service... :) *\n" +
-                    "*********************************************************************************";
 
-            /*
-             * Send a message using the local representation
-             */
-            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), messageContent);
 
         }
 
@@ -776,15 +893,16 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
     /**
      * This method initialize the database
      *
-     * @throws CantInitializeTemplateNetworkServiceDatabaseException
+     * @throws CantInitializeAssetTransmissionNetworkServiceDatabaseException
      */
-    private void initializeDb() throws CantInitializeTemplateNetworkServiceDatabaseException {
+    private void initializeDb() throws CantInitializeAssetTransmissionNetworkServiceDatabaseException {
 
         try {
             /*
              * Open new database connection
              */
             this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.digitalAssetMetaDataTransactionDao = new DigitalAssetMetaDataTransactionDao(dataBase);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -792,7 +910,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
              * The database exists but cannot be open. I can not handle this situation.
              */
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+            throw new CantInitializeAssetTransmissionNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -808,6 +926,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                  * We create the new database
                  */
                 this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.digitalAssetMetaDataTransactionDao = new DigitalAssetMetaDataTransactionDao(dataBase);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -815,7 +934,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                  * The database cannot be created. I can not handle this situation.
                  */
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
-                throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+                throw new CantInitializeAssetTransmissionNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
         }
@@ -909,6 +1028,8 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
 
         try {
 
+            System.out.println(" AssetTransmissionPluginRoot - Starting method sendDigitalAssetMetadata");
+
             /*
              * ask for a previous connection
              */
@@ -917,7 +1038,26 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             /*
              * Construct the message content in json format
              */
-            String msjContent = EncodeMsjContent.encodeMSjContentDigitalAssetMetadataTransmit(digitalAssetMetadataToSend);
+            String msjContent = EncodeMsjContent.encodeMSjContentDigitalAssetMetadataTransmit(digitalAssetMetadataToSend, PlatformComponentType.ACTOR_ASSET_ISSUER, PlatformComponentType.ACTOR_ASSET_USER);
+
+             /*
+             * Construct a new digitalAssetMetadataTransaction
+             */
+            DigitalAssetMetadataTransactionImpl digitalAssetMetadataTransaction = new DigitalAssetMetadataTransactionImpl();
+            digitalAssetMetadataTransaction.setGenesisTransaction(digitalAssetMetadataToSend.getGenesisTransaction());
+            digitalAssetMetadataTransaction.setSenderId(actorAssetIssuerSender.getPublicKey());
+            digitalAssetMetadataTransaction.setSenderType(PlatformComponentType.ACTOR_ASSET_ISSUER);
+            digitalAssetMetadataTransaction.setReceiverId(actorAssetUserReceiver.getPublicKey());
+            digitalAssetMetadataTransaction.setReceiverType(PlatformComponentType.ACTOR_ASSET_USER);
+            digitalAssetMetadataTransaction.setDigitalAssetMetadata(digitalAssetMetadataToSend);
+            digitalAssetMetadataTransaction.setDistributionStatus(DistributionStatus.DELIVERING);
+            digitalAssetMetadataTransaction.setType(DigitalAssetMetadataTransactionType.META_DATA_TRANSMIT);
+            digitalAssetMetadataTransaction.setProcessed(DigitalAssetMetadataTransactionImpl.PROCESSED);
+
+            /*
+             * Save into data base
+             */
+            getDigitalAssetMetaDataTransactionDao().create(digitalAssetMetadataTransaction);
 
             /*
              * If not null
@@ -991,10 +1131,10 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
 
     /**
      * (non-Javadoc)
-     * @see AssetTransmissionNetworkServiceManager#sendTransactionNewStatusNotification(ActorAssetUser, ActorAssetIssuer, String, String)
+     * @see AssetTransmissionNetworkServiceManager#sendTransactionNewStatusNotification(ActorAssetUser, ActorAssetIssuer, String, DistributionStatus)
      */
     @Override
-    public void sendTransactionNewStatusNotification(ActorAssetUser actorAssetUserSender, ActorAssetIssuer actorAssetIssuerReceiver, String transactionId, String newStatus) throws CantSendTransactionNewStatusNotificationException {
+    public void sendTransactionNewStatusNotification(ActorAssetUser actorAssetUserSender, ActorAssetIssuer actorAssetIssuerReceiver, String transactionId, DistributionStatus newDistributionStatus) throws CantSendTransactionNewStatusNotificationException {
 
         try {
 
@@ -1006,7 +1146,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             /*
              * Construct the message content in json format
              */
-            String msjContent = EncodeMsjContent.encodeMSjContentTransactionNewStatusNotification(transactionId, newStatus);
+            String msjContent = EncodeMsjContent.encodeMSjContentTransactionNewStatusNotification(transactionId, newDistributionStatus, PlatformComponentType.ACTOR_ASSET_USER, PlatformComponentType.ACTOR_ASSET_ISSUER);
 
             /*
              * If not null
@@ -1076,13 +1216,107 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             throw pluginStartException;
         }
 
+    }
 
+    /**
+     * Get the DigitalAssetMetaDataTransactionDao
+     *
+     * @return DigitalAssetMetaDataTransactionDao
+     */
+    public DigitalAssetMetaDataTransactionDao getDigitalAssetMetaDataTransactionDao() {
+        return digitalAssetMetaDataTransactionDao;
+    }
+
+    /**
+     * Get the EventManager
+     * @return EventManager
+     */
+    public EventManager getEventManager() {
+        return eventManager;
+    }
+
+    /**
+     * Get the ErrorManager
+     * @return ErrorManager
+     */
+    public ErrorManager getErrorManager() {
+        return errorManager;
     }
 
 
+    /**
+     * (non-Javadoc)
+     * @see TransactionProtocolManager#confirmReception(UUID)
+     */
+    @Override
+    public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
 
+        try {
 
+            DigitalAssetMetadataTransactionImpl digitalAssetMetadataTransaction = digitalAssetMetaDataTransactionDao.findById(transactionID.toString());
+            digitalAssetMetadataTransaction.setProcessed(DigitalAssetMetadataTransactionImpl.PROCESSED);
+            digitalAssetMetaDataTransactionDao.update(digitalAssetMetadataTransaction);
 
+        } catch (Exception e) {
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+            throw new CantConfirmTransactionException(CantConfirmTransactionException.DEFAULT_MESSAGE,e, contextBuffer.toString(), "Database error" );
+        }
 
+    }
+
+    /**
+     * (non-Javadoc)
+     * @see TransactionProtocolManager#getPendingTransactions(Specialist)
+     */
+    @Override
+    public List<Transaction<DigitalAssetMetadataTransaction>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
+
+        List<Transaction<DigitalAssetMetadataTransaction>> pendingTransactions = new ArrayList<>();
+
+        try {
+
+            List<DigitalAssetMetadataTransactionImpl> pendingDigitalAssetMetadataTransactions = digitalAssetMetaDataTransactionDao.findAll(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_PROCESSED_COLUMN_NAME, DigitalAssetMetadataTransactionImpl.NO_PROCESSED);
+
+            if (pendingTransactions != null && !pendingTransactions.isEmpty()){
+
+                for (DigitalAssetMetadataTransactionImpl digitalAssetMetadataTransaction: pendingDigitalAssetMetadataTransactions) {
+
+                    Transaction<DigitalAssetMetadataTransaction> transaction = new Transaction<>(digitalAssetMetadataTransaction.getTransactionId(),
+                                                                                                 (DigitalAssetMetadataTransaction) digitalAssetMetadataTransaction,
+                                                                                                 Action.APPLY,
+                                                                                                 digitalAssetMetadataTransaction.getTimestamp());
+
+                    pendingTransactions.add(transaction);
+
+                }
+
+            }
+
+        } catch (CantReadRecordDataBaseException e) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+           throw new CantDeliverPendingTransactionsException(CantDeliverPendingTransactionsException.DEFAULT_MESSAGE,e, contextBuffer.toString(), "No pending Transaction" );
+        }
+
+        return pendingTransactions;
+    }
 
 }

@@ -127,7 +127,7 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
         incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_ADDRESS_TO_COLUMN_NAME);
         incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME);
         incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_VALUE_COLUMN_NAME);
-        incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_FEE_COLUMN_NAME);
+        incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_OP_RETURN_COLUMN_NAME);
         incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME);
         incoming_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.INCOMING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME);
         /**
@@ -148,7 +148,7 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
         outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_ADDRESS_TO_COLUMN_NAME);
         outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME);
         outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_VALUE_COLUMN_NAME);
-        outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_FEE_COLUMN_NAME);
+        outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_OP_RETURN_COLUMN_NAME);
         outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME);
         outgoing_TransactionsColumns.add(BitcoinCryptoNetworkDatabaseConstants.OUTGOING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME);
         /**

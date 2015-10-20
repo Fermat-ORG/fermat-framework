@@ -6,12 +6,10 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 /**
  * Created by mati on 2015.07.20..
  */
-public interface SubAppsSession {
+public interface SubAppsSession extends FermatSession{
 
     public SubApps getSubAppSessionType();
-    public void setData (String key,Object object);
-    public Object getData (String key);
-    public ErrorManager getErrorManager();
+
     //public ToolManager getToolManager();
     //public WalletFactoryProjectManager getWalletFactoryManager();
 

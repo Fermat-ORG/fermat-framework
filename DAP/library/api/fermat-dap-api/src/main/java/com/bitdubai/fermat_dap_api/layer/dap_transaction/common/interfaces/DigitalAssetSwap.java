@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
@@ -16,7 +17,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantE
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -25,6 +28,7 @@ import java.util.UUID;
 public abstract class DigitalAssetSwap {
 
     AssetVaultManager assetVaultManager;
+    BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
     public AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
@@ -41,13 +45,29 @@ public abstract class DigitalAssetSwap {
         this.assetTransmissionNetworkServiceManager=assetTransmissionNetworkServiceManager;
     }
 
+    public void setBitcoinCryptoNetworkManager(BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager){
+        this.bitcoinCryptoNetworkManager=bitcoinCryptoNetworkManager;
+    }
+
     public abstract void checkDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata) throws DAPException;
 
-    public boolean isDigitalAssetHashValid(DigitalAssetMetadata digitalAssetMetadata) throws CantGetGenesisTransactionException {
+    public boolean isDigitalAssetHashValid(DigitalAssetMetadata digitalAssetMetadata) throws CantGetGenesisTransactionException, DAPException {
         String digitalAssetMetadataHash=digitalAssetMetadata.getDigitalAssetHash();
-        CryptoTransaction cryptoTransaction=/*this.assetVaultManager.getGenesisTransaction(digitalAssetMetadataHash)*/null;
+        String digitalAssetGenesisTransaction=digitalAssetMetadata.getGenesisTransaction();
+        CryptoTransaction cryptoTransaction=getCryptoTransactionFromCryptoNetwork(digitalAssetGenesisTransaction);
         String hashFromCryptoTransaction=cryptoTransaction.getOp_Return();
         return digitalAssetMetadataHash.equals(hashFromCryptoTransaction);
+    }
+
+    private CryptoTransaction getCryptoTransactionFromCryptoNetwork(String genesisTransaction) throws DAPException {
+        //Todo: get the list from BitcoinCryptoNetwork
+        List<CryptoTransaction> cryptoTransactionList=new ArrayList<>();
+        for(CryptoTransaction cryptoTransaction : cryptoTransactionList){
+            if(cryptoTransaction.getTransactionHash().equals(genesisTransaction)){
+                return cryptoTransaction;
+            }
+        }
+        throw new DAPException("The genesis transaction doesn't exists in the crypto network");
     }
 
     public abstract void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser actorAssetUser) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException;

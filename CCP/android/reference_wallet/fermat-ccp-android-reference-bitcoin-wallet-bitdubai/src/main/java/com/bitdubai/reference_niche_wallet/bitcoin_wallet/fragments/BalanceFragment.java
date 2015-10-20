@@ -123,7 +123,7 @@ public class BalanceFragment extends FermatWalletFragment {
          */
         try {
 
-            //tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+            tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
             balanceAvailable = 0;
             bookBalance = 0;
             cryptoWalletManager = referenceWalletSession.getCryptoWalletManager();
@@ -201,7 +201,7 @@ public class BalanceFragment extends FermatWalletFragment {
             txtViewBalance = ((TextView) rootView.findViewById(R.id.txtViewBalance));
             //txtViewBalance.setTypeface(tf);
             txtViewBalance.setText(formatBalanceString(balanceAvailable, ShowMoneyType.BITCOIN.getCode()));
-
+            txtViewBalance.setTypeface(tf);
             ViewCompat.setElevation(txtViewBalance, 30);
 
             txtViewBalance.setOnClickListener(new View.OnClickListener() {
