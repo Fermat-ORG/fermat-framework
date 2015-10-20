@@ -220,9 +220,9 @@ public class AssetActorIssuerPluginRoot implements DealsWithErrors, DatabaseMana
 
             for (int i = 0; i < 10; i++) {
 
-                System.out.println("*******************************************************");
-                System.out.println("PRUEBA DE VICTOR - ASSET ISSUER: iniciando a crear el record: " + i);
-                System.out.println("*******************************************************");
+//                System.out.println("*******************************************************");
+//                System.out.println("PRUEBA DE VICTOR - ASSET ISSUER: iniciando a crear el record: " + i);
+//                System.out.println("*******************************************************");
                 String assetIssuerActorIdentityToLinkPublicKey = i + UUID.randomUUID().toString();
                 String assetIssuerActorPublicKey = i + UUID.randomUUID().toString();
                 CryptoAddress cryptoAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);

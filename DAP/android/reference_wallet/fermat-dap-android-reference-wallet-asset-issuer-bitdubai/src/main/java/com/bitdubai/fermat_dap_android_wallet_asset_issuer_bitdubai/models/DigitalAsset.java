@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models;
 
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,9 @@ public class DigitalAsset {
 
     private String name;
     private String amount;
+    private String walletPublicKey;
+    private String assetPublicKey;
+    private ActorAssetUser actorAssetUser;
 
 
     public DigitalAsset(String name, String amount) {
@@ -44,5 +49,29 @@ public class DigitalAsset {
 
     public String toString() {
         return String.format("%s | %s BTC", name, amount);
+    }
+
+    public String getWalletPublicKey() {
+        return walletPublicKey;
+    }
+
+    public void setWalletPublicKey(String walletPublicKey) {
+        this.walletPublicKey = walletPublicKey;
+    }
+
+    public String getAssetPublicKey() {
+        return assetPublicKey;
+    }
+
+    public void setAssetPublicKey(String assetPublicKey) {
+        this.assetPublicKey = assetPublicKey;
+    }
+
+    public ActorAssetUser getActorAssetUser() {
+        return actorAssetUser;
+    }
+
+    public void setActorAssetUser(ActorAssetUser actorAssetUser) {
+        this.actorAssetUser = actorAssetUser;
     }
 }
