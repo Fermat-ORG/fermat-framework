@@ -130,7 +130,7 @@ public class IntraWalletUserActorDao implements Serializable {
                 /**
                  * Persist profile image on a file
                  */
-                persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
+                if(profileImage!=null) persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
 
                 database.closeDatabase();
             }

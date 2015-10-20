@@ -6,13 +6,13 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.I
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.google.gson.Gson;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
  * Created by Matias Furszyfer on 2015.10.15..
  */
 public class ActorNetworkServiceRecord implements IntraUserNotification {
-
 
     private UUID id;
     private Actors actorDestinationType;
@@ -94,6 +94,10 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
         return actorProtocolState;
     }
 
+    public void changeDescriptor(IntraUserNotificationDescriptor intraUserNotificationDescriptor){
+        intraUserNotificationDescriptor = intraUserNotificationDescriptor;
+    }
+
     public void changeState(ActorProtocolState actorProtocolState){
         this.actorDestinationPublicKey = actorSenderPublicKey;
     }
@@ -106,5 +110,23 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
 
         Gson gson = new Gson();
         return gson.toJson(this);
+    }
+
+
+    @Override
+    public String toString() {
+        return "ActorNetworkServiceRecord{" +
+                "id=" + id +
+                ", actorDestinationType=" + actorDestinationType +
+                ", actorSenderType=" + actorSenderType +
+                ", actorSenderPublicKey='" + actorSenderPublicKey + '\'' +
+                ", actorDestinationPublicKey='" + actorDestinationPublicKey + '\'' +
+                ", actorSenderAlias='" + actorSenderAlias + '\'' +
+                ", actorSenderProfileImage=" + Arrays.toString(actorSenderProfileImage) +
+                ", intraUserNotificationDescriptor=" + intraUserNotificationDescriptor +
+                ", sentDate=" + sentDate +
+                ", actorProtocolState=" + actorProtocolState +
+                ", flagReadead=" + flagReadead +
+                '}';
     }
 }
