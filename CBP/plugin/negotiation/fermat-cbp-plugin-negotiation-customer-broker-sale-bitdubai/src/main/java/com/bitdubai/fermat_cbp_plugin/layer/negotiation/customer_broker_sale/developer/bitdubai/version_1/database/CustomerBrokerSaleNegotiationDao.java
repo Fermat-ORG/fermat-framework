@@ -57,8 +57,8 @@ public class CustomerBrokerSaleNegotiationDao {
         ) throws CantCreateCustomerBrokerPurchaseException {
 
             try {
-                DatabaseTable PurchaseNegotiationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
-                DatabaseTableRecord recordToInsert   = PurchaseNegotiationTable.getEmptyRecord();
+                DatabaseTable SaleNegotiationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
+                DatabaseTableRecord recordToInsert   = SaleNegotiationTable.getEmptyRecord();
 
                 UUID negotiationId = UUID.randomUUID();
 
@@ -70,7 +70,7 @@ public class CustomerBrokerSaleNegotiationDao {
                         startDataTime
                 );
 
-                PurchaseNegotiationTable.insertRecord(recordToInsert);
+                SaleNegotiationTable.insertRecord(recordToInsert);
 
                 return newCustomerBrokerSaleNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, NegotiationStatus.OPEN.getCode());
 
@@ -107,5 +107,19 @@ public class CustomerBrokerSaleNegotiationDao {
             } catch (Exception exception) {
                 throw new CantInitializeCustomerBrokerSaleLogsDaoException(CantInitializeCustomerBrokerSaleNegotiationDaoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
             }
+        }
+
+        private void loadRecordAsNew(
+                DatabaseTableRecord databaseTableRecord,
+                UUID   negotiationId,
+                String publicKeyCustomer,
+                String publicKeyBroker,
+                long startDataTime
+        ) {
+            databaseTableRecord.setUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME, negotiationId);
+            databaseTableRecord.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKeyCustomer);
+            databaseTableRecord.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKeyBroker);
+            databaseTableRecord.setLongValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME, startDataTime);
+            databaseTableRecord.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, NegotiationStatus.OPEN.getCode());
         }
 }
