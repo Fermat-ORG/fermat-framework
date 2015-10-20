@@ -425,6 +425,8 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         statusBar.setColor("#0288D1");
         activity.setStatusBar(statusBar);
 
+        Header header = new Header();
+        header.setLabel("Market rate");
 
         TabStrip tabStrip = new TabStrip();
         tabStrip.setTabsColor("#0288D1");
