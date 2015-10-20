@@ -231,7 +231,7 @@ public class RedeemPointPluginRoot implements DealsWithErrors, DatabaseManagerFo
                 DeviceLocation location = new DeviceLocation();
                 location.setLongitude(new Random().nextDouble());
                 location.setLatitude(new Random().nextDouble());
-                RedeemPointActorRecord record = new RedeemPointActorRecord("victor", publicKey);
+                RedeemPointActorRecord record = new RedeemPointActorRecord("Thunder_RePo_User_" + i, publicKey);
                 record.setConnectionState(ConnectionState.CONNECTED);
                 record.setProfileImage(new byte[5]);
                 record.setLocation(location);
@@ -247,7 +247,10 @@ public class RedeemPointPluginRoot implements DealsWithErrors, DatabaseManagerFo
                 record.setHoursOfOperation("08:00 am a 05:30pm");
                 record.setContactInformation("marsvicam@gmail.com");
                 try {
-                    redeemPointActorDao.createNewRedeemPoint(identityPublicKey, record);
+                    if (i == 0) {
+                        redeemPointActorDao.createNewRedeemPoint(identityPublicKey, record);
+                    }
+                    redeemPointActorDao.createNewRedeemPointRegisterInNetworkService(record);
                 } catch (CantAddPendingRedeemPointException e) {
                     System.out.println("*******************************************************");
                     System.out.println("PRUEBA DE VICTOR - REDEEM POINT: Falló creando el record número: " + i);

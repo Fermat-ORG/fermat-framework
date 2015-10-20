@@ -189,7 +189,7 @@ public class RedeemPointActorDao implements Serializable {
                 updateRedeemPointRegisteredConnectionState(redeemPoint.getPublicKey(), ConnectionState.CONNECTED);
             } else {
 
-                DatabaseTable table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_TABLE_NAME);
+                DatabaseTable table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
                 DatabaseTableRecord record = table.getEmptyRecord();
 
                 record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
@@ -624,6 +624,7 @@ public class RedeemPointActorDao implements Serializable {
 
 
     private void setValuesToRecordRegistered(DatabaseTableRecord record, ActorAssetRedeemPoint redeemPoint) {
+        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_NAME_COLUMN_NAME, redeemPoint.getName());
         record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_STATE_COLUMN_NAME, redeemPoint.getConnectionState().getCode());
         record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_MODIFIED_DATE_COLUMN_NAME, System.currentTimeMillis());
         //LOCATION
