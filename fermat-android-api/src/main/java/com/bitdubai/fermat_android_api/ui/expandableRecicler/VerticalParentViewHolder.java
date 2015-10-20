@@ -1,4 +1,4 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.expandableRecicler;
+package com.bitdubai.fermat_android_api.ui.expandableRecicler;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
@@ -7,7 +7,6 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 
 
 /**
@@ -40,9 +39,9 @@ public class VerticalParentViewHolder extends ParentViewHolder {
     public VerticalParentViewHolder(View itemView) {
         super(itemView);
 
-        mNumberTextView = (TextView) itemView.findViewById(R.id.list_item_parent_vertical_number_textView);
-        mDataTextView = (TextView) itemView.findViewById(R.id.list_item_parent_vertical_parent_textView);
-        mArrowExpandImageView = (ImageView) itemView.findViewById(R.id.list_item_parent_horizontal_arrow_imageView);
+//        mNumberTextView = (TextView) itemView.findViewById(R.id.list_item_parent_vertical_number_textView);
+//        mDataTextView = (TextView) itemView.findViewById(R.id.list_item_parent_vertical_parent_textView);
+//        mArrowExpandImageView = (ImageView) itemView.findViewById(R.id.list_item_parent_horizontal_arrow_imageView);
     }
 
     public void bind(int parentNumber, String parentText) {

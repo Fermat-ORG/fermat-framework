@@ -1,4 +1,4 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.expandableRecicler;
+package com.bitdubai.fermat_android_api.ui.expandableRecicler;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -48,7 +48,7 @@ public class ParentViewHolder extends RecyclerView.ViewHolder implements View.On
     }
 
     /**
-     * Sets a {@link android.view.View.OnClickListener} on the entire parent
+     * Sets a {@link View.OnClickListener} on the entire parent
      * view to trigger expansion.
      */
     public void setMainItemClickToExpand() {
@@ -105,7 +105,7 @@ public class ParentViewHolder extends RecyclerView.ViewHolder implements View.On
     }
 
     /**
-     * {@link android.view.View.OnClickListener} to listen for click events on
+     * {@link View.OnClickListener} to listen for click events on
      * the entire parent {@link View}.
      * <p>
      * Only registered if {@link #shouldItemViewClickToggleExpansion()} is true.
@@ -129,7 +129,7 @@ public class ParentViewHolder extends RecyclerView.ViewHolder implements View.On
      * expansion in response to a another event or {@link #collapseView()} to
      * trigger a collapse.
      *
-     * @return true to set an {@link android.view.View.OnClickListener} on the item view
+     * @return true to set an {@link View.OnClickListener} on the item view
      */
     public boolean shouldItemViewClickToggleExpansion() {
         return true;

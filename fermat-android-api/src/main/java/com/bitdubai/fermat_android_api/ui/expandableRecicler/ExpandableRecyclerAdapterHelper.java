@@ -1,4 +1,4 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.expandableRecicler;
+package com.bitdubai.fermat_android_api.ui.expandableRecicler;
 
 
 import java.util.ArrayList;

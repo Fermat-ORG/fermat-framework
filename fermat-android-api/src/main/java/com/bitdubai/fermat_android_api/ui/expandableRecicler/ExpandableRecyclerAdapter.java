@@ -1,4 +1,4 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.expandableRecicler;
+package com.bitdubai.fermat_android_api.ui.expandableRecicler;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -50,7 +50,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * Allows objects to register themselves as expand/collapse listeners to be
      * notified of change events.
      * <p>
-     * Implement this in your {@link android.app.Activity} or {@link android.app.Fragment}
+     * Implement this in your {@link Activity} or {@link android.app.Fragment}
      * to receive these callbacks.
      */
     public interface ExpandCollapseListener {

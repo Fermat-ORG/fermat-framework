@@ -170,7 +170,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                                 "-----------------------\n DESDE: " + cpr.getActorSenderAlias());
 
 
-                        toWaitingResponse(cpr.getId(),actorNetworkServicePluginRoot.getOutgoingNotificationDao());
+                        //toWaitingResponse(cpr.getId(),actorNetworkServicePluginRoot.getOutgoingNotificationDao());
                         break;
 
                 }
@@ -180,12 +180,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 //            e.printStackTrace();
 //        }
         } catch (CantListIntraWalletUsersException e) {
-            e.printStackTrace();
-        } catch (CantUpdateRecordDataBaseException e) {
-            e.printStackTrace();
-        } catch (CantUpdateRecordException e) {
-            e.printStackTrace();
-        } catch (RequestNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -269,7 +263,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         sendMessageToActor(cpr);
 
 
-                            toWaitingResponse(cpr.getId(),actorNetworkServicePluginRoot.getIncomingNotificationsDao());
+                            //toWaitingResponse(cpr.getId(),actorNetworkServicePluginRoot.getIncomingNotificationsDao());
 
                         break;
 
@@ -277,12 +271,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
             }
 
 
-       } catch (CantUpdateRecordDataBaseException e) {
-           e.printStackTrace();
-       } catch (RequestNotFoundException e) {
-           e.printStackTrace();
-       } catch (CantUpdateRecordException e) {
-           e.printStackTrace();
        } catch (CantListIntraWalletUsersException e) {
            e.printStackTrace();
        }
@@ -341,16 +329,13 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         Gson gson = new Gson();
 
                         communicationNetworkServiceLocal.sendMessage(
-                                actorNetworkServicePluginRoot.getIdentityPublicKey(),
+                                actorNetworkServiceRecord.getActorSenderPublicKey(),
                                 actorNetworkServiceRecord.getActorDestinationPublicKey(),
                                 gson.toJson(actorNetworkServiceRecord)
                         );
 
                         actorNetworkServicePluginRoot.getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.SENT);
 
-                        //poolConnectionsWaitingForResponse.remove(actorPublicKey);
-
-                        //communicationNetworkServiceConnectionManager.closeConnection(actorPublicKey); // close connection once i send message ?
 
                     } catch (Exception e) {
 
@@ -410,9 +395,9 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
         //actorNetworkServiceDao.changeProtocolState(requestId, ActorProtocolState.PENDING_ACTION);
     }
 
-    private void toWaitingResponse(UUID notificationId,DAO dao) throws CantUpdateRecordDataBaseException, RequestNotFoundException, CantUpdateRecordException {
-        dao.changeProtocolState(notificationId, ActorProtocolState.WAITING_RESPONSE);
-    }
+//    private void toWaitingResponse(UUID notificationId,DAO dao) throws CantUpdateRecordDataBaseException, RequestNotFoundException, CantUpdateRecordException {
+//        //dao.changeProtocolState(notificationId, ActorProtocolState.WAITING_RESPONSE);
+//    }
 
     private void raiseEvent(final EventType eventType,
                             final UUID      requestId) {
@@ -436,6 +421,9 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
         Gson gson = new Gson();
 
         try {
+            System.out.println("----------------------------\n" +
+                    "CONVIERTIENDO MENSAJE ENTRANTE A GSON:" + fermatMessage.toJson()
+                    + "\n-------------------------------------------------");
 
             //JsonObject jsonObject =new JsonParser().parse(fermatMessage.getContent()).getAsJsonObject();
 
