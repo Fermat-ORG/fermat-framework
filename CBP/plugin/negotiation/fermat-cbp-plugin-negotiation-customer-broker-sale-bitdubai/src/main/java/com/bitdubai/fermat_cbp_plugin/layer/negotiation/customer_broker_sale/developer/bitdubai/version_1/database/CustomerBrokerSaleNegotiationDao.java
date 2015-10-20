@@ -100,6 +100,22 @@ public class CustomerBrokerSaleNegotiationDao {
     
         }
 
+        public void closeNegotiation(CustomerBrokerSale negotiation) throws CantUpdateCustomerBrokerSaleException {
+            try {
+                DatabaseTable SaleNegotiationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
+                DatabaseTableRecord recordToUpdate   = SaleNegotiationTable.getEmptyRecord();
+    
+                SaleNegotiationTable.setUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME, negotiation.getNegotiationId(), DatabaseFilterType.EQUAL);
+    
+                recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_STATUS_COLUMN_NAME, NegotiationStatus.CLOSED.getCode());
+    
+                SaleNegotiationTable.updateRecord(recordToUpdate);
+            } catch (CantUpdateRecordException e) {
+                new CantUpdateCustomerBrokerSaleException("An exception happened",e,"","");
+            }
+    
+        }
+
 
     /*
         Private methods
