@@ -12,5 +12,6 @@
     <color name="crypto_customer_identity_list_divider">#FFFFFF</color>
     <color name="circle_border">#3c4ab4</color>
     <color name="no_identities_text_color">#999999</color>
+    <color name="spanned_text">#666666</color>
 
 </resources>

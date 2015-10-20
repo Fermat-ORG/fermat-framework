@@ -1,7 +1,7 @@
 package com.bitdubai.sub_app.crypto_customer_identity.common.adapters;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
+import android.text.SpannableString;
 import android.view.View;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -10,14 +10,13 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
 import com.bitdubai.sub_app.crypto_customer_identity.common.holders.CryptoCustomerIdentityInfoViewHolder;
-import com.bitdubai.sub_app.crypto_customer_identity.common.model.CryptoCustomerIdentityInformationImp;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CryptoCustomerIdentityListFilter;
+import com.bitdubai.sub_app.crypto_customer_identity.util.UtilsFuncs;
 
 import java.util.ArrayList;
 
 /**
- * Created on 22/08/15.
- * Adapter para el RecliclerView del CryptoCustomerIdentityListFragment que muestra el catalogo de Wallets disponibles en el store
+ * Adapter para el RecyclerView del CryptoBrokerIdentityListFragment que muestra la lista de identidades de un customer
  *
  * @author Nelson Ramirez
  */
@@ -32,6 +31,20 @@ public class CryptoCustomerIdentityInfoAdapter
     }
 
     @Override
+    protected void bindHolder(final CryptoCustomerIdentityInfoViewHolder holder, final CryptoCustomerIdentityInformation data, final int position) {
+        filter = (CryptoCustomerIdentityListFilter) getFilter();
+
+        SpannableString spannedText = UtilsFuncs.getSpannedText(
+                context.getResources(),
+                R.color.spanned_text,
+                data.getAlias(),
+                filter.getConstraint());
+
+        holder.setText(spannedText);
+        holder.setImage(data.getProfileImage());
+    }
+
+    @Override
     protected CryptoCustomerIdentityInfoViewHolder createHolder(View itemView, int type) {
         return new CryptoCustomerIdentityInfoViewHolder(itemView);
     }
@@ -39,19 +52,6 @@ public class CryptoCustomerIdentityInfoAdapter
     @Override
     protected int getCardViewResource() {
         return R.layout.crypto_customer_identity_list_item;
-    }
-
-    @Override
-    protected void bindHolder(final CryptoCustomerIdentityInfoViewHolder holder, final CryptoCustomerIdentityInformation data, final int position) {
-        holder.getIdentityName().setText(data.getAlias());
-
-        if (data instanceof CryptoCustomerIdentityInformationImp) {
-            CryptoCustomerIdentityInformationImp dataImp = (CryptoCustomerIdentityInformationImp) data;
-            holder.getIdentityImage().setImageResource(dataImp.getProfileImageDrawableId());
-        } else {
-            byte[] profileImage = data.getProfileImage();
-            holder.getIdentityImage().setImageBitmap(BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length));
-        }
     }
 
     @Override

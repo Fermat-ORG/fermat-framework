@@ -16,8 +16,7 @@ import com.bitdubai.sub_app.crypto_broker_identity.util.UtilsFuncs;
 import java.util.ArrayList;
 
 /**
- * Created on 22/08/15.
- * Adapter para el RecliclerView del CryptoBrokerIdentityListFragment que muestra el catalogo de Wallets disponibles en el store
+ * Adapter para el RecyclerView del CryptoBrokerIdentityListFragment que muestra la lista de identidades de un broker
  *
  * @author Nelson Ramirez
  */
@@ -59,7 +58,6 @@ public class CryptoBrokerIdentityInfoAdapter
         return R.layout.crypto_broker_identity_list_item;
     }
 
-
     @Override
     public Filter getFilter() {
         if (filter == null)
@@ -67,6 +65,4 @@ public class CryptoBrokerIdentityInfoAdapter
 
         return filter;
     }
-
-
 }
