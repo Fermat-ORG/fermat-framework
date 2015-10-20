@@ -244,7 +244,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
             Logger LOG = Logger.getGlobal();
             //LOG.info("Asset Issuing monitor agent DoTheMainTask");
             try {
-//                assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
+                assetIssuingTransactionDao=new AssetIssuingTransactionDao(pluginDatabaseSystem,pluginId);
 //
 //                List<String> transactionHashList;
 //                CryptoStatus transactionCryptoStatus;
@@ -272,7 +272,6 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 //                }
 //
 //                checkTransactionsCryptoStatus(getCryptoTransactionsByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK));
-
 
                 setGenesisTransactionFromOutgoingIntraActor();
                 checkTransactionsNotFinished();
@@ -327,6 +326,8 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                 throw new CantCheckAssetIssuingProgressException(exception,"Exception in asset Issuing monitor agent","Cannot get the genesis transaction from Outgoing Intra actor");
             } catch (CantGetOutgoingIntraActorTransactionManagerException exception) {
                 throw new CantCheckAssetIssuingProgressException(exception,"Exception in asset Issuing monitor agent","Cannot get the outgoing intra actor transaction manager");
+            } catch(Exception exception){
+                throw new CantCheckAssetIssuingProgressException(exception,"Exception in asset Issuing monitor agent","Unexpected exception");
             }
 
         }
@@ -507,6 +508,11 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                 CantPersistsGenesisTransactionException,
                 UnexpectedResultReturnedFromDatabaseException {
             List<String> outgoingIdList=assetIssuingTransactionDao.getOutgoingTransactionIdByIssuingStatus();
+            //For testing
+            if(outgoingIdList==null){
+                return;
+            }
+            //End testing
             for(String outgoingId : outgoingIdList){
                 UUID transactionUUID=UUID.fromString(outgoingId);
                 String genesisTransaction=outgoingIntraActorManager.getTransactionManager().getSendCryptoTransactionHash(transactionUUID);
@@ -590,9 +596,10 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
             /**
              * Mock for testing
              */
-//            CryptoTransaction mockCryptoTransaction=new CryptoTransaction();
-//            mockCryptoTransaction.setTransactionHash("d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43");
-//            mockCryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
+            //CryptoTransaction mockCryptoTransaction=new CryptoTransaction();
+            //mockCryptoTransaction.setTransactionHash("d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43");
+            //mockCryptoTransaction.setCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
+            //return mockCryptoTransaction;
             //transactionList.add(mockCryptoTransaction);
             /**
              * End of mocking
