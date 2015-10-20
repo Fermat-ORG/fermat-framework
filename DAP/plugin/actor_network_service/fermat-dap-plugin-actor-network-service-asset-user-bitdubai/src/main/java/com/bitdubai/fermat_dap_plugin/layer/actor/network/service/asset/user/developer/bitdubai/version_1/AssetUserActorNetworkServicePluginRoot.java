@@ -687,7 +687,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
 
     @Override
-    public void sendMessage(ActorAssetUser actorAssetUserSender, ActorAssetUser actorAssetUserDestination, String msjContent) throws CantSendMessageException {
+    public void requestCryptoAddress(ActorAssetUser actorAssetUserSender, ActorAssetUser actorAssetUserDestination, String msjContent) throws CantSendMessageException {
 
         try {
 

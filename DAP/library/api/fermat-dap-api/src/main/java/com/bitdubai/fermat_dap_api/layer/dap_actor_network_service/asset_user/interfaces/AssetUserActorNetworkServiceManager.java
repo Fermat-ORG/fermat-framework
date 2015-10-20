@@ -31,7 +31,7 @@ public interface AssetUserActorNetworkServiceManager {
      *
      * @throws CantSendMessageException
      */
-    public void sendMessage(ActorAssetUser actorAssetUserSender, ActorAssetUser actorAssetUserDestination, String msjContent)  throws CantSendMessageException;
+    public void requestCryptoAddress(ActorAssetUser actorAssetUserSender, ActorAssetUser actorAssetUserDestination, String msjContent)  throws CantSendMessageException;
 
     /**
      * Request the list of the actorAssetUser register in the server
