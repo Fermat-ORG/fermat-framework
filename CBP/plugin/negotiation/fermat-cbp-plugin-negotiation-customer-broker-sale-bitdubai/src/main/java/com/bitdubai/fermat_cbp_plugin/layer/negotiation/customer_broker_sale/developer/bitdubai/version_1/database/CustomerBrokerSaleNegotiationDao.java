@@ -9,8 +9,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSale;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleClausesDaoException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleLogsDaoException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleNegotiationDaoException;
@@ -50,11 +50,11 @@ public class CustomerBrokerSaleNegotiationDao {
             }
         }
 
-        public CustomerBrokerPurchase createCustomerBrokerPurchaseNegotiation(
+        public CustomerBrokerSale createCustomerBrokerSaleNegotiation(
                 String publicKeyCustomer,
                 String publicKeyBroker,
                 long startDataTime
-        ) throws CantCreateCustomerBrokerPurchaseException {
+        ) throws CantCreateCustomerBrokerSaleException {
 
             try {
                 DatabaseTable SaleNegotiationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
@@ -75,7 +75,7 @@ public class CustomerBrokerSaleNegotiationDao {
                 return newCustomerBrokerSaleNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, NegotiationStatus.OPEN.getCode());
 
             } catch (CantInsertRecordException e) {
-                throw new CantCreateCustomerBrokerPurchaseException("An exception happened",e,"","");
+                throw new CantCreateCustomerBrokerSaleException("An exception happened",e,"","");
             }
 
         }
@@ -121,5 +121,15 @@ public class CustomerBrokerSaleNegotiationDao {
             databaseTableRecord.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKeyBroker);
             databaseTableRecord.setLongValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME, startDataTime);
             databaseTableRecord.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, NegotiationStatus.OPEN.getCode());
+        }
+
+        private CustomerBrokerSale newCustomerBrokerSaleNegotiation(
+                UUID   negotiationId,
+                String publicKeyCustomer,
+                String publicKeyBroker,
+                long startDataTime,
+                String statusNegotiation
+        ){
+            return new CustomerBrokerSaleNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation);
         }
 }
