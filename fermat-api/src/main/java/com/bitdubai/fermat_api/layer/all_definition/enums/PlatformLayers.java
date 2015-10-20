@@ -62,6 +62,9 @@ public enum PlatformLayers {
     BITDUBAI_CCP_TRANSACTION_LAYER    ("BCCPTRL", Developers.BITDUBAI),
     // End CCP Layers
 
+    // Init CCM Layers
+    BITDUBAI_CCM_ACTOR_LAYER          ("BCCMACL", Developers.BITDUBAI),
+
     // Init DAP Layers
     BITDUBAI_DAP_ACTOR_LAYER                  ("BDAPAL",  Developers.BITDUBAI),
     BITDUBAI_DAP_ACTOR_NETWORK_SERVICE_LAYER  ("BDAPANSL",  Developers.BITDUBAI),

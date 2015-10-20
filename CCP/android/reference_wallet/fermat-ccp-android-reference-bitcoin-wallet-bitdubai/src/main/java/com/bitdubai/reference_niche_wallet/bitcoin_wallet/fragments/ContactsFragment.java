@@ -119,7 +119,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog()
                 .penaltyDeath().build());
 
-        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
 
         errorManager = walletSession.getErrorManager();
 

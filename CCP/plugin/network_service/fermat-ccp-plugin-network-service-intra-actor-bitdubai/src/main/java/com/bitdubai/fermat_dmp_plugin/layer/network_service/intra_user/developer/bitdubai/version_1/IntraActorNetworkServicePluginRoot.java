@@ -76,6 +76,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecordedAgent;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.Identity;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNSInformation;
@@ -102,6 +103,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enum
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IntraUserActorConnectionCancelledEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -1068,7 +1070,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
     }
 
     @Override
-    public void askIntraUserForAcceptance(String intraUserLoggedInPublicKey,Actors senderType, String intraUserToAddName, String intraUserToAddPublicKey,Actors destinationType, byte[] myProfileImage) throws ErrorAskIntraUserForAcceptanceException {
+    public void askIntraUserForAcceptance(String intraUserLoggedInPublicKey,String intraUserLoggedName,Actors senderType, String intraUserToAddName, String intraUserToAddPublicKey,Actors destinationType, byte[] myProfileImage) throws ErrorAskIntraUserForAcceptanceException {
 
         try {
         //TODO: guardar mensaje en base de datos
@@ -1077,10 +1079,13 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
              * Guardo en mensaje en la base de datos
              */
 
-            outgoingNotificationDao.createNotification(UUID.randomUUID(),
+            ActorNetworkServiceRecord actorNetworkServiceRecord = outgoingNotificationDao.createNotification(
+                    UUID.randomUUID(),
                     intraUserLoggedInPublicKey,
-                    senderType,intraUserToAddPublicKey,
-                    intraUserToAddName,myProfileImage,
+                    senderType,
+                    intraUserToAddPublicKey,
+                    intraUserLoggedName,
+                    myProfileImage,
                     destinationType,
                     IntraUserNotificationDescriptor.ASKFORACCEPTANCE,
                     System.currentTimeMillis(),
@@ -1089,32 +1094,37 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
 
 
-            JsonObject obj=new JsonObject();
-            obj.addProperty(JsonObjectConstants.SENDER_PUBLIC_HEY, intraUserLoggedInPublicKey);
-            obj.addProperty(JsonObjectConstants.DESTINATION_NAME, intraUserToAddName);
-            obj.addProperty(JsonObjectConstants.DESTINATION_PUBLIC_KEY, intraUserToAddPublicKey);
-            obj.addProperty(JsonObjectConstants.PROFILE_IMAGE, String.valueOf(myProfileImage));
-            obj.addProperty(JsonObjectConstants.MESSAGE_TYPE, IntraUserNotificationDescriptor.ASKFORACCEPTANCE.getCode());
+//            JsonObject obj=new JsonObject();
+//            obj.addProperty(JsonObjectConstants.SENDER_PUBLIC_HEY, intraUserLoggedInPublicKey);
+//            obj.addProperty(JsonObjectConstants.SENDER_NAME,intraUserLoggedName);
+//            obj.addProperty(JsonObjectConstants.DESTINATION_NAME, intraUserToAddName);
+//            obj.addProperty(JsonObjectConstants.DESTINATION_PUBLIC_KEY, intraUserToAddPublicKey);
+//            obj.addProperty(JsonObjectConstants.PROFILE_IMAGE, String.valueOf(myProfileImage));
+//            obj.addProperty(JsonObjectConstants.MESSAGE_TYPE, IntraUserNotificationDescriptor.ASKFORACCEPTANCE.getCode());
+
+//            Gson gson = new Gson();
+//
+//
+//
+//
+//            FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(intraUserLoggedInPublicKey,  //Sender NetworkService
+//                    intraUserToAddPublicKey,   //Receiver
+//                    gson.toJson(actorNetworkServiceRecord).toString(),                //Message Content
+//                    FermatMessageContentType.TEXT);//Type
+//
+//            /*
+//             * Configure the correct status
+//             */
+//            ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
+//
+//            /*
+//             * Save to the data base table
+//             */
+//            communicationNetworkServiceConnectionManager.getOutgoingMessageDao().create(fermatMessage);
 
 
-            FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(intraUserLoggedInPublicKey,  //Sender NetworkService
-                    intraUserToAddPublicKey,   //Receiver
-                    obj.toString(),                //Message Content
-                    FermatMessageContentType.TEXT);//Type
 
-            /*
-             * Configure the correct status
-             */
-            ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
-
-            /*
-             * Save to the data base table
-             */
-            communicationNetworkServiceConnectionManager.getOutgoingMessageDao().create(fermatMessage);
-
-
-
-            connectToBetweenActors(intraUserLoggedInPublicKey, PlatformComponentType.ACTOR_INTRA_USER, intraUserToAddPublicKey, PlatformComponentType.ACTOR_INTRA_USER);
+            //connectToBetweenActors(intraUserLoggedInPublicKey, PlatformComponentType.ACTOR_INTRA_USER, intraUserToAddPublicKey, PlatformComponentType.ACTOR_INTRA_USER);
 
 
            /* communicationNetworkServiceConnectionManager.getIncomingMessageDao().create(new FermatMessageCommunication(String content,
@@ -1341,6 +1351,8 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
         //TODO: deberia cambiaresto para que venga el tipo de actor a registrar
 
+
+
         CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
 
 
@@ -1364,12 +1376,15 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
                 actorsToRegisterCache.add(platformComponentProfile);
 
+            if(register){
                 try {
                     communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
 
                 } catch (CantRegisterComponentException e) {
                     e.printStackTrace();
                 }
+            }
+
 
 
         }

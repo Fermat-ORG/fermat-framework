@@ -151,7 +151,7 @@ public class TransactionsBookFragment extends Fragment{
         try {
 
             errorManager = walletSession.getErrorManager();
-            tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+            tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
 
             cryptoWalletManager = walletSession.getCryptoWalletManager();
             cryptoWallet = cryptoWalletManager.getCryptoWallet();

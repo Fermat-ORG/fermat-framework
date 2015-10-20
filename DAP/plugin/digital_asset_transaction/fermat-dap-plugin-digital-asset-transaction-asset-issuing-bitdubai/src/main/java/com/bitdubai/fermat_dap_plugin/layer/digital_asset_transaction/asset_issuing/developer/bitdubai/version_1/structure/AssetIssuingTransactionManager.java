@@ -126,7 +126,8 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
                     this.errorManager,
                     this.pluginId,
                     this.userPublicKey,
-                    this.assetVaultManager);
+                    this.assetVaultManager,
+                    this.outgoingIntraActorManager);
             this.assetIssuingTransactionMonitorAgent.setDigitalAssetIssuingVault(digitalAssetIssuingVault);
             this.assetIssuingTransactionMonitorAgent.setLogManager(this.logManager);
             this.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
@@ -140,6 +141,8 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     public void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount, String walletPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantIssueDigitalAssetsException {
         try {
             startMonitorAgent();
+            //For testing and for now the walletPublicKey is hardcoded
+            walletPublicKey="walletPublicKeyTest";
             this.digitalAssetCryptoTransactionFactory.issueDigitalAssets(digitalAssetToIssue, assetsAmount, walletPublicKey, blockchainNetworkType);
         } catch (CantIssueDigitalAssetsException exception) {
             throw new CantIssueDigitalAssetsException(exception, "Creating a Digital Asset Transaction", "Check the cause");
