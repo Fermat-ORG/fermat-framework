@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications.IncomingMessageDao;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
@@ -187,5 +188,58 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      */
     public IncomingMessageDao getIncomingMessageDao() {
         return incomingMessageDao;
+    }
+
+    /**
+     * Handles events that indicate a connection to been established between two
+     * network services and prepares all objects to work with this new connection
+     *
+     * @param remoteComponentProfile
+     */
+    public void handleEstablishedRequestedNetworkServiceConnection(PlatformComponentProfile remoteComponentProfile) {
+
+        try {
+
+            /*
+             * Get the active connection
+             */
+            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile.getNetworkServiceType(), remoteComponentProfile);
+
+            //Validate the connection
+            if (communicationsVPNConnection != null &&
+                    communicationsVPNConnection.isActive()) {
+
+                 /*
+                 * Instantiate the local reference
+                 */
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao);
+
+                /*
+                 * Instantiate the remote reference
+                 */
+                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
+
+                /*
+                 * Register the observer to the observable agent
+                 */
+                communicationNetworkServiceRemoteAgent.addObserver(communicationNetworkServiceLocal);
+
+                /*
+                 * Start the service thread
+                 */
+                communicationNetworkServiceRemoteAgent.start();
+
+                /*
+                 * Add to the cache
+                 */
+                communicationNetworkServiceLocalsCache.put(remoteComponentProfile.getIdentityPublicKey(), communicationNetworkServiceLocal);
+                communicationNetworkServiceRemoteAgentsCache.put(remoteComponentProfile.getIdentityPublicKey(), communicationNetworkServiceRemoteAgent);
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not get connection"));
+        }
     }
 }
