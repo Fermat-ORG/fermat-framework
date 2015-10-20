@@ -176,6 +176,25 @@ public class CustomerBrokerSaleNegotiationDao {
             return resultados;
         }
 
+        public Collection<CustomerBrokerSale> getNegotiationsByBroker(ActorIdentity broker) throws CantLoadTableToMemoryException, InvalidParameterException {
+            DatabaseTable identityTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
+    
+            identityTable.setStringFilter(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, broker.getPublicKey(), DatabaseFilterType.EQUAL);
+    
+            identityTable.loadToMemory();
+    
+            List<DatabaseTableRecord> records = identityTable.getRecords();
+            identityTable.clearAllFilters();
+    
+            Collection<CustomerBrokerSale> resultados = new ArrayList<CustomerBrokerSale>();
+    
+            for (DatabaseTableRecord record : records) {
+                resultados.add(constructCustomerBrokerSaleFromRecord(record));
+            }
+    
+            return resultados;
+        }
+
 
     /*
         Private methods
