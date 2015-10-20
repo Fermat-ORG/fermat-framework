@@ -9,11 +9,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
  */
 public interface CryptoBrokerTransactionSummary {
 
-    BalanceType getBalanceType();
-
-    TransactionType getTransactionType();
-
     CurrencyType getCurrencyType();
 
-    float getAmount();
+    float getRunningBookBalance();
+
+    float getRunningAvailableBalance();
 }
