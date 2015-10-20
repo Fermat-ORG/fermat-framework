@@ -465,7 +465,7 @@ public class AssetIssuingTransactionDao {
         }
     }
 
-    public void persistOutgoingIntraActorUUID(String transactionID, UUID outgoingId)throws CantPersistsTransactionUUIDException {
+    public void persistOutgoingIntraActorUUID(String transactionID, UUID outgoingId) throws CantPersistsTransactionUUIDException, CantPersistsGenesisAddressException {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
