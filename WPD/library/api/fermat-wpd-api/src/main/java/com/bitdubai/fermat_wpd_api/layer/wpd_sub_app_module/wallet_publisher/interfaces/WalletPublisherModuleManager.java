@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.interfaces.PublisherIdentity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.WalletFactoryProject;
@@ -30,7 +31,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface WalletPublisherModuleManager {
+public interface WalletPublisherModuleManager extends ModuleManager {
 
     /**
      * This method returns all descriptor factory projects closed and ready to be published

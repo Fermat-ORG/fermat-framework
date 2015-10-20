@@ -791,16 +791,16 @@ public class CryptoWalletWalletModuleManager implements DealsWithCryptoTransmiss
 //                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(convertTime(paymentRecord.getStartTimeStamp()),paymentRecord.getDescription(),paymentRecord.getAmount(),cryptoWalletWalletContact,PaymentRequest.SEND_PAYMENT,paymentRecord.getState().name());
 //                lst.add(cryptoWalletPaymentRequest);
 //            }
-            //TODO: Harcoder
-            CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
-            lst.add(cryptoWalletPaymentRequest);
-            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
-            lst.add(cryptoWalletPaymentRequest);
-
-            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
-            lst.add(cryptoWalletPaymentRequest);
-            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
-            lst.add(cryptoWalletPaymentRequest);
+//            //TODO: Harcoder
+//            CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
+//            lst.add(cryptoWalletPaymentRequest);
+//            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
+//            lst.add(cryptoWalletPaymentRequest);
+//
+//            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
+//            lst.add(cryptoWalletPaymentRequest);
+//            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
+//            lst.add(cryptoWalletPaymentRequest);
 
 
             return lst;
