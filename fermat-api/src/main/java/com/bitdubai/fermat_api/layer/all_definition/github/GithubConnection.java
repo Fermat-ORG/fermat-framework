@@ -29,9 +29,6 @@ public class GithubConnection {
     String mainRepository;
 
 
-    /*Properties properties;
-    GHRepository ghRepository;*/
-
     Repo repo;
 
     public GithubConnection() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
@@ -45,22 +42,6 @@ public class GithubConnection {
     }
 
 
-    /*private void setUpConnection() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
-        properties = new Properties();
-        properties.setProperty("login", "MALOTeam");
-        properties.setProperty("password", "fermat123456");
-        try {
-
-            GitHub gitHub = GitHubBuilder.fromProperties(properties).build();
-            ghRepository = gitHub.getRepository(mainRepository);
-
-
-        } catch (java.io.FileNotFoundException e) {
-            throw new GitHubRepositoryNotFoundException(GitHubRepositoryNotFoundException.DEFAULT_MESSAGE, e, "Check the name of the repository.", "");
-        } catch (IOException e) {
-            throw new GitHubNotAuthorizedException(GitHubNotAuthorizedException.DEFAULT_MESSAGE, e, "Check your credentials or access to this repository.", "");
-        }
-    }*/
     private void setUpConnection() throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
 
         try{
@@ -74,23 +55,6 @@ public class GithubConnection {
             throw new GitHubNotAuthorizedException(GitHubNotAuthorizedException.DEFAULT_MESSAGE, e, "Check your credentials or access to this repository.", "");
         }
     }
-
-    /*private void setUpConnection(String user,String password) throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
-        properties = new Properties();
-        properties.setProperty("login", user);
-        properties.setProperty("password", password);
-        try {
-
-            GitHub gitHub = GitHubBuilder.fromProperties(properties).build();
-            ghRepository = gitHub.getRepository(mainRepository);
-
-
-        } catch (java.io.FileNotFoundException e) {
-            throw new GitHubRepositoryNotFoundException(GitHubRepositoryNotFoundException.DEFAULT_MESSAGE, e, "Check the name of the repository.", "");
-        } catch (IOException e) {
-            throw new GitHubNotAuthorizedException(GitHubNotAuthorizedException.DEFAULT_MESSAGE, e, "Check your credentials or access to this repository.", "");
-        }
-    }*/
 
     private void setUpConnection(String user,String password) throws GitHubRepositoryNotFoundException, GitHubNotAuthorizedException {
         try{
@@ -114,20 +78,6 @@ public class GithubConnection {
      * @throws IOException
      */
 
-
-    /*public String getFile(String path) throws IOException {
-
-        GHContent ghContent= ghRepository.getFileContent(path);
-
-        InputStream inputStream = ghContent.read();
-
-        StringWriter writer = new StringWriter();
-        IOUtils.copy(inputStream, writer, "UTF-8");
-        String theString = writer.toString();
-
-        return theString;
-    }*/
-
     public String getFile(String path) throws IOException {
 
         Content content;
@@ -149,25 +99,6 @@ public class GithubConnection {
      * @return
      * @throws IOException
      */
-
-    /*public byte[] getImage(String path) throws IOException {
-
-        GHContent ghContent= ghRepository.getFileContent(path);
-
-        InputStream inputStream = ghContent.read();
-
-        BufferedInputStream in = new BufferedInputStream(inputStream);
-        ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
-        int c;
-        while ((c = in.read()) != -1) {
-            byteArrayOut.write(c);
-        }
-
-        in.close();
-        return byteArrayOut.toByteArray();
-
-    }*/
-
     public byte[] getImage(String path) throws IOException {
 
         Content content;
@@ -198,13 +129,6 @@ public class GithubConnection {
      * @param commitMessage
      */
 
-    /*public void createGitHubImageFile(String path, byte[] commitContent, String commitMessage) {
-        try {
-            ghRepository.createContent(commitContent,commitMessage, path);
-        } catch (IOException e) {
-            System.out.println(getJsonMessage(e.getMessage()));
-        }
-    }*/
 
     public void createGitHubImageFile(String path, byte[] commitContent, String commitMessage) {
         try {
@@ -223,14 +147,6 @@ public class GithubConnection {
      * @param commitContent
      * @param commitMessage
      */
-    /*public void createGitHubTextFile(String path, String commitContent, String commitMessage) {
-        try {
-            ghRepository.createContent(commitContent,commitMessage, path);
-        } catch (IOException e) {
-            System.out.println(getJsonMessage(e.getMessage()));
-        }
-    }*/
-
     public void createGitHubTextFile(String path, String commitContent, String commitMessage) {
         try {
             JsonObject json= Json.createObjectBuilder().add("path", path).add("message", commitMessage).add("content",new String(Base64.encodeBase64(commitContent.getBytes()))).build();
