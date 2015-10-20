@@ -137,6 +137,25 @@ public class CustomerBrokerSaleNegotiationDao {
             return resultados;
         }
 
+        public Collection<CustomerBrokerSale> getNegotiations(NegotiationStatus status) throws CantLoadTableToMemoryException, InvalidParameterException {
+            DatabaseTable identityTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
+    
+            identityTable.setStringFilter(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
+    
+            identityTable.loadToMemory();
+    
+            List<DatabaseTableRecord> records = identityTable.getRecords();
+            identityTable.clearAllFilters();
+    
+            Collection<CustomerBrokerSale> resultados = new ArrayList<CustomerBrokerSale>();
+    
+            for (DatabaseTableRecord record : records) {
+                resultados.add(constructCustomerBrokerSaleFromRecord(record));
+            }
+    
+            return resultados;
+        }
+
 
     /*
         Private methods
