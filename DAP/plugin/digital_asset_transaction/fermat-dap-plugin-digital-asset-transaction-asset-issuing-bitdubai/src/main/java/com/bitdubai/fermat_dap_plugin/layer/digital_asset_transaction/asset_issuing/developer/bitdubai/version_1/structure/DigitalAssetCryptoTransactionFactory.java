@@ -572,7 +572,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new CantDeliverDigitalAssetToAssetWalletException("Cannot deliver the digital asset - is not complete:"+digitalAssetMetadata);
         }
         this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.ISSUING);
-        this.digitalAssetIssuingVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata);
+        this.digitalAssetIssuingVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, transactionId);
     }
 
     /**
@@ -610,7 +610,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
      * @throws CantSendGenesisAmountException
      * @throws CantPersistsGenesisTransactionException
      */
-    private String sendBitcoins(CryptoAddress genesisAddress, String digitalAssetHash, String transactionId) throws CantSendGenesisAmountException, CantPersistsGenesisTransactionException {
+    private void sendBitcoins(CryptoAddress genesisAddress, String digitalAssetHash, String transactionId) throws CantSendGenesisAmountException, CantPersistsGenesisTransactionException {
         try {
             this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.SENDING_CRYPTO);
             this.assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(digitalAssetHash, CryptoStatus.PENDING_SUBMIT);
@@ -619,8 +619,9 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             //genesisTransaction.setOp_Return(digitalAssetHash);
             //this.cryptoVaultManager.sendBitcoins(genesisTransaction);
             //TODO: this genesisTransaction is hardcoded for now. Waiting for a better way to get the genesisTransaction
-            String genesisTransaction="d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43";
-            this.assetIssuingTransactionDao.persistGenesisTransaction(transactionId, genesisTransaction);
+            //I will remove the genesisTransaction from this method, now I cannot get this parameter in a syncronic way
+            //String genesisTransaction="d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43";
+            //this.assetIssuingTransactionDao.persistGenesisTransaction(transactionId, genesisTransaction);
             this.outgoingIntraActorManager.getTransactionManager().sendCrypto(this.walletPublicKey,
                     genesisAddress,
                     this.digitalAsset.getGenesisAmount(),
@@ -631,8 +632,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                     Actors.INTRA_USER,
                     Actors.ASSET_ISSUER,
                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
-            this.assetIssuingTransactionDao.updateTransactionProtocolStatus(genesisTransaction, ProtocolStatus.TO_BE_NOTIFIED);
-            return genesisTransaction;
+            //this.assetIssuingTransactionDao.updateTransactionProtocolStatus(genesisTransaction, ProtocolStatus.TO_BE_NOTIFIED);
+            //return genesisTransaction;
         }  catch (CantExecuteQueryException exception) {
             throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "Cannot update the database: "+transactionId);
         } catch (UnexpectedResultReturnedFromDatabaseException exception) {
@@ -662,28 +663,28 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
          */
         DigitalAssetMetadata digitalAssetMetadata=null;
         try{
-            //Primero, asigno un UUID interno
+            //Asign internal UUID
             UUID transactionUUID=generateTransactionUUID();
             String transactionId=transactionUUID.toString();
-            //Verifico que existan los fondos en la wallet seleccionada
+            //Check the available balance
             checkCryptoWalletBalance();
-            //Solicito la genesisAddress
+            //Request the genesisAddress
             CryptoAddress genesisAddress= requestGenesisAddress();
-            //La persisto en base de datos
+            //persist the genesisAddress in database
             persistsGenesisAddress(transactionId,genesisAddress.getAddress());
-            //Registro genesisAddress in AddressBook
+            //Register genesisAddress in AddressBook
             registerGenesisAddressInCryptoAddressBook(genesisAddress);
-            //Le asigno al Digital Asset la genesisAddress
+            //Set the genesisAddres genesisAddress
             setDigitalAssetGenesisAddress(transactionId, genesisAddress);
-            //Creo el digitalAssetMetadata
+            //create the digitalAssetMetadata
             digitalAssetMetadata=new DigitalAssetMetadata(this.digitalAsset);
-            //Obtengo el hash del digital Asset
+            //Get the digital asset metadata hash
             String digitalAssetHash=getDigitalAssetHash(digitalAssetMetadata, transactionId);
             //LOG.info("MAP_DIGITAL ASSET FULL: "+this.digitalAsset);
             LOG.info("MAP_HASH DEL ASSET: " + digitalAssetHash);
-            //envío de BTC
-            String genesisTransaction=sendBitcoins(genesisAddress, digitalAssetHash, transactionId);
-            digitalAssetMetadata=setDigitalAssetGenesisTransaction(transactionId, genesisTransaction, digitalAssetMetadata);
+            //BTC Sending
+            /*String genesisTransaction=*/sendBitcoins(genesisAddress, digitalAssetHash, transactionId);
+            //digitalAssetMetadata=setDigitalAssetGenesisTransaction(transactionId, genesisTransaction, digitalAssetMetadata);
             //We kept the DigitalAssetMetadata in DAMVault
             saveDigitalAssetMetadataInVault(digitalAssetMetadata, transactionId);
 

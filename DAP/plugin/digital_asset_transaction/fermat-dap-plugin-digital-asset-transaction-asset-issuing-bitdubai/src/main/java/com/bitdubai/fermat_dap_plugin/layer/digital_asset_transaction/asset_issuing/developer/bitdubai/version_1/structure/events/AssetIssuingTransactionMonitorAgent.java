@@ -266,6 +266,8 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 
                 checkTransactionsCryptoStatus(getCryptoTransactionsByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK));
 
+
+
                 /**
                  * The following lines will be used in the future. Please, delete the previous lines
                  * when the next lines will be ready to be used.
@@ -290,9 +292,12 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                             assetIssuingTransactionDao.updateDigitalAssetTransactionStatusByTransactionHash(transactionHash, TransactionStatus.RECEIVED);
                             continue;
                         }
-                        digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, AssetBalanceType.AVAILABLE);
+                        String transactionInternalId=this.assetIssuingTransactionDao.getTransactionIdByTransactionhash(transactionHash);
+                        digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId ,AssetBalanceType.AVAILABLE);
                     }
                 }
+
+
 
                 if(!isPendingAssets()){
                     threadWorking=false;
@@ -327,6 +332,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
             List<CryptoTransaction> transactionList;
             CryptoStatus transactionCryptoStatus;
             if (isTransactionToBeNotified(CryptoStatus.PENDING_SUBMIT)){
+                //TODO: get the genesis transaction from OutgoingIntraActor
                 if(isPendingEvents()){
                     System.out.println("AID: is pending event");
                     List<String> eventIdList=getPendingEvents();
@@ -365,7 +371,8 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     //assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(transactionHash, transactionCryptoStatus);
                     //String genesisTransaction=assetIssuingTransactionDao.getDigitalAssetGenesisTransactionByHash(transactionHash);
                     CryptoTransaction cryptoGenesisTransaction=getCryptoTransaction(cryptoTransactionList, genesisTransaction);
-                    digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, AssetBalanceType.BOOK);
+                    String transactionInternalId=this.assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
+                    digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.BOOK);
                 }
             }
 
@@ -400,9 +407,16 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     assetIssuingTransactionDao.updateDigitalAssetTransactionStatusByGenesisTransaction(genesisTransaction, TransactionStatus.DELIVERING);
                     String publicKey=this.assetIssuingTransactionDao.getPublicKeyByGenesisTransaction(genesisTransaction);
                     this.assetIssuingTransactionDao.updateAssetsGeneratedCounter(publicKey);
-                    digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, AssetBalanceType.AVAILABLE);
+                    String transactionInternalId=this.assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
+                    digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.AVAILABLE);
                 }
             }
+        }
+
+        //TODO: create a method that get the genesis transaction from Outgoin intra actor
+        private void setGenesisTransactionFromOutgoingIntraActor() throws CantCheckAssetIssuingProgressException {
+            List<String> outgoingIdList=assetIssuingTransactionDao.getOutgoingTransactionIdByIssuingStatus();
+
         }
 
         /**

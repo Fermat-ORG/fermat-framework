@@ -517,8 +517,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
 //        PluginTextFile digitalAssetFile=this.pluginFileSystem.createTextFile(this.pluginId, "digital-asset-swap/", genesisTransaction+".xml", FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 //        digitalAssetFile.setContent(digitalAssetInnerXML);
 //        digitalAssetFile.persistToMedia();
-        this.digitalAssetIssuingVault.setWalletPublicKey("testWalletPublicKey");
-        this.digitalAssetIssuingVault.persistDigitalAssetMetadataInLocalStorage(mockDigitalAssetMetadataForTesting);
+        this.digitalAssetIssuingVault.setWalletPublicKey("walletPublicKeyTest");
+        this.digitalAssetIssuingVault.persistDigitalAssetMetadataInLocalStorage(mockDigitalAssetMetadataForTesting,"testId");
         this.assetIssuingTransactionDao.persistDigitalAsset(
                 mockDigitalAssetForTesting.getPublicKey(),
                 "testLocalPath",
@@ -562,7 +562,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         LOG.info("MAP_DigitalAsset2:" + digitalAsset);
         DigitalAssetMetadata dam=new DigitalAssetMetadata(digitalAsset);
         dam.setGenesisTransaction("testGenesisTX");
-        this.digitalAssetIssuingVault.persistDigitalAssetMetadataInLocalStorage(dam);
+        this.digitalAssetIssuingVault.persistDigitalAssetMetadataInLocalStorage(dam, "testId");
         LOG.info("DAM from vault:\n" + this.digitalAssetIssuingVault.getDigitalAssetMetadataFromLocalStorage("testGenesisTX").toString());
     }
 

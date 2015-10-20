@@ -41,7 +41,9 @@ public class DigitalAssetIssuingVault extends DigitalAssetVault {
         this.errorManager=errorManager;
     }
 
-    public void deliverDigitalAssetMetadataToAssetWallet(CryptoTransaction genesisTransaction, AssetBalanceType assetBalanceType)throws CantDeliverDigitalAssetToAssetWalletException{
+    //TODO: method that update genesisTransaction
+
+    public void deliverDigitalAssetMetadataToAssetWallet(CryptoTransaction genesisTransaction, String internalId, AssetBalanceType assetBalanceType)throws CantDeliverDigitalAssetToAssetWalletException{
         try{
             DigitalAssetMetadata digitalAssetMetadataToDeliver=getDigitalAssetMetadataFromLocalStorage(genesisTransaction.getTransactionHash());
             BalanceType balanceType;
