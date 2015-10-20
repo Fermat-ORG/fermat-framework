@@ -41,7 +41,7 @@ public class CreateBrokerIdentityExecutor extends CreateIdentityExecutor {
     }
 
     @Override
-    public int createNewIdentity() {
+    public int execute() {
         if (entryDataIsInvalid())
             return INVALID_ENTRY_DATA;
 

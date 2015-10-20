@@ -21,19 +21,26 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -43,17 +50,18 @@ import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interf
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing.intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
-import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.DealsWithBitcoinNetwork;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.exceptions.CantDefineContractPropertyException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
@@ -64,10 +72,14 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfac
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.AssetIssuingTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.MockIdentityAssetIssuerForTest;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.mocks.MockDigitalAssetMetadataForTesting;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.mocks.MockIdentityAssetIssuerForTest;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisAddressException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsTransactionUUIDException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.AssetIssuingTransactionManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetIssuingVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
@@ -96,7 +108,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
  */
-public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DealsWithAssetVault, DealsWithAssetIssuerWallet, DealsWithBitcoinWallet, DealsWithBitcoinCryptoNetwork, DatabaseManagerForDevelopers, DealsWithCryptoAddressBook, /*DealsWithCryptoVault,*/ DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithOutgoingIntraActor, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service/*, TransactionProtocolManager*/ {
+public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DealsWithAssetVault, DealsWithAssetIssuerWallet, DealsWithBitcoinWallet, DealsWithBitcoinNetwork, DatabaseManagerForDevelopers, DealsWithCryptoAddressBook, /*DealsWithCryptoVault,*/ DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithOutgoingIntraActor, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service/*, TransactionProtocolManager*/ {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     AssetIssuingTransactionManager assetIssuingTransactionManager;
@@ -118,7 +130,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     CryptoAddressBookManager cryptoAddressBookManager;
     OutgoingIntraActorManager outgoingIntraActorManager;
     AssetIssuerWalletManager assetIssuerWalletManager;
-    BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
+    BitcoinNetworkManager bitcoinNetworkManager;
 
     //TODO: Delete this log object
     Logger LOG = Logger.getGlobal();
@@ -208,7 +220,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             this.assetIssuingTransactionManager.setUserPublicKey(this.deviceUserManager.getLoggedInDeviceUser().getPublicKey());
             this.assetIssuingTransactionManager.setEventManager(this.eventManager);
             this.assetIssuingTransactionManager.setLogManager(this.logManager);
-            this.assetIssuingTransactionManager.setBitcoinCryptoNetworkManager(this.bitcoinCryptoNetworkManager);
+            this.assetIssuingTransactionManager.setBitcoinNetworkManager(this.bitcoinNetworkManager);
             try{
                 //printSomething("Event manager:"+this.eventManager);
                 this.assetIssuingEventRecorderService.start();
@@ -222,6 +234,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             checkIfExistsPendingAssets();
 
             //For testing, please, clean up your database or change the asset public key
+            //testWalletDeliverAssetToAssetIssuerWallet();
             //testIssueSingleAsset();
             //testIssueMultipleAssetsWithNoIdentity();
             //testIssueMultipleFullAssets();
@@ -258,10 +271,11 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
                     this.errorManager,
                     this.pluginId,
                     userPublicKey,
-                    this.assetVaultManager);
+                    this.assetVaultManager,
+                    this.outgoingIntraActorManager);
             this.assetIssuingTransactionMonitorAgent.setDigitalAssetIssuingVault(digitalAssetIssuingVault);
             this.assetIssuingTransactionMonitorAgent.setLogManager(this.logManager);
-            this.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
+            this.setBitcoinNetworkManager(bitcoinNetworkManager);
             this.assetIssuingTransactionMonitorAgent.start();
         }else{
                 this.assetIssuingTransactionMonitorAgent.start();
@@ -465,14 +479,65 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     }
 
     @Override
-    public void setBitcoinCryptoNetworkManager(BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager) {
-        this.bitcoinCryptoNetworkManager=bitcoinCryptoNetworkManager;
+    public void setBitcoinNetworkManager(BitcoinNetworkManager bitcoinNetworkManager) {
+        this.bitcoinNetworkManager=bitcoinNetworkManager;
     }
 
     /**
      * Test methods.
      * Todo: delete them in production
      */
+
+    /**
+     * This method implement a delivering test to asset issuer wallet, mocking an event raise and transactions
+     * @throws CantDefineContractPropertyException
+     * @throws CantCreateDigitalAssetFileException
+     * @throws CantPersistDigitalAssetException
+     * @throws CantSetObjectException
+     * @throws CantExecuteQueryException
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantPersistsGenesisTransactionException
+     * @throws CantCheckAssetIssuingProgressException
+     * @throws CantStartAgentException
+     * @throws CantGetLoggedInDeviceUserException
+     * @throws CantCreateFileException
+     * @throws CantPersistFileException
+     */
+    private void testWalletDeliverAssetToAssetIssuerWallet() throws CantDefineContractPropertyException,
+            CantCreateDigitalAssetFileException,
+            CantPersistDigitalAssetException,
+            CantSetObjectException,
+            CantExecuteQueryException,
+            UnexpectedResultReturnedFromDatabaseException,
+            CantPersistsGenesisTransactionException,
+            CantCheckAssetIssuingProgressException, CantStartAgentException, CantGetLoggedInDeviceUserException, CantCreateFileException, CantPersistFileException, CantPersistsTransactionUUIDException, CantPersistsGenesisAddressException {
+        printSomething("Start deliver to Asset wallet test");
+        String genesisTransaction="d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43";
+        MockDigitalAssetMetadataForTesting mockDigitalAssetMetadataForTesting=new MockDigitalAssetMetadataForTesting();
+        DigitalAsset mockDigitalAssetForTesting=mockDigitalAssetMetadataForTesting.getDigitalAsset();
+        String digitalAssetInnerXML=mockDigitalAssetForTesting.toString();
+//        PluginTextFile digitalAssetFile=this.pluginFileSystem.createTextFile(this.pluginId, "digital-asset-swap/", genesisTransaction+".xml", FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+//        digitalAssetFile.setContent(digitalAssetInnerXML);
+//        digitalAssetFile.persistToMedia();
+        this.digitalAssetIssuingVault.setWalletPublicKey("walletPublicKeyTest");
+        this.digitalAssetIssuingVault.persistDigitalAssetMetadataInLocalStorage(mockDigitalAssetMetadataForTesting, "testId");
+        this.assetIssuingTransactionDao.persistDigitalAsset(
+                mockDigitalAssetForTesting.getPublicKey(),
+                "testLocalPath",
+                1,
+                BlockchainNetworkType.REG_TEST,
+                "testWalletPublicKey");
+        this.assetIssuingTransactionDao.persistDigitalAssetTransactionId(mockDigitalAssetForTesting.getPublicKey(), "testId");
+        this.assetIssuingTransactionDao.persistDigitalAssetHash("testId", mockDigitalAssetMetadataForTesting.getDigitalAssetHash());
+        this.assetIssuingTransactionDao.persistGenesisTransaction("testId", genesisTransaction);
+        this.assetIssuingTransactionDao.persistOutgoingIntraActorUUID("testId", UUID.fromString("testUUIDId"));
+        this.assetIssuingTransactionDao.updateTransactionProtocolStatus(genesisTransaction, ProtocolStatus.TO_BE_NOTIFIED);
+        this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus("testId", TransactionStatus.ISSUING);
+        this.assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(mockDigitalAssetMetadataForTesting.getDigitalAssetHash(), CryptoStatus.PENDING_SUBMIT);
+        testRaiseEvent();
+        startMonitorAgent();
+        printSomething("End Deliver test");
+    }
 
     private void testRaiseEvent(){
         printSomething("Start event test");
@@ -500,7 +565,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         LOG.info("MAP_DigitalAsset2:" + digitalAsset);
         DigitalAssetMetadata dam=new DigitalAssetMetadata(digitalAsset);
         dam.setGenesisTransaction("testGenesisTX");
-        this.digitalAssetIssuingVault.persistDigitalAssetMetadataInLocalStorage(dam);
+        this.digitalAssetIssuingVault.persistDigitalAssetMetadataInLocalStorage(dam, "testId");
         LOG.info("DAM from vault:\n" + this.digitalAssetIssuingVault.getDigitalAssetMetadataFromLocalStorage("testGenesisTX").toString());
     }
 

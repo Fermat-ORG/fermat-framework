@@ -86,15 +86,20 @@ public abstract class DigitalAssetVault {
     /**
      * This method persists the DigitalAssetMetadata XML file in local storage.
      * @param digitalAssetMetadata
+     * @param internalId Asset Issuing: This id is an UUID provided by DigitalAssetTransactionFactory, this will be used to identify the file in Local Storage
      * @throws com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException
      */
-    public void persistDigitalAssetMetadataInLocalStorage(DigitalAssetMetadata digitalAssetMetadata)throws CantCreateDigitalAssetFileException {
+    public void persistDigitalAssetMetadataInLocalStorage(DigitalAssetMetadata digitalAssetMetadata, String internalId)throws CantCreateDigitalAssetFileException {
         DigitalAsset digitalAsset=digitalAssetMetadata.getDigitalAsset();
+        //String genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
+        System.out.println("Persisting path: "+this.LOCAL_STORAGE_PATH+"digital-asset-metadata/"+internalId+".xml");
         try{
             String digitalAssetInnerXML=digitalAsset.toString();
-            persistXMLStringInLocalStorage(digitalAssetInnerXML, digitalAssetFileName);
+            setDigitalAssetLocalFilePath(this.LOCAL_STORAGE_PATH+"digital-asset/");
+            persistXMLStringInLocalStorage(digitalAssetInnerXML, internalId+".xml");
             String digitalAssetMetadataInnerXML=digitalAssetMetadata.toString();
-            persistXMLStringInLocalStorage(digitalAssetMetadataInnerXML, digitalAssetMetadataFileName);
+            setDigitalAssetLocalFilePath(this.LOCAL_STORAGE_PATH+"digital-asset-metadata/");
+            persistXMLStringInLocalStorage(digitalAssetMetadataInnerXML, internalId+".xml");
         } catch (CantPersistFileException | CantCreateFileException exception) {
             throw new CantCreateDigitalAssetFileException(exception, "Persisting the digital asset objects in local storage", "Cannot create or persist the file");
         }
@@ -109,16 +114,16 @@ public abstract class DigitalAssetVault {
 
     /**
      * This method get the XML file and cast the DigitalAssetMetadata object
-     * @param genesisTransaction
+     * @param internalId AssetIssuing: Asset Issuing: This id is an UUID provided by DigitalAssetTransactionFactory, this will be used to identify the file in Local Storage
      * @return
      * @throws com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException
      */
-    public DigitalAssetMetadata getDigitalAssetMetadataFromLocalStorage(String genesisTransaction) throws CantGetDigitalAssetFromLocalStorageException {
+    public DigitalAssetMetadata getDigitalAssetMetadataFromLocalStorage(String internalId) throws CantGetDigitalAssetFromLocalStorageException {
         String digitalAssetMetadataFileName = "no-file-name-assigned";
         try {
             DigitalAssetMetadata digitalAssetMetadataObtainedFromFileStorage = new DigitalAssetMetadata();
-            digitalAssetMetadataFileName = genesisTransaction + ".xml";
-            PluginTextFile digitalAssetMetadataFile = this.pluginFileSystem.getTextFile(this.pluginId, this.LOCAL_STORAGE_PATH, digitalAssetMetadataFileName, FILE_PRIVACY, FILE_LIFE_SPAN);
+            digitalAssetMetadataFileName = internalId + ".xml";
+            PluginTextFile digitalAssetMetadataFile = this.pluginFileSystem.getTextFile(this.pluginId, this.LOCAL_STORAGE_PATH+"digital-asset-metadata/", digitalAssetMetadataFileName, FILE_PRIVACY, FILE_LIFE_SPAN);
             String digitalAssetMetadataXMLString = digitalAssetMetadataFile.getContent();
             digitalAssetMetadataObtainedFromFileStorage = (DigitalAssetMetadata) XMLParser.parseXML(digitalAssetMetadataXMLString, digitalAssetMetadataObtainedFromFileStorage);
             return digitalAssetMetadataObtainedFromFileStorage;
@@ -159,13 +164,13 @@ public abstract class DigitalAssetVault {
 
     /**
      * This method delete a XML file from the local storage
-     * @param genesisTransaction
+     * @param internalId Asset Issuing: This id is an UUID provided by DigitalAssetTransactionFactory, this will be used to identify the file in Local Storage
      * @throws com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeleteDigitalAssetFromLocalStorageException
      */
-    public void deleteDigitalAssetMetadataFromLocalStorage(String genesisTransaction) throws CantDeleteDigitalAssetFromLocalStorageException {
+    public void deleteDigitalAssetMetadataFromLocalStorage(String internalId) throws CantDeleteDigitalAssetFromLocalStorageException {
         String digitalAssetMetadataFileName = "no-file-name-assigned";
         try{
-            digitalAssetMetadataFileName = genesisTransaction + ".xml";
+            digitalAssetMetadataFileName = internalId + ".xml";
             PluginTextFile digitalAssetMetadataFile = this.pluginFileSystem.getTextFile(this.pluginId, this.LOCAL_STORAGE_PATH, digitalAssetMetadataFileName, FILE_PRIVACY, FILE_LIFE_SPAN);
             digitalAssetMetadataFile.delete();
         } catch (FileNotFoundException exception) {
@@ -215,6 +220,7 @@ public abstract class DigitalAssetVault {
             throw new CantSetObjectException("walletPublicKey is null");
         }
         this.walletPublicKey=walletPublicKey;
+        System.out.println("The wallet public key in vault is "+this.walletPublicKey);
     }
 
 }

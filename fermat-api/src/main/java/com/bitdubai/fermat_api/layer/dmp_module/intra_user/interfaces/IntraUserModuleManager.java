@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserC
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserConectionDenegationFailedException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserDisconnectingFailedException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUser;
+import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ import java.util.List;
  * The interface <code>com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager</code>
  * provides the methods for the Intra Users sub app.
  */
-public interface IntraUserModuleManager {
+public interface IntraUserModuleManager extends ModuleManager{
 
 
     /**
@@ -83,7 +84,7 @@ public interface IntraUserModuleManager {
      * @param profileImage            The profile image that the intra user has
      * @throws CantStartRequestException
      */
-    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantStartRequestException;
+    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage,String identityPublicKey,String identityAlias) throws CantStartRequestException;
 
     /**
      * The method <code>acceptIntraUser</code> takes the information of a connection request, accepts

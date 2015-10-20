@@ -1,3 +1,4 @@
+
 /*
 * @#CompleteClientAssetUserActorRegistrationNotificationEventHandler.java - 2015
 * Copyright bitDubai.com., All rights reserved.
@@ -12,8 +13,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 
-import com.bitdubai.fermat_dap_api.layer.all_definition.events.CompleteClientAssetUserActorRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.ActorNetworkServiceAssetUser;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.AssetUserActorCompleteRegistrationNotificationEvent;
+
 /**
  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers_asset_user.CompleteClientAssetUserActorRegistrationNotificationEventHandler</code>
  * <p/>
@@ -39,7 +41,7 @@ public class CompleteClientAssetUserActorRegistrationNotificationEventHandler im
         if (((Service) this.actorNetworkServiceAssetUser).getStatus() == ServiceStatus.STARTED) {
 
 
-            CompleteClientAssetUserActorRegistrationNotificationEvent completeClientAssetUserActorRegistrationNotificationEvent = (CompleteClientAssetUserActorRegistrationNotificationEvent) platformEvent;
+            AssetUserActorCompleteRegistrationNotificationEvent completeClientAssetUserActorRegistrationNotificationEvent = (AssetUserActorCompleteRegistrationNotificationEvent) platformEvent;
 
              /*
              *  ActorNetworkServiceAssetUser make the job

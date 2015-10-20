@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.DAPException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
@@ -137,6 +138,8 @@ public class DigitalAssetDistributor extends DigitalAssetSwap {
             throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Unexpected result in database");
         } catch (CantSendDigitalAssetMetadataException exception) {
             throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "There is an error delivering the digital asset through the network layer");
+        } catch (DAPException exception) {
+            throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Generic DAP Exception");
         }
     }
 
@@ -145,9 +148,9 @@ public class DigitalAssetDistributor extends DigitalAssetSwap {
     private void deliverToRemoteActor(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser remoteActorAssetUser)throws CantSendDigitalAssetMetadataException{
         String genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
         try {
-            //TODO: saqué esto porque estaba dando problemas, fijarse que falta
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.DELIVERING,genesisTransaction);
-            this.assetTransmissionNetworkServiceManager.sendDigitalAssetMetadata(null,null,null);//digitalAssetMetadata, remoteActorAssetUser);
+            //TODO: set the correct ActorSender to the next method
+            this.assetTransmissionNetworkServiceManager.sendDigitalAssetMetadata(null,remoteActorAssetUser,digitalAssetMetadata);
         } catch (CantExecuteQueryException exception) {
             throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE,exception,"Delivering Digital Asset Metadata to Remote Actor", "There is an error executing a query in database");
         } catch (UnexpectedResultReturnedFromDatabaseException exception) {
@@ -171,7 +174,8 @@ public class DigitalAssetDistributor extends DigitalAssetSwap {
     public void persistInLocalStorage(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateDigitalAssetFileException {
         //DigitalAsset Path structure: digital-asset-distribution/hash/digital-asset.xml
         //DigitalAssetMetadata Path structure: digital-asset-distribution/hash/digital-asset-metadata.xml
-        this.digitalAssetDistributionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata);
+        //TODO: create an UUID for this asset and persists in database
+        this.digitalAssetDistributionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata,"");
 
     }
 
