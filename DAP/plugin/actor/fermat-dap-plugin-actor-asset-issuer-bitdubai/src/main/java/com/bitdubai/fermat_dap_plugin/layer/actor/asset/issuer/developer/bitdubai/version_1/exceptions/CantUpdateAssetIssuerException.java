@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by natalia on 13/08/15.
  */
-public class CantUpdateAssetIssuerConnectionException extends FermatException {
+public class CantUpdateAssetIssuerException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantUpdateAssetIssuerConnectionException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantUpdateAssetIssuerConnectionException(String message, Exception cause, String context, String possibleReason) {
+    public CantUpdateAssetIssuerException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
