@@ -84,12 +84,6 @@ public abstract class PluginIdsManager {
         }
     }
 
-    protected abstract FermatPluginsEnum getPluginByKey(String key) throws InvalidParameterException;
-
-    protected abstract FermatPluginsEnum[] getAllPlugins();
-
-    protected abstract Platforms getPlatform();
-
     /**
      * returns the id of the desired plugin.
      * if it doesn't exists, creates a new one and saves it in the plugins id file.
@@ -124,7 +118,7 @@ public abstract class PluginIdsManager {
                 FileNotFoundException    e) {
 
             throw new PluginNotRecognizedException(
-                    "Plugin Descriptor: " + buildPluginKey(plugin),
+                    "Plugin Descriptor: " + plugin.getCode(),
                     "There is a problem with the plugins id file."
             );
         }
@@ -147,16 +141,16 @@ public abstract class PluginIdsManager {
 
         String fileContent = "";
         for (Map.Entry<FermatPluginsEnum, UUID> plugin : pluginIdsMap.entrySet())
-            fileContent = fileContent + buildPluginKey(plugin.getKey()) + PAIR_SEPARATOR + plugin.getValue() + PLUGIN_SEPARATOR;
+            fileContent = fileContent + plugin.getKey().getCode() + PAIR_SEPARATOR + plugin.getValue() + PLUGIN_SEPARATOR;
 
         platformTextFile.setContent(fileContent);
         platformTextFile.persistToMedia();
     }
 
-    private String buildPluginKey(final FermatPluginsEnum plugin) {
+    protected abstract FermatPluginsEnum getPluginByKey(String key) throws InvalidParameterException;
 
-        return plugin.getPlatform() +
-               plugin.getCode();
-    }
+    protected abstract FermatPluginsEnum[] getAllPlugins();
+
+    protected abstract Platforms getPlatform();
 
 }
