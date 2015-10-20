@@ -17,19 +17,19 @@ package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.
 public class AssetTransmissionJsonAttNames {
 
     /**
-     * Represent the value of MSJ_CONTEMNT_TYPE
+     * Represent the value of MSJ_CONTENT_TYPE
      */
-    public final static String MSJ_CONTEMNT_TYPE = "mct";
+    public final static String MSJ_CONTENT_TYPE = "mct";
 
     /**
-     * Represent the value of ACTOR_ASSET_USER
+     * Represent the value of SENDER_TYPE
      */
-    public final static String ACTOR_ASSET_USER = "asu";
+    public final static String SENDER_TYPE = "st";
 
     /**
-     * Represent the value of ACTOR_ISSUER_USER
+     * Represent the value of RECEIVER_TYPE
      */
-    public final static String ACTOR_ISSUER_USER = "aiu";
+    public final static String RECEIVER_TYPE = "rt";
 
     /**
      * Represent the value of DIGITAL_ASSET_METADATA
@@ -37,12 +37,12 @@ public class AssetTransmissionJsonAttNames {
     public final static String DIGITAL_ASSET_METADATA = "dam";
 
     /**
-     * Represent the value of TRANSACTION_ID
+     * Represent the value of GENESIS_TRANSACTION
      */
-    public final static String TRANSACTION_ID = "ti";
+    public final static String GENESIS_TRANSACTION = "gt";
 
     /**
-     * Represent the value of NEW_STATUS_TRANSACTION
+     * Represent the value of NEW_DISTRIBUTION_STATUS
      */
-    public final static String NEW_STATUS_TRANSACTION = "nst";
+    public final static String NEW_DISTRIBUTION_STATUS = "nds";
 }

@@ -6,7 +6,7 @@
     <color name="circle_border">#b3d3df</color>
     <color name="create_identity_fragment_background">#eaeaea</color>
     <color name="add_button_normal">#ff4f37</color>
-    <color name="create_identity_button">#ff2f14</color>
+    <color name="create_broker_identity_button">#ff2f14</color>
     <color name="update_identity_button">#ff2f14</color>
     <color name="crypto_broker_identity_name_item">#323232</color>
     <color name="crypto_broker_identity_list_divider">#9e9e9e</color>
@@ -14,5 +14,6 @@
     <color name="img_background">#ff2f14</color>
     <color name="broker_name_text_color">#0072bc</color>
     <color name="create_button_text">#ffffff</color>
+    <color name="spanned_text">#ff2f14</color>
 
 </resources>

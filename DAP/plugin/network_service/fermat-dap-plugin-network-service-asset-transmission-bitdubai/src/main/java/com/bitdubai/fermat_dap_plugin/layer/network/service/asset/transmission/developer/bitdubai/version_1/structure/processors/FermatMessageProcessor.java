@@ -6,8 +6,10 @@
  */
 package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.processors;
 
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.AssetTransmissionMsjContentType;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionPluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 /**
@@ -23,15 +25,45 @@ import com.google.gson.JsonObject;
 public abstract class FermatMessageProcessor {
 
     /**
+     * Represent the assetTransmissionPluginRoot
+     */
+    private AssetTransmissionPluginRoot assetTransmissionPluginRoot;
+
+    /**
+     * Represent the gson
+     */
+    protected Gson gson;
+
+    /**
+     * Constructor with parameters
+     * @param assetTransmissionPluginRoot
+     */
+    public FermatMessageProcessor(AssetTransmissionPluginRoot assetTransmissionPluginRoot){
+        super();
+        this.assetTransmissionPluginRoot = assetTransmissionPluginRoot;
+        this.gson = new Gson();
+    }
+
+    /**
      * Method that contain the logic to process the message
      */
     public abstract void processingMessage(final FermatMessage fermatMessage, final JsonObject jsonMsjContent);
 
     /**
-     * Return the AssetTransmissionMsjContentType that it processes
+     * Return the DigitalAssetMetadataTransactionType that it processes
      * @return
      */
-    public abstract AssetTransmissionMsjContentType getAssetTransmissionMsjContentType();
+    public abstract DigitalAssetMetadataTransactionType getDigitalAssetMetadataTransactionType();
+
+
+    /**
+     * Get the AssetTransmissionPluginRoot
+     * @return assetTransmissionPluginRoot
+     */
+    public AssetTransmissionPluginRoot getAssetTransmissionPluginRoot() {
+        return assetTransmissionPluginRoot;
+    }
+
 
 
 }

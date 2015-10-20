@@ -5,10 +5,10 @@ import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -22,17 +22,22 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
+import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor;
+import com.bitdubai.sub_app.crypto_broker_identity.util.UtilsFuncs;
 
 import java.io.ByteArrayOutputStream;
 
-import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.*;
+import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.EXCEPTION_THROWN;
+import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.INVALID_ENTRY_DATA;
+import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.SUCCESS;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,10 +53,8 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
 
     private Bitmap cryptoBrokerBitmap;
 
-    private CryptoBrokerIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
 
-    private Button createButton;
     private EditText mBrokerName;
     private ImageView mBrokerImage;
 
@@ -65,7 +68,6 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoBrokerIdentitySubAppSession) subAppsSession).getModuleManager();
             errorManager = subAppsSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -89,25 +91,25 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        createButton = (Button) layout.findViewById(R.id.create_crypto_broker_button);
-        mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
-        mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
 
+        mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
         mBrokerName.requestFocus();
 
+        mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
+        RoundedBitmapDrawable roundedBitmap = UtilsFuncs.getRoundedBitmap(getResources(), R.drawable.img_new_user_camera);
+        mBrokerImage.setImageDrawable(roundedBitmap);
         mBrokerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CommonLogger.debug(TAG, "Entrando en mBrokerImage.setOnClickListener");
                 registerForContextMenu(mBrokerImage);
                 getActivity().openContextMenu(mBrokerImage);
             }
         });
 
+        Button createButton = (Button) layout.findViewById(R.id.create_crypto_broker_button);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
                 createNewIdentity();
             }
         });
@@ -131,24 +133,26 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
                             cryptoBrokerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
                             cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                    } catch (Exception ex) {
+                        errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, ex);
+                        Toast.makeText(getActivity(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
 
-            if (pictureView != null && cryptoBrokerBitmap != null)
-                pictureView.setImageDrawable(new BitmapDrawable(getResources(), cryptoBrokerBitmap));
+            if (pictureView != null && cryptoBrokerBitmap != null) {
+                RoundedBitmapDrawable roundedBitmap = UtilsFuncs.getRoundedBitmap(getResources(), cryptoBrokerBitmap);
+                pictureView.setImageDrawable(roundedBitmap);
+            }
         }
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.setHeaderTitle("Choose mode");
+        menu.setHeaderTitle(R.string.title_photo_context_menu);
         menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.ic_camera_green));
-        menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
-        menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
+        menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, R.string.camera_option_context_menu);
+        menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, R.string.gallery_option_context_menu);
 
         super.onCreateContextMenu(menu, view, menuInfo);
     }
@@ -168,12 +172,6 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
 
     /**
      * Crea una nueva identidad para un crypto broker
-     *
-     * @return key con el resultado de la operacion:<br/><br/>
-     * <code>CREATE_IDENTITY_SUCCESS</code>: Se creo exitosamente una identidad <br/>
-     * <code>CREATE_IDENTITY_FAIL_MODULE_EXCEPTION</code>: Se genero una excepcion cuando se ejecuto el metodo para crear la identidad en el Module Manager <br/>
-     * <code>CREATE_IDENTITY_FAIL_MODULE_IS_NULL</code>: No se tiene una referencia al Module Manager <br/>
-     * <code>CREATE_IDENTITY_FAIL_NO_VALID_DATA</code>: Los datos ingresados para crear la identidad no son validos (faltan datos, no tiene el formato correcto, etc) <br/>
      */
     private void createNewIdentity() {
 
@@ -181,7 +179,7 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
         byte[] imgInBytes = toByteArray(cryptoBrokerBitmap);
 
         CreateBrokerIdentityExecutor executor = new CreateBrokerIdentityExecutor(subAppsSession, brokerNameText, imgInBytes);
-        int resultKey = executor.createNewIdentity();
+        int resultKey = executor.execute();
 
         switch (resultKey) {
             case SUCCESS:

@@ -52,7 +52,10 @@ public interface ActorAssetUser {
      *
      * @return the Location of the Asset user
      */
-    Location getLocation();
+//    Location getLocation();
+    Double getLocationLatitude();
+
+    Double getLocationLongitude();
 
     /**
      * The method <code>getGender</code> gives us the Gender of the represented Asset user

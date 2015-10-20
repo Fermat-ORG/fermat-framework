@@ -7,8 +7,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWa
  * Created by franklin on 14/10/15.
  */
 public interface AssetRedeemPointWalletManager {
-    AssetRedeemPointWallet loadAssetIssuerWallet(String walletPublicKey) throws CantLoadWalletException;
+    AssetRedeemPointWallet loadAssetRedeemPointWallet(String walletPublicKey) throws CantLoadWalletException;
 
-    void createWalletAssetIssuer (String walletPublicKey) throws CantCreateWalletException;
+    void createWalletAssetRedeemPoint (String walletPublicKey) throws CantCreateWalletException;
 
 }

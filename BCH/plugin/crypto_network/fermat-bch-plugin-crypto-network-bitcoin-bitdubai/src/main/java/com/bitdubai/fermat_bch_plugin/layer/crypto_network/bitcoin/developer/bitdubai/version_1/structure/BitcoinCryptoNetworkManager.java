@@ -3,11 +3,14 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
@@ -15,6 +18,7 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.store.UnreadableWalletException;
 
@@ -27,7 +31,15 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by rodrigo on 10/4/15.
+ * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptonetwork.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkManager</code>
+ * Starts the monitoring agent that will listen to transactions. Based on the passed public Keys from the network type
+ * it will activate a different agent to listen to that network.
+ * <p/>
+ *
+ * Created by Rodrigo Acosta - (acosta_rodrigo@hotmail.com) on 13/10/15.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
 
@@ -270,5 +282,29 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      */
     private List<TransactionProtocolData> getPendingTransactionProtocolData() throws CantExecuteDatabaseOperationException {
         return getDao().getPendingTransactionProtocolData();
+    }
+
+    /**
+     * Gets the CryptoTransaction list that matches the specified hash
+     * @param txHash
+     * @return
+     * @throws CantGetGenesisTransactionException
+     */
+    public List<CryptoTransaction> getGenesisTransaction(String txHash) throws CantGetGenesisTransactionException {
+        try {
+            return getDao().getIncomingCryptoTransaction(txHash);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantGetGenesisTransactionException(CantGetGenesisTransactionException.DEFAULT_MESSAGE, e, "database operation issue.", "database error");
+        }
+    }
+
+    /**
+     * Broadcast a well formed, commited and signed transaction into the specified network
+     * @param blockchainNetworkType
+     * @param tx
+     * @throws CantBroadcastTransactionException
+     */
+    public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx) throws CantBroadcastTransactionException {
+        runningAgents.get(blockchainNetworkType).broadcastTransaction(tx);
     }
 }

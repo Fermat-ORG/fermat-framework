@@ -9,11 +9,12 @@ package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.AssetTransmissionJsonAttNames;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.AssetTransmissionMsjContentType;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.processors.DigitalAssetMetadataTransmitMessageReceiverProcessor;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.processors.FermatMessageProcessor;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.processors.TransactionNewStatusNotificationMessageReceiverProcessor;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.processors.NewTransactionStatusNotificationMessageReceiverProcessor;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.google.gson.Gson;
@@ -38,7 +39,7 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
     /**
      * Represent the messagesProcessorsRegistered
      */
-    private Map<AssetTransmissionMsjContentType, FermatMessageProcessor> messagesProcessorsRegistered;
+    private Map<DigitalAssetMetadataTransactionType, FermatMessageProcessor> messagesProcessorsRegistered;
 
     /**
      * Represent the gson
@@ -55,10 +56,10 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
      *
      * @param
      */
-    public NewReceiveMessagesNotificationEventHandler() {
+    public NewReceiveMessagesNotificationEventHandler(AssetTransmissionPluginRoot assetTransmissionPluginRoot) {
         this.messagesProcessorsRegistered = new HashMap<>();
-        this.messagesProcessorsRegistered.put(AssetTransmissionMsjContentType.META_DATA_TRANSMIT, new DigitalAssetMetadataTransmitMessageReceiverProcessor());
-        this.messagesProcessorsRegistered.put(AssetTransmissionMsjContentType.TRANSACTION_STATUS_UPDATE, new TransactionNewStatusNotificationMessageReceiverProcessor());
+        this.messagesProcessorsRegistered.put(DigitalAssetMetadataTransactionType.META_DATA_TRANSMIT, new DigitalAssetMetadataTransmitMessageReceiverProcessor(assetTransmissionPluginRoot));
+        this.messagesProcessorsRegistered.put(DigitalAssetMetadataTransactionType.TRANSACTION_STATUS_UPDATE, new NewTransactionStatusNotificationMessageReceiverProcessor(assetTransmissionPluginRoot));
         gson = new Gson();
         parser = new JsonParser();
     }
@@ -91,17 +92,16 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
         /*
          * Extract the type of content of the message
          */
-        AssetTransmissionMsjContentType assetTransmissionMsjContentType = gson.fromJson(jsonMsjContent.get(AssetTransmissionJsonAttNames.MSJ_CONTEMNT_TYPE), AssetTransmissionMsjContentType.class);
+        DigitalAssetMetadataTransactionType digitalAssetMetadataTransactionType = gson.fromJson(jsonMsjContent.get(AssetTransmissionJsonAttNames.MSJ_CONTENT_TYPE), DigitalAssetMetadataTransactionType.class);
 
         /*
          * Process the messages for his type
          */
-         if (messagesProcessorsRegistered.containsKey(assetTransmissionMsjContentType)){
+         if (messagesProcessorsRegistered.containsKey(digitalAssetMetadataTransactionType)){
 
-             messagesProcessorsRegistered.get(assetTransmissionMsjContentType).processingMessage(fermatMessageReceive, jsonMsjContent);
+             messagesProcessorsRegistered.get(digitalAssetMetadataTransactionType).processingMessage(fermatMessageReceive, jsonMsjContent);
 
          }
-
 
     }
 
