@@ -24,10 +24,4 @@ public interface FermatPluginsEnum extends FermatEnum {
      */
     Developers getDeveloper();
 
-    /**
-     * Throw the method <code>getAllPlugins</code> you can get all the elements of the plugin enum.
-     * @return the list of all the elements.
-     */
-    FermatPluginsEnum[] getAllPlugins();
-
 }

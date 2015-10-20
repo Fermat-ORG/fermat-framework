@@ -26,9 +26,9 @@ import java.util.regex.Pattern;
  */
 public abstract class PluginIdsManager {
 
-    private final String PLUGIN_IDS_DIRECTORY_NAME = DeviceDirectory.PLATFORM.getName();
+    private final String PLUGIN_IDS_DIRECTORY_NAME = DeviceDirectory.SYSTEM.getName() + "/" + getPlatform().getCode();
 
-    private final String PLUGIN_IDS_FILE_NAME = getPlatform().getCode()+"plugin_ids_";
+    private final String PLUGIN_IDS_FILE_NAME = "plugin_ids";
 
     private final String PAIR_SEPARATOR   = ";";
     private final String PLUGIN_SEPARATOR = "|";
@@ -37,7 +37,7 @@ public abstract class PluginIdsManager {
 
     private Map<FermatPluginsEnum, UUID> pluginIdsMap = new HashMap<>();
 
-    public PluginIdsManager(final PlatformFileSystem platformFileSystem) throws CantInitializePluginsManagerException {
+    protected PluginIdsManager(final PlatformFileSystem platformFileSystem) throws CantInitializePluginsManagerException {
 
         this.platformFileSystem = platformFileSystem;
         try {

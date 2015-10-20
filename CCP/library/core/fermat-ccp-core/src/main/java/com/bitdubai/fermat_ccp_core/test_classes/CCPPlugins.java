@@ -12,6 +12,10 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum CCPPlugins implements FermatPluginsEnum {
 
+    /**
+     * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
+     */
+
     BITDUBAI_CRYPTO_ADDRESSES_NETWORK_SERVICE       ("BCANS" , Developers.BITDUBAI),
     BITDUBAI_CRYPTO_PAYMENT_REQUEST                 ("BCPR"  , Developers.BITDUBAI),
     BITDUBAI_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE ("BCPRNS", Developers.BITDUBAI),
@@ -65,15 +69,8 @@ public enum CCPPlugins implements FermatPluginsEnum {
     }
 
     @Override
-    public FermatPluginsEnum[] getAllPlugins() {
-        return CCPPlugins.values();
-    }
-
-    @Override
     public String getCode() {
         return this.code;
     }
-
-
 
 }
