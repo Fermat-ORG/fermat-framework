@@ -109,12 +109,12 @@ public class NavigationStructureFactory {
         activity.setTabStrip(tabStrip);
 
         Tab tab = new Tab();
-        tab.setLabel("Deals");
-        tab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_DEALS_TAB);
+        tab.setLabel("Negotiations");
+        tab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB);
         tabStrip.addTab(tab);
         Fragment fragment = new Fragment();
-        fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_DEALS_TAB.getKey());
-        activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_DEALS_TAB.getKey(), fragment);
+        fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey());
+        activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey(), fragment);
 
         tab = new Tab();
         tab.setLabel("Contracts");
@@ -127,7 +127,7 @@ public class NavigationStructureFactory {
 
         fragment = new Fragment();
         fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_DEAL_DETAILS.getKey());
-        fragment.setBack(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_DEALS_TAB.getKey());
+        fragment.setBack(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey());
         activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_DEAL_DETAILS.getKey(), fragment);
 
         fragment = new Fragment();

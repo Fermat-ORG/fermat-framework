@@ -13,7 +13,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.DealD
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.contracts.ContractsActivityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.deals.DealsActivityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenContractsTabFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenDealsTabFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenNegotiationsTabFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.MarketRateStatisticsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockStatisticsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsActivityFragment;
@@ -61,7 +61,7 @@ public class GetFragmentTest {
         assertThat(actualFragment).isInstanceOf(MarketRateStatisticsFragment.class);
 
         actualFragment = fragmentFactory.getFragment("CBPCBWHAODT", session, settings, providerManager);
-        assertThat(actualFragment).isInstanceOf(OpenDealsTabFragment.class);
+        assertThat(actualFragment).isInstanceOf(OpenNegotiationsTabFragment.class);
 
         actualFragment = fragmentFactory.getFragment("CBPCBWHAOCT", session, settings, providerManager);
         assertThat(actualFragment).isInstanceOf(OpenContractsTabFragment.class);
