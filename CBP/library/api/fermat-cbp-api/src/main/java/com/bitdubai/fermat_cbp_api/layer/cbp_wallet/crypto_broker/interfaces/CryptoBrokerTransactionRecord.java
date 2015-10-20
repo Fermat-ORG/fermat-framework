@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 02.10.15.
  */
-public interface CryptoBrokerBalanceRecord {
+public interface CryptoBrokerTransactionRecord {
 
     UUID getTransactionId();
 
@@ -19,11 +19,17 @@ public interface CryptoBrokerBalanceRecord {
 
     CurrencyType getCurrencyType();
 
-    String getPublicKeyActorFrom();
+    String getPublicKeyWallet();
 
-    String getPublicKeyActorTo();
+    String getPublicKeyBroker();
+
+//    String getDescriptionBalance();
 
     float getAmount();
+
+    float getRunningBookBalance();
+
+    float getRunningAvailableBalance();
 
     long getTimestamp();
 
