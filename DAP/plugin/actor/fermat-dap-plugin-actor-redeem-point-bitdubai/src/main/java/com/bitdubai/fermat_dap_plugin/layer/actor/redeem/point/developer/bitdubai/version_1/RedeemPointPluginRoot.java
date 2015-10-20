@@ -222,9 +222,9 @@ public class RedeemPointPluginRoot implements DealsWithErrors, DatabaseManagerFo
 
             for (int i = 0; i < 10; i++) {
 
-                System.out.println("*******************************************************");
-                System.out.println("PRUEBA DE VICTOR - REDEEM POINT: iniciando a crear el record: " + i);
-                System.out.println("*******************************************************");
+//                System.out.println("*******************************************************");
+//                System.out.println("PRUEBA DE VICTOR - REDEEM POINT: iniciando a crear el record: " + i);
+//                System.out.println("*******************************************************");
                 String identityPublicKey = i + UUID.randomUUID().toString();
                 String publicKey = i + UUID.randomUUID().toString();
                 CryptoAddress cryptoAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);
