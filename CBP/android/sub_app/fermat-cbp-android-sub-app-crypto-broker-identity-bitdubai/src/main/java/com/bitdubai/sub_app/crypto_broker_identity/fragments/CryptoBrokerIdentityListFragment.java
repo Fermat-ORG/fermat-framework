@@ -126,26 +126,6 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     }
 
     @Override
-    protected int getLayoutResource() {
-        return R.layout.fragment_crypto_broker_identity_list;
-    }
-
-    @Override
-    protected int getSwipeRefreshLayoutId() {
-        return R.id.swipe_refresh;
-    }
-
-    @Override
-    protected int getRecyclerLayoutId() {
-        return R.id.crypto_broker_identity_recycler_view;
-    }
-
-    @Override
-    protected boolean recyclerHasFixedSize() {
-        return true;
-    }
-
-    @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             adapter = new CryptoBrokerIdentityInfoAdapter(getActivity(), identityInformationList);
@@ -163,6 +143,24 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     }
 
     @Override
+    protected int getLayoutResource() {
+        return R.layout.fragment_crypto_broker_identity_list;
+    }
+
+
+    @Override
+    protected int getRecyclerLayoutId() {
+        return R.id.crypto_broker_identity_recycler_view;
+    }
+
+    @Override
+    protected int getSwipeRefreshLayoutId() {
+        return R.id.swipe_refresh;
+    }
+
+
+
+    @Override
     public List<CryptoBrokerIdentityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<CryptoBrokerIdentityInformation> data = new ArrayList<>();
 
@@ -178,6 +176,10 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         return data;
     }
 
+    @Override
+    protected boolean recyclerHasFixedSize() {
+        return true;
+    }
 
     @Override
     public void onItemClickListener(CryptoBrokerIdentityInformation data, int position) {

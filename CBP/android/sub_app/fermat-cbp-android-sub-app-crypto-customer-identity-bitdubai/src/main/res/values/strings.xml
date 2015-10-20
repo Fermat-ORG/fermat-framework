@@ -11,4 +11,7 @@
     <string name="camera_option_context_menu">Camera</string>
     <string name="gallery_option_context_menu">Gallery</string>
     <string name="title_photo_context_menu">Choose mode</string>
+    <string name="description_search">Search</string>
+    <string name="empty_identity_list_msg">The List is empty</string>
+    <string name="no_matches">No Matches</string>
 </resources>
