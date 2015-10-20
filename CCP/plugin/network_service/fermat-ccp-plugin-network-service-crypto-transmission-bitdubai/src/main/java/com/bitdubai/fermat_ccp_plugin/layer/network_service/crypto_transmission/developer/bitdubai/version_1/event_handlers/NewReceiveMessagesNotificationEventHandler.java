@@ -40,17 +40,17 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
 
         System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent.toString());
 
-        System.out.print("NOTIFICACION EVENTO LLEGADA MENSAJE!!!!");
+        //System.out.print("NOTIFICACION EVENTO LLEGADA MENSAJE!!!!");
 
 
-        if (this.cryptoTransmissionAgent.isRunning()) {
-
-            NewNetworkServiceMessageReceivedNotificationEvent newNetworkServiceMessageSentNotificationEvent = (NewNetworkServiceMessageReceivedNotificationEvent) platformEvent;
-
-            cryptoTransmissionAgent.handleNewMessages((FermatMessage)newNetworkServiceMessageSentNotificationEvent.getData());
-
-
-        }
+//        if (this.cryptoTransmissionAgent.isRunning()) {
+//
+//            NewNetworkServiceMessageReceivedNotificationEvent newNetworkServiceMessageSentNotificationEvent = (NewNetworkServiceMessageReceivedNotificationEvent) platformEvent;
+//
+//            cryptoTransmissionAgent.handleNewMessages((FermatMessage)newNetworkServiceMessageSentNotificationEvent.getData());
+//
+//
+//        }
     }
 
 }
