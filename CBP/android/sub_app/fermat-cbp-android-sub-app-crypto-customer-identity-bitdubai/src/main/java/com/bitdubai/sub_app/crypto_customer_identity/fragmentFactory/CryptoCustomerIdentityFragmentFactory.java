@@ -21,14 +21,13 @@ public class CryptoCustomerIdentityFragmentFactory extends FermatSubAppFragmentF
     @Override
     public FermatFragment getFermatFragment(CryptoCustomerIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {
 
-        if (fragments == CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT) {
+        if (fragments == CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT)
             return CryptoCustomerIdentityListFragment.newInstance();
-        }
-        if(fragments == CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT){
-            return CreateCryptoCustomerIdentityFragment.newInstance();
-        }
 
-        if(fragments == CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT)
+        if (fragments == CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT)
+            return CreateCryptoCustomerIdentityFragment.newInstance();
+
+        if (fragments == CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT)
             return EditCryptoCustomerIdentityFragment.newInstance();
 
         throw createFragmentNotFoundException(fragments);
@@ -38,7 +37,6 @@ public class CryptoCustomerIdentityFragmentFactory extends FermatSubAppFragmentF
     public CryptoCustomerIdentityFragmentsEnumType getFermatFragmentEnumType(String key) {
         return CryptoCustomerIdentityFragmentsEnumType.getValue(key);
     }
-
 
     private FragmentNotFoundException createFragmentNotFoundException(FermatFragmentsEnumType fragments) {
         String possibleReason, context;

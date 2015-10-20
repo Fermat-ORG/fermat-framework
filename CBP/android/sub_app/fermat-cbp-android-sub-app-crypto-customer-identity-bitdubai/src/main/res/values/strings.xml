@@ -8,4 +8,7 @@
     <string name="create">CREATE</string>
     <string name="identity_img">customer_img</string>
     <string name="update">UPDATE</string>
+    <string name="camera_option_context_menu">Camera</string>
+    <string name="gallery_option_context_menu">Gallery</string>
+    <string name="title_photo_context_menu">Choose mode</string>
 </resources>
