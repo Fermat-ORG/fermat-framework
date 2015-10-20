@@ -15,7 +15,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantListNegotianionsException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantListPurchaseNegotianionsException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseManager;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerPurchaseNegotiationDao;
@@ -135,54 +135,54 @@ public class CustomerBrokerPurchasePluginRoot implements CustomerBrokerPurchaseM
     }
 
     @Override
-    public Collection<CustomerBrokerPurchase> getNegotiations() throws CantListNegotianionsException {
+    public Collection<CustomerBrokerPurchase> getNegotiations() throws CantListPurchaseNegotianionsException {
         try {
             Collection<CustomerBrokerPurchase> negotiations = new ArrayList<CustomerBrokerPurchase>();
             negotiations = customerBrokerPurchaseNegotiationDao.getNegotiations();
             return negotiations;
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantListNegotianionsException(CantListNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantListPurchaseNegotianionsException(CantListPurchaseNegotianionsException.DEFAULT_MESSAGE, e, "", "");
         } catch (InvalidParameterException e) {
-            throw new CantListNegotianionsException(CantListNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantListPurchaseNegotianionsException(CantListPurchaseNegotianionsException.DEFAULT_MESSAGE, e, "", "");
         }
     }
 
     @Override
-    public Collection<CustomerBrokerPurchase> getNegotiations(NegotiationStatus status) throws CantListNegotianionsException {
+    public Collection<CustomerBrokerPurchase> getNegotiations(NegotiationStatus status) throws CantListPurchaseNegotianionsException {
         try {
             Collection<CustomerBrokerPurchase> negotiations = new ArrayList<CustomerBrokerPurchase>();
             negotiations = customerBrokerPurchaseNegotiationDao.getNegotiations(status);
             return negotiations;
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantListNegotianionsException(CantListNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantListPurchaseNegotianionsException(CantListPurchaseNegotianionsException.DEFAULT_MESSAGE, e, "", "");
         } catch (InvalidParameterException e) {
-            throw new CantListNegotianionsException(CantListNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantListPurchaseNegotianionsException(CantListPurchaseNegotianionsException.DEFAULT_MESSAGE, e, "", "");
         }
     }
 
     @Override
-    public Collection<CustomerBrokerPurchase> getNegotiationsByCustomer(ActorIdentity customer) throws CantListNegotianionsException {
+    public Collection<CustomerBrokerPurchase> getNegotiationsByCustomer(ActorIdentity customer) throws CantListPurchaseNegotianionsException {
         try {
             Collection<CustomerBrokerPurchase> negotiations = new ArrayList<CustomerBrokerPurchase>();
             negotiations = customerBrokerPurchaseNegotiationDao.getNegotiationsByCustomer(customer);
             return negotiations;
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantListNegotianionsException(CantListNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantListPurchaseNegotianionsException(CantListPurchaseNegotianionsException.DEFAULT_MESSAGE, e, "", "");
         } catch (InvalidParameterException e) {
-            throw new CantListNegotianionsException(CantListNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantListPurchaseNegotianionsException(CantListPurchaseNegotianionsException.DEFAULT_MESSAGE, e, "", "");
         }
     }
 
     @Override
-    public Collection<CustomerBrokerPurchase> getNegotiationsByBroker(ActorIdentity broker) throws CantListNegotianionsException {
+    public Collection<CustomerBrokerPurchase> getNegotiationsByBroker(ActorIdentity broker) throws CantListPurchaseNegotianionsException {
         try {
             Collection<CustomerBrokerPurchase> negotiations = new ArrayList<CustomerBrokerPurchase>();
             negotiations = customerBrokerPurchaseNegotiationDao.getNegotiationsByBroker(broker);
             return negotiations;
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantListNegotianionsException(CantListNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantListPurchaseNegotianionsException(CantListPurchaseNegotianionsException.DEFAULT_MESSAGE, e, "", "");
         } catch (InvalidParameterException e) {
-            throw new CantListNegotianionsException(CantListNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantListPurchaseNegotianionsException(CantListPurchaseNegotianionsException.DEFAULT_MESSAGE, e, "", "");
         }
     }
 }
