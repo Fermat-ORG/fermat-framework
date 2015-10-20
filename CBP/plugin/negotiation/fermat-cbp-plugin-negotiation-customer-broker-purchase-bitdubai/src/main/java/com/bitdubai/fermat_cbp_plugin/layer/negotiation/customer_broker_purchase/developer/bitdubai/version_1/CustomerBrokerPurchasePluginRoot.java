@@ -15,11 +15,11 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantListNegotianionsException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseManager;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerPurchaseNegotiationDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseNegotiationDaoException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantListNegotianionsException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -33,7 +33,7 @@ import java.util.UUID;
 /**
  * Created by jorge on 12-10-2015.
  */
-public class CustomerBrokerPurchasePluginRoot implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Service, Plugin {
+public class CustomerBrokerPurchasePluginRoot implements CustomerBrokerPurchaseManager, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Service, Plugin {
 
     private ErrorManager errorManager;
     private LogManager logManager;
@@ -117,5 +117,48 @@ public class CustomerBrokerPurchasePluginRoot implements DealsWithErrors, DealsW
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    @Override
+    public CustomerBrokerPurchase createCustomerBrokerPurchaseNegotiation(String publicKeyCustomer, String publicKeyBroker) throws CantCreateCustomerBrokerPurchaseException {
+        return null;
+    }
+
+    @Override
+    public void cancelNegotiation(CustomerBrokerPurchase negotiation) {
+
+    }
+
+    @Override
+    public void closeNegotiation(CustomerBrokerPurchase negotiation) {
+
+    }
+
+    @Override
+    public Collection<CustomerBrokerPurchase> getNegotiations() throws CantListNegotianionsException {
+        try {
+            Collection<CustomerBrokerPurchase> negotiations = new ArrayList<CustomerBrokerPurchase>();
+            negotiations = customerBrokerPurchaseNegotiationDao.getNegotiations();
+            return negotiations;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantListNegotianionsException(CantListNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+        } catch (InvalidParameterException e) {
+            throw new CantListNegotianionsException(CantListNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+        }
+    }
+
+    @Override
+    public Collection<CustomerBrokerPurchase> getNegotiations(NegotiationStatus status) throws CantListNegotianionsException {
+        return null;
+    }
+
+    @Override
+    public Collection<CustomerBrokerPurchase> getNegotiationsByCustomer(ActorIdentity customer) throws CantListNegotianionsException {
+        return null;
+    }
+
+    @Override
+    public Collection<CustomerBrokerPurchase> getNegotiationsByBroker(ActorIdentity broker) throws CantListNegotianionsException {
+        return null;
     }
 }
