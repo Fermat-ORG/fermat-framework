@@ -1,5 +1,5 @@
 
-include ':fermat-android-api', ':fermat-p2p-plugin-communication-wifi-bitdubai'
+include ':fermat-android-api'
 include ':fermat-android-core'
 
 include ':fermat-api'
