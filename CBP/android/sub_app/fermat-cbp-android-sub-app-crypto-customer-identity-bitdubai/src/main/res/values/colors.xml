@@ -4,7 +4,7 @@
     <color name="background_tab_pressed">#6633B5E5</color>
     <color name="identity_list_fragment_background">#FFFFFF</color>
     <color name="create_identity_fragment_background">#FFFFFF</color>
-    <color name="add_button_normal">#5677fc</color>
+    <color name="add_customer_identity_button_normal">#5677fc</color>
     <color name="create_customer_identity_button">#5677fc</color>
     <color name="update_customer_identity_button">#497dff</color>
     <color name="customer_name_text_color">#3b97ff</color>
