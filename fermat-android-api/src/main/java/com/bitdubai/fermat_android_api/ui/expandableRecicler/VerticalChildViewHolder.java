@@ -1,9 +1,9 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.expandableRecicler;
+package com.bitdubai.fermat_android_api.ui.expandableRecicler;
 
 import android.view.View;
 import android.widget.TextView;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.android_api.R;
 
 
 /**
@@ -28,7 +28,7 @@ public class VerticalChildViewHolder extends ChildViewHolder {
     public VerticalChildViewHolder(View itemView) {
         super(itemView);
 
-        mDataTextView = (TextView) itemView.findViewById(R.id.list_item_vertical_child_textView);
+        //mDataTextView = (TextView) itemView.findViewById(R.id.list_item_vertical_child_textView);
     }
 
     public void bind(String childText) {
