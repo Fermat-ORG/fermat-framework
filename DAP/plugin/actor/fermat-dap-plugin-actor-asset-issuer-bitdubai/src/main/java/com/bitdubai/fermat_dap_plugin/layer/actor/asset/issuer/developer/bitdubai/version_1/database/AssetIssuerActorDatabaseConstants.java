@@ -15,9 +15,14 @@ public class AssetIssuerActorDatabaseConstants {
     public static final String ASSET_ISSUER_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "linked_identity_publicKey";
     public static final String ASSET_ISSUER_ISSUER_PUBLIC_KEY_COLUMN_NAME = "publicKey";
     public static final String ASSET_ISSUER_ISSUER_NAME_COLUMN_NAME = "name";
+    public static final String ASSET_ISSUER_ISSUER_DESCRIPTION_COLUMN_NAME = "description";
     public static final String ASSET_ISSUER_ISSUER_STATE_COLUMN_NAME = "contact_state";
     public static final String ASSET_ISSUER_ISSUER_REGISTRATION_DATE_COLUMN_NAME = "registration_date";
     public static final String ASSET_ISSUER_ISSUER_MODIFIED_DATE_COLUMN_NAME = "modified_date";
+    public static final String ASSET_ISSUER_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME = "crypto_address";
+    public static final String ASSET_ISSUER_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME = "crypto_currency";
+    public static final String ASSET_ISSUER_ISSUER_LOCATION_LATITUDE_COLUMN_NAME = "location_latitude";
+    public static final String ASSET_ISSUER_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME = "location_longitude";
 
     public static final String ASSET_ISSUER_FIRST_KEY_COLUMN = "publicKey";
 
