@@ -19,11 +19,17 @@ public interface CryptoBrokerBalanceRecord {
 
     CurrencyType getCurrencyType();
 
-    String getPublicKeyActorFrom();
+    String getPublicKeyWallet();
 
-    String getPublicKeyActorTo();
+    String getPublicKeyBroker();
+
+//    String getDescriptionBalance();
 
     float getAmount();
+
+    float getRunningBookBalance();
+
+    float getRunningAvailableBalance();
 
     long getTimestamp();
 
