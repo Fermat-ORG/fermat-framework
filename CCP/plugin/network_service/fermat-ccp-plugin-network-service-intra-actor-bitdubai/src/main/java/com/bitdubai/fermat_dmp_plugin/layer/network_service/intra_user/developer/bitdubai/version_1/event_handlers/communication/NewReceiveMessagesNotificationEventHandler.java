@@ -13,15 +13,15 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 public class NewReceiveMessagesNotificationEventHandler implements FermatEventHandler {
 
 
-    private final ActorNetworkServiceRecordedAgent cryptoTransmissionAgent;
+    private final ActorNetworkServiceRecordedAgent actorNetworkServiceRecordedAgent;
 
     /**
      * Constructor with parameter
      *
      * @param
      */
-    public NewReceiveMessagesNotificationEventHandler(ActorNetworkServiceRecordedAgent cryptoTransmissionAgent) {
-        this.cryptoTransmissionAgent = cryptoTransmissionAgent;
+    public NewReceiveMessagesNotificationEventHandler(ActorNetworkServiceRecordedAgent actorNetworkServiceRecordedAgent) {
+        this.actorNetworkServiceRecordedAgent = actorNetworkServiceRecordedAgent;
     }
 
     /**
@@ -37,14 +37,14 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
 
         System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent.toString());
 
-        System.out.print("NOTIFICACION EVENTO LLEGADA MENSAJE!!!!");
+        System.out.print("NOTIFICACION EVENTO LLEGADA MENSAJE A INTRA ACTOR NETWORK SERVICE!!!!");
 
 
-        if (this.cryptoTransmissionAgent.isRunning()) {
+        if (this.actorNetworkServiceRecordedAgent.isRunning()) {
 
             NewNetworkServiceMessageReceivedNotificationEvent newNetworkServiceMessageSentNotificationEvent = (NewNetworkServiceMessageReceivedNotificationEvent) platformEvent;
 
-            cryptoTransmissionAgent.handleNewMessages((FermatMessage)newNetworkServiceMessageSentNotificationEvent.getData());
+            actorNetworkServiceRecordedAgent.handleNewMessages((FermatMessage)newNetworkServiceMessageSentNotificationEvent.getData());
 
 
         }
