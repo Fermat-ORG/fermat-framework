@@ -647,8 +647,8 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "Cannot update the transaction CryptoStatus");
         } catch (CantPersistsTransactionUUIDException exception) {
             throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "Cannot persists Transaction UUID");
-        } catch (CantPersistsGenesisAddressException e) {
-            e.printStackTrace(); //manuel handle
+        } catch (CantPersistsGenesisAddressException exception) {
+            throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "Cannot persists the genesis transaction");
         }
     }
 
