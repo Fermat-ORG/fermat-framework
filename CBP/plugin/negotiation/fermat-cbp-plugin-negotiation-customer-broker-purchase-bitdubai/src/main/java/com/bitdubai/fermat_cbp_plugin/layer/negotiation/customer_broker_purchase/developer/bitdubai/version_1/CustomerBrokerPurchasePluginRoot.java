@@ -162,7 +162,15 @@ public class CustomerBrokerPurchasePluginRoot implements CustomerBrokerPurchaseM
 
     @Override
     public Collection<CustomerBrokerPurchase> getNegotiationsByCustomer(ActorIdentity customer) throws CantListNegotianionsException {
-        return null;
+        try {
+            Collection<CustomerBrokerPurchase> negotiations = new ArrayList<CustomerBrokerPurchase>();
+            negotiations = customerBrokerPurchaseNegotiationDao.getNegotiationsByCustomer(customer);
+            return negotiations;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantListNegotianionsException(CantListNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+        } catch (InvalidParameterException e) {
+            throw new CantListNegotianionsException(CantListNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+        }
     }
 
     @Override
