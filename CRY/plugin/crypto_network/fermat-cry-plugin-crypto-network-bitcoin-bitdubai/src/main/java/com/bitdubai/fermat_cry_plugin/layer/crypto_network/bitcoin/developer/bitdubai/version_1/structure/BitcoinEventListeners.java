@@ -121,6 +121,7 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
         StringBuilder logAggresive = new StringBuilder("New connection to Peer " + peer.toString());
         logAggresive.append(System.getProperty("line.separator"));
         logAggresive.append("Total connected peers: " + peerCount);
+        System.out.println(logAggresive.toString());
         logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "Connected to Peer.", "Total peers are " + peerCount, logAggresive.toString());
     }
 
