@@ -13,6 +13,15 @@ repositories {
 
 dependencies {
     compile project(':fermat-api')
+
+    compile project(':fermat-ccp-api')
+    compile project(':fermat-ccp-plugin-actor-intra-wallet-user-bitdubai')
+    compile project(':fermat-ccp-plugin-identity-intra-wallet-user-bitdubai')
+    compile project(':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai')
+    compile project(':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai')
+    compile project(':fermat-ccp-plugin-network-service-crypto-payment-request-bitdubai')
+    compile project(':fermat-ccp-plugin-request-crypto-payment-bitdubai')
+    compile project(':fermat-ccp-plugin-transaction-outgoing-intra-actor-bitdubai')
 }
 
 pmd {
