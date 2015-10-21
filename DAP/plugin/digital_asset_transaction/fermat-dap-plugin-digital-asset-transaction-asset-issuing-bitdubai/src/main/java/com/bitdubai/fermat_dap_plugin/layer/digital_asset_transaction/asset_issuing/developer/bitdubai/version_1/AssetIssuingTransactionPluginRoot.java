@@ -529,10 +529,11 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
                 "testWalletPublicKey");
         this.assetIssuingTransactionDao.persistDigitalAssetTransactionId(mockDigitalAssetForTesting.getPublicKey(), "testId");
         this.assetIssuingTransactionDao.persistDigitalAssetHash("testId", mockDigitalAssetMetadataForTesting.getDigitalAssetHash());
-        this.assetIssuingTransactionDao.persistGenesisTransaction("testId", genesisTransaction);
-        this.assetIssuingTransactionDao.persistOutgoingIntraActorUUID("testId", UUID.fromString("testUUIDId"));
+        UUID mockUUId=UUID.randomUUID();
+        this.assetIssuingTransactionDao.persistOutgoingIntraActorUUID("testId", mockUUId);
+        this.assetIssuingTransactionDao.persistGenesisTransaction(mockUUId.toString(), genesisTransaction);
         this.assetIssuingTransactionDao.updateTransactionProtocolStatus(genesisTransaction, ProtocolStatus.TO_BE_NOTIFIED);
-        this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus("testId", TransactionStatus.ISSUING);
+        this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus("testId", TransactionStatus.CRYPTO_SENT);
         this.assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByTransactionHash(mockDigitalAssetMetadataForTesting.getDigitalAssetHash(), CryptoStatus.PENDING_SUBMIT);
         testRaiseEvent();
         startMonitorAgent();
