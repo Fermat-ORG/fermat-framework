@@ -18,8 +18,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseClausesDaoException;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseLogsDaoException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseNegotiationDaoException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.structure.CustomerBrokerPurchaseNegotiation;
 
@@ -50,7 +48,7 @@ public class CustomerBrokerPurchaseNegotiationDao {
 
         public void initialize(UUID pluginId) throws CantInitializeCustomerBrokerPurchaseNegotiationDaoException {
             try {
-                this.database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
+                this.database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_DATABASE_NAME);
             } catch (DatabaseNotFoundException e) {
                 try {
                     CustomerBrokerPurchaseNegotiationDatabaseFactory databaseFactory = new CustomerBrokerPurchaseNegotiationDatabaseFactory(pluginDatabaseSystem);
@@ -93,7 +91,7 @@ public class CustomerBrokerPurchaseNegotiationDao {
                 return newCustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDateTime, NegotiationStatus.OPEN);
 
             } catch (CantInsertRecordException e) {
-                throw new CantCreateCustomerBrokerPurchaseException("An exception happened",e,"","");
+                throw new CantCreateCustomerBrokerPurchaseException(CantCreateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
             }
 
         }
@@ -109,7 +107,7 @@ public class CustomerBrokerPurchaseNegotiationDao {
 
                 PurchaseNegotiationTable.updateRecord(recordToUpdate);
             } catch (CantUpdateRecordException e) {
-                new CantUpdateCustomerBrokerPurchaseException("An exception happened",e,"","");
+                new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
             }
 
         }
@@ -125,7 +123,7 @@ public class CustomerBrokerPurchaseNegotiationDao {
 
                 PurchaseNegotiationTable.updateRecord(recordToUpdate);
             } catch (CantUpdateRecordException e) {
-                new CantUpdateCustomerBrokerPurchaseException("An exception happened",e,"","");
+                new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
             }
 
         }
@@ -206,30 +204,6 @@ public class CustomerBrokerPurchaseNegotiationDao {
     /*
         Private methods
      */
-
-        private void initializeClause(UUID pluginId) throws CantInitializeCustomerBrokerPurchaseClausesDaoException {
-            try {
-                this.database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
-            } catch (DatabaseNotFoundException e) {
-
-            } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-                throw new CantInitializeCustomerBrokerPurchaseClausesDaoException("I couldn't open the database", cantOpenDatabaseException, "Database Name: " + CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TABLE_NAME, "");
-            } catch (Exception exception) {
-                throw new CantInitializeCustomerBrokerPurchaseClausesDaoException(CantInitializeCustomerBrokerPurchaseNegotiationDaoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-            }
-        }
-
-        private void initializeLogs(UUID pluginId) throws CantInitializeCustomerBrokerPurchaseLogsDaoException {
-            try {
-                this.database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSE_STATUS_LOG_TABLE_NAME);
-            } catch (DatabaseNotFoundException e) {
-
-            } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-                throw new CantInitializeCustomerBrokerPurchaseLogsDaoException("I couldn't open the database", cantOpenDatabaseException, "Database Name: " + CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSE_STATUS_LOG_TABLE_NAME, "");
-            } catch (Exception exception) {
-                throw new CantInitializeCustomerBrokerPurchaseLogsDaoException(CantInitializeCustomerBrokerPurchaseNegotiationDaoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-            }
-        }
 
         private void loadRecordAsNew(
                 DatabaseTableRecord databaseTableRecord,
