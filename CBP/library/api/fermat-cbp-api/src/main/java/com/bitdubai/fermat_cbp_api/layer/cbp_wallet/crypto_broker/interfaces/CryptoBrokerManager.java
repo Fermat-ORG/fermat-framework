@@ -12,22 +12,7 @@ import java.util.List;
  */
 public interface CryptoBrokerManager {
 
-    List<CryptoBroker> getTransactionsBankMoney() throws CantTransactionCryptoBrokerException;
+    CryptoBroker loadCryptoBrokerWallet(String walletPublicKey) throws CantLoadCryptoBrokerException;
 
-    CryptoBroker registerBankMoney(
-         final String transactionId
-        ,final String publicKeyCustomer
-        ,final String publicKeyBroker
-        ,final String balanceType
-        ,final String transactionType
-        ,final float  amount
-        ,final long runningBookBalance
-        ,final long runningAvailableBalance
-        ,final long timestamp
-        ,final String getMemo
-    ) throws CantRegisterCryptoBrokerException;
-
-    CryptoBroker loadCashMoneyWallet(String walletPublicKey) throws CantLoadCryptoBrokerException;
-
-    void createCashMoney (String walletPublicKey) throws CantCreateCryptoBrokerException;
+    void createCryptoBrokerWallet(String walletPublicKey) throws CantCreateCryptoBrokerException;
 }
