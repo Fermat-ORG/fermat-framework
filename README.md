@@ -1,4 +1,5 @@
-![alt text](https://raw.githubusercontent.com/bitDubai/fermat-graphic-design/master/Dise%C3%B1o%20plano/Fermat/Logo%20Fermat/logo_png/logo_fermat.png?token=AJCkx_HdE_GTJueaHS7p2Ob4Wc9ZWx5Cks5WMBpnwA%3D%3D "Fermat Logo")
+![alt text](https://github.com/bitDubai/fermat-graphic-design/blob/master/Dise%C3%B1o%20plano/Fermat/Logo%20Fermat/logo_jpg/logo_github_readme.jpg "Fermat Logo")
+
 
 Welcome to Fermat! 
 -------------------
