@@ -11,8 +11,12 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 
 import java.io.ByteArrayOutputStream;
 
+
 /**
- * Created by Matias Furszyfer on 2015.10.02..
+ * Class with utility static methods to work with images
+ *
+ * @author Matias Furszyfer
+ * @author Nelson Ramirez
  */
 public class ImagesUtils {
 
@@ -57,6 +61,15 @@ public class ImagesUtils {
         return getRoundedBitmap(res, srcBitmap);
     }
 
+    /**
+     * Return a rounded shape bitmap based on the given bitmap
+     * <p/>
+     * Deprecated: use {@link ImagesUtils#getRoundedBitmap(Resources, Bitmap)} instead
+     *
+     * @param scaleBitmapImage the bitmap with the image
+     * @return the rounded bitmap
+     */
+    @Deprecated
     public static Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
         int targetWidth = 50;
         int targetHeight = 50;
@@ -72,10 +85,9 @@ public class ImagesUtils {
                 Path.Direction.CCW);
 
         canvas.clipPath(path);
-        Bitmap sourceBitmap = scaleBitmapImage;
-        canvas.drawBitmap(sourceBitmap,
-                new Rect(0, 0, sourceBitmap.getWidth(),
-                        sourceBitmap.getHeight()),
+        canvas.drawBitmap(scaleBitmapImage,
+                new Rect(0, 0, scaleBitmapImage.getWidth(),
+                        scaleBitmapImage.getHeight()),
                 new Rect(0, 0, targetWidth, targetHeight), null);
         return targetBitmap;
     }

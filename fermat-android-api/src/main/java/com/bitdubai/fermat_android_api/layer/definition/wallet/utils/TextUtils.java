@@ -12,16 +12,18 @@ import android.widget.Toast;
 
 import java.util.Locale;
 
+
 /**
- * Created by Matias Furszyfer on 2015.08.13..
+ * Class with utility static methods to work with text
+ *
+ * @author Matias Furszyfer
  */
 public class TextUtils {
 
     /**
      * copy text to clipboard
-    */
-
-    public static void copyToClipboard(Activity activity,String text) {
+     */
+    public static void copyToClipboard(Activity activity, String text) {
 
         ClipboardManager myClipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData myClip = ClipData.newPlainText("text", text);
