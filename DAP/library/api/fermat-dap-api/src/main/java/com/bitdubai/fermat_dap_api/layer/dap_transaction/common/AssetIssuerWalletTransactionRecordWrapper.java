@@ -30,7 +30,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
     private final long timeStamp;
     private final String memo;
     private final String digitalAssetMetadataHash;
-    private final UUID transactionId;
+    private final String transactionId;
 
     AssetIssuerWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
                                               String digitalAssetPublicKey,
@@ -46,7 +46,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
                                               long timeStamp,
                                               String memo,
                                               String digitalAssetMetadataHash,
-                                              UUID transactionId){
+                                              String transactionId){
         this.digitalAsset = digitalAsset;
         this.digitalAssetPublicKey = digitalAssetPublicKey;
         this.name = name;
@@ -80,7 +80,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
         this.actorToType = Actors.ASSET_ISSUER;
         this.amount = cryptoGenesisTransaction.getCryptoAmount();
         this.digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
-        this.transactionId = UUID.fromString(cryptoGenesisTransaction.getTransactionHash());
+        this.transactionId = cryptoGenesisTransaction.getTransactionHash();
         Date date= new Date();
         this.timeStamp = date.getTime();
         this.memo = "Digital Asset delivered at"+this.timeStamp;
@@ -137,7 +137,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
     }
 
     @Override
-    public UUID getIdTransaction() {
+    public String getIdTransaction() {
         return transactionId;
     }
 

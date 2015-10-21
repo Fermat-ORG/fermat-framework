@@ -327,7 +327,7 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
 
     private AssetIssuerWalletTransaction constructAssetIssuerWalletTransactionFromRecord(DatabaseTableRecord record){
 
-        UUID transactionId              = record.getUUIDValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TABLE_ID_COLUMN_NAME);
+        String transactionId            = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_VERIFICATION_ID_COLUMN_NAME);
         String assetPublicKey           = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TABLE_ASSET_PUBLIC_KEY_COLUMN_NAME);
         String transactionHash          = record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TRANSACTION_HASH_COLUMN_NAME);
         TransactionType transactionType = TransactionType.getByCode(record.getStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME));
@@ -396,7 +396,7 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
         DatabaseTableRecord record = getAssetIssuerWalletTable().getEmptyRecord();
         record.setUUIDValue  (AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TABLE_ID_COLUMN_NAME                   , UUID.randomUUID());
         record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_ASSET_PUBLIC_KEY_COLUMN_NAME           , assetIssuerWalletTransactionRecord.getDigitalAsset().getPublicKey());
-        record.setUUIDValue  (AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_VERIFICATION_ID_COLUMN_NAME           , assetIssuerWalletTransactionRecord.getIdTransaction());
+        record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_VERIFICATION_ID_COLUMN_NAME            , assetIssuerWalletTransactionRecord.getIdTransaction());
         record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TYPE_COLUMN_NAME                      , transactionType.getCode());
         record.setLongValue  (AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_AMOUNT_COLUMN_NAME                    , assetIssuerWalletTransactionRecord.getAmount());
         record.setStringValue(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_MEMO_COLUMN_NAME                      , assetIssuerWalletTransactionRecord.getMemo());
@@ -439,9 +439,9 @@ public class AssetIssuerWalletDao implements DealsWithPluginFileSystem {
         return getQuantityCurrentBalanceByAsset(BalanceType.BOOK, assetPublicKey);
     }
 
-    private boolean isTransactionInTable(final UUID transactionId, final TransactionType transactionType, final BalanceType balanceType) throws CantLoadTableToMemoryException {
+    private boolean isTransactionInTable(final String transactionId, final TransactionType transactionType, final BalanceType balanceType) throws CantLoadTableToMemoryException {
         DatabaseTable assetIssuerWalletTable = getAssetIssuerWalletTable();
-        assetIssuerWalletTable.setUUIDFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_VERIFICATION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+        assetIssuerWalletTable.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_VERIFICATION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
         assetIssuerWalletTable.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
         assetIssuerWalletTable.setStringFilter(AssetWalletIssuerDatabaseConstant.ASSET_WALLET_ISSUER_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
         assetIssuerWalletTable.loadToMemory();

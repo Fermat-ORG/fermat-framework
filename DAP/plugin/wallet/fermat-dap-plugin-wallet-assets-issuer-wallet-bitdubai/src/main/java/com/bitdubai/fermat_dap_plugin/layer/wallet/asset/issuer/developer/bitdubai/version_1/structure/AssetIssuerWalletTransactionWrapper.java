@@ -12,7 +12,7 @@ import java.util.UUID;
  * Created by franklin on 30/09/15.
  */
 public class AssetIssuerWalletTransactionWrapper implements AssetIssuerWalletTransaction {
-    private final UUID transactionId;
+    private final String transactionId;
     private final String transactionHash;
     private final String assetPublicKey;
     private final TransactionType transactionType;
@@ -29,7 +29,7 @@ public class AssetIssuerWalletTransactionWrapper implements AssetIssuerWalletTra
     private final long timeStamp;
     private final String memo;
 
-    public AssetIssuerWalletTransactionWrapper(final UUID transactionId,
+    public AssetIssuerWalletTransactionWrapper(final String transactionId,
                                            final String transactionHash,
                                            final String assetPublicKey,
                                            final TransactionType transactionType,
@@ -68,7 +68,7 @@ public class AssetIssuerWalletTransactionWrapper implements AssetIssuerWalletTra
     }
 
     @Override
-    public UUID getTransactionId() {
+    public String getTransactionId() {
         return transactionId;
     }
 
