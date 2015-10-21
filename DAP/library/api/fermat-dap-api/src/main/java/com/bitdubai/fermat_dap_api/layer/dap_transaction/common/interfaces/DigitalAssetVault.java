@@ -220,6 +220,7 @@ public abstract class DigitalAssetVault {
             throw new CantSetObjectException("walletPublicKey is null");
         }
         this.walletPublicKey=walletPublicKey;
+        System.out.println("The wallet public key in vault is "+this.walletPublicKey);
     }
 
 }

@@ -81,6 +81,9 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
         this.amount = cryptoGenesisTransaction.getCryptoAmount();
         this.digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
+        //this.transactionId = UUID.fromString(cryptoGenesisTransaction.getTransactionHash());
+        //TODO: for testing Franklin
+        //this.transactionId=UUID.randomUUID();
         Date date= new Date();
         this.timeStamp = date.getTime();
         this.memo = "Digital Asset delivered at"+this.timeStamp;
