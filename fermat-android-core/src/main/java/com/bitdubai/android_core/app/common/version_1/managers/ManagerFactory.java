@@ -56,6 +56,9 @@ public class ManagerFactory {
             case DAP_ASSETS_COMMUNITY_ISSUER:
                 moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE);
                 break;
+            case DAP_ASSETS_COMMUNITY_REDEEM_POINT:
+                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE);
+                break;
             case CBP_CRYPTO_BROKER_IDENTITY:
                 moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE);
                 break;

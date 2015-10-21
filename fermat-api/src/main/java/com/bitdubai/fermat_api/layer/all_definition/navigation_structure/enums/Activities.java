@@ -84,8 +84,9 @@ public enum Activities {
     DAP_DESKTOP("DAPD"),
     CBP_DESKTOP("CBPD"),
     DAP_MAIN("DAPM"),
-    DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN("DAUCAM"),
-    DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN("DAICAM"),
+    DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN("DAPAUCAM"),
+    DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN("DAPAICAM"),
+    DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN("DAPARPCAM"),
 
     // Crypto Broker Wallet
     CBP_CRYPTO_BROKER_WALLET_HOME("CBPCBWH"),
@@ -241,10 +242,12 @@ public enum Activities {
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS;
             case "CWRWBWBV1M":
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN;
-            case "DAUCAM":
+            case "DAPAUCAM":
                 return Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN;
-            case "DAICAM":
+            case "DAPAICAM":
                 return Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN;
+            case "DAPARPCAM":
+                return Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN;
             case "CBPSACBI":
                 return Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY;
             case "CBPSACBICI":
