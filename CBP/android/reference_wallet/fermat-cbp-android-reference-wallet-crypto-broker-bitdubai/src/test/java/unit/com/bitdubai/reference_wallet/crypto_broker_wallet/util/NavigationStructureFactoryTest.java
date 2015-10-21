@@ -23,7 +23,7 @@ public class NavigationStructureFactoryTest {
         WalletNavigationStructure navigationStructure = NavigationStructureFactory.createNavigationStructure();
         assertThat(navigationStructure).isNotNull();
 
-        int expectedActivities = 5;
+        int expectedActivities = 4;
         assertThat(navigationStructure.getActivities()).hasSize(expectedActivities);
 
         Activity startActivity = navigationStructure.getStartActivity();
@@ -57,21 +57,7 @@ public class NavigationStructureFactoryTest {
     public void testDealsActivityIsWellConfigured() {
         WalletNavigationStructure navigationStructure = NavigationStructureFactory.createNavigationStructure();
 
-        Activities activityType = Activities.CBP_CRYPTO_BROKER_WALLET_DEALS;
-        Activity activity = navigationStructure.getActivity(activityType);
-
-        assertThat(activity.getType()).isNotNull().isEqualTo(activityType);
-        assertThat(activity.getActivityType()).isNotNull().isEqualTo(activityType.getCode());
-        assertThat(activity.getFragments()).isNotNull().hasSize(2);
-        assertThat(activity.getTitleBar()).isNotNull();
-        assertThat(activity.getStatusBar()).isNotNull();
-    }
-
-    @Test
-    public void testContractsActivityIsWellConfigured() {
-        WalletNavigationStructure navigationStructure = NavigationStructureFactory.createNavigationStructure();
-
-        Activities activityType = Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS;
+        Activities activityType = Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY;
         Activity activity = navigationStructure.getActivity(activityType);
 
         assertThat(activity.getType()).isNotNull().isEqualTo(activityType);
@@ -85,7 +71,7 @@ public class NavigationStructureFactoryTest {
     public void testStockPreferenceActivityIsWellConfigured() {
         WalletNavigationStructure navigationStructure = NavigationStructureFactory.createNavigationStructure();
 
-        Activities activityType = Activities.CBP_CRYPTO_BROKER_WALLET_STOCK_PREFERENCE;
+        Activities activityType = Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS;
         Activity activity = navigationStructure.getActivity(activityType);
 
         assertThat(activity.getType()).isNotNull().isEqualTo(activityType);

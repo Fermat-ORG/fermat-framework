@@ -29,9 +29,8 @@ public class CryptoBrokerIdentityFragmentFactory extends FermatSubAppFragmentFac
         if (fragments == CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT)
             return CreateCryptoBrokerIdentityFragment.newInstance();
 
-        if(fragments == CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT)
+        if (fragments == CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT)
             return EditCryptoBrokerIdentityFragment.newInstance();
-
 
         throw createFragmentNotFoundException(fragments);
     }

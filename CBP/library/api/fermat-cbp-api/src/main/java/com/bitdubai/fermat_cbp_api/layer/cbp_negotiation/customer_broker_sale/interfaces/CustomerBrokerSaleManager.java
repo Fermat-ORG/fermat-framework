@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.i
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantListSaleNegotianionsException;
 
 import java.util.Collection;
 
@@ -15,8 +16,8 @@ public interface CustomerBrokerSaleManager {
     void cancelNegotiation(CustomerBrokerSale negotiation);
     void closeNegotiation(CustomerBrokerSale negotiation);
 
-    Collection<CustomerBrokerSale> getNegotiations();
-    Collection<CustomerBrokerSale> getNegotiations(NegotiationStatus status);
-    Collection<CustomerBrokerSale> getNegotiationsByCustomer(ActorIdentity customer);
-    Collection<CustomerBrokerSale> getNegotiationsByBroker(ActorIdentity broker);
+    Collection<CustomerBrokerSale> getNegotiations() throws CantListSaleNegotianionsException;
+    Collection<CustomerBrokerSale> getNegotiations(NegotiationStatus status) throws CantListSaleNegotianionsException;
+    Collection<CustomerBrokerSale> getNegotiationsByCustomer(ActorIdentity customer) throws CantListSaleNegotianionsException;
+    Collection<CustomerBrokerSale> getNegotiationsByBroker(ActorIdentity broker) throws CantListSaleNegotianionsException;
 }
