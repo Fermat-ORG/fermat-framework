@@ -275,7 +275,7 @@ public class MoneyRequestFragment extends FermatWalletFragment {
      */
     private void loadTransactionMap(){
         for(CryptoWalletTransaction transaction:lstTransactions){
-            Date date = new Date(transaction.getBitcoinWalletTransaction().getTimestamp());
+            Date date = new Date(transaction.getTimestamp());
             if(!mapTransactionPerDate.containsKey(date)){
                 Set<CryptoWalletTransaction> cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
                 cryptoWalletTransactionSet.add(transaction);
@@ -296,7 +296,7 @@ public class MoneyRequestFragment extends FermatWalletFragment {
     private List<CryptoWalletTransaction> showTransactionListSelected(List<CryptoWalletTransaction> lstTransactions, BalanceType balanceType) {
         List<CryptoWalletTransaction> lstToShow = new ArrayList<CryptoWalletTransaction>();
         for (CryptoWalletTransaction t : lstTransactions) {
-            if (t.getBitcoinWalletTransaction().getBalanceType()==(balanceType)) {
+            if (t.getBalanceType()==(balanceType)) {
                 lstToShow.add(t);
             }
         }
@@ -428,17 +428,17 @@ public class MoneyRequestFragment extends FermatWalletFragment {
 
                     if(textView_amount != null)
                         if(walletSession.getBalanceTypeSelected()==BalanceType.AVAILABLE.getCode()){
-                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningAvailableBalance(), ShowMoneyType.BITCOIN.getCode()));
+                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getRunningAvailableBalance(), ShowMoneyType.BITCOIN.getCode()));
                         }else if (walletSession.getBalanceTypeSelected()==BalanceType.BOOK.getCode())
-                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningBookBalance(),ShowMoneyType.BITCOIN.getCode()));
+                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getRunningBookBalance(),ShowMoneyType.BITCOIN.getCode()));
                     if(textView_time!=null){
                         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.US);
-                        textView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));
+                        textView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getTimestamp()));
                     }
                     if(textView_type!=null){
-                        if(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType()== TransactionType.CREDIT){
+                        if(entryItem.cryptoWalletTransaction.getTransactionType()== TransactionType.CREDIT){
                             textView_type.setText(R.string.credit);
-                        }else if(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType()==TransactionType.DEBIT){
+                        }else if(entryItem.cryptoWalletTransaction.getTransactionType()==TransactionType.DEBIT){
                             textView_type.setText(R.string.debit);
                         }
                     }

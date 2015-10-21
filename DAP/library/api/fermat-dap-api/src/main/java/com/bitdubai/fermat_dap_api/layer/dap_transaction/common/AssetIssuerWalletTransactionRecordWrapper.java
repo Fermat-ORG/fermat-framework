@@ -77,7 +77,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
         this.actorFromPublicKey = actorFromPublicKey;
         this.actorToPublicKey =actorToPublicKey;
         this.actorFromType = Actors.INTRA_USER;
-        this.actorToType = Actors.ASSET_ISSUER;
+        this.actorToType = Actors.DAP_ASSET_ISSUER;
         this.amount = cryptoGenesisTransaction.getCryptoAmount();
         this.digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
