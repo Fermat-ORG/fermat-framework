@@ -63,18 +63,29 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     /**
      * Represent the WS_PROTOCOL
      */
-    private static final String WS_PROTOCOL = "ws://";
+    public static final String WS_PROTOCOL = "ws://";
+
+    /**
+     * Represent the HTTP_PROTOCOL
+     */
+    public static final String HTTP_PROTOCOL = "http://";
 
     /**
      * Represent the SERVER_IP
      */
-    public static final String SERVER_IP = "52.11.156.16"; //AWS
-    //public static final String SERVER_IP = "192.168.1.2";
+    //public static final String SERVER_IP = "52.11.156.16"; //AWS
+    public static final String SERVER_IP = "192.168.1.7";
 
     /**
      * Represent the DEFAULT_PORT
      */
-    private static final int DEFAULT_PORT = 9090;
+    public static final int DEFAULT_PORT = 9090;
+
+    /**
+     * Represent the WEB_SERVICE_PORT
+     */
+    public static final int WEB_SERVICE_PORT = 8080;
+
     /**
      * Represent the newLoggingLevel
      */

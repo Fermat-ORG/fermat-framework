@@ -717,12 +717,12 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
 
 
-                requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
-
-
-
+               // requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
 
             } catch (CantRegisterComponentException e) {
+                e.printStackTrace();
+            } catch (CantRequestListException e) {
                 e.printStackTrace();
             }
 

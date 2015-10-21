@@ -1,52 +1,52 @@
 /*
- * @#RequestListComponentRegisterPacketProcessor.java - 2015
+ * @#ComponentRegisteredListWs.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors;
+package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.webservices;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.DiscoveryQueryParametersCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationCloudServer;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.util.DistanceCalculator;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
-import org.java_websocket.WebSocket;
+import org.json.JSONObject;
+
+import org.restlet.ext.json.JsonRepresentation;
+import org.restlet.representation.Representation;
+import org.restlet.resource.Post;
+import org.restlet.resource.ServerResource;
+
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor</code> implement
- * the logic to process the packet when a packet type <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED</code> is receive by the server.
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.webservices.ComponentRegisteredListWebService</code>
  * <p/>
- * Created by Roberto Requena - (rart3001@gmail.com) on 06/09/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 20/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class RequestListComponentRegisterPacketProcessor extends FermatPacketProcessor {
+public class ComponentRegisteredListWebService extends ServerResource {
 
+    /**
+     * Represent the wsCommunicationCloudServer
+     */
+    private WsCommunicationCloudServer wsCommunicationCloudServer;
 
     /**
      * Represent the gson
@@ -54,45 +54,33 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
     private Gson gson;
 
     /**
-     * Represent the jsonParser
-     */
-    private JsonParser jsonParser;
-
-    /**
      * Constructor
      */
-    public RequestListComponentRegisterPacketProcessor() {
-        gson = new Gson();
-        jsonParser = new JsonParser();
+    public ComponentRegisteredListWebService(){
+        super();
+        this.gson = new Gson();
     }
 
-    /**
-     * (no-javadoc)
-     * @see FermatPacketProcessor#processingPackage(WebSocket, FermatPacket, ECCKeyPair)
-     */
-    @Override
-    public void processingPackage(WebSocket clientConnection, FermatPacket receiveFermatPacket, ECCKeyPair serverIdentity) {
+    @Post("application/json")
+    public String getList(Representation entity){
 
         System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println("RequestListComponentRegisterPacketProcessor - Starting processingPackage");
-
-        String packetContentJsonStringRepresentation = null;
+        System.out.println("ComponentRegisteredListWebService - Starting getList");
+        JsonObject jsonObjectRespond = new JsonObject();
 
         try{
 
-             /*
-             * Get the filters from the message content and decrypt
-             */
-            packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), serverIdentity.getPrivateKey());
-
-            System.out.println("RequestListComponentRegisterPacketProcessor - Starting packetContentJsonStringRepresentation = "+packetContentJsonStringRepresentation);
+            wsCommunicationCloudServer = (WsCommunicationCloudServer) getContext().getAttributes().get(WebServicesApplication.PLUGIN_ROOT_ATT_NAME);
 
             /*
              * Construct the json object
              */
-            JsonObject contentJsonObject = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
-            NetworkServiceType networkServiceTypeApplicant = gson.fromJson(contentJsonObject.get(JsonAttNamesConstants.NETWORK_SERVICE_TYPE).getAsString(), NetworkServiceType.class);
-            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(contentJsonObject.get(JsonAttNamesConstants.DISCOVERY_PARAM).getAsString());
+            JSONObject requestParametersJsonObject = (new JsonRepresentation(entity)).getJsonObject();
+
+            System.out.println("ComponentRegisteredListWebService - requestParametersJsonObject = "+requestParametersJsonObject);
+
+            String clientIdentityPublicKey = requestParametersJsonObject.getString(JsonAttNamesConstants.NAME_IDENTITY);
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(requestParametersJsonObject.getString(JsonAttNamesConstants.DISCOVERY_PARAM));
 
             /*
              * hold the result list
@@ -102,15 +90,15 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
             if (discoveryQueryParameters.getFromOtherPlatformComponentType() == null &&
                     discoveryQueryParameters.getFromOtherNetworkServiceType() == null){
 
-                resultList = applyDiscoveryQueryParameters(discoveryQueryParameters, receiveFermatPacket);
+                resultList = applyDiscoveryQueryParameters(discoveryQueryParameters, clientIdentityPublicKey);
 
             }else{
 
-                resultList = applyDiscoveryQueryParametersFromOtherComponent(discoveryQueryParameters, receiveFermatPacket);
+                resultList = applyDiscoveryQueryParametersFromOtherComponent(discoveryQueryParameters, clientIdentityPublicKey);
 
             }
 
-            System.out.println("RequestListComponentRegisterPacketProcessor - filteredLis.size() ="+resultList.size());
+            System.out.println("ComponentRegisteredListWebService - filteredLis.size() ="+resultList.size());
 
             /*
              * Convert the list to json representation
@@ -120,56 +108,17 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
             /*
              * Create the respond
              */
-            JsonObject jsonObjectRespond = new JsonObject();
-            jsonObjectRespond.addProperty(JsonAttNamesConstants.COMPONENT_TYPE,       discoveryQueryParameters.getPlatformComponentType().toString());
-            jsonObjectRespond.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
-            jsonObjectRespond.addProperty(JsonAttNamesConstants.RESULT_LIST,          jsonListRepresentation);
+            jsonObjectRespond.addProperty(JsonAttNamesConstants.RESULT_LIST, jsonListRepresentation);
 
-             /*
-             * Construct a fermat packet whit the list
-             */
-            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(),                    //Destination
-                    serverIdentity.getPublicKey(),                      //Sender
-                    gson.toJson(jsonObjectRespond),                     //Message Content
-                    FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED, //Packet type
-                    serverIdentity.getPrivateKey());                    //Sender private key
-            /*
-            * Send the encode packet to the server
-            */
-            clientConnection.send(FermatPacketEncoder.encode(fermatPacketRespond));
 
         }catch (Exception e){
 
-            System.out.println("RequestListComponentRegisterPacketProcessor - requested list is not available");
+            System.out.println("ComponentRegisteredListWebService - requested list is not available");
+            jsonObjectRespond.addProperty(JsonAttNamesConstants.FAILURE, "Requested list is not available");
             e.printStackTrace();
-
-            /*
-             * Get the client connection destination
-             */
-            WebSocket clientConnectionDestination = getWsCommunicationCloudServer().getRegisteredClientConnectionsCache().get(receiveFermatPacket.getSender());
-
-            /*
-             * Construct the json object
-             */
-            JsonObject packetContent = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
-            packetContent.addProperty(JsonAttNamesConstants.FAILURE_VPN_MSJ, "failure in obtain the list requested: "+e.getMessage());
-
-            /*
-             * Create the respond packet
-             */
-            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(receiveFermatPacket.getSender(), //Destination
-                                                                                                                        serverIdentity.getPublicKey(), //Sender
-                                                                                                                        gson.toJson(packetContent), //packet Content
-                                                                                                                        FermatPacketType.FAILURE_REQUESTED_LIST_NOT_AVAILABLE, //Packet type
-                                                                                                                        serverIdentity.getPrivateKey()); //Sender private key
-            /*
-             * Send the packet
-             */
-            clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
-
         }
 
-
+        return gson.toJson(jsonObjectRespond);
     }
 
     /**
@@ -180,7 +129,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
      * @param networkServiceType
      * @return List<PlatformComponentProfile>
      */
-    public List<PlatformComponentProfile> getPrimaryFilteredListFromCache(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, FermatPacket receiveFermatPacket){
+    public List<PlatformComponentProfile> getPrimaryFilteredListFromCache(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String clientIdentityPublicKey){
 
         /*
          * Get the list
@@ -193,20 +142,20 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         switch (platformComponentType){
 
             case COMMUNICATION_CLOUD_SERVER :
-                list = (List<PlatformComponentProfile>) new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values()).clone();
+                list = (List<PlatformComponentProfile>) new ArrayList<>(wsCommunicationCloudServer.getRegisteredCommunicationsCloudServerCache().values()).clone();
                 break;
 
             case COMMUNICATION_CLOUD_CLIENT :
-                list = (List<PlatformComponentProfile>) new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values()).clone();
+                list = (List<PlatformComponentProfile>) new ArrayList<>(wsCommunicationCloudServer.getRegisteredCommunicationsCloudClientCache().values()).clone();
                 break;
 
             case NETWORK_SERVICE :
-                list = (List<PlatformComponentProfile>) new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType)).clone();
+                list = (List<PlatformComponentProfile>) new ArrayList<>(wsCommunicationCloudServer.getRegisteredNetworkServicesCache().get(networkServiceType)).clone();
                 break;
 
             //Others
             default :
-                list = (List<PlatformComponentProfile>) new ArrayList<>(getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType)).clone();
+                list = (List<PlatformComponentProfile>) new ArrayList<>(wsCommunicationCloudServer.getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType)).clone();
                 break;
 
         }
@@ -218,8 +167,8 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         while (iterator.hasNext()){
 
             PlatformComponentProfile platformComponentProfileRegistered = iterator.next();
-            if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(receiveFermatPacket.getSender())){
-                System.out.println("RequestListComponentRegisterPacketProcessor - removing ="+platformComponentProfileRegistered.getName());
+            if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(clientIdentityPublicKey)){
+                System.out.println("ComponentRegisteredListWebService - removing ="+platformComponentProfileRegistered.getName());
                 iterator.remove();
             }
         }
@@ -232,18 +181,17 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
      * Filter the PlatformComponentProfile that match with the discoveryQueryParameters
      *
      * @param discoveryQueryParameters
-     * @param receiveFermatPacket
      * @return List<PlatformComponentProfile>
      */
-    private  List<PlatformComponentProfile> applyDiscoveryQueryParameters(DiscoveryQueryParameters discoveryQueryParameters, FermatPacket receiveFermatPacket){
+    private  List<PlatformComponentProfile> applyDiscoveryQueryParameters(DiscoveryQueryParameters discoveryQueryParameters, String clientIdentityPublicKey){
 
         int totalFilterToApply = countFilers(discoveryQueryParameters);
         int filterMatched = 0;
 
-        List<PlatformComponentProfile>  list = getPrimaryFilteredListFromCache(discoveryQueryParameters.getPlatformComponentType(), discoveryQueryParameters.getNetworkServiceType(), receiveFermatPacket);
+        List<PlatformComponentProfile>  list = getPrimaryFilteredListFromCache(discoveryQueryParameters.getPlatformComponentType(), discoveryQueryParameters.getNetworkServiceType(), clientIdentityPublicKey);
         List<PlatformComponentProfile>  filteredLis = new ArrayList<>();
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - totalFilterToApply    = "+totalFilterToApply);
+        System.out.println("ComponentRegisteredListWebService - totalFilterToApply    = "+totalFilterToApply);
 
         if (totalFilterToApply > 0){
 
@@ -294,7 +242,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          */
         if (discoveryQueryParameters.getLocation() != null &&
                 discoveryQueryParameters.getLocation().getLatitude() != 0 &&
-                    discoveryQueryParameters.getLocation().getLongitude() != 0){
+                discoveryQueryParameters.getLocation().getLongitude() != 0){
 
 
             filteredLis = applyGeoLocationFilter(filteredLis, discoveryQueryParameters);
@@ -374,12 +322,12 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
      * Filter the PlatformComponentProfiles that match with the discoveryQueryParameters that get from other component
      *
      * @param discoveryQueryParameters
-     * @param receiveFermatPacket
+     * @param clientIdentityPublicKey
      * @return List<PlatformComponentProfile>
      */
-    private  List<PlatformComponentProfile> applyDiscoveryQueryParametersFromOtherComponent(DiscoveryQueryParameters discoveryQueryParameters, FermatPacket receiveFermatPacket){
+    private  List<PlatformComponentProfile> applyDiscoveryQueryParametersFromOtherComponent(DiscoveryQueryParameters discoveryQueryParameters, String clientIdentityPublicKey){
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - applyDiscoveryQueryParametersFromOtherComponent    = ");
+        System.out.println("ComponentRegisteredListWebService - applyDiscoveryQueryParametersFromOtherComponent    = ");
 
         List<PlatformComponentProfile>  filteredListFromOtherComponentType = new ArrayList<>();
 
@@ -387,7 +335,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
          * Get the list from the cache that match with the other componet
          */
         List<PlatformComponentProfile> otherComponentList = (List<PlatformComponentProfile>) new ArrayList<>(searchProfile(discoveryQueryParameters.getFromOtherPlatformComponentType(), discoveryQueryParameters.getFromOtherNetworkServiceType(), discoveryQueryParameters.getIdentityPublicKey())).clone();
-        System.out.println("RequestListComponentRegisterPacketProcessor - otherComponentList  = " + otherComponentList.size());
+        System.out.println("ComponentRegisteredListWebService - otherComponentList  = " + otherComponentList.size());
 
         /*
          * Find the other component that match with the identity
@@ -408,15 +356,15 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         while (iterator.hasNext()){
 
             PlatformComponentProfile platformComponentProfileRegistered = iterator.next();
-            if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(receiveFermatPacket.getSender())){
-                System.out.println("RequestListComponentRegisterPacketProcessor - removing ="+platformComponentProfileRegistered.getName());
+            if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(clientIdentityPublicKey)){
+                System.out.println("ComponentRegisteredListWebService - removing ="+platformComponentProfileRegistered.getName());
                 iterator.remove();
             }
         }
 
 
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - filteredListFromOtherComponentType  = "+filteredListFromOtherComponentType.size());
+        System.out.println("ComponentRegisteredListWebService - filteredListFromOtherComponentType  = "+filteredListFromOtherComponentType.size());
 
 
         return filteredListFromOtherComponentType;
@@ -446,20 +394,20 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         switch (platformComponentType){
 
             case COMMUNICATION_CLOUD_SERVER :
-                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values());
+                temporalList = new ArrayList<>(wsCommunicationCloudServer.getRegisteredCommunicationsCloudServerCache().values());
                 break;
 
             case COMMUNICATION_CLOUD_CLIENT :
-                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
+                temporalList = new ArrayList<>(wsCommunicationCloudServer.getRegisteredCommunicationsCloudClientCache().values());
                 break;
 
             case NETWORK_SERVICE :
-                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
+                temporalList = new ArrayList<>(wsCommunicationCloudServer.getRegisteredNetworkServicesCache().get(networkServiceType));
                 break;
 
             //Others
             default :
-                temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
+                temporalList = wsCommunicationCloudServer.getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
                 break;
 
         }
@@ -503,20 +451,20 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         switch (platformComponentType){
 
             case COMMUNICATION_CLOUD_SERVER :
-                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values());
+                temporalList = new ArrayList<>(wsCommunicationCloudServer.getRegisteredCommunicationsCloudServerCache().values());
                 break;
 
             case COMMUNICATION_CLOUD_CLIENT :
-                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
+                temporalList = new ArrayList<>(wsCommunicationCloudServer.getRegisteredCommunicationsCloudClientCache().values());
                 break;
 
             case NETWORK_SERVICE :
-                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
+                temporalList = new ArrayList<>(wsCommunicationCloudServer.getRegisteredNetworkServicesCache().get(networkServiceType));
                 break;
 
             //Others
             default :
-                temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
+                temporalList = wsCommunicationCloudServer.getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
                 break;
 
         }
@@ -565,13 +513,4 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         return  total;
     }
 
-
-    /**
-     * (no-javadoc)
-     * @see FermatPacketProcessor#getFermatPacketType()
-     */
-    @Override
-    public FermatPacketType getFermatPacketType() {
-        return FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED;
-    }
 }
