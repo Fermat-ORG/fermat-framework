@@ -22,7 +22,8 @@ public enum SubApps {
     CCP_INTRA_USER_COMMUNITY("CCPIUC"),
     CBP_CUSTOMERS("CBPC"),
     DAP_ASSETS_FACTORY("DAPAF"),
-    DAP_ASSETS_COMMUNITY_USER("DACU");
+    DAP_ASSETS_COMMUNITY_USER("DACU"),
+    DAP_ASSETS_COMMUNITY_ISSUER("DAPCI");
 
 
     private final String code;
@@ -57,6 +58,8 @@ public enum SubApps {
                 return SubApps.DAP_ASSETS_FACTORY;
             case "DACU":
                 return SubApps.DAP_ASSETS_COMMUNITY_USER;
+            case "DAPCI":
+                return SubApps.DAP_ASSETS_COMMUNITY_ISSUER;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the SubApps enum");
 
