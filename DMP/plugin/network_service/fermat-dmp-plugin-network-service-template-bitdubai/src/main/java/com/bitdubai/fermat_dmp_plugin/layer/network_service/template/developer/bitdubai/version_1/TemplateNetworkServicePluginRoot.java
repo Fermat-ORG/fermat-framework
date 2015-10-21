@@ -683,10 +683,10 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
     /**
      * (non-Javadoc)
-     * @see NetworkService#handleCompleteRequestListComponentRegisteredNotificationEvent(List, DiscoveryQueryParameters)
+     * @see NetworkService#handleCompleteRequestListComponentRegisteredNotificationEvent(List)
      */
     @Override
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
 
         System.out.println(" TemplateNetworkServicePluginRoot - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
 
@@ -872,7 +872,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
          */
         try {
 
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfile, discoveryQueryParameters);
 
         } catch (CantRequestListException e) {
 

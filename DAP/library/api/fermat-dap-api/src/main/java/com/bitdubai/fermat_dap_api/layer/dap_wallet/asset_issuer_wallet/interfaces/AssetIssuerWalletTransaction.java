@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface AssetIssuerWalletTransaction {
     public String getAssetPublicKey();
 
-    public UUID getTransactionId();
+    public String getTransactionId();
 
     public String getTransactionHash();
 

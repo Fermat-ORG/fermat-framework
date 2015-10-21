@@ -1,7 +1,10 @@
 package com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -18,10 +21,38 @@ import java.util.UUID;
  */
 public interface CryptoWalletTransaction extends Serializable {
 
-    BitcoinWalletTransaction getBitcoinWalletTransaction();
-
     Actor getInvolvedActor();
 
     UUID getContactId();
+
+    UUID getTransactionId();
+
+    String getTransactionHash();
+
+    CryptoAddress getAddressFrom();
+
+    CryptoAddress getAddressTo();
+
+    String getActorToPublicKey();
+
+    String getActorFromPublicKey();
+
+    Actors getActorToType();
+
+    Actors getActorFromType();
+
+    BalanceType getBalanceType();
+
+    TransactionType getTransactionType();
+
+    long getTimestamp();
+
+    long getAmount();
+
+    long getRunningBookBalance();
+
+    long getRunningAvailableBalance();
+
+    String getMemo();
 
 }

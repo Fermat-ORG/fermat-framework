@@ -6,7 +6,6 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -32,15 +31,14 @@ public class CompleteRequestListComponentRegisteredNotificationEvent extends Abs
     private List<PlatformComponentProfile> registeredComponentList;
 
     /**
-     * Represent the networkServiceType
+     * Represent the networkServiceTypeApplicant
      */
-    private NetworkServiceType networkServiceType;
+    private NetworkServiceType networkServiceTypeApplicant;
 
     /**
      * Represent the platformComponentType
      */
     private PlatformComponentType platformComponentType;
-    private DiscoveryQueryParameters discoveryQueryPerams;
 
     /**
      * Constructor with parameter
@@ -71,16 +69,16 @@ public class CompleteRequestListComponentRegisteredNotificationEvent extends Abs
      * Get the NetworkServiceType
      * @return NetworkServiceType
      */
-    public NetworkServiceType getNetworkServiceType() {
-        return networkServiceType;
+    public NetworkServiceType getNetworkServiceTypeApplicant() {
+        return networkServiceTypeApplicant;
     }
 
     /**
      * Set the NetworkServiceType
-     * @param networkServiceType
+     * @param networkServiceTypeApplicant
      */
-    public void setNetworkServiceType(NetworkServiceType networkServiceType) {
-        this.networkServiceType = networkServiceType;
+    public void setNetworkServiceTypeApplicant(NetworkServiceType networkServiceTypeApplicant) {
+        this.networkServiceTypeApplicant = networkServiceTypeApplicant;
     }
 
     /**
@@ -99,7 +97,4 @@ public class CompleteRequestListComponentRegisteredNotificationEvent extends Abs
         this.platformComponentType = platformComponentType;
     }
 
-    public DiscoveryQueryParameters getDiscoveryQueryPerams() {
-        return discoveryQueryPerams;
-    }
 }

@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -28,6 +30,9 @@ public class AssetUserActorRecord implements ActorAssetUser {
      * Constructor
      */
 
+   /*
+    * Para el Registro del Actor en el Actor Network Service
+    */
     public AssetUserActorRecord(String name, String publicKey, byte[] profileImage, Location location) {
 
         this.name = name;
@@ -52,6 +57,20 @@ public class AssetUserActorRecord implements ActorAssetUser {
         this.genders = genders;
         this.age = age;
 //        this.cryptoAddress = cryptoAddress;
+        this.connectionState = ConnectionState.CONNECTED;
+
+    }
+
+    public AssetUserActorRecord(String name, String publicKey, byte[] profileImage, long registrationDate, Genders genders, String age, String cryptoAddress, String cryptoCurrency) throws InvalidParameterException {
+
+        this.name = name;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage.clone();
+        this.registrationDate = registrationDate;
+//        this.location = location;
+        this.genders = genders;
+        this.age = age;
+        this.cryptoAddress = new CryptoAddress(cryptoAddress, CryptoCurrency.getByCode(cryptoCurrency));
         this.connectionState = ConnectionState.CONNECTED;
 
     }
