@@ -88,14 +88,14 @@ public class TransactionHistoryAdapter extends FermatAdapter<CryptoWalletTransac
         {
             //holder.getContactIcon().setImageResource(R.drawable.mati_profile);
 
-            holder.getTxt_amount().setText(formatBalanceString(data.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
+            holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
 
             holder.getTxt_contactName().setText(data.getInvolvedActor().getName());//data.getContact().getActorName());
 
-            holder.getTxt_notes().setText(data.getBitcoinWalletTransaction().getMemo());
+            holder.getTxt_notes().setText(data.getMemo());
 
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            holder.getTxt_time().setText(sdf.format(data.getBitcoinWalletTransaction().getTimestamp()));
+            holder.getTxt_time().setText(sdf.format(data.getTimestamp()));
 
 
             ActorTransactionSummary actorTransactionSummary = null;

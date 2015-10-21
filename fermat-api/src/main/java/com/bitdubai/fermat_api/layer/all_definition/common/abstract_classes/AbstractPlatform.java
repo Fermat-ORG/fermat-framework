@@ -33,7 +33,7 @@ public abstract class AbstractPlatform {
     }
 
     /**
-     * Throw the method <code>addLayer</code> you can add new layers to the platform.
+     * Throw the method <code>registerLayer</code> you can add new layers to the platform.
      * Here we'll corroborate too that the layer is not added twice.
      *
      * @param layer          layer descriptor (element of enum).
@@ -41,8 +41,8 @@ public abstract class AbstractPlatform {
      *
      * @throws CantStartPlatformException if something goes wrong.
      */
-    protected final void addLayer(final Layers        layer           ,
-                                  final AbstractLayer abstractLayer) throws CantStartPlatformException {
+    protected final void registerLayer(final Layers layer,
+                                       final AbstractLayer abstractLayer) throws CantStartPlatformException {
 
         try {
 
