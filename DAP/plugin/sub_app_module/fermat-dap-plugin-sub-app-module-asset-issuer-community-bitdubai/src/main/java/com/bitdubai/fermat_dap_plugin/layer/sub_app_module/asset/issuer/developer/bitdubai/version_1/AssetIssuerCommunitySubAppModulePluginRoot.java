@@ -127,6 +127,11 @@ public class AssetIssuerCommunitySubAppModulePluginRoot implements AssetIssuerCo
 //        actorAssetList.add(new AssetIssuerActorRecord("Franklin Marcano",UUID.randomUUID().toString(),new byte[0],location));
 //        actorAssetList.add(new AssetIssuerActorRecord("Manuel Colmenares",UUID.randomUUID().toString(),new byte[0],location));
 //        actorAssetList.add(new AssetIssuerActorRecord("Nerio Indriago",UUID.randomUUID().toString(),new byte[0],location));
+        try {
+            actorAssetList = actorAssetIssuerManager.getAllAssetIssuerActorRegistered();
+        } catch (CantGetAssetIssuerActorsException e) {
+            e.printStackTrace();
+        }
 
         return actorAssetList;
     }

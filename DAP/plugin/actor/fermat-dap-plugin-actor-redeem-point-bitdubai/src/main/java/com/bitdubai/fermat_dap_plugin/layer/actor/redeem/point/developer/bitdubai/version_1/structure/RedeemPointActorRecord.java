@@ -19,6 +19,8 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     private ConnectionState connectionState;
     private CryptoAddress cryptoAddress;
     private Location location;
+    private Double locationLatitude;
+    private Double locationLongitude;
     private Address address;
     private String contactInformation;
     private String hoursOfOperation;
@@ -99,13 +101,23 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         return connectionState;
     }
 
-    /**
-     *
-     * {@inheritDoc}
-     */
+//    /**
+//     *
+//     * {@inheritDoc}
+//     */
+//    @Override
+//    public Location getLocation() {
+//        return location;
+//    }
+
     @Override
-    public Location getLocation() {
-        return location;
+    public Double getLocationLatitude() {
+        return this.locationLatitude;
+    }
+
+    @Override
+    public Double getLocationLongitude() {
+        return this.locationLongitude;
     }
 
     /**
