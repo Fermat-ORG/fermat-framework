@@ -30,7 +30,7 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.Networ
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
-import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
+
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.IntraUserNotificationDescriptor;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorAcceptIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorAskIntraUserForAcceptanceException;
@@ -43,6 +43,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorSearchingSuggestionsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserNotification;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -745,7 +746,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
          * save into the cache
          */
 
-        remoteNetworkServicesRegisteredList.addAll(platformComponentProfileRegisteredList);
+        remoteNetworkServicesRegisteredList.addAllAbsent(platformComponentProfileRegisteredList);
 
 
         System.out.println("--------------------------------------\n" +
@@ -1011,22 +1012,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
         List<IntraUserInformation> intraUserList = new ArrayList<IntraUserInformation>();
 
-        intraUserList.add(new com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService("public_key",new byte[0],"Matias"));
-        intraUserList.add(new com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService("public_key1",new byte[0],"Leon"));
-        intraUserList.add(new com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService("public_key2",new byte[0],"Luis"));
-        intraUserList.add(new com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService("public_key3",new byte[0],"Rodrigo"));
-        intraUserList.add(new com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService("public_key",new byte[0],"Matias"));
-        intraUserList.add(new com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService("public_key1",new byte[0],"Leon"));
-        intraUserList.add(new com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService("public_key2",new byte[0],"Luis"));
-        intraUserList.add(new com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService("public_key3",new byte[0],"Rodrigo"));
-        intraUserList.add(new com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService("public_key",new byte[0],"Matias"));
-        intraUserList.add(new com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService("public_key1",new byte[0],"Leon"));
-        intraUserList.add(new com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService("public_key2",new byte[0],"Luis"));
-        intraUserList.add(new com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService("public_key3",new byte[0],"Rodrigo"));
-        intraUserList.add(new com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService("public_key",new byte[0],"Matias"));
-        intraUserList.add(new com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService("public_key1", new byte[0], "Leon"));
-        intraUserList.add(new com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService("public_key2", new byte[0], "Luis"));
-        intraUserList.add(new com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService("public_key3",new byte[0],"Rodrigo"));
+
         return intraUserList;
     }
 
@@ -1051,6 +1037,26 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                             lstIntraUser.add(intraUser);
                         }
                 }
+
+            /* This is for test and example of how to use
+                    * Construct the filter
+            */
+            DiscoveryQueryParameters discoveryQueryParameters = constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_INTRA_USER, //PlatformComponentType you want to find
+                    NetworkServiceType.UNDEFINED,     //NetworkServiceType you want to find
+                    null,                     // alias
+                    null,                     // identityPublicKey
+                    null,                     // location
+                    null,                     // distance
+                    null,                     // name
+                    null,                     // extraData
+                    null,                     // offset
+                    null,                     // max
+                    null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                    null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+
+
+
+            requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
 
         }catch (Exception e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -1313,8 +1319,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 //TODO Harcode
         List<IntraUserNotification> intraUserNotificationList = new ArrayList<IntraUserNotification>();
 
-        intraUserNotificationList.add(new IntraUserNetworkServiceNotification(UUID.randomUUID().toString(), "alias1", UUID.randomUUID().toString(), IntraUserNotificationDescriptor.ACCEPTED, new byte[0]));
-        intraUserNotificationList.add(new IntraUserNetworkServiceNotification(UUID.randomUUID().toString(),"alias2",UUID.randomUUID().toString(),IntraUserNotificationDescriptor.CANCEL,new byte[0]));
+
 
 
         return intraUserNotificationList;
@@ -1368,15 +1373,16 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                     jsonObject.toString());
 
 
-            if(!actorsToRegisterCache.contains(platformComponentProfile))
+            if(!actorsToRegisterCache.contains(platformComponentProfile)) {
                 actorsToRegisterCache.add(platformComponentProfile);
 
-            if(register){
-                try {
-                    communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+                if (register) {
+                    try {
+                        communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
 
-                } catch (CantRegisterComponentException e) {
-                    e.printStackTrace();
+                    } catch (CantRegisterComponentException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 

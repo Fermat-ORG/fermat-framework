@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.Abst
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPluginIdsManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_ccp_core.layer.actor.ActorLayer;
 import com.bitdubai.fermat_ccp_core.layer.basic_wallet.BasicWalletLayer;
@@ -23,9 +24,8 @@ import com.bitdubai.fermat_ccp_core.layer.wallet_module.WalletModuleLayer;
  */
 public class CCPPlatform extends AbstractPlatform {
 
-    public CCPPlatform(final PlatformFileSystem platformFileSystem) {
-
-        super(platformFileSystem);
+    public CCPPlatform() {
+        super(Platforms.CRYPTO_CURRENCY_PLATFORM);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class CCPPlatform extends AbstractPlatform {
     }
 
     @Override
-    public AbstractPluginIdsManager getPluginIdsManager() throws CantStartPluginIdsManagerException {
+    public AbstractPluginIdsManager getPluginIdsManager(final PlatformFileSystem platformFileSystem) throws CantStartPluginIdsManagerException {
         return new PluginIdsManager(platformFileSystem);
     }
 }

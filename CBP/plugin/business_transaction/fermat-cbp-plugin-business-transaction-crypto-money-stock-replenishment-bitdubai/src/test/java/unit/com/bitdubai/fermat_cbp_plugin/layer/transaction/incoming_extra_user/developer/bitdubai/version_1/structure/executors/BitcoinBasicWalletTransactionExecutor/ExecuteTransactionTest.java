@@ -24,7 +24,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
-import static org.fest.assertions.api.Assertions.*;
 import static com.googlecode.catchexception.CatchException.*;
 /**
  * Created by jorgegonzalez on 2015.07.08..

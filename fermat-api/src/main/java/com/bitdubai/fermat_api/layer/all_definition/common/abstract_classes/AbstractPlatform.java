@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.PluginNotF
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddonsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 
 import java.util.Map;
@@ -26,12 +27,12 @@ public abstract class AbstractPlatform {
 
     private Map<Layers, AbstractLayer> layers;
 
-    protected final PlatformFileSystem platformFileSystem;
+    private final Platforms platform;
 
-    public AbstractPlatform(final PlatformFileSystem platformFileSystem) {
+    public AbstractPlatform(final Platforms platform) {
 
-        this.layers             = new ConcurrentHashMap<>();
-        this.platformFileSystem = platformFileSystem;
+        this.layers   = new ConcurrentHashMap<>();
+        this.platform = platform;
     }
 
     /**
@@ -111,6 +112,8 @@ public abstract class AbstractPlatform {
 
     public abstract void start() throws CantStartPlatformException;
 
-    public abstract AbstractPluginIdsManager getPluginIdsManager() throws CantStartPluginIdsManagerException;
+    public final Platforms getPlatform() { return platform; }
+
+    public abstract AbstractPluginIdsManager getPluginIdsManager(final PlatformFileSystem platformFileSystem) throws CantStartPluginIdsManagerException;
 
 }
