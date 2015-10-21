@@ -59,7 +59,7 @@ public class CompleteComponentConnectionRequestNotificationEventHandler implemen
 
 
 //            if (completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getPlatformComponentType()  == networkService.getPlatformComponentType() &&
-//                    completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getNetworkServiceType() == networkService.getNetworkServiceType()){
+//                    completeComponentConnectionRequestNotificationEvent.getRemoteComponent().getNetworkServiceTypeApplicant() == networkService.getNetworkServiceTypeApplicant()){
 
 
                 /*

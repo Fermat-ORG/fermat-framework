@@ -739,7 +739,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
      * (non-Javadoc)
      * @see NetworkService#
      */
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList,DiscoveryQueryParameters discoveryQueryParameters){
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList){
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
 
@@ -932,7 +932,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
          */
         try {
 
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfile, discoveryQueryParameters);
 
         } catch (CantRequestListException e) {
 
@@ -1352,6 +1352,8 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
         for(Actor actor:actors){
 
+
+
         /*
          * Construct  profile and register
          */
@@ -1368,6 +1370,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                     jsonObject.toString());
 
 
+            if(!actorsToRegisterCache.contains(platformComponentProfile))
                 actorsToRegisterCache.add(platformComponentProfile);
 
             if(register){
