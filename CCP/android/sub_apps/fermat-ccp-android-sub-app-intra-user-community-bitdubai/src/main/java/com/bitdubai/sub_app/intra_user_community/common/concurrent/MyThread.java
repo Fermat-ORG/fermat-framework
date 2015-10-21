@@ -2,7 +2,7 @@ package com.bitdubai.sub_app.intra_user_community.common.concurrent;
 
 import android.app.Activity;
 
-import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 
 import java.util.List;
 
