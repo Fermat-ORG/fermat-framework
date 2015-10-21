@@ -344,7 +344,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
                 if (abTitle != null) {
                     abTitle.setTextColor(Color.WHITE);
-                    abTitle.setTypeface(Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/CaviarDreams.ttf"));
+                    abTitle.setTypeface(Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/roboto.ttf"));
                     if (titleBar.getLabelSize() != -1) {
                         abTitle.setTextSize(titleBar.getLabelSize());
 
@@ -381,7 +381,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         SpannableString s = new SpannableString(title);
 
 
-        s.setSpan(new MyTypefaceSpan(getApplicationContext(), "CaviarDreams.ttf"), 0, s.length(),
+        s.setSpan(new MyTypefaceSpan(getApplicationContext(), "roboto.ttf"), 0, s.length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Update the action bar title with the TypefaceSpan instance
@@ -613,7 +613,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             pagerSlidingTabStrip.setVisibility(View.INVISIBLE);
         else {
             pagerSlidingTabStrip.setVisibility(View.VISIBLE);
-            Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/CaviarDreams.ttf");
+            Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/roboto.ttf");
             pagerSlidingTabStrip.setTypeface(tf, 1);
             pagerSlidingTabStrip.setDividerColor(Color.TRANSPARENT);
 
@@ -636,7 +636,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
         // put tabs font
         if (pagerSlidingTabStrip != null) {
-            pagerSlidingTabStrip.setTypeface(Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/CaviarDreams.ttf"), 1);
+            pagerSlidingTabStrip.setTypeface(Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/roboto.ttf"), 1);
         }
     }
 

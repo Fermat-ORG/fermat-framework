@@ -84,7 +84,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     public static final int REQUEST_LOAD_IMAGE = 2;
     public static final int CONTEXT_MENU_CAMERA = 1;
     public static final int CONTEXT_MENU_GALLERY = 2;
-    public static final int CONTEXT_MENU_DELETE = 3;
+
     private static final int CONTEXT_MENU_NO_PHOTO = 4;
 
     private static final int UNIQUE_FRAGMENT_GROUP_ID = 16;

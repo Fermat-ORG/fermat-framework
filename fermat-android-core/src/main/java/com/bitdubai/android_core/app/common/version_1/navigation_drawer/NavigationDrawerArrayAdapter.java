@@ -47,7 +47,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Typeface tf=Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams.ttf");
+        Typeface tf=Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
         View rowView = convertView;
         try
         {
@@ -144,14 +144,15 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                         imageView.setImageResource(R.drawable.ic_action_factory);
                         break;
                     case 4:
-                        imageView.setImageResource(R.drawable.ic_action_wallet_published);
+                        imageView.setImageResource(R.drawable.ic_action_exit);
+
                         break;
                     case 5:
                         imageView.setImageResource(R.drawable.ic_action_wallet);
                         break;
 
                     case 6:
-                        imageView.setImageResource(R.drawable.ic_action_exit);
+                        imageView.setImageResource(R.drawable.ic_action_wallet_published);
                         break;
                     default:
                         imageView.setImageResource(R.drawable.unknown_icon);
