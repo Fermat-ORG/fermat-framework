@@ -18,6 +18,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerTransactionRecord {
     private UUID transactionId;
     private KeyPair keyPairWallet;
     private KeyPair keyPairBroker;
+    private KeyPair keyPairCustomer;
     private BalanceType balanceType;
     private TransactionType transactionType;
     private float amount;
@@ -31,6 +32,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerTransactionRecord {
             UUID transactionId,
             KeyPair keyPairWallet,
             KeyPair keyPairBroker,
+            KeyPair keyPairCustomer,
             BalanceType balanceType,
             TransactionType transactionType,
             CurrencyType currencyType,
@@ -43,6 +45,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerTransactionRecord {
         this.transactionId = transactionId;
         this.keyPairWallet = keyPairWallet;
         this.keyPairBroker = keyPairBroker;
+        this.keyPairCustomer = keyPairCustomer;
         this.balanceType = balanceType;
         this.transactionType = transactionType;
         this.amount = amount;
@@ -76,6 +79,10 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerTransactionRecord {
     @Override
     public String getPublicKeyBroker() { return this.keyPairBroker.getPublicKey(); }
     public void setPublicKeyBroker(String publicKey) { this.keyPairBroker = keyPairBroker; }
+
+    @Override
+    public String getPublicKeyCustomer() { return this.keyPairCustomer.getPublicKey(); }
+    public void setPublicKeyCustomer(String publicKey) { this.keyPairCustomer = keyPairCustomer; }
 
     @Override
     public float getAmount() { return this.amount; }
