@@ -5,8 +5,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_ccp_api.layer.crypto_wallet.interfaces.*;
 
 import java.io.Serializable;
 import java.util.List;
@@ -230,11 +231,11 @@ public interface CryptoWallet extends Serializable {
      *
      * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException if something goes wrong.
      */
-    List<CryptoWalletTransaction> getTransactions(BalanceType balanceType,
-                                                  TransactionType transactionType,
-                                                  String      walletPublicKey,
-                                                  int         max,
-                                                  int         offset) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
+    List<com.bitdubai.fermat_ccp_api.layer.crypto_wallet.interfaces.CryptoWalletTransaction> getTransactions(BalanceType balanceType,
+                                                                                                             TransactionType transactionType,
+                                                                                                             String walletPublicKey,
+                                                                                                             int max,
+                                                                                                             int offset) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
 
     /**
      * Throw the method <code>listTransactionsByActor</code> you cant get all the transactions related with an specific actor.
@@ -249,11 +250,11 @@ public interface CryptoWallet extends Serializable {
      *
      * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException if something goes wrong.
      */
-    List<CryptoWalletTransaction> listTransactionsByActor(BalanceType balanceType,
-                                                          String      walletPublicKey,
-                                                          String      actorPublicKey,
-                                                          int         max,
-                                                          int         offset) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
+    List<com.bitdubai.fermat_ccp_api.layer.crypto_wallet.interfaces.CryptoWalletTransaction> listTransactionsByActor(BalanceType balanceType,
+                                                                                                                     String walletPublicKey,
+                                                                                                                     String actorPublicKey,
+                                                                                                                     int max,
+                                                                                                                     int offset) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
 
     /**
      * Throw the method <code>getActorTransactionHistory</code> you can get the transaction history of an specific actor.
@@ -284,11 +285,11 @@ public interface CryptoWallet extends Serializable {
      *
      * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException if something goes wrong.
      */
-    List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType     balanceType,
-                                                                             TransactionType transactionType,
-                                                                             String          walletPublicKey,
-                                                                             int             max,
-                                                                             int             offset) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
+    List<com.bitdubai.fermat_ccp_api.layer.crypto_wallet.interfaces.CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
+                                                                                                                                        TransactionType transactionType,
+                                                                                                                                        String walletPublicKey,
+                                                                                                                                        int max,
+                                                                                                                                        int offset) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
 
     /**
      * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.
