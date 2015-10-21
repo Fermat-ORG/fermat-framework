@@ -8,12 +8,12 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.enums.IntraUserNotificationDescriptor;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
@@ -28,17 +28,14 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingActorRequestConnectionNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import jdk.nashorn.internal.parser.JSONParser;
 
 /**
  * Created by mati on 2015.10.15..
@@ -170,7 +167,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                                 "-----------------------\n DESDE: " + cpr.getActorSenderAlias());
 
 
-                        toWaitingResponse(cpr.getId(),actorNetworkServicePluginRoot.getOutgoingNotificationDao());
+                        //toWaitingResponse(cpr.getId(),actorNetworkServicePluginRoot.getOutgoingNotificationDao());
                         break;
 
                 }
@@ -180,12 +177,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 //            e.printStackTrace();
 //        }
         } catch (CantListIntraWalletUsersException e) {
-            e.printStackTrace();
-        } catch (CantUpdateRecordDataBaseException e) {
-            e.printStackTrace();
-        } catch (CantUpdateRecordException e) {
-            e.printStackTrace();
-        } catch (RequestNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -237,22 +228,37 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         ActorNetworkServicePendingsNotificationEvent intraUserActorRequestConnectionEvent = (ActorNetworkServicePendingsNotificationEvent) fermatEvent;
                         eventManager.raiseEvent(intraUserActorRequestConnectionEvent);
 
-                        Gson gson = new Gson();
+                        try {
 
-                        cpr.changeDescriptor(IntraUserNotificationDescriptor.ACCEPTED);
-                        String message = gson.toJson(cpr);
+                            actorNetworkServicePluginRoot.getIncomingNotificationsDao().changeProtocolState(cpr.getId(),ActorProtocolState.PENDING_ACTION);
 
-                        // El destination soy yo porque me lo estan enviando
-                        // El sender es el otro y es a quien le voy a responder
-                        NetworkServiceLocal communicationNetworkServiceLocal = actorNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(cpr.getActorSenderPublicKey());
+                        } catch (CantUpdateRecordDataBaseException e) {
+                            e.printStackTrace();
+                        } catch (CantUpdateRecordException e) {
+                            e.printStackTrace();
+                        } catch (RequestNotFoundException e) {
+                            e.printStackTrace();
+                        }
 
-                        // los cambio porque el sender es el destino y el destination soy yo al estar recibiendo
-                        communicationNetworkServiceLocal.sendMessage(cpr.getActorSenderPublicKey(),cpr.getActorDestinationPublicKey(), message);
+                        //TODO: antes de cerrar la conexion deberia poner un
+                        //communicationNetworkServiceConnectionManager.closeConnection(cpr.getActorSenderPublicKey());
 
-
-                        System.out.print("-----------------------\n" +
-                                "ENVIANDO RESPUESTA !!!!! -----------------------\n" +
-                                "-----------------------\n NOTIFICATION: " + cpr);
+//                        Gson gson = new Gson();
+//
+//                        cpr.changeDescriptor(IntraUserNotificationDescriptor.ACCEPTED);
+//                        String message = gson.toJson(cpr);
+//
+//                        // El destination soy yo porque me lo estan enviando
+//                        // El sender es el otro y es a quien le voy a responder
+//                        NetworkServiceLocal communicationNetworkServiceLocal = actorNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(cpr.getActorSenderPublicKey());
+//
+//                        // los cambio porque el sender es el destino y el destination soy yo al estar recibiendo
+//                        communicationNetworkServiceLocal.sendMessage(cpr.getActorSenderPublicKey(),cpr.getActorDestinationPublicKey(), message);
+//
+//
+//                        System.out.print("-----------------------\n" +
+//                                "ENVIANDO RESPUESTA !!!!! -----------------------\n" +
+//                                "-----------------------\n NOTIFICATION: " + cpr);
 
 
                         break;
@@ -269,7 +275,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         sendMessageToActor(cpr);
 
 
-                            toWaitingResponse(cpr.getId(),actorNetworkServicePluginRoot.getIncomingNotificationsDao());
+                            //toWaitingResponse(cpr.getId(),actorNetworkServicePluginRoot.getIncomingNotificationsDao());
 
                         break;
 
@@ -277,12 +283,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
             }
 
 
-       } catch (CantUpdateRecordDataBaseException e) {
-           e.printStackTrace();
-       } catch (RequestNotFoundException e) {
-           e.printStackTrace();
-       } catch (CantUpdateRecordException e) {
-           e.printStackTrace();
        } catch (CantListIntraWalletUsersException e) {
            e.printStackTrace();
        }
@@ -341,16 +341,13 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         Gson gson = new Gson();
 
                         communicationNetworkServiceLocal.sendMessage(
-                                actorNetworkServicePluginRoot.getIdentityPublicKey(),
+                                actorNetworkServiceRecord.getActorSenderPublicKey(),
                                 actorNetworkServiceRecord.getActorDestinationPublicKey(),
                                 gson.toJson(actorNetworkServiceRecord)
                         );
 
                         actorNetworkServicePluginRoot.getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.SENT);
 
-                        //poolConnectionsWaitingForResponse.remove(actorPublicKey);
-
-                        //communicationNetworkServiceConnectionManager.closeConnection(actorPublicKey); // close connection once i send message ?
 
                     } catch (Exception e) {
 
@@ -410,9 +407,9 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
         //actorNetworkServiceDao.changeProtocolState(requestId, ActorProtocolState.PENDING_ACTION);
     }
 
-    private void toWaitingResponse(UUID notificationId,DAO dao) throws CantUpdateRecordDataBaseException, RequestNotFoundException, CantUpdateRecordException {
-        dao.changeProtocolState(notificationId, ActorProtocolState.WAITING_RESPONSE);
-    }
+//    private void toWaitingResponse(UUID notificationId,DAO dao) throws CantUpdateRecordDataBaseException, RequestNotFoundException, CantUpdateRecordException {
+//        //dao.changeProtocolState(notificationId, ActorProtocolState.WAITING_RESPONSE);
+//    }
 
     private void raiseEvent(final EventType eventType,
                             final UUID      requestId) {
@@ -436,6 +433,9 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
         Gson gson = new Gson();
 
         try {
+            System.out.println("----------------------------\n" +
+                    "CONVIERTIENDO MENSAJE ENTRANTE A GSON:" + fermatMessage.toJson()
+                    + "\n-------------------------------------------------");
 
             //JsonObject jsonObject =new JsonParser().parse(fermatMessage.getContent()).getAsJsonObject();
 
@@ -458,6 +458,8 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);;
 
                     actorNetworkServicePluginRoot.getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
+
+                    launchIncomingRequestConnectionNotificationEvent(actorNetworkServiceRecord);
 
                     break;
                 case ACCEPTED:
@@ -484,5 +486,16 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
         System.out.println("---------------------------\n" +
                 "Llegaron mensajes!!!!\n" +
                 "-----------------------------------------");
+    }
+
+    private void launchIncomingRequestConnectionNotificationEvent(ActorNetworkServiceRecord actorNetworkServiceRecord) {
+        FermatEvent platformEvent = eventManager.getNewEvent(EventType.INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION);
+        IncomingActorRequestConnectionNotificationEvent incomingActorRequestConnectionNotificationEvent =  (IncomingActorRequestConnectionNotificationEvent) platformEvent;
+        incomingActorRequestConnectionNotificationEvent.setSource(EventSource.NETWORK_SERVICE_INTRA_ACTOR);
+        incomingActorRequestConnectionNotificationEvent.setActorId(actorNetworkServiceRecord.getActorSenderPublicKey());
+        incomingActorRequestConnectionNotificationEvent.setActorName(actorNetworkServiceRecord.getActorSenderAlias());
+        incomingActorRequestConnectionNotificationEvent.setActorType(Actors.INTRA_USER);
+        //incomingActorRequestConnectionNotificationEvent.setProfileImage(actorNetworkServiceRecord.getActorSenderProfileImage());
+        eventManager.raiseEvent(platformEvent);
     }
 }

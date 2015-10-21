@@ -99,7 +99,7 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
     }
 
     public void changeState(ActorProtocolState actorProtocolState){
-        this.actorDestinationPublicKey = actorSenderPublicKey;
+        this.actorProtocolState = actorProtocolState;
     }
 
     public boolean isFlagReadead() {
