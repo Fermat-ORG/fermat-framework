@@ -7,8 +7,8 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.I
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserSearchResult;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserSearch;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_user.exceptions.ErrorInIntraUserSearchException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_user.interfaces.IntraUserManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorInIntraUserSearchException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 
 import java.util.ArrayList;
 import java.util.List;

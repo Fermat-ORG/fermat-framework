@@ -111,8 +111,8 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
     /**
      * DATA
      */
-    private List<com.bitdubai.fermat_ccp_api.layer.crypto_wallet.interfaces.CryptoWalletTransaction> lstCryptoWalletTransactionsAvailable;
-    private List<com.bitdubai.fermat_ccp_api.layer.crypto_wallet.interfaces.CryptoWalletTransaction> lstCryptoWalletTransactionsBook;
+    private List<CryptoWalletTransaction> lstCryptoWalletTransactionsAvailable;
+    private List<CryptoWalletTransaction> lstCryptoWalletTransactionsBook;
 
     private CryptoWalletTransaction selectedItem;
 
