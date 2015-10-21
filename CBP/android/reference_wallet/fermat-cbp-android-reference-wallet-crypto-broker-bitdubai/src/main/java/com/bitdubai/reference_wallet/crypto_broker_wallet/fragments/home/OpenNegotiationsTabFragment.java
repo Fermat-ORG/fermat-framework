@@ -2,7 +2,6 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home;
 
 
 import android.app.Fragment;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,13 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.VerticalChild;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.VerticalParent;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.VerticalExpandableAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.CbpVerticalExpandableAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +26,11 @@ import java.util.List;
 public class OpenNegotiationsTabFragment extends FermatWalletFragment implements ExpandableRecyclerAdapter.ExpandCollapseListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
 
     private RecyclerView mRecyclerView;
-    private VerticalExpandableAdapter mExpandableAdapter;
+    private CbpVerticalExpandableAdapter mExpandableAdapter;
 
 
     /**
@@ -61,7 +57,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.open_negotiations_recycler_view);
 
         // Create a new adapter with 20 test data items
-        mExpandableAdapter = new VerticalExpandableAdapter(getActivity(), setUpTestData(5));
+        mExpandableAdapter = new CbpVerticalExpandableAdapter(getActivity(), setUpTestData(5));
 
         // Attach this activity to the Adapter as the ExpandCollapseListener
         mExpandableAdapter.setExpandCollapseListener(this);

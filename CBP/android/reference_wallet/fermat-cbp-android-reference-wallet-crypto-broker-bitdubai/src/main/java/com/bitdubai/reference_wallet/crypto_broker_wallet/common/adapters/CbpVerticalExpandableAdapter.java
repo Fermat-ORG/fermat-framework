@@ -1,17 +1,17 @@
-package com.bitdubai.reference_wallet.crypto_broker_wallet.common;
+package com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentListItem;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.VerticalChild;
-import com.bitdubai.fermat_android_api.ui.expandableRecicler.VerticalChildViewHolder;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.VerticalParent;
-import com.bitdubai.fermat_android_api.ui.expandableRecicler.VerticalParentViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.GrouperParentViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.OpenNegotiationsChildViewHolder;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ import java.util.List;
  * @version 1.0
  * @since 5/27/2015
  */
-public class VerticalExpandableAdapter extends ExpandableRecyclerAdapter<VerticalParentViewHolder, VerticalChildViewHolder> {
+public class CbpVerticalExpandableAdapter extends ExpandableRecyclerAdapter<GrouperParentViewHolder, OpenNegotiationsChildViewHolder> {
 
     private LayoutInflater mInflater;
 
@@ -31,7 +31,7 @@ public class VerticalExpandableAdapter extends ExpandableRecyclerAdapter<Vertica
      *
      * @param parentItemList the list of parent items to be displayed in the RecyclerView
      */
-    public VerticalExpandableAdapter(Context context, List<? extends ParentListItem> parentItemList) {
+    public CbpVerticalExpandableAdapter(Context context, List<? extends ParentListItem> parentItemList) {
         super(parentItemList);
         mInflater = LayoutInflater.from(context);
     }
@@ -44,9 +44,9 @@ public class VerticalExpandableAdapter extends ExpandableRecyclerAdapter<Vertica
      * @return the user's custom parent ViewHolder that must extend ParentViewHolder
      */
     @Override
-    public VerticalParentViewHolder onCreateParentViewHolder(ViewGroup parent) {
+    public GrouperParentViewHolder onCreateParentViewHolder(ViewGroup parent) {
         View view = mInflater.inflate(R.layout.cbp_list_item_parent, parent, false);
-        return new VerticalParentViewHolder(view);
+        return new GrouperParentViewHolder(view);
     }
 
     /**
@@ -57,9 +57,9 @@ public class VerticalExpandableAdapter extends ExpandableRecyclerAdapter<Vertica
      * @return the user's custom parent ViewHolder that must extend ParentViewHolder
      */
     @Override
-    public VerticalChildViewHolder onCreateChildViewHolder(ViewGroup parent) {
+    public OpenNegotiationsChildViewHolder onCreateChildViewHolder(ViewGroup parent) {
         View view = mInflater.inflate(R.layout.cbp_list_item_child, parent, false);
-        return new VerticalChildViewHolder(view);
+        return new OpenNegotiationsChildViewHolder(view);
     }
 
     /**
@@ -67,10 +67,10 @@ public class VerticalExpandableAdapter extends ExpandableRecyclerAdapter<Vertica
      * parent view should be performed here.
      *
      * @param parentViewHolder the ViewHolder of the parent item created in OnCreateParentViewHolder
-     * @param position the position in the RecyclerView of the item
+     * @param position         the position in the RecyclerView of the item
      */
     @Override
-    public void onBindParentViewHolder(VerticalParentViewHolder parentViewHolder, int position, ParentListItem parentListItem) {
+    public void onBindParentViewHolder(GrouperParentViewHolder parentViewHolder, int position, ParentListItem parentListItem) {
         VerticalParent verticalParent = (VerticalParent) parentListItem;
         parentViewHolder.bind(verticalParent.getParentNumber(), verticalParent.getParentText());
     }
@@ -80,10 +80,10 @@ public class VerticalExpandableAdapter extends ExpandableRecyclerAdapter<Vertica
      * child view should be performed here.
      *
      * @param childViewHolder the ViewHolder of the child item created in OnCreateChildViewHolder
-     * @param position the position in the RecyclerView of the item
+     * @param position        the position in the RecyclerView of the item
      */
     @Override
-    public void onBindChildViewHolder(VerticalChildViewHolder childViewHolder, int position, Object childListItem) {
+    public void onBindChildViewHolder(OpenNegotiationsChildViewHolder childViewHolder, int position, Object childListItem) {
         VerticalChild verticalChild = (VerticalChild) childListItem;
         childViewHolder.bind(verticalChild.getChildText());
     }
