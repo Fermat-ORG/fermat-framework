@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
@@ -13,18 +15,18 @@ import java.util.UUID;
  */
 public class CustomerBrokerPurchaseNegotiation implements CustomerBrokerPurchase {
 
-    private UUID   negotiationId;
-    private String publicKeyCustomer;
-    private String publicKeyBroker;
-    private long   startDataTime;
-    private String statusNegotiation;
+    private final UUID   negotiationId;
+    private final String publicKeyCustomer;
+    private final String publicKeyBroker;
+    private final long   startDataTime;
+    private NegotiationStatus statusNegotiation;
 
     public CustomerBrokerPurchaseNegotiation(
             UUID   negotiationId,
             String publicKeyCustomer,
             String publicKeyBroker,
             long startDataTime,
-            String statusNegotiation
+            NegotiationStatus statusNegotiation
     ){
         this.negotiationId = negotiationId;
         this.publicKeyCustomer = publicKeyCustomer;
@@ -54,12 +56,37 @@ public class CustomerBrokerPurchaseNegotiation implements CustomerBrokerPurchase
     }
 
     @Override
-    public NegotiationStatus getStatus() throws InvalidParameterException {
-        return NegotiationStatus.getByCode(this.statusNegotiation);
+    public NegotiationStatus getStatus() {
+        return this.statusNegotiation;
+    }
+
+    @Override
+    public void setStatus(NegotiationStatus status) {
+
     }
 
     @Override
     public Collection<Clause> getClauses() {
+        return null;
+    }
+
+    @Override
+    public Clause addNewClause(ClauseType type, String value) {
+        return null;
+    }
+
+    @Override
+    public Clause modifyClause(Clause clause, String value) {
+        return null;
+    }
+
+    @Override
+    public Clause modifyClause(Clause clause, ClauseStatus status) {
+        return null;
+    }
+
+    @Override
+    public ClauseType getNextClauseType() {
         return null;
     }
 }

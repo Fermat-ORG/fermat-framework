@@ -11,6 +11,8 @@ public class AssetIssuerWalletBalance implements AssetIssuerWalletList {
     String description;
     long bookBalance;
     long availableBalance;
+//    long quantityBookBalance;
+//    long quantityAvailableBalance;
 
     public AssetIssuerWalletBalance(String assetPublicKey, String name, String description, long bookBalance, long availableBalance){
         this.assetPublicKey = assetPublicKey;

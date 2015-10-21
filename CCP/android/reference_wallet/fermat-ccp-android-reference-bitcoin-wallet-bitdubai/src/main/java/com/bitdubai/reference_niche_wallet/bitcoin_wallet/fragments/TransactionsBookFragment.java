@@ -23,11 +23,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.EntryItem;
@@ -151,7 +151,7 @@ public class TransactionsBookFragment extends Fragment{
         try {
 
             errorManager = walletSession.getErrorManager();
-            tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+            tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
 
             cryptoWalletManager = walletSession.getCryptoWalletManager();
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
@@ -305,7 +305,7 @@ public class TransactionsBookFragment extends Fragment{
     private void loadTransactionMap(List<CryptoWalletTransaction> lstTransactions){
         Set<CryptoWalletTransaction> cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
         for(CryptoWalletTransaction transaction:lstTransactions){
-            Date date = new Date(transaction.getBitcoinWalletTransaction().getTimestamp());
+            Date date = new Date(transaction.getTimestamp());
             if(!mapTransactionPerDate.containsKey(convertDateToString(date))){
                 cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
                 cryptoWalletTransactionSet.add(transaction);
@@ -341,7 +341,7 @@ public class TransactionsBookFragment extends Fragment{
     private List<CryptoWalletTransaction> showTransactionListSelected(List<CryptoWalletTransaction> lstTransactions, BalanceType balanceType) {
         List<CryptoWalletTransaction> lstToShow = new ArrayList<CryptoWalletTransaction>();
         for (CryptoWalletTransaction t : lstTransactions) {
-            if (t.getBitcoinWalletTransaction().getBalanceType()==(balanceType)) {
+            if (t.getBalanceType()==(balanceType)) {
                 lstToShow.add(t);
             }
         }
@@ -488,18 +488,18 @@ public class TransactionsBookFragment extends Fragment{
 
                     if(textView_amount != null)
                         if(type==0){
-                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningBookBalance(),ShowMoneyType.BITCOIN.getCode())+"_"+WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(),ShowMoneyType.BITCOIN.getCode()));
+                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getRunningBookBalance(),ShowMoneyType.BITCOIN.getCode())+"_"+WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getAmount(),ShowMoneyType.BITCOIN.getCode()));
                         }else if( type==1){
-                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getRunningAvailableBalance(),ShowMoneyType.BITCOIN.getCode())+"_"+WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(),ShowMoneyType.BITCOIN.getCode()));
+                            textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getRunningAvailableBalance(),ShowMoneyType.BITCOIN.getCode())+"_"+WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getAmount(),ShowMoneyType.BITCOIN.getCode()));
                         }
                     if(textView_time!=null){
                         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                        textView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));
+                        textView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getTimestamp()));
                     }
                     if(textView_type!=null){
-                        if(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType()==TransactionType.CREDIT){
+                        if(entryItem.cryptoWalletTransaction.getTransactionType()==TransactionType.CREDIT){
                             textView_type.setText(R.string.credit);
-                        }else if(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType()==TransactionType.DEBIT){
+                        }else if(entryItem.cryptoWalletTransaction.getTransactionType()==TransactionType.DEBIT){
                             textView_type.setText(R.string.debit);
                         }
                     }

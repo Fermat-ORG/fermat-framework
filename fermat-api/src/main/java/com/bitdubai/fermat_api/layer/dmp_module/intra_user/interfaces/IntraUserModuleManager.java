@@ -5,14 +5,12 @@ import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetAct
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantLoginIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantShowLoginIdentitiesException;
-import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantSolveRequestLaterException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantStartRequestException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CouldNotCreateIntraUserException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantSaveProfileImageException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserCancellingFailedException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserConectionDenegationFailedException;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.IntraUserDisconnectingFailedException;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUser;
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 
 import java.util.List;
@@ -84,7 +82,7 @@ public interface IntraUserModuleManager extends ModuleManager{
      * @param profileImage            The profile image that the intra user has
      * @throws CantStartRequestException
      */
-    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage,String identityPublicKey) throws CantStartRequestException;
+    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage,String identityPublicKey,String identityAlias) throws CantStartRequestException;
 
     /**
      * The method <code>acceptIntraUser</code> takes the information of a connection request, accepts

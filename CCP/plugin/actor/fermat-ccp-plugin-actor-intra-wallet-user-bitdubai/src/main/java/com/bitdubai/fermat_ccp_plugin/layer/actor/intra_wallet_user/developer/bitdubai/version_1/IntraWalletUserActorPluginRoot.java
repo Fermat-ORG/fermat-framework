@@ -16,9 +16,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUserException;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.IntraUserNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetIntraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.IntraUserNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantAcceptIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCancelIntraWalletUserException;
@@ -28,9 +28,9 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.Cant
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.DealsWithIntraUsersNetworkService;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserNotification;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.DealsWithIntraUsersNetworkService;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserNotification;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -39,11 +39,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.database.IntraWalletUserActorDao;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.database.IntraWalletUserActorDeveloperDatabaseFactory;
-import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.event_handlers.IntraWalletUserConnectionAcceptedEventHandlers;
-import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.event_handlers.IntraWalletUserDeniedConnectionEventHandlers;
-import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.event_handlers.IntraWalletUserDisconnectionEventHandlers;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.event_handlers.IntraWalletUserNewNotificationsEventHandlers;
-import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.event_handlers.IntraWalletUserRequestConnectionEventHandlers;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantAddPendingIntraWalletUserException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantGetIntraWalletUsersListException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraWalletUserActorDatabaseException;
@@ -409,54 +405,6 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
             FermatEventListener fermatEventListener;
             FermatEventHandler fermatEventHandler;
 
-
-            /**
-             * Listener Accepted connection event
-             */
-            fermatEventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_ACCEPTED);
-            fermatEventHandler = new IntraWalletUserConnectionAcceptedEventHandlers();
-            ((IntraWalletUserConnectionAcceptedEventHandlers) fermatEventHandler).setIntraWalletUserManager(this);
-            ((IntraWalletUserConnectionAcceptedEventHandlers) fermatEventHandler).setEventManager(eventManager);
-            ((IntraWalletUserConnectionAcceptedEventHandlers) fermatEventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
-
-            /**
-             * Listener Cancelled connection event
-             */
-            fermatEventListener = eventManager.getNewListener(EventType.INTRA_USER_DISCONNECTION_REQUEST_RECEIVED);
-            fermatEventHandler = new IntraWalletUserDisconnectionEventHandlers();
-            ((IntraWalletUserDisconnectionEventHandlers) fermatEventHandler).setIntraWalletUserManager(this);
-            ((IntraWalletUserDisconnectionEventHandlers) fermatEventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
-
-            /**
-             * Listener Request connection event
-             */
-            fermatEventListener = eventManager.getNewListener(EventType.INTRA_USER_REQUESTED_CONNECTION);
-            fermatEventHandler = new IntraWalletUserRequestConnectionEventHandlers();
-            ((IntraWalletUserRequestConnectionEventHandlers) fermatEventHandler).setIntraWalletUserManager(this);
-            ((IntraWalletUserRequestConnectionEventHandlers) fermatEventHandler).setEventManager(this.eventManager);
-            ((IntraWalletUserRequestConnectionEventHandlers) fermatEventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
-
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
-
-            /**
-             * Listener Denied connection event
-             */
-            fermatEventListener = eventManager.getNewListener(EventType.INTRA_USER_CONNECTION_DENIED);
-            fermatEventHandler = new IntraWalletUserDeniedConnectionEventHandlers();
-            ((IntraWalletUserDeniedConnectionEventHandlers) fermatEventHandler).setActorIntraUserManager(this);
-            ((IntraWalletUserDeniedConnectionEventHandlers) fermatEventHandler).setIntraUserManager(this.intraUserNetworkServiceManager);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
 
 
             /**

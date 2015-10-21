@@ -24,16 +24,12 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
-import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor;
 import com.bitdubai.sub_app.crypto_broker_identity.util.UtilsFuncs;
-
-import java.io.ByteArrayOutputStream;
 
 import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.EXCEPTION_THROWN;
 import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.INVALID_ENTRY_DATA;
@@ -75,12 +71,10 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View rootLayout = inflater.inflate(R.layout.fragment_create_crypto_broker_identity, container, false);
         initViews(rootLayout);
-
 
         return rootLayout;
     }
@@ -176,7 +170,7 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
     private void createNewIdentity() {
 
         String brokerNameText = mBrokerName.getText().toString();
-        byte[] imgInBytes = toByteArray(cryptoBrokerBitmap);
+        byte[] imgInBytes = UtilsFuncs.toByteArray(cryptoBrokerBitmap);
 
         CreateBrokerIdentityExecutor executor = new CreateBrokerIdentityExecutor(subAppsSession, brokerNameText, imgInBytes);
         int resultKey = executor.execute();
@@ -208,17 +202,5 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
 
         Intent loadImageIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
-    }
-
-    /**
-     * Bitmap to byte[]
-     *
-     * @param bitmap Bitmap
-     * @return byte array
-     */
-    private byte[] toByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
     }
 }

@@ -71,7 +71,7 @@ public class CustomerBrokerPurchaseNegotiationDao {
         public CustomerBrokerPurchase createCustomerBrokerPurchaseNegotiation(
                 String publicKeyCustomer,
                 String publicKeyBroker,
-                long startDataTime
+                long startDateTime
         ) throws CantCreateCustomerBrokerPurchaseException {
 
             try {
@@ -85,12 +85,12 @@ public class CustomerBrokerPurchaseNegotiationDao {
                         negotiationId,
                         publicKeyCustomer,
                         publicKeyBroker,
-                        startDataTime
+                        startDateTime
                 );
 
                 PurchaseNegotiationTable.insertRecord(recordToInsert);
 
-                return newCustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, NegotiationStatus.OPEN.getCode());
+                return newCustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDateTime, NegotiationStatus.OPEN);
 
             } catch (CantInsertRecordException e) {
                 throw new CantCreateCustomerBrokerPurchaseException("An exception happened",e,"","");
@@ -249,19 +249,19 @@ public class CustomerBrokerPurchaseNegotiationDao {
                 UUID   negotiationId,
                 String publicKeyCustomer,
                 String publicKeyBroker,
-                long startDataTime,
-                String statusNegotiation
+                long startDateTime,
+                NegotiationStatus statusNegotiation
         ){
-            return new CustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation);
+            return new CustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDateTime, statusNegotiation);
         }
 
-        private CustomerBrokerPurchase constructCustomerBrokerPurchaseFromRecord(DatabaseTableRecord record){
+        private CustomerBrokerPurchase constructCustomerBrokerPurchaseFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
 
             UUID    negotiationId     = record.getUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME);
             String  publicKeyCustomer = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
             String  publicKeyBroker   = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
             long    startDataTime     = record.getLongValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME);
-            String  statusNegotiation = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
+            NegotiationStatus  statusNegotiation = NegotiationStatus.getByCode(record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME));
 
             return new CustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation);
         }

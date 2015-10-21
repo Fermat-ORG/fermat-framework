@@ -16,9 +16,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.DealsWithIntraUsersNetworkService;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.DealsWithIntraUsersNetworkService;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.DealsWithWalletManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
@@ -288,7 +288,9 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
                 walletManagerManager
         );
 
-        executePendingAddressExchangeRequests(cryptoAddressGenerationService);
+        registerIdentities();
+        //TODO: LEON LPM, tu NS me estaba tirando el mio
+        //executePendingAddressExchangeRequests(cryptoAddressGenerationService);
 
         FermatEventListener cryptoAddressReceivedEventListener = eventManager.getNewListener(EventType.CRYPTO_ADDRESS_REQUESTED);
         cryptoAddressReceivedEventListener.setEventHandler(new CryptoAddressRequestedEventHandler(this, cryptoAddressGenerationService));
@@ -296,7 +298,7 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
         listenersAdded.add(cryptoAddressReceivedEventListener);
 
 
-        registerIdentities();
+
 
 
         this.serviceStatus = ServiceStatus.STARTED;
