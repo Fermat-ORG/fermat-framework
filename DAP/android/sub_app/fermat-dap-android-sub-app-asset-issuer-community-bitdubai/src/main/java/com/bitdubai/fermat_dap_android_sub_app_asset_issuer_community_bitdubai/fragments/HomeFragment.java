@@ -72,7 +72,7 @@ public class HomeFragment extends FermatFragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.home_fragment, container, false);
+        rootView = inflater.inflate(R.layout.home_dap_issuer_community_fragment, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);

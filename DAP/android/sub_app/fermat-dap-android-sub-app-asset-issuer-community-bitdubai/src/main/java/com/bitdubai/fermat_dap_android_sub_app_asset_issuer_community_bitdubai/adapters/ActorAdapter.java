@@ -32,7 +32,7 @@ public class ActorAdapter extends FermatAdapter<ActorAssetIssuer, ActorViewHolde
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.row_actor;
+        return R.layout.row_dap_issuer_community_actor;
     }
 
     @Override
