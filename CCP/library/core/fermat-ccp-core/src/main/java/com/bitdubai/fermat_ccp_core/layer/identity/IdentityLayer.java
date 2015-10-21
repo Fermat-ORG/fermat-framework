@@ -2,7 +2,7 @@ package com.bitdubai.fermat_ccp_core.layer.identity;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartLayerException;
-import com.bitdubai.fermat_ccp_core.layer.identity.intra_wallet_user.IntraWalletUserSubsystem;
+import com.bitdubai.fermat_ccp_core.layer.identity.intra_wallet_user.IntraWalletUserPluginSubsystem;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CCPPlugins;
 
 /**
@@ -15,9 +15,9 @@ public class IdentityLayer extends AbstractLayer {
 
     public void start() throws CantStartLayerException {
 
-        addPlugin(
+        registerPlugin(
                 CCPPlugins.BITDUBAI_INTRA_WALLET_USER_IDENTITY,
-                new IntraWalletUserSubsystem()
+                new IntraWalletUserPluginSubsystem()
         );
 
     }

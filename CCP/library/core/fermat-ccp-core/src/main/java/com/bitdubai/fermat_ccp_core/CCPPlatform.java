@@ -38,7 +38,7 @@ public class CCPPlatform extends AbstractPlatform {
         registerLayer(Layers.NETWORK_SERVICE, new NetworkServiceLayer());
         registerLayer(Layers.REQUEST        , new RequestLayer()       );
         registerLayer(Layers.TRANSACTION    , new TransactionLayer()   );
-        registerLayer(Layers.WALLET_MODULE  , new WalletModuleLayer()   );
+        registerLayer(Layers.WALLET_MODULE  , new WalletModuleLayer()  );
 
     }
 

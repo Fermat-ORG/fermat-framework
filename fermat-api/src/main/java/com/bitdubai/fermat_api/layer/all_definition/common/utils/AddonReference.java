@@ -1,20 +1,21 @@
-package com.bitdubai.fermat_ccp_core.test_classes;
+package com.bitdubai.fermat_api.layer.all_definition.common.utils;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddonsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 /**
- * The class <code>com.bitdubai.fermat_ccp_core.test_classes.FermatPluginReference</code>
- * haves all the information of a FermatAddonReference.
+ * The class <code>com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference</code>
+ * haves all the information of a AddonReference.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */
-public class FermatAddonReference {
+public class AddonReference {
 
     private final FermatAddonsEnum addon  ;
     private final Version          version;
 
-    public FermatAddonReference(final FermatAddonsEnum addon,
-                                final Version version) {
+    public AddonReference(final FermatAddonsEnum addon,
+                          final Version version) {
 
         this.addon   = addon  ;
         this.version = version;

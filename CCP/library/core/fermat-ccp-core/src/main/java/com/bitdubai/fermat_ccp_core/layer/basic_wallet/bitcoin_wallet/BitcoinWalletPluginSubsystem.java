@@ -1,17 +1,17 @@
-package com.bitdubai.fermat_ccp_core.layer.identity.intra_wallet_user;
+package com.bitdubai.fermat_ccp_core.layer.basic_wallet.bitcoin_wallet;
 
 import com.bitdubai.fermat_api.PluginDeveloper;
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractSubsystem;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
-import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.DeveloperBitDubai;
 
 /**
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/09/2015.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class IntraWalletUserSubsystem extends AbstractSubsystem {
+public class BitcoinWalletPluginSubsystem extends AbstractPluginSubsystem {
 
     @Override
     public void start() throws CantStartSubsystemException {
@@ -23,5 +23,4 @@ public class IntraWalletUserSubsystem extends AbstractSubsystem {
             throw new CantStartSubsystemException(e, null, null);
         }
     }
-
 }

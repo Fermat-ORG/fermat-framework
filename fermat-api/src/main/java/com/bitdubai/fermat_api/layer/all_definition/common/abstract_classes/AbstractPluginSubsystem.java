@@ -4,12 +4,12 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
 
 /**
- * The abstract class <code>com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractSubsystem</code>
- * contains all the basic functionality of a Subsystem class.
+ * The abstract class <code>com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginSubsystem</code>
+ * contains all the basic functionality of a plugin Subsystem class.
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */
-public abstract class AbstractSubsystem {
+public abstract class AbstractPluginSubsystem {
 
     protected Plugin plugin;
 
