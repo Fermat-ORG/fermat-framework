@@ -52,6 +52,8 @@ import com.bitdubai.fermat_core.layer.wpd.network_service.WPDNetworkServiceLayer
 import com.bitdubai.fermat_core.layer.wpd.sub_app_module.WPDSubAppModuleLayer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.DealsWithAssetIssuerActorNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.DealsWithAssetRedeemPointActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.DealsWithAssetIssuerWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSupAppModule;
@@ -1218,6 +1220,15 @@ public class Platform implements Serializable {
                 injectPluginReferencesAndStart(assetIssuerActorNetworkService, Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR_NETWORK_SERVICE);
            /*
 
+            /*
+            * Plugin Asset RedeemPoint Actor Network Service
+            * ----------------------------------------
+            */
+                Plugin assetRedeemPointActorNetworkService = ((DAPActorNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_ACTOR_NETWORK_SERVICE_LAYER)).getAssetRedeemPointActorNetwokService();
+                injectLayerReferences(assetRedeemPointActorNetworkService);
+                injectPluginReferencesAndStart(assetRedeemPointActorNetworkService, Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE);
+           /*
+
 
             * Plugin Asset Transmission Network Service
             * ----------------------------------------assetIssuerActorNetworkService
@@ -1757,6 +1768,10 @@ public class Platform implements Serializable {
 
             if (plugin instanceof DealsWithAssetUserActorNetworkServiceManager) {
                 ((DealsWithAssetUserActorNetworkServiceManager) plugin).setAssetUserActorNetworkServiceManager((AssetUserActorNetworkServiceManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE));
+            }
+
+            if (plugin instanceof DealsWithAssetRedeemPointActorNetworkServiceManager) {
+                ((DealsWithAssetRedeemPointActorNetworkServiceManager) plugin).setAssetRedeemPointActorNetworkServiceManager((AssetRedeemPointActorNetworkServiceManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_ACTOR_NETWORK_SERVICE));
             }
 
             if (plugin instanceof DealsWithAssetTransmissionNetworkServiceManager) {

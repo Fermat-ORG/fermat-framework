@@ -16,10 +16,10 @@ public interface AssetRedeemPointActorNetworkServiceManager {
     /**
      * Register the ActorAssetUser in the cloud server like online
      *
-     * @param actorAssetRedeemPoint
+     * @param actorAssetRedeemPointToRegister
      * @throws CantRegisterActorAssetRedeemPointException
      */
-    public void registerActorAssetRedeemPoint(ActorAssetRedeemPoint actorAssetRedeemPoint) throws CantRegisterActorAssetRedeemPointException;
+    public void registerActorAssetRedeemPoint(ActorAssetRedeemPoint actorAssetRedeemPointToRegister) throws CantRegisterActorAssetRedeemPointException;
 
     /**
      *
@@ -36,7 +36,7 @@ public interface AssetRedeemPointActorNetworkServiceManager {
      *
      * @throws CantRegisterActorAssetRedeemPointException
      */
-    public void requestListActorAssetIssuerRegistered()  throws CantRegisterActorAssetRedeemPointException;
+    public void requestListActorAssetRedeemPointRegistered()  throws CantRegisterActorAssetRedeemPointException;
 
     /**
      * Get the content of the list previously requested, this method have to call after the
@@ -44,7 +44,7 @@ public interface AssetRedeemPointActorNetworkServiceManager {
      *
      * @return List<ActorAssetRedeemPoint>
      */
-    public List<ActorAssetRedeemPoint> getListActorAssetIssuerRegistered() throws RequestedListNotReadyRecevivedException;
+    public List<ActorAssetRedeemPoint> getListActorAssetRedeemPointRegistered() throws RequestedListNotReadyRecevivedException;
 
 
 }
