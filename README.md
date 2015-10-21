@@ -206,6 +206,8 @@ Fermat Principles
 
 How to install and run Fermat
 -------------------------------
+
+
 #### Download
 
 Installers for the latest stable build for Android, Mac, Windows and Linux (Debian/Ubuntu) can be [downloaded here](http://fermat.org/download/).
@@ -224,6 +226,7 @@ for a list of Niche Wallets.
 
 For installation instructions and running from the source code, see the [documentation](https://github.com/bitDubai/fermat/fermat-documentation).
 
+
 #### Need help?
 
 Having problems compiling or running Fermat the first time, or not sure how to use Fermat?  Please 
@@ -236,11 +239,11 @@ you to fix common problems and find extra help if needed.
 Status of the Project:
 ------------------------------------------------
 
-As of August 2015 the state of the project is the following:
+As of October 2015 the state of the project is the following:
 
-State of the code: Under development for 2 months. No realeses yet. 17 full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
+State of the code: Under development for 5 months. No realeses yet. 24 full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
 
-Future path of development: Active (First release with very limited features schedulled for late September 2015).
+Future path of development: Active (First release with very limited features schedulled for late November 2015).
 
 
 
