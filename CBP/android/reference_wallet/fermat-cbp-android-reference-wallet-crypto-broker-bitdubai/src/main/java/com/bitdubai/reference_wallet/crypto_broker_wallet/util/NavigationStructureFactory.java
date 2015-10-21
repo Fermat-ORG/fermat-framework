@@ -196,8 +196,8 @@ public class NavigationStructureFactory {
 
 
         Fragment fragment = new Fragment();
-        fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_PREFERENCE.getKey());
-        activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_PREFERENCE.getKey(), fragment);
+        fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_EARNINGS.getKey());
+        activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_EARNINGS.getKey(), fragment);
 
         return activity;
     }
