@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantSignExtraUserMessageException;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantSignExtraUserMessageException;
 
 /**
  * Created by Matias Furszyfer on 2015.10.15..

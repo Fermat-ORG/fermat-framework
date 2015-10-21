@@ -79,7 +79,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.DealsWithWalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettingsManager;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.DealsWithWalletModuleCryptoWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.DealsWithWalletModuleCryptoWallet;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.DealsWithDeviceLocation;
 
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
@@ -90,7 +90,6 @@ import com.bitdubai.fermat_core.layer.dap_identity.DAPIdentityLayer;
 import com.bitdubai.fermat_core.layer.dap_middleware.DAPMiddlewareLayer;
 import com.bitdubai.fermat_core.layer.dap_module.DAPModuleLayer;
 import com.bitdubai.fermat_core.layer.dap_transaction.DAPTransactionLayer;
-import com.bitdubai.fermat_core.layer.dmp_wallet_module.WalletModuleLayer;
 import com.bitdubai.fermat_core.layer.pip_engine.EngineLayer;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
@@ -149,7 +148,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_statistics.interfaces.DealsWithWalletStatisticsNetworkService;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_statistics.interfaces.WalletStatisticsManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.DealsWithWalletStoreNetworkService;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_extra_user.DealsWithOutgoingExtraUser;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_extra_user.OutgoingExtraUserManager;
 import com.bitdubai.fermat_api.layer.osa_android.DataBaseSystemOs;
@@ -182,10 +181,9 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.interfaces.DealsWithExtraUsers;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.interfaces.ExtraUserManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.DealsWithExtraUsers;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_core.layer.cry_crypto_router.CryptoRouterLayer;
-import com.bitdubai.fermat_core.layer.dmp_transaction.TransactionLayer;
 import com.bitdubai.fermat_core.layer.pip_actor.ActorLayer;
 import com.bitdubai.fermat_core.layer.dmp_identity.IdentityLayer;
 import com.bitdubai.fermat_core.layer.pip_platform_service.PlatformServiceLayer;
@@ -479,7 +477,6 @@ public class Platform implements Serializable {
             corePlatformContext.registerPlatformLayer(new MiddlewareLayer(), PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER);
             corePlatformContext.registerPlatformLayer(new ModuleLayer(), PlatformLayers.BITDUBAI_MODULE_LAYER);
             corePlatformContext.registerPlatformLayer(new AgentLayer(), PlatformLayers.BITDUBAI_AGENT_LAYER);
-            corePlatformContext.registerPlatformLayer(new WalletModuleLayer(), PlatformLayers.BITDUBAI_WALLET_MODULE_LAYER);
             corePlatformContext.registerPlatformLayer(new ActorLayer(), PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER);
             corePlatformContext.registerPlatformLayer(new com.bitdubai.fermat_core.layer.pip_module.ModuleLayer(), PlatformLayers.BITDUBAI_PIP_MODULE_LAYER);
             corePlatformContext.registerPlatformLayer(new com.bitdubai.fermat_core.layer.pip_network_service.NetworkServiceLayer(), PlatformLayers.BITDUBAI_PIP_NETWORK_SERVICE_LAYER);
@@ -722,7 +719,7 @@ public class Platform implements Serializable {
             boolean CCP = true;
             boolean CRY = true;
             boolean CSH = true;
-            boolean DAP = false;
+            boolean DAP = true;
             boolean DMP = true;//DOBLEMENTE TEMPORAL
             boolean MKT = true;
             boolean OSA = true;
@@ -753,13 +750,12 @@ public class Platform implements Serializable {
 
             }
 
-
             if (PIP) {
            /*
             * Plugin Actor Developer
             * -----------------------------
             */
-                Plugin actorDeveloper = ((ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER)).getmActorDeveloper();
+                Plugin actorDeveloper = ((ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER)).getActorDeveloper();
                 injectPluginReferencesAndStart(actorDeveloper, Plugins.BITDUBAI_ACTOR_DEVELOPER);
 
            /*
@@ -768,20 +764,6 @@ public class Platform implements Serializable {
             */
                 Plugin developerModule = ((com.bitdubai.fermat_core.layer.pip_module.ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_MODULE_LAYER)).getmDeveloperModule();
                 injectPluginReferencesAndStart(developerModule, Plugins.BITDUBAI_DEVELOPER_MODULE);
-
-           /*
-            * Plugin Extra User
-            * -------------------------------
-            */
-                Plugin extraUser = ((ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER)).getmActorExtraUser();
-                injectPluginReferencesAndStart(extraUser, Plugins.BITDUBAI_ACTOR_EXTRA_USER);
-
-           /*
-            * Plugin Intra User PIP
-            * -------------------------------
-            */
-                Plugin intraUser = ((ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER)).getmActorIntraUser();
-                injectPluginReferencesAndStart(intraUser, Plugins.BITDUBAI_USER_INTRA_USER);
 
            /*
             * Plugin Desktop runtime PIP
@@ -994,7 +976,6 @@ public class Platform implements Serializable {
                     Plugin cryptoPaymentRequest = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_CRYPTO_PAYMENT_REQUEST);
                     injectPluginReferencesAndStart(cryptoPaymentRequest, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST);
 
-
                     Plugin ccpIntraWalletUserIdentity = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_IDENTITY);
                     injectPluginReferencesAndStart(ccpIntraWalletUserIdentity, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY);
 
@@ -1010,9 +991,14 @@ public class Platform implements Serializable {
                     Plugin incomingIntraUserTransaction = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION);
                     injectPluginReferencesAndStart(incomingIntraUserTransaction, Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION);
 
+                    Plugin extraUser = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_EXTRA_WALLET_USER_ACTOR);
+                    injectPluginReferencesAndStart(extraUser, Plugins.BITDUBAI_ACTOR_EXTRA_USER);
+
                     Plugin intraUserActor = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_ACTOR);
                     injectPluginReferencesAndStart(intraUserActor, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR);
 
+                    Plugin cryptoWalletWalletModule = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_CRYPTO_WALLET_MODULE);
+                    injectPluginReferencesAndStart(cryptoWalletWalletModule, Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE);
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (e instanceof FermatException) {
@@ -1071,20 +1057,6 @@ public class Platform implements Serializable {
                 injectPluginReferencesAndStart(moneyRequest, Plugins.BITDUBAI_REQUEST_MONEY_REQUEST);
 
            /*
-            * Plugin Multi account Wallet Niche Type Wallet
-            * ----------------------------------
-            */
-                Plugin multiAccountWalletWalletModule = ((WalletModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WALLET_MODULE_LAYER)).getmMultiAccountWallet();
-                injectPluginReferencesAndStart(multiAccountWalletWalletModule, Plugins.BITDUBAI_MULTI_ACCOUNT_WALLET_WALLET_MODULE);
-
-           /*
-            * Plugin Bank Notes Wallet Niche Type Wallet
-            * ----------------------------------
-            */
-                Plugin bankNotesWalletWalletModule = ((WalletModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WALLET_MODULE_LAYER)).getmBankNotesWallet();
-                injectPluginReferencesAndStart(bankNotesWalletWalletModule, Plugins.BITDUBAI_BANK_NOTES_WALLET_WALLET_MODULE);
-
-           /*
             * Plugin Wallet Runtime
             * -----------------------------
             */
@@ -1114,19 +1086,6 @@ public class Platform implements Serializable {
 
 
 
-           /*
-            * Plugin crypto Wallet Niche Type Wallet
-            * ----------------------------------
-            */
-                Plugin cryptoWalletWalletModule = ((WalletModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WALLET_MODULE_LAYER)).getmCryptoWallet();
-                injectPluginReferencesAndStart(cryptoWalletWalletModule, Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE);
-
-           /*
-            * Plugin Discount Wallet Niche Type Wallet
-            * ----------------------------------
-            */
-                Plugin discountWalletWalletModule = ((WalletModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_WALLET_MODULE_LAYER)).getmDiscountWallet();
-                injectPluginReferencesAndStart(discountWalletWalletModule, Plugins.BITDUBAI_DISCOUNT_WALLET_WALLET_MODULE);
 
            /*
             * Plugin notification

@@ -130,6 +130,7 @@ dependencies {
 
     compile project(':fermat-dap-android-sub-app-asset-factory-bitdubai')
     compile project(':fermat-dap-android-sub-app-asset-user-community-bitdubai')
+    compile project(':fermat-dap-android-sub-app-asset-issuer-community-bitdubai')
     compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
 
     compile fileTree(dir: 'libs', include: ['*.jar'])

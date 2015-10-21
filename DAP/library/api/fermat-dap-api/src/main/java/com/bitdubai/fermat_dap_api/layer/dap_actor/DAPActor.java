@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor;
 
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantSignExtraUserMessageException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantSignExtraUserMessageException;
 
 /**
  * Created by Nerio on 10/09/15.
