@@ -2,7 +2,7 @@ package com.bitdubai.fermat_ccp_core.layer.middleware;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartLayerException;
-import com.bitdubai.fermat_ccp_core.layer.middleware.wallet_contacts.WalletContactsSubsystem;
+import com.bitdubai.fermat_ccp_core.layer.middleware.wallet_contacts.WalletContactsPluginSubsystem;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CCPPlugins;
 
 /**
@@ -15,9 +15,9 @@ public class MiddlewareLayer extends AbstractLayer {
 
     public void start() throws CantStartLayerException {
 
-        addPlugin(
+        registerPlugin(
                 CCPPlugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE,
-                new WalletContactsSubsystem()
+                new WalletContactsPluginSubsystem()
         );
 
     }

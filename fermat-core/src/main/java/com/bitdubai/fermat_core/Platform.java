@@ -187,8 +187,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.DealsWithExtraUsers;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_core.layer.cry_crypto_router.CryptoRouterLayer;
-import com.bitdubai.fermat_core.layer.ccp_basic_wallet.BasicWalletLayer;
-import com.bitdubai.fermat_core.layer.dmp_transaction.TransactionLayer;
 import com.bitdubai.fermat_core.layer.pip_actor.ActorLayer;
 import com.bitdubai.fermat_core.layer.dmp_identity.IdentityLayer;
 import com.bitdubai.fermat_core.layer.pip_platform_service.PlatformServiceLayer;
@@ -954,7 +952,7 @@ public class Platform implements Serializable {
 
                 try {
 
-                    AbstractPlatform ccpPlatform = new CCPPlatform(fileSystemOs.getPlatformFileSystem());
+                    AbstractPlatform ccpPlatform = new CCPPlatform();
                     ccpPlatform.start();
 
                     Plugin bitcoinWalletBasicWallet = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET);

@@ -29,15 +29,17 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identi
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
-import com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityExecutor;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
+import com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityExecutor;
 import com.bitdubai.sub_app.crypto_broker_identity.util.UtilsFuncs;
 
 import java.io.ByteArrayOutputStream;
 
 import static com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession.IDENTITY_INFO;
-import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityExecutor.*;
+import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityExecutor.DATA_NOT_CHANGED;
+import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityExecutor.EXCEPTION_THROWN;
+import static com.bitdubai.sub_app.crypto_broker_identity.util.PublishIdentityExecutor.SUCCESS;
 
 
 /**

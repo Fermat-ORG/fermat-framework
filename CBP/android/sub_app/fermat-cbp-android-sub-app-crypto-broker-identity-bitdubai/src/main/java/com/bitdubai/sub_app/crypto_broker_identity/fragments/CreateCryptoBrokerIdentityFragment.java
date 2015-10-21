@@ -24,18 +24,16 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
-import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
+import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor;
 import com.bitdubai.sub_app.crypto_broker_identity.util.UtilsFuncs;
 
-import java.io.ByteArrayOutputStream;
-
-import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.*;
+import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.EXCEPTION_THROWN;
+import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.INVALID_ENTRY_DATA;
+import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.SUCCESS;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,10 +49,8 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
 
     private Bitmap cryptoBrokerBitmap;
 
-    private CryptoBrokerIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
 
-    private Button createButton;
     private EditText mBrokerName;
     private ImageView mBrokerImage;
 
@@ -68,7 +64,6 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoBrokerIdentitySubAppSession) subAppsSession).getModuleManager();
             errorManager = subAppsSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -76,12 +71,10 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View rootLayout = inflater.inflate(R.layout.fragment_create_crypto_broker_identity, container, false);
         initViews(rootLayout);
-
 
         return rootLayout;
     }
@@ -92,28 +85,25 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        createButton = (Button) layout.findViewById(R.id.create_crypto_broker_button);
+
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
-        mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
-
-        RoundedBitmapDrawable roundedBitmap = UtilsFuncs.getRoundedBitmap(getResources(), R.drawable.img_new_user_camera);
-        mBrokerImage.setImageDrawable(roundedBitmap);
-
         mBrokerName.requestFocus();
 
+        mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
+        RoundedBitmapDrawable roundedBitmap = UtilsFuncs.getRoundedBitmap(getResources(), R.drawable.img_new_user_camera);
+        mBrokerImage.setImageDrawable(roundedBitmap);
         mBrokerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CommonLogger.debug(TAG, "Entrando en mBrokerImage.setOnClickListener");
                 registerForContextMenu(mBrokerImage);
                 getActivity().openContextMenu(mBrokerImage);
             }
         });
 
+        Button createButton = (Button) layout.findViewById(R.id.create_crypto_broker_button);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
                 createNewIdentity();
             }
         });
@@ -153,10 +143,10 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.setHeaderTitle("Choose mode");
+        menu.setHeaderTitle(R.string.title_photo_context_menu);
         menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.ic_camera_green));
-        menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
-        menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
+        menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, R.string.camera_option_context_menu);
+        menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, R.string.gallery_option_context_menu);
 
         super.onCreateContextMenu(menu, view, menuInfo);
     }
@@ -176,17 +166,11 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
 
     /**
      * Crea una nueva identidad para un crypto broker
-     *
-     * @return key con el resultado de la operacion:<br/><br/>
-     * <code>CREATE_IDENTITY_SUCCESS</code>: Se creo exitosamente una identidad <br/>
-     * <code>CREATE_IDENTITY_FAIL_MODULE_EXCEPTION</code>: Se genero una excepcion cuando se ejecuto el metodo para crear la identidad en el Module Manager <br/>
-     * <code>CREATE_IDENTITY_FAIL_MODULE_IS_NULL</code>: No se tiene una referencia al Module Manager <br/>
-     * <code>CREATE_IDENTITY_FAIL_NO_VALID_DATA</code>: Los datos ingresados para crear la identidad no son validos (faltan datos, no tiene el formato correcto, etc) <br/>
      */
     private void createNewIdentity() {
 
         String brokerNameText = mBrokerName.getText().toString();
-        byte[] imgInBytes = toByteArray(cryptoBrokerBitmap);
+        byte[] imgInBytes = UtilsFuncs.toByteArray(cryptoBrokerBitmap);
 
         CreateBrokerIdentityExecutor executor = new CreateBrokerIdentityExecutor(subAppsSession, brokerNameText, imgInBytes);
         int resultKey = executor.execute();
@@ -218,17 +202,5 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
 
         Intent loadImageIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
-    }
-
-    /**
-     * Bitmap to byte[]
-     *
-     * @param bitmap Bitmap
-     * @return byte array
-     */
-    private byte[] toByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
     }
 }

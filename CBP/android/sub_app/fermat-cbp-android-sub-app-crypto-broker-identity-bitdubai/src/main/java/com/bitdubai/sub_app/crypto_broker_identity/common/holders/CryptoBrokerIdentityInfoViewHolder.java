@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.crypto_broker_identity.common.holders;
 
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.text.SpannableString;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -24,14 +25,20 @@ public class CryptoBrokerIdentityInfoViewHolder extends FermatViewHolder {
     }
 
     public void setImage(byte[] imageInBytes) {
-        RoundedBitmapDrawable roundedBitmap = imageInBytes != null ?
-                UtilsFuncs.getRoundedBitmap(identityImage.getResources(), imageInBytes) :
-                UtilsFuncs.getRoundedBitmap(identityImage.getResources(), R.drawable.person);
+        RoundedBitmapDrawable roundedBitmap;
+        if (imageInBytes != null)
+            roundedBitmap = UtilsFuncs.getRoundedBitmap(identityImage.getResources(), imageInBytes);
+        else
+            roundedBitmap = UtilsFuncs.getRoundedBitmap(identityImage.getResources(), R.drawable.person);
 
         identityImage.setImageDrawable(roundedBitmap);
     }
 
     public void setText(String text) {
+        identityName.setText(text);
+    }
+
+    public void setText(SpannableString text) {
         identityName.setText(text);
     }
 }
