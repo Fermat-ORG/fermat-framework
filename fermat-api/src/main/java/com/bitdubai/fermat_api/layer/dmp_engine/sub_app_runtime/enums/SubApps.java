@@ -49,14 +49,14 @@ public enum SubApps {
             case "CIU":
                 return SubApps.CWP_INTRA_USER_IDENTITY;
             case "CBPC":
-                return CBP_CUSTOMERS;
+                return SubApps.CBP_CUSTOMERS;
             //Modified by Manuel Perez on 05/08/2015
             case "CS":
                 return SubApps.CWP_SHELL;
             case "DAPAF":
-                return DAP_ASSETS_FACTORY;
+                return SubApps.DAP_ASSETS_FACTORY;
             case "DACU":
-                return DAP_ASSETS_COMMUNITY_USER;
+                return SubApps.DAP_ASSETS_COMMUNITY_USER;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the SubApps enum");
 
