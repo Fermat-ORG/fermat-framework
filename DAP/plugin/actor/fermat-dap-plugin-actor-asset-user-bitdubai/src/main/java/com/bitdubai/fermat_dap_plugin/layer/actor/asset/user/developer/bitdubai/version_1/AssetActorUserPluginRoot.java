@@ -51,6 +51,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.ex
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.DealsWithAssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantGetGenesisAddressException;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.database.AssetUserActorDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.developerUtils.AssetUserActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.AssetUserActorCompleteRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.AssetUserActorRequestListRegisteredNetworksNotificationEventHandler;
@@ -267,10 +268,10 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
             this.serviceStatus = ServiceStatus.STARTED;
 
             blockchainNetworkType = BlockchainNetworkType.REG_TEST;
-            CryptoAddress genesisAddress;
             test();
 //            registerActorInANS();
-            genesisAddress = obtenerGenesisAddress();
+            getAllAssetUserActorConnected();
+            CryptoAddress genesisAddress = obtenerGenesisAddress();
             registerGenesisAddressInCryptoAddressBook(genesisAddress);
 
 //            testRaiseEvent();
@@ -292,10 +293,9 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
     private CryptoAddress obtenerGenesisAddress() throws CantGetGenesisAddressException {
         try {
 //            System.out.println("La BlockChain es: " + blockchainNetworkType);
-
             CryptoAddress genesisAddress = this.assetVaultManager.getNewAssetVaultCryptoAddress(this.blockchainNetworkType);
-            System.out.println("Genesis Address Actor Asset User: " + genesisAddress.getAddress() + " Currency: " + genesisAddress.getCryptoCurrency());
-//            LOG.info("MAP_GENESIS ADDRESS GENERATED:"+genesisAddress.getAddress());
+//            System.out.println("========================================================================");
+//            System.out.println("Genesis Address Actor Asset User: " + genesisAddress.getAddress() + " Currency: " + genesisAddress.getCryptoCurrency());
             return genesisAddress;
         } catch (GetNewCryptoAddressException exception) {
             throw new CantGetGenesisAddressException(exception, "Requesting a genesis address", "Cannot get a new crypto address from asset vault");
@@ -310,17 +310,33 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
      */
     private void registerGenesisAddressInCryptoAddressBook(CryptoAddress genesisAddress) throws CantRegisterCryptoAddressBookRecordException {
         //TODO: solicitar los publickeys de los actors, la publicKey de la wallet
-        //I'm gonna harcode the actors publicKey
-        this.cryptoAddressBookManager.registerCryptoAddress(genesisAddress,
-                "testDeliveredByActorPublicKey",
-                Actors.ASSET_USER,
-                "testDeliveredToActorPublicKey",
-                Actors.ASSET_ISSUER,
-                Platforms.DIGITAL_ASSET_PLATFORM,
-                VaultType.ASSET_VAULT,
-                CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
-                UUID.randomUUID().toString(),//this.walletPublicKey,
-                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
+        try {
+            this.cryptoAddressBookManager.registerCryptoAddress(genesisAddress,
+                    this.assetUserActorDao.getActorPublicKey().getPublicKey(),//"testDeliveredByActorPublicKey",
+                    Actors.DAP_ASSET_USER,
+                    "testDeliveredToActorIssuerPublicKey",
+                    Actors.DAP_ASSET_ISSUER,
+                    Platforms.DIGITAL_ASSET_PLATFORM,
+                    VaultType.ASSET_VAULT,
+                    CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
+                    UUID.randomUUID().toString(),//this.walletPublicKey,
+                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
+
+//            System.out.println("========================================================================");
+//            System.out.println("Genesis Address: " + genesisAddress.getAddress());
+//            System.out.println("Delivered By: " + this.assetUserActorDao.getActorPublicKey().getPublicKey());
+//            System.out.println("Actor: " + Actors.DAP_ASSET_USER);
+//            System.out.println("Delivered To: " + "testDeliveredToActorIssuerPublicKey");
+//            System.out.println("Actor: " + Actors.DAP_ASSET_ISSUER);
+//            System.out.println("Platform: " + Platforms.DIGITAL_ASSET_PLATFORM);
+//            System.out.println("Vault Type: " + VaultType.ASSET_VAULT);
+//            System.out.println("CryptoCurrency Vault: " + CryptoCurrencyVault.BITCOIN_VAULT.getCode());
+//            System.out.println("Wallet PublicKey: " + UUID.randomUUID().toString());
+//            System.out.println("Reference Wallet: " + ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
+//            System.out.println("========================================================================");
+        } catch (CantGetAssetUsersListException e) {
+            throw new CantRegisterCryptoAddressBookRecordException(e.getMessage(), e, "Asset User Actor", "Can't Register CryptoAddress Book: Review Actor PublicKey");
+        }
     }
 
 //    private void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType)throws ObjectNotSetException {
@@ -447,6 +463,17 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
     }
 
     @Override
+    public List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUserActorsException {
+        List<ActorAssetUser> list; // Asset User Actor list.
+        try {
+            list = this.assetUserActorDao.getAllAssetUserActorConnected();
+        } catch (CantGetAssetUsersListException e) {
+            throw new CantGetAssetUserActorsException("CAN'T GET ASSET USER ACTORS CONNECTED WITH CRYPTOADDRESS ", e, "", "");
+        }
+        return list;
+    }
+
+    @Override
     public ActorAssetUser createActorAssetUserFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage, Location assetUserActorlocation) throws CantCreateAssetUserActorException {
         return new AssetUserActorRecord(assetUserActorPublicKey, assetUserActorName, assetUserActorprofileImage, assetUserActorlocation);
     }
@@ -488,7 +515,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
                 if (i == 0) {
                     this.assetUserActorDao.createNewAssetUser(assetUserActorIdentityToLinkPublicKey, "Thunders Asset User_" + i, assetUserActorToAddPublicKey, new byte[0], genders, age, cryptoAddress, ConnectionState.CONNECTED);
                 }
-                this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(assetUserActorIdentityToLinkPublicKey, "Thunders Asset User_" + i, new byte[0], location);
+                this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(assetUserActorToAddPublicKey, "Thunders Asset User_" + i, new byte[0], location, cryptoAddress);
             }
 //                System.out.println("Asset User Actor Identity Link PublicKey: " + assetUserActorIdentityToLinkPublicKey);
 //                System.out.println("Asset User Actor Name: Thunders Asset User_" + i);

@@ -586,7 +586,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                 "testDeliveredByActorPublicKey",
                 Actors.INTRA_USER,
                 "testDeliveredToActorPublicKey",
-                Actors.ASSET_ISSUER,
+                Actors.DAP_ASSET_ISSUER,
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 VaultType.ASSET_VAULT,
                 CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
@@ -629,7 +629,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                     "senderPublicKey",
                     "receptorPublicKey",
                     Actors.INTRA_USER,
-                    Actors.ASSET_ISSUER,
+                    Actors.DAP_ASSET_ISSUER,
                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
             this.assetIssuingTransactionDao.persistOutgoingIntraActorUUID(transactionId, outgoingId);
             //this.assetIssuingTransactionDao.updateTransactionProtocolStatus(genesisTransaction, ProtocolStatus.TO_BE_NOTIFIED);

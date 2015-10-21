@@ -119,7 +119,20 @@ public interface ActorAssetUserManager {
 
   ActorAssetUser getActorPublicKey() throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
 
+  /**
+   * The method <code>getAllAssetUserActorRegistered</code> get All Actors Registered in Actor Network Service
+   *
+   * @throws CantGetAssetUserActorsException
+   * @throws CantAssetUserActorNotFoundException
+   */
   List<ActorAssetUser> getAllAssetUserActorRegistered() throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
+
+   /**
+     * The method <code>getAllAssetUserActorConnected</code> receives All Actors with have CryptoAddress in BD
+     *
+     * @throws CantGetAssetUserActorsException
+     */
+  List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUserActorsException;
 
   ActorAssetUser createActorAssetUserFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage, Location assetUserActorlocation) throws CantCreateAssetUserActorException;
 
