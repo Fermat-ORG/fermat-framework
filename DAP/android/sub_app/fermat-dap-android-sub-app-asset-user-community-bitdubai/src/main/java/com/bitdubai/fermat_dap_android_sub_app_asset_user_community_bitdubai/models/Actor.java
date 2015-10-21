@@ -7,137 +7,125 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
 /**
- * Created by francisco on 15/10/15.
+ * Actor Model
  */
 public class Actor implements ActorAssetUser {
 
-    private String thumbnail;
-
-    public Actor(String name, String thumbnail) {
-//        super(name, null, null, null);
-        setThumbnail(thumbnail);
-    }
+    private String publicKey;
+    private String name;
+    private long contactRegistrationDate;
+    private byte[] profileImage;
+    private Double latitude;
+    private Double longitude;
+    private Genders gender;
+    private ConnectionState state;
+    private CryptoAddress cryptoAddress;
+    private String age;
 
     public Actor(String name, String publicKey, byte[] profileImage, Location location) {
-//        super(name, publicKey, profileImage, location);
+        this.name = name;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage;
+        this.latitude = location.getLatitude();
+        this.longitude = location.getLongitude();
     }
 
     public Actor(String name, String publicKey, byte[] profileImage, long registrationDate, Genders genders, String age) {
-//        super(name, publicKey, profileImage, registrationDate, genders, age);
+        this.name = name;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage;
+        this.contactRegistrationDate = registrationDate;
+        this.gender = genders;
+        this.age = age;
     }
 
-    public String getThumbnail() {
-        return thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-    }
-
-    /**
-     * The metho <code>getPublicKey</code> gives us the public key of the represented Asset user
-     *
-     * @return the public key
-     */
     @Override
     public String getPublicKey() {
-        return null;
+        return publicKey;
     }
 
-    /**
-     * The method <code>getName</code> gives us the name of the represented Asset user
-     *
-     * @return the name of the intra user
-     */
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
+
     @Override
     public String getName() {
-        return null;
+        return name;
     }
 
-    /**
-     * The method <code>getContactRegistrationDate</code> gives us the date when both Asset users
-     * exchanged their information and accepted each other as contacts.
-     *
-     * @return the date
-     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public long getContactRegistrationDate() {
-        return 0;
+        return contactRegistrationDate;
     }
 
-    /**
-     * The method <coda>getProfileImage</coda> gives us the profile image of the represented Asset user
-     *
-     * @return the image
-     */
+    public void setContactRegistrationDate(long contactRegistrationDate) {
+        this.contactRegistrationDate = contactRegistrationDate;
+    }
+
     @Override
     public byte[] getProfileImage() {
-        return new byte[0];
+        return profileImage;
     }
 
-    /**
-     * The method <code>getConnectionState</code> gives us the ConnectionState state of the represented Asset
-     * user
-     *
-     * @return the contact state
-     */
+    public void setProfileImage(byte[] profileImage) {
+        this.profileImage = profileImage;
+    }
+
     @Override
     public ConnectionState getConnectionState() {
-        return null;
+        return state;
     }
 
-    /**
-     * The method <code>getLocation</code> gives us the Location of the represented Asset user
-     *
-     * @return the Location of the Asset user
-     */
     @Override
     public Double getLocationLatitude() {
-        return null;
+        return latitude;
     }
 
     @Override
     public Double getLocationLongitude() {
-        return null;
+        return longitude;
     }
 
-    /**
-     * The method <code>getLocation</code> gives us the Location of the represented Asset user
-     *
-     * @return the Location of the Asset user
-     */
-//    @Override
-//    public Location getLocation() {
-//        return null;
-//    }
-
-    /**
-     * The method <code>getGender</code> gives us the Gender of the represented Asset user
-     *
-     * @return the Gender of the Asset user
-     */
     @Override
     public Genders getGender() {
-        return null;
+        return gender;
     }
 
-    /**
-     * The method <code>getAge</code> gives us the Age of the represented Asset user
-     *
-     * @return the Location of the Asset user
-     */
+    public void setGender(Genders gender) {
+        this.gender = gender;
+    }
+
     @Override
     public String getAge() {
-        return null;
+        return age;
     }
 
-    /**
-     * returns the crypto address to which it belongs
-     *
-     * @return CryptoAddress instance.
-     */
+    public void setAge(String age) {
+        this.age = age;
+    }
+
     @Override
     public CryptoAddress getCryptoAddress() {
-        return null;
+        return cryptoAddress;
+    }
+
+    public void setCryptoAddress(CryptoAddress cryptoAddress) {
+        this.cryptoAddress = cryptoAddress;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setState(ConnectionState state) {
+        this.state = state;
     }
 }

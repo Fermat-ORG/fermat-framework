@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.fragments;
+package com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,32 +15,44 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.ActorAdapter;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.adapters.ActorAdapter;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.AssetIssuerCommunitySubAppSession;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Home Fragment
+ * Created by francisco on 21/10/15.
  */
-public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class HomeFragment extends FermatFragment
+        implements SwipeRefreshLayout.OnRefreshListener {
 
-    private AssetUserCommunitySubAppModuleManager manager;
-    private List<ActorAssetUser> actors;
 
-    // recycler
+    private List<ActorAssetIssuer> actors;
+
+    /**
+     * Platform reference
+     */
+    private AssetIssuerCommunitySubAppModuleManager manager;
+    private ErrorManager errorManager;
+
+    /**
+     * View reference
+     */
+    private View rootView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
-    private GridLayoutManager layoutManager;
+    private RecyclerView.LayoutManager layoutManager;
     private ActorAdapter adapter;
-    private SwipeRefreshLayout swipeRefresh;
 
-    // flags
+    /**
+     * Flags
+     */
     private boolean isRefreshing = false;
-
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -50,7 +62,8 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            manager = ((AssetUserCommunitySubAppSession) subAppsSession).getManager();
+            manager = ((AssetIssuerCommunitySubAppSession) subAppsSession).getManager();
+            errorManager = subAppsSession.getErrorManager();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -59,7 +72,7 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.home_fragment, container, false);
+        rootView = inflater.inflate(R.layout.home_dap_issuer_community_fragment, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
@@ -67,10 +80,9 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
         adapter = new ActorAdapter(getActivity());
         recyclerView.setAdapter(adapter);
 
-        swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
-        swipeRefresh.setOnRefreshListener(this);
-        swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
-
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeColors(Color.BLUE, Color.BLUE);
         return rootView;
     }
 
@@ -96,12 +108,12 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
                 @Override
                 public void onPostExecute(Object... result) {
                     isRefreshing = false;
-                    if (swipeRefresh != null)
-                        swipeRefresh.setRefreshing(false);
+                    if (swipeRefreshLayout != null)
+                        swipeRefreshLayout.setRefreshing(false);
                     if (result != null &&
                             result.length > 0) {
                         if (getActivity() != null && adapter != null) {
-                            actors = (ArrayList<ActorAssetUser>) result[0];
+                            actors = (ArrayList<ActorAssetIssuer>) result[0];
                             adapter.changeDataSet(actors);
                         }
                     }
@@ -110,8 +122,8 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
                 @Override
                 public void onErrorOccurred(Exception ex) {
                     isRefreshing = false;
-                    if (swipeRefresh != null)
-                        swipeRefresh.setRefreshing(false);
+                    if (swipeRefreshLayout != null)
+                        swipeRefreshLayout.setRefreshing(false);
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
                     ex.printStackTrace();
@@ -121,11 +133,11 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
         }
     }
 
-    private synchronized List<ActorAssetUser> getMoreData() throws Exception {
-        List<ActorAssetUser> dataSet = null;
+    private synchronized List<ActorAssetIssuer> getMoreData() throws Exception {
+        List<ActorAssetIssuer> dataSet = null;
         if (manager == null)
-            throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
-        dataSet = manager.getAllActorAssetUserRegistered();
+            throw new NullPointerException("AssetIssuerCommunitySubAppModuleManager is null");
+        dataSet = manager.getAllActorAssetIssuerRegistered();
         return dataSet;
     }
 }
