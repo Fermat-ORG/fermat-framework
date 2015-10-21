@@ -773,7 +773,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
          * Request the list of component registers
          */
         try {
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfile, discoveryQueryParameters);
         } catch (CantRequestListException e) {
             e.printStackTrace();
         }
@@ -896,61 +896,66 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
     }
 
     @Override
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
-        /*
-         * if have result create a ActorAssetRedeemPoint
-         */
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
 
-        if(platformComponentProfileRegisteredList != null && !platformComponentProfileRegisteredList.isEmpty()){
-
-            /*
-             * Get a remote network service registered from the list requested
-             */
-            PlatformComponentProfile remoteNetworkServiceToConnect = platformComponentProfileRegisteredList.get(0);
-
-            /*
-             * tell to the manager to connect to this remote network service
-             */
-            //communicationNetworkServiceConnectionManager.connectTo(remoteNetworkServiceToConnect);
-
-
-            if(remoteNetworkServiceToConnect.getNetworkServiceType()== NetworkServiceType.UNDEFINED &&  remoteNetworkServiceToConnect.getPlatformComponentType()== PlatformComponentType.ACTOR_ASSET_USER ){
-
-                for(PlatformComponentProfile p : platformComponentProfileRegisteredList){
-
-
-//                    ReturnAssetUserActorNetworkService returnactor = new AssetUserANS();
-//
-//                    Location loca = null;
-//
-//                    ActorAssetRedeemPoint actorAssetRedeemPointNew = null;
-//                    try {
-//                        actorAssetRedeemPointNew = actorAssetRedeemPointManager.creatActorAssetUser(p.getIdentityPublicKey(),p.getName(),convertoByteArrayfromString(p.getExtraData()), loca);
-//                    } catch (CantCreateAssetUserActorException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    actorAssetUserRegisteredList.add(actorAssetUserNew);
-                }
-
-//                FermatEvent event =  eventManager.getNewEvent(DapEvenType.COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION);
-//                event.setSource(EventSource.ACTOR_ASSET_USER);
-//
-//                ((CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent)event).setActorAssetUserList(actorAssetUserRegisteredList);
-//                eventManager.raiseEvent(event);
-
-
-            }else if(remoteNetworkServiceToConnect.getNetworkServiceType()== NetworkServiceType.ASSET_REDEEM_POINT_ACTOR &&  remoteNetworkServiceToConnect.getPlatformComponentType()== PlatformComponentType.NETWORK_SERVICE ){
-
-                /*
-                 * save into the cache
-                 */
-                remoteNetworkServicesRegisteredList = platformComponentProfileRegisteredList;
-
-            }
-        }
     }
+
+//    @Override
+//    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
+//        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
+//        /*
+//         * if have result create a ActorAssetRedeemPoint
+//         */
+//
+//        if(platformComponentProfileRegisteredList != null && !platformComponentProfileRegisteredList.isEmpty()){
+//
+//            /*
+//             * Get a remote network service registered from the list requested
+//             */
+//            PlatformComponentProfile remoteNetworkServiceToConnect = platformComponentProfileRegisteredList.get(0);
+//
+//            /*
+//             * tell to the manager to connect to this remote network service
+//             */
+//            //communicationNetworkServiceConnectionManager.connectTo(remoteNetworkServiceToConnect);
+//
+//
+//            if(remoteNetworkServiceToConnect.getNetworkServiceType()== NetworkServiceType.UNDEFINED &&  remoteNetworkServiceToConnect.getPlatformComponentType()== PlatformComponentType.ACTOR_ASSET_USER ){
+//
+//                for(PlatformComponentProfile p : platformComponentProfileRegisteredList){
+//
+//
+////                    ReturnAssetUserActorNetworkService returnactor = new AssetUserANS();
+////
+////                    Location loca = null;
+////
+////                    ActorAssetRedeemPoint actorAssetRedeemPointNew = null;
+////                    try {
+////                        actorAssetRedeemPointNew = actorAssetRedeemPointManager.creatActorAssetUser(p.getIdentityPublicKey(),p.getName(),convertoByteArrayfromString(p.getExtraData()), loca);
+////                    } catch (CantCreateAssetUserActorException e) {
+////                        e.printStackTrace();
+////                    }
+////
+////                    actorAssetUserRegisteredList.add(actorAssetUserNew);
+//                }
+//
+////                FermatEvent event =  eventManager.getNewEvent(DapEvenType.COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION);
+////                event.setSource(EventSource.ACTOR_ASSET_USER);
+////
+////                ((CompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent)event).setActorAssetUserList(actorAssetUserRegisteredList);
+////                eventManager.raiseEvent(event);
+//
+//
+//            }else if(remoteNetworkServiceToConnect.getNetworkServiceType()== NetworkServiceType.ASSET_REDEEM_POINT_ACTOR &&  remoteNetworkServiceToConnect.getPlatformComponentType()== PlatformComponentType.NETWORK_SERVICE ){
+//
+//                /*
+//                 * save into the cache
+//                 */
+//                remoteNetworkServicesRegisteredList = platformComponentProfileRegisteredList;
+//
+//            }
+//        }
+//    }
 
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
