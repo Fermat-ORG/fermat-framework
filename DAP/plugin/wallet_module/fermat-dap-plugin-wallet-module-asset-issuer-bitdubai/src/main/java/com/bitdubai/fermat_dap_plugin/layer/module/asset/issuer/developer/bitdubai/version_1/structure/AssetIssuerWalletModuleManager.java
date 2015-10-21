@@ -2,7 +2,9 @@ package com.bitdubai.fermat_dap_plugin.layer.module.asset.issuer.developer.bitdu
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.DealsWithAssetIssuerWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
@@ -23,16 +25,17 @@ import java.util.List;
  * Created by franklin on 06/10/15.
  */
 public class AssetIssuerWalletModuleManager {
-    //TODO: Excepciones y documentar
+    //TODO: Documentar
     AssetIssuerWalletManager assetIssuerWalletManager;
+    ActorAssetUserManager actorAssetUserManager;
 
     /**
      * constructor
      * @param assetIssuerWalletManager
      */
-    public AssetIssuerWalletModuleManager(AssetIssuerWalletManager assetIssuerWalletManager) {
+    public AssetIssuerWalletModuleManager(AssetIssuerWalletManager assetIssuerWalletManager,ActorAssetUserManager actorAssetUserManager) {
         this.assetIssuerWalletManager = assetIssuerWalletManager;
-        //setAssetIssuerManager(assetIssuerWalletManager);
+        this.actorAssetUserManager    = actorAssetUserManager;
     }
 
     public List<AssetIssuerWalletList>  getAssetIssuerWalletBalancesAvailable(String publicKey) throws CantLoadWalletException{
@@ -60,5 +63,13 @@ public class AssetIssuerWalletModuleManager {
     }
     public void setAssetIssuerManager(AssetIssuerWalletManager assetIssuerWalletManager) {
         this.assetIssuerWalletManager = assetIssuerWalletManager;
+    }
+
+    public List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUserActorsException {
+        try {
+            return actorAssetUserManager.getAllAssetUserActorConnected();
+        }catch (Exception exception){
+            throw new CantGetAssetUserActorsException("Error Get Actor Connected", exception, "Method: getAllAssetUserActorConnected", "Class: AssetIssuerWalletModuleManager");
+        }
     }
 }
