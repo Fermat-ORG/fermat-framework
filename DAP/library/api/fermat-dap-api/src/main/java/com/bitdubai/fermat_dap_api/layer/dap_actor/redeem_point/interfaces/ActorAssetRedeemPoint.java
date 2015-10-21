@@ -63,12 +63,16 @@ public interface ActorAssetRedeemPoint {
      * @return un objeto {@link com.bitdubai.fermat_api.layer.osa_android.location_system.Location}
      * que contiene las coordenadas y demas valores para ubicar al RedeemPoint en el mapa.
      */
-    Location getLocation();
+//    Location getLocation();
 
+    Double getLocationLatitude();
+
+    Double getLocationLongitude();
     /**
      * Metodo {@code getAddress()}:
      * devuelve la direccion en el que esta ubicado un redeem point, a diferencia del metodo
-     * {@link ActorAssetRedeemPoint#getLocation()} la informacion devuelta por este metodo,
+     * {@link ActorAssetRedeemPoint#getLocationLatitude()#getLocationLongitude}
+     * la informacion devuelta por este metodo,
      * aunque ambas puedan apuntar al mismo lugar, se presenta de una manera mas amigable
      * para el usuario que coordenadas geograficas.
      *
