@@ -126,14 +126,14 @@ public class NavigationStructureFactory {
 
 
         fragment = new Fragment();
-        fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_DEAL_DETAILS.getKey());
+        fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey());
         fragment.setBack(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey());
-        activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_DEAL_DETAILS.getKey(), fragment);
+        activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey(), fragment);
 
         fragment = new Fragment();
-        fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS.getKey());
+        fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS.getKey());
         fragment.setBack(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB.getKey());
-        activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS.getKey(), fragment);
+        activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS.getKey(), fragment);
 
         // TODO falta agregar un footer a navigation structure
         fragment = new Fragment();
@@ -168,9 +168,9 @@ public class NavigationStructureFactory {
         activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_DEALS.getKey(), fragment);
 
         fragment = new Fragment();
-        fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_DEAL_DETAILS.getKey());
+        fragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey());
         fragment.setBack(Fragments.CBP_CRYPTO_BROKER_WALLET_DEALS.getKey());
-        activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_DEAL_DETAILS.getKey(), fragment);
+        activity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey(), fragment);
 
         return activity;
     }

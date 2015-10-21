@@ -22,7 +22,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.stock.StockP
 import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_CONTRACTS;
 import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS;
 import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_DEALS;
-import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_DEAL_DETAILS;
+import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS;
 import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB;
 import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB;
 import static com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentsEnumType.CBP_CRYPTO_BROKER_WALLET_MARKET_RATE_STATISTICS;
@@ -49,7 +49,7 @@ public class CryptoBrokerWalletFragmentFactory implements WalletFragmentFactory 
             return OpenContractsTabFragment.newInstance();
         if (fragment == CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS)
             return StockStatisticsFragment.newInstance();
-        if (fragment == CBP_CRYPTO_BROKER_WALLET_DEAL_DETAILS)
+        if (fragment == CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS)
             return DealDetailsFragment.newInstance();
         if (fragment == CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS)
             return ContractDetailsFragment.newInstance();
