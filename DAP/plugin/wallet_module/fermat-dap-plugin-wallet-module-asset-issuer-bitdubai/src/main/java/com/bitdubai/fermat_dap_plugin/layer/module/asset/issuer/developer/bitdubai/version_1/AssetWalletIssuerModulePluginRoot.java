@@ -88,6 +88,11 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithActor
         try {
             assetIssuerWalletModuleManager = new AssetIssuerWalletModuleManager(assetIssuerWalletManager, actorAssetUserManager);
             System.out.println("******* Asset Issuer Wallet Module Init ******");
+//            for (ActorAssetUser actorAssetUser : getAllAssetUserActorConnected())
+//            {
+//                System.out.println("Actor Public Key: " + actorAssetUser.getPublicKey());
+//                System.out.println("Actor Name      : " + actorAssetUser.getName());
+//            }
             this.serviceStatus = ServiceStatus.STARTED;
         }catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
