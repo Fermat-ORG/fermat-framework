@@ -554,12 +554,11 @@ public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsW
     public List<IntraUserInformation> getIntraUsersWaitingYourAcceptance(int max,int offset) throws CantGetIntraUsersListException {
         List<IntraUserInformation> intraUserList= new ArrayList<IntraUserInformation>();
 
-        intraUserList.add(new IntraUserModuleInformation("Matias Furszyfer","public_key",null));
-        intraUserList.add(new IntraUserModuleInformation("Jorge Gonzales","public_key",null));
-        intraUserList.add(new IntraUserModuleInformation("Cher Munish","public_key",null));
-        intraUserList.add(new IntraUserModuleInformation("Scrowe Math","public_key",null));
-        try
-        {
+//        intraUserList.add(new IntraUserModuleInformation("Matias Furszyfer","public_key",null));
+//        intraUserList.add(new IntraUserModuleInformation("Jorge Gonzales","public_key",null));
+//        intraUserList.add(new IntraUserModuleInformation("Cher Munish","public_key",null));
+//        intraUserList.add(new IntraUserModuleInformation("Scrowe Math","public_key",null));
+        try {
 
 
             List<IntraWalletUser> actorsList = this.intraWalletUserManager.getWaitingYourAcceptanceIntraWalletUsers(this.intraUserLoggedPublicKey, max, offset);
@@ -570,8 +569,7 @@ public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsW
 
             return intraUserList;
         }
-       catch(CantGetIntraWalletUsersException e)
-        {
+       catch(CantGetIntraWalletUsersException e) {
             //throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE",e,"","");
             /**
              * Testing purpose
@@ -579,8 +577,7 @@ public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsW
 
             return intraUserList;
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE",FermatException.wrapException(e),"","unknown exception");
         }
     }

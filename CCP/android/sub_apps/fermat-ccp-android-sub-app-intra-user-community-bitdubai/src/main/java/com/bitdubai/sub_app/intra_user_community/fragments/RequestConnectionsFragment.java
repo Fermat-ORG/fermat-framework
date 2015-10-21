@@ -152,7 +152,7 @@ public class RequestConnectionsFragment extends FermatListFragment<IntraUserInfo
     public List<IntraUserInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<IntraUserInformation> data = new ArrayList<>();
         try {
-            if (moduleManager == null) {
+            if (moduleManager != null) {
                 data = moduleManager.getIntraUsersWaitingYourAcceptance(MAX, offset);
                 offset = data.size();
             } else {
