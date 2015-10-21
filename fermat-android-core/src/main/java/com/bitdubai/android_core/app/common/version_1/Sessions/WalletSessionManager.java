@@ -1,15 +1,16 @@
 package com.bitdubai.android_core.app.common.version_1.Sessions;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
-
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
@@ -35,7 +36,7 @@ public class WalletSessionManager implements com.bitdubai.fermat_android_api.lay
 
 
     @Override
-    public WalletSession openWalletSession(InstalledWallet installedWallet,CryptoWalletManager cryptoWalletManager,WalletSettings walletSettings,WalletResourcesProviderManager walletResourcesProviderManager,ErrorManager errorManager,CryptoBrokerWalletModuleManager cryptoBrokerWalletModuleManager,AssetIssuerWalletSupAppModuleManager assetIssuerWalletManager) {
+    public WalletSession openWalletSession(InstalledWallet installedWallet, CryptoWalletManager cryptoWalletManager, WalletSettings walletSettings, WalletResourcesProviderManager walletResourcesProviderManager, ErrorManager errorManager, CryptoBrokerWalletModuleManager cryptoBrokerWalletModuleManager, AssetIssuerWalletSupAppModuleManager assetIssuerWalletManager, AssetUserWalletSubAppModuleManager assetUserModuleManager) {
         WalletSession walletSession = null;
         if(installedWallet!=null){
             switch (installedWallet.getWalletCategory()){
@@ -56,6 +57,10 @@ public class WalletSessionManager implements com.bitdubai.fermat_android_api.lay
                         case "asset_issuer":
                             walletSession = new AssetIssuerSession(installedWallet,errorManager,assetIssuerWalletManager);
                             lstWalletSession.put(installedWallet.getWalletPublicKey(),walletSession);
+                            return walletSession;
+                        case "asset_user":
+                            walletSession = new AssetUserSession(walletResourcesProviderManager, installedWallet, errorManager, assetUserModuleManager);
+                            lstWalletSession.put(installedWallet.getWalletPublicKey(), walletSession);
                             return walletSession;
                     }
 
