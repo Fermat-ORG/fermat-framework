@@ -141,7 +141,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         }catch (Exception e){
 
             System.out.println("RequestListComponentRegisterPacketProcessor - requested list is not available");
-            e.printStackTrace();
+            //e.printStackTrace();
 
             /*
              * Get the client connection destination
