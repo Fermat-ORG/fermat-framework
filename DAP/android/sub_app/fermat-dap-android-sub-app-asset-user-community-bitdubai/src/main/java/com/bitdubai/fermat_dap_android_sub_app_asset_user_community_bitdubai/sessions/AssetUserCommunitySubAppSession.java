@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Created by francisco on 14/10/15.
  */
-public class Session implements SubAppsSession {
+public class AssetUserCommunitySubAppSession implements SubAppsSession {
 
 
     private AssetUserCommunitySubAppModuleManager manager;
@@ -21,7 +21,7 @@ public class Session implements SubAppsSession {
     private Map<String, Object> data;
 
 
-    public Session(SubApps subApps, ErrorManager errorManager, AssetUserCommunitySubAppModuleManager manager) {
+    public AssetUserCommunitySubAppSession(SubApps subApps, ErrorManager errorManager, AssetUserCommunitySubAppModuleManager manager) {
         this.sessionType = subApps;
         this.errorManager = errorManager;
         this.manager = manager;
