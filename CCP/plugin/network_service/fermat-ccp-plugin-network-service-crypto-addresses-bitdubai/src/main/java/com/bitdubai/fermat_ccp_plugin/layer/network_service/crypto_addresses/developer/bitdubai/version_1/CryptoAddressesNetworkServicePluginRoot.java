@@ -592,7 +592,7 @@ public class CryptoAddressesNetworkServicePluginRoot implements
             /*
              * Request the list of component registers
              */
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfile, discoveryQueryParameters);
 
         } catch (CantRequestListException e) {
 
@@ -785,20 +785,6 @@ public class CryptoAddressesNetworkServicePluginRoot implements
 
     }
 
-    /**
-     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
-     */
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(final List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
-
-        System.out.println(" Crypto Payment Request Network Service - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
-
-        /*
-         * save into the cache
-         */
-        remoteNetworkServicesRegisteredList = platformComponentProfileRegisteredList;
-
-    }
-
     @Override
     public void handleFailureComponentRegistrationNotificationEvent(final PlatformComponentProfile networkServiceApplicant,
                                                                     final PlatformComponentProfile remoteParticipant      ) {
@@ -807,7 +793,7 @@ public class CryptoAddressesNetworkServicePluginRoot implements
     }
 
     @Override
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
 
         System.out.println(" Crypto Addresses Network Service - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
 

@@ -83,7 +83,7 @@ public class ComponentRegistrationRequestPacketProcessor extends FermatPacketPro
             PlatformComponentProfile platformComponentProfileToRegister = new PlatformComponentProfileCommunication().fromJson(packetContentJsonStringRepresentation);
 
             // System.out.println("ComponentRegistrationRequestPacketProcessor - platformComponentProfileToRegister.getPlatformComponentType() = "+platformComponentProfileToRegister.getPlatformComponentType() );
-            // System.out.println("ComponentRegistrationRequestPacketProcessor - platformComponentProfileToRegister.getNetworkServiceType() = "+platformComponentProfileToRegister.getNetworkServiceType() );
+            // System.out.println("ComponentRegistrationRequestPacketProcessor - platformComponentProfileToRegister.getNetworkServiceTypeApplicant() = "+platformComponentProfileToRegister.getNetworkServiceTypeApplicant() );
 
 
             /*
