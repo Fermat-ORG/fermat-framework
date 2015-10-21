@@ -271,7 +271,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
 //                checkTransactionsCryptoStatus(getCryptoTransactionsByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK));
 
                 setGenesisTransactionFromOutgoingIntraActor();
-                checkTransactionsNotFinished();
+                checkTransactionsUnfinished();
                 /**
                  * The following lines will be used in the future. Please, delete the previous lines
                  * when the next lines will be ready to be used.
@@ -368,7 +368,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
          * @throws CantGetGenesisTransactionException
          * @throws CantDeliverDigitalAssetToAssetWalletException
          */
-        private void checkTransactionsNotFinished()throws CantExecuteQueryException,
+        private void checkTransactionsUnfinished()throws CantExecuteQueryException,
                 CantCheckAssetIssuingProgressException,
                 UnexpectedResultReturnedFromDatabaseException,
                 CantGetGenesisTransactionException,
@@ -396,8 +396,9 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                                     String transactionInternalId=this.assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                                     digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.BOOK);
                                     assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
-                                    assetIssuingTransactionDao.updateEventStatus(eventId);
+
                                 }
+                                assetIssuingTransactionDao.updateEventStatus(eventId);
                             }
                             break;
                         //case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER:
@@ -405,7 +406,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                             if (isTransactionToBeNotified(CryptoStatus.ON_CRYPTO_NETWORK)){
                                 genesisTransactionList=assetIssuingTransactionDao.getGenesisTransactionsByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
                                 for(String genesisTransaction: genesisTransactionList){
-                                    System.out.println("BCH Transaction Hash: "+genesisTransaction);
+                                    System.out.println("BCH Transaction Hash: " + genesisTransaction);
                                     CryptoTransaction cryptoGenesisTransaction=getCryptoTransactionByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN, genesisTransaction);
                                     if(cryptoGenesisTransaction==null){
                                         //throw new CantCheckAssetIssuingProgressException("Cannot get the crypto status from crypto network");
@@ -418,8 +419,9 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                                     String transactionInternalId=this.assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                                     digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.BOOK);
                                     assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
-                                    assetIssuingTransactionDao.updateEventStatus(eventId);
+
                                 }
+                                assetIssuingTransactionDao.updateEventStatus(eventId);
                             }
                             break;
                         //case INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER:

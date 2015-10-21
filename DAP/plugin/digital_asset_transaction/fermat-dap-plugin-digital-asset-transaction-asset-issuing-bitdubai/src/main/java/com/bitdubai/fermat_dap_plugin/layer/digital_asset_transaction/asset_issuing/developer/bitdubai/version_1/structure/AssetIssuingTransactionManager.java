@@ -14,6 +14,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.Ass
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
@@ -37,7 +38,7 @@ import java.util.UUID;
 public class AssetIssuingTransactionManager implements AssetIssuingManager, DealsWithErrors/*, TransactionProtocolManager*/ {
 
     CryptoAddressBookManager cryptoAddressBookManager;
-    //CryptoVaultManager cryptoVaultManager;
+    CryptoVaultManager cryptoVaultManager;
     BitcoinWalletManager bitcoinWalletManager;
     ErrorManager errorManager;
     UUID pluginId;
@@ -55,7 +56,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     BitcoinNetworkManager bitcoinNetworkManager;
 
     public AssetIssuingTransactionManager(UUID pluginId,
-                                          //CryptoVaultManager cryptoVaultManager,
+                                          CryptoVaultManager cryptoVaultManager,
                                           BitcoinWalletManager bitcoinWalletManager,
                                           PluginDatabaseSystem pluginDatabaseSystem,
                                           PluginFileSystem pluginFileSystem,
@@ -64,7 +65,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
                                           CryptoAddressBookManager cryptoAddressBookManager,
                                           OutgoingIntraActorManager outgoingIntraActorManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 
-        //setCryptoVaultManager(cryptoVaultManager);
+        setCryptoVaultManager(cryptoVaultManager);
         setCryptoWallet(bitcoinWalletManager);
         setErrorManager(errorManager);
         setPluginFileSystem(pluginFileSystem);
@@ -74,7 +75,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         setCryptoAddressBookManager(cryptoAddressBookManager);
         setOutgoingIntraActorManager(outgoingIntraActorManager);
         this.digitalAssetCryptoTransactionFactory=new DigitalAssetCryptoTransactionFactory(this.pluginId,
-                //this.cryptoVaultManager,
+                this.cryptoVaultManager,
                 this.bitcoinWalletManager,
                 this.pluginDatabaseSystem,
                 this.pluginFileSystem,
@@ -199,12 +200,12 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         this.pluginFileSystem=pluginFileSystem;
     }
 
-    /*public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) throws CantSetObjectException{
+    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) throws CantSetObjectException{
         if(cryptoVaultManager==null){
             throw new CantSetObjectException("cryptoVaultManager is null");
         }
         this.cryptoVaultManager=cryptoVaultManager;
-    }*/
+    }
 
     public void setAssetVaultManager(AssetVaultManager assetVaultManager)throws CantSetObjectException{
         if(assetVaultManager==null){
