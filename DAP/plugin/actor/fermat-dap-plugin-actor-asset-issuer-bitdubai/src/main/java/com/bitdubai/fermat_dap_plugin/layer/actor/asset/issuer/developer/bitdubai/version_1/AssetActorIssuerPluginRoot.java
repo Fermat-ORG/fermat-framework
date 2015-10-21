@@ -55,6 +55,7 @@ import java.util.UUID;
 //TODO TERMINAR DE IMPLEMENTAR
 public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, DealsWithErrors, DatabaseManagerForDevelopers, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
 
+    AssetIssuerActorDao assetIssuerActorDao;
     /**
      * Service Interface member variables.
      */
@@ -165,6 +166,8 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
     @Override
     public void start() throws CantStartPluginException {
         try {
+            assetIssuerActorDao = new AssetIssuerActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
+
             test();
         } catch (CantInitializeAssetIssuerActorDatabaseException e) {
             throw new CantStartPluginException();
@@ -222,9 +225,8 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
     }
 
     private void test() throws CantInitializeAssetIssuerActorDatabaseException {
-        AssetIssuerActorDao assetIssuerActorDao;
-        try {
-            assetIssuerActorDao = new AssetIssuerActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
+//        AssetIssuerActorDao assetIssuerActorDao;
+//            assetIssuerActorDao = new AssetIssuerActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
 
             for (int i = 0; i < 10; i++) {
 
@@ -269,13 +271,13 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
             }
 
 
-        } catch (CantInitializeAssetIssuerActorDatabaseException e) {
-            System.out.println("*******************************************************");
-            System.out.println("PRUEBA DE VICTOR - ASSET ISSUER: Falló iniciando la base de datos.: ");
-            e.printStackTrace();
-            System.out.println("*******************************************************");
-            throw e;
-        }
+//        } catch (CantInitializeAssetIssuerActorDatabaseException e) {
+//            System.out.println("*******************************************************");
+//            System.out.println("PRUEBA DE VICTOR - ASSET ISSUER: Falló iniciando la base de datos.: ");
+//            e.printStackTrace();
+//            System.out.println("*******************************************************");
+//            throw e;
+//        }
     }
 
     /**

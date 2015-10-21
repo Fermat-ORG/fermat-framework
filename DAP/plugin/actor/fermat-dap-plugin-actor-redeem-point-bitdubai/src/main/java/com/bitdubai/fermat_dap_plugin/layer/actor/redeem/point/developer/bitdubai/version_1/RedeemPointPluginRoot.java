@@ -54,6 +54,8 @@ import java.util.UUID;
 
 public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, DealsWithErrors, DatabaseManagerForDevelopers, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
 
+    RedeemPointActorDao redeemPointActorDao;
+
     /**
      * Service Interface member variables.
      */
@@ -164,6 +166,8 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
     @Override
     public void start() throws CantStartPluginException {
         try {
+            redeemPointActorDao = new RedeemPointActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
+
             test();
         } catch (CantInitializeRedeemPointActorDatabaseException e) {
             throw new CantStartPluginException();
@@ -222,10 +226,7 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
     }
 
     private void test() throws CantInitializeRedeemPointActorDatabaseException {
-        RedeemPointActorDao redeemPointActorDao;
-        try {
-            redeemPointActorDao = new RedeemPointActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
-
+//        try {
             for (int i = 0; i < 10; i++) {
 
 //                System.out.println("*******************************************************");
@@ -266,13 +267,13 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
             }
 
 
-        } catch (CantInitializeRedeemPointActorDatabaseException e) {
-            System.out.println("*******************************************************");
-            System.out.println("PRUEBA DE VICTOR - REDEEM POINT: Falló iniciando la base de datos.: ");
-            e.printStackTrace();
-            System.out.println("*******************************************************");
-            throw e;
-        }
+//        } catch (CantInitializeRedeemPointActorDatabaseException e) {
+//            System.out.println("*******************************************************");
+//            System.out.println("PRUEBA DE VICTOR - REDEEM POINT: Falló iniciando la base de datos.: ");
+//            e.printStackTrace();
+//            System.out.println("*******************************************************");
+//            throw e;
+//        }
     }
 
     /**
