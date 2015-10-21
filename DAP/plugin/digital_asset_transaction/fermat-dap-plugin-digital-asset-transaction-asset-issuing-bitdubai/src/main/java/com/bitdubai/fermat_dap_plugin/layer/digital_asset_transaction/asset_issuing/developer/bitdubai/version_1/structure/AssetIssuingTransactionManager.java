@@ -141,9 +141,9 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     @Override
     public void issueAssets(DigitalAsset digitalAssetToIssue, int assetsAmount, String walletPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantIssueDigitalAssetsException {
         try {
-            startMonitorAgent();
+            //startMonitorAgent();
             //For testing and for now the walletPublicKey is hardcoded
-            walletPublicKey="walletPublicKeyTest";
+            //walletPublicKey="walletPublicKeyTest";
             this.digitalAssetCryptoTransactionFactory.issueDigitalAssets(digitalAssetToIssue, assetsAmount, walletPublicKey, blockchainNetworkType);
         } catch (CantIssueDigitalAssetsException exception) {
             throw new CantIssueDigitalAssetsException(exception, "Creating a Digital Asset Transaction", "Check the cause");

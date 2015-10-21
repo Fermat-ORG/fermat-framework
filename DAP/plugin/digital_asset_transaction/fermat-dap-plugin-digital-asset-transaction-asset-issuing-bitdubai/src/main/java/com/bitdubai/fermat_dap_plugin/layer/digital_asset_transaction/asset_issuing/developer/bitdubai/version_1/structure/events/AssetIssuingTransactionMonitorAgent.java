@@ -393,7 +393,8 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                                     System.out.println("CN genesis transaction: "+genesisTransaction);
                                     CryptoTransaction cryptoGenesisTransaction=getCryptoTransactionByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK, genesisTransaction);
                                     if(cryptoGenesisTransaction==null){
-                                        throw new CantCheckAssetIssuingProgressException("Cannot get the crypto status from crypto network");
+                                        //throw new CantCheckAssetIssuingProgressException("Cannot get the crypto status from crypto network");
+                                        continue;
                                     }
                                     String transactionInternalId=this.assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                                     digitalAssetIssuingVault.deliverDigitalAssetMetadataToAssetWallet(cryptoGenesisTransaction, transactionInternalId, AssetBalanceType.BOOK);
@@ -410,7 +411,8 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                                     System.out.println("BCH Transaction Hash: "+genesisTransaction);
                                     CryptoTransaction cryptoGenesisTransaction=getCryptoTransactionByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN, genesisTransaction);
                                     if(cryptoGenesisTransaction==null){
-                                        throw new CantCheckAssetIssuingProgressException("Cannot get the crypto status from crypto network");
+                                        //throw new CantCheckAssetIssuingProgressException("Cannot get the crypto status from crypto network");
+                                        continue;
                                     }
 
                                     assetIssuingTransactionDao.updateDigitalAssetTransactionStatusByGenesisTransaction(genesisTransaction, TransactionStatus.DELIVERING);
@@ -606,9 +608,24 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
              */
             //TODO: change this line when is implemented in crypto network
             List<CryptoTransaction> transactionListFromCryptoNetwork=bitcoinNetworkManager.getGenesisTransaction(genesisTransaction);
+            if(transactionListFromCryptoNetwork==null){
+                throw new CantGetGenesisTransactionException(CantGetGenesisTransactionException.DEFAULT_MESSAGE,null,
+                        "Getting the cryptoStatus from CryptoNetwork",
+                        "The crypto status from genesis transaction "+genesisTransaction+" return null");
+            }
+            if(transactionListFromCryptoNetwork.isEmpty()){
+                throw new CantGetGenesisTransactionException(CantGetGenesisTransactionException.DEFAULT_MESSAGE,null,
+                        "Getting the cryptoStatus from CryptoNetwork",
+                        "The genesis transaction "+genesisTransaction+" cannot be found in crypto network");
+            }
+            System.out.println("I found "+transactionListFromCryptoNetwork.size()+" from genesis transaction:\n"+genesisTransaction);
+
+            System.out.println("Now, I'm looking for this crypto status "+cryptoStatus);
             for(CryptoTransaction cryptoTransaction : transactionListFromCryptoNetwork){
+                System.out.println("CryptoStatus from CN:"+cryptoTransaction.getCryptoStatus());
                 if(cryptoTransaction.getCryptoStatus()==cryptoStatus){
                     //transactionList.add(cryptoTransaction);
+                    System.out.println("I found it!");
                     return cryptoTransaction;
                 }
             }

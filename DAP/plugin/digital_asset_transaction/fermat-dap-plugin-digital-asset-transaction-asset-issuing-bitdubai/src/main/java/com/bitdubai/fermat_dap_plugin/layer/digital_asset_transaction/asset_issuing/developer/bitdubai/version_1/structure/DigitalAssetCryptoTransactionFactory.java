@@ -197,7 +197,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     private void isPublicKeyInDatabase(String publicKey) throws CantIssueDigitalAssetException {
         try{
             if(this.assetIssuingTransactionDao.isPublicKeyUsed(publicKey)){
-                throw new CantIssueDigitalAssetException("The public key "+publicKey+" is already registred in database");
+                throw new CantIssueDigitalAssetException("The public key "+publicKey+" is already registered in database");
             }
         } catch (UnexpectedResultReturnedFromDatabaseException exception) {
             throw new CantIssueDigitalAssetException(exception, "Checking the asset publicKey in database", "Unexpected results");
@@ -429,10 +429,10 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             if(digitalAssetHash==null||digitalAssetHash.equals("")){
                 return false;
             }
-            String genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
+            /*String genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
             if(genesisTransaction==null||genesisTransaction.equals("")){
                 return false;
-            }
+            }*/
             return true;
         } catch (ObjectNotSetException e) {
             return false;
@@ -634,7 +634,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                     Actors.ASSET_ISSUER,
                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
             this.assetIssuingTransactionDao.persistOutgoingIntraActorUUID(transactionId, outgoingId);
-            //this.assetIssuingTransactionDao.updateTransactionProtocolStatus(genesisTransaction, ProtocolStatus.TO_BE_NOTIFIED);
+            this.assetIssuingTransactionDao.updateTransactionProtocolStatusByTransactionId(transactionId, ProtocolStatus.TO_BE_NOTIFIED);
             //return genesisTransaction;
         }  catch (CantExecuteQueryException exception) {
             throw new CantSendGenesisAmountException(exception, "Sending the genesis amount to Asset Wallet", "Cannot update the database: "+transactionId);
