@@ -1,7 +1,7 @@
-package com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces;
+package com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces;
 
 /**
- * The interface <code>com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionSummary</code>
+ * The interface <code>BitcoinWalletTransactionSummary</code>
  * haves all methods for the contacts activity of a bitcoin wallet
  * <p/>
  *

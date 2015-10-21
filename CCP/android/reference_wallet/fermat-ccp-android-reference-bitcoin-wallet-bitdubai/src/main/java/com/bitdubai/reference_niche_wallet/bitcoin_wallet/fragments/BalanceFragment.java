@@ -250,7 +250,7 @@ public class BalanceFragment extends FermatWalletFragment {
             );
 
            for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactions) {
-               if (cryptoWalletTransaction.getBitcoinWalletTransaction().getBalanceType().getCode().equals(referenceWalletSession.getBalanceTypeSelected())) {
+               if (cryptoWalletTransaction.getBalanceType().getCode().equals(referenceWalletSession.getBalanceTypeSelected())) {
                    ListComponent listComponent = new ListComponent(cryptoWalletTransaction);
                    lstData.add(listComponent);
                 }

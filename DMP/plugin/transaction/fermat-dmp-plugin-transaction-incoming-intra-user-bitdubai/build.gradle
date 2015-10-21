@@ -12,6 +12,7 @@ repositories {
 dependencies {
 
     compile project(':fermat-api')
+    compile project(':fermat-ccp-api')
     compile project(':fermat-cry-api')
     compile project(':fermat-pip-api')
 

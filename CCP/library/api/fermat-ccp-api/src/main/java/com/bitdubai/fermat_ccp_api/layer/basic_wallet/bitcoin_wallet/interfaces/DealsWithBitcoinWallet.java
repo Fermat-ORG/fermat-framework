@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces;
+package com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces;
 
 /**
  * Created by eze on 2015.06.17..a

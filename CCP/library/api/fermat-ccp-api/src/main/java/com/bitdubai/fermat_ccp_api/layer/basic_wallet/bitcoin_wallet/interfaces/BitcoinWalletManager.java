@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces;
+package com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantLoadWalletException;

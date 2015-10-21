@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces;
+package com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The interface <code>com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet</code>
+ * The interface <code>BitcoinWalletWallet</code>
  * haves all consumable methods from a bitcoin wallet.
  *
  * Created by eze on 2015.06.17..

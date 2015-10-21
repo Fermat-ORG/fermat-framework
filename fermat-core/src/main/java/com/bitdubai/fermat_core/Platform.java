@@ -121,8 +121,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.inte
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.DealsWithAssetDistribution;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEventMonitor;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsManager;
@@ -490,15 +490,6 @@ public class Platform implements Serializable {
             corePlatformContext.registerPlatformLayer(new com.bitdubai.fermat_core.layer.pip_Identity.IdentityLayer(), PlatformLayers.BITDUBAI_PIP_IDENTITY_LAYER);
             corePlatformContext.registerPlatformLayer(new IdentityLayer(), PlatformLayers.BITDUBAI_IDENTITY_LAYER);
             corePlatformContext.registerPlatformLayer(new EngineLayer(), PlatformLayers.BITDUBAI_ENGINE_LAYER);
-
-            // Init CCP Layers
-            /*corePlatformContext.registerPlatformLayer(new CCPActorLayer(), PlatformLayers.BITDUBAI_CCP_ACTOR_LAYER);
-            corePlatformContext.registerPlatformLayer(new CCPIdentityLayer(), PlatformLayers.BITDUBAI_CCP_IDENTITY_LAYER);
-            corePlatformContext.registerPlatformLayer(new CCPMiddlewareLayer(), PlatformLayers.BITDUBAI_CCP_MIDDLEWARE_LAYER);
-            corePlatformContext.registerPlatformLayer(new CCPNetworkServiceLayer(), PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER);
-            corePlatformContext.registerPlatformLayer(new CCPRequestLayer(), PlatformLayers.BITDUBAI_CCP_REQUEST_LAYER);
-            corePlatformContext.registerPlatformLayer(new CCPTransactionLayer(), PlatformLayers.BITDUBAI_CCP_TRANSACTION_LAYER);*/
-            // End  CCP Layers
 
             // Init CCM Layers
             corePlatformContext.registerPlatformLayer(new CCMActorLayer(), PlatformLayers.BITDUBAI_CCM_ACTOR_LAYER);

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions;
+package com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
