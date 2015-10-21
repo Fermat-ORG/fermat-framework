@@ -263,7 +263,6 @@ public enum Activities {
                 return CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS;
             case "CBPCBWCCD":
                 return CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS;
-                return Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN;
             case "DAICAM":
                 return Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN;
             case "CBPSACBI":
@@ -278,7 +277,6 @@ public enum Activities {
                 return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY;
             case "CBPSACCIEI":
                 return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY;
-                return Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY;
             case "CCPSAISI":
                 return Activities.CCP_SUB_APP_INTRA_USER_IDENTITY;
             case "CCPSAIICI":
