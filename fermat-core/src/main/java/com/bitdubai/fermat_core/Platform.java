@@ -750,13 +750,12 @@ public class Platform implements Serializable {
 
             }
 
-
             if (PIP) {
            /*
             * Plugin Actor Developer
             * -----------------------------
             */
-                Plugin actorDeveloper = ((ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER)).getmActorDeveloper();
+                Plugin actorDeveloper = ((ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER)).getActorDeveloper();
                 injectPluginReferencesAndStart(actorDeveloper, Plugins.BITDUBAI_ACTOR_DEVELOPER);
 
            /*
@@ -765,20 +764,6 @@ public class Platform implements Serializable {
             */
                 Plugin developerModule = ((com.bitdubai.fermat_core.layer.pip_module.ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_MODULE_LAYER)).getmDeveloperModule();
                 injectPluginReferencesAndStart(developerModule, Plugins.BITDUBAI_DEVELOPER_MODULE);
-
-           /*
-            * Plugin Extra User
-            * -------------------------------
-            */
-                Plugin extraUser = ((ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER)).getmActorExtraUser();
-                injectPluginReferencesAndStart(extraUser, Plugins.BITDUBAI_ACTOR_EXTRA_USER);
-
-           /*
-            * Plugin Intra User PIP
-            * -------------------------------
-            */
-                Plugin intraUser = ((ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER)).getmActorIntraUser();
-                injectPluginReferencesAndStart(intraUser, Plugins.BITDUBAI_USER_INTRA_USER);
 
            /*
             * Plugin Desktop runtime PIP
@@ -991,7 +976,6 @@ public class Platform implements Serializable {
                     Plugin cryptoPaymentRequest = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_CRYPTO_PAYMENT_REQUEST);
                     injectPluginReferencesAndStart(cryptoPaymentRequest, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST);
 
-
                     Plugin ccpIntraWalletUserIdentity = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_IDENTITY);
                     injectPluginReferencesAndStart(ccpIntraWalletUserIdentity, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY);
 
@@ -1006,6 +990,9 @@ public class Platform implements Serializable {
 
                     Plugin incomingIntraUserTransaction = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION);
                     injectPluginReferencesAndStart(incomingIntraUserTransaction, Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION);
+
+                    Plugin extraUser = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_EXTRA_WALLET_USER_ACTOR);
+                    injectPluginReferencesAndStart(extraUser, Plugins.BITDUBAI_ACTOR_EXTRA_USER);
 
                     Plugin intraUserActor = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_ACTOR);
                     injectPluginReferencesAndStart(intraUserActor, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR);
