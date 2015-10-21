@@ -31,6 +31,7 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.N
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.IntraUserNotificationDescriptor;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorAcceptIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorAskIntraUserForAcceptanceException;
@@ -1316,31 +1317,24 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
        //     throw new ErrorGetNotificationsIntraUserException("ERROR GETING NOTIFICATIONS  ",e, "", "Generic Exception");
        // }
 
-//TODO Harcode
-        List<IntraUserNotification> intraUserNotificationList = new ArrayList<IntraUserNotification>();
+        List<IntraUserNotification> lstIntraUserNotifications = new ArrayList<>();
+        try {
+            lstIntraUserNotifications .addAll(incomingNotificationsDao.listNotificationsUnreaded());
+        } catch (CantListIntraWalletUsersException e) {
+            e.printStackTrace();
+        }
 
-
-
-
-        return intraUserNotificationList;
-       // return null;
+        return lstIntraUserNotifications;
     }
 
     @Override
     public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey) throws ErrorConfirmNotificationsIntraUserException {
-//        try
-//        {
-//            //delete request record for database
-//            getIntraUserNetworkServiceDao().deleteRequestRecord(intraUserLogedInPublicKey,intraUserInvolvedPublicKey);
-//        }
-//        catch (CantExecuteDatabaseOperationException e)
-//        {
-//            throw new ErrorConfirmNotificationsIntraUserException("ERROR GETING NOTIFICATIONS ",e,"","Error list records to database");
-//        }
-//        catch (Exception e)
-//        {
-//            throw new ErrorConfirmNotificationsIntraUserException("ERROR GETING NOTIFICATIONS  ",e, "", "Generic Exception");
-//        }
+//        incomingNotificationsDao.markReadedNotification();
+    }
+
+    @Override
+    public void confirmNotification(UUID notificationID) throws ErrorConfirmNotificationsIntraUserException {
+        incomingNotificationsDao.markReadedNotification(notificationID);
     }
 
     @Override

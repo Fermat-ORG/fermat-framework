@@ -324,6 +324,16 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         }
     }
 
+    @Override
+    public List<ActorNetworkServiceRecord> listNotificationsUnreaded() throws CantListIntraWalletUsersException {
+        return null;
+    }
+
+    @Override
+    public void markReadedNotification(UUID notificationId) {
+
+    }
+
     private DatabaseTableRecord buildDatabaseRecord(DatabaseTableRecord                      record                    ,
                                                     com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord cryptoPaymentRequestRecord) {
 

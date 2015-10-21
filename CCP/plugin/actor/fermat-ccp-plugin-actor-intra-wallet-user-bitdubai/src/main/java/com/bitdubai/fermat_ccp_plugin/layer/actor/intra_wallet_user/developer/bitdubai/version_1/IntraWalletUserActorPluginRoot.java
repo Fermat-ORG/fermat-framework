@@ -570,6 +570,7 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
 
         try {
 
+            System.out.println("PROCESSING NOTIFICATIONS IN INTRA USER WALLET ");
             List<IntraUserNotification> intraUserNotificationes = intraUserNetworkServiceManager.getPendingNotifications();
 
 
