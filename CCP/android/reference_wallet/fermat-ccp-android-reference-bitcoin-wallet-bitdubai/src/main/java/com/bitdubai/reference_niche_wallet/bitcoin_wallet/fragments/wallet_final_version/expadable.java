@@ -14,10 +14,10 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
+import com.bitdubai.fermat_android_api.ui.expandableRecicler.VerticalChild;
+import com.bitdubai.fermat_android_api.ui.expandableRecicler.VerticalParent;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.VerticalExpandableAdapter;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.expandableRecicler.ExpandableRecyclerAdapter;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.expandableRecicler.VerticalChild;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.expandableRecicler.VerticalParent;
 
 import java.util.ArrayList;
 import java.util.List;

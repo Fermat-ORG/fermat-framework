@@ -13,6 +13,7 @@ import java.util.Map;
  * Created by Matias Furszyfer on 2015.07.20..
  */
 public class CryptoCustomerIdentitySubAppSession implements SubAppsSession {
+    public static final String IDENTITY_INFO = "CRYPTO_CUSTOMER_IDENTITY_INFORMATION";
 
     /**
      * SubApps type

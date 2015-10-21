@@ -113,8 +113,8 @@ public class CreateIntraUserIdentityFragment extends FermatFragment {
             public void onClick(View view) {
                 CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
 
-                createNewIdentity();
-                int resultKey = CREATE_IDENTITY_SUCCESS;
+
+                int resultKey = createNewIdentity();
                 switch (resultKey) {
                     case CREATE_IDENTITY_SUCCESS:
                         changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode());

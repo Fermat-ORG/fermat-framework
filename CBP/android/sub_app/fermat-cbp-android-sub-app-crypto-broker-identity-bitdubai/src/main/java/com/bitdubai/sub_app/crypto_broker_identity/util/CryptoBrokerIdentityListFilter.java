@@ -1,8 +1,8 @@
 package com.bitdubai.sub_app.crypto_broker_identity.util;
 
+import android.view.View;
 import android.widget.Filter;
 
-import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.sub_app.crypto_broker_identity.common.adapters.CryptoBrokerIdentityInfoAdapter;
 
@@ -16,17 +16,25 @@ import java.util.Locale;
 public class CryptoBrokerIdentityListFilter extends Filter {
     private List<CryptoBrokerIdentityInformation> listOfIdentities;
     private CryptoBrokerIdentityInfoAdapter adapter;
+    private String constraint;
+    private View viewToShow;
+    private View viewToHide;
 
     public CryptoBrokerIdentityListFilter(List<CryptoBrokerIdentityInformation> listOfIdentities, CryptoBrokerIdentityInfoAdapter adapter) {
         this.listOfIdentities = listOfIdentities;
         this.adapter = adapter;
+        constraint = "";
+
+        viewToShow = viewToHide = null;
     }
 
     @Override
     protected FilterResults performFiltering(CharSequence constraint) {
         FilterResults result = new FilterResults();
 
-        if (constraint != null && constraint.toString().length() > 0) {
+        this.constraint = (constraint == null) ? "" : constraint.toString();
+
+        if (constraint != null && constraint.length() > 0) {
             String constraintStr = constraint.toString().toLowerCase(Locale.getDefault());
             ArrayList<CryptoBrokerIdentityInformation> filterItems = new ArrayList<>();
 
@@ -49,12 +57,48 @@ public class CryptoBrokerIdentityListFilter extends Filter {
         return result;
     }
 
-
     @Override
     @SuppressWarnings("unchecked")
     protected void publishResults(CharSequence constraint, FilterResults results) {
-        ArrayList<CryptoBrokerIdentityInformation> filteredList = (ArrayList<CryptoBrokerIdentityInformation>) results.values;
-        adapter.changeDataSet(filteredList);
+        if (results.count == 0) {
+            switchViewsVisibility(true);
+        } else {
+            switchViewsVisibility(false);
+
+            ArrayList<CryptoBrokerIdentityInformation> filteredList = (ArrayList<CryptoBrokerIdentityInformation>) results.values;
+            adapter.changeDataSet(filteredList);
+        }
     }
 
+    /**
+     * @return the string used as to apply the filter
+     */
+    public String getConstraint() {
+        return constraint;
+    }
+
+    /**
+     * Set the views that are going to be shown and hided when there is no match for the filter
+     *
+     * @param viewToShow the view to be shown (can be a layout with a text of "No Matches")
+     * @param viewToHide the view to be hided (should be the view where the adapter is set)
+     */
+    public void setNoMatchViews(View viewToShow, View viewToHide) {
+        this.viewToShow = viewToShow;
+        this.viewToHide = viewToHide;
+    }
+
+    private void switchViewsVisibility(boolean show) {
+        if (viewToShow != null && show)
+            viewToShow.setVisibility(View.VISIBLE);
+
+        if (viewToHide != null && show)
+            viewToHide.setVisibility(View.GONE);
+
+        if (viewToShow != null && !show)
+            viewToShow.setVisibility(View.GONE);
+
+        if (viewToHide != null && !show)
+            viewToHide.setVisibility(View.VISIBLE);
+    }
 }
