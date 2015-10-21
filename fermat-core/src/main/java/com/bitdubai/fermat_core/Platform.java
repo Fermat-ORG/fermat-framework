@@ -151,7 +151,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.Ass
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.DealsWithModuleAseetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.DealsWithAssetIssuerWalletSubAppModule;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSupAppModule;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.DealsWithAssetRedeemPointWalleSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.DealsWithAssetUserWalletSubAppModule;
@@ -1751,7 +1751,7 @@ public class Platform implements Serializable {
                 ((DealsWithAssetUserWalletSubAppModule) plugin).setWalletAssetUserManager((AssetUserWalletSubAppModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE));
             }
             if (plugin instanceof DealsWithAssetRedeemPointWalleSubAppModule) {
-                ((DealsWithAssetRedeemPointWalleSubAppModule) plugin).setWalletAssetRedeemPointManager((AssetRedeemPointWalletSupAppModule) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE));
+                ((DealsWithAssetRedeemPointWalleSubAppModule) plugin).setWalletAssetRedeemPointManager((AssetRedeemPointWalletSubAppModule) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE));
             }
 
             if (plugin instanceof DealsWithWsCommunicationsCloudClientManager) {

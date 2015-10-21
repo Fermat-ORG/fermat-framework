@@ -431,6 +431,44 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         setNavigationStructureXml(runtimeWalletNavigationStructure);
 
         /**
+         * Asset Redeem Point
+         */
+        runtimeWalletNavigationStructure = new WalletNavigationStructure();
+        runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
+        runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
+        publicKey = "redeem_point";
+        runtimeWalletNavigationStructure.setPublicKey(publicKey);
+        //listWallets.put(publicKey, runtimeWalletNavigationStructure);
+
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+        runtimeActivity.setColor("#8bba9e");
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("asset redeem point wallet");
+        runtimeTitleBar.setLabelSize(16);
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#72af9c");
+
+        runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+        runtimeStatusBar.setColor("#72af9c");
+
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment("DWRPMA");
+
+
+        setNavigationStructureXml(runtimeWalletNavigationStructure);
+
+        /**
          * Crypto broker wallet
          */
 

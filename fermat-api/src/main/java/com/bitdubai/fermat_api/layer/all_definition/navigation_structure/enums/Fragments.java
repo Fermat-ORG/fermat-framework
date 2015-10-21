@@ -123,6 +123,7 @@ public enum Fragments implements FermatFragments {
 
     DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY("DWAIMA"),
     DAP_WALLET_ASSET_USER_MAIN_ACTIVITY("DWUIMA"),
+    DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY("DWRPMA"),
 
 
     /**

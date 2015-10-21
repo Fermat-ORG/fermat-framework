@@ -83,6 +83,7 @@ import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
@@ -678,7 +679,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             //TODO: tengo que agregar el header en los 4 xml base para que esto no se caiga cuando no lo tiene
             try {
                 ((RelativeLayout) findViewById(R.id.container_header_balance)).setVisibility((header != null) ? View.VISIBLE : View.GONE);
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
 
@@ -1306,9 +1307,16 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         return (AssetUserWalletSubAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE);
     }
 
+    /**
+     * Asset Redeem Point
+     */
+    public AssetRedeemPointWalletSubAppModule getAssetRedeemPointWalletModuleManager() {
+        return (AssetRedeemPointWalletSubAppModule) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE);
+    }
+
 
     /**
-     *  Assets User community
+     * Assets User community
      */
     public AssetUserCommunitySubAppModuleManager getAssetUserCommunitySubAppModuleManager() {
         return null;//(AssetUserCommunitySubAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.DAP);
@@ -1331,7 +1339,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         return (CryptoBrokerIdentityModuleManager) platformContext.getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE);
     }
 
-    public CryptoCustomerIdentityModuleManager getCryptoCustomerIdentityModuleManager(){
+    public CryptoCustomerIdentityModuleManager getCryptoCustomerIdentityModuleManager() {
         ApplicationSession applicationSession = (ApplicationSession) getApplication();
         Platform platform = applicationSession.getFermatPlatform();
         CorePlatformContext platformContext = platform.getCorePlatformContext();
@@ -1400,15 +1408,14 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         //Log.i(TAG, "Got a new result: " + notification_title);
         Resources r = getResources();
         PendingIntent pi = null;
-        if(walletPublicKey!=null) {
+        if (walletPublicKey != null) {
             Intent intent = new Intent(this, WalletActivity.class);
             intent.putExtra(WalletActivity.WALLET_PUBLIC_KEY, walletPublicKey);
             intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 
-
-        pi = PendingIntent
-                .getActivity(this, 0, intent, 0);
+            pi = PendingIntent
+                    .getActivity(this, 0, intent, 0);
 
         }
         Notification notification = new NotificationCompat.Builder(this)

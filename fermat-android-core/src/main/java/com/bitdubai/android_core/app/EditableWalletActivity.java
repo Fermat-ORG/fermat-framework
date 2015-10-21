@@ -298,7 +298,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
         WalletSession walletSession = null;
         try {
             //WalletSettings walletSettings = getWalletSettingsManager().getSettings(lastWallet.getWalletPublicKey());
-            walletSession = getWalletSessionManager().openWalletSession(lastWallet, getCryptoWalletManager(), null, getWalletResourcesProviderManager(), getErrorManager(), getCryptoBrokerWalletModuleManager(), getAssetIssuerWalletModuleManager(), getAssetUserWalletModuleManager());
+            walletSession = getWalletSessionManager().openWalletSession(lastWallet, getCryptoWalletManager(), null, getWalletResourcesProviderManager(), getErrorManager(), getCryptoBrokerWalletModuleManager(), getAssetIssuerWalletModuleManager(), getAssetUserWalletModuleManager(), getAssetRedeemPointWalletModuleManager());
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
