@@ -29,7 +29,6 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.enums.IntraUserNotificationDescriptor;
@@ -745,7 +744,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
      * (non-Javadoc)
      * @see NetworkService#
      */
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList,DiscoveryQueryParameters discoveryQueryParameters){
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList){
 
         System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
 
@@ -938,7 +937,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
          */
         try {
 
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfile, discoveryQueryParameters);
 
         } catch (CantRequestListException e) {
 
@@ -1358,6 +1357,8 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
 
         for(Actor actor:actors){
 
+
+
         /*
          * Construct  profile and register
          */
@@ -1374,6 +1375,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                     jsonObject.toString());
 
 
+            if(!actorsToRegisterCache.contains(platformComponentProfile))
                 actorsToRegisterCache.add(platformComponentProfile);
 
             if(register){

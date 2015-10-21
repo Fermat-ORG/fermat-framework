@@ -832,7 +832,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
      * (non-Javadoc
      * @see NetworkService#
      */
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList,DiscoveryQueryParameters discoveryQueryParameters){
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList){
 
         System.out.println(" CryptoTransmissionNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
 
@@ -850,7 +850,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
         cryptoTransmissionAgent.addRemoteNetworkServicesRegisteredList(platformComponentProfileRegisteredList);
 
         // por ahora guardo solo el primero para saber cuales estan conectados
-        cacheConnections.put(discoveryQueryParameters.getIdentityPublicKey(), platformComponentProfileRegisteredList.get(0));
+        //cacheConnections.put(discoveryQueryParameters.getIdentityPublicKey(), platformComponentProfileRegisteredList.get(0));
 
     }
 
@@ -1052,7 +1052,7 @@ public class CryptoTransmissionNetworkServicePluginRoot implements CryptoTransmi
          */
         try {
 
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfile, discoveryQueryParameters);
 
         } catch (CantRequestListException e) {
 

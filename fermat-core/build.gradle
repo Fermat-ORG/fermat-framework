@@ -11,7 +11,6 @@ dependencies {
     compile project(':fermat-api')
     compile project(':fermat-ccm-api')
     compile project(':fermat-cbp-api')
-    compile project(':fermat-ccp-api')
     compile project(':fermat-dap-api')
     compile project(':fermat-p2p-api')
     compile project(':fermat-wpd-api')
@@ -64,7 +63,10 @@ dependencies {
     compile project(':fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai')
+
     // Init CCP Projects (Plugins)
+    compile project(':fermat-ccp-api')
+    compile project(':fermat-ccp-core')
     compile project(':fermat-ccp-plugin-actor-intra-wallet-user-bitdubai')
     compile project(':fermat-ccp-plugin-identity-intra-wallet-user-bitdubai')
     compile project(':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai')
@@ -96,6 +98,7 @@ dependencies {
     compile project(':fermat-dap-plugin-wallet-redeem-point-wallet-bitdubai')
     compile project(':fermat-dap-plugin-actor-network-service-asset-user-bitdubai')
     compile project(':fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai')
+    compile project(':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai')
     compile project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai')
     // CRY Projects
     compile project(':fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
