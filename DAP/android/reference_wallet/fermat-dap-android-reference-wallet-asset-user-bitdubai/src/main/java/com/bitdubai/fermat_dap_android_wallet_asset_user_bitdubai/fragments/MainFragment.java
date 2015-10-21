@@ -32,7 +32,7 @@ public class MainFragment extends FermatWalletFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.main_fragment, container, false);
+        rootView = inflater.inflate(R.layout.main_dap_reference_wallet_user_fragment, container, false);
 
         return rootView;
     }

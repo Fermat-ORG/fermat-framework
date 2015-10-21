@@ -122,6 +122,7 @@ public enum Fragments implements FermatFragments {
     CWP_WALLET_PUBLISHER_MAIN("CWPM"),
 
     DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY("DWAIMA"),
+    DAP_WALLET_ASSET_USER_MAIN_ACTIVITY("DWUIMA"),
 
 
     /**
