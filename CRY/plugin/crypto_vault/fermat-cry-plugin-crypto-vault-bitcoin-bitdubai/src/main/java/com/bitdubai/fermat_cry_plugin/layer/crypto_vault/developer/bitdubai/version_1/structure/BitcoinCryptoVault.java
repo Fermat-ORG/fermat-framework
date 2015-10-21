@@ -57,6 +57,8 @@ import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
+import org.bitcoinj.script.ScriptBuilder;
+import org.bitcoinj.script.ScriptOpCodes;
 import org.bitcoinj.store.UnreadableWalletException;
 import org.bitcoinj.wallet.DeterministicSeed;
 
@@ -488,6 +490,101 @@ public class BitcoinCryptoVault implements
             throw new CouldNotSendMoneyException("Fatal error sending bitcoins.", exception, "Address to:" + addressTo.getAddress() + ", transaction Id:" + fermatTxId.toString(), "Unkwnown.");
         }
     }
+
+
+    /**
+     * Sends bitcoins to the specified address
+     *
+     * @param fermatTxId  the internal txID set for the transfer protocol
+     * @param addressTo   the address to
+     * @param amount      the amount of satoshis
+     *
+     * @return the transaction hash created to send the crypto.
+     *
+     * @throws InsufficientCryptoFundsException if i don't have enough crypto to send
+     */
+
+    public String sendBitcoins(final UUID          fermatTxId,
+                               final CryptoAddress addressTo ,
+                               final long          amount    ,
+                               String op_Return) throws InsufficientCryptoFundsException      ,
+            InvalidSendToAddressException         ,
+            CouldNotSendMoneyException            ,
+            CryptoTransactionAlreadySentException {
+
+        try {
+            // if the transaction was requested before but resent by mistake, we're not going to send it again
+            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Sending bitcoins...", "Address to:" + addressTo.getAddress() + "TxId: " + fermatTxId, null);
+
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, eventManager);
+
+            // check if the transaction was already sent, this might be an error. we're not going to send it again.
+            if (!db.isNewFermatTransaction(fermatTxId)) {
+
+                throw new CryptoTransactionAlreadySentException(
+                        "Transaction ID: " + fermatTxId.toString(),
+                        "An error in a previous module."
+                );
+
+            }
+
+            // generate the address in the BitcoinJ format
+            Address address = new Address(this.networkParameters, addressTo.getAddress());
+
+            PeerGroup peers = (PeerGroup) bitcoinCryptoNetworkManager.getBroadcasters();
+
+            // If we don't have enough money, we'll raise the exception
+            Wallet.SendResult result = vault.sendCoins(peers, address, Coin.valueOf(amount));
+
+            vault.saveToFile(vaultFile);
+
+            result.broadcastComplete.get();
+
+
+            /**
+             * after the transaction is completed, I will hadd the op_return value into a new output.
+             */
+            //request.tx.addOutput(Coin.ZERO, new ScriptBuilder().op(ScriptOpCodes.OP_RETURN).data(op_Return.getBytes()).build());
+
+
+            /**
+             * I will check that it is not an address that belongs to my wallet
+             */
+            Transaction tx = result.tx;
+
+            String txHash = tx.getHashAsString();
+
+
+            // we're ready to go. we'll proceed to save the transaction and commit it.
+            db.persistNewTransaction(fermatTxId.toString(), txHash);
+
+            // after we persist the new Transaction, we'll persist it as a Fermat transaction.
+            db.persistnewFermatTransaction(fermatTxId.toString());
+
+
+            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: bitcoin sent!!!", "Address to: " + addressTo.getAddress(), "Amount: " + amount);
+
+            //returns the created transaction id
+            return txHash;
+
+        } catch (InterruptedException interruptedException) {
+
+            throw new CouldNotSendMoneyException("An error occured waiting for confirmation from the Bitcoin network.", interruptedException, null, "No peers connected at this time.");
+        } catch (InsufficientMoneyException insufficientMoneyException) {
+
+            throw new InsufficientCryptoFundsException("Not enought money in Vault to complete the transaction", insufficientMoneyException, "AddressTo:" + addressTo.getAddress() + ", Satoshis: " + amount, "Transaction confidence level too low to spend money. Wait for at least another block generation.");
+        } catch (AddressFormatException addressFormatException) {
+
+            throw new InvalidSendToAddressException(addressFormatException, "Address: " + addressTo.getAddress(), "Incorrect generation by scanner or user entry");
+        } catch (CantExecuteQueryException cantExecuteQueryException) {
+
+            throw new CouldNotSendMoneyException("I coudln't persist the internal transaction Id.", cantExecuteQueryException, "Transaction ID: " + fermatTxId.toString(), "An error in the Database plugin..");
+        } catch(Exception exception){
+
+            throw new CouldNotSendMoneyException("Fatal error sending bitcoins.", exception, "Address to:" + addressTo.getAddress() + ", transaction Id:" + fermatTxId.toString(), "Unkwnown.");
+        }
+    }
+
 
     /**
      * Validates if this transaction is to send money to ourselves.

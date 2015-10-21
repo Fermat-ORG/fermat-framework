@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
@@ -17,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
@@ -47,7 +49,7 @@ public class OutgoingNotificationDao implements DAO {
         return database.getTable(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TABLE_NAME);
     }
 
-    public void createNotification(        UUID                        notificationId        ,
+    public ActorNetworkServiceRecord createNotification(        UUID                        notificationId        ,
                                            String                      senderPublicKey,
                                            Actors                      senderType     ,
                                            String                      destinationPublicKey   ,
@@ -81,6 +83,8 @@ public class OutgoingNotificationDao implements DAO {
             );
 
             cryptoPaymentRequestTable.insertRecord(buildDatabaseRecord(entityRecord, cryptoPaymentRequestRecord));
+
+            return cryptoPaymentRequestRecord;
 
         } catch (CantInsertRecordException e) {
 
@@ -330,7 +334,7 @@ public class OutgoingNotificationDao implements DAO {
 
         record.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, cryptoPaymentRequestRecord.getId());
         record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME, cryptoPaymentRequestRecord.getActorSenderAlias()                              );
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME          , cryptoPaymentRequestRecord.getActorSenderProfileImage() .toString()                 );
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME          , (cryptoPaymentRequestRecord.getActorSenderProfileImage() != null) ? cryptoPaymentRequestRecord.getActorSenderProfileImage() .toString() : null);
         record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME     , cryptoPaymentRequestRecord.getIntraUserNotificationDescriptor().getCode()                                 );
         record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME, cryptoPaymentRequestRecord.getActorDestinationType().getCode());
         record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME, cryptoPaymentRequestRecord.getActorSenderType().getCode());
@@ -381,5 +385,45 @@ public class OutgoingNotificationDao implements DAO {
                 readed
 
         );
+    }
+
+    /**
+     * Method that update an entity in the data base.
+     *
+     * @param entity ActorNetworkServiceRecord to update.
+     * @throws CantUpdateRecordDataBaseException
+     */
+    public void update(ActorNetworkServiceRecord entity) throws CantUpdateRecordDataBaseException {
+
+        if (entity == null) {
+            throw new IllegalArgumentException("The entity is required, can not be null");
+        }
+
+        try {
+
+
+            DatabaseTableRecord emptyRecord = getDatabaseTable().getEmptyRecord();
+            /*
+             * 1- Create the record to the entity
+             */
+            DatabaseTableRecord entityRecord = buildDatabaseRecord(emptyRecord,entity);
+
+            /**
+             * 2.- Create a new transaction and execute
+             */
+            DatabaseTransaction transaction = database.newTransaction();
+            transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
+            database.executeTransaction(transaction);
+
+        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+            // Register the failure.
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The record do not exist";
+            CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
+            throw cantUpdateRecordDataBaseException;
+        }
     }
 }

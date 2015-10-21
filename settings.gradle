@@ -1,15 +1,16 @@
 
-include ':fermat-android-api', ':fermat-p2p-plugin-communication-wifi-bitdubai'
+include ':fermat-android-api'
 include ':fermat-android-core'
 
 include ':fermat-api'
 include ':fermat-core'
 include ':fermat-bnk-api'
 project(':fermat-bnk-api').projectDir = new File('BNK/library/api/fermat-bnk-api')
-include ':fermat-ccm-api'
+
 include ':fermat-cbp-api'
 project(':fermat-cbp-api').projectDir = new File('CBP/library/api/fermat-cbp-api')
 include ':fermat-ccp-api'
+project(':fermat-ccp-api').projectDir = new File('CCP/library/api/fermat-ccp-api')
 include ':fermat-cry-api'
 include ':fermat-csh-api'
 project(':fermat-csh-api').projectDir = new File('CSH/library/api/fermat-csh-api')
@@ -184,6 +185,13 @@ project(':fermat-dmp-plugin-identity-intra-user-bitdubai').projectDir = new File
 
 
 //CCM Projects
+
+include ':fermat-ccm-api'
+project(':fermat-ccm-api').projectDir = new File('CCM/library/api/fermat-ccm-api')
+
+include ':fermat-ccm-plugin-actor-intra-wallet-user-bitdubai'
+project(':fermat-ccm-plugin-actor-intra-wallet-user-bitdubai').projectDir = new File('CCM/plugin/actor/fermat-ccm-plugin-actor-intra-wallet-user-bitdubai')
+
 
 include ':fermat-ccm-plugin-network-service-money-request-bitdubai'
 project(':fermat-ccm-plugin-network-service-money-request-bitdubai').projectDir = new File('CCM/plugin/network_service/fermat-ccm-plugin-network-service-money-request-bitdubai')
@@ -834,3 +842,4 @@ project(':fermat-cbp-plugin-world-fiat-index-bitdubai').projectDir = new File('C
 
 //include ':'
 //project(':').projectDir = new File('CBP/plugin//')
+project(':fermat-ccm-plugin-actor-intra-wallet-user-bitdubai').projectDir = new File('CCM/plugin/actor/fermat-ccm-plugin-actor-intra-wallet-user-bitdubai')

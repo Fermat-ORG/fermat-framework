@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DapEvenType;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
@@ -21,6 +20,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.google.gson.JsonObject;
 
 /**
@@ -92,7 +92,7 @@ public class DigitalAssetMetadataTransmitMessageReceiverProcessor extends Fermat
             /*
              * Notify to the interested
              */
-            FermatEvent event =  getAssetTransmissionPluginRoot().getEventManager().getNewEvent(DapEvenType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
+            FermatEvent event =  getAssetTransmissionPluginRoot().getEventManager().getNewEvent(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
             event.setSource(AssetTransmissionPluginRoot.EVENT_SOURCE);
             getAssetTransmissionPluginRoot().getEventManager().raiseEvent(event);
 

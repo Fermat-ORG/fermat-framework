@@ -20,7 +20,7 @@ import java.util.UUID;
 public interface DAO {
 
 
-    public void createNotification(        UUID                        notificationId        ,
+    public ActorNetworkServiceRecord createNotification(        UUID                        notificationId        ,
                                            String                      senderPublicKey,
                                            Actors senderType     ,
                                            String                      destinationPublicKey   ,

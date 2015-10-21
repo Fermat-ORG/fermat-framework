@@ -638,7 +638,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
          */
         try {
 
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfile, discoveryQueryParameters);
 
         } catch (CantRequestListException e) {
 
@@ -721,7 +721,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
     }
 
     @Override
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
 
         System.out.println(" AssetTransmissionPluginRoot - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
@@ -771,6 +771,23 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                     public ConnectionState getContactState() {
                         return null;
                     }
+
+                    @Override
+                    public String getDescription() {
+                        return null;
+                    }
+
+                    @Override
+                    public Location getLocation() {
+                        return null;
+                    }
+
+                    @Override
+                    public CryptoAddress getCryptoAddress() {
+                        return null;
+                    }
+
+
                 };
 
                 ActorAssetUser actorAssetUser = new ActorAssetUser() {
@@ -800,9 +817,15 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                     }
 
                     @Override
-                    public Location getLocation() {
-                        return remoteToConnect.getLocation();
+                    public Double getLocationLatitude() {
+                        return null;
                     }
+
+                    @Override
+                    public Double getLocationLongitude() {
+                        return null;
+                    }
+
 
                     @Override
                     public Genders getGender() {

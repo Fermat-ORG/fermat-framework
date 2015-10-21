@@ -247,4 +247,9 @@ public class PlatformComponentProfileCommunication implements PlatformComponentP
                 ", communicationCloudClientIdentity='" + communicationCloudClientIdentity + '\'' +
                 ", extraData = "+extraData + '}';
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

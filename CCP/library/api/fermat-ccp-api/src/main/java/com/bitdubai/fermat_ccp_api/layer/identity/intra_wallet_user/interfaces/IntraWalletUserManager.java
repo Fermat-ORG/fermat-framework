@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * The interface <code>com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager</code>
  * provides the methods to create and obtain intra users associated to a Device User.
  */
-public interface IntraWalletUserManager {
+public interface IntraWalletUserManager extends ModuleManager {
 
     /**
      * The method <code>getAllIntraWalletUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in

@@ -127,7 +127,7 @@ public class SendFragment extends FermatWalletFragment {
 
         referenceWalletSession = (ReferenceWalletSession) walletSession;
 
-        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
 
 
         cryptoWalletManager = referenceWalletSession.getCryptoWalletManager();

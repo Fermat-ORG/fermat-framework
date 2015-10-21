@@ -9,7 +9,7 @@ import com.bitdubai.fermat_csh_api.all_definition.exceptions.InvalidParameterExc
 public enum CashTransactionStatus {
     NEGOTIATION("NEG"),
     PAUSED("PAU"),
-    PENDING_PAYMENT("PEN"),
+    PENDING("PEN"),
     COMPLETED("COM"),
     CANCELLED ("CAN");
 
@@ -27,7 +27,7 @@ public enum CashTransactionStatus {
         switch (code) {
             case "NEG": return CashTransactionStatus.NEGOTIATION;
             case "PAU": return CashTransactionStatus.PAUSED;
-            case "PEN": return CashTransactionStatus.PENDING_PAYMENT;
+            case "PEN": return CashTransactionStatus.PENDING;
             case "COM": return CashTransactionStatus.COMPLETED;
             case "CAN": return CashTransactionStatus.CANCELLED;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the CashTransactionStatus enum");

@@ -60,20 +60,22 @@ public class CompleteRequestListComponentRegisteredNotificationEventHandler impl
             CompleteRequestListComponentRegisteredNotificationEvent completeRequestListComponentRegisteredNotificationEvent = (CompleteRequestListComponentRegisteredNotificationEvent) platformEvent;
 
 
+
             if ((completeRequestListComponentRegisteredNotificationEvent.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
-                    completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceType() == NetworkServiceType.ASSET_USER_ACTOR)
+                    completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceTypeApplicant() == NetworkServiceType.ASSET_USER_ACTOR)
 
                     ||
 
                     (completeRequestListComponentRegisteredNotificationEvent.getPlatformComponentType()  == PlatformComponentType.ACTOR_ASSET_USER &&
-                            completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceType() == NetworkServiceType.UNDEFINED)
+                            completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceTypeApplicant() == NetworkServiceType.UNDEFINED)
 
                     ){
+
 
                  /*
                  *  networkService make the job
                  */
-                this.networkService.handleCompleteRequestListComponentRegisteredNotificationEvent(completeRequestListComponentRegisteredNotificationEvent.getRegisteredComponentList(),completeRequestListComponentRegisteredNotificationEvent.getDiscoveryQueryPerams());
+                this.networkService.handleCompleteRequestListComponentRegisteredNotificationEvent(completeRequestListComponentRegisteredNotificationEvent.getRegisteredComponentList());
 
             }
 

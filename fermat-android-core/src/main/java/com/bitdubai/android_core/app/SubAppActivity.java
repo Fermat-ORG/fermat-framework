@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.bitdubai.android_core.app.common.version_1.FragmentFactory.SubAppFragmentFactory;
+import com.bitdubai.android_core.app.common.version_1.managers.ManagerFactory;
 import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
@@ -24,6 +25,8 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.*;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
+import com.bitdubai.fermat_core.CorePlatformContext;
+import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
@@ -470,10 +473,25 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                 if (getSubAppSessionManager().isSubAppOpen(installedSubApp.getSubAppType())) {
                     subAppSession = getSubAppSessionManager().getSubAppsSession(installedSubApp.getSubAppType());
                 } else {
-                    com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager toolManager = getToolManager();
-                    WalletStoreModuleManager walletStoreModuleManager = getWalletStoreModuleManager();
-                    WalletPublisherModuleManager walletPublisherModuleManager = getWalletPublisherManager();
-                    subAppSession = getSubAppSessionManager().openSubAppSession(installedSubApp.getSubAppType(), getErrorManager(), getWalletFactoryManager(), toolManager,walletStoreModuleManager,walletPublisherModuleManager,getIntraUserModuleManager(),getAssetFactoryModuleManager(), getCryptoBrokerIdentityModuleManager(), getIntraWalletUserManager());
+                    ManagerFactory managerFactory = new ManagerFactory(((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext());
+                    //com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager toolManager = getToolManager();
+                    //WalletStoreModuleManager walletStoreModuleManager = getWalletStoreModuleManager();
+                    //WalletPublisherModuleManager walletPublisherModuleManager = getWalletPublisherManager();
+                    subAppSession = getSubAppSessionManager().openSubAppSession(
+                            installedSubApp.getSubAppType(),
+                            getErrorManager(),
+                            managerFactory.getModuleManagerFactory(installedSubApp.getSubAppType())
+                    );
+
+//                            getWalletFactoryManager(),
+//                            toolManager,
+//                            walletStoreModuleManager,
+//                            walletPublisherModuleManager,
+//                            getIntraUserModuleManager(),
+//                            getAssetFactoryModuleManager(),
+//                            getCryptoBrokerIdentityModuleManager(),
+//                            getCryptoCustomerIdentityModuleManager(),
+//                            getIntraWalletUserManager());
                 }
             }
 

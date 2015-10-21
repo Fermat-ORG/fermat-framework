@@ -58,15 +58,15 @@ public class CompleteRequestListComponentRegisteredNotificationEventHandler impl
             CompleteRequestListComponentRegisteredNotificationEvent completeRequestListComponentRegisteredNotificationEvent = (CompleteRequestListComponentRegisteredNotificationEvent) platformEvent;
 
 
-            if (completeRequestListComponentRegisteredNotificationEvent.getPlatformComponentType()  == networkService.getPlatformComponentType() &&
-                    completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceType() == networkService.getNetworkServiceType()){
+            //if (completeRequestListComponentRegisteredNotificationEvent.getPlatformComponentType()  == networkService.getPlatformComponentType() &&
+            //        completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceTypeApplicant() == networkService.getNetworkServiceTypeApplicant()){
 
                  /*
                  *  networkService make the job
                  */
-                this.networkService.handleCompleteRequestListComponentRegisteredNotificationEvent(completeRequestListComponentRegisteredNotificationEvent.getRegisteredComponentList(),completeRequestListComponentRegisteredNotificationEvent.getDiscoveryQueryPerams());
+                this.networkService.handleCompleteRequestListComponentRegisteredNotificationEvent(completeRequestListComponentRegisteredNotificationEvent.getRegisteredComponentList());
 
-            }
+            //}
 
 
         }

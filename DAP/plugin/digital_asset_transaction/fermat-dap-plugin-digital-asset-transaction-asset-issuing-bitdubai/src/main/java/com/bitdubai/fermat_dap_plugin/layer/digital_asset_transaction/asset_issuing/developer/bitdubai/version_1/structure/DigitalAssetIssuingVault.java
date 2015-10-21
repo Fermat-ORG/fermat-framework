@@ -55,6 +55,7 @@ public class DigitalAssetIssuingVault extends DigitalAssetVault {
                 default:
                     throw new CantDeliverDigitalAssetToAssetWalletException("Incorrect AssetBalanceType");
             }
+            System.out.println("ASSET ISSUING - DELIVER TO WALLET TEST - "+balanceType+"\nHash: "+genesisTransaction.getTransactionHash());
             deliverDigitalAssetMetadata(digitalAssetMetadataToDeliver, genesisTransaction, balanceType);
         } catch (CantGetDigitalAssetFromLocalStorageException exception) {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the DigitalAssetMetadata from storage");
@@ -68,6 +69,10 @@ public class DigitalAssetIssuingVault extends DigitalAssetVault {
     }
 
     private void deliverDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException {
+        /////////////////////////////////////////////
+        // TODO: Coloque esto porque es la wallet qye tengo hardcore para la wallet y para hacer las pruebas
+        this.walletPublicKey = "walletPublicKeyTest";
+        /////////////////////////////////////////////
         AssetIssuerWallet assetIssuerWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
         AssetIssuerWalletBalance assetIssuerWalletBalance= assetIssuerWallet.getBookBalance(balanceType);
         com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper=new com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetIssuerWalletTransactionRecordWrapper(

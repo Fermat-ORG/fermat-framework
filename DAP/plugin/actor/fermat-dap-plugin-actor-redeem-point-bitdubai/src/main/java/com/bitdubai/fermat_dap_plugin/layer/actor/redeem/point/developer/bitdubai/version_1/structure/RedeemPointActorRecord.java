@@ -2,7 +2,10 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdub
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Address;
 
 /**
  * Created by Nerio on 22/09/15.
@@ -13,19 +16,27 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     private String publicKey;
     private byte[] profileImage ;
     private long registrationDate;
-    private ConnectionState contactState;
+    private ConnectionState connectionState;
+    private CryptoAddress cryptoAddress;
+    private Location location;
+    private Address address;
+    private String contactInformation;
+    private String hoursOfOperation;
 
     /**
      * Constructor
      */
     public RedeemPointActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, ConnectionState contactState){
-
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = (byte[])profileImage.clone();
+        this.profileImage = profileImage.clone();
         this.registrationDate = registrationDate;
-        this.contactState = contactState;
+        this.connectionState = contactState;
+    }
 
+    public RedeemPointActorRecord(String name, String publicKey) {
+        this.publicKey = publicKey;
+        this.name = name;
     }
 
     /**
@@ -69,13 +80,98 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         return this.profileImage.clone();
     }
 
+
     /**
-     * The method <code>getContactState</code> gives us the contact state of the represented Redeem Point
      *
-     * @return the contact state
+     * {@inheritDoc}
      */
     @Override
-    public ConnectionState getContactState() {
-        return this.contactState;
+    public CryptoAddress getCryptoAddress() {
+        return cryptoAddress;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public ConnectionState getConnectionState() {
+        return connectionState;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public Location getLocation() {
+        return location;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public Address getAddress() {
+        return address;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public String getContactInformation() {
+        return contactInformation;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     */
+    @Override
+    public String getHoursOfOperation() {
+        return hoursOfOperation;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    public void setProfileImage(byte[] profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public void setRegistrationDate(long registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public void setConnectionState(ConnectionState connectionState) {
+        this.connectionState = connectionState;
+    }
+
+    public void setCryptoAddress(CryptoAddress cryptoAddress) {
+        this.cryptoAddress = cryptoAddress;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public void setContactInformation(String contactInformation) {
+        this.contactInformation = contactInformation;
+    }
+
+    public void setHoursOfOperation(String hoursOfOperation) {
+        this.hoursOfOperation = hoursOfOperation;
     }
 }

@@ -10,10 +10,9 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserANS;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ReturnAssetUserActorNetworkService;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.ActorNetworkServiceAssetUser;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
@@ -32,6 +31,7 @@ public class NewReceiveMessagesAssetUserRemoteNotificationEventHandler implement
 
 
     private ActorNetworkServiceAssetUser actorNetworkServiceAssetUser;
+    private ActorAssetUserManager actorAssetUserManager;
 
     public NewReceiveMessagesAssetUserRemoteNotificationEventHandler(ActorNetworkServiceAssetUser actorNetworkServiceAssetUser){
 
@@ -56,13 +56,13 @@ public class NewReceiveMessagesAssetUserRemoteNotificationEventHandler implement
         if(fermatMessageReceive.getContent()== null || fermatMessageReceive.getContent().isEmpty()){
 
 
-            ReturnAssetUserActorNetworkService returnactor = new AssetUserANS();
+
 
             Location loca = null;
 
             ActorAssetUser actorAssetUserNew = null;
             try {
-                actorAssetUserNew = returnactor.creatActorAssetUser(fermatMessageReceive.getSender(),null,new byte[]{}, loca);
+                actorAssetUserNew = actorAssetUserManager.createActorAssetUserFactory(fermatMessageReceive.getSender(), null, new byte[]{}, loca);
             } catch (CantCreateAssetUserActorException e) {
                 e.printStackTrace();
             }
@@ -74,14 +74,14 @@ public class NewReceiveMessagesAssetUserRemoteNotificationEventHandler implement
 
             String cryptoAddress =  fermatMessageReceive.getContent();
 
-            ReturnAssetUserActorNetworkService returnactor = new AssetUserANS();
+
 
             Location loca = null;
 
             ActorAssetUser actorAssetUserNew = null;
             try {
 
-                actorAssetUserNew = returnactor.creatActorAssetUser(fermatMessageReceive.getSender(),null,new byte[]{}, loca);
+                actorAssetUserNew = actorAssetUserManager.createActorAssetUserFactory(fermatMessageReceive.getSender(),null,new byte[]{}, loca);
 
             } catch (CantCreateAssetUserActorException e) {
                 e.printStackTrace();
