@@ -11,8 +11,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
@@ -42,12 +44,22 @@ import java.util.UUID;
 /**
  * Created by franklin on 05/10/15.
  */
-public class AssetUserWalletDao {
-    //TODO: Manejo de excepciones
+public class AssetUserWalletDao implements DealsWithPluginFileSystem {
+    public static final String PATH_DIRECTORY = "asset-user-swap/";//digital-asset-swap/"
+    PluginFileSystem pluginFileSystem;
+    UUID plugin;
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
     private Database database;
 
     public AssetUserWalletDao(Database database) {
         this.database = database;
+    }
+
+    public void setPlugin(UUID plugin){
+        this.plugin = plugin;
     }
 
     private long getCurrentBookBalance() throws CantGetBalanceRecordException{
@@ -215,36 +227,6 @@ public class AssetUserWalletDao {
         }
     }
 
-    private long calculateQuantityAvailableRunningBalanceByAsset(final long transactionAmount, String assetPublicKey) throws CantGetBalanceRecordException{
-        return  getQuantityCurrentAvailableBalanceByAsset(assetPublicKey) + transactionAmount;
-    }
-
-    private long getQuantityCurrentAvailableBalanceByAsset(String assetPublicKey) throws CantGetBalanceRecordException{
-        return getQuantityCurrentBalanceByAsset(BalanceType.AVAILABLE, assetPublicKey);
-    }
-
-    private long getQuantityCurrentBalanceByAsset(BalanceType balanceType, String assetPublicKey)
-    {
-        try {
-            long balanceAmount = 0;
-            if (balanceType == BalanceType.AVAILABLE)
-                balanceAmount = getBalancesByAssetRecord(assetPublicKey).getLongValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME);
-            else
-                balanceAmount = getBalancesByAssetRecord(assetPublicKey).getLongValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME);
-            return balanceAmount;
-        }
-        catch (Exception exception){
-            return 0;
-        }
-    }
-
-    private long calculateQuantityBookRunningBalanceByAsset(final long transactionAmount, String assetPublicKey) throws CantGetBalanceRecordException{
-        return  getCurrentQuantityBookBalanceByAsset(assetPublicKey) + transactionAmount;
-    }
-
-    private long getCurrentQuantityBookBalanceByAsset(String assetPublicKey) throws CantGetBalanceRecordException{
-        return getQuantityCurrentBalanceByAsset(BalanceType.BOOK, assetPublicKey);
-    }
 
     /*
     * Add a new credit transaction.
@@ -364,6 +346,37 @@ public class AssetUserWalletDao {
         }
     }
 
+    private long calculateQuantityAvailableRunningBalanceByAsset(final long transactionAmount, String assetPublicKey) throws CantGetBalanceRecordException{
+        return  getQuantityCurrentAvailableBalanceByAsset(assetPublicKey) + transactionAmount;
+    }
+
+    private long getQuantityCurrentAvailableBalanceByAsset(String assetPublicKey) throws CantGetBalanceRecordException{
+        return getQuantityCurrentBalanceByAsset(BalanceType.AVAILABLE, assetPublicKey);
+    }
+
+    private long getQuantityCurrentBalanceByAsset(BalanceType balanceType, String assetPublicKey)
+    {
+        try {
+            long balanceAmount = 0;
+            if (balanceType == BalanceType.AVAILABLE)
+                balanceAmount = getBalancesByAssetRecord(assetPublicKey).getLongValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME);
+            else
+                balanceAmount = getBalancesByAssetRecord(assetPublicKey).getLongValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME);
+            return balanceAmount;
+        }
+        catch (Exception exception){
+            return 0;
+        }
+    }
+
+    private long calculateQuantityBookRunningBalanceByAsset(final long transactionAmount, String assetPublicKey) throws CantGetBalanceRecordException{
+        return  getCurrentQuantityBookBalanceByAsset(assetPublicKey) + transactionAmount;
+    }
+
+    private long getCurrentQuantityBookBalanceByAsset(String assetPublicKey) throws CantGetBalanceRecordException{
+        return getQuantityCurrentBalanceByAsset(BalanceType.BOOK, assetPublicKey);
+    }
+
     private boolean isTransactionInTable(final String transactionId, final TransactionType transactionType, final BalanceType balanceType) throws CantLoadTableToMemoryException {
         DatabaseTable assetUserWalletTable = getAssetUserWalletTable();
         assetUserWalletTable.setStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_VERIFICATION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
@@ -413,7 +426,6 @@ public class AssetUserWalletDao {
     }
 
     private void executeTransaction(final AssetUserWalletTransactionRecord assetUserWalletTransactionRecord, final TransactionType transactionType, final BalanceType balanceType, final long availableRunningBalance, final long bookRunningBalance, final long quantityAvailableRunningBalance, final long quantityBookRunningBalance) throws CantExecuteAssetUserTransactionException {
-        //TODO: Falta manejo de excepciones
         try {
             DatabaseTableRecord assetUserWalletRecord = constructAssetUserWalletRecord(assetUserWalletTransactionRecord, transactionType, balanceType, availableRunningBalance, bookRunningBalance);//DatabaseTableRecord balanceRecord = constructBalanceRecord(availableRunningBalance, bookRunningBalance);
             DatabaseTableRecord assetBalanceRecord = constructAssetBalanceRecord(assetUserWalletTransactionRecord.getDigitalAsset(), availableRunningBalance, bookRunningBalance, quantityAvailableRunningBalance, quantityBookRunningBalance);
@@ -425,12 +437,11 @@ public class AssetUserWalletDao {
             databaseTable.loadToMemory();
             if (databaseTable.getRecords().isEmpty()){
                 transaction.addRecordToInsert(databaseTable, assetBalanceRecord);
-                //TODO: Manejo de archivo
                 transaction.addRecordToInsert(databaseTable, assetBalanceRecord);
-//                String digitalAssetInnerXML = assetUserWalletTransactionRecord.getDigitalAsset().toString();
-//                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(plugin, assetUserWalletTransactionRecord.getDigitalAsset().getPublicKey(), PATH_DIRECTORY, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-//                pluginTextFile.setContent(digitalAssetInnerXML);
-//                pluginTextFile.persistToMedia();
+                String digitalAssetInnerXML = assetUserWalletTransactionRecord.getDigitalAsset().toString();
+                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(plugin, assetUserWalletTransactionRecord.getDigitalAsset().getPublicKey(), PATH_DIRECTORY, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                pluginTextFile.setContent(digitalAssetInnerXML);
+                pluginTextFile.persistToMedia();
             }else{
                 transaction.addRecordToUpdate(databaseTable, assetBalanceRecord);
             }
