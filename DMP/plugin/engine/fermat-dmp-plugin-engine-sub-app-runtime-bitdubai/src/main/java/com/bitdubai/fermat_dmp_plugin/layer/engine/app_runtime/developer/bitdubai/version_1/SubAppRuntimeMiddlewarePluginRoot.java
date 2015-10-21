@@ -988,32 +988,9 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             listSubApp.put(SubApps.DAP_ASSETS_FACTORY, dapFactory);
 
-            // DAP ASSET USER COMMUNITY
-            // DAP
-            RuntimeSubApp dapUserCommunity = new RuntimeSubApp();
-            dapUserCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_USER);
-            dapUserCommunity.setStartActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
-
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
-            runtimeActivity.setColor("#0072bc");
-
-            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-            statusBar.setColor("#0072bc");
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Asset User Community");
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-            runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey());
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey());
-            runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey(), runtimeFragment);
-
-            dapUserCommunity.addActivity(runtimeActivity);
-            listSubApp.put(SubApps.DAP_ASSETS_COMMUNITY_USER, dapUserCommunity);
-
-            // DAP ASSET ISSUER COMMUNITY
-            // DAP
+           /**
+             * Dap Asset Issuer Community
+             */
             RuntimeSubApp dapAssetIssuerCommunity = new RuntimeSubApp();
             dapAssetIssuerCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_ISSUER);
             dapAssetIssuerCommunity.setStartActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
@@ -1036,8 +1013,34 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             dapAssetIssuerCommunity.addActivity(runtimeActivity);
             listSubApp.put(SubApps.DAP_ASSETS_COMMUNITY_ISSUER, dapAssetIssuerCommunity);
 
-            // DAP ASSET REDEEM POINT COMMUNITY
-            // DAP
+            /**
+             * Dap Asset User Community
+             */
+            RuntimeSubApp dapAssetUserCommunity = new RuntimeSubApp();
+            dapAssetUserCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_USER);
+            dapAssetUserCommunity.setStartActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
+
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
+            runtimeActivity.setColor("#0072bc");
+
+            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#0072bc");
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Asset User Community");
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+            runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey());
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey());
+            runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey(), runtimeFragment);
+
+            dapAssetUserCommunity.addActivity(runtimeActivity);
+            listSubApp.put(SubApps.DAP_ASSETS_COMMUNITY_USER, dapAssetUserCommunity);
+
+            /**
+              * Dap Asset Redeem Point Community
+              */
             RuntimeSubApp dapAssetRedeemPointCommunity = new RuntimeSubApp();
             dapAssetRedeemPointCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT);
             dapAssetRedeemPointCommunity.setStartActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
@@ -1059,6 +1062,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             dapAssetRedeemPointCommunity.addActivity(runtimeActivity);
             listSubApp.put(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT, dapAssetRedeemPointCommunity);
+
             /**
              * End of DAP
              */
