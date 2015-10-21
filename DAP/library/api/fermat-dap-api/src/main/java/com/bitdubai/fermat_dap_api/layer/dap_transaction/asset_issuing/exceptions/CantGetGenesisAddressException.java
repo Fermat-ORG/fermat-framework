@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions;
 
 import com.bitdubai.fermat_api.layer.DAPException;
 

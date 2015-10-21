@@ -5,28 +5,28 @@ import com.bitdubai.fermat_api.layer.DAPException;
 /**
  * Created by Nerio on 07/09/15.
  */
-public class CantCreateNewRedeemPointException extends DAPException {
+public class CantCreateActorRedeemPointException extends DAPException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T CREATE NEW REDEEM POINT";
 
-    public CantCreateNewRedeemPointException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantCreateActorRedeemPointException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
-    public CantCreateNewRedeemPointException(final String message, final Exception cause) {
+    public CantCreateActorRedeemPointException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }
 
-    public CantCreateNewRedeemPointException(final String message) {
+    public CantCreateActorRedeemPointException(final String message) {
         this(message, null);
     }
 
-    public CantCreateNewRedeemPointException(final Exception exception) {
+    public CantCreateActorRedeemPointException(final Exception exception) {
         this(exception.getMessage());
         setStackTrace(exception.getStackTrace());
     }
 
-    public CantCreateNewRedeemPointException() {
+    public CantCreateActorRedeemPointException() {
         this(DEFAULT_MESSAGE);
     }
 }

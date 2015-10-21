@@ -56,7 +56,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exception
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantGetGenesisAddressException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantGetGenesisAddressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantIssueDigitalAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisAddressException;
@@ -585,7 +585,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                 "testDeliveredByActorPublicKey",
                 Actors.INTRA_USER,
                 "testDeliveredToActorPublicKey",
-                Actors.ASSET_ISSUER,
+                Actors.DAP_ASSET_ISSUER,
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 VaultType.ASSET_VAULT,
                 CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
@@ -628,7 +628,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                     "senderPublicKey",
                     "receptorPublicKey",
                     Actors.INTRA_USER,
-                    Actors.ASSET_ISSUER,
+                    Actors.DAP_ASSET_ISSUER,
                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
             this.assetIssuingTransactionDao.persistOutgoingIntraActorUUID(transactionId, outgoingId);
             //this.assetIssuingTransactionDao.updateTransactionProtocolStatus(genesisTransaction, ProtocolStatus.TO_BE_NOTIFIED);

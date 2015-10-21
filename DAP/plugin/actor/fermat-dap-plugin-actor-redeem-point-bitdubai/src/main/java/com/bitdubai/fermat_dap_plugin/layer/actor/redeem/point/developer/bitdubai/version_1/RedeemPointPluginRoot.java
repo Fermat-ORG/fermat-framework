@@ -20,7 +20,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.developerUtils.RedeemPointActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantAddPendingRedeemPointException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantInitializeRedeemPointActorDatabaseException;
@@ -37,6 +42,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -46,7 +52,7 @@ import java.util.UUID;
  * Created by Nerio on 09/09/15.
  */
 
-public class RedeemPointPluginRoot implements DealsWithErrors, DatabaseManagerForDevelopers, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
+public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, DealsWithErrors, DatabaseManagerForDevelopers, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
 
     /**
      * Service Interface member variables.
@@ -231,7 +237,7 @@ public class RedeemPointPluginRoot implements DealsWithErrors, DatabaseManagerFo
                 DeviceLocation location = new DeviceLocation();
                 location.setLongitude(new Random().nextDouble());
                 location.setLatitude(new Random().nextDouble());
-                RedeemPointActorRecord record = new RedeemPointActorRecord("victor", publicKey);
+                RedeemPointActorRecord record = new RedeemPointActorRecord("Thunder_RePo_User_" + i, publicKey);
                 record.setConnectionState(ConnectionState.CONNECTED);
                 record.setProfileImage(new byte[5]);
                 record.setLocation(location);
@@ -247,7 +253,10 @@ public class RedeemPointPluginRoot implements DealsWithErrors, DatabaseManagerFo
                 record.setHoursOfOperation("08:00 am a 05:30pm");
                 record.setContactInformation("marsvicam@gmail.com");
                 try {
-                    redeemPointActorDao.createNewRedeemPoint(identityPublicKey, record);
+                    if (i == 0) {
+                        redeemPointActorDao.createNewRedeemPoint(identityPublicKey, record);
+                    }
+                    redeemPointActorDao.createNewRedeemPointRegisterInNetworkService(record);
                 } catch (CantAddPendingRedeemPointException e) {
                     System.out.println("*******************************************************");
                     System.out.println("PRUEBA DE VICTOR - REDEEM POINT: Falló creando el record número: " + i);
@@ -264,5 +273,56 @@ public class RedeemPointPluginRoot implements DealsWithErrors, DatabaseManagerFo
             System.out.println("*******************************************************");
             throw e;
         }
+    }
+
+    /**
+     * The method <code>getActorPublicKey</code> get All Information about Actor
+     *
+     * @throws CantGetAssetRedeemPointActorsException
+     */
+    @Override
+    public ActorAssetRedeemPoint getActorPublicKey() throws CantGetAssetRedeemPointActorsException {
+
+        return null;
+    }
+
+    /**
+     * The method <code>getAllAssetUserActorRegistered</code> get All Actors Registered in Actor Network Service
+     * and used in Sub App Community
+     *
+     * @throws CantGetAssetRedeemPointActorsException
+     */
+    @Override
+    public List<ActorAssetRedeemPoint> getAllAssetRedeemPointActorRegistered() throws CantGetAssetRedeemPointActorsException {
+        List<ActorAssetRedeemPoint> list = new LinkedList<>();
+
+        return list;
+    }
+
+    /**
+     * The method <code>getAllAssetIssuerActorConnected</code> receives All Actors with have CryptoAddress in BD
+     *
+     * @throws CantGetAssetRedeemPointActorsException
+     */
+    @Override
+    public List<ActorAssetRedeemPoint> getAllRedeemPointActorConnected() throws CantGetAssetRedeemPointActorsException {
+        List<ActorAssetRedeemPoint> list = new LinkedList<>();
+
+        return list;
+    }
+
+    /**
+     * The method <code>createActorAssetUserFactory</code> create Actor in Actor Network Service
+     *
+     * @param assetRedeemPointActorPublicKey
+     * @param assetRedeemPointActorName
+     * @param assetRedeemPointActorprofileImage
+     * @param assetRedeemPointActorlocation
+     * @throws CantCreateActorRedeemPointException
+     */
+    @Override
+    public ActorAssetRedeemPoint createActorAssetRedeemPointFactory(String assetRedeemPointActorPublicKey, String assetRedeemPointActorName, byte[] assetRedeemPointActorprofileImage, Location assetRedeemPointActorlocation) throws CantCreateActorRedeemPointException {
+
+        return null;
     }
 }

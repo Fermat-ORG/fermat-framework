@@ -366,8 +366,8 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
         switch (type) {
 
             case INTRA_USER  : return PlatformComponentType.ACTOR_INTRA_USER  ;
-            case ASSET_ISSUER: return PlatformComponentType.ACTOR_ASSET_ISSUER;
-            case ASSET_USER  : return PlatformComponentType.ACTOR_ASSET_USER  ;
+            case DAP_ASSET_ISSUER: return PlatformComponentType.ACTOR_ASSET_ISSUER;
+            case DAP_ASSET_USER  : return PlatformComponentType.ACTOR_ASSET_USER  ;
 
             default: throw new InvalidParameterException(
                     " actor type: "+type.name()+"  type-code: "+type.getCode(),
