@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentE
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptNetworkTransactionsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
@@ -29,6 +30,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.wallet.WalletTransaction;
 
 import java.util.List;
 import java.util.UUID;
@@ -204,5 +206,16 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, Da
     @Override
     public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx) throws CantBroadcastTransactionException {
        bitcoinCryptoNetworkManager.broadcastTransaction(blockchainNetworkType, tx);
+    }
+
+    /**
+     * Get the transactions stored on the crypto network that are referenced by the passed pool of keys.
+     * @param pool
+     * @return
+     * @throws CantGetCryptNetworkTransactionsException
+     */
+    @Override
+    public List<Transaction> getTransactions(WalletTransaction.Pool pool) throws CantGetCryptNetworkTransactionsException {
+        return bitcoinCryptoNetworkManager.getTransactions(pool);
     }
 }

@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentE
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptNetworkTransactionsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
@@ -21,6 +22,7 @@ import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.store.UnreadableWalletException;
+import org.bitcoinj.wallet.WalletTransaction;
 
 import java.io.File;
 import java.io.IOException;
@@ -310,5 +312,23 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      */
     public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx) throws CantBroadcastTransactionException {
         runningAgents.get(blockchainNetworkType).broadcastTransaction(tx);
+    }
+
+
+    /**
+     * Get the transactions stored on the crypto network that are referenced by the passed pool of keys.
+     * @param pool
+     * @return
+     * @throws CantGetCryptNetworkTransactionsException
+     */
+    public List<Transaction> getTransactions(WalletTransaction.Pool pool) throws CantGetCryptNetworkTransactionsException {
+        try{
+            List<Transaction> transactions = new ArrayList<>(wallet.getTransactionPool(pool).values());
+            return transactions;
+        } catch (Exception e) {
+            throw new CantGetCryptNetworkTransactionsException("There was an error getting the list of transactions for the specified pool.", e, null, null);
+        }
+
+
     }
 }
