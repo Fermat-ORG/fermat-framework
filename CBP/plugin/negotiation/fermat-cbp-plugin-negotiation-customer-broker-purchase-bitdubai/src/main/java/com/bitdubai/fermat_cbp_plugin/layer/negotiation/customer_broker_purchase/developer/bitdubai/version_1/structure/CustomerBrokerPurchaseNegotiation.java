@@ -3,7 +3,6 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchas
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
 
@@ -11,8 +10,9 @@ import java.util.Collection;
 import java.util.UUID;
 
 /**
- * Created by angel on 19/10/15.
+ *  Created by angel on 19/10/15.
  */
+
 public class CustomerBrokerPurchaseNegotiation implements CustomerBrokerPurchase {
 
     private final UUID   negotiationId;
@@ -62,7 +62,7 @@ public class CustomerBrokerPurchaseNegotiation implements CustomerBrokerPurchase
 
     @Override
     public void setStatus(NegotiationStatus status) {
-
+        this.statusNegotiation = status;
     }
 
     @Override
