@@ -104,18 +104,18 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerTransactionRecord {
     public String getMemo() { return this.memo; }
     public void setMemo(String memo) { this.memo = memo; }
 
-    /*public boolean equals(Object o){
-        if(!(o instanceof CryptoBrokerIdentity))
+    public boolean equals(Object o){
+        if(!(o instanceof CryptoBrokerTransactionRecord))
             return false;
-        CryptoBrokerIdentity compare = (CryptoBrokerIdentity) o;
-        return alias.equals(compare.getAlias()) && keyPair.getPublicKey().equals(compare.getPublicKey());
+        CryptoBrokerTransactionRecord compare = (CryptoBrokerTransactionRecord) o;
+        return keyPairBroker.getPublicKey().equals(compare.getPublicKeyBroker()) && keyPairWallet.getPublicKey().equals(compare.getPublicKeyWallet());
     }
 
     @Override
     public int hashCode(){
         int c = 0;
-        c += alias.hashCode();
-        c += keyPair.hashCode();
+        c += keyPairBroker.hashCode();
+        c += keyPairWallet.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
-    }*/
+    }
 }

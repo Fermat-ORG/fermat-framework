@@ -288,25 +288,6 @@ public class CryptoBrokerWalletDatabaseDao {
         }
     }
 
-    private void  persistNewCryptoBrokerWalletPrivateKeysFile(String publicKey,String privateKey) throws CantPersistPrivateKeyException {
-        try {
-            PluginTextFile file = this.pluginFileSystem.createTextFile(pluginId,
-                    DeviceDirectory.LOCAL_USERS.getName(),
-                    CryptoBrokerWalletPluginRoot.CRYPTO_BROKER_PRIVATE_KEYS_WALLET_FILE_NAME + "_" + publicKey,
-                    FilePrivacy.PRIVATE,
-                    FileLifeSpan.PERMANENT
-            );
-            file.setContent(privateKey);
-            file.persistToMedia();
-        } catch (CantPersistFileException e) {
-            throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error persist file.", null);
-        } catch (CantCreateFileException e) {
-            throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error creating file.", null);
-        } catch (Exception e) {
-            throw  new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ",FermatException.wrapException(e),"", "");
-        }
-    }
-
     private void loadCryptoBrokersRecordAsNew(
             DatabaseTableRecord databaseTableRecord,
             CryptoBrokerTransactionRecord cryptoBrokerTransactionRecord,
@@ -319,6 +300,7 @@ public class CryptoBrokerWalletDatabaseDao {
         databaseTableRecord.setUUIDValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TRANSACTION_ID_COLUMN_NAME, transactionId);
         databaseTableRecord.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_WALLET_COLUMN_NAME, cryptoBrokerTransactionRecord.getPublicKeyWallet());
         databaseTableRecord.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_BROKER_COLUMN_NAME, cryptoBrokerTransactionRecord.getPublicKeyBroker());
+        databaseTableRecord.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, cryptoBrokerTransactionRecord.getPublicKeyCustomer());
         databaseTableRecord.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode());
         databaseTableRecord.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TRANSACTION_TYPE_COLUMN_NAME, transactionType.getCode());
         databaseTableRecord.setFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_AMOUNT_COLUMN_NAME, cryptoBrokerTransactionRecord.getAmount());
@@ -360,10 +342,12 @@ public class CryptoBrokerWalletDatabaseDao {
         String  memo                        = record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_MEMO_COLUMN_NAME);
         KeyPair keyPairWallet               = AsymmetricCryptography.createKeyPair(publickeyWalle);
         KeyPair keyPairBroker               = AsymmetricCryptography.createKeyPair(publickeyBroker);
+        KeyPair keyPairCustomer             = AsymmetricCryptography.createKeyPair(publicKeyCustomer);
         return new CryptoBrokerWalletImpl(
                 transactionId,
                 keyPairWallet,
                 keyPairBroker,
+                keyPairCustomer,
                 balanceType,
                 transactionType,
                 currencyType,
@@ -375,14 +359,33 @@ public class CryptoBrokerWalletDatabaseDao {
         );
     }
 
-    private String getCryptoBrokerPrivateKeyWallet(String publicKey) throws CantGetCryptoBrokerWalletPrivateKeyException {
-        String privateKey = "";
+    private void  persistNewCryptoBrokerWalletPrivateKeysFile(String publicKey,String privateKey) throws CantPersistPrivateKeyException {
         try {
-            PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
+            PluginTextFile file = this.pluginFileSystem.createTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
                     CryptoBrokerWalletPluginRoot.CRYPTO_BROKER_PRIVATE_KEYS_WALLET_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
+            );
+            file.setContent(privateKey);
+            file.persistToMedia();
+        } catch (CantPersistFileException e) {
+            throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error persist file.", null);
+        } catch (CantCreateFileException e) {
+            throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error creating file.", null);
+        } catch (Exception e) {
+            throw  new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ",FermatException.wrapException(e),"", "");
+        }
+    }
+
+    private String getCryptoBrokerPrivateKeyWallet(String publicKey) throws CantGetCryptoBrokerWalletPrivateKeyException {
+        String privateKey = "";
+        try {
+            PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
+                DeviceDirectory.LOCAL_USERS.getName(),
+                CryptoBrokerWalletPluginRoot.CRYPTO_BROKER_PRIVATE_KEYS_WALLET_FILE_NAME + "_" + publicKey,
+                FilePrivacy.PRIVATE,
+                FileLifeSpan.PERMANENT
             );
             file.loadFromMedia();
             privateKey = file.getContent();
@@ -400,10 +403,10 @@ public class CryptoBrokerWalletDatabaseDao {
         String privateKey = "";
         try {
             PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
-                    DeviceDirectory.LOCAL_USERS.getName(),
-                    CryptoBrokerWalletPluginRoot.CRYPTO_BROKER_PRIVATE_KEYS_BROKER_FILE_NAME + "_" + publicKey,
-                    FilePrivacy.PRIVATE,
-                    FileLifeSpan.PERMANENT
+                DeviceDirectory.LOCAL_USERS.getName(),
+                CryptoBrokerWalletPluginRoot.CRYPTO_BROKER_PRIVATE_KEYS_BROKER_FILE_NAME + "_" + publicKey,
+                FilePrivacy.PRIVATE,
+                FileLifeSpan.PERMANENT
             );
             file.loadFromMedia();
             privateKey = file.getContent();
@@ -421,10 +424,10 @@ public class CryptoBrokerWalletDatabaseDao {
         String privateKey = "";
         try {
             PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
-                    DeviceDirectory.LOCAL_USERS.getName(),
-                    CryptoBrokerWalletPluginRoot.CRYPTO_BROKER_PRIVATE_KEYS_CUSTOMER_FILE_NAME + "_" + publicKey,
-                    FilePrivacy.PRIVATE,
-                    FileLifeSpan.PERMANENT
+                DeviceDirectory.LOCAL_USERS.getName(),
+                CryptoBrokerWalletPluginRoot.CRYPTO_BROKER_PRIVATE_KEYS_CUSTOMER_FILE_NAME + "_" + publicKey,
+                FilePrivacy.PRIVATE,
+                FileLifeSpan.PERMANENT
             );
             file.loadFromMedia();
             privateKey = file.getContent();
@@ -437,6 +440,5 @@ public class CryptoBrokerWalletDatabaseDao {
         }
         return privateKey;
     }
-
     /*##END PRIVATE##*/
 }
