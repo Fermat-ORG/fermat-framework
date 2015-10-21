@@ -12,7 +12,7 @@ import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentViewHolder;
 /**
  * Created by nelson on 21/10/15.
  */
-public class GrouperParentViewHolder extends ParentViewHolder {
+public class GrouperViewHolder extends ParentViewHolder {
 
     private static final float INITIAL_POSITION = 0.0f;
     private static final float ROTATED_POSITION = 180f;
@@ -29,7 +29,7 @@ public class GrouperParentViewHolder extends ParentViewHolder {
      *
      * @param itemView the view of the parent item. Find/modify views using this.
      */
-    public GrouperParentViewHolder(View itemView) {
+    public GrouperViewHolder(View itemView) {
         super(itemView);
 
 //        mNumberTextView = (TextView) itemView.findViewById(R.id.list_item_parent_vertical_number_textView);

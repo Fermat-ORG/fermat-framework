@@ -8,7 +8,7 @@ import com.bitdubai.fermat_android_api.ui.expandableRecicler.ChildViewHolder;
 /**
  * Created by nelson on 21/10/15.
  */
-public class OpenNegotiationsChildViewHolder extends ChildViewHolder {
+public class OpenNegotiationViewHolder extends ChildViewHolder {
 
     public TextView mDataTextView;
 
@@ -17,7 +17,7 @@ public class OpenNegotiationsChildViewHolder extends ChildViewHolder {
      *
      * @param itemView the child ViewHolder's view
      */
-    public OpenNegotiationsChildViewHolder(View itemView) {
+    public OpenNegotiationViewHolder(View itemView) {
         super(itemView);
 
         //mDataTextView = (TextView) itemView.findViewById(R.id.list_item_vertical_child_textView);

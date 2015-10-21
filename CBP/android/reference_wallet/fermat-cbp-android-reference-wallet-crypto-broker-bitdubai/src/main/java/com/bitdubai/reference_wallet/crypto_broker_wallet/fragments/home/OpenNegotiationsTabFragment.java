@@ -12,10 +12,10 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
-import com.bitdubai.fermat_android_api.ui.expandableRecicler.VerticalChild;
-import com.bitdubai.fermat_android_api.ui.expandableRecicler.VerticalParent;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.CbpVerticalExpandableAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItemData;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.OpenNegotiationsItemData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
     // TODO: Rename and change types of parameters
 
     private RecyclerView mRecyclerView;
-    private CbpVerticalExpandableAdapter mExpandableAdapter;
+    private OpenNegotiationsExpandableAdapter mExpandableAdapter;
 
 
     /**
@@ -57,7 +57,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.open_negotiations_recycler_view);
 
         // Create a new adapter with 20 test data items
-        mExpandableAdapter = new CbpVerticalExpandableAdapter(getActivity(), setUpTestData(5));
+        mExpandableAdapter = new OpenNegotiationsExpandableAdapter(getActivity(), setUpTestData(5));
 
         // Attach this activity to the Adapter as the ExpandCollapseListener
         mExpandableAdapter.setExpandCollapseListener(this);
@@ -104,34 +104,34 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
      *
      * @return A List of Objects that contains all parent items. Expansion of children are handled in the adapter
      */
-    private List<VerticalParent> setUpTestData(int numItems) {
-        List<VerticalParent> verticalParentList = new ArrayList<>();
+    private List<GrouperItemData> setUpTestData(int numItems) {
+        List<GrouperItemData> parentItemList = new ArrayList<>();
 
         for (int i = 0; i < numItems; i++) {
-            List<VerticalChild> childItemList = new ArrayList<>();
+            List<OpenNegotiationsItemData> childItemList = new ArrayList<>();
 
-            VerticalChild verticalChild = new VerticalChild();
-            verticalChild.setChildText("hijo 1: " + i);
-            childItemList.add(verticalChild);
+            OpenNegotiationsItemData childOne = new OpenNegotiationsItemData();
+            childOne.setChildText("hijo 1: " + i);
+            childItemList.add(childOne);
 
             // Evens get 2 children, odds get 1
             if (i % 2 == 0) {
-                VerticalChild verticalChild2 = new VerticalChild();
-                verticalChild2.setChildText("hijo 2" + i);
-                childItemList.add(verticalChild2);
+                OpenNegotiationsItemData childTwo = new OpenNegotiationsItemData();
+                childTwo.setChildText("hijo 2" + i);
+                childItemList.add(childTwo);
             }
 
-            VerticalParent verticalParent = new VerticalParent();
+            GrouperItemData verticalParent = new GrouperItemData();
             verticalParent.setChildItemList(childItemList);
             verticalParent.setParentNumber(i);
             verticalParent.setParentText("texto padre");
             if (i == 0) {
                 verticalParent.setInitiallyExpanded(true);
             }
-            verticalParentList.add(verticalParent);
+            parentItemList.add(verticalParent);
         }
 
-        return verticalParentList;
+        return parentItemList;
     }
 
 }
