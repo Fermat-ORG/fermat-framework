@@ -16,12 +16,17 @@ dependencies {
 
     compile project(':fermat-ccp-api')
     compile project(':fermat-ccp-plugin-actor-intra-wallet-user-bitdubai')
+    compile project(':fermat-ccp-plugin-basic-wallet-bitcoin-wallet-bitdubai')
     compile project(':fermat-ccp-plugin-identity-intra-wallet-user-bitdubai')
     compile project(':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai')
     compile project(':fermat-ccp-plugin-network-service-crypto-addresses-bitdubai')
     compile project(':fermat-ccp-plugin-network-service-crypto-payment-request-bitdubai')
     compile project(':fermat-ccp-plugin-network-service-crypto-transmission-bitdubai')
+    compile project(':fermat-ccp-plugin-network-service-intra-actor-bitdubai')
     compile project(':fermat-ccp-plugin-request-crypto-payment-bitdubai')
+    compile project(':fermat-ccp-plugin-transaction-incoming-extra-user-bitdubai')
+    compile project(':fermat-ccp-plugin-transaction-incoming-intra-user-bitdubai')
+    compile project(':fermat-ccp-plugin-transaction-outgoing-extra-user-bitdubai')
     compile project(':fermat-ccp-plugin-transaction-outgoing-intra-actor-bitdubai')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
