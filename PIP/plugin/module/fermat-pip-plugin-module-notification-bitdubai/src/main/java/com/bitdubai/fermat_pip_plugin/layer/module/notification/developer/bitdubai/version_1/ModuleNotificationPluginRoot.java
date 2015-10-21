@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.interfaces.DealsWithEx
 import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
+import com.bitdubai.fermat_pip_api.layer.notifications.FermatNotificationListener;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
@@ -49,6 +50,8 @@ import java.util.Observer;
 import java.util.Queue;
 import java.util.UUID;
 import java.util.regex.Pattern;
+
+import javax.management.NotificationListener;
 
 /**
  * Created by Matias Furszyfer
@@ -120,6 +123,8 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
     private boolean notificationFlag;
 
     FlagNotification flagNotification;
+
+    private FermatNotificationListener notificationListener;
 
     /**
      * Service Interface implementation.
@@ -334,14 +339,27 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
 
         try {
             Notification notification = createNotification(source, actorId, actorName, actorType, profileImage);
-            notification.setNotificationType(NotificationType.INCOMING_CONNECTION.getCode());
+            notification.setNotificationType(NotificationType.INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION.getCode());
             poolNotification.add(notification);
+
+            notificationListener.notificate(notification);
         } catch (CantCreateNotification cantCreateNotification) {
             cantCreateNotification.printStackTrace();
         }
 
         // notify observers
         notifyNotificationArrived();
+    }
+
+    @Override
+    public void addCallback(FermatNotificationListener notificationListener) {
+        this.notificationListener = notificationListener;
+    }
+
+    @Override
+    public void deleteCallback(FermatNotificationListener fermatNotificationListener) {
+        //esto deberia ser un hashmap
+        this.notificationListener = null;
     }
 
 
