@@ -396,10 +396,6 @@ project(':fermat-ccp-android-sub-app-intra-user-community-bitdubai').projectDir 
 include ':fermat-dmp-plugin-middleware-wallet-skin-bitdubai'
 project(':fermat-dmp-plugin-middleware-wallet-skin-bitdubai').projectDir = new File('DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-skin-bitdubai')
 
-// Milestone 1 project:
-include ':fermat-dmp-plugin-middleware-wallet-contacts-bitdubai'
-project(':fermat-dmp-plugin-middleware-wallet-contacts-bitdubai').projectDir = new File('DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai')
-
 include ':fermat-dmp-plugin-middleware-wallet-language-bitdubai'
 project(':fermat-dmp-plugin-middleware-wallet-language-bitdubai').projectDir = new File('DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-language-bitdubai')
 
