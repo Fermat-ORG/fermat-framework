@@ -19,6 +19,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/10/15.
@@ -85,9 +86,10 @@ public class AssetDistributionRecorderService implements DealsWithEvents, AssetT
     }
 
     public void receivedNewDigitalAssetMetadataNotificationrEvent(ReceivedNewDigitalAssetMetadataNotificationEvent event) throws CantSaveEventException {
-        //Logger LOG = Logger.getGlobal();
+        Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         this.assetDistributionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+        LOG.info("guardando evento en bd");
         //LOG.info("CHECK THE DATABASE");
     }
 
