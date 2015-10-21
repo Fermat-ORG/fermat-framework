@@ -39,8 +39,6 @@ import com.bitdubai.fermat_ccp_core.CCPPlatform;
 import com.bitdubai.fermat_core.layer.cbp.identity.CBPIdentityLayer;
 import com.bitdubai.fermat_core.layer.cbp.sub_app_module.CBPSubAppModuleLayer;
 import com.bitdubai.fermat_core.layer.ccm.actor.CCMActorLayer;
-import com.bitdubai.fermat_core.layer.ccp.actor.CCPActorLayer;
-import com.bitdubai.fermat_core.layer.ccp.request.CCPRequestLayer;
 import com.bitdubai.fermat_core.layer.dap_actor_network_service.DAPActorNetworkServiceLayer;
 import com.bitdubai.fermat_core.layer.dap_network_service.DAPNetworkServiceLayer;
 import com.bitdubai.fermat_core.layer.dap_sub_app_module.DAPSubAppModuleLayer;
@@ -86,10 +84,6 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.DealsWithDevice
 
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
-import com.bitdubai.fermat_core.layer.ccp.identity.CCPIdentityLayer;
-import com.bitdubai.fermat_core.layer.ccp.middleware.CCPMiddlewareLayer;
-import com.bitdubai.fermat_core.layer.ccp.network_service.CCPNetworkServiceLayer;
-import com.bitdubai.fermat_core.layer.ccp.transaction.CCPTransactionLayer;
 
 import com.bitdubai.fermat_core.layer.dap_actor.DAPActorLayer;
 import com.bitdubai.fermat_core.layer.dap_identity.DAPIdentityLayer;
