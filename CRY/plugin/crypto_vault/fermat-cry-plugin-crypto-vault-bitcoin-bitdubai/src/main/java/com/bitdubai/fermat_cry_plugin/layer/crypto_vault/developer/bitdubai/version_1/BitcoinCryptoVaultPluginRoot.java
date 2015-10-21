@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -401,11 +402,31 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantStartAgentException );
             }
 
+            // test method
+            //sendTestBitcoins();
+
             /**
              * the service is started.
              */
             this.serviceStatus = ServiceStatus.STARTED;
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault started.", null, null);
+    }
+
+    /**
+     * Test Method that can be deleted.
+     */
+    private void sendTestBitcoins() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    Thread.sleep(5000);
+                    sendBitcoins(UUID.randomUUID().toString(), UUID.randomUUID(), new CryptoAddress("n4arfawovx5YxhwaabwfLiTKU8EyPN5Xaz", CryptoCurrency.BITCOIN), 123456);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     /**
