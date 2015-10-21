@@ -17,7 +17,7 @@ public class ListComponent implements CustomComponentsObjects{
     private CryptoWalletTransaction cryptoWalletTransaction;
 
     public ListComponent(CryptoWalletTransaction cryptoWalletTransaction) {
-        //this.titleTransaction = cryptoWalletTransaction.getBitcoinWalletTransaction().;
+        //this.titleTransaction = cryptoWalletTransaction.;
         this.cryptoWalletTransaction = cryptoWalletTransaction;
         generateTitle();
         generateDetailTransaction();
@@ -26,12 +26,12 @@ public class ListComponent implements CustomComponentsObjects{
 
     private void generateTitle(){
         try {
-            if (cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType().equals(TransactionType.CREDIT)) {
+            if (cryptoWalletTransaction.getTransactionType().equals(TransactionType.CREDIT)) {
                 titleTransaction += "Receive from " + cryptoWalletTransaction.getInvolvedActor().getName();
-            } else if (cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType().equals(TransactionType.DEBIT)) {
+            } else if (cryptoWalletTransaction.getTransactionType().equals(TransactionType.DEBIT)) {
                 titleTransaction += "Send from " + cryptoWalletTransaction.getInvolvedActor().getName();
             }
-            titleTransaction+= " "+formatBalanceString(cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(), ShowMoneyType.BITCOIN.getCode());
+            titleTransaction+= " "+formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode());
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -39,7 +39,7 @@ public class ListComponent implements CustomComponentsObjects{
 
     private void generateDetailTransaction(){
         try {
-        String textBody = cryptoWalletTransaction.getBitcoinWalletTransaction().getMemo();
+        String textBody = cryptoWalletTransaction.getMemo();
         if(textBody.length() != 0){
             detailTransaction+= textBody;
         }else{

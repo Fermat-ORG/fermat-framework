@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartP
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_ccp_core.layer.actor.ActorLayer;
+import com.bitdubai.fermat_ccp_core.layer.basic_wallet.BasicWalletLayer;
 import com.bitdubai.fermat_ccp_core.layer.identity.IdentityLayer;
 import com.bitdubai.fermat_ccp_core.layer.middleware.MiddlewareLayer;
 import com.bitdubai.fermat_ccp_core.layer.network_service.NetworkServiceLayer;
@@ -29,12 +30,13 @@ public class CCPPlatform extends AbstractPlatform {
     @Override
     public void start() throws CantStartPlatformException {
 
-        addLayer(Layers.ACTOR          , new ActorLayer()         );
-        addLayer(Layers.IDENTITY       , new IdentityLayer()      );
-        addLayer(Layers.MIDDLEWARE     , new MiddlewareLayer()    );
-        addLayer(Layers.NETWORK_SERVICE, new NetworkServiceLayer());
-        addLayer(Layers.REQUEST        , new RequestLayer()       );
-        addLayer(Layers.TRANSACTION    , new TransactionLayer()   );
+        registerLayer(Layers.ACTOR          , new ActorLayer()         );
+        registerLayer(Layers.BASIC_WALLET   , new BasicWalletLayer()   );
+        registerLayer(Layers.IDENTITY       , new IdentityLayer()      );
+        registerLayer(Layers.MIDDLEWARE     , new MiddlewareLayer()    );
+        registerLayer(Layers.NETWORK_SERVICE, new NetworkServiceLayer());
+        registerLayer(Layers.REQUEST        , new RequestLayer()       );
+        registerLayer(Layers.TRANSACTION    , new TransactionLayer()   );
 
     }
 
