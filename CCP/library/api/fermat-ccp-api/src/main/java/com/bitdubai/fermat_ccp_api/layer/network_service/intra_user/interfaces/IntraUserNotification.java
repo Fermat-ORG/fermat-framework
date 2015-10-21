@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.network_service.intra_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_user.enums.IntraUserNotificationDescriptor;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.IntraUserNotificationDescriptor;
 
 import java.util.UUID;
 
