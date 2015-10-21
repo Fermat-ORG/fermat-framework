@@ -5,6 +5,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerPurchaseNegotiationDao;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -21,18 +22,22 @@ public class CustomerBrokerPurchaseNegotiation implements CustomerBrokerPurchase
     private final long   startDataTime;
     private NegotiationStatus statusNegotiation;
 
+    private CustomerBrokerPurchaseNegotiationDao customerBrokerPurchaseNegotiationDao;
+
     public CustomerBrokerPurchaseNegotiation(
             UUID   negotiationId,
             String publicKeyCustomer,
             String publicKeyBroker,
             long startDataTime,
-            NegotiationStatus statusNegotiation
+            NegotiationStatus statusNegotiation,
+            CustomerBrokerPurchaseNegotiationDao customerBrokerPurchaseNegotiationDao
     ){
         this.negotiationId = negotiationId;
         this.publicKeyCustomer = publicKeyCustomer;
         this.publicKeyBroker = publicKeyBroker;
         this.startDataTime = startDataTime;
         this.statusNegotiation = statusNegotiation;
+        this.customerBrokerPurchaseNegotiationDao = customerBrokerPurchaseNegotiationDao;
     }
 
     @Override
@@ -66,27 +71,27 @@ public class CustomerBrokerPurchaseNegotiation implements CustomerBrokerPurchase
     }
 
     @Override
-    public Collection<Clause> getClauses() {
-        return null;
+    public Collection<Clause> getClauses(){
+        return this.customerBrokerPurchaseNegotiationDao.getClauses(this.negotiationId);
     }
 
     @Override
     public Clause addNewClause(ClauseType type, String value) {
-        return null;
+        return this.customerBrokerPurchaseNegotiationDao.addNewClause(this.negotiationId, type, value);
     }
 
     @Override
     public Clause modifyClause(Clause clause, String value) {
-        return null;
+        return this.customerBrokerPurchaseNegotiationDao.modifyClause(this.negotiationId, clause, value);
     }
 
     @Override
-    public Clause modifyClause(Clause clause, ClauseStatus status) {
-        return null;
+    public Clause modifyClauseStatus(Clause clause, ClauseStatus status) {
+        return this.customerBrokerPurchaseNegotiationDao.modifyClauseStatus(this.negotiationId, clause, status);
     }
 
     @Override
     public ClauseType getNextClauseType() {
-        return null;
+        return this.customerBrokerPurchaseNegotiationDao.getNextClauseType(this.negotiationId);
     }
 }
