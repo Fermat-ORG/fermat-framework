@@ -80,7 +80,9 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
         this.actorToType = Actors.DAP_ASSET_ISSUER;
         this.amount = cryptoGenesisTransaction.getCryptoAmount();
         this.digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
-        this.transactionId = UUID.fromString(cryptoGenesisTransaction.getTransactionHash());
+        //this.transactionId = UUID.fromString(cryptoGenesisTransaction.getTransactionHash());
+        //TODO: for testing
+        this.transactionId=UUID.randomUUID();
         Date date= new Date();
         this.timeStamp = date.getTime();
         this.memo = "Digital Asset delivered at"+this.timeStamp;
