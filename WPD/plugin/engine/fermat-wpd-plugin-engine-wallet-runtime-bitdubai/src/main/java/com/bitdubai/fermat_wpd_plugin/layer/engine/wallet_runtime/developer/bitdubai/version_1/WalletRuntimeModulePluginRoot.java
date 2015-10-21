@@ -551,19 +551,39 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS.getKey());
 
+        // Activity: Close Contract Details
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS);
+        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getCode());
+        runtimeActivity.setColor("#03A9F4");
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Contract Details");
+        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#0288D1");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getKey());
+
         // Activity: Contracts History
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getCode());
         runtimeActivity.setColor("#03A9F4");
 
-
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Deals History");
         runtimeTitleBar.setColor("#FFFFFF");
         runtimeTitleBar.setLabelSize(16);
         runtimeActivity.setTitleBar(runtimeTitleBar);
-
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor("#0288D1");
