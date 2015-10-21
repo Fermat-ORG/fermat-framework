@@ -1,10 +1,13 @@
 package com.bitdubai.fermat_ccp_core.test_classes;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * The abstract class <code>com.bitdubai.fermat_ccp_core.test_classes.FermatPlugin</code>
@@ -62,5 +65,11 @@ public abstract class FermatPlugin {
     public final Version getVersion() {
         return version;
     }
+
+    public abstract List<FermatAddonReference> getNeededAddonReferences();
+
+    public abstract List<FermatPluginReference> getNeededPluginReferences();
+
+    public abstract void setId(UUID pluginId);
 
 }

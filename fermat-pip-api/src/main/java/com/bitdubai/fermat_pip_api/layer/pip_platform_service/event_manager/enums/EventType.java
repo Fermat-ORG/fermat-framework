@@ -9,6 +9,7 @@ package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enu
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.events.ActorNetworkServicePendingsNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.*;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -788,17 +789,6 @@ public enum EventType implements FermatEventEnum {
             return null;
         }
     },
-    ACTOR_NETWORK_SERVICE_ASK_FOR_ACCEPTANCE("ANSAFA"){
-        @Override
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return null;
-        }
-
-        @Override
-        public FermatEvent getNewEvent() {
-            return null;
-        }
-    },
     ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS("ANSNN"){
         @Override
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
@@ -807,8 +797,19 @@ public enum EventType implements FermatEventEnum {
 
         @Override
         public FermatEvent getNewEvent() {
-            return null;
+            return new ActorNetworkServicePendingsNotificationEvent(this);
         }
+    }, INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION("IIARCN"){
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingActorRequestConnectionNotificationEventListener(this, fermatEventMonitor);
+        }
+
+        @Override
+        public FermatEvent getNewEvent() {
+            return new IncomingActorRequestConnectionNotificationEvent(this);
+        }
+
     };
 
 
