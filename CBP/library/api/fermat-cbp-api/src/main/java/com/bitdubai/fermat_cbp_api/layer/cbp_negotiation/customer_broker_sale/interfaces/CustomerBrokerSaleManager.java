@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.i
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantListSaleNegotianionsException;
 
@@ -12,7 +13,7 @@ import java.util.Collection;
  */
 public interface CustomerBrokerSaleManager {
 
-    CustomerBrokerSale createNegotiation() throws CantCreateCustomerBrokerSaleException;
+    CustomerBrokerSale createNegotiation(String publicKeyCustomer, String publicKeyBroker, Collection<Clause> clauses) throws CantCreateCustomerBrokerSaleException;
     void cancelNegotiation(CustomerBrokerSale negotiation);
     void closeNegotiation(CustomerBrokerSale negotiation);
 
