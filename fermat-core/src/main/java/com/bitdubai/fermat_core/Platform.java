@@ -722,11 +722,11 @@ public class Platform implements Serializable {
             boolean CCP = true;
             boolean CRY = true;
             boolean CSH = true;
-            boolean DAP = false;
+            boolean DAP = true;
             boolean DMP = true;//DOBLEMENTE TEMPORAL
             boolean MKT = true;
             boolean OSA = true;
-            boolean P2P = false;
+            boolean P2P = true;
             boolean PIP = true;
             boolean SHP = true;
             boolean WPD = true;
