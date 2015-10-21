@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.deals;
+package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common;
 
 
 import android.app.Fragment;
@@ -13,15 +13,15 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DealsActivityFragment extends FermatFragment {
+public class OpenContractDetailsFragment extends FermatFragment {
 
 
-    public DealsActivityFragment() {
+    public OpenContractDetailsFragment() {
         // Required empty public constructor
     }
 
-    public static DealsActivityFragment newInstance() {
-        return new DealsActivityFragment();
+    public static OpenContractDetailsFragment newInstance() {
+        return new OpenContractDetailsFragment();
     }
 
     @Override
