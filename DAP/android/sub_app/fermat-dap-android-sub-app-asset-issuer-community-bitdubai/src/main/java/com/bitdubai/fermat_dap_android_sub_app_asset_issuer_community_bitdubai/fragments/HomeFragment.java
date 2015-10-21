@@ -117,7 +117,7 @@ public class HomeFragment extends FermatFragment
                             adapter.changeDataSet(actors);
                         }
                     }
-                    if (actors == null || actors.isEmpty() && getActivity() != null) // for test purporse only
+                    if (actors == null || actors.isEmpty() && getActivity() != null) // for test purpose only
                         Toast.makeText(getActivity(), "There are no registered actors...", Toast.LENGTH_SHORT).show();
                 }
 
