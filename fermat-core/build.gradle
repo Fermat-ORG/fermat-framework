@@ -66,6 +66,7 @@ dependencies {
 
     // Init CCP Projects (Plugins)
     compile project(':fermat-ccp-api')
+    compile project(':fermat-ccp-core')
     compile project(':fermat-ccp-plugin-actor-intra-wallet-user-bitdubai')
     compile project(':fermat-ccp-plugin-identity-intra-wallet-user-bitdubai')
     compile project(':fermat-ccp-plugin-middleware-wallet-contacts-bitdubai')
