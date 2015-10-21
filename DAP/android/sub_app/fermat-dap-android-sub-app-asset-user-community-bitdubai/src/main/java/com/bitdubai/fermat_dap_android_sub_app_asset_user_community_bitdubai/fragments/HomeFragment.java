@@ -17,7 +17,6 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.ActorAdapter;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
@@ -122,10 +121,11 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
         }
     }
 
-    private synchronized List<Actor> getMoreData() throws Exception {
-        List<Actor> dataSet = null;
+    private synchronized List<ActorAssetUser> getMoreData() throws Exception {
+        List<ActorAssetUser> dataSet = null;
         if (manager == null)
             throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
+        dataSet = manager.getAllActorAssetUserRegistered();
         return dataSet;
     }
 }
