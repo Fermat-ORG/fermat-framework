@@ -13,7 +13,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPlug
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
