@@ -47,7 +47,7 @@ public class CashMoneyWalletDatabaseFactory implements DealsWithPluginDatabaseSy
      * @return Database
      * @throws CantCreateDatabaseException
      */
-    protected Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    protected  Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         Database database;
 
         /**

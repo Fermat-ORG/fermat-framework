@@ -24,7 +24,7 @@ public interface CashMoneyBalanceRecord {
 
     TransactionType getTransactionType();
 
-    float getAmount();
+    double getAmount();
 
     CashCurrencyType getCashCurrencyType();
 
