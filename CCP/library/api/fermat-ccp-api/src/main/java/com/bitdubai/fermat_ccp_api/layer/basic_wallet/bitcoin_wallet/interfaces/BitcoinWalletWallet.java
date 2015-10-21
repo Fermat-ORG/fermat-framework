@@ -1,11 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantGetActorTransactionSummaryException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantListTransactionsException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantStoreMemoException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.exceptions.CantFindTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 
 import java.util.List;
 import java.util.UUID;
@@ -39,11 +34,11 @@ public interface BitcoinWalletWallet {
      *
      * @return a list of bitcoin wallet transactions.
      *
-     * @throws CantListTransactionsException if something goes wrong.
+     * @throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException if something goes wrong.
      */
-    List<BitcoinWalletTransaction> listTransactions(BalanceType balanceType,TransactionType transactionType,
+    List<BitcoinWalletTransaction> listTransactions(BalanceType balanceType, com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType transactionType,
                                                     int         max,
-                                                    int         offset) throws CantListTransactionsException;
+                                                    int         offset) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException;
 
     /**
      * Throw the method <code>listTransactionsByActor</code> you can get all the transactions made with the
@@ -56,12 +51,12 @@ public interface BitcoinWalletWallet {
      *
      * @return a list of bitcoin wallet transactions.
      *
-     * @throws CantListTransactionsException if something goes wrong.
+     * @throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException if something goes wrong.
      */
     List<BitcoinWalletTransaction> listTransactionsByActor(String      actorPublicKey,
                                                            BalanceType balanceType,
                                                            int         max,
-                                                           int         offset) throws CantListTransactionsException;
+                                                           int         offset) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException;
 
     /**
      * Throw the method <code>listLastActorTransactionsByTransactionType</code> you can get the last transaction for each actor
@@ -74,12 +69,12 @@ public interface BitcoinWalletWallet {
      *
      * @return a list of crypto wallet transactions (enriched crypto transactions).
      *
-     * @throws CantListTransactionsException if something goes wrong.
+     * @throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException if something goes wrong.
      */
     List<BitcoinWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType     balanceType,
-                                                                              TransactionType transactionType,
+                                                                              com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType transactionType,
                                                                               int             max,
-                                                                              int             offset) throws CantListTransactionsException;
+                                                                              int             offset) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException;
 
     /**
      * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.
@@ -87,11 +82,11 @@ public interface BitcoinWalletWallet {
      * @param transactionID to identify the transaction.
      * @param description   string describing the transaction
      *
-     * @throws CantStoreMemoException if something goes wrong.
-     * @throws CantFindTransactionException if we cant find the transaction.
+     * @throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantStoreMemoException if something goes wrong.
+     * @throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException if we cant find the transaction.
      */
     void setTransactionDescription(UUID   transactionID,
-                                   String description) throws CantStoreMemoException, CantFindTransactionException;
+                                   String description) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantStoreMemoException, com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException;
 
     /**
      * Throw the method <code>getActorTransactionSummary</code> you can get the summary of transaction of an specific user and balance type.
@@ -101,9 +96,9 @@ public interface BitcoinWalletWallet {
      *
      * @return an instance of BitcoinWalletTransactionSummary
      *
-     * @throws CantGetActorTransactionSummaryException if something goes wrong.
+     * @throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetActorTransactionSummaryException if something goes wrong.
      */
     BitcoinWalletTransactionSummary getActorTransactionSummary(String      actorPublicKey,
-                                                               BalanceType balanceType) throws CantGetActorTransactionSummaryException;
+                                                               BalanceType balanceType) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 
 }

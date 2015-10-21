@@ -1,16 +1,19 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
 
+import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.AddonNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPluginIdsManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.LayerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.PluginNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddonsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -24,12 +27,12 @@ public abstract class AbstractPlatform {
 
     private Map<Layers, AbstractLayer> layers;
 
-    protected final PlatformFileSystem platformFileSystem;
+    private final Platforms platform;
 
-    public AbstractPlatform(final PlatformFileSystem platformFileSystem) {
+    public AbstractPlatform(final Platforms platform) {
 
-        this.layers             = new ConcurrentHashMap<>();
-        this.platformFileSystem = platformFileSystem;
+        this.layers   = new ConcurrentHashMap<>();
+        this.platform = platform;
     }
 
     /**
@@ -41,7 +44,7 @@ public abstract class AbstractPlatform {
      *
      * @throws CantStartPlatformException if something goes wrong.
      */
-    protected final void registerLayer(final Layers layer,
+    protected final void registerLayer(final Layers        layer        ,
                                        final AbstractLayer abstractLayer) throws CantStartPlatformException {
 
         try {
@@ -69,6 +72,25 @@ public abstract class AbstractPlatform {
             throw new LayerNotFoundException("layer: "+layer, "layer not found.");
     }
 
+    public final Addon getAddon(final FermatAddonsEnum addon) throws AddonNotFoundException {
+
+        try {
+
+            return getLayer(addon.getLayer()).getAddon(addon);
+
+        } catch (LayerNotFoundException e) {
+
+            String context =
+                    "addon: "      + addon.toString() +
+                    " - layer: "    + addon.getLayer() +
+                    " - platform: " + addon.getPlatform();
+            throw new AddonNotFoundException(e, context, "layer not found for the specified addon.");
+        } catch (AddonNotFoundException e) {
+
+            throw e;
+        }
+    }
+
     public final Plugin getPlugin(final FermatPluginsEnum plugin) throws PluginNotFoundException {
 
         try {
@@ -82,11 +104,16 @@ public abstract class AbstractPlatform {
                     " - layer: "    + plugin.getLayer() +
                     " - platform: " + plugin.getPlatform();
             throw new PluginNotFoundException(e, context, "layer not found for the specified plugin.");
+        } catch (PluginNotFoundException e) {
+
+            throw e;
         }
     }
 
     public abstract void start() throws CantStartPlatformException;
 
-    public abstract AbstractPluginIdsManager getPluginIdsManager() throws CantStartPluginIdsManagerException;
+    public final Platforms getPlatform() { return platform; }
+
+    public abstract AbstractPluginIdsManager getPluginIdsManager(final PlatformFileSystem platformFileSystem) throws CantStartPluginIdsManagerException;
 
 }

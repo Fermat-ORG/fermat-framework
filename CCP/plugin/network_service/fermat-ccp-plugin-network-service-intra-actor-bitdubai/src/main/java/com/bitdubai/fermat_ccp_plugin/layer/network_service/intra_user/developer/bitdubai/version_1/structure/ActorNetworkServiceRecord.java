@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.IntraUserNotificationDescriptor;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserNotification;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.google.gson.Gson;
 
 import java.util.Arrays;
@@ -21,7 +21,7 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
     private String actorDestinationPublicKey;
     private String actorSenderAlias;
     private byte[] actorSenderProfileImage;
-    private IntraUserNotificationDescriptor  intraUserNotificationDescriptor;
+    private IntraUserNotificationDescriptor intraUserNotificationDescriptor;
     private long sentDate;
     private ActorProtocolState actorProtocolState;
     private boolean flagReadead;
