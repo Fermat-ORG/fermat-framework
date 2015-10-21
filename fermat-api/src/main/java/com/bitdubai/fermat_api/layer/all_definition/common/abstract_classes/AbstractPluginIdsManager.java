@@ -1,7 +1,8 @@
-package com.bitdubai.fermat_ccp_core.test_classes;
+package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
 
-import com.bitdubai.fermat_api.CantInitializePluginsManagerException;
 import com.bitdubai.fermat_api.PluginNotRecognizedException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPluginIdsManagerException;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -19,12 +20,12 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
- * The abstract class <code>com.bitdubai.fermat_ccp_core.test_classes.PluginIdsManager</code> haves all the main functionality
+ * The abstract class <code>com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginIdsManager</code> haves all the main functionality
  * to manage fermat plugins ids.
  *
  * Created by Leon Acosta (laion.cj01@gmail.com) on 20/10/2015.
  */
-public abstract class PluginIdsManager {
+public abstract class AbstractPluginIdsManager {
 
     private final String PLUGIN_IDS_DIRECTORY_NAME = DeviceDirectory.SYSTEM.getName() + "/" + getPlatform().getCode();
 
@@ -37,7 +38,7 @@ public abstract class PluginIdsManager {
 
     private Map<FermatPluginsEnum, UUID> pluginIdsMap = new HashMap<>();
 
-    protected PluginIdsManager(final PlatformFileSystem platformFileSystem) throws CantInitializePluginsManagerException {
+    protected AbstractPluginIdsManager(final PlatformFileSystem platformFileSystem) throws CantStartPluginIdsManagerException {
 
         this.platformFileSystem = platformFileSystem;
         try {
@@ -45,7 +46,7 @@ public abstract class PluginIdsManager {
                 String[] stringPluginIdPairs = getPluginIdsFile().getContent().split(Pattern.quote(PLUGIN_SEPARATOR));
                 boolean changed = false;
 
-                for (String stringPluginIdPair : stringPluginIdPairs) {
+                for (final String stringPluginIdPair : stringPluginIdPairs) {
 
                     if (!stringPluginIdPair.equals("")) {
 
@@ -66,10 +67,13 @@ public abstract class PluginIdsManager {
                 if (changed)
                     savePluginIdsFile(getPluginIdsFile());
 
-            } catch (CantCreateFileException | CantPersistFileException e) {
-                throw new CantInitializePluginsManagerException(e, "platform: "+getPlatform(), "Problem with plugins id file.");
+            } catch(final CantCreateFileException  |
+                          CantPersistFileException e) {
+
+                throw new CantStartPluginIdsManagerException(e, "platform: "+getPlatform(), "Problem with plugins id file.");
             }
-        } catch (FileNotFoundException fileNotFoundException) {
+        } catch (final FileNotFoundException fileNotFoundException) {
+
             try {
                 PlatformTextFile platformTextFile = platformFileSystem.createFile(PLUGIN_IDS_DIRECTORY_NAME, PLUGIN_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
@@ -78,17 +82,13 @@ public abstract class PluginIdsManager {
 
                 savePluginIdsFile(platformTextFile);
 
-            } catch (CantCreateFileException | CantPersistFileException e) {
-                throw new CantInitializePluginsManagerException(e, "platform: "+getPlatform(), "Problem with plugins id file.");
+            } catch (final CantCreateFileException  |
+                           CantPersistFileException e) {
+
+                throw new CantStartPluginIdsManagerException(e, "platform: "+getPlatform(), "Problem with plugins id file.");
             }
         }
     }
-
-    protected abstract FermatPluginsEnum getPluginByKey(String key) throws InvalidParameterException;
-
-    protected abstract FermatPluginsEnum[] getAllPlugins();
-
-    protected abstract Platforms getPlatform();
 
     /**
      * returns the id of the desired plugin.
@@ -100,7 +100,7 @@ public abstract class PluginIdsManager {
      *
      * @throws PluginNotRecognizedException if something goes wrong.
      */
-    public UUID getPluginId(FermatPluginsEnum plugin) throws PluginNotRecognizedException {
+    public final UUID getPluginId(final FermatPluginsEnum plugin) throws PluginNotRecognizedException {
 
         UUID pluginId = pluginIdsMap.get(plugin);
 
@@ -119,17 +119,16 @@ public abstract class PluginIdsManager {
             pluginIdsMap.put(plugin, newId);
             return newId;
 
-        } catch(CantPersistFileException |
-                CantCreateFileException  |
-                FileNotFoundException    e) {
+        } catch(final CantPersistFileException |
+                      CantCreateFileException  |
+                      FileNotFoundException    e) {
 
             throw new PluginNotRecognizedException(
-                    "Plugin Descriptor: " + buildPluginKey(plugin),
+                    "Plugin Descriptor: " + plugin.getCode(),
                     "There is a problem with the plugins id file."
             );
         }
     }
-
 
     private PlatformTextFile getPluginIdsFile() throws CantCreateFileException,
                                                        FileNotFoundException  {
@@ -147,16 +146,16 @@ public abstract class PluginIdsManager {
 
         String fileContent = "";
         for (Map.Entry<FermatPluginsEnum, UUID> plugin : pluginIdsMap.entrySet())
-            fileContent = fileContent + buildPluginKey(plugin.getKey()) + PAIR_SEPARATOR + plugin.getValue() + PLUGIN_SEPARATOR;
+            fileContent = fileContent + plugin.getKey().getCode() + PAIR_SEPARATOR + plugin.getValue() + PLUGIN_SEPARATOR;
 
         platformTextFile.setContent(fileContent);
         platformTextFile.persistToMedia();
     }
 
-    private String buildPluginKey(final FermatPluginsEnum plugin) {
+    protected abstract FermatPluginsEnum getPluginByKey(String key) throws InvalidParameterException;
 
-        return plugin.getPlatform() +
-               plugin.getCode();
-    }
+    protected abstract FermatPluginsEnum[] getAllPlugins();
+
+    protected abstract Platforms getPlatform();
 
 }

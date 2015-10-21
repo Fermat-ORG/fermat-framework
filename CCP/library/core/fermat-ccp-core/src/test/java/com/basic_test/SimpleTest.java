@@ -1,6 +1,6 @@
 package com.basic_test;
 
-import com.bitdubai.fermat_ccp_core.test_classes.FermatPluginsEnum;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
 
 import org.junit.Test;
 

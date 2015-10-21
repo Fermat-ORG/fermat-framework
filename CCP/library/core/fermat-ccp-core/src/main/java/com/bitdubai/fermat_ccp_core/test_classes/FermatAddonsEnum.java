@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 
 /**
- * The class <code>com.bitdubai.fermat_ccp_core.test_classes.FermatPluginsEnum</code>
+ * The class <code>FermatPluginsEnum</code>
  * haves the representation of the basic functionality of a Fermat Addons Enum.
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.

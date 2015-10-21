@@ -1,16 +1,16 @@
-package com.bitdubai.fermat_ccp_api.layer.actor;
+package com.bitdubai.fermat_api.layer.all_definition.common.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The exception <code>com.bitdubai.fermat_ccp_api.layer.actor.CantStartSubsystemException</code>
- * is thrown when there is an error trying to start an actor of the CCP platform.
- *
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/09/2015.
+ * The exception <code>CantStartSubsystemException</code>
+ * is thrown when there is an error trying to start a subsystem class.
+ * <p>
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */
 public class CantStartSubsystemException extends FermatException {
 
-    private static final String DEFAULT_MESSAGE = "CAN'T START ACTOR CCP SUBSYSTEM EXCEPTION";
+    private static final String DEFAULT_MESSAGE = "CAN'T START SUBSYSTEM EXCEPTION";
 
     public CantStartSubsystemException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
