@@ -85,13 +85,14 @@ public interface CommunicationsClientConnection {
     public void registerComponentForCommunication(PlatformComponentProfile platformComponentProfile) throws CantRegisterComponentException;
 
     /**
-     * Method that request to the communication cloud server the list of component registered that mathc
+     * Method that request to the communication cloud server the list of component registered that match
      * whit the discovery query params
      *
+     * @param networkServiceApplicant who made the request
      * @param discoveryQueryParameters
      * @throws CantRequestListException
      */
-    public void requestListComponentRegistered(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException;
+    public void requestListComponentRegistered(PlatformComponentProfile networkServiceApplicant, DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException;
 
     /**
      * Method that request to the communication cloud server create a vpn connection between the applicant and

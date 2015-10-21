@@ -1403,13 +1403,18 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     public void notificateWallet(String walletPublicKey, String notificationTitle, String notificationImageText, String notificationTextBody) {
         //Log.i(TAG, "Got a new result: " + notification_title);
         Resources r = getResources();
-        Intent intent = new Intent(this, WalletActivity.class);
-        intent.putExtra(WalletActivity.WALLET_PUBLIC_KEY, walletPublicKey);
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pi = null;
+        if(walletPublicKey!=null) {
+            Intent intent = new Intent(this, WalletActivity.class);
+            intent.putExtra(WalletActivity.WALLET_PUBLIC_KEY, walletPublicKey);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 
-        PendingIntent pi = PendingIntent
+
+        pi = PendingIntent
                 .getActivity(this, 0, intent, 0);
+
+        }
         Notification notification = new NotificationCompat.Builder(this)
                 .setTicker(notificationTitle)
                 .setSmallIcon(android.R.drawable.ic_menu_report_image)
@@ -1457,6 +1462,10 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                         launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;
                     case INCOMING_CONNECTION:
+                        //launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
+                        break;
+                    case INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION:
+                        launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;
                     case MONEY_REQUEST:
                         break;

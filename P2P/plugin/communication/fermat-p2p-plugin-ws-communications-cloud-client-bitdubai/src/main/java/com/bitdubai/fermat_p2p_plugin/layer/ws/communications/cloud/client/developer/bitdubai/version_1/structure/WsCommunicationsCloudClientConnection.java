@@ -287,10 +287,10 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
     /**
      * (non-javadoc)
-     * @see CommunicationsClientConnection#requestListComponentRegistered(DiscoveryQueryParameters)
+     * @see CommunicationsClientConnection#requestListComponentRegistered(PlatformComponentProfile, DiscoveryQueryParameters)
      */
     @Override
-    public void requestListComponentRegistered(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException {
+    public void requestListComponentRegistered(PlatformComponentProfile networkServiceApplicant, DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException {
 
         try {
 
@@ -304,12 +304,17 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
                     throw new IllegalArgumentException("The discoveryQueryParameters is required, can not be null");
                 }
 
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceApplicant.getNetworkServiceType().toString());
+                jsonObject.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM     , discoveryQueryParameters.toJson());
+
                  /*
                  * Construct a fermat packet whit the filters
                  */
                 FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
                                                                                                                             wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
-                                                                                                                            discoveryQueryParameters.toJson(),                                           //Message Content
+                                                                                                                            gson.toJson(jsonObject),                                           //Message Content
                                                                                                                             FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED,                      //Packet type
                                                                                                                             wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
 
