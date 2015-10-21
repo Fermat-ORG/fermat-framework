@@ -13,15 +13,15 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DealDetailsFragment extends FermatFragment {
+public class CloseContractDetailsFragment extends FermatFragment {
 
 
-    public DealDetailsFragment() {
+    public CloseContractDetailsFragment() {
         // Required empty public constructor
     }
 
-    public static DealDetailsFragment newInstance() {
-        return new DealDetailsFragment();
+    public static CloseContractDetailsFragment newInstance() {
+        return new CloseContractDetailsFragment();
     }
 
     @Override
