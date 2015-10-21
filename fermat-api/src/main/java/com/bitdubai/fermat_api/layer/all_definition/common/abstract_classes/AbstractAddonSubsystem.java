@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddonsEnum;
 
 /**
  * The abstract class <code>com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddonSubsystem</code>
@@ -11,10 +12,21 @@ import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartS
  */
 public abstract class AbstractAddonSubsystem {
 
+    private final FermatAddonsEnum addonEnum;
+
+    public AbstractAddonSubsystem(final FermatAddonsEnum addonEnum) {
+
+        this.addonEnum = addonEnum;
+    }
+
     protected Addon addon;
 
     public final Addon getAddon() {
         return addon;
+    }
+
+    public final FermatAddonsEnum getAddonEnum() {
+        return addonEnum;
     }
 
     public abstract void start() throws CantStartSubsystemException;

@@ -2,6 +2,8 @@ package com.bitdubai.fermat_ccp_core.layer.request.crypto_payment;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.CCPPlugins;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.DeveloperBitDubai;
 
 /**
@@ -11,6 +13,10 @@ import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bit
  * @since Java JDK 1.7
  */
 public class CryptoPaymentPluginSubsystem extends AbstractPluginSubsystem {
+
+    public CryptoPaymentPluginSubsystem() {
+        super(CCPPlugins.BITDUBAI_CRYPTO_PAYMENT_REQUEST);
+    }
 
     @Override
     public void start() throws CantStartSubsystemException {

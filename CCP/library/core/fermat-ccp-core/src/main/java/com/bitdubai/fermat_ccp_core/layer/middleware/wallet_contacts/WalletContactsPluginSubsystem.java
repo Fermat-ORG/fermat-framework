@@ -2,6 +2,8 @@ package com.bitdubai.fermat_ccp_core.layer.middleware.wallet_contacts;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.CCPPlugins;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.DeveloperBitDubai;
 
 /**
@@ -11,6 +13,10 @@ import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer
  * @since Java JDK 1.7
  */
 public class WalletContactsPluginSubsystem extends AbstractPluginSubsystem {
+
+    public WalletContactsPluginSubsystem() {
+        super(CCPPlugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE);
+    }
 
     @Override
     public void start() throws CantStartSubsystemException {
