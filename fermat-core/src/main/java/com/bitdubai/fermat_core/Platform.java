@@ -726,7 +726,7 @@ public class Platform implements Serializable {
             boolean DMP = true;//DOBLEMENTE TEMPORAL
             boolean MKT = true;
             boolean OSA = true;
-            boolean P2P = false;
+            boolean P2P = true;
             boolean PIP = true;
             boolean SHP = true;
             boolean WPD = true;
