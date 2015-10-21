@@ -136,7 +136,7 @@ public class HomeFragment extends FermatFragment
     private synchronized List<ActorAssetIssuer> getMoreData() throws Exception {
         List<ActorAssetIssuer> dataSet = null;
         if (manager == null)
-            throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
+            throw new NullPointerException("AssetIssuerCommunitySubAppModuleManager is null");
         dataSet = manager.getAllActorAssetIssuerRegistered();
         return dataSet;
     }
