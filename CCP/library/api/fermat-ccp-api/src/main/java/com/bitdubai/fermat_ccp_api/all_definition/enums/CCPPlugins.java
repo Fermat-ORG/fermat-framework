@@ -22,9 +22,11 @@ public enum CCPPlugins implements com.bitdubai.fermat_api.layer.all_definition.c
     BITDUBAI_CRYPTO_PAYMENT_REQUEST                 ("BCPR"  , Developers.BITDUBAI, Layers.REQUEST        ),
     BITDUBAI_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE ("BCPRNS", Developers.BITDUBAI, Layers.NETWORK_SERVICE),
     BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE    ("BCTNS" , Developers.BITDUBAI, Layers.NETWORK_SERVICE),
+    BITDUBAI_CRYPTO_WALLET_MODULE                   ("BCWM"  , Developers.BITDUBAI, Layers.WALLET_MODULE  ),
+    BITDUBAI_EXTRA_WALLET_USER_ACTOR                ("BEWUA" , Developers.BITDUBAI, Layers.ACTOR          ),
     BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION        ("BIEUT" , Developers.BITDUBAI, Layers.TRANSACTION    ),
     BITDUBAI_INCOMING_INTRA_USER_TRANSACTION        ("BIIUT" , Developers.BITDUBAI, Layers.TRANSACTION    ),
-    BITDUBAI_INTRA_USER_NETWORK_SERVICE("BIUNS" , Developers.BITDUBAI, Layers.NETWORK_SERVICE),
+    BITDUBAI_INTRA_USER_NETWORK_SERVICE             ("BIUNS" , Developers.BITDUBAI, Layers.NETWORK_SERVICE),
     BITDUBAI_INTRA_WALLET_USER_ACTOR                ("BIWUA" , Developers.BITDUBAI, Layers.ACTOR          ),
     BITDUBAI_INTRA_WALLET_USER_IDENTITY             ("BIUI"  , Developers.BITDUBAI, Layers.IDENTITY       ),
     BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION        ("BOEUT" , Developers.BITDUBAI, Layers.TRANSACTION    ),
@@ -55,9 +57,11 @@ public enum CCPPlugins implements com.bitdubai.fermat_api.layer.all_definition.c
             case "BCPR"  : return BITDUBAI_CRYPTO_PAYMENT_REQUEST                ;
             case "BCPRNS": return BITDUBAI_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE;
             case "BCTNS" : return BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE   ;
+            case "BCWM"  : return BITDUBAI_CRYPTO_WALLET_MODULE                  ;
+            case "BEWUA" : return BITDUBAI_EXTRA_WALLET_USER_ACTOR               ;
             case "BIEUT" : return BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION       ;
             case "BIIUT" : return BITDUBAI_INCOMING_INTRA_USER_TRANSACTION       ;
-            case "BIUNS" : return BITDUBAI_INTRA_USER_NETWORK_SERVICE;
+            case "BIUNS" : return BITDUBAI_INTRA_USER_NETWORK_SERVICE            ;
             case "BIWUA" : return BITDUBAI_INTRA_WALLET_USER_ACTOR               ;
             case "BIUI"  : return BITDUBAI_INTRA_WALLET_USER_IDENTITY            ;
             case "BOEUT" : return BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION       ;
