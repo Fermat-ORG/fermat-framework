@@ -616,7 +616,7 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
                 /**
                  * I confirm the application in the Network Service
                  */
-                intraUserNetworkServiceManager.confirmNotification(intraUserSendingPublicKey, intraUserToConnectPublicKey);
+                //intraUserNetworkServiceManager.confirmNotification(intraUserSendingPublicKey, intraUserToConnectPublicKey);
             }
 
 

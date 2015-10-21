@@ -57,7 +57,7 @@ public class IntraWalletUserDeniedConnectionEventHandlers implements FermatEvent
                 /**
                  * Confirm Denied on Network services
                  */
-                intraUserNetworkServiceManager.confirmNotification(intraUserActorConnectionDeniedEvent.getIntraUserLoggedInPublicKey(), intraUserActorConnectionDeniedEvent.getIntraUserToAddPublicKey());
+                //intraUserNetworkServiceManager.confirmNotification(intraUserActorConnectionDeniedEvent.getIntraUserLoggedInPublicKey(), intraUserActorConnectionDeniedEvent.getIntraUserToAddPublicKey());
 
             }
             catch(CantDenyConnectionException e)

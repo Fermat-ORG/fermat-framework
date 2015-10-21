@@ -53,7 +53,7 @@ public class IntraWalletUserDisconnectionEventHandlers implements FermatEventHan
                  * Confirm Disconnect on Network services
                  */
 
-                intraUserNetworkServiceManager.confirmNotification(intraUserActorConnectionCancelledEvent.getIntraUserLoggedInPublicKey(), intraUserActorConnectionCancelledEvent.getIntraUserToAddPublicKey());
+                //intraUserNetworkServiceManager.confirmNotification(intraUserActorConnectionCancelledEvent.getIntraUserLoggedInPublicKey(), intraUserActorConnectionCancelledEvent.getIntraUserToAddPublicKey());
             }
             catch(CantDisconnectIntraWalletUserException e)
             {

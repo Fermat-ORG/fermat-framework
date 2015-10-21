@@ -64,7 +64,7 @@ public class IntraWalletUserConnectionAcceptedEventHandlers implements FermatEve
                 /**
                  * Confirm connexion on Network services
                  */
-                intraUserNetworkServiceManager.confirmNotification(intraUserActorConnectionAcceptedEvent.getIntraUserLoggedInPublicKey(), intraUserActorConnectionAcceptedEvent.getIntraUserToAddPublicKey());
+                //intraUserNetworkServiceManager.confirmNotification(intraUserActorConnectionAcceptedEvent.getIntraUserLoggedInPublicKey(), intraUserActorConnectionAcceptedEvent.getIntraUserToAddPublicKey());
                 /**
                  * fire event "INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION"
                  */

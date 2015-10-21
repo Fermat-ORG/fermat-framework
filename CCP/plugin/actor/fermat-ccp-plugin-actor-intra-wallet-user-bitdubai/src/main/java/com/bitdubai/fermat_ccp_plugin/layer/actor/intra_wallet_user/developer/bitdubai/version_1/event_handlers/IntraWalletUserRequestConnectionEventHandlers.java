@@ -65,7 +65,7 @@ public class IntraWalletUserRequestConnectionEventHandlers implements FermatEven
                  * Confirm connection on Network services
                  */
 
-                intraUserNetworkServiceManager.confirmNotification(intraUserActorRequestConnectionEvent.getIntraUserLoggedInPublicKey(), intraUserActorRequestConnectionEvent.getIntraUserToAddPublicKey());
+               // intraUserNetworkServiceManager.confirmNotification(intraUserActorRequestConnectionEvent.getIntraUserLoggedInPublicKey(), intraUserActorRequestConnectionEvent.getIntraUserToAddPublicKey());
 
 
                 /**

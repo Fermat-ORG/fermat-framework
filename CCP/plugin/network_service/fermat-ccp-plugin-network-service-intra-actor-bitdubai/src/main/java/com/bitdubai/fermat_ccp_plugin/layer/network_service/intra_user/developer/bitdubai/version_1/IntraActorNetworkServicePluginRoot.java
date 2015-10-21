@@ -1327,7 +1327,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
         return lstIntraUserNotifications;
     }
 
-    @Override
+    //@Override
     public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey) throws ErrorConfirmNotificationsIntraUserException {
 //        incomingNotificationsDao.markReadedNotification();
     }
