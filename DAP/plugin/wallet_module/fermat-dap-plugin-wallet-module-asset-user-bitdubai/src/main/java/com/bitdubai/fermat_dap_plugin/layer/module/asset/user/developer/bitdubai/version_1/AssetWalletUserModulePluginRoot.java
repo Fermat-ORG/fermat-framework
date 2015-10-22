@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSupAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.DealsWithAssetUserWallet;
@@ -28,27 +28,22 @@ import java.util.UUID;
 /**
  * Created by Franklin on 07/09/15.
  */
-public class AssetWalletUserModulePluginRoot implements Plugin, Service, DealsWithAssetUserWallet, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, AssetUserWalletSupAppModuleManager {
+public class AssetWalletUserModulePluginRoot implements Plugin, Service, DealsWithAssetUserWallet, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, AssetUserWalletSubAppModuleManager {
 
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     UUID pluginId;
-
     /**
      * DealsWithErros interface member variable
      */
     ErrorManager errorManager;
-
     /**
      * DealsWithLogger interface member variable
      */
     LogManager logManager;
-
     /**
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-
     AssetUserWalletModule assetUserWalletModule;
 
     AssetUserWalletManager assetUserWalletManager;

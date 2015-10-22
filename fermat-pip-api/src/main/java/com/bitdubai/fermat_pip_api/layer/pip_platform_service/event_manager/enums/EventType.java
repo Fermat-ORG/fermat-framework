@@ -735,6 +735,22 @@ public enum EventType implements FermatEventEnum {
             return new AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent(this);
         }
     },
+    COMPLETE_REQUEST_LIST_ASSET_ISSUER_REGISTERED_NOTIFICATION("CL_RLAIRN") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new AssetUserActorRequestListRegisteredNetworksNotificationEventListener(this, fermatEventMonitor);
+        }
+        public FermatEvent getNewEvent() {
+            return new AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent(this);
+        }
+    },
+    COMPLETE_REQUEST_LIST_ASSET_REDEEM_POINT_REGISTERED_NOTIFICATION("CL_RLARRN") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new AssetUserActorRequestListRegisteredNetworksNotificationEventListener(this, fermatEventMonitor);
+        }
+        public FermatEvent getNewEvent() {
+            return new AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent(this);
+        }
+    },
     COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION("CL_CAURN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new AssetUserActorCompleteRegistrationNotificationEventListener(this, fermatEventMonitor);

@@ -14,6 +14,11 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -31,7 +36,10 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.DealsWithActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRequestListActorAssetIssuerRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantSendMessageException;
@@ -47,16 +55,23 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.d
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
@@ -80,7 +95,7 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkServiceAssetIssuer, AssetIssuerActorNetworkServiceManager, DealsWithWsCommunicationsCloudClientManager, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,DealsWithLogger, LogManagerForDevelopers, Plugin, Service, Serializable, NetworkService {
+public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkServiceAssetIssuer, AssetIssuerActorNetworkServiceManager, DatabaseManagerForDevelopers, DealsWithActorAssetIssuer, DealsWithWsCommunicationsCloudClientManager, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,DealsWithLogger, LogManagerForDevelopers, Plugin, Service, Serializable, NetworkService {
 
     /**
      * Represent the logManager
@@ -203,6 +218,8 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
      * Represent the actorAssetUserPendingToRegistration
      */
     private List<PlatformComponentProfile> actorAssetIssuerPendingToRegistration;
+
+    ActorAssetIssuerManager actorAssetIssuerManager;
 
 
     /**
@@ -391,7 +408,22 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
     }
 
     private void initilizelistener2() {
+        try {
 
+            FermatEventListener event = eventManager.getNewListener(EventType.COMPLETE_REQUEST_LIST_ASSET_ISSUER_REGISTERED_NOTIFICATION);
+            //event.setEventHandler(new CompleteClientAssetUserActorRegistrationNotificationEventHandler(this));
+            eventManager.addListener(event);
+            listenersAdded.add(event);
+
+            event = eventManager.getNewListener(EventType.COMPLETE_REQUEST_LIST_ASSET_ISSUER_REGISTERED_NOTIFICATION);
+            //event.setEventHandler(new CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventHandler(this));
+            eventManager.addListener(event);
+            listenersAdded.add(event);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
     }
 
 
@@ -596,7 +628,7 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
                         actorAssetIssuerToRegister.getName().toLowerCase().trim(),
                         actorAssetIssuerToRegister.getName(),
                         NetworkServiceType.UNDEFINED,
-                        PlatformComponentType.ACTOR_ASSET_USER,
+                        PlatformComponentType.ACTOR_ASSET_ISSUER,
                         Arrays.toString(actorAssetIssuerToRegister.getProfileImage()));
                 /*
                  * ask to the communication cloud client to register
@@ -727,7 +759,7 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
 
     @Override
     public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters) {
-        System.out.println(" AssetUserActorNetworkServicePluginRoot - requestRemoteNetworkServicesRegisteredList");
+        System.out.println(" AssetIssuerActorNetworkServicePluginRoot - requestRemoteNetworkServicesRegisteredList");
 
         /*
          * Request the list of component registers
@@ -921,10 +953,87 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
+        System.out.println(" TemplateNetworkServiceRoot - Starting method handleCompleteComponentConnectionRequestNotificationEvent");
+
+        /*
+         * Tell the manager to handler the new connection stablished
+         */
+        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
     }
 
     @Override
     public void setWsCommunicationsCloudClientConnectionManager(WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager) {
         this.wsCommunicationsCloudClientManager = wsCommunicationsCloudClientManager;
+    }
+
+    /*
+* get a string and convert it into array bytes
+ */
+    private static byte[] convertoByteArrayfromString(String arrengebytes) {
+
+        if (arrengebytes != null) {
+
+            try {
+
+                String[] byteValues = arrengebytes.substring(1, arrengebytes.length() - 1).split(",");
+                byte[] bytes = new byte[byteValues.length];
+                if (bytes.length > 0) {
+                    for (int i = 0, len = bytes.length; i < len; i++) {
+                        bytes[i] = Byte.parseByte(byteValues[i].trim());
+                    }
+                    return bytes;
+                } else {
+                    return new byte[]{};
+                }
+            } catch (Exception e) {
+                return new byte[]{};
+            }
+        } else {
+            return new byte[]{};
+        }
+    }
+
+    /**
+     * Get the New Received Message List
+     *
+     * @return List<FermatMessage>
+     */
+//    public List<FermatMessage> getNewReceivedMessageList() throws CantReadRecordDataBaseException {
+//
+//        Map<String, Object> filters = new HashMap<>();
+//        filters.put(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_FIRST_KEY_COLUMN, MessagesStatus.NEW_RECEIVED.getCode());
+//
+//        return communicationNetworkServiceConnectionManager.getIncomingMessageDao().findAll(filters);
+//    }
+
+    /**
+     * Mark the message as read
+     *
+     * @param fermatMessage
+     */
+    public void markAsRead(FermatMessage fermatMessage) throws CantUpdateRecordDataBaseException {
+
+        ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
+        communicationNetworkServiceConnectionManager.getIncomingMessageDao().update(fermatMessage);
+    }
+
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+    }
+
+    @Override
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
+        this.actorAssetIssuerManager = actorAssetIssuerManager;
     }
 }

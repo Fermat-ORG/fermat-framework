@@ -6,18 +6,23 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces
  * Created by franklin on 05/10/15.
  */
 public class AssetUserWalletBalance implements AssetUserWalletList {
+
     String assetPublicKey;
     String name;
     String description;
     long bookBalance;
     long availableBalance;
+    long quantityBookBalance;
+    long quantityAvailableBalance;
 
-    public AssetUserWalletBalance(String assetPublicKey, String name, String description, long bookBalance, long availableBalance){
+    public AssetUserWalletBalance(String assetPublicKey, String name, String description, long bookBalance, long availableBalance, long quantityBookBalance, long quantityAvailableBalance){
         this.assetPublicKey = assetPublicKey;
         this.name = name;
         this.description = description;
         this.bookBalance = bookBalance;
         this.availableBalance = availableBalance;
+        this.quantityAvailableBalance = quantityAvailableBalance;
+        this.quantityBookBalance = quantityBookBalance;
     };
 
     public AssetUserWalletBalance(){};
@@ -70,5 +75,25 @@ public class AssetUserWalletBalance implements AssetUserWalletList {
     @Override
     public void setAvailableBalance(long availableBalance) {
         this.availableBalance = availableBalance;
+    }
+
+    @Override
+    public long getQuantityAvailableBalance() {
+        return quantityAvailableBalance;
+    }
+
+    @Override
+    public void setQuantityAvailableBalance(long quantityAvailableBalance) {
+        this.quantityAvailableBalance = quantityAvailableBalance;
+    }
+
+    @Override
+    public long getQuantityBookBalance() {
+        return quantityBookBalance;
+    }
+
+    @Override
+    public void setQuantityBookBalance(long quantityBookBalance) {
+        this.quantityBookBalance = quantityBookBalance;
     }
 }

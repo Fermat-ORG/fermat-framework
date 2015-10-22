@@ -168,7 +168,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
     @Override
     public com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException {
         try {
-            return new AssetUserWalletBalanceImpl(database);
+            return new AssetUserWalletBalanceImpl(database, pluginId, pluginFileSystem);
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
