@@ -10,9 +10,7 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.Can
  */
 public interface CryptoBrokerBalance {
 
-    long getBalance()  throws CantCalculateBalanceException;
+    void debit(CryptoBrokerTransactionRecord cryptoBrokerTransactionRecord, BalanceType balanceType) throws CantRegisterDebitException;
 
-    void debit(CryptoBrokerTransactionRecord BankMoneyTransactionRecord, BalanceType balanceType) throws CantRegisterDebitException;
-
-    void credit(CryptoBrokerTransactionRecord BankMoneyTransactionRecord, BalanceType balanceType)  throws CantRegisterCreditException;
+    void credit(CryptoBrokerTransactionRecord cryptoBrokerTransactionRecord, BalanceType balanceType)  throws CantRegisterCreditException;
 }
