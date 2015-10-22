@@ -16,6 +16,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterExc
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantListPurchaseNegotianionsException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseManager;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerPurchaseNegotiationDao;
@@ -115,27 +116,36 @@ public class CustomerBrokerPurchasePluginRoot implements CustomerBrokerPurchaseM
     }
 
     @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem){
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
     @Override
     public CustomerBrokerPurchase createCustomerBrokerPurchaseNegotiation(String publicKeyCustomer, String publicKeyBroker) throws CantCreateCustomerBrokerPurchaseException {
-        return null;
+        long startDateTime = System.currentTimeMillis();
+        return customerBrokerPurchaseNegotiationDao.createCustomerBrokerPurchaseNegotiation(publicKeyCustomer, publicKeyBroker, startDateTime);
     }
 
     @Override
-    public void cancelNegotiation(CustomerBrokerPurchase negotiation) {
-
+    public void cancelNegotiation(CustomerBrokerPurchase negotiation){
+        try {
+            customerBrokerPurchaseNegotiationDao.cancelNegotiation(negotiation);
+        } catch (CantUpdateCustomerBrokerPurchaseException e) {
+            new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
+        }
     }
 
     @Override
-    public void closeNegotiation(CustomerBrokerPurchase negotiation) {
-
+    public void closeNegotiation(CustomerBrokerPurchase negotiation){
+        try {
+            customerBrokerPurchaseNegotiationDao.closeNegotiation(negotiation);
+        } catch (CantUpdateCustomerBrokerPurchaseException e){
+            new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
+        }
     }
 
     @Override
-    public Collection<CustomerBrokerPurchase> getNegotiations() throws CantListPurchaseNegotianionsException {
+    public Collection<CustomerBrokerPurchase> getNegotiations() throws CantListPurchaseNegotianionsException{
         try {
             Collection<CustomerBrokerPurchase> negotiations = new ArrayList<CustomerBrokerPurchase>();
             negotiations = customerBrokerPurchaseNegotiationDao.getNegotiations();

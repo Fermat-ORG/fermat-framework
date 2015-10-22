@@ -200,10 +200,6 @@ Fermat Principles
 * Crypto Brokers concept.
 
 
-
-
-
-
 How to install and run Fermat
 -------------------------------
 #### Download
@@ -230,9 +226,6 @@ Having problems compiling or running Fermat the first time, or not sure how to u
 review [Troubleshooting](https://github.com/bitDubai/fermat/fermat-documentation), which helps 
 you to fix common problems and find extra help if needed.
 
-
-
-
 Status of the Project:
 ------------------------------------------------
 
@@ -241,8 +234,6 @@ As of August 2015 the state of the project is the following:
 State of the code: Under development for 2 months. No realeses yet. 17 full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
 
 Future path of development: Active (First release with very limited features schedulled for late September 2015).
-
-
 
 I want to join the team!
 ------------------------------------------------
