@@ -1474,7 +1474,7 @@ This low level layer allows to build in sucesive layer the modules to implement 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__i_os">4.3. _I-OS _</h3>
+<h3 id="__em_i_os_em_layer">4.3. <em>I-OS</em> layer</h3>
 <div class="paragraph">
 <p>(for further development) &#8230;</p>
 </div>
@@ -1525,11 +1525,11 @@ These Wallets are created in a way that they generate a <strong>master privat ke
 </dd>
 <dt class="hdlist1">Assets over Bitcoin </dt>
 <dd>
-<p>it "stores" (in the sense above mentioned) each little amount of_Bitcoin_ used to validate a <strong>Digital Asset</strong> ( called assets <em>proof of existence</em> ). It is more a <strong>metada storage</strong> of what is represented by the <strong>asset</strong> than a a storage of <strong>value</strong>.  (See full explanation in the section about <a href="#DigitalAssets">FERMAT Digital Asset Platform</a>)</p>
+<p>it "stores" (in the sense above mentioned) each little amount of_Bitcoin_ used to validate a <strong>Digital Asset</strong> ( called assets <em>proof of existence</em> ). It is more a <strong>metada storage</strong> of what is represented by the <strong>asset</strong> than a a storage of <strong>value</strong>.  (See full explanation in the section about <a href="#DigitalAssets">FERMAT Digital Asset Platform.</a>)</p>
 </dd>
 <dt class="hdlist1">Bitcoin Watch Only Vault </dt>
 <dd>
-<p>it stores "receive only" type of Bitcoin transactions, what means that the transaction is showed in the ledger, but there is no <em>privat key</em> available to claim the Bitcoins transfered. This type of <strong>addresses</strong> are used in the <em>Digital Asset Platform</em> to allow <strong>redeem points</strong> wallet to work, showing they have received an Asset to be redeem by the <strong>Assets Issuer</strong>. (See full explanation in the section about <a href="#DigitalAssets">FERMAT Digital Asset Platform</a>)<br></p>
+<p>it stores "receive only" type of Bitcoin transactions, what means that the transaction is showed in the ledger, but there is no <em>privat key</em> available to claim the Bitcoins transfered. This type of <strong>addresses</strong> are used in the <em>Digital Asset Platform</em> to allow <strong>redeem points</strong> wallet to work, showing they have received an Asset to be redeem by the <strong>Assets Issuer</strong>. (See full explanation in the section about <a href="#DigitalAssets">FERMAT Digital Asset Platform.</a>)<br></p>
 </dd>
 </dl>
 </div>
@@ -2084,56 +2084,292 @@ The new functionalities added are:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_fermat_bank_notes_platform">10. FERMAT Bank Notes Platform</h2>
+<h2 id="_fermat_crypto_commodity_money">10. FERMAT Crypto Commodity Money</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This platform &#8230;.</p>
+</div>
+<div class="sect2">
+<h3 id="__em_network_service_layer_em_2">10.1. <em>Network Service layer</em></h3>
+<div class="paragraph">
+<p>Each time that a certain system function must perform any operation <strong>outside</strong> the device where FERMAT is running, a <em>network service</em> is required to follow the execution in other devices until is completed.<br>
+Network services' modules need to have a * communication channel* stablished and maintained between the parties involved, what is done by the <strong>P2P networks and communication superlayer</strong> ( see the explanation at the previous section <a href="#communicationLayer">[communicationLayer]</a> )+
+Each <strong>network service module</strong> running on a <em>local device</em> stablish communication EXCLUSIVELY to its <em>counterpart</em> running in the <em>remote device</em>.<br></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Money Request </dt>
+<dt class="hdlist1">Money Transmission </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_wallet_layer_em">10.2. <em>Wallet layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Crypto Commodity Wallet </dt>
+<dt class="hdlist1">Discount Walet </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_composite_wallet_layer_em">10.3. <em>Composite Wallet layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Multiaccount Wallet </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_crypto_money_transaction_layer_em">10.4. <em>Crypto Money Transaction layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Incoming Device User </dt>
+<dt class="hdlist1">Incoming Extra Actor </dt>
+<dt class="hdlist1">Incoming Intra Actor </dt>
+<dt class="hdlist1">Intra Wallet </dt>
+<dt class="hdlist1">Outgoing Device User </dt>
+<dt class="hdlist1">Outgoing Extra Actor </dt>
+<dt class="hdlist1">Outgoing Intra Actor </dt>
+<dt class="hdlist1">Inter Account </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_request_layer_em">10.5. <em>Request layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Money Request </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_reference_wallet_layer_em">10.6. <em>Reference Wallet layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Discount Wallet </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_fermat_crypto_commodity_money">11. FERMAT Crypto Commodity Money</h2>
+<h2 id="_fermat_bank_notes_platform">11. FERMAT Bank Notes Platform</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This platform &#8230;.</p>
+</div>
+<div class="sect2">
+<h3 id="__em_network_service_layer_em_3">11.1. <em>Network Service layer</em></h3>
+<div class="paragraph">
+<p>Each time that a certain system function must perform any operation <strong>outside</strong> the device where FERMAT is running, a <em>network service</em> is required to follow the execution in other devices until is completed.<br>
+Network services' modules need to have a * communication channel* stablished and maintained between the parties involved, what is done by the <strong>P2P networks and communication superlayer</strong> ( see the explanation at the previous section <a href="#communicationLayer">[communicationLayer]</a> )+
+Each <strong>network service module</strong> running on a <em>local device</em> stablish communication EXCLUSIVELY to its <em>counterpart</em> running in the <em>remote device</em>.<br></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Bank Notes </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_wallet_layer_em_2">11.2. <em>Wallet layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Bank Notes </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_middleware_layer_em_2">11.3. <em>Middleware layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Bank Notes </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_wallet_module_layer_em">11.4. <em>Wallet Module layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Bank Notes Wallet </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_reference_wallet_layer_em_2">11.5. <em>Reference Wallet layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Bank Notes Wallet </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_fermat_shoping_platform_br">12. FERMAT Shoping Platform:<br></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="__em_network_service_layer_em_4">12.1. <em>Network Service layer</em></h3>
 <div class="paragraph">
-<p>Making it easy for shop owners</p>
+<p>Each time that a certain system function must perform any operation <strong>outside</strong> the device where FERMAT is running, a <em>network service</em> is required to follow the execution in other devices until is completed.<br>
+Network services' modules need to have a * communication channel* stablished and maintained between the parties involved, what is done by the <strong>P2P networks and communication superlayer</strong> ( see the explanation at the previous section <a href="#communicationLayer">[communicationLayer]</a> )+
+Each <strong>network service module</strong> running on a <em>local device</em> stablish communication EXCLUSIVELY to its <em>counterpart</em> running in the <em>remote device</em>.<br></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Purchase Transmission </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_shop_owners">12.1. Shop Owners</h3>
+<h3 id="__em_actor_network_service_layer_em_2">12.2. <em>Actor Network Service layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Shop </dt>
+<dt class="hdlist1">Brand </dt>
+<dt class="hdlist1">Retailer </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_identity_layer_em_2">12.3. <em>Identity layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Shop </dt>
+<dt class="hdlist1">Brand </dt>
+<dt class="hdlist1">Retailer </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_wallet_layer_em_3">12.4. <em>Wallet layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Shop Wallet </dt>
-<dd>
-<p>&#8594; <strong>for shop owners who accept cryptocurrency in payment of their products !</strong></p>
-</dd>
-</dl>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_brands">12.2. Brands</h3>
-<div class="dlist">
-<dl>
 <dt class="hdlist1">Brand Wallet </dt>
+<dt class="hdlist1">Retailer Wallet </dt>
 <dd>
-<p>&#8594; <strong>for brands owners who accept cryptocurrency in their retailers network.</strong></p>
+<p>+</p>
 </dd>
 </dl>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_retailers">12.3. Retailers</h3>
+<h3 id="__em_crypto_money_transaction_em">12.5. <em>Crypto Money Transaction</em></h3>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Retail wallet </dt>
+<dt class="hdlist1">Purchase </dt>
+<dt class="hdlist1">Sale </dt>
 <dd>
-<p>&#8594; <strong>for</strong></p>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_actor_layer_em_2">12.6. <em>Actor layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Shop </dt>
+<dt class="hdlist1">Brand </dt>
+<dt class="hdlist1">Retailer </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_subapp_module_layer_em_2">12.7. <em>Subapp Module layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Shop </dt>
+<dt class="hdlist1">Brand </dt>
+<dt class="hdlist1">Retailer </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_wallet_module_layer_em_2">12.8. <em>Wallet Module layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Shop Wallet </dt>
+<dt class="hdlist1">Brand Wallet </dt>
+<dt class="hdlist1">Retailer Wallet </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_subapp_layer_em_2">12.9. <em>Subapp layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Shop </dt>
+<dt class="hdlist1">Brand </dt>
+<dt class="hdlist1">Retailer </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_reference_wallet_layer_em_3">12.10. <em>Reference Wallet layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Shop Wallet </dt>
+<dt class="hdlist1">Brand Wallet </dt>
+<dt class="hdlist1">Retailer Wallet </dt>
+<dd>
+<p>+</p>
 </dd>
 </dl>
 </div>
@@ -2141,32 +2377,193 @@ The new functionalities added are:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="DigitalAssets">13. FERMAT Digital Asset Platform</h2>
+<h2 id="DigitalAssets">13. FERMAT Digital Asset Platform.</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>+
-Blockchain beyond currency</p>
-</div>
 <div class="sect2">
-<h3 id="_what_is_a_digital_asset">13.1. What is a Digital Asset ?</h3>
+<h3 id="_blockchain_beyond_currency">13.1. Blockchain beyond currency</h3>
 
 </div>
 <div class="sect2">
-<h3 id="_asset_issuer_wallet">13.2. Asset Issuer Wallet</h3>
+<h3 id="_what_is_a_digital_asset">13.2. What is a Digital Asset ?</h3>
+
+</div>
+<div class="sect2">
+<h3 id="__em_network_service_layer_em_5">13.3. <em>Network Service layer</em></h3>
 <div class="paragraph">
-<p>&#8594; for company or brand that issues a Digital Assets to offer to their customers*</p>
+<p>Each time that a certain system function must perform any operation <strong>outside</strong> the device where FERMAT is running, a <em>network service</em> is required to follow the execution in other devices until is completed.<br>
+Network services' modules need to have a * communication channel* stablished and maintained between the parties involved, what is done by the <strong>P2P networks and communication superlayer</strong> ( see the explanation at the previous section <a href="#communicationLayer">[communicationLayer]</a> )+
+Each <strong>network service module</strong> running on a <em>local device</em> stablish communication EXCLUSIVELY to its <em>counterpart</em> running in the <em>remote device</em>.<br></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Asset Transmission </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_asset_user_wallet">13.3. Asset User Wallet</h3>
-<div class="paragraph">
-<p>&#8594; for <strong>the customer who accepts/obtain some Digital Assets according to his interests</strong></p>
+<h3 id="__em_actor_network_service_layer_em_3">13.4. <em>Actor Network Service layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Asset Issuer </dt>
+<dt class="hdlist1">Asset User </dt>
+<dt class="hdlist1">Redeem Point </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_redeem_point_wallet">13.4. Redeem Point Wallet</h3>
-<div class="paragraph">
-<p>&#8594; for the <strong>place/shop/person that exchanges the Asset for a certain service or product (redeems it)</strong></p>
+<h3 id="__em_identity_layer_em_3">13.5. <em>Identity layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Asset Issuer </dt>
+<dt class="hdlist1">Asset User </dt>
+<dt class="hdlist1">Redeem Point </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_wallet_layer_em_4">13.6. <em>Wallet layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Asset Issuer Wallet </dt>
+<dt class="hdlist1">Asset User Wallet </dt>
+<dt class="hdlist1">Redeem Point Wallet </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_digital_asset_transaction_em">13.7. <em>Digital Asset Transaction</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Asset Distribution </dt>
+<dt class="hdlist1">Asset Reception </dt>
+<dt class="hdlist1">Asset Issuing </dt>
+<dt class="hdlist1">Issuer Redemption </dt>
+<dt class="hdlist1">User Redemption </dt>
+<dt class="hdlist1">Redeem Point Redemption </dt>
+<dt class="hdlist1">Asset Appropiation </dt>
+<dt class="hdlist1">Appropiation Stats </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_middleware_layer_em_3">13.8. <em>Middleware layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Asset Factory </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_actor_layer_em_3">13.9. <em>Actor layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Asset Issuer </dt>
+<dt class="hdlist1">Asset User </dt>
+<dt class="hdlist1">Redeem Point </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_desktop_module_layer_em_2">13.10. <em>Desktop Module layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Sub App Manager </dt>
+<dt class="hdlist1">Wallet Manager </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_sub_app_module_layer_em">13.11. <em>Sub App Module layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Asset Factory </dt>
+<dd>
+<p>::</p>
+</dd>
+<dt class="hdlist1">Asset Issuer Community </dt>
+<dt class="hdlist1">Asset User Community </dt>
+<dd>
+<p>Redeem Point Community ::+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_wallet_module_layer_em_3">13.12. <em>Wallet Module layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Asset Issuer </dt>
+<dt class="hdlist1">Asset User </dt>
+<dt class="hdlist1">Redeem Point </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_desktop_layer_em_2">13.13. <em>Desktop layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Sub App Manager </dt>
+<dt class="hdlist1">Wallet Manager </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_sub_app_layer_em">13.14. <em>Sub App layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Asset Factory </dt>
+<dd>
+<p>::</p>
+</dd>
+<dt class="hdlist1">Asset Issuer Community </dt>
+<dt class="hdlist1">Asset User Community </dt>
+<dd>
+<p>Redeem Point Community ::+</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_reference_wallet_layer_em_4">13.15. <em>Reference Wallet layer</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Asset Issuer </dt>
+<dt class="hdlist1">Asset User </dt>
+<dt class="hdlist1">Redeem Point </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
