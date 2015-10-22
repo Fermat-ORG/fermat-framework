@@ -2,6 +2,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -52,6 +53,8 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
 
     // context object
     Context mContext;
+
+
 
     // posiscionamiento de los contactos
     private Map<Integer,CryptoWalletWalletContact> contactPositionItem;
@@ -183,6 +186,33 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
 
                 }
             }
+
+            //contact image
+            ImageView contact_image = (ImageView)convertView.findViewById(R.id.imageView_contact);
+            contact_image.setImageResource(R.drawable.caroline_profile_picture);
+
+            switch (position){
+                case 0:
+                    contact_image.setImageResource(R.drawable.mati_profile);
+                    break;
+                case 1:
+                    contact_image.setImageResource(R.drawable.caroline_profile_picture);
+                    break;
+                case 2:
+                    contact_image.setImageResource(R.drawable.brant_profile_picture);
+                    break;
+                case 3:
+                    contact_image.setImageResource(R.drawable.louis_profile_picture);
+                    break;
+                case 4:
+                    contact_image.setImageResource(R.drawable.madaleine_profile_picture);
+                    break;
+                default:
+                    contact_image.setImageResource(R.drawable.luis_profile_picture);
+                    break;
+
+            }
+
 
 
 //        final String text = mListItems.get(position);
