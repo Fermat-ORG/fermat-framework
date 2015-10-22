@@ -33,7 +33,7 @@ public class TestPluginClass extends AbstractPlugin {
 
         List<PluginReference> pluginReferences = new ArrayList<>();
 
-        pluginReferences.add(new PluginReference(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_ACTOR, null));
+        pluginReferences.add(new PluginReference(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_ACTOR));
 
         return pluginReferences;
     }

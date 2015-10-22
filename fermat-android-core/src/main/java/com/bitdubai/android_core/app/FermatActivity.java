@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -508,7 +509,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
                 if (abTitle != null) {
                     abTitle.setTextColor(Color.WHITE);
-                    abTitle.setTypeface(Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/CaviarDreams.ttf"));
+                    abTitle.setTypeface(Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/roboto.ttf"));
                     if (titleBar.getLabelSize() != -1) {
                         abTitle.setTextSize(titleBar.getLabelSize());
 
@@ -545,7 +546,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         SpannableString s = new SpannableString(title);
 
 
-        s.setSpan(new MyTypefaceSpan(getApplicationContext(), "CaviarDreams.ttf"), 0, s.length(),
+        s.setSpan(new MyTypefaceSpan(getApplicationContext(), "roboto.ttf"), 0, s.length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Update the action bar title with the TypefaceSpan instance
@@ -778,7 +779,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             pagerSlidingTabStrip.setVisibility(View.INVISIBLE);
         else {
             pagerSlidingTabStrip.setVisibility(View.VISIBLE);
-            Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/CaviarDreams.ttf");
+            Typeface tf = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/roboto.ttf");
             pagerSlidingTabStrip.setTypeface(tf, 1);
             pagerSlidingTabStrip.setDividerColor(Color.TRANSPARENT);
 
@@ -801,7 +802,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
         // put tabs font
         if (pagerSlidingTabStrip != null) {
-            pagerSlidingTabStrip.setTypeface(Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/CaviarDreams.ttf"), 1);
+            pagerSlidingTabStrip.setTypeface(Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/roboto.ttf"), 1);
         }
     }
 
@@ -1284,20 +1285,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         return (DesktopRuntimeManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DESKTOP_RUNTIME);
     }
 
-    /**
-     * Intra user identity
-     */
-    public IntraWalletUserManager getIntraWalletUserManager() {
-        return (IntraWalletUserManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY);
-    }
 
-
-    /**
-     * DAP
-     */
-    public AssetFactoryModuleManager getAssetFactoryModuleManager() {
-        return (AssetFactoryModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_ASSET_FACTORY_MODULE);
-    }
 
     /**
      * Assest Issuer Wallet Module
@@ -1510,6 +1498,11 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     @Override
     public RelativeLayout getActivityHeader() {
         return (RelativeLayout) findViewById(R.id.container_header_balance);
+    }
+
+    @Override
+    public void changeNavigationDrawerAdapter(ListAdapter listAdapter) {
+        NavigationDrawerFragment.changeNavigationDrawerAdapter(listAdapter);
     }
 
 

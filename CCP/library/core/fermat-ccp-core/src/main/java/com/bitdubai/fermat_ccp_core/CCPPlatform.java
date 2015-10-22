@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_core;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginIdsManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPluginIdsManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -31,19 +32,30 @@ public class CCPPlatform extends AbstractPlatform {
     @Override
     public void start() throws CantStartPlatformException {
 
-        registerLayer(Layers.ACTOR          , new ActorLayer()         );
-        registerLayer(Layers.BASIC_WALLET   , new BasicWalletLayer()   );
-        registerLayer(Layers.IDENTITY       , new IdentityLayer()      );
-        registerLayer(Layers.MIDDLEWARE     , new MiddlewareLayer()    );
-        registerLayer(Layers.NETWORK_SERVICE, new NetworkServiceLayer());
-        registerLayer(Layers.REQUEST        , new RequestLayer()       );
-        registerLayer(Layers.TRANSACTION    , new TransactionLayer()   );
-        registerLayer(Layers.WALLET_MODULE  , new WalletModuleLayer()  );
+        try {
 
+            registerLayer(new ActorLayer()         );
+            registerLayer(new BasicWalletLayer()   );
+            registerLayer(new IdentityLayer()      );
+            registerLayer(new MiddlewareLayer()    );
+            registerLayer(new NetworkServiceLayer());
+            registerLayer(new RequestLayer()       );
+            registerLayer(new TransactionLayer()   );
+            registerLayer(new WalletModuleLayer());
+
+        } catch (CantRegisterLayerException e) {
+
+            throw new CantStartPlatformException(
+                    e,
+                    "",
+                    "Problem trying to register a layer."
+            );
+        }
     }
 
     @Override
     public AbstractPluginIdsManager getPluginIdsManager(final PlatformFileSystem platformFileSystem) throws CantStartPluginIdsManagerException {
         return new PluginIdsManager(platformFileSystem);
     }
+
 }

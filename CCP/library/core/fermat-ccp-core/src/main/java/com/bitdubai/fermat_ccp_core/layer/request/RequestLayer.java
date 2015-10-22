@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_ccp_core.layer.request;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractLayer;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartLayerException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_ccp_core.layer.request.crypto_payment.CryptoPaymentPluginSubsystem;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CCPPlugins;
 
@@ -13,13 +15,22 @@ import com.bitdubai.fermat_ccp_api.all_definition.enums.CCPPlugins;
  */
 public class RequestLayer extends AbstractLayer {
 
-    public void start() throws CantStartLayerException {
-
-        registerPlugin(
-                CCPPlugins.BITDUBAI_CRYPTO_PAYMENT_REQUEST,
-                new CryptoPaymentPluginSubsystem()
-        );
-
+    public RequestLayer() {
+        super(Layers.REQUEST);
     }
 
+    public void start() throws CantStartLayerException {
+
+        try {
+            registerPlugin(new CryptoPaymentPluginSubsystem());
+
+        } catch (CantRegisterPluginException e) {
+
+            throw new CantStartLayerException(
+                    e,
+                    "",
+                    "Problem trying to register a plugin."
+            );
+        }
+    }
 }
