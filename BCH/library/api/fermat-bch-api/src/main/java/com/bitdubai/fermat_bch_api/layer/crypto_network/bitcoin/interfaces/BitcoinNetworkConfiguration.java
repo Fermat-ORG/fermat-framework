@@ -8,7 +8,7 @@ import org.bitcoinj.params.TestNet3Params;
  * Created by rodrigo on 9/19/15.
  */
 public interface BitcoinNetworkConfiguration {
-    public static final NetworkParameters DEFAULT_NETWORK_PARAMETERS = TestNet3Params.get();
+    public static final NetworkParameters DEFAULT_NETWORK_PARAMETERS = RegTestParams.get();
     public static final String BITCOIN_FULL_NODE_IP = "54.69.181.0";
     public static final int  BITCOIN_FULL_NODE_PORT = 18444;
     public static final String USER_AGENT_NAME = "Fermat Agent";
