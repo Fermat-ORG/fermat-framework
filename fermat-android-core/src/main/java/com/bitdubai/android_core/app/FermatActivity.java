@@ -78,6 +78,8 @@ import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
+import com.bitdubai.fermat_pip_api.layer.notifications.FermatNotificationListener;
+
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.SubAppSettingsManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettingsManager;
@@ -118,7 +120,7 @@ import static java.lang.System.gc;
  * Created by Matias Furszyfer
  */
 
-public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications, PaintActivtyFeactures, Observer {
+public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications, PaintActivtyFeactures, Observer,FermatNotificationListener {
 
     private static final String TAG = "fermat-core";
     private MainMenu mainMenu;
@@ -586,6 +588,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     protected void onResume() {
         super.onResume();
         getNotificationManager().addObserver(this);
+        getNotificationManager().addCallback(this);
     }
 
     @Override
@@ -597,6 +600,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     protected void onPause() {
         super.onPause();
         getNotificationManager().deleteObserver(this);
+        getNotificationManager().deleteCallback(this);
     }
 
     /**
@@ -1463,6 +1467,10 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                         break;
                     case CLOUD_CONNECTED_NOTIFICATION:
                         launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
+                        break;
+                    default:
+                        launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
+                        break;
 
                 }
 
@@ -1483,6 +1491,41 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     @Override
     public void invalidate() {
         //( (RelativeLayout) findViewById(R.id.activity_header)).invalidate();
+    }
+
+    @Override
+    public void notificate(NotificationEvent notification) {
+        try {
+
+            for (NotificationEvent notificationEvent : getNotificationManager().getPoolNotification()) {
+
+                switch (NotificationType.getByCode(notificationEvent.getNotificationType())) {
+                    case INCOMING_MONEY:
+                        launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
+                        break;
+                    case INCOMING_CONNECTION:
+                        //launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
+                        break;
+                    case INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION:
+                        launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
+                        break;
+                    case MONEY_REQUEST:
+                        break;
+                    case CLOUD_CONNECTED_NOTIFICATION:
+                        launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
+                        break;
+                    default:
+                        launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
+                        break;
+
+                }
+
+            }
+
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+        }
+
     }
 
 

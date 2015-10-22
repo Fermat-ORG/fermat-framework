@@ -747,7 +747,7 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
          * save into the cache
          */
 
-        remoteNetworkServicesRegisteredList.addAll(platformComponentProfileRegisteredList);
+        remoteNetworkServicesRegisteredList.addAllAbsent(platformComponentProfileRegisteredList);
 
 
         System.out.println("--------------------------------------\n" +
@@ -1053,6 +1053,26 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                             lstIntraUser.add(intraUser);
                         }
                 }
+
+            /* This is for test and example of how to use
+                    * Construct the filter
+            */
+            DiscoveryQueryParameters discoveryQueryParameters = constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_INTRA_USER, //PlatformComponentType you want to find
+                    NetworkServiceType.UNDEFINED,     //NetworkServiceType you want to find
+                    null,                     // alias
+                    null,                     // identityPublicKey
+                    null,                     // location
+                    null,                     // distance
+                    null,                     // name
+                    null,                     // extraData
+                    null,                     // offset
+                    null,                     // max
+                    null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                    null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+
+
+
+            requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
 
         }catch (Exception e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -1370,15 +1390,16 @@ public class IntraActorNetworkServicePluginRoot implements IntraUserManager, Ser
                     jsonObject.toString());
 
 
-            if(!actorsToRegisterCache.contains(platformComponentProfile))
+            if(!actorsToRegisterCache.contains(platformComponentProfile)) {
                 actorsToRegisterCache.add(platformComponentProfile);
 
-            if(register){
-                try {
-                    communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+                if (register) {
+                    try {
+                        communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
 
-                } catch (CantRegisterComponentException e) {
-                    e.printStackTrace();
+                    } catch (CantRegisterComponentException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
