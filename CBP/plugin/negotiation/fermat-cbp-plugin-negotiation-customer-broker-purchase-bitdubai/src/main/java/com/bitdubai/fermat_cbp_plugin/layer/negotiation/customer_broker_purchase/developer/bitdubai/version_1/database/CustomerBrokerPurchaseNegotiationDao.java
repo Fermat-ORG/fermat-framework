@@ -21,7 +21,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantGetListPurchaseClauseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseNegotiationDaoException;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.structure.CustomerBrokerPurchaseClause;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.structure.CustomerBrokerPurchaseNegotiation;
 
 import java.util.ArrayList;
@@ -208,30 +210,34 @@ public class CustomerBrokerPurchaseNegotiationDao {
             Clause methods
          */
 
-            public Collection<Clause> getClauses(UUID negotiationId) {
-                DatabaseTable PurchaseClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
-                PurchaseClauseTable.setUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
+            public Collection<Clause> getClauses(UUID negotiationId){
 
                 try {
+                    DatabaseTable PurchaseClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
+                    PurchaseClauseTable.setUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
+
                     PurchaseClauseTable.loadToMemory();
+                    List<DatabaseTableRecord> records = PurchaseClauseTable.getRecords();
+                    PurchaseClauseTable.clearAllFilters();
+
+                    Collection<Clause> resultados = new ArrayList<Clause>();
+
+                    for (DatabaseTableRecord record : records) {
+                        resultados.add(constructCustomerBrokerPurchaseClauseFromRecord(record));
+                    }
+
+                    return resultados;
+
                 } catch (CantLoadTableToMemoryException e) {
-                    // TODO: Agregar Exception
+                    new CantGetListPurchaseClauseException(CantGetListPurchaseClauseException.DEFAULT_MESSAGE, e, "", "");
+                } catch (InvalidParameterException e) {
+                    new CantGetListPurchaseClauseException(CantGetListPurchaseClauseException.DEFAULT_MESSAGE, e, "", "");
                 }
 
-                List<DatabaseTableRecord> records = PurchaseClauseTable.getRecords();
-                PurchaseClauseTable.clearAllFilters();
-
-                Collection<Clause> resultados = new ArrayList<Clause>();
-
-                for (DatabaseTableRecord record : records) {
-                    // TODO: Crear metodo constructCustomerBrokerPurchaseClauseFromRecord
-                    // resultados.add(constructCustomerBrokerPurchaseClauseFromRecord(record));
-                }
-
-                return resultados;
+                return null;
             }
 
-            public Clause addNewClause(UUID negotiationId, ClauseType type, String value) {
+            public Clause addNewClause(UUID clauseId, ClauseType type, String value) {
                 return null;
             }
 
