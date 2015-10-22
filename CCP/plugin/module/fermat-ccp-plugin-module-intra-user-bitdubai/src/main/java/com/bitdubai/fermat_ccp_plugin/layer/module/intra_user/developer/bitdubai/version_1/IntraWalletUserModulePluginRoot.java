@@ -200,9 +200,9 @@ public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsW
         try{
             this.intraWalletUser.setNewProfileImage(image);
         }
-        catch (CantSetNewProfileImageException e){
-            throw new CantSaveProfileImageException("CAN'T SAVE INTRA USER PROFILE IMAGE",e,"","Error in Intra user identity manager");
-        }
+//        catch (CantSetNewProfileImageException e){
+//            throw new CantSaveProfileImageException("CAN'T SAVE INTRA USER PROFILE IMAGE",e,"","Error in Intra user identity manager");
+//        }
         catch(Exception e)
         {
             throw new CantSaveProfileImageException("CAN'T SAVE INTRA USER PROFILE IMAGE",FermatException.wrapException(e),"","unknown exception");

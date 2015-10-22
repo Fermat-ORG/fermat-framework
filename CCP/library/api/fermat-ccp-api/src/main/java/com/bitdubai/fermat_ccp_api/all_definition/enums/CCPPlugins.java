@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.all_definition.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -11,7 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */
-public enum CCPPlugins implements com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum {
+public enum CCPPlugins implements FermatPluginsEnum {
 
     /**
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.

@@ -11,11 +11,14 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithDatabaseManagers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithLogManagers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformLayers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -955,7 +958,9 @@ public class Platform implements Serializable {
                     AbstractPlatform ccpPlatform = new CCPPlatform();
                     ccpPlatform.start();
 
-                    Plugin bitcoinWalletBasicWallet = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET);
+                    LayerReference layerReference = new LayerReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.BASIC_WALLET);
+
+                    Plugin bitcoinWalletBasicWallet = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET));
                     injectPluginReferencesAndStart(bitcoinWalletBasicWallet, Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET);
 
                     //                Plugin cryptoPaymentRequestNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoPaymentRequestPlugin();
@@ -966,11 +971,13 @@ public class Platform implements Serializable {
             * Plugin Intra User NetWorkService
             * -----------------------------
             */
-                    Plugin intraUserNetworkService = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_INTRA_USER_NETWORK_SERVICE);
+                    layerReference = new LayerReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE);
+
+                    Plugin intraUserNetworkService = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_INTRA_USER_NETWORK_SERVICE));
                     injectLayerReferences(intraUserNetworkService);
                     injectPluginReferencesAndStart(intraUserNetworkService, Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE);
 
-                    Plugin cryptoTransmissionNetworkService = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE);
+                    Plugin cryptoTransmissionNetworkService = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE));
                     injectLayerReferences(cryptoTransmissionNetworkService);
                     injectPluginReferencesAndStart(cryptoTransmissionNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_CRYPTO_TRANSMISSION_NETWORK_SERVICE);
 
@@ -982,35 +989,42 @@ public class Platform implements Serializable {
                     //                Plugin cryptoAddressesNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoAddressesPlugin();
                     //                injectPluginReferencesAndStart(cryptoAddressesNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE);
 
+                    layerReference = new LayerReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.MIDDLEWARE);
 
-                    Plugin walletContactsMiddleware = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE);
+                    Plugin walletContactsMiddleware = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE));
                     injectPluginReferencesAndStart(walletContactsMiddleware, Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE);
 
-                    Plugin cryptoPaymentRequest = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_CRYPTO_PAYMENT_REQUEST);
+                    layerReference = new LayerReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.REQUEST);
+
+                    Plugin cryptoPaymentRequest = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_CRYPTO_PAYMENT_REQUEST));
                     injectPluginReferencesAndStart(cryptoPaymentRequest, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST);
 
-                    Plugin ccpIntraWalletUserIdentity = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_IDENTITY);
+                    layerReference = new LayerReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.IDENTITY);
+                    Plugin ccpIntraWalletUserIdentity = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_INTRA_WALLET_USER_IDENTITY));
                     injectPluginReferencesAndStart(ccpIntraWalletUserIdentity, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY);
 
-                    Plugin outgoingIntraActorPlugin = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_OUTGOING_INTRA_ACTOR_TRANSACTION);
+                    layerReference = new LayerReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION);
+                    Plugin outgoingIntraActorPlugin = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_OUTGOING_INTRA_ACTOR_TRANSACTION));
                     injectPluginReferencesAndStart(outgoingIntraActorPlugin, Plugins.BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION);
 
-                    Plugin outgoingExtraUserPlugin = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION);
+                    Plugin outgoingExtraUserPlugin = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION));
                     injectPluginReferencesAndStart(outgoingExtraUserPlugin, Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION);
 
-                    Plugin incomingExtraUserTransaction = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
+                    Plugin incomingExtraUserTransaction = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION));
                     injectPluginReferencesAndStart(incomingExtraUserTransaction, Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
 
-                    Plugin incomingIntraUserTransaction = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION);
+                    Plugin incomingIntraUserTransaction = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION));
                     injectPluginReferencesAndStart(incomingIntraUserTransaction, Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION);
 
-                    Plugin extraUser = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_EXTRA_WALLET_USER_ACTOR);
+                    layerReference = new LayerReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.ACTOR);
+                    Plugin extraUser = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_EXTRA_WALLET_USER_ACTOR));
                     injectPluginReferencesAndStart(extraUser, Plugins.BITDUBAI_ACTOR_EXTRA_USER);
 
-                    Plugin intraUserActor = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_ACTOR);
+                    Plugin intraUserActor = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_INTRA_WALLET_USER_ACTOR));
                     injectPluginReferencesAndStart(intraUserActor, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR);
 
-                    Plugin cryptoWalletWalletModule = ccpPlatform.getPlugin(CCPPlugins.BITDUBAI_CRYPTO_WALLET_MODULE);
+                    layerReference = new LayerReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.WALLET_MODULE);
+                    Plugin cryptoWalletWalletModule = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_CRYPTO_WALLET_MODULE));
                     injectPluginReferencesAndStart(cryptoWalletWalletModule, Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1266,6 +1280,7 @@ public class Platform implements Serializable {
                 Plugin redeemPointIdentityLayer = ((DAPIdentityLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_IDENTITY_LAYER)).getRedeemPointIdentity();
                 injectPluginReferencesAndStart(redeemPointIdentityLayer, Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY);
 
+
            /*
             * Plugin Asset Factory Middleware
             * -----------------------------
@@ -1293,14 +1308,13 @@ public class Platform implements Serializable {
             */
                 Plugin assetUserWalletModule = ((DAPModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_MODULE_LAYER)).getPluginModuleAssetUserWallet();
                 injectPluginReferencesAndStart(assetUserWalletModule, Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE);
-           /*
 
+           /*
             * Plugin Asset Redeem Point Wallet Module
             * -----------------------------
             */
                 Plugin assetRedeemPointWalletModule = ((DAPModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_MODULE_LAYER)).getPluginModuleAssetRedeemPointrWallet();
                 injectPluginReferencesAndStart(assetRedeemPointWalletModule, Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE);
-
 
            /*
             * Plugin Asset Issuer Community Sub App Module
