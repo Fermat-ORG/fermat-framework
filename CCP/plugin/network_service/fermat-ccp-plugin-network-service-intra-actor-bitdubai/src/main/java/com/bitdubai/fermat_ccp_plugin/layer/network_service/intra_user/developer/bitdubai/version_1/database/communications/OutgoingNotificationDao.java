@@ -86,6 +86,20 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
             throw new CantCreateIntraUserException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
         }
     }
+    public void createNotification(ActorNetworkServiceRecord actorNetworkServiceRecord) throws CantCreateIntraUserException {
+
+        try {
+            DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
+
+            DatabaseTableRecord entityRecord = cryptoPaymentRequestTable.getEmptyRecord();
+
+            cryptoPaymentRequestTable.insertRecord(buildDatabaseRecord(entityRecord, actorNetworkServiceRecord));
+
+        } catch (CantInsertRecordException e) {
+
+            throw new CantCreateIntraUserException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+        }
+    }
 
 //    public void createCryptoPaymentInformation(UUID                 requestId    ,
 //                                               RequestType direction    ,
@@ -322,6 +336,16 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
             throw new CantListIntraWalletUsersException("",exception, "Exception invalidParameterException.","");
         }
+    }
+
+    @Override
+    public List<ActorNetworkServiceRecord> listNotificationsUnreaded() throws CantListIntraWalletUsersException {
+        return null;
+    }
+
+    @Override
+    public void markReadedNotification(UUID notificationId) {
+
     }
 
     private DatabaseTableRecord buildDatabaseRecord(DatabaseTableRecord                      record                    ,

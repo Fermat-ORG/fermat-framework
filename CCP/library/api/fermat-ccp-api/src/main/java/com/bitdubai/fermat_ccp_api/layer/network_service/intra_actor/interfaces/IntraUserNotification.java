@@ -34,6 +34,8 @@ public interface IntraUserNotification {
 
     Actors getActorSenderType();
 
+    void setFlagReadead(boolean flagReadead);
+
     /**
      * The method <code>getNotificationDescriptor</code> tells us the nature of the notification
      *
