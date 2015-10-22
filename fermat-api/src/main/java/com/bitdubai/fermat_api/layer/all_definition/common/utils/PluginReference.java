@@ -49,4 +49,13 @@ public class PluginReference {
         c += version.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
+
+    @Override
+    public String toString() {
+        return "PluginReference{" +
+                "plugin=" + plugin +
+                ", version=" + version +
+                '}';
+    }
+
 }
