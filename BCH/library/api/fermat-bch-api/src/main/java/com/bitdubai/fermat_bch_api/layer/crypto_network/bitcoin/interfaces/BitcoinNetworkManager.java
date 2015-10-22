@@ -4,14 +4,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptNetworkTransactionsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.CryptoVaults;
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Transaction;
-import org.bitcoinj.wallet.WalletTransaction;
+import org.bitcoinj.core.UTXOProvider;
 
 import java.util.List;
 
@@ -44,11 +43,10 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
     void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx) throws CantBroadcastTransactionException;
 
     /**
-     * Get the transactions stored on the crypto network that are referenced by the passed pool of keys.
-     * @param pool
+     * Gets the UTXO provider from the CryptoNetwork on the specified Network
+     * @param blockchainNetworkType
      * @return
-     * @throws CantGetCryptNetworkTransactionsException
      */
-    List<Transaction> getTransactions(WalletTransaction.Pool pool) throws CantGetCryptNetworkTransactionsException;
+    UTXOProvider getUTXOProvider(BlockchainNetworkType blockchainNetworkType);
 
 }

@@ -421,7 +421,9 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
             public void run() {
                 try{
                     Thread.sleep(5000);
-                    sendBitcoins(UUID.randomUUID().toString(), UUID.randomUUID(), new CryptoAddress("n4arfawovx5YxhwaabwfLiTKU8EyPN5Xaz", CryptoCurrency.BITCOIN), 123456);
+                    sendBitcoins(UUID.randomUUID().toString(), UUID.randomUUID(), new CryptoAddress("mq54V2zPkhWoytXU2WmbL3MKNmKB9h1rRm", CryptoCurrency.BITCOIN), 123456);
+                    sendBitcoins(UUID.randomUUID().toString(), UUID.randomUUID(), new CryptoAddress("mkhavuNr3rDSWMD4Ce17RJeyM26Jb2siBu", CryptoCurrency.BITCOIN), 654321);
+                    sendBitcoins(UUID.randomUUID().toString(), UUID.randomUUID(), new CryptoAddress("mpjxhz2gf7ZWfvhfVaSAoLcRsz1QTr7k3S", CryptoCurrency.BITCOIN), 555555);
                 } catch (Exception e){
                     e.printStackTrace();
                 }
