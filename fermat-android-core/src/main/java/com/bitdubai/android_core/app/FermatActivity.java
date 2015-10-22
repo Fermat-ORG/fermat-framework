@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -1303,20 +1304,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         return (DesktopRuntimeManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DESKTOP_RUNTIME);
     }
 
-    /**
-     * Intra user identity
-     */
-    public IntraWalletUserManager getIntraWalletUserManager() {
-        return (IntraWalletUserManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY);
-    }
 
-
-    /**
-     * DAP
-     */
-    public AssetFactoryModuleManager getAssetFactoryModuleManager() {
-        return (AssetFactoryModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_ASSET_FACTORY_MODULE);
-    }
 
     /**
      * Assest Issuer Wallet Module
@@ -1529,6 +1517,11 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     @Override
     public RelativeLayout getActivityHeader() {
         return (RelativeLayout) findViewById(R.id.container_header_balance);
+    }
+
+    @Override
+    public void changeNavigationDrawerAdapter(ListAdapter listAdapter) {
+        NavigationDrawerFragment.changeNavigationDrawerAdapter(listAdapter);
     }
 
 
