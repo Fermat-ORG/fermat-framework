@@ -129,6 +129,11 @@ public class RedeemPointCommunitySubAppModulePluginRoot implements RedeemPointCo
 //        actorAssetList.add(new RedeemPointActorRecord("Franklin Marcano",UUID.randomUUID().toString(),new byte[0],location));
 //        actorAssetList.add(new RedeemPointActorRecord("Manuel Colmenares",UUID.randomUUID().toString(),new byte[0],location));
 //        actorAssetList.add(new RedeemPointActorRecord("Nerio Indriago",UUID.randomUUID().toString(),new byte[0],location));
+        try {
+            actorAssetList = actorAssetRedeemPointManager.getAllAssetRedeemPointActorRegistered();
+        } catch (CantGetAssetRedeemPointActorsException e) {
+            e.printStackTrace();
+        }
 
         return actorAssetList;
     }

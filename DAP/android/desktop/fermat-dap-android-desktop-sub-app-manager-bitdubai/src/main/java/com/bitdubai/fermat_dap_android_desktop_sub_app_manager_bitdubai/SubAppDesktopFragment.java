@@ -81,21 +81,15 @@ public class SubAppDesktopFragment extends Fragment {
                         "intra_user"
                 };
 
-        mlist = new ArrayList<InstalledSubApp>();
-
-
+        mlist = new ArrayList<>();
         InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_FACTORY, null, null, "sub-app-asset-factory", "Assets factory", "sub-app-asset-factory", "sub-app-asset-factory", new Version(1, 0, 0));
+        mlist.add(installedSubApp);
+        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_ISSUER, null, null, "sub-app-asset-community-issuer", "Asset Community Issuer", "sub-app-asset-community-issuer", "sub-app-asset-community-issuer", new Version(1, 0, 0));
         mlist.add(installedSubApp);
         installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_USER, null, null, "sub-app-asset-community-user", "Asset Community User", "sub-app-asset-community-user", "sub-app-asset-community-user", new Version(1, 0, 0));
         mlist.add(installedSubApp);
-//        installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_PUBLISHER,null,null,"wallet_publisher","Wallet publisher","wallet_publisher","wallet_publisher",new Version(1,0,0));
-//        mlist.add(installedSubApp);
-//        installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_STORE,null,null,"wallet_store","Wallet store","wallet_store","wallet_store",new Version(1,0,0));
-//        mlist.add(installedSubApp);
-//        installedSubApp = new InstalledSubApp(SubApps.CWP_DEVELOPER_APP,null,null,"developer_sub_app","Developer","developer_sub_app","developer_sub_app",new Version(1,0,0));
-//        mlist.add(installedSubApp);
-//        installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER,null,null,"intra_user_sub_app","Intra user","intra_user_sub_app","intra_user_sub_app",new Version(1,0,0));
-//        mlist.add(installedSubApp);
+        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT, null, null, "sub-app-asset-community-redeem-point", "Asset Community Redeem Point", "sub-app-asset-community-redeem-point", "sub-app-asset-community-redeem-point", new Version(1, 0, 0));
+        mlist.add(installedSubApp);
 
         GridView gridView = new GridView(getActivity());
 
@@ -198,7 +192,35 @@ public class SubAppDesktopFragment extends Fragment {
                         }
                     });
                     break;
+                case "sub-app-asset-community-issuer":
+                holder.imageView.setImageResource(R.drawable.intra_user);
+                holder.imageView.setTag("DevelopersActivity|1");
+                linearLayout.setTag("DevelopersActivity|1");
+                holder.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        //set the next fragment and params
+                        ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+
+                    }
+                });
+                break;
                 case "sub-app-asset-community-user":
+                    holder.imageView.setImageResource(R.drawable.intra_user);
+                    holder.imageView.setTag("DevelopersActivity|1");
+                    linearLayout.setTag("DevelopersActivity|1");
+                    holder.imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //set the next fragment and params
+                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+
+                        }
+                    });
+                    break;
+                case "sub-app-asset-community-redeem-point":
                     holder.imageView.setImageResource(R.drawable.intra_user);
                     holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");

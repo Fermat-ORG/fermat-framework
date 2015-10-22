@@ -205,6 +205,45 @@
 				</libraries>
 			</layer>
 
+			
+			<layer name="Niche Wallet" language="java-android"></layer>
+			<layer name="Reference Wallet" language="java-android"></layer>
+			<layer name="Sub App" language="java-android"></layer>
+			<layer name="Desktop" language="java-android"></layer>
+			<layer name="empty layer 1"></layer>
+			<layer name="Engine" language="java"></layer>
+			<layer name="Wallet Module" language="java"></layer>
+			<layer name="Sub App Module" language="java"></layer>
+			<layer name="Desktop Module" language="java"></layer>
+			<layer name="Agent" language="java"></layer>
+			<layer name="Actor" language="java"></layer>
+			<layer name="Middleware" language="java"></layer>
+			<layer name="Request" language="java"></layer>
+			<layer name="Business Transaction" language="java"></layer>
+			<layer name="Digital Asset Transaction" language="java"></layer>
+			<layer name="Crypto Money Transaction" language="java"></layer>
+			<layer name="Cash Money Transaction" language="java"></layer>
+			<layer name="Bank Money Transaction" language="java"></layer>
+			<layer name="Contract" language="java"></layer>
+			<layer name="Composite Wallet" language="java"></layer>
+			<layer name="Wallet" language="java"></layer>
+			<layer name="World" language="java"></layer>
+			<layer name="Identity" language="java"></layer>
+			<layer name="Actor Network Service" language="java"></layer>
+			<layer name="Network Service" language="java"></layer>
+			<layer name="empty layer 2"></layer>
+			<layer super_layer="P2P"></layer>
+			<layer name="empty layer 3"></layer>
+			<layer super_layer="BCH"></layer>
+			<layer name="empty layer 4"></layer>
+			<layer name="License" language="java"></layer>
+			<layer name="Plugin" language="java"></layer>
+			<layer name="User" language="java"></layer>
+			<layer name="Hardware" language="java"></layer>
+			<layer name="Platform Service" language="java"></layer>
+			<layer name="empty layer 5"></layer>
+			<layer super_layer="OSA"></layer>
+
 			<layer name="Api" language="java">
 				<libraries>
 					<library
@@ -6964,10 +7003,17 @@
 		<layer name="Multi OS" language="java" super_layer="OSA"></layer>
 		<layer name="Android" language="java" super_layer="OSA"></layer>
 		<!-- separator or empty layer -->		
-		<layer name="Api" language="java">
+		<layer name="Api" language="java"></layer>
 	</layers>
 
 	<processes>
+		<process platform="DAP"
+			name="Digital Asset Platform"
+			description=""
+			previous=""
+			>
+		</process>
+
 	    <process platform="CBP" 
 	    	     name="Connection request from customer to broker"
 	             description="A customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation."

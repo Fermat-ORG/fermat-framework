@@ -5,7 +5,6 @@ import android.app.ActionBar;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -20,10 +19,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
@@ -31,11 +28,9 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +46,7 @@ import com.bitdubai.android_core.app.common.version_1.classes.MyTypefaceSpan;
 import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
 import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
@@ -61,7 +57,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Header;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
@@ -72,7 +67,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
-import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -83,30 +77,44 @@ import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_plugin.layer.module.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerWalletModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.SubAppSettingsManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettingsManager;
+
 import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
-import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_factory.interfaces.WalletFactoryManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
-
-import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
+import com.bitdubai.fermat_core.CorePlatformContext;
+import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.SubAppSettingsManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettingsManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_factory.interfaces.WalletFactoryManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
 
@@ -119,7 +127,9 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 
-import static android.widget.Toast.*;
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.LENGTH_SHORT;
+import static android.widget.Toast.makeText;
 import static java.lang.System.gc;
 
 /**
@@ -129,13 +139,11 @@ import static java.lang.System.gc;
 public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications, PaintActivtyFeactures, Observer {
 
     private static final String TAG = "fermat-core";
-    private MainMenu mainMenu;
-
     /**
      * Navigation menu
      */
     protected NavigationDrawerFragment NavigationDrawerFragment;
-
+    private MainMenu mainMenu;
     /**
      * Screen adapters
      */
@@ -152,6 +160,167 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      */
     private ActivityType activityType;
 
+    public static Bitmap fastblur(Bitmap sentBitmap, int radius) {
+        Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
+        if (radius < 1) {
+            return (null);
+        }
+        int w = bitmap.getWidth();
+        int h = bitmap.getHeight();
+        int[] pix = new int[w * h];
+        Log.e("pix", w + " " + h + " " + pix.length);
+        bitmap.getPixels(pix, 0, w, 0, 0, w, h);
+        int wm = w - 1;
+        int hm = h - 1;
+        int wh = w * h;
+        int div = radius + radius + 1;
+        int r[] = new int[wh];
+        int g[] = new int[wh];
+        int b[] = new int[wh];
+        int rsum, gsum, bsum, x, y, i, p, yp, yi, yw;
+        int vmin[] = new int[Math.max(w, h)];
+        int divsum = (div + 1) >> 1;
+        divsum *= divsum;
+        int dv[] = new int[256 * divsum];
+        for (i = 0; i < 256 * divsum; i++) {
+            dv[i] = (i / divsum);
+        }
+        yw = yi = 0;
+        int[][] stack = new int[div][3];
+        int stackpointer;
+        int stackstart;
+        int[] sir;
+        int rbs;
+        int r1 = radius + 1;
+        int routsum, goutsum, boutsum;
+        int rinsum, ginsum, binsum;
+        for (y = 0; y < h; y++) {
+            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
+            for (i = -radius; i <= radius; i++) {
+                p = pix[yi + Math.min(wm, Math.max(i, 0))];
+                sir = stack[i + radius];
+                sir[0] = (p & 0xff0000) >> 16;
+                sir[1] = (p & 0x00ff00) >> 8;
+                sir[2] = (p & 0x0000ff);
+                rbs = r1 - Math.abs(i);
+                rsum += sir[0] * rbs;
+                gsum += sir[1] * rbs;
+                bsum += sir[2] * rbs;
+                if (i > 0) {
+                    rinsum += sir[0];
+                    ginsum += sir[1];
+                    binsum += sir[2];
+                } else {
+                    routsum += sir[0];
+                    goutsum += sir[1];
+                    boutsum += sir[2];
+                }
+            }
+            stackpointer = radius;
+            for (x = 0; x < w; x++) {
+                r[yi] = dv[rsum];
+                g[yi] = dv[gsum];
+                b[yi] = dv[bsum];
+                rsum -= routsum;
+                gsum -= goutsum;
+                bsum -= boutsum;
+                stackstart = stackpointer - radius + div;
+                sir = stack[stackstart % div];
+                routsum -= sir[0];
+                goutsum -= sir[1];
+                boutsum -= sir[2];
+                if (y == 0) {
+                    vmin[x] = Math.min(x + radius + 1, wm);
+                }
+                p = pix[yw + vmin[x]];
+                sir[0] = (p & 0xff0000) >> 16;
+                sir[1] = (p & 0x00ff00) >> 8;
+                sir[2] = (p & 0x0000ff);
+                rinsum += sir[0];
+                ginsum += sir[1];
+                binsum += sir[2];
+                rsum += rinsum;
+                gsum += ginsum;
+                bsum += binsum;
+                stackpointer = (stackpointer + 1) % div;
+                sir = stack[(stackpointer) % div];
+                routsum += sir[0];
+                goutsum += sir[1];
+                boutsum += sir[2];
+                rinsum -= sir[0];
+                ginsum -= sir[1];
+                binsum -= sir[2];
+                yi++;
+            }
+            yw += w;
+        }
+        for (x = 0; x < w; x++) {
+            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
+            yp = -radius * w;
+            for (i = -radius; i <= radius; i++) {
+                yi = Math.max(0, yp) + x;
+                sir = stack[i + radius];
+                sir[0] = r[yi];
+                sir[1] = g[yi];
+                sir[2] = b[yi];
+                rbs = r1 - Math.abs(i);
+                rsum += r[yi] * rbs;
+                gsum += g[yi] * rbs;
+                bsum += b[yi] * rbs;
+                if (i > 0) {
+                    rinsum += sir[0];
+                    ginsum += sir[1];
+                    binsum += sir[2];
+                } else {
+                    routsum += sir[0];
+                    goutsum += sir[1];
+                    boutsum += sir[2];
+                }
+                if (i < hm) {
+                    yp += w;
+                }
+            }
+            yi = x;
+            stackpointer = radius;
+            for (y = 0; y < h; y++) {
+// Preserve alpha channel: ( 0xff000000 & pix[yi] )
+                pix[yi] = (0xff000000 & pix[yi]) | (dv[rsum] << 16) | (dv[gsum] << 8) | dv[bsum];
+                rsum -= routsum;
+                gsum -= goutsum;
+                bsum -= boutsum;
+                stackstart = stackpointer - radius + div;
+                sir = stack[stackstart % div];
+                routsum -= sir[0];
+                goutsum -= sir[1];
+                boutsum -= sir[2];
+                if (x == 0) {
+                    vmin[y] = Math.min(y + r1, hm) * w;
+                }
+                p = x + vmin[y];
+                sir[0] = r[p];
+                sir[1] = g[p];
+                sir[2] = b[p];
+                rinsum += sir[0];
+                ginsum += sir[1];
+                binsum += sir[2];
+                rsum += rinsum;
+                gsum += ginsum;
+                bsum += binsum;
+                stackpointer = (stackpointer + 1) % div;
+                sir = stack[stackpointer];
+                routsum += sir[0];
+                goutsum += sir[1];
+                boutsum += sir[2];
+                rinsum -= sir[0];
+                ginsum -= sir[1];
+                binsum -= sir[2];
+                yi += w;
+            }
+        }
+        Log.e("pix", w + " " + h + " " + pix.length);
+        bitmap.setPixels(pix, 0, w, 0, 0, w, h);
+        return (bitmap);
+    }
 
     /**
      * Called when the activity is first created
@@ -187,7 +356,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                     LENGTH_LONG).show();
         }
     }
-
 
     /**
      * Initialize the contents of the Activity's standard options menu
@@ -232,18 +400,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
     }
 
-    /**
-     * Dispatch onStop() to all fragments.  Ensure all loaders are stopped.
-     */
-    @Override
-    protected void onStop() {
-        try {
-            super.onStop();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
     /**
      * Dispatch onResume() to fragments.  Note that for better inter-operation
@@ -255,6 +411,17 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      * {@link #onResumeFragments()}.
      */
 
+    /**
+     * Dispatch onStop() to all fragments.  Ensure all loaders are stopped.
+     */
+    @Override
+    protected void onStop() {
+        try {
+            super.onStop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * This hook is called whenever an item in your options menu is selected.
@@ -528,7 +695,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             //TODO: tengo que agregar el header en los 4 xml base para que esto no se caiga cuando no lo tiene
             try {
                 ((RelativeLayout) findViewById(R.id.container_header_balance)).setVisibility((header != null) ? View.VISIBLE : View.GONE);
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
 
@@ -579,7 +746,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
         }
     }
-
 
     /**
      * Dispatch onResume() to fragments.  Note that for better inter-operation
@@ -718,22 +884,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 } catch (Exception e) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                     Log.d("WalletActivity", "Sdk version not compatible with status bar color");
-                }catch (OutOfMemoryError outOfMemoryError){
-                    getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY,UnexpectedUIExceptionSeverity.CRASH,new Exception());
-                    Toast.makeText(this,"out of memory exception",LENGTH_SHORT).show();
+                } catch (OutOfMemoryError outOfMemoryError) {
+                    getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, new Exception());
+                    Toast.makeText(this, "out of memory exception", LENGTH_SHORT).show();
                 }
             }
         }
-    }
-
-    /**
-     * Set the activity type
-     *
-     * @param activityType Enum value
-     */
-
-    public void setActivityType(ActivityType activityType) {
-        this.activityType = activityType;
     }
 
     /**
@@ -744,6 +900,16 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
     public ActivityType getActivityType() {
         return activityType;
+    }
+
+    /**
+     * Set the activity type
+     *
+     * @param activityType Enum value
+     */
+
+    public void setActivityType(ActivityType activityType) {
+        this.activityType = activityType;
     }
 
     /**
@@ -978,169 +1144,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         }
     }
 
-    public static Bitmap fastblur(Bitmap sentBitmap, int radius) {
-        Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
-        if (radius < 1) {
-            return (null);
-        }
-        int w = bitmap.getWidth();
-        int h = bitmap.getHeight();
-        int[] pix = new int[w * h];
-        Log.e("pix", w + " " + h + " " + pix.length);
-        bitmap.getPixels(pix, 0, w, 0, 0, w, h);
-        int wm = w - 1;
-        int hm = h - 1;
-        int wh = w * h;
-        int div = radius + radius + 1;
-        int r[] = new int[wh];
-        int g[] = new int[wh];
-        int b[] = new int[wh];
-        int rsum, gsum, bsum, x, y, i, p, yp, yi, yw;
-        int vmin[] = new int[Math.max(w, h)];
-        int divsum = (div + 1) >> 1;
-        divsum *= divsum;
-        int dv[] = new int[256 * divsum];
-        for (i = 0; i < 256 * divsum; i++) {
-            dv[i] = (i / divsum);
-        }
-        yw = yi = 0;
-        int[][] stack = new int[div][3];
-        int stackpointer;
-        int stackstart;
-        int[] sir;
-        int rbs;
-        int r1 = radius + 1;
-        int routsum, goutsum, boutsum;
-        int rinsum, ginsum, binsum;
-        for (y = 0; y < h; y++) {
-            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
-            for (i = -radius; i <= radius; i++) {
-                p = pix[yi + Math.min(wm, Math.max(i, 0))];
-                sir = stack[i + radius];
-                sir[0] = (p & 0xff0000) >> 16;
-                sir[1] = (p & 0x00ff00) >> 8;
-                sir[2] = (p & 0x0000ff);
-                rbs = r1 - Math.abs(i);
-                rsum += sir[0] * rbs;
-                gsum += sir[1] * rbs;
-                bsum += sir[2] * rbs;
-                if (i > 0) {
-                    rinsum += sir[0];
-                    ginsum += sir[1];
-                    binsum += sir[2];
-                } else {
-                    routsum += sir[0];
-                    goutsum += sir[1];
-                    boutsum += sir[2];
-                }
-            }
-            stackpointer = radius;
-            for (x = 0; x < w; x++) {
-                r[yi] = dv[rsum];
-                g[yi] = dv[gsum];
-                b[yi] = dv[bsum];
-                rsum -= routsum;
-                gsum -= goutsum;
-                bsum -= boutsum;
-                stackstart = stackpointer - radius + div;
-                sir = stack[stackstart % div];
-                routsum -= sir[0];
-                goutsum -= sir[1];
-                boutsum -= sir[2];
-                if (y == 0) {
-                    vmin[x] = Math.min(x + radius + 1, wm);
-                }
-                p = pix[yw + vmin[x]];
-                sir[0] = (p & 0xff0000) >> 16;
-                sir[1] = (p & 0x00ff00) >> 8;
-                sir[2] = (p & 0x0000ff);
-                rinsum += sir[0];
-                ginsum += sir[1];
-                binsum += sir[2];
-                rsum += rinsum;
-                gsum += ginsum;
-                bsum += binsum;
-                stackpointer = (stackpointer + 1) % div;
-                sir = stack[(stackpointer) % div];
-                routsum += sir[0];
-                goutsum += sir[1];
-                boutsum += sir[2];
-                rinsum -= sir[0];
-                ginsum -= sir[1];
-                binsum -= sir[2];
-                yi++;
-            }
-            yw += w;
-        }
-        for (x = 0; x < w; x++) {
-            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
-            yp = -radius * w;
-            for (i = -radius; i <= radius; i++) {
-                yi = Math.max(0, yp) + x;
-                sir = stack[i + radius];
-                sir[0] = r[yi];
-                sir[1] = g[yi];
-                sir[2] = b[yi];
-                rbs = r1 - Math.abs(i);
-                rsum += r[yi] * rbs;
-                gsum += g[yi] * rbs;
-                bsum += b[yi] * rbs;
-                if (i > 0) {
-                    rinsum += sir[0];
-                    ginsum += sir[1];
-                    binsum += sir[2];
-                } else {
-                    routsum += sir[0];
-                    goutsum += sir[1];
-                    boutsum += sir[2];
-                }
-                if (i < hm) {
-                    yp += w;
-                }
-            }
-            yi = x;
-            stackpointer = radius;
-            for (y = 0; y < h; y++) {
-// Preserve alpha channel: ( 0xff000000 & pix[yi] )
-                pix[yi] = (0xff000000 & pix[yi]) | (dv[rsum] << 16) | (dv[gsum] << 8) | dv[bsum];
-                rsum -= routsum;
-                gsum -= goutsum;
-                bsum -= boutsum;
-                stackstart = stackpointer - radius + div;
-                sir = stack[stackstart % div];
-                routsum -= sir[0];
-                goutsum -= sir[1];
-                boutsum -= sir[2];
-                if (x == 0) {
-                    vmin[y] = Math.min(y + r1, hm) * w;
-                }
-                p = x + vmin[y];
-                sir[0] = r[p];
-                sir[1] = g[p];
-                sir[2] = b[p];
-                rinsum += sir[0];
-                ginsum += sir[1];
-                binsum += sir[2];
-                rsum += rinsum;
-                gsum += ginsum;
-                bsum += binsum;
-                stackpointer = (stackpointer + 1) % div;
-                sir = stack[stackpointer];
-                routsum += sir[0];
-                goutsum += sir[1];
-                boutsum += sir[2];
-                rinsum -= sir[0];
-                ginsum -= sir[1];
-                binsum -= sir[2];
-                yi += w;
-            }
-        }
-        Log.e("pix", w + " " + h + " " + pix.length);
-        bitmap.setPixels(pix, 0, w, 0, 0, w, h);
-        return (bitmap);
-    }
-
-
     @Override
     public void paintComboBoxInActionBar(ArrayAdapter adapter, ActionBar.OnNavigationListener listener) {
         getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -1311,13 +1314,41 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     public AssetIssuerWalletSupAppModuleManager getAssetIssuerWalletModuleManager() {
         return (AssetIssuerWalletSupAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE);
     }
-    /**
-     *  Assets User community
+
+   /**
+     * Asset User Wallet Module
      */
-    public AssetUserCommunitySubAppModuleManager getAssetUserCommunitySubAppModuleManager() {
-        return null;//(AssetUserCommunitySubAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.DAP);
+    public AssetUserWalletSubAppModuleManager getAssetUserWalletModuleManager() {
+        return (AssetUserWalletSubAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE);
     }
 
+   /**
+     * Asset Redeem Point
+     */
+    public AssetRedeemPointWalletSubAppModule getAssetRedeemPointWalletModuleManager() {
+        return (AssetRedeemPointWalletSubAppModule) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE);
+    }
+
+    /**
+     *  Assets Issuer community
+     */
+    public AssetIssuerCommunitySubAppModuleManager getAssetIssuerCommunitySubAppModuleManager() {
+        return (AssetIssuerCommunitySubAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE);
+    }
+
+    /**
+     * Assets User community
+     */
+    public AssetUserCommunitySubAppModuleManager getAssetUserCommunitySubAppModuleManager() {
+        return (AssetUserCommunitySubAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE);
+    }
+
+    /**
+     *  Assets Redeem Point community
+     */
+    public RedeemPointCommunitySubAppModuleManager getAssetRedeemPointCommunitySubAppModuleManager() {
+        return (RedeemPointCommunitySubAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE);
+    }
 
     /**
      * CBP
@@ -1335,7 +1366,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         return (CryptoBrokerIdentityModuleManager) platformContext.getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE);
     }
 
-    public CryptoCustomerIdentityModuleManager getCryptoCustomerIdentityModuleManager(){
+    public CryptoCustomerIdentityModuleManager getCryptoCustomerIdentityModuleManager() {
         ApplicationSession applicationSession = (ApplicationSession) getApplication();
         Platform platform = applicationSession.getFermatPlatform();
         CorePlatformContext platformContext = platform.getCorePlatformContext();
@@ -1403,13 +1434,17 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     public void notificateWallet(String walletPublicKey, String notificationTitle, String notificationImageText, String notificationTextBody) {
         //Log.i(TAG, "Got a new result: " + notification_title);
         Resources r = getResources();
-        Intent intent = new Intent(this, WalletActivity.class);
-        intent.putExtra(WalletActivity.WALLET_PUBLIC_KEY, walletPublicKey);
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pi = null;
+        if (walletPublicKey != null) {
+            Intent intent = new Intent(this, WalletActivity.class);
+            intent.putExtra(WalletActivity.WALLET_PUBLIC_KEY, walletPublicKey);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 
-        PendingIntent pi = PendingIntent
-                .getActivity(this, 0, intent, 0);
+            pi = PendingIntent
+                    .getActivity(this, 0, intent, 0);
+
+        }
         Notification notification = new NotificationCompat.Builder(this)
                 .setTicker(notificationTitle)
                 .setSmallIcon(android.R.drawable.ic_menu_report_image)
@@ -1457,6 +1492,10 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                         launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;
                     case INCOMING_CONNECTION:
+                        //launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
+                        break;
+                    case INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION:
+                        launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
                         break;
                     case MONEY_REQUEST:
                         break;

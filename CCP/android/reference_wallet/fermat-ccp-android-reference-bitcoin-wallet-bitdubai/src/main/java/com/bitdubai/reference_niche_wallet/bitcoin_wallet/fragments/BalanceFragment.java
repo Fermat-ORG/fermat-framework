@@ -21,13 +21,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
-import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentsObjects;
@@ -250,7 +249,7 @@ public class BalanceFragment extends FermatWalletFragment {
             );
 
            for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactions) {
-               if (cryptoWalletTransaction.getBitcoinWalletTransaction().getBalanceType().getCode().equals(referenceWalletSession.getBalanceTypeSelected())) {
+               if (cryptoWalletTransaction.getBalanceType().getCode().equals(referenceWalletSession.getBalanceTypeSelected())) {
                    ListComponent listComponent = new ListComponent(cryptoWalletTransaction);
                    lstData.add(listComponent);
                 }
