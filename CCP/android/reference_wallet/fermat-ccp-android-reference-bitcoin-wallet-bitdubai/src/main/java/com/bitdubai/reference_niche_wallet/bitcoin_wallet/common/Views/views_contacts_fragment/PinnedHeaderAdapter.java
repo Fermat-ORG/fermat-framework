@@ -53,7 +53,8 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
 
     // context object
     Context mContext;
-
+    //Type face font
+    Typeface tf;
 
 
     // posiscionamiento de los contactos
@@ -79,6 +80,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
             }
         }
 
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
         contactPositionItem = new HashMap<>();
 
 
@@ -162,6 +164,10 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                         }
                         text = walletContact.getActorName();
 
+                        //contact image
+                        ImageView contact_image = (ImageView)convertView.findViewById(R.id.imageView_contact);
+                        contact_image.setImageResource(R.drawable.caroline_profile_picture);
+
                         break;
                     case TYPE_SECTION:
                         convertView = mLayoutInflater.inflate(R.layout.section_row_view, null);
@@ -170,6 +176,8 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                 }
 
                 holder.textView = (TextView) convertView.findViewById(R.id.row_title);
+                holder.textView.setTypeface(tf);
+
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -185,32 +193,6 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                     }
 
                 }
-            }
-
-            //contact image
-            ImageView contact_image = (ImageView)convertView.findViewById(R.id.imageView_contact);
-            contact_image.setImageResource(R.drawable.caroline_profile_picture);
-
-            switch (position){
-                case 0:
-                    contact_image.setImageResource(R.drawable.mati_profile);
-                    break;
-                case 1:
-                    contact_image.setImageResource(R.drawable.caroline_profile_picture);
-                    break;
-                case 2:
-                    contact_image.setImageResource(R.drawable.brant_profile_picture);
-                    break;
-                case 3:
-                    contact_image.setImageResource(R.drawable.louis_profile_picture);
-                    break;
-                case 4:
-                    contact_image.setImageResource(R.drawable.madaleine_profile_picture);
-                    break;
-                default:
-                    contact_image.setImageResource(R.drawable.luis_profile_picture);
-                    break;
-
             }
 
 
