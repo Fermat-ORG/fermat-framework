@@ -291,4 +291,15 @@ public class CustomerBrokerPurchaseNegotiationDao {
 
             return newCustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation);
         }
+
+        private CustomerBrokerPurchaseClause newCustomerBrokerPurchaseClause(
+                UUID            clauseId,
+                ClauseType      type,
+                String          value,
+                ClauseStatus    status,
+                String          proposedBy,
+                short           indexOrder
+        ){
+            return new CustomerBrokerPurchaseClause(clauseId, type, value, status, proposedBy, indexOrder);
+        }
 }
