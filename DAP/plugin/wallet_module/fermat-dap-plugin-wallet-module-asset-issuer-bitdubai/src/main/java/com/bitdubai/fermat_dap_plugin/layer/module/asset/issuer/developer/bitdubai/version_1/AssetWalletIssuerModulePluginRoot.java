@@ -181,8 +181,8 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithActor
     }
 
     @Override
-    public void distributionAssets(String assetPublicKey, String walletPublicKey, ActorAssetUser actorAssetUser) throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException {
-        assetIssuerWalletModuleManager.distributionAssets(assetPublicKey, walletPublicKey, actorAssetUser);
+    public void distributionAssets(String assetPublicKey, String walletPublicKey, List<ActorAssetUser> actorAssetUsers) throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException {
+        assetIssuerWalletModuleManager.distributionAssets(assetPublicKey, walletPublicKey, actorAssetUsers);
     }
 
     public List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUserActorsException{
