@@ -32,8 +32,6 @@ import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DealsWithI
 import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentityManager;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.DealsWithIdentityTranslator;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentityManager;
-import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.DealsWithIntraUsersModule;
-import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.DataBaseSystemOs;
 import com.bitdubai.fermat_api.layer.osa_android.FileSystemOs;
 import com.bitdubai.fermat_api.layer.osa_android.LocationSystemOs;
