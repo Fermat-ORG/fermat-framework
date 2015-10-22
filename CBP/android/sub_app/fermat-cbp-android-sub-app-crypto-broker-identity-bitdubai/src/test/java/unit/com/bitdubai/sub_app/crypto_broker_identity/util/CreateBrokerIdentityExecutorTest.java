@@ -1,7 +1,6 @@
 package unit.com.bitdubai.sub_app.crypto_broker_identity.util;
 
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
-import com.bitdubai.sub_app.crypto_broker_identity.common.interfaces.CreateIdentityExecutor;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor;
 
 import org.junit.Before;
@@ -29,19 +28,19 @@ public class CreateBrokerIdentityExecutorTest {
 
         executor = new CreateBrokerIdentityExecutor(null, null, null, null);
         int result = executor.execute();
-        assertThat(result).isEqualTo(CreateIdentityExecutor.INVALID_ENTRY_DATA);
+        assertThat(result).isEqualTo(CreateBrokerIdentityExecutor.INVALID_ENTRY_DATA);
 
         executor = new CreateBrokerIdentityExecutor(testModuleManager, null, new byte[0], null);
         result = executor.execute();
-        assertThat(result).isEqualTo(CreateIdentityExecutor.INVALID_ENTRY_DATA);
+        assertThat(result).isEqualTo(CreateBrokerIdentityExecutor.INVALID_ENTRY_DATA);
 
         executor = new CreateBrokerIdentityExecutor(testModuleManager, null, new byte[0], null);
         result = executor.execute();
-        assertThat(result).isEqualTo(CreateIdentityExecutor.INVALID_ENTRY_DATA);
+        assertThat(result).isEqualTo(CreateBrokerIdentityExecutor.INVALID_ENTRY_DATA);
 
         executor = new CreateBrokerIdentityExecutor(testModuleManager, null, new byte[0], "");
         result = executor.execute();
-        assertThat(result).isEqualTo(CreateIdentityExecutor.INVALID_ENTRY_DATA);
+        assertThat(result).isEqualTo(CreateBrokerIdentityExecutor.INVALID_ENTRY_DATA);
     }
 
     @Test
@@ -51,7 +50,7 @@ public class CreateBrokerIdentityExecutorTest {
 
         CreateBrokerIdentityExecutor executor = new CreateBrokerIdentityExecutor(testModuleManager, null, new byte[10], "Nelson");
         int result = executor.execute();
-        assertThat(result).isEqualTo(CreateIdentityExecutor.EXCEPTION_THROWN);
+        assertThat(result).isEqualTo(CreateBrokerIdentityExecutor.EXCEPTION_THROWN);
     }
 
     @Test
@@ -63,7 +62,7 @@ public class CreateBrokerIdentityExecutorTest {
         CreateBrokerIdentityExecutor executor = new CreateBrokerIdentityExecutor(testModuleManager, null, imageInBytes, brokerName);
 
         int result = executor.execute();
-        assertThat(result).isEqualTo(CreateIdentityExecutor.SUCCESS);
+        assertThat(result).isEqualTo(CreateBrokerIdentityExecutor.SUCCESS);
 
         CryptoBrokerIdentityInformation identity = executor.getIdentity();
         assertThat(identity.getAlias()).isEqualTo(brokerName);

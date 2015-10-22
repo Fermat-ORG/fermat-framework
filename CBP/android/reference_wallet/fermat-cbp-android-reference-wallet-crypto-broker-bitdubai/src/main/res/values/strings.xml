@@ -4,4 +4,7 @@
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="action_settings">Settings</string>
+    <string name="no_new_open_negotiations">No New\nOpen Negotiations</string>
+    <string name="identity_img">person_img</string>
+    <string name="arrow">arrow</string>
 </resources>

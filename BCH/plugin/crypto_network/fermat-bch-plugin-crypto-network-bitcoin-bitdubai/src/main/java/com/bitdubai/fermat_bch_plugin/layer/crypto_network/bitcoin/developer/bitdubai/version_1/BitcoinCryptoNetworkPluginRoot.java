@@ -12,7 +12,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
@@ -29,6 +28,8 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.UTXOProvider;
+import org.bitcoinj.wallet.WalletTransaction;
 
 import java.util.List;
 import java.util.UUID;
@@ -204,5 +205,15 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, Da
     @Override
     public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx) throws CantBroadcastTransactionException {
        bitcoinCryptoNetworkManager.broadcastTransaction(blockchainNetworkType, tx);
+    }
+
+    /**
+     * Gets the UTXO provider from the CryptoNetwork on the specified Network
+     * @param blockchainNetworkType
+     * @return
+     */
+    @Override
+    public UTXOProvider getUTXOProvider(BlockchainNetworkType blockchainNetworkType) {
+        return bitcoinCryptoNetworkManager.getUTXOProvider(blockchainNetworkType);
     }
 }

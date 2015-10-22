@@ -7,12 +7,17 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.InvalidSeedException;
 
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.wallet.DeterministicSeed;
 
@@ -119,13 +124,48 @@ public class AssetCryptoVaultManager  {
         return vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getBitcoinAddress(blockchainNetworkType, vaultAccount);
     }
 
-
-    public CryptoTransaction getGenesisTransaction(String transactionId) throws CantGetGenesisTransactionException {
-        return null;
-    }
-
-
     public long getAvailableBalanceForTransaction(String genesisTransaction) {
         return 0;
+    }
+
+    /**
+     * Sends bitcoins to the specified address. It will create a new wallet object from the Keys generated from the
+     * VaultKeyHierarchyGenerator and set an UTXO provider from the CryptoNetwork. Using my UTXO, I will create a new
+     * transaction and broadcast it on the corresponding network.
+     * @param genesisTransactionId
+     * @param addressTo
+     * @throws CantSendAssetBitcoinsToUserException
+     */
+    public void sendBitcoinAssetToUser(String genesisTransactionId, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException {
+        /**
+         * I get the network Parameters from the passed address.
+         */
+        NetworkParameters networkParameters = null;
+        Wallet wallet = null;
+        try {
+            networkParameters = Address.getParametersFromAddress(addressTo.getAddress());
+        } catch (AddressFormatException e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * I create the wallet from my seed, and imported the Keys that are being used at the Crypto Network. This list was generated and is maintained
+         * by the HierarchyMaintainer and passed to the Hierarchy Generator.
+         */
+        try {
+            wallet = Wallet.fromSeed(networkParameters, getAssetVaultSeed());
+            wallet.importKeys(vaultKeyHierarchyGenerator.getAllAccountsKeyList());
+        } catch (InvalidSeedException e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * I get the UTXO provider from the Crypto Network and set it to the wallet with the keys
+         */
+        //wallet.setUTXOProvider(bitcoinNetworkManager.getUTXOProvider());
+
+        //todo esto probablemente lo tendria que poner en el vault Key Hierarchy porque ahi tengo que actualizar la red a la que debo monitorear
+        //en este punto ya tengo todo listo para armar la transacción y enviarla.
+
     }
 }

@@ -13,8 +13,8 @@ public interface CashMoneyBalance {
 
     double getBalance()  throws CantCalculateBalanceException;
 
-    void debit(CashMoneyBalanceRecord CashMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterDebitException;
+    void debit(CashMoneyBalanceRecord cashMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterDebitException;
 
-    void credit(CashMoneyBalanceRecord CashMoneyBalanceRecord, BalanceType balanceType)  throws CantRegisterCreditException;
+    void credit(CashMoneyBalanceRecord cashMoneyBalanceRecord, BalanceType balanceType)  throws CantRegisterCreditException;
     
 }

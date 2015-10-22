@@ -167,11 +167,14 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager
         //generateAddress();
 
 
+
         /**
          * Nothing left to do.
          */
         this.serviceStatus = ServiceStatus.STARTED;
     }
+
+
 
     /**
      * Test Method to generate an address at startup
@@ -222,7 +225,7 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager
 
     @Override
     public void sendBitcoinAssetToUser(String genesisTransactionId, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException {
-
+        assetCryptoVaultManager.sendBitcoinAssetToUser(genesisTransactionId, addressTo);
     }
 
 }

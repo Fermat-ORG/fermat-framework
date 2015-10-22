@@ -105,7 +105,7 @@ public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, 
             loadWalletIssuerMap();
             createWalletAssetIssuer("walletPublicKeyTest");
             assetIssuerWallet = loadAssetIssuerWallet("walletPublicKeyTest");
-            //testWallet();
+            testWallet();
             System.out.println("Star Plugin AssetWalletIssuer");
             this.serviceStatus = ServiceStatus.STARTED;
         }catch(CantStartPluginException exception){
@@ -451,7 +451,7 @@ public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, 
                     return null;
                 }
             };
-            //assetIssuerWallet.distributionAssets("assetPublicKey", "walletPublicKeyTest", actorAssetUser);
+            //assetIssuerWallet.distributionAssets("assetPublicKeyNew2", "walletPublicKeyTest", actorAssetUser);
 
         } catch (Exception e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));

@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 /**
  * Created by jorge on 12-10-2015.
  */
+
 public class DeveloperBitdubai implements PluginDeveloper, PluginLicensor {
     @Override
     public Plugin getPlugin() {

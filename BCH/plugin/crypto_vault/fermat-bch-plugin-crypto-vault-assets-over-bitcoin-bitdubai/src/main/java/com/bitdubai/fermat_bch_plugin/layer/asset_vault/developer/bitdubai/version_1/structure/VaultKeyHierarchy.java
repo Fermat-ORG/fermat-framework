@@ -144,7 +144,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * Updates the database to active a new network
      * @param blockchainNetworkType
      */
-    private void setActiveNetwork(BlockchainNetworkType blockchainNetworkType) {
+    public void setActiveNetwork(BlockchainNetworkType blockchainNetworkType) {
         //todo update table active_Networks and add (if missing) this blockchainNetworkType
     }
 
