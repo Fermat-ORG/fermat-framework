@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdub
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.util.validations.Validate;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Address;
@@ -56,7 +57,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
      */
     @Override
     public String getName() {
-        return this.name;
+        return Validate.verifyString(this.name);
     }
 
     /**
@@ -123,7 +124,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
      */
     @Override
     public String getContactInformation() {
-        return contactInformation;
+        return Validate.verifyString(contactInformation);
     }
 
     /**
@@ -132,7 +133,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
      */
     @Override
     public String getHoursOfOperation() {
-        return hoursOfOperation;
+        return Validate.verifyString(hoursOfOperation);
     }
 
     public void setName(String name) {

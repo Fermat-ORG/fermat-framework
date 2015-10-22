@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdub
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.util.validations.Validate;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 
@@ -85,7 +86,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
      */
     @Override
     public String getDescription() {
-        return description;
+        return Validate.verifyString(description);
     }
 
     @Override
