@@ -1,7 +1,11 @@
 :numbered:
 == FERMAT Plug-ins Platform
 
-*FERMAT Plug-ins Platform* is open source and run on end users’ devices. It allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment. A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way.
+*FERMAT Plug-ins Platform* is open source and run on end users’ devices. It allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment. A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way. +
+This platform encapsulates all the modules that provides the basic services that build the back end infrastructure of FERMAT multiplatform system with the architectural characteristics that we have already explored in the previous section <<architecture>>. +
+The _multilayer architecture_ reveals in this platform its convenience allowing the modules group according to their common functionalities, and taking into account the future requirements of modules and application built on top this platform.
+
+
 
 === _Platform Services layer_
 Error Manager ::
@@ -49,7 +53,7 @@ Developer:: +
 
 
 === _Identity layer_
-Developer ::
+Developer :: gathers information about developers of modules of FERMAT, not only to identify his products, but also to give technical support.
 Designer :: +
 
 

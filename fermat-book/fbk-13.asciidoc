@@ -1,8 +1,9 @@
-== Blockchain beyond currency: DIGITAL ASSETS 
+[[DigitalAssets]]
+== FERMAT Digital Asset Platform 
++
+Blockchain beyond currency 
 
-=== FERMAT Digital Asset Platform  
-
-==== What is a Digital Asset ?
+=== What is a Digital Asset ?
 
 === Asset Issuer Wallet
 -> for company or brand that issues a Digital Assets to offer to their customers*

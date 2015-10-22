@@ -52,7 +52,7 @@ Can be freely adopted, implemented and extended.
 * *androids*: applications that run on Android System and present the graphic user interface.
 * *plug-ins*: components which encapsulates a very specific sets of functions, cosums services from other components and offer a public interface to the services they provide to other components.
 * *add-ons*: these are low level plug-ins that provides the sensitive functionalities, and therefore are developed by trusted developers, while plug-ins are open to the general development community to be developed.
-
+[[architecture]]
 === FERMAT's architecture 
 
 :numbered!:

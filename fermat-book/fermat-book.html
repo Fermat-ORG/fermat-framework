@@ -1495,7 +1495,7 @@ More specifically, the module connects to a <strong>full node</strong> of the co
 <div class="sect2">
 <h3 id="__em_crypto_vaults_layers_em">5.2. <em>Crypto Vaults layers</em></h3>
 <div class="paragraph">
-<p>As well as in a traditional <strong>funds management</strong> of a Bank, the entire money that a Banks posseses is store in one <em>main vault</em>, and the <em>user&#8217;s account managing system</em> acknowledges how much money corresponds to every one, in FERMAT, all transactions corresponding to FERMAT&#8217;s users are held in a <strong>vault module</strong>,  corresponding to the currency associated to the transaction. Then is task of every FERMAT <strong>wallet</strong> to manage the amount of cryptocurrency owned by each <strong>actor</strong>.</p>
+<p>As well as in a traditional <strong>funds management</strong> of a Bank, the entire money that a Banks posseses is store in one <em>main vault</em>, and the <em>user&#8217;s account managing system</em> acknowledges how much money corresponds to every one, in FERMAT, all transactions corresponding to FERMAT&#8217;s users are held in a <strong>vault module</strong>,  corresponding to the currency associated to the transaction. Then is task of every FERMAT <strong>wallet</strong> to manage the amount of cryptocurrency owned by each <strong>actor</strong>, in the way wallets do: they track every <strong>unspent transaction output</strong> in the <em>blockchain public ledger</em> and they display the information (transaction history, transaction report, balance, etc) according to their built-in functionalities.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1505,27 +1505,27 @@ More specifically, the module connects to a <strong>full node</strong> of the co
 </td>
 <td class="content">
 It might be useful to recall in this section a basic concept in blockchain technology about Hierarchical Deterministics Wallets.
-These Wallets are created in a way that with a <strong>master parent privat key</strong> a complete set of keys might be derived from it in a hierarchical relationships of <strong>children</strong> keys and <strong>grandchildren</strong> keys and so forth&#8230;, enabling the creation of a very large number of privat keys to sign transactions and public address for wallets to send/receive value.
+These Wallets are created in a way that they generate a <strong>master privat key</strong> and taking this key as a <strong>parent branch</strong> of a derivation tree, a complete set of <strong>children</strong> keys might be derived from it in a hierarchical deterministic manner. This enables the creation of a very large number of children privat keys to sign transactions and children public key to obtain valid cryptoaddress from them -with the usual procedure of applying a <em>hash function</em>- which allow the derived wallets created in the system to properly operate with them <em>without</em> revealing the <strong>master key</strong>.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>So, each <strong>vault module</strong> uses its <em>master key</em>  in the way of a HD wallet, to issue derived children keys which supply the necessary keys to each platform within Fermat to perform valid cryptocurrency transactions with complete safety and minimizing the data size to be shared and transmitted along the system.</p>
+<p>So, each <strong>vault module</strong> uses its <em>master key</em> in the way of a HD wallet, to issue derived children keys which supply the necessary keys to each platform within Fermat to perform valid cryptocurrency transactions with complete safety and minimizing the data size to be shared and transmitted along the system.</p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Bitcoin Vault </dt>
 <dd>
-<p>it stores the entire system&#8217;s available <em>Bitcoin</em> funds (<strong>value storage</strong>)</p>
+<p>it stores the entire system&#8217;s children keys that let all FERMAT Bitcoin Wallets <strong>unlock</strong> the funds owned by their users, so it can be thinked that this vault "stores" the available <em>Bitcoin</em> funds of the entire system. (<strong>value storage</strong>).</p>
 </dd>
 <dt class="hdlist1">Assets over Bitcoin </dt>
 <dd>
-<p>it stores each little amount of_Bitcoin_ used to create a <strong>Digital Asset</strong> ( <strong>metada storage</strong> of what is represented by the <strong>asset</strong> , this is primerly <strong>NOT</strong> a storage of <strong>value</strong> ).  (See full explanation in the section about <em>Digital Assets</em> [dap] )</p>
+<p>it "stores" (in the sense above mentioned) each little amount of_Bitcoin_ used to validate a <strong>Digital Asset</strong> ( called assets <em>proof of existence</em> ). It is more a <strong>metada storage</strong> of what is represented by the <strong>asset</strong> than a a storage of <strong>value</strong>.  (See full explanation in the section about <a href="#DigitalAssets">FERMAT Digital Asset Platform</a>)</p>
 </dd>
 <dt class="hdlist1">Bitcoin Watch Only Vault </dt>
 <dd>
-<p>used in the <em>Digital Asset Platform</em> to store bitcoins that are needed to let the <strong>redeem points</strong> work. See full explanation in the section about <em>Digital Assets</em> [dap] )<br></p>
+<p>it stores "receive only" type of Bitcoin transactions, what means that the transaction is showed in the ledger, but there is no <em>privat key</em> available to claim the Bitcoins transfered. This type of <strong>addresses</strong> are used in the <em>Digital Asset Platform</em> to allow <strong>redeem points</strong> wallet to work, showing they have received an Asset to be redeem by the <strong>Assets Issuer</strong>. (See full explanation in the section about <a href="#DigitalAssets">FERMAT Digital Asset Platform</a>)<br></p>
 </dd>
 </dl>
 </div>
@@ -1536,19 +1536,25 @@ These Wallets are created in a way that with a <strong>master parent privat key<
 <dl>
 <dt class="hdlist1">Crypto Address Book </dt>
 <dd>
-<p>+</p>
+<p>it keeps a list of every cryptoaddress requested by any module of FERMAT, recording who originated the request, from which platform, and any other necessary information to identify the address when consumed from any plugin. It is the <em>authority</em> to recognize every address belonging to FERMAT from the rest of addresses available in the blockchain ledger.</p>
 </dd>
 </dl>
 </div>
 </div>
 <div class="sect2">
 <h3 id="__em_crypto_router_layer_em">5.4. <em>Crypto Router layer</em></h3>
+<div class="paragraph">
+<p>This layer really acts as a  <strong>router</strong> of incoming/outgoing transactions refering to FERMAT&#8217;s users, listening to the specific events to be aware of the transaction and  "delivering" them to the appropiate plugin to handle it.<br></p>
+</div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Incoming Crypto </dt>
+<dd>
+<p>it receives a call from the <em>Crypto Network Layer</em> when a FERMAT address receives a transfer of cryptocurrency (what is identified by consulting the <em>Crypto Address Book</em> ), and it races an event to pass the responsibility to the corresponding plug-in to handle this transaction.</p>
+</dd>
 <dt class="hdlist1">Outgoing Crypto </dt>
 <dd>
-<p>+</p>
+<p>it delivers the transaction to the corresponding <strong>cryptonetwork</strong> and tracks the confidence level to inform the wallet the status of the transaction.</p>
 </dd>
 </dl>
 </div>
@@ -2108,14 +2114,15 @@ The new functionalities added are:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_blockchain_beyond_currency_digital_assets">13. Blockchain beyond currency: DIGITAL ASSETS</h2>
+<h2 id="DigitalAssets">13. FERMAT Digital Asset Platform</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_fermat_digital_asset_platform">13.1. FERMAT Digital Asset Platform</h3>
-<div class="sect3">
-<h4 id="_what_is_a_digital_asset">13.1.1. What is a Digital Asset ?</h4>
-
+<div class="paragraph">
+<p>+
+Blockchain beyond currency</p>
 </div>
+<div class="sect2">
+<h3 id="_what_is_a_digital_asset">13.1. What is a Digital Asset ?</h3>
+
 </div>
 <div class="sect2">
 <h3 id="_asset_issuer_wallet">13.2. Asset Issuer Wallet</h3>
