@@ -21,7 +21,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.doThrow;
 import static com.googlecode.catchexception.CatchException.*;
-import static org.fest.assertions.api.Assertions.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InitializeTest extends TestCase {

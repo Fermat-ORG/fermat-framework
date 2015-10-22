@@ -237,8 +237,8 @@ project(':fermat-dmp-plugin-identity-translator-bitdubai').projectDir = new File
 include ':fermat-dmp-plugin-identity-designer-bitdubai'
 project(':fermat-dmp-plugin-identity-designer-bitdubai').projectDir = new File('DMP/plugin/identity/fermat-dmp-plugin-identity-designer-bitdubai')
 
-include ':fermat-dmp-plugin-module-intra-user-bitdubai'
-project(':fermat-dmp-plugin-module-intra-user-bitdubai').projectDir = new File('DMP/plugin/module/fermat-dmp-plugin-module-intra-user-bitdubai')
+include ':fermat-ccp-plugin-module-intra-user-bitdubai'
+project(':fermat-ccp-plugin-module-intra-user-bitdubai').projectDir = new File('CCP/plugin/module/fermat-ccp-plugin-module-intra-user-bitdubai')
 
 
 
@@ -284,8 +284,6 @@ include ':fermat-dmp-plugin-wallet-module-crypto-loss-protected-wallet-bitdubai'
 project(':fermat-dmp-plugin-wallet-module-crypto-loss-protected-wallet-bitdubai').projectDir = new File('DMP/plugin/wallet_module/fermat-dmp-plugin-wallet-module-crypto-loss-protected-wallet-bitdubai')
 
 // Milestone 1 project:
-include ':fermat-dmp-plugin-wallet-module-discount-wallet-bitdubai'
-project(':fermat-dmp-plugin-wallet-module-discount-wallet-bitdubai').projectDir = new File('DMP/plugin/wallet_module/fermat-dmp-plugin-wallet-module-discount-wallet-bitdubai')
 
 include ':fermat-dmp-plugin-wallet-module-fiat-over-crypto-loss-protected-wallet-bitdubai'
 project(':fermat-dmp-plugin-wallet-module-fiat-over-crypto-loss-protected-wallet-bitdubai').projectDir = new File('DMP/plugin/wallet_module/fermat-dmp-plugin-wallet-module-fiat-over-crypto-loss-protected-wallet-bitdubai')
@@ -331,8 +329,6 @@ project(':fermat-dmp-plugin-middleware-money-request-bitdubai').projectDir = new
 include ':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai'
 project(':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai').projectDir = new File('DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai')
 
-include ':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai'
-project(':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai').projectDir = new File('DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai')
 
 // DMP Projects (Addons)
 
