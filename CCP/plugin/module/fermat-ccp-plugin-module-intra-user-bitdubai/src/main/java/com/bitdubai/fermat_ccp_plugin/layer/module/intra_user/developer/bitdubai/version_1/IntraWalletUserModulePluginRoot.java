@@ -385,18 +385,18 @@ public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsW
      * @throws CantAcceptRequestException
      */
     @Override
-    public void acceptIntraUser(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantAcceptRequestException {
+    public void acceptIntraUser(String identityPublicKey,String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantAcceptRequestException {
         try
         {
             /**
              *Call Actor Intra User to accept request connection
              */
-            this.intraWalletUserManager.acceptIntraWalletUser(this.intraUserLoggedPublicKey, intraUserToAddPublicKey);
+            this.intraWalletUserManager.acceptIntraWalletUser(identityPublicKey, intraUserToAddPublicKey);
 
             /**
              *Call Network Service Intra User to accept request connection
              */
-            this.intraUserNertwokServiceManager.acceptIntraUser(this.intraUserLoggedPublicKey, intraUserToAddPublicKey);
+            this.intraUserNertwokServiceManager.acceptIntraUser(identityPublicKey, intraUserToAddPublicKey);
 
         }
        catch(CantAcceptIntraWalletUserException e)
@@ -551,17 +551,12 @@ public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsW
      * @throws CantGetIntraUsersListException
      */
     @Override
-    public List<IntraUserInformation> getIntraUsersWaitingYourAcceptance(int max,int offset) throws CantGetIntraUsersListException {
+    public List<IntraUserInformation> getIntraUsersWaitingYourAcceptance(String identityPublicKey,int max,int offset) throws CantGetIntraUsersListException {
         List<IntraUserInformation> intraUserList= new ArrayList<IntraUserInformation>();
-
-//        intraUserList.add(new IntraUserModuleInformation("Matias Furszyfer","public_key",null));
-//        intraUserList.add(new IntraUserModuleInformation("Jorge Gonzales","public_key",null));
-//        intraUserList.add(new IntraUserModuleInformation("Cher Munish","public_key",null));
-//        intraUserList.add(new IntraUserModuleInformation("Scrowe Math","public_key",null));
         try {
 
 
-            List<IntraWalletUser> actorsList = this.intraWalletUserManager.getWaitingYourAcceptanceIntraWalletUsers(this.intraUserLoggedPublicKey, max, offset);
+            List<IntraWalletUser> actorsList = this.intraWalletUserManager.getWaitingYourAcceptanceIntraWalletUsers(identityPublicKey, max, offset);
 
             for (IntraWalletUser intraUserActor : actorsList) {
                 intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage()));
@@ -570,12 +565,7 @@ public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsW
             return intraUserList;
         }
        catch(CantGetIntraWalletUsersException e) {
-            //throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE",e,"","");
-            /**
-             * Testing purpose
-             */
-
-            return intraUserList;
+            throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE",e,"","");
         }
         catch(Exception e) {
             throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE",FermatException.wrapException(e),"","unknown exception");
@@ -605,12 +595,12 @@ public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsW
      * @throws CantGetIntraUsersListException
      */
     @Override
-    public List<IntraUserInformation> getIntraUsersWaitingTheirAcceptance(int max,int offset) throws CantGetIntraUsersListException {
+    public List<IntraUserInformation> getIntraUsersWaitingTheirAcceptance(String identityPublicKey,int max,int offset) throws CantGetIntraUsersListException {
         try
         {
             List<IntraUserInformation> intraUserList= new ArrayList<IntraUserInformation>();
 
-             List<IntraWalletUser> actorsList = this.intraWalletUserManager.getWaitingTheirAcceptanceIntraWalletUsers(this.intraUserLoggedPublicKey, max, offset);
+             List<IntraWalletUser> actorsList = this.intraWalletUserManager.getWaitingTheirAcceptanceIntraWalletUsers(identityPublicKey, max, offset);
 
             for (IntraWalletUser intraUserActor : actorsList) {
                 intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage()));

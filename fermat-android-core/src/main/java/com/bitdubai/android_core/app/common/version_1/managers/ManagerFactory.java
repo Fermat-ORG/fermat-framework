@@ -22,39 +22,48 @@ public class ManagerFactory {
         this.corePlatformContext = corePlatformContext;
     }
 
-    public ModuleManager getModuleManagerFactory(SubApps subApps){
+    public ModuleManager getModuleManagerFactory(SubApps subApps) {
         ModuleManager moduleManager = null;
 
-        switch (subApps){
+        switch (subApps) {
             case CWP_WALLET_MANAGER:
                 moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
                 break;
             case CWP_WALLET_FACTORY:
-                moduleManager = (ModuleManager)corePlatformContext.getPlugin(Plugins.BITDUBAI_WPD_WALLET_FACTORY_SUB_APP_MODULE);
+                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WPD_WALLET_FACTORY_SUB_APP_MODULE);
                 break;
             case CWP_DEVELOPER_APP:
-                moduleManager = (ModuleManager)corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE);
+                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE);
                 break;
             case CWP_WALLET_STORE:
-                moduleManager = (ModuleManager)corePlatformContext.getPlugin(Plugins.BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE);
+                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE);
                 break;
             case CCP_INTRA_USER_COMMUNITY:
-                moduleManager = (ModuleManager)corePlatformContext.getPlugin(Plugins.BITDUBAI_INTRA_USER_FACTORY_MODULE);
+                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_INTRA_USER_FACTORY_MODULE);
                 break;
             case CWP_WALLET_PUBLISHER:
-                moduleManager = (ModuleManager)corePlatformContext.getPlugin(Plugins.BITDUBAI_WPD_WALLET_PUBLISHER_SUB_APP_MODULE);
+                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WPD_WALLET_PUBLISHER_SUB_APP_MODULE);
                 break;
             case CWP_INTRA_USER_IDENTITY:
-                moduleManager = (ModuleManager)corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY);
+                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY);
                 break;
             case DAP_ASSETS_FACTORY:
-                moduleManager = (ModuleManager)corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_FACTORY_MODULE);
+                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_FACTORY_MODULE);
+                break;
+            case DAP_ASSETS_COMMUNITY_USER:
+                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE);
+                break;
+            case DAP_ASSETS_COMMUNITY_ISSUER:
+                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE);
+                break;
+            case DAP_ASSETS_COMMUNITY_REDEEM_POINT:
+                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE);
                 break;
             case CBP_CRYPTO_BROKER_IDENTITY:
-                moduleManager = (ModuleManager)corePlatformContext.getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE);
+                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE);
                 break;
             case CBP_CRYPTO_CUSTOMER_IDENTITY:
-                moduleManager = (ModuleManager)corePlatformContext.getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE);
+                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE);
                 break;
 //            case BITDUBAI_CRYPTO_WALLET_WALLET_MODULE:
 //                moduleManager = (ModuleManager)corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE);
@@ -72,7 +81,7 @@ public class ManagerFactory {
         return moduleManager;
     }
 
-    public ModuleManager getModuleManagerFactory(Platforms platformType,WalletCategory walletCategory,WalletType walletType) {
+    public ModuleManager getModuleManagerFactory(Platforms platformType, WalletCategory walletCategory, WalletType walletType) {
         ModuleManager moduleManager = null;
 
 
@@ -116,7 +125,7 @@ public class ManagerFactory {
 
                             case REFERENCE:
 
-                                moduleManager = (ModuleManager)corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE);
+                                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE);
                                 break;
                             default:
                                 System.out.println("NO se encuentra el modulo seleccionado, ingresarlo en el managerFactory. En el tipo REFERENCE");
@@ -142,7 +151,7 @@ public class ManagerFactory {
                         switch (walletType) {
 
                             case REFERENCE:
-                                moduleManager = (ModuleManager)corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE);
+                                moduleManager = (ModuleManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE);
                                 break;
                             default:
                                 System.out.println("NO se encuentra el modulo seleccionado, ingresarlo en el managerFactory. En el tipo REFERENCE");

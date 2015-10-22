@@ -4,5 +4,5 @@ package com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interface
  * Created by franklin on 16/10/15.
  */
 public interface DealsWithAssetUserWalletSubAppModule {
-    void setWalletAssetUserManager(AssetUserWalletSupAppModuleManager assetUserWalletSupAppModuleManager);
+    void setWalletAssetUserManager(AssetUserWalletSubAppModuleManager assetUserWalletSubAppModuleManager);
 }

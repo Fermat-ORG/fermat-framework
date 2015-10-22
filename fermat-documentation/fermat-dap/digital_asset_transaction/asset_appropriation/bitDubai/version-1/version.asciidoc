@@ -23,7 +23,7 @@ La transacción Asset Appropriation ejecuta los siguientes pasos:
 
 1) Verifica que el Digital Asset sigue siendo válido y no fue modificado.
 
-2) Se envía el monto descrito en la genesis amount a través del OutgoingIntraActor desde el actor ASSET_USER al actor INTRA_USER.
+2) Se envía el monto descrito en la genesis amount a través del OutgoingIntraActor desde el actor DAP_ASSET_USER al actor INTRA_USER.
 
 3) Si la transacción es llevada a cabo con éxito, se debe hacer un débito a la Asset User Wallet por el Digital Asset que se desea apropiarse.
 

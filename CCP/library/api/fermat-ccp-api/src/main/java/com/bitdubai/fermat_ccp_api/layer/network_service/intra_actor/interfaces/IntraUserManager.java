@@ -14,6 +14,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorSearchingSuggestionsException;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by loui on 18/02/15.
@@ -95,7 +96,13 @@ public interface IntraUserManager {
      * @param intraUserLogedInPublicKey
      * @param intraUserInvolvedPublicKey
      */
-    public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey) throws ErrorConfirmNotificationsIntraUserException;
+//    public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey) throws ErrorConfirmNotificationsIntraUserException;
+
+    /**
+     *
+     */
+    public void confirmNotification(UUID notificationID) throws ErrorConfirmNotificationsIntraUserException;
+
 
     /**
      * Regist

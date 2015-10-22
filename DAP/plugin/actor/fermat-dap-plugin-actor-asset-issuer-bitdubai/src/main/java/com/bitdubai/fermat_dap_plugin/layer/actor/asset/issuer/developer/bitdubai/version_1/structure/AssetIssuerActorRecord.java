@@ -15,7 +15,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     private String publicKey;
     private byte[] profileImage ;
     private long registrationDate;
-    private ConnectionState contactState;
+    private ConnectionState connectionState;
     private Location location;
     private CryptoAddress cryptoAddress;
 
@@ -26,6 +26,16 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     public AssetIssuerActorRecord(String name, String publicKey) {
         this.name = name;
         this.publicKey = publicKey;
+    }
+
+    public AssetIssuerActorRecord(String name, String publicKey, byte[] profileImage, long registrationDate) {
+
+        this.name = name;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage.clone();
+        this.registrationDate = registrationDate;
+        this.connectionState = ConnectionState.CONNECTED;
+
     }
 
     /**
@@ -76,7 +86,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
      */
     @Override
     public ConnectionState getContactState() {
-        return this.contactState;
+        return this.connectionState;
     }
 
     /**
@@ -118,8 +128,8 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         this.registrationDate = registrationDate;
     }
 
-    public void setContactState(ConnectionState contactState) {
-        this.contactState = contactState;
+    public void setContactState(ConnectionState connectionState) {
+        this.connectionState = connectionState;
     }
 
     public void setLocation(Location location) {

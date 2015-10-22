@@ -14,7 +14,7 @@ public interface CryptoBroker {
 
     CryptoBrokerBalance getAvailableBalance(BalanceType balanceType) throws CantTransactionCryptoBrokerException;
 
-    List<CryptoBrokerTransaction> getTransactions(BalanceType balanceType, int max, int offset)throws CantTransactionCryptoBrokerException;
+    List<CryptoBrokerTransactionRecord> getTransactions(BalanceType balanceType, int max, int offset)throws CantTransactionCryptoBrokerException;
 
     CryptoBrokerTransactionSummary getBrokerTransactionSummary(BalanceType balanceType) throws CantTransactionCryptoBrokerException;
 }

@@ -5,10 +5,10 @@ import android.text.SpannableString;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
-import com.bitdubai.sub_app.crypto_broker_identity.util.UtilsFuncs;
 
 /**
  * Created by nelson on 01/09/15.
@@ -27,9 +27,9 @@ public class CryptoBrokerIdentityInfoViewHolder extends FermatViewHolder {
     public void setImage(byte[] imageInBytes) {
         RoundedBitmapDrawable roundedBitmap;
         if (imageInBytes != null)
-            roundedBitmap = UtilsFuncs.getRoundedBitmap(identityImage.getResources(), imageInBytes);
+            roundedBitmap = ImagesUtils.getRoundedBitmap(identityImage.getResources(), imageInBytes);
         else
-            roundedBitmap = UtilsFuncs.getRoundedBitmap(identityImage.getResources(), R.drawable.person);
+            roundedBitmap = ImagesUtils.getRoundedBitmap(identityImage.getResources(), R.drawable.person);
 
         identityImage.setImageDrawable(roundedBitmap);
     }

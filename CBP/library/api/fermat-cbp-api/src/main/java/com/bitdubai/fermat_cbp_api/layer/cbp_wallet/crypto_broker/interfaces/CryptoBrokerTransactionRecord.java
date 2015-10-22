@@ -23,7 +23,7 @@ public interface CryptoBrokerTransactionRecord {
 
     String getPublicKeyBroker();
 
-//    String getDescriptionBalance();
+    String getPublicKeyCustomer();
 
     float getAmount();
 
