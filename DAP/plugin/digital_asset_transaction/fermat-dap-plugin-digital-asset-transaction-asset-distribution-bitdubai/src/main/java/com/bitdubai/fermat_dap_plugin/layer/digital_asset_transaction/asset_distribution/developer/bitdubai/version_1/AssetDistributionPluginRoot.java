@@ -12,6 +12,8 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -45,6 +47,8 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dist
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -134,7 +138,7 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting pluginDatabaseSystem in DigitalAssetDistributor", "Error in constructor method AssetDistributor");
         }
         this.serviceStatus=ServiceStatus.STARTED;
-
+        testRaiseEvent();
     }
 
     @Override
@@ -258,5 +262,13 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
     @Override
     public void setBitcoinCryptoNetworkManager(BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager) {
         this.bitcoinCryptoNetworkManager=bitcoinCryptoNetworkManager;
+    }
+    EventManager eventManager;
+    private void testRaiseEvent(){
+        printSomething("Start event RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION");
+        FermatEvent eventToRaise = eventManager.getNewEvent(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
+        eventToRaise.setSource(EventSource.CRYPTO_ROUTER);
+        eventManager.raiseEvent(eventToRaise);
+        printSomething("End event RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION");
     }
 }
