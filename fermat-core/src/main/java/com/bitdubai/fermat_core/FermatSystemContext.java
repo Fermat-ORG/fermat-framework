@@ -14,18 +14,17 @@ import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * The class <code>com.bitdubai.fermat_core.SystemContext</code>
+ * The class <code>com.bitdubai.fermat_core.FermatSystemContext</code>
  * the system context hold all the  references of the mains components of fermat.
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 21/10/2015.
  */
-public class SystemContext {
+public class FermatSystemContext {
 
     private final Map<PlatformReference, AbstractPlatform> platforms;
 
@@ -34,7 +33,7 @@ public class SystemContext {
      * The platforms array contains all the references to the platforms.
      * The key is an element of the Platforms enum, and the value is the Platform in-self.
      */
-    public SystemContext() {
+    public FermatSystemContext() {
 
         platforms = new ConcurrentHashMap<>();
     }
