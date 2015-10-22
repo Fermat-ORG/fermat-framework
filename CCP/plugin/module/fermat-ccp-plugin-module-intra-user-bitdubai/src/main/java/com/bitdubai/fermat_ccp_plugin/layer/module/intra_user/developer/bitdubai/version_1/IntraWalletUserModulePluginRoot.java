@@ -39,9 +39,9 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserI
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserSearch;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_user.exceptions.ErrorSearchingSuggestionsException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_user.interfaces.DealsWithIntraUsersNetworkService;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_user.interfaces.IntraUserManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorSearchingSuggestionsException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.DealsWithIntraUsersNetworkService;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -82,7 +82,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithCCPIntraWalletUser,DealsWithCCPIntraWalletUsers, DealsWithPluginFileSystem, LogManagerForDevelopers,  IntraUserModuleManager, Plugin, Service  {
+public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithCCPIntraWalletUser,DealsWithCCPIntraWalletUsers, DealsWithPluginFileSystem, LogManagerForDevelopers, IntraUserModuleManager, Plugin, Service  {
 
     private static String INTRA_USER_LOGIN_FILE_NAME = "intraUsersLogin";
 
@@ -554,12 +554,11 @@ public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsW
     public List<IntraUserInformation> getIntraUsersWaitingYourAcceptance(int max,int offset) throws CantGetIntraUsersListException {
         List<IntraUserInformation> intraUserList= new ArrayList<IntraUserInformation>();
 
-        intraUserList.add(new IntraUserModuleInformation("Matias Furszyfer","public_key",null));
-        intraUserList.add(new IntraUserModuleInformation("Jorge Gonzales","public_key",null));
-        intraUserList.add(new IntraUserModuleInformation("Cher Munish","public_key",null));
-        intraUserList.add(new IntraUserModuleInformation("Scrowe Math","public_key",null));
-        try
-        {
+//        intraUserList.add(new IntraUserModuleInformation("Matias Furszyfer","public_key",null));
+//        intraUserList.add(new IntraUserModuleInformation("Jorge Gonzales","public_key",null));
+//        intraUserList.add(new IntraUserModuleInformation("Cher Munish","public_key",null));
+//        intraUserList.add(new IntraUserModuleInformation("Scrowe Math","public_key",null));
+        try {
 
 
             List<IntraWalletUser> actorsList = this.intraWalletUserManager.getWaitingYourAcceptanceIntraWalletUsers(this.intraUserLoggedPublicKey, max, offset);
@@ -570,8 +569,7 @@ public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsW
 
             return intraUserList;
         }
-       catch(CantGetIntraWalletUsersException e)
-        {
+       catch(CantGetIntraWalletUsersException e) {
             //throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE",e,"","");
             /**
              * Testing purpose
@@ -579,8 +577,7 @@ public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsW
 
             return intraUserList;
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             throw new CantGetIntraUsersListException("CAN'T GET INTRA USER WAITING YOUR ACCEPTANCE",FermatException.wrapException(e),"","unknown exception");
         }
     }

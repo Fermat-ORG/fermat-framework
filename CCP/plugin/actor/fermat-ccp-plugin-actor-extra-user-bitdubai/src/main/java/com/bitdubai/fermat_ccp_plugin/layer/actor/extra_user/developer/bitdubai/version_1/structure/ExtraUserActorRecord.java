@@ -2,11 +2,11 @@ package com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantSignExtraUserMessageException;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantSignExtraUserMessageException;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUserActorRecord</code>
+ * The Class <code>ExtraUserActorRecord</code>
  * Implements the functionality of the actor Interface with all his methods.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 02/09/2015.

@@ -20,10 +20,11 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.fermat_ccp_api.layer.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_ccp_api.layer.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.crypto_wallet.interfaces.CryptoWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.EntryItem;
@@ -335,7 +336,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
      */
 //    private void loadTransactionMap(){
 //        for(CryptoWalletTransaction transaction:lstTransactions){
-//            Date date = new Date(transaction.getBitcoinWalletTransaction().getTimestamp());
+//            Date date = new Date(transaction.getTimestamp());
 //            if(!mapTransactionPerDate.containsKey(date)){
 //                Set<CryptoWalletTransaction> cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
 //                cryptoWalletTransactionSet.add(transaction);
@@ -356,7 +357,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
     private List<CryptoWalletTransaction> showTransactionListSelected(List<CryptoWalletTransaction> lstTransactions, BalanceType balanceType) {
         List<CryptoWalletTransaction> lstToShow = new ArrayList<CryptoWalletTransaction>();
         for (CryptoWalletTransaction t : lstTransactions) {
-            if (t.getBitcoinWalletTransaction().getBalanceType()==(balanceType)) {
+            if (t.getBalanceType()==(balanceType)) {
                 lstToShow.add(t);
             }
         }
@@ -495,7 +496,7 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
     private void loadTransactionMap(List<CryptoWalletTransaction> lstTransactions){
         Set<CryptoWalletTransaction> cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
         for(CryptoWalletTransaction transaction:lstTransactions){
-            Date date = new Date(transaction.getBitcoinWalletTransaction().getTimestamp());
+            Date date = new Date(transaction.getTimestamp());
             if(!mapTransactionPerDate.containsKey(convertDateToString(date))){
                 cryptoWalletTransactionSet = new HashSet<CryptoWalletTransaction>();
                 cryptoWalletTransactionSet.add(transaction);
@@ -586,15 +587,15 @@ public class TransactionsFragment extends FermatListFragment implements FermatLi
 //                    }
 //
 //                    if(textView_amount != null)
-//                        textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(), ShowMoneyType.BITCOIN.getCode()));
+//                        textView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode()));
 //                    if(textView_time!=null){
 //                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-//                        textView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));
+//                        textView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getTimestamp()));
 //                    }
 //                    if(textView_type!=null){
-//                        if(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType()==TransactionTypes.CREDIT){
+//                        if(entryItem.cryptoWalletTransaction.getTransactionType()==TransactionTypes.CREDIT){
 //                            textView_type.setText(R.string.credit);
-//                        }else if(entryItem.cryptoWalletTransaction.getBitcoinWalletTransaction().getTransactionType()==TransactionTypes.DEBIT){
+//                        }else if(entryItem.cryptoWalletTransaction.getTransactionType()==TransactionTypes.DEBIT){
 //                            textView_type.setText(R.string.debit);
 //                        }
 //                    }

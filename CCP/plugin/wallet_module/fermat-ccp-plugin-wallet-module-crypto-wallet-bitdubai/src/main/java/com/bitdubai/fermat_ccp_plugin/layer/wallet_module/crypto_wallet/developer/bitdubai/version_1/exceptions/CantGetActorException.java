@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions;
 
-import com.bitdubai.fermat_ccp_api.layer.crypto_wallet.exceptions.CryptoWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CryptoWalletException;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantCreateOrRegisterActorException</code>
+ * The Class <code>CantCreateOrRegisterActorException</code>
  * is thrown when i cant get an actor
  * <p/>
  *

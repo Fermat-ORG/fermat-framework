@@ -1,13 +1,13 @@
 package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 
 /**
  * Created by ciencias on 7/6/15.
@@ -33,7 +33,7 @@ public class BitcoinWalletBasicWalletAvailableBalance implements BitcoinWalletBa
         this.database = database;
     }
     @Override
-    public long getBalance() throws CantCalculateBalanceException{
+    public long getBalance() throws CantCalculateBalanceException {
         try {
             bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
             return bitcoinWalletBasicWalletDao.getAvailableBalance();
@@ -54,7 +54,7 @@ public class BitcoinWalletBasicWalletAvailableBalance implements BitcoinWalletBa
     public void debit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitException {
         try {
             bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
-            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction,BalanceType.AVAILABLE);
+            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.AVAILABLE);
         } catch(CantRegisterDebitException exception){
             throw exception;
         } catch(Exception exception){

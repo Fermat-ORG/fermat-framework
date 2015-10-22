@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_ccp_api.layer.crypto_wallet.interfaces.ActorTransactionSummary;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.ActorTransactionSummary;
 
 /**
- * The class <code>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleActorTransactionSummary</code>
+ * The class <code>CryptoWalletWalletModuleActorTransactionSummary</code>
  * implements the interface ActorTransactionSummary and all its methods.
  *
  * Created by mati on 2015.09.17..

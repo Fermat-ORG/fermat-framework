@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces;
 
+
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
  * The interface <code>IntraUserModuleManager</code>
  * provides the methods for the Intra Users sub app.
  */
-public interface IntraUserModuleManager extends ModuleManager{
+public interface IntraUserModuleManager extends ModuleManager {
 
 
     /**

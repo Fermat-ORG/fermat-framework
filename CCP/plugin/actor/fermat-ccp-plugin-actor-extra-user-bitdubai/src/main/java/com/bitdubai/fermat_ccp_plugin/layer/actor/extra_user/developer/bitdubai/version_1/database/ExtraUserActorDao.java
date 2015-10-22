@@ -1,10 +1,10 @@
 package com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
-import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantCreateExtraUserException;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantGetExtraUserException;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.ExtraUserNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.ExtraUserNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The interface <code>com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDao</code>
+ * The interface <code>ExtraUserActorDao</code>
  * haves all the methods that interact with the database.
  * Manages the extra user actors by storing them on a Database Table.
  * <p/>
@@ -78,15 +78,15 @@ public class ExtraUserActorDao implements DealsWithPluginDatabaseSystem, DealsWi
         }
 
         try {
-            DatabaseTable extraUserTable = database.getTable(ExtraUserActorDatabaseConstants.EXTRA_USER_TABLE_NAME);
-            extraUserTable.setStringFilter(ExtraUserActorDatabaseConstants.EXTRA_USER_EXTRA_USER_PUBLIC_KEY_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+            DatabaseTable extraUserTable = database.getTable(com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDatabaseConstants.EXTRA_USER_TABLE_NAME);
+            extraUserTable.setStringFilter(com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDatabaseConstants.EXTRA_USER_EXTRA_USER_PUBLIC_KEY_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
             extraUserTable.loadToMemory();
 
             List<DatabaseTableRecord> records = extraUserTable.getRecords();
 
             if (!records.isEmpty()) {
                 DatabaseTableRecord record = records.get(0);
-                String name = record.getStringValue(ExtraUserActorDatabaseConstants.EXTRA_USER_NAME_COLUMN_NAME);
+                String name = record.getStringValue(com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDatabaseConstants.EXTRA_USER_NAME_COLUMN_NAME);
                 return new ExtraUserActorRecord(actorPublicKey,"", name);
             } else
                 throw  new ExtraUserNotFoundException(ExtraUserNotFoundException.DEFAULT_MESSAGE, null, "", "There's no record with that actorPublicKey.");
@@ -109,13 +109,13 @@ public class ExtraUserActorDao implements DealsWithPluginDatabaseSystem, DealsWi
         }
 
         try {
-            DatabaseTable extraUserTable = database.getTable(ExtraUserActorDatabaseConstants.EXTRA_USER_TABLE_NAME);
+            DatabaseTable extraUserTable = database.getTable(com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDatabaseConstants.EXTRA_USER_TABLE_NAME);
 
             DatabaseTableRecord entityRecord = extraUserTable.getEmptyRecord();
 
-            entityRecord.setStringValue(ExtraUserActorDatabaseConstants.EXTRA_USER_NAME_COLUMN_NAME,                  actorName);
-            entityRecord.setStringValue(ExtraUserActorDatabaseConstants.EXTRA_USER_EXTRA_USER_PUBLIC_KEY_COLUMN_NAME, actorPublicKey);
-            entityRecord.setLongValue(  ExtraUserActorDatabaseConstants.EXTRA_USER_TIME_STAMP_COLUMN_NAME,            timeStamp);
+            entityRecord.setStringValue(com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDatabaseConstants.EXTRA_USER_NAME_COLUMN_NAME,                  actorName);
+            entityRecord.setStringValue(com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDatabaseConstants.EXTRA_USER_EXTRA_USER_PUBLIC_KEY_COLUMN_NAME, actorPublicKey);
+            entityRecord.setLongValue(  com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDatabaseConstants.EXTRA_USER_TIME_STAMP_COLUMN_NAME,            timeStamp);
 
             extraUserTable.insertRecord(entityRecord);
 

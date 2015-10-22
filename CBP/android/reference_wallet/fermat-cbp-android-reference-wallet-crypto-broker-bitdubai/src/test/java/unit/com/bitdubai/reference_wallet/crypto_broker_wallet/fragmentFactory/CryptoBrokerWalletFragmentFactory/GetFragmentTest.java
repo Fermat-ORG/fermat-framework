@@ -8,16 +8,16 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Wallet
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentFactory;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.ContractDetailsFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.DealDetailsFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.contracts.ContractsActivityFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.deals.DealsActivityFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.CloseNegotiationDetailsFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.OpenNegotiationDetailsFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.CloseContractDetailsFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.OpenContractDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenContractsTabFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenDealsTabFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.RequestTabFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.OpenNegotiationsTabFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.MarketRateStatisticsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockStatisticsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.settings.SettingsActivityFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.stock.StockPreferencesActivityFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.contracts_history.ContractsHistoryActivityFragment;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -58,10 +58,10 @@ public class GetFragmentTest {
     @Test
     public void fragmentsObjectsMatchTheirCodes() throws Exception {
         Fragment actualFragment = fragmentFactory.getFragment("CBPCBWHART", session, settings, providerManager);
-        assertThat(actualFragment).isInstanceOf(RequestTabFragment.class);
+        assertThat(actualFragment).isInstanceOf(MarketRateStatisticsFragment.class);
 
         actualFragment = fragmentFactory.getFragment("CBPCBWHAODT", session, settings, providerManager);
-        assertThat(actualFragment).isInstanceOf(OpenDealsTabFragment.class);
+        assertThat(actualFragment).isInstanceOf(OpenNegotiationsTabFragment.class);
 
         actualFragment = fragmentFactory.getFragment("CBPCBWHAOCT", session, settings, providerManager);
         assertThat(actualFragment).isInstanceOf(OpenContractsTabFragment.class);
@@ -70,19 +70,19 @@ public class GetFragmentTest {
         assertThat(actualFragment).isInstanceOf(StockStatisticsFragment.class);
 
         actualFragment = fragmentFactory.getFragment("CBPCBWDD", session, settings, providerManager);
-        assertThat(actualFragment).isInstanceOf(DealDetailsFragment.class);
+        assertThat(actualFragment).isInstanceOf(OpenNegotiationDetailsFragment.class);
 
         actualFragment = fragmentFactory.getFragment("CBPCBWCD", session, settings, providerManager);
-        assertThat(actualFragment).isInstanceOf(ContractDetailsFragment.class);
+        assertThat(actualFragment).isInstanceOf(CloseNegotiationDetailsFragment.class);
 
         actualFragment = fragmentFactory.getFragment("CBPCBWD", session, settings, providerManager);
-        assertThat(actualFragment).isInstanceOf(DealsActivityFragment.class);
+        assertThat(actualFragment).isInstanceOf(OpenContractDetailsFragment.class);
 
         actualFragment = fragmentFactory.getFragment("CBPCBWC", session, settings, providerManager);
-        assertThat(actualFragment).isInstanceOf(ContractsActivityFragment.class);
+        assertThat(actualFragment).isInstanceOf(CloseContractDetailsFragment.class);
 
         actualFragment = fragmentFactory.getFragment("CBPCBWSP", session, settings, providerManager);
-        assertThat(actualFragment).isInstanceOf(StockPreferencesActivityFragment.class);
+        assertThat(actualFragment).isInstanceOf(ContractsHistoryActivityFragment.class);
 
         actualFragment = fragmentFactory.getFragment("CBPCBWS", session, settings, providerManager);
         assertThat(actualFragment).isInstanceOf(SettingsActivityFragment.class);

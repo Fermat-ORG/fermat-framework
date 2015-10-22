@@ -14,8 +14,8 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantSetPhotoException;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.ExtraUserNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantSetPhotoException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.ExtraUserNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -31,20 +31,16 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
-import com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDao;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantInitializeExtraUserActorDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantLoadPrivateKeyException;
-import com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantPersistPhotoException;
-import com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
-import com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUserActorRecord;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetDataBaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.interfaces.ExtraUserManager;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantCreateExtraUserException;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantGetExtraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
@@ -56,7 +52,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.ExtraUserActorPluginRoot</code>
+ * The Class <code>ExtraUserActorPluginRoot</code>
  * Implements the ExtraUserManager interface with all his methods.
  * <p/>
  * In this plug-in manages a registry of known extra users.
@@ -97,7 +93,7 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
     /**
      * ExtraUserManager Interface member variables.
      */
-    private ExtraUserActorDao extraUserActorDao;
+    private com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDao extraUserActorDao;
 
     public static final String EXTRA_USERS_PROFILE_IMAGE_DIRECTORY_NAME = "extraUserIdentityProfileImages";
     public static final String EXTRA_USERS_PRIVATE_KEYS_DIRECTORY_NAME = "extraUserIdentityPrivateKeys";
@@ -115,7 +111,7 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
         logManager.log(ExtraUserActorPluginRoot.getLogLevelByClass(this.getClass().getName()), "Extra User Actor Plugin Initializing...", null, null);
 
         try {
-            extraUserActorDao = new ExtraUserActorDao(pluginDatabaseSystem, pluginId);
+            extraUserActorDao = new com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDao(pluginDatabaseSystem, pluginId);
             extraUserActorDao.initialize();
         } catch (CantInitializeExtraUserActorDatabaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ACTOR_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -170,7 +166,7 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
         } catch (CantCreateExtraUserException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ACTOR_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (CantPersistPrivateKeyException e) {
+        } catch (com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ACTOR_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateExtraUserException(CantCreateExtraUserException.DEFAULT_MESSAGE, e, "Cannot persist private key file.", null);
         } catch (Exception e) {
@@ -179,7 +175,7 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
         }
 
         logManager.log(ExtraUserActorPluginRoot.getLogLevelByClass(this.getClass().getName()), "Extra User Created Successfully.", null, null);
-        return new ExtraUserActorRecord(publicKey, privateKey, actorName);
+        return new com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUserActorRecord(publicKey, privateKey, actorName);
     }
 
     @Override
@@ -202,10 +198,10 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
         } catch (CantCreateExtraUserException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ACTOR_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (CantPersistPrivateKeyException e) {
+        } catch (com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ACTOR_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateExtraUserException(CantCreateExtraUserException.DEFAULT_MESSAGE, e, "Cannot persist private key file.", null);
-        } catch (CantPersistPhotoException e) {
+        } catch (com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantPersistPhotoException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ACTOR_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateExtraUserException(CantCreateExtraUserException.DEFAULT_MESSAGE, e, "Cannot persist photo file.", null);
         } catch (Exception e) {
@@ -214,7 +210,7 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
         }
 
         logManager.log(ExtraUserActorPluginRoot.getLogLevelByClass(this.getClass().getName()), "Extra User Created Successfully.", null, null);
-        return new ExtraUserActorRecord(publicKey, privateKey,actorName);
+        return new com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUserActorRecord(publicKey, privateKey,actorName);
     }
 
     @Override
@@ -230,7 +226,7 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
             }
             Actor actor = extraUserActorDao.getActorByPublicKey(actorPublicKey);
 
-            return new ExtraUserActorRecord(actorPublicKey, privateKey,actor.getName(), image);
+            return new com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUserActorRecord(actorPublicKey, privateKey,actor.getName(), image);
 
         } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -265,7 +261,7 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
         } catch (FileNotFoundException e){
             try {
                 persistPhoto(actorPublicKey, photo);
-            } catch (CantPersistPhotoException z) {
+            } catch (com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantPersistPhotoException z) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, z);
                 throw new CantSetPhotoException(CantSetPhotoException.DEFAULT_MESSAGE, z, "There is a problem trying to persist the photo.", null);
             } catch (Exception z) {
@@ -278,7 +274,7 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
         }
     }
 
-    private void persistPrivateKey(String privateKey, String publicKey) throws CantPersistPrivateKeyException {
+    private void persistPrivateKey(String privateKey, String publicKey) throws com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException {
         try {
             PluginTextFile file = this.pluginFileSystem.createTextFile(
                     pluginId,
@@ -293,9 +289,9 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
             file.persistToMedia();
 
         } catch (CantPersistFileException | CantCreateFileException e) {
-            throw new CantPersistPrivateKeyException(CantPersistPrivateKeyException.DEFAULT_MESSAGE, e, "Error creating or persisting file.", null);
+            throw new com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException(com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException.DEFAULT_MESSAGE, e, "Error creating or persisting file.", null);
         } catch (Exception e) {
-            throw new CantPersistPrivateKeyException(CantPersistPrivateKeyException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
+            throw new com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException(com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
         }
     }
 
@@ -319,7 +315,7 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
         }
     }
 
-    private void persistPhoto(String publicKey, byte[] photo) throws CantPersistPhotoException {
+    private void persistPhoto(String publicKey, byte[] photo) throws com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantPersistPhotoException {
         try {
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(
                     pluginId,
@@ -333,12 +329,12 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
 
             file.persistToMedia();
         } catch (CantPersistFileException e) {
-            throw new CantPersistPhotoException(CantPersistPhotoException.DEFAULT_MESSAGE, e, "Error persist file.", null);
+            throw new com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantPersistPhotoException(com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantPersistPhotoException.DEFAULT_MESSAGE, e, "Error persist file.", null);
 
         } catch (CantCreateFileException e) {
-            throw new CantPersistPhotoException(CantPersistPhotoException.DEFAULT_MESSAGE, e, "Error creating file.", null);
+            throw new com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantPersistPhotoException(com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantPersistPhotoException.DEFAULT_MESSAGE, e, "Error creating file.", null);
         } catch (Exception e) {
-            throw new CantPersistPhotoException(CantPersistPhotoException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
+            throw new com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantPersistPhotoException(com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.exceptions.CantPersistPhotoException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
         }
     }
 
@@ -364,11 +360,11 @@ public class ExtraUserActorPluginRoot implements DatabaseManagerForDevelopers, D
     public List<String> getClassesFullPath() {
 
         List<String> returnedClasses = new ArrayList<>();
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.ExtraUserActorPluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUserActorRecord");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDeveloperDatabaseFactory");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDatabaseFactory");
-        returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.database.ExtraUserActorDao");
+        returnedClasses.add("ExtraUserActorPluginRoot");
+        returnedClasses.add("ExtraUserActorRecord");
+        returnedClasses.add("ExtraUserActorDeveloperDatabaseFactory");
+        returnedClasses.add("ExtraUserActorDatabaseFactory");
+        returnedClasses.add("ExtraUserActorDao");
 
         return returnedClasses;
     }

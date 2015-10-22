@@ -1,8 +1,5 @@
 package com.bitdubai.fermat_ccm_api.layer.actor.intra_wallet_user.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUserException;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.IntraUserNotFoundException;
 import com.bitdubai.fermat_ccm_api.layer.actor.intra_wallet_user.exceptions.CantAcceptIntraWalletUserException;
 import com.bitdubai.fermat_ccm_api.layer.actor.intra_wallet_user.exceptions.CantCancelIntraWalletUserException;
 import com.bitdubai.fermat_ccm_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraWalletUserException;

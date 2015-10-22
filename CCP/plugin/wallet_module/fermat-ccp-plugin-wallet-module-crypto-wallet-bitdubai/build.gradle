@@ -15,7 +15,7 @@ configurations {
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'fermat-dmp-plugin-wallet-module-crypto-wallet-bitdubai',
+        attributes 'Implementation-Title': 'fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai',
                 'Implementation-Version': '1.0.0'
     }
 }
@@ -37,8 +37,8 @@ pmd {
 
 dependencies {
     compile project(':fermat-api')
-    compile project(':fermat-cry-api')
     compile project(':fermat-ccp-api')
+    compile project(':fermat-cry-api')
     compile project(':fermat-pip-api')
 
     deployerJars "org.apache.maven.wagon:wagon-webdav:1.0-beta-2"
