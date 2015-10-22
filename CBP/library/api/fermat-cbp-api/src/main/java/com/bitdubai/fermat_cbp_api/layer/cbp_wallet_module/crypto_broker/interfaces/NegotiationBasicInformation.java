@@ -21,7 +21,7 @@ public interface NegotiationBasicInformation {
     /**
      * @return the contract ID
      */
-    UUID getContractId();
+    UUID getNegotiationId();
 
     /**
      * @return the amount of merchandise the customer want to buy
@@ -39,7 +39,13 @@ public interface NegotiationBasicInformation {
     String getTypeOfPayment();
 
     /**
-     * @return the exchange rate the merchandise is going to be sell
+     * @return the exchange rate amount for the merchandise
      */
-    String getExchangeRate();
+    float getExchangeRateAmount();
+
+    /**
+     * @return the payment currency
+     */
+    String getPaymentCurrency();
+
 }
