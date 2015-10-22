@@ -1,6 +1,6 @@
-= Fermat Installation for Developers
+=  Fermat Development Environment Installation and Configuration
 
-You are going to need
+You are going to need the following tools in order to develop in Fermat
 
 * *Git*
 * *Java Standard Development Kit 7*
@@ -100,7 +100,6 @@ To do these installations, we use the Android SDK Manager, this is a graphical t
 android sdk
 
 ----
-
 
 == Setting up your IDE
 
