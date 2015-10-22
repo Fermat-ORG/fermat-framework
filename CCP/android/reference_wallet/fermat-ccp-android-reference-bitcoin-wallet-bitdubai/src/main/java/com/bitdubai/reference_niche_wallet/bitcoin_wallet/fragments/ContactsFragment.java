@@ -355,7 +355,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         mListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getActivity(), mListItems.get(i).toString(), Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(getActivity(), mListItems.get(i).toString(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
