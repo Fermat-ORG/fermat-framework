@@ -13,17 +13,12 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
-<<<<<<< HEAD:CCP/plugin/network_service/fermat-ccp-plugin-network-service-intra-actor-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/intra_user/developer/bitdubai/version_1/structure/ActorNetworkServiceRecordedAgent.java
-
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_user.enums.IntraUserNotificationDescriptor;
-
-=======
->>>>>>> ffdcb2ad088646b389bedbbf63fff6ff7344fe18:CCP/plugin/network_service/fermat-ccp-plugin-network-service-intra-actor-bitdubai/src/main/java/com/bitdubai/fermat_ccp_plugin/layer/network_service/intra_user/developer/bitdubai/version_1/structure/ActorNetworkServiceRecordedAgent.java
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.IntraUserNotificationDescriptor;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
@@ -358,7 +353,16 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         reportUnexpectedError(FermatException.wrapException(e));
                     }
                 }
+//                else if (actorNetworkServicePluginRoot.getNetworkServiceConnectionManager().
+//                        getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey()) == null
+//                        &&
+//                        poolConnectionsWaitingForResponse.containsKey(actorNetworkServiceRecord.getActorDestinationPublicKey())){
+//                    poolConnectionsWaitingForResponse.remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
+//
+//                }
             }
+
+
         } catch (Exception z) {
 
             reportUnexpectedError(FermatException.wrapException(z));
@@ -464,6 +468,18 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     actorNetworkServicePluginRoot.getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
 
                     launchIncomingRequestConnectionNotificationEvent(actorNetworkServiceRecord);
+
+                    actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
+                    actorNetworkServiceRecord.changeDescriptor(IntraUserNotificationDescriptor.RECEIVED);
+                    communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorSenderPublicKey()).sendMessage(actorNetworkServiceRecord.getActorDestinationPublicKey(),actorNetworkServiceRecord.getActorSenderAlias(),actorNetworkServiceRecord.toJson());
+
+//                    try{
+//                        //TOOD: ver si esto funciona
+//                        communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorSenderPublicKey());
+//
+//                    }catch (Exception e){
+//                        e.printStackTrace();
+//                    }
 
                     break;
                 case ACCEPTED:

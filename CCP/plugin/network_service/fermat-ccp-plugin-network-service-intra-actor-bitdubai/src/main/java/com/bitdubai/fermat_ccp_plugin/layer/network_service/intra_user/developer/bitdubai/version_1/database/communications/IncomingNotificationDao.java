@@ -322,6 +322,7 @@ public class IncomingNotificationDao implements DAO {
     public void changeIntraUserNotificationDescriptor(final String                 senderPublicKey    ,
                                     final IntraUserNotificationDescriptor intraUserNotificationDescriptor) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException {
 
+
         if (senderPublicKey == null)
             throw new CantUpdateRecordDataBaseException("requestId null "   , null);
 
@@ -356,6 +357,52 @@ public class IncomingNotificationDao implements DAO {
             throw new CantUpdateRecordDataBaseException("Cant update record exception.",exception);
         }
     }
+
+    public ActorNetworkServiceRecord changeIntraUserNotificationDescriptor(final String                 senderPublicKey    ,
+                                                      final IntraUserNotificationDescriptor intraUserNotificationDescriptor,
+                                                      final ActorProtocolState actorProtocolState) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException {
+
+
+        if (senderPublicKey == null)
+            throw new CantUpdateRecordDataBaseException("requestId null "   , null);
+
+        if (intraUserNotificationDescriptor == null)
+            throw new CantUpdateRecordDataBaseException("protocolState null", null);
+
+        try {
+
+            DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
+
+            cryptoPaymentRequestTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME, senderPublicKey, DatabaseFilterType.EQUAL);
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+
+                record.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, intraUserNotificationDescriptor.getCode());
+                record.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, actorProtocolState.getCode());
+
+                cryptoPaymentRequestTable.updateRecord(record);
+
+                return buildActorNetworkServiceRecord(record);
+            } else {
+                throw new RequestNotFoundException("RequestId: "+senderPublicKey, "Cannot find a CryptoPaymentRequest with the given id.");
+            }
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantUpdateRecordDataBaseException( "Exception not handled by the plugin, there is a problem in database and i cannot load the table.",e);
+        } catch (CantUpdateRecordException exception) {
+
+            throw new CantUpdateRecordDataBaseException("Cant update record exception.",exception);
+        } catch (InvalidParameterException e) {
+            throw new CantUpdateRecordDataBaseException("Cant get the updated record exception.",e);
+        }
+    }
+
 
     public List<com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord> listRequestsByProtocolStateAndType(final ActorProtocolState protocolState) throws CantListIntraWalletUsersException {
 
