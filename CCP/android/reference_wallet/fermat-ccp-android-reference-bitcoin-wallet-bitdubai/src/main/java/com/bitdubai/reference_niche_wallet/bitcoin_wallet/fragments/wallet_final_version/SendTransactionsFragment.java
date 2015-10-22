@@ -565,7 +565,10 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                     e.printStackTrace();
                 } catch (CantFindWalletContactException e) {
                     e.printStackTrace();
-                }
+                } catch (Exception e) {
+                e.printStackTrace();
+                    Toast.makeText(getActivity(),"oooopps",Toast.LENGTH_SHORT).show();
+                 }
             }
         } else {
             Toast.makeText(getActivity(), "Invalid Address", Toast.LENGTH_LONG).show();

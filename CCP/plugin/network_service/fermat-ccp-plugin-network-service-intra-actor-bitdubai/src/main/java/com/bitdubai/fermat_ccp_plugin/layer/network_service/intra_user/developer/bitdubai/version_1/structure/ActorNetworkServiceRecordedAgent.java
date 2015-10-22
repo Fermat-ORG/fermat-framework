@@ -13,6 +13,12 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
+<<<<<<< HEAD:CCP/plugin/network_service/fermat-ccp-plugin-network-service-intra-actor-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/intra_user/developer/bitdubai/version_1/structure/ActorNetworkServiceRecordedAgent.java
+
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_user.enums.IntraUserNotificationDescriptor;
+
+=======
+>>>>>>> ffdcb2ad088646b389bedbbf63fff6ff7344fe18:CCP/plugin/network_service/fermat-ccp-plugin-network-service-intra-actor-bitdubai/src/main/java/com/bitdubai/fermat_ccp_plugin/layer/network_service/intra_user/developer/bitdubai/version_1/structure/ActorNetworkServiceRecordedAgent.java
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
