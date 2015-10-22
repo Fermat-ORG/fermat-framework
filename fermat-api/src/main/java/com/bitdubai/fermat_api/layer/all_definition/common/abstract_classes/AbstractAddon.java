@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractAddon {
 
-    private Map<FermatAddonsEnum , AbstractAddon> addons ;
+    private final Map<FermatAddonsEnum, AbstractAddon> addons;
 
     private final Version version  ;
 
@@ -27,16 +27,16 @@ public abstract class AbstractAddon {
         this.version = version;
     }
 
-    public final void addAddonReference(final FermatAddonsEnum descriptor,
-                                        final AbstractAddon addon     ) {
+    public final void addAddonReference(final FermatAddonsEnum addonEnum,
+                                        final AbstractAddon    addon     ) {
 
-        addons.put(descriptor, addon);
+        addons.put(addonEnum, addon);
     }
 
 
-    protected final AbstractAddon getAddonReference(final FermatAddonsEnum descriptor) {
+    protected final AbstractAddon getAddonReference(final FermatAddonsEnum addonEnum) {
 
-        return addons.get(descriptor);
+        return addons.get(addonEnum);
     }
 
     public final Version getVersion() {
