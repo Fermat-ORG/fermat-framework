@@ -11,16 +11,24 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
+import org.bitcoinj.core.Address;
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionOutput;
+import org.bitcoinj.core.UTXO;
 import org.bitcoinj.core.UTXOProvider;
+import org.bitcoinj.core.UTXOProviderException;
 import org.bitcoinj.core.Wallet;
+import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.store.UnreadableWalletException;
 import org.bitcoinj.wallet.WalletTransaction;
 
@@ -43,13 +51,18 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
+public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, UTXOProvider {
 
     /**
      * BitcoinJ wallet where I'm storing the public keys and transactions
      */
     Wallet wallet=null;
     private final String WALLET_FILENAME = "/data/data/com.bitdubai.fermat/files/wallet_";
+
+    /**
+     * UTXO Provider interface variables
+     */
+    BlockchainNetworkType utxoProviderNetworkParameter;
 
     /**
      * class variables
@@ -321,7 +334,75 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @return
      */
     public UTXOProvider getUTXOProvider(BlockchainNetworkType blockchainNetworkType) {
-        Wallet utxoProvider = getWallet(blockchainNetworkType);
-        return utxoProvider.getUTXOProvider();
+        this.utxoProviderNetworkParameter = blockchainNetworkType;
+        return this;
+    }
+
+    /**
+     * Implementation of UTXOProvider interface. Calculates all the UTXO available which outputs are send to the specified address
+     * @param addresses
+     * @return
+     * @throws UTXOProviderException
+     */
+    @Override
+    public List<UTXO> getOpenTransactionOutputs(List<Address> addresses) throws UTXOProviderException {
+        /**
+         * load the wallet from the passed network. The network type was defined when the UTXO provider was set.
+         */
+        Wallet wallet = this.getWallet(utxoProviderNetworkParameter);
+        List<UTXO> utxoList = new ArrayList<>();
+
+        /**
+         * I will get all the outputs that are mine to spent.
+         */
+        for (TransactionOutput output : wallet.calculateAllSpendCandidates()){
+            for (Address address : addresses){
+                /**
+                 * and if one of them matches the passed address, then I will convert it to an UTXO and add it to the list.
+                 */
+                if (output.getAddressFromP2PKHScript(RegTestParams.get()) == address){
+                    UTXO utxo = new UTXO(   output.getHash(),
+                                            output.getIndex(),
+                                            output.getValue(),
+                                            output.getParentTransactionDepthInBlocks(),
+                                            output.getParentTransaction().isCoinBase(),
+                                            output.getScriptPubKey(),
+                                            address.toString());
+                    utxoList.add(utxo);
+                }
+            }
+        }
+        return utxoList;
+    }
+
+
+    /**
+     * Access the store blockchain and get its height
+     * @return
+     * @throws UTXOProviderException
+     */
+    @Override
+    public int getChainHeadHeight() throws UTXOProviderException {
+        try {
+            /**
+             * instantiates a blockchain that will load it from file.
+             */
+            BitcoinCryptoNetworkBlockChain blockChain = new BitcoinCryptoNetworkBlockChain(BitcoinNetworkSelector.getNetworkParameter(utxoProviderNetworkParameter));
+            /**
+             * get its height.
+             */
+            return blockChain.getBlockChain().getBestChainHeight();
+        } catch (BlockchainException e) {
+            throw new UTXOProviderException("There was an error loading the blockchain.", e);
+        }
+    }
+
+    /**
+     * returns the nertwork parameter defined for this UTXO provider
+     * @return
+     */
+    @Override
+    public NetworkParameters getParams() {
+        return BitcoinNetworkSelector.getNetworkParameter(utxoProviderNetworkParameter);
     }
 }

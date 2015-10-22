@@ -26,10 +26,13 @@ import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionOutput;
+import org.bitcoinj.core.UTXO;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.wallet.DeterministicSeed;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -147,69 +150,7 @@ public class AssetCryptoVaultManager  {
      * @throws CantSendAssetBitcoinsToUserException
      */
     public void sendBitcoinAssetToUser(String genesisTransactionId, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException {
-        /**
-         * I get the network Parameters from the passed address.
-         */
-        NetworkParameters networkParameters = null;
-        Wallet wallet = null;
-        Address address = null;
-        try {
-            address = new Address(networkParameters, addressTo.getAddress());
-            networkParameters = address.getParameters();
-        } catch (AddressFormatException e) {
-            /**
-             * if the address is not valid, I can't go on
-             */
-            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "The specified address is not valid. " + addressTo.getAddress(), "invalid address.");
-        }
-
-
-        /**
-         * I will make sure that this network is being monitored by activating it
-         */
-        BlockchainNetworkType blockchainNetworkType = BitcoinNetworkSelector.getBlockchainNetworkType(networkParameters);
-        try {
-            getDao().setActiveNetworkType(blockchainNetworkType);
-        } catch (CantExecuteDatabaseOperationException e) {
-            e.printStackTrace();
-        }
-
-
-        /**
-         * I create the wallet from my seed, and imported the Keys that are being used at the Crypto Network. This list was generated and is maintained
-         * by the HierarchyMaintainer and passed to the Hierarchy Generator.
-         */
-        try {
-            wallet = Wallet.fromSeed(networkParameters, getAssetVaultSeed());
-            wallet.importKeys(vaultKeyHierarchyGenerator.getAllAccountsKeyList());
-        } catch (InvalidSeedException e) {
-            e.printStackTrace();
-        }
-
-        /**
-         * I get the UTXO provider from the Crypto Network and set it to the wallet with the keys
-         */
-        wallet.setUTXOProvider(bitcoinNetworkManager.getUTXOProvider(blockchainNetworkType));
-
-        /**
-         * I get the genesis transaction and the value that was sent to me to resend this value substracting the fee
-         */
-        Transaction transaction = wallet.getTransaction(Sha256Hash.of(genesisTransactionId.getBytes()));
-        long value = transaction.getValueSentToMe(wallet).getValue();
-        value = value - 5000;
-
-        Wallet.SendRequest request = Wallet.SendRequest.to(address, Coin.valueOf(value));
-        try {
-            wallet.completeTx(request);
-            wallet.commitTx(request.tx);
-
-            bitcoinNetworkManager.broadcastTransaction(blockchainNetworkType, request.tx);
-        } catch (InsufficientMoneyException e) {
-            e.printStackTrace();
-        } catch (CantBroadcastTransactionException e) {
-            e.printStackTrace();
-        }
-
+        BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.DEFAULT;
 
     }
 
