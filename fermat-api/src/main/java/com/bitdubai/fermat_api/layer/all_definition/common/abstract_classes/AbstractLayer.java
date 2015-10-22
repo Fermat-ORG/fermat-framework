@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartS
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,9 +29,9 @@ public abstract class AbstractLayer {
 
     private final LayerReference layerReference;
 
-    public AbstractLayer(final LayerReference layerReference) {
+    public AbstractLayer(final Layers layerEnum) {
 
-        this.layerReference   = layerReference;
+        this.layerReference = new LayerReference(layerEnum);
 
         this.addons  = new ConcurrentHashMap<>();
         this.plugins = new ConcurrentHashMap<>();

@@ -50,6 +50,7 @@ public abstract class AbstractPlatform {
     protected final void registerLayer(final AbstractLayer abstractLayer) throws CantRegisterLayerException {
 
         LayerReference layerReference = abstractLayer.getLayerReference();
+        layerReference.setPlatform(platformEnum);
 
         try {
 

@@ -11,8 +11,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
  */
 public class LayerReference {
 
-    private final Platforms platform;
+    private       Platforms platform;
     private final Layers    layer   ;
+
+    public LayerReference(final Layers    layer   ) {
+
+        this.layer    = layer   ;
+    }
 
     public LayerReference(final Platforms platform,
                           final Layers    layer   ) {
@@ -23,6 +28,10 @@ public class LayerReference {
 
     public Platforms getPlatform() {
         return platform;
+    }
+
+    public void setPlatform(Platforms platform) {
+        this.platform = platform;
     }
 
     public Layers getLayer() {

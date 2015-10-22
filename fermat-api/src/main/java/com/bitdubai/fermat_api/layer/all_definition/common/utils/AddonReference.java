@@ -17,7 +17,12 @@ public class AddonReference {
     private       LayerReference   layerReference;
 
     private final FermatAddonsEnum addon         ;
-    private final Version          version       ;
+    private       Version          version       ;
+
+    public AddonReference(final FermatAddonsEnum addon) {
+
+        this.addon = addon;
+    }
 
     public AddonReference(final FermatAddonsEnum  addon         ,
                           final Version           version       ) {

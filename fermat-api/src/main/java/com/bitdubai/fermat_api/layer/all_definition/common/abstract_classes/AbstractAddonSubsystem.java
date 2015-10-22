@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddonsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
 
 /**
@@ -14,9 +15,9 @@ public abstract class AbstractAddonSubsystem {
 
     private final AddonReference addonReference;
 
-    public AbstractAddonSubsystem(final AddonReference addonReference) {
+    public AbstractAddonSubsystem(final FermatAddonsEnum addonEnum) {
 
-        this.addonReference = addonReference;
+        this.addonReference = new AddonReference(addonEnum);
     }
 
     protected Addon addon;
