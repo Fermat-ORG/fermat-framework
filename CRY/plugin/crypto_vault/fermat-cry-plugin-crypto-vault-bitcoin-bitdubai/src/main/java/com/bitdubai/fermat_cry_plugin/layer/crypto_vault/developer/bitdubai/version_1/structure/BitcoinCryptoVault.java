@@ -538,7 +538,7 @@ public class BitcoinCryptoVault implements
             // If we don't have enough money, we'll raise the exception
             Wallet.SendRequest request = Wallet.SendRequest.to(address, Coin.valueOf(amount));
 
-            request.tx.addOutput(Coin.ZERO, new ScriptBuilder().op(ScriptOpCodes.OP_RETURN).data(op_Return.getBytes()).build());
+            //request.tx.addOutput(Coin.ZERO, new ScriptBuilder().op(ScriptOpCodes.OP_RETURN).data(op_Return.getBytes()).build());
             vault.completeTx(request);
             vault.commitTx(request.tx);
             vault.saveToFile(vaultFile);
@@ -770,7 +770,12 @@ public class BitcoinCryptoVault implements
                     /**
                      * This is address To
                      */
+                try{
                     addresses[1] = output.getScriptPubKey().getToAddress(networkParameters).toString();
+                } catch (Exception e){
+
+                }
+                    addresses[1] = "";
                 }
 
             }
