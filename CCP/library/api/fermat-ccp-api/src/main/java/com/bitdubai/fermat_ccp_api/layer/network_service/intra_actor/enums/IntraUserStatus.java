@@ -1,45 +1,47 @@
 package com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Created by ciencias on 2/13/15.
+ * Modified by lnacosta (laion.cj91@gmail.com) on 21/10/2015.
  */
-public enum IntraUserStatus {
-    //Modified by Manuel Perez on 05/08/2015
-    UNKNOWN("UNK"),
+public enum IntraUserStatus implements FermatEnum {
+
     LOGGED_IN("LOGIN"),
-    LOGGED_OUT("LOGOUT");
+    LOGGED_OUT("LOGOUT"),
+    UNKNOWN("UNK"),
 
-    private String code;
+    ;
 
-    IntraUserStatus(String code){
+    private final String code;
 
-        this.code=code;
+    IntraUserStatus(final String code){
 
+        this.code = code;
     }
 
-    public String getCode(){
-
-        return this.code;
-
-    }
 
     public static IntraUserStatus getByCode(String code)throws InvalidParameterException{
 
         switch (code){
 
-            case "UNK":
-                return IntraUserStatus.UNKNOWN;
-            case "LOGIN":
-                return IntraUserStatus.LOGGED_IN;
-            case "LOGOUT":
-                return IntraUserStatus.LOGGED_OUT;
+            case "LOGIN":  return LOGGED_IN ;
+            case "LOGOUT": return LOGGED_OUT;
+            case "UNK":    return UNKNOWN   ;
+
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the IntraUserStatus enum");
-
+                throw new InvalidParameterException(
+                        "Code received: " + code,
+                        "The code received is not valid for the IntraUserStatus enum."
+                );
         }
+    }
 
+    @Override
+    public String getCode(){
+        return this.code;
     }
 
 }

@@ -1,6 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.preference_settings;
 
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.PreferenceWalletSettings;
 
 /**

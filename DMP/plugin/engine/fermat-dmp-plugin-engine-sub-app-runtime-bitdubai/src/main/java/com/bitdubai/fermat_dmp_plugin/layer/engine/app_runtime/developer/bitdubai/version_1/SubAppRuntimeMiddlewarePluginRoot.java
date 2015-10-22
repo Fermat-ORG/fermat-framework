@@ -924,24 +924,24 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST);
             runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST.getCode());
-            runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.addActivity(runtimeActivity);
+            runtimeActivity.setBackActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+            runtimeActivity.setColor("#FF0B46F0");
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Crypto Customer Identity");
+            runtimeTitleBar.setLabel("Request list");
             runtimeTitleBar.setColor("#FFFFFF");
             runtimeTitleBar.setLabelSize(16);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
-            statusBar.setColor("#0288D1");
+            statusBar.setColor("#FF0B46F0");
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT.getKey());
-            runtimeSubApp.addActivity(runtimeActivity);
+            subAppIntraUser.addActivity(runtimeActivity);
 
             /**
              * End of community intra user CCP

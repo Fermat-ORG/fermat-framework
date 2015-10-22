@@ -6,12 +6,12 @@ import android.view.View;
 import android.widget.Filter;
 import android.widget.Filterable;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.TextUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
 import com.bitdubai.sub_app.crypto_customer_identity.common.holders.CryptoCustomerIdentityInfoViewHolder;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CryptoCustomerIdentityListFilter;
-import com.bitdubai.sub_app.crypto_customer_identity.util.UtilsFuncs;
 
 import java.util.ArrayList;
 
@@ -34,7 +34,7 @@ public class CryptoCustomerIdentityInfoAdapter
     protected void bindHolder(final CryptoCustomerIdentityInfoViewHolder holder, final CryptoCustomerIdentityInformation data, final int position) {
         filter = (CryptoCustomerIdentityListFilter) getFilter();
 
-        SpannableString spannedText = UtilsFuncs.getSpannedText(
+        SpannableString spannedText = TextUtils.getSpannedText(
                 context.getResources(),
                 R.color.spanned_text,
                 data.getAlias(),
