@@ -11,22 +11,63 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
  */
 public class AddonReference {
 
-    private final FermatAddonsEnum addon  ;
-    private final Version          version;
+    private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
+    private static final int HASH_PRIME_NUMBER_ADD = 2819;
 
-    public AddonReference(final FermatAddonsEnum addon,
-                          final Version version) {
+    private       LayerReference   layerReference;
 
-        this.addon   = addon  ;
-        this.version = version;
+    private final FermatAddonsEnum addon         ;
+    private final Version          version       ;
+
+    public AddonReference(final FermatAddonsEnum  addon         ,
+                          final Version           version       ) {
+
+        this.addon          = addon         ;
+        this.version        = version       ;
     }
 
-    public FermatAddonsEnum getAddon() {
+    public final FermatAddonsEnum getAddon() {
         return addon;
     }
 
-    public Version getVersion() {
+    public final Version getVersion() {
         return version;
     }
-    
+
+    public final LayerReference getLayerReference() {
+        return layerReference;
+    }
+
+    public final void setLayerReference(final LayerReference layerReference) {
+        this.layerReference = layerReference;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(!(o instanceof PluginReference))
+            return false;
+        PluginReference compare = (PluginReference) o;
+
+        return addon.equals(compare.getPlugin()) &&
+                version.equals(compare.getVersion()) &&
+                layerReference.equals(compare.getLayerReference());
+    }
+
+    @Override
+    public int hashCode() {
+        int c = 0;
+        c += addon .hashCode();
+        c += version.hashCode();
+        c += layerReference.hashCode();
+        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+    }
+
+    @Override
+    public String toString() {
+        return "AddonReference{" +
+                "layerReference=" + layerReference +
+                ", addon=" + addon +
+                ", version=" + version +
+                '}';
+    }
 }

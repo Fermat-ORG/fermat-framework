@@ -12,7 +12,10 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -117,15 +120,13 @@ public class LogicTest {
         return new PluginReference(e, new Version("1.0.0"));
     }
 
-    private List<PluginReference> buildRL(PluginReference pr, PluginReference...refs) {
+    private List<PluginReference> buildRL(PluginReference...refs) {
         return Arrays.asList(refs);
     }
 
-    @Test
-    public void SimpleConstruction_ValidParameters_NotNull(){
-
+    private void chargeTestingDataWithCyclicReferences() {
         // testing data
-
+        pluginReferenceListMap = new HashMap<>();
 
         PluginReference basicWallet = buildPR(CCPPlugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET);
         PluginReference cryptoWallet = buildPR(CCPPlugins.BITDUBAI_CRYPTO_WALLET_MODULE);
@@ -135,7 +136,6 @@ public class LogicTest {
         PluginReference walletContacts = buildPR(CCPPlugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE);
 
         List<PluginReference> basicWalletRefs = buildRL(
-                basicWallet,
                 buildPR(CCPPlugins.BITDUBAI_CRYPTO_WALLET_MODULE)
         );
 
@@ -145,7 +145,6 @@ public class LogicTest {
         );
 
         List<PluginReference> cryptoWalletRefs = buildRL(
-                cryptoWallet,
                 buildPR(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_ACTOR),
                 buildPR(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_IDENTITY),
                 buildPR(CCPPlugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE)
@@ -157,7 +156,6 @@ public class LogicTest {
         );
 
         List<PluginReference> intraActorRefs = buildRL(
-                intraActor,
                 buildPR(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_IDENTITY)
         );
 
@@ -167,7 +165,6 @@ public class LogicTest {
         );
 
         List<PluginReference> intraIdentityRefs = buildRL(
-                intraIdentity,
                 buildPR(CCPPlugins.BITDUBAI_EXTRA_WALLET_USER_ACTOR)
         );
 
@@ -182,7 +179,6 @@ public class LogicTest {
         );
 
         List<PluginReference> extraWalletRefs = buildRL(
-                intraActor,
                 buildPR(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_IDENTITY)
         );
         pluginReferenceListMap.put(
@@ -191,22 +187,107 @@ public class LogicTest {
         );
 
         // end testing data
+    }
+
+    private void chargeGoodTestingData() {
+        // testing data
+        pluginReferenceListMap = new HashMap<>();
+
+        PluginReference basicWallet = buildPR(CCPPlugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET);
+        PluginReference cryptoWallet = buildPR(CCPPlugins.BITDUBAI_CRYPTO_WALLET_MODULE);
+        PluginReference intraActor  = buildPR(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_ACTOR);
+        PluginReference intraIdentity = buildPR(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_IDENTITY);
+        PluginReference extraWallet = buildPR(CCPPlugins.BITDUBAI_EXTRA_WALLET_USER_ACTOR);
+        PluginReference walletContacts = buildPR(CCPPlugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE);
+
+        List<PluginReference> basicWalletRefs = buildRL(
+                buildPR(CCPPlugins.BITDUBAI_CRYPTO_WALLET_MODULE)
+        );
+
+        pluginReferenceListMap.put(
+                basicWallet,
+                basicWalletRefs
+        );
+
+        List<PluginReference> cryptoWalletRefs = buildRL(
+                buildPR(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_ACTOR),
+                buildPR(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_IDENTITY),
+                buildPR(CCPPlugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE)
+        );
+
+        pluginReferenceListMap.put(
+                cryptoWallet,
+                cryptoWalletRefs
+        );
+
+        List<PluginReference> intraActorRefs = buildRL(
+                buildPR(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_IDENTITY)
+        );
+
+        pluginReferenceListMap.put(
+                intraActor,
+                intraActorRefs
+        );
+
+        List<PluginReference> intraIdentityRefs = buildRL(
+                buildPR(CCPPlugins.BITDUBAI_EXTRA_WALLET_USER_ACTOR)
+        );
+
+        pluginReferenceListMap.put(
+                intraIdentity,
+                intraIdentityRefs
+        );
+
+        pluginReferenceListMap.put(
+                walletContacts,
+                new ArrayList<PluginReference>()
+        );
 
 
+        pluginReferenceListMap.put(
+                extraWallet,
+                new ArrayList<PluginReference>()
+        );
+
+        // end testing data
+    }
+
+    @Test
+    public void SimpleConstruction_ValidParameters_NotNull(){
 
         PluginReference pluginNeeded = buildPR(CCPPlugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET);
 
+        chargeGoodTestingData();
 
         setLevels(pluginNeeded, 1);
 
-        for( Map.Entry<PluginReference, Integer> entry : pluginLevels.entrySet() ) {
-            System.out.println(entry.getKey() + " - " + entry.getValue());
+        showInstantiationOrder();
+
+        chargeTestingDataWithCyclicReferences();
+
+        setLevels(pluginNeeded, 1);
+
+        showInstantiationOrder();
+    }
+
+    private void showInstantiationOrder() {
+        List<Map.Entry<PluginReference, Integer>> list = new LinkedList<>(pluginLevels.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<PluginReference,Integer>>() {
+            public int compare(Map.Entry<PluginReference, Integer> o1, Map.Entry<PluginReference, Integer> o2) {
+                return (o2.getValue()).compareTo(o1.getValue());
+            }
+        });
+
+        System.out.println("************************************************************************");
+        System.out.println("---- INIT Lista de Plugins a instanciar por orden. ----");
+        System.out.println("************************************************************************");
+        for (Map.Entry<PluginReference, Integer> entry : list) {
+            System.out.println(entry.getKey().toString() + " - Level: "+entry.getValue());
         }
 
-        // tener en cuenta que no haya referencias cíclicas.
-        //      como me doy cuenta de esto? si el nro es menor que el actual?
-        // que solo se instancie un plugin
-        // que se instancien en el debido orden
+        System.out.println("************************************************************************");
+        System.out.println("---- END  Lista de Plugins a instanciar por orden. ----");
+        System.out.println("************************************************************************");
     }
 
     private void setLevels(PluginReference prToCalc, Integer lvlToAssign) {

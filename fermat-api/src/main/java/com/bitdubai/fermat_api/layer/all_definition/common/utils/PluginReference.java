@@ -14,22 +14,49 @@ public class PluginReference {
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
     private static final int HASH_PRIME_NUMBER_ADD = 2819;
 
-    private final FermatPluginsEnum plugin ;
-    private final Version           version;
+    private       LayerReference    layerReference;
+    private       Version           version       ;
+    private final FermatPluginsEnum plugin        ;
 
-    public PluginReference(final FermatPluginsEnum plugin,
-                           final Version version) {
+    public PluginReference(final FermatPluginsEnum plugin) {
 
-        this.plugin  = plugin ;
-        this.version = version;
+        this.plugin = plugin;
     }
 
-    public FermatPluginsEnum getPlugin() {
+    public PluginReference(final LayerReference    layerReference,
+                           final FermatPluginsEnum plugin        ) {
+
+        this.layerReference = layerReference;
+        this.plugin         = plugin        ;
+    }
+
+    public PluginReference(final LayerReference    layerReference,
+                           final FermatPluginsEnum plugin        ,
+                           final Version           version       ) {
+
+        this.layerReference = layerReference;
+        this.plugin         = plugin        ;
+        this.version        = version       ;
+    }
+
+    public final FermatPluginsEnum getPlugin() {
         return plugin;
     }
 
-    public Version getVersion() {
+    public final Version getVersion() {
         return version;
+    }
+
+    public void setVersion(Version version) {
+        this.version = version;
+    }
+
+    public final LayerReference getLayerReference() {
+        return layerReference;
+    }
+
+    public final void setLayerReference(LayerReference layerReference) {
+        this.layerReference = layerReference;
     }
 
     @Override
@@ -39,7 +66,8 @@ public class PluginReference {
         PluginReference compare = (PluginReference) o;
 
         return plugin.equals(compare.getPlugin()) &&
-                version.equals(compare.getVersion());
+                version.equals(compare.getVersion()) &&
+                 layerReference.equals(compare.getLayerReference());
     }
 
     @Override
@@ -47,15 +75,16 @@ public class PluginReference {
         int c = 0;
         c += plugin .hashCode();
         c += version.hashCode();
+        c += layerReference.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
     @Override
     public String toString() {
         return "PluginReference{" +
-                "plugin=" + plugin +
+                "layerReference=" + layerReference +
+                ", plugin=" + plugin +
                 ", version=" + version +
                 '}';
     }
-
 }

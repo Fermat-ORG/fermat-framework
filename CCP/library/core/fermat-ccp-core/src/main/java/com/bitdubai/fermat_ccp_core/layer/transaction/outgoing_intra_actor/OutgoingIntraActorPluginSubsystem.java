@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_core.layer.transaction.outgoing_intra_actor;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CCPPlugins;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_actor.developer.bitdubai.DeveloperBitDubai;
 
@@ -14,7 +15,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_actor.dev
 public class OutgoingIntraActorPluginSubsystem extends AbstractPluginSubsystem {
 
     public OutgoingIntraActorPluginSubsystem() {
-        super(CCPPlugins.BITDUBAI_OUTGOING_INTRA_ACTOR_TRANSACTION);
+        super(new PluginReference(CCPPlugins.BITDUBAI_OUTGOING_INTRA_ACTOR_TRANSACTION));
     }
 
     @Override

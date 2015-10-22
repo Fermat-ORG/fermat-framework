@@ -29,4 +29,28 @@ public class LayerReference {
         return layer;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof LayerReference)) return false;
+
+        LayerReference that = (LayerReference) o;
+
+        return platform.equals(that.platform) && layer.equals(that.layer);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = platform.hashCode();
+        result = 31 * result + layer.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "LayerReference{" +
+                "platform=" + platform +
+                ", layer=" + layer +
+                '}';
+    }
 }
