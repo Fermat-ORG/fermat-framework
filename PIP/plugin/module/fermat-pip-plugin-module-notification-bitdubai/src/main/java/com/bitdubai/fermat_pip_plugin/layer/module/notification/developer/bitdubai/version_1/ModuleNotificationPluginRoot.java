@@ -9,14 +9,15 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.FlagNotification;
-import com.bitdubai.fermat_api.layer.all_definition.util.WalletUtils;
-import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantGetExtraUserException;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.ExtraUserNotFoundException;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.interfaces.DealsWithExtraUsers;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.interfaces.ExtraUserManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.ExtraUserNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.DealsWithExtraUsers;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
+import com.bitdubai.fermat_ccp_api.all_definition.util.WalletUtils;
 import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
+import com.bitdubai.fermat_pip_api.layer.notifications.FermatNotificationListener;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
@@ -36,6 +37,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_pip_plugin.layer.module.notification.developer.bitdubai.version_1.event_handlers.CloudClietNotificationHandler;
 import com.bitdubai.fermat_pip_plugin.layer.module.notification.developer.bitdubai.version_1.event_handlers.IncomingMoneyNotificationHandler;
+import com.bitdubai.fermat_pip_plugin.layer.module.notification.developer.bitdubai.version_1.event_handlers.IncomingRequestConnectionNotificationHandler;
 import com.bitdubai.fermat_pip_plugin.layer.module.notification.developer.bitdubai.version_1.exceptions.CantCreateNotification;
 import com.bitdubai.fermat_pip_plugin.layer.module.notification.developer.bitdubai.version_1.structure.Notification;
 
@@ -48,6 +50,8 @@ import java.util.Observer;
 import java.util.Queue;
 import java.util.UUID;
 import java.util.regex.Pattern;
+
+import javax.management.NotificationListener;
 
 /**
  * Created by Matias Furszyfer
@@ -119,6 +123,8 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
     private boolean notificationFlag;
 
     FlagNotification flagNotification;
+
+    private FermatNotificationListener notificationListener;
 
     /**
      * Service Interface implementation.
@@ -215,6 +221,11 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
         eventManager.addListener(fermatEventListenerCloudClientConnectedNotification);
         listenersAdded.add(fermatEventListenerCloudClientConnectedNotification);
 
+        FermatEventListener fermatEventListenerIncomingRequestConnectionNotification = eventManager.getNewListener(EventType.INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION);
+        FermatEventHandler incomingRequestConnectionNotificationHandler = new IncomingRequestConnectionNotificationHandler(this);
+        fermatEventListenerIncomingRequestConnectionNotification.setEventHandler(incomingRequestConnectionNotificationHandler);
+        eventManager.addListener(fermatEventListenerIncomingRequestConnectionNotification);
+        listenersAdded.add(fermatEventListenerIncomingRequestConnectionNotification);
 
 
     }
@@ -270,6 +281,26 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
         throw new CantCreateNotification();
     }
 
+    private Notification createNotification(EventSource eventSource, String actorId, String actorName, Actors actorType, byte[] profileImage) throws CantCreateNotification {
+        try {
+
+            Notification notification = new Notification();
+            notification.setAlertTitle("Nuevo pedido de conexión!!!");
+
+            notification.setImage(profileImage);
+
+            notification.setTextTitle("Soy una bestia");
+
+            notification.setTextBody("Se recibió un pedido de conexion de " + actorName);
+
+            return notification;
+
+        }catch (Exception e) {
+            throw new CantCreateNotification();
+        }
+
+    }
+
     private Notification createNotification(EventSource eventSource,String text) throws CantCreateNotification {
 
             Notification notification = new Notification();
@@ -302,6 +333,36 @@ public class ModuleNotificationPluginRoot implements DealsWithExtraUsers,DealsWi
         notifyNotificationArrived();
 
     }
+
+    @Override
+    public void addIncomingRequestConnectionNotification(EventSource source, String actorId, String actorName, Actors actorType, byte[] profileImage) {
+
+        try {
+            Notification notification = createNotification(source, actorId, actorName, actorType, profileImage);
+            notification.setNotificationType(NotificationType.INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION.getCode());
+            poolNotification.add(notification);
+
+            notificationListener.notificate(notification);
+        } catch (CantCreateNotification cantCreateNotification) {
+            cantCreateNotification.printStackTrace();
+        }
+
+        // notify observers
+        notifyNotificationArrived();
+    }
+
+    @Override
+    public void addCallback(FermatNotificationListener notificationListener) {
+        this.notificationListener = notificationListener;
+    }
+
+    @Override
+    public void deleteCallback(FermatNotificationListener fermatNotificationListener) {
+        //esto deberia ser un hashmap
+        this.notificationListener = null;
+    }
+
+
 
     private void notifyNotificationArrived(){
 

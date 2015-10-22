@@ -11,11 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat.R;
-import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_api.layer.identity.common.IdentityUserInformation;
-import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.Image;
 
 import java.util.List;
 
@@ -49,7 +47,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Typeface tf=Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams.ttf");
+        Typeface tf=Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
         View rowView = convertView;
         try
         {
@@ -146,14 +144,15 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                         imageView.setImageResource(R.drawable.ic_action_factory);
                         break;
                     case 4:
-                        imageView.setImageResource(R.drawable.ic_action_wallet_published);
+                        imageView.setImageResource(R.drawable.ic_action_exit);
+
                         break;
                     case 5:
                         imageView.setImageResource(R.drawable.ic_action_wallet);
                         break;
 
                     case 6:
-                        imageView.setImageResource(R.drawable.ic_action_exit);
+                        imageView.setImageResource(R.drawable.ic_action_wallet_published);
                         break;
                     default:
                         imageView.setImageResource(R.drawable.unknown_icon);

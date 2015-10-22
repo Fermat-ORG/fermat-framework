@@ -17,8 +17,8 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.ActorAdapter;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.Session;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import java.util.List;
 public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private AssetUserCommunitySubAppModuleManager manager;
-    private List<Actor> actors;
+    private List<ActorAssetUser> actors;
 
     // recycler
     private RecyclerView recyclerView;
@@ -50,7 +50,7 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            manager = ((Session) subAppsSession).getManager();
+            manager = ((AssetUserCommunitySubAppSession) subAppsSession).getManager();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -101,7 +101,7 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
                     if (result != null &&
                             result.length > 0) {
                         if (getActivity() != null && adapter != null) {
-                            actors = (ArrayList<Actor>) result[0];
+                            actors = (ArrayList<ActorAssetUser>) result[0];
                             adapter.changeDataSet(actors);
                         }
                     }
@@ -121,40 +121,11 @@ public class HomeFragment extends FermatFragment implements SwipeRefreshLayout.O
         }
     }
 
-    private synchronized List<Actor> getMoreData() {
-        List<Actor> dataSet = new ArrayList<>();
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-        dataSet.add(new Actor("Francisco Vasquez", "https://media.licdn.com/mpr/mpr/shrinknp_400_400/AAEAAQAAAAAAAAJuAAAAJGQ0MmU5ZDNjLTQxY2MtNDkxMi1hNGIzLWI3NzkwYzdiMmI2OA.jpg"));
-
+    private synchronized List<ActorAssetUser> getMoreData() throws Exception {
+        List<ActorAssetUser> dataSet = null;
+        if (manager == null)
+            throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
+        dataSet = manager.getAllActorAssetUserRegistered();
         return dataSet;
     }
 }

@@ -76,7 +76,7 @@ public class DigitalAssetIssuingVault extends DigitalAssetVault {
     private void deliverDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException {
         /////////////////////////////////////////////
         // TODO: Coloque esto porque es la wallet qye tengo hardcore para la wallet y para hacer las pruebas
-        //this.walletPublicKey = "walletPublicKeyTest";
+        this.walletPublicKey = "walletPublicKeyTest";
         /////////////////////////////////////////////
         System.out.println("Before delivering - Wallet public key:"+this.walletPublicKey);
         AssetIssuerWallet assetIssuerWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);

@@ -44,6 +44,15 @@ class VaultKeyHierarchyMaintainer implements Agent {
     private boolean isSupposedToRun;
 
     /**
+     * This will hold all the keys that I need to pass to bitcoin network for monitoring.
+     */
+    List<ECKey> allAccountsKeyList;
+
+    /**
+     * The inner class that is the agent itself.
+     */
+    VaultKeyHierarchyMaintainerAgent vaultKeyHierarchyMaintainerAgent;
+    /**
      * the DAO object to access the database
      */
     AssetsOverBitcoinCryptoVaultDao dao;
@@ -76,7 +85,8 @@ class VaultKeyHierarchyMaintainer implements Agent {
     @Override
     public void start() throws CantStartAgentException {
         isSupposedToRun = true;
-        Thread agentThread = new Thread(new VaultKeyHierarchyMaintainerAgent());
+        vaultKeyHierarchyMaintainerAgent = new VaultKeyHierarchyMaintainerAgent();
+        Thread agentThread = new Thread(vaultKeyHierarchyMaintainerAgent);
         agentThread.start();
     }
 
@@ -355,6 +365,22 @@ class VaultKeyHierarchyMaintainer implements Agent {
             }
             return hierarchyAccounts;
         }
+
+        /**
+         * Gets all the keys that are generated for the accounts.
+         * @return
+         */
+        public List<ECKey> getAllAccountsKeyList() {
+            return allAccountsKeyList;
+        }
     }
 
+    /**
+     * Gets the key list that the network is listening to.
+     * @return
+     */
+    public List<ECKey> getAllAccountsKeyList() {
+        this.allAccountsKeyList = vaultKeyHierarchyMaintainerAgent.getAllAccountsKeyList();
+        return allAccountsKeyList;
+    }
 }

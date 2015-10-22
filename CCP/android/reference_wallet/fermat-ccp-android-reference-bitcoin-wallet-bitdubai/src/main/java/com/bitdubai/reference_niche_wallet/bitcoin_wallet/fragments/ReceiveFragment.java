@@ -39,12 +39,12 @@
 //
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 //import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-//import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
-//import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-//import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantRequestCryptoAddressException;
-//import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
-//import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
-//import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
+//import CantGetAllWalletContactsException;
+//import CantGetCryptoWalletException;
+//import CantRequestCryptoAddressException;
+//import CryptoWallet;
+//import CryptoWalletManager;
+//import CryptoWalletWalletContact;
 //import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 //import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 //import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;

@@ -3,9 +3,12 @@ package com.bitdubai.fermat_pip_api.layer.pip_module.notification.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_pip_api.layer.notifications.FermatNotificationListener;
 
 import java.util.Observer;
 import java.util.Queue;
+
+import javax.management.NotificationListener;
 
 
 /**
@@ -14,15 +17,19 @@ import java.util.Queue;
 
 public interface NotificationManagerMiddleware {
 
-    public void addIncomingExtraUserNotification(EventSource eventSource,String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType);
+    void addIncomingExtraUserNotification(EventSource eventSource,String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType);
 
-    public Queue<NotificationEvent> getPoolNotification();
+    Queue<NotificationEvent> getPoolNotification();
 
-    public void addObserver(Observer observer);
+    void addObserver(Observer observer);
 
-    public void deleteObserver(Observer observer);
+    void deleteObserver(Observer observer);
 
-    public void addPopUpNotification(EventSource source, String s);
+    void addPopUpNotification(EventSource source, String s);
 
+    void addIncomingRequestConnectionNotification(EventSource source, String actorId, String actorName, Actors actorType, byte[] profileImage);
 
+    void addCallback(FermatNotificationListener notificationListener);
+
+    void deleteCallback(FermatNotificationListener fermatNotificationListener);
 }

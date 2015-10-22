@@ -72,7 +72,7 @@ public class AssetUserWalletDatabaseFactory implements DealsWithPluginDatabaseSy
         table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, true);
         table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ASSET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, false );
         table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-        table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_VERIFICATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
+        table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_VERIFICATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
         table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESS_FROM_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
         table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
         table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ACTOR_FROM_COLUMN_NAME, DatabaseDataType.STRING, 150, false);

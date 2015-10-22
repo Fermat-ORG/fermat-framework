@@ -612,4 +612,49 @@ public class AssetIssuerActorDao implements Serializable {
             throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer Actor", "Cant check if alias exists, unknown failure.");
         }
     }
+
+    public List<ActorAssetIssuer> getAllAssetIssuerActorRegistered() throws CantGetAssetIssuersListException {
+        List<ActorAssetIssuer> list = new ArrayList<>(); // Asset Issuer Actor list.
+
+        DatabaseTable table;
+
+        // Get Asset Issuer identities list.
+        try {
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get asset Issuer identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
+            }
+
+            table.loadToMemory();
+
+            // 3) Get Asset Issuer Recorod.
+            for (DatabaseTableRecord record : table.getRecords()) {
+                // Add records to list.
+                list.add(new AssetIssuerActorRecord(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_NAME_COLUMN_NAME),
+                        record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_PUBLIC_KEY_COLUMN_NAME),
+                        getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_PUBLIC_KEY_COLUMN_NAME)),
+                        record.getLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_REGISTRATION_DATE_COLUMN_NAME)));           }
+
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException e) {
+            database.closeDatabase();
+            throw new CantGetAssetIssuersListException(e.getMessage(), e, "Asset Issuer Actor Registered", "Cant load " + AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TABLE_NAME + " table in memory.");
+        } catch (CantGetAssetIssuerActorProfileImageException e) {
+            database.closeDatabase();
+            // Failure unknown.
+            throw new CantGetAssetIssuersListException(e.getMessage(), e, "Asset Issuer Actor Registered", "Can't get profile ImageMiddleware.");
+        } catch (Exception e) {
+            database.closeDatabase();
+            throw new CantGetAssetIssuersListException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer Actor Registered", "Cant get Asset Issuer Actor Registered list, unknown failure.");
+        }
+        // Return the list values.
+        return list;
+    }
 }

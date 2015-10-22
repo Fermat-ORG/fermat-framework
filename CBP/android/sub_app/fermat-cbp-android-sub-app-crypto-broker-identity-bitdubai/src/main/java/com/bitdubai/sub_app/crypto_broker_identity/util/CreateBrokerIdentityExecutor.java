@@ -7,40 +7,49 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identi
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.sub_app.crypto_broker_identity.common.interfaces.CreateIdentityExecutor;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 
 /**
+ * Execute the method of the module manager to create a broker identity
+ * <p/>
  * Created by nelson on 14/10/15.
  */
-public class CreateBrokerIdentityExecutor extends CreateIdentityExecutor {
-    CryptoBrokerIdentityModuleManager moduleManager;
-    ErrorManager errorManager;
-    CryptoBrokerIdentityInformation identity;
+public class CreateBrokerIdentityExecutor {
+    public static final int EXCEPTION_THROWN = 3;
+    public static final int SUCCESS = 1;
+    public static final int INVALID_ENTRY_DATA = 2;
 
-    public CreateBrokerIdentityExecutor(CryptoBrokerIdentityModuleManager moduleManager,
-                                        ErrorManager errorManager,
-                                        byte[] imageInBytes,
-                                        String identityName) {
+    private byte[] imageInBytes;
+    private String identityName;
 
-        super(imageInBytes, identityName);
+    private CryptoBrokerIdentityModuleManager moduleManager;
+    private ErrorManager errorManager;
+    private CryptoBrokerIdentityInformation identity;
+
+    public CreateBrokerIdentityExecutor(byte[] imageInBytes, String identityName) {
+        this.imageInBytes = imageInBytes;
+        this.identityName = identityName;
+    }
+
+    public CreateBrokerIdentityExecutor(CryptoBrokerIdentityModuleManager moduleManager, ErrorManager errorManager, byte[] imageInBytes, String identityName) {
+        this(imageInBytes, identityName);
+
         this.moduleManager = moduleManager;
         this.errorManager = errorManager;
         identity = null;
     }
 
     public CreateBrokerIdentityExecutor(SubAppsSession session, String identityName, byte[] imageInBytes) {
-        super(imageInBytes, identityName);
+        this(imageInBytes, identityName);
         identity = null;
 
-        if(session != null){
+        if (session != null) {
             CryptoBrokerIdentitySubAppSession subAppSession = (CryptoBrokerIdentitySubAppSession) session;
             this.moduleManager = subAppSession.getModuleManager();
             this.errorManager = subAppSession.getErrorManager();
         }
     }
 
-    @Override
     public int execute() {
         if (entryDataIsInvalid())
             return INVALID_ENTRY_DATA;
@@ -61,7 +70,7 @@ public class CreateBrokerIdentityExecutor extends CreateIdentityExecutor {
         return SUCCESS;
     }
 
-    public CryptoBrokerIdentityInformation getIdentity(){
+    public CryptoBrokerIdentityInformation getIdentity() {
         return identity;
     }
 

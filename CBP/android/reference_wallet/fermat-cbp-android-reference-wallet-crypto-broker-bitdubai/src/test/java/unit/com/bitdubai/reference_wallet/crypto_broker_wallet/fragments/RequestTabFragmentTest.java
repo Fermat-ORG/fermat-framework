@@ -2,25 +2,20 @@ package unit.com.bitdubai.reference_wallet.crypto_broker_wallet.fragments;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 
 
 import com.bitdubai.reference_wallet.crypto_broker_wallet.BuildConfig;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.RequestTabFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.MarketRateStatisticsFragment;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowResources;
-import org.robolectric.util.FragmentController;
-import org.robolectric.util.FragmentTestUtil;
 
 
 import unit.com.bitdubai.reference_wallet.crypto_broker_wallet.TestActivity;
@@ -34,12 +29,12 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @Config(constants = BuildConfig.class)
 public class RequestTabFragmentTest {
 
-    private RequestTabFragment fragment;
+    private MarketRateStatisticsFragment fragment;
     private TestActivity activity;
 
     @Before
     public void setUp() {
-        fragment = RequestTabFragment.newInstance();
+        fragment = MarketRateStatisticsFragment.newInstance();
 
         activity = Robolectric.setupActivity(TestActivity.class);
 

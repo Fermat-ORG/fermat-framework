@@ -20,6 +20,8 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     private ConnectionState connectionState;
     private CryptoAddress cryptoAddress;
     private Location location;
+    private Double locationLatitude;
+    private Double locationLongitude;
     private Address address;
     private String contactInformation;
     private String hoursOfOperation;
@@ -40,6 +42,15 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         this.name = name;
     }
 
+    public RedeemPointActorRecord(String name, String publicKey, byte[] profileImage, long registrationDate) {
+
+        this.name = name;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage.clone();
+        this.registrationDate = registrationDate;
+        this.connectionState = ConnectionState.CONNECTED;
+
+    }
     /**
      * The metho <code>getPublicKey</code> gives us the public key of the represented Redeem Point
      *
@@ -100,13 +111,23 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         return connectionState;
     }
 
-    /**
-     *
-     * {@inheritDoc}
-     */
+//    /**
+//     *
+//     * {@inheritDoc}
+//     */
+//    @Override
+//    public Location getLocation() {
+//        return location;
+//    }
+
     @Override
-    public Location getLocation() {
-        return location;
+    public Double getLocationLatitude() {
+        return this.locationLatitude;
+    }
+
+    @Override
+    public Double getLocationLongitude() {
+        return this.locationLongitude;
     }
 
     /**

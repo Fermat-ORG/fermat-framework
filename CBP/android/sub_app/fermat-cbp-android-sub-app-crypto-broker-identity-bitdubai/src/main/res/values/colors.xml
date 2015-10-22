@@ -14,5 +14,6 @@
     <color name="img_background">#ff2f14</color>
     <color name="broker_name_text_color">#0072bc</color>
     <color name="create_button_text">#ffffff</color>
+    <color name="spanned_text">#ff2f14</color>
 
 </resources>
