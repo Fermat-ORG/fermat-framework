@@ -7,7 +7,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
  */
 public enum AssetIssuerCommunityFragmentEnumTypes implements FermatFragmentsEnumType<AssetIssuerCommunityFragmentEnumTypes> {
 
-    DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN("DAICAM");
+    DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN("DAPAICAM");
 
     private String key;
 
