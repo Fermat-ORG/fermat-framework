@@ -22,6 +22,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.UTXO;
@@ -404,5 +405,15 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
     @Override
     public NetworkParameters getParams() {
         return BitcoinNetworkSelector.getNetworkParameter(utxoProviderNetworkParameter);
+    }
+
+    /**
+     * Gets the specified bitcoin transaction
+     * @param transactionHash
+     * @return
+     */
+    public Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
+        Wallet wallet = getWallet(blockchainNetworkType);
+        return wallet.getTransaction(Sha256Hash.of(transactionHash.getBytes()));
     }
 }
