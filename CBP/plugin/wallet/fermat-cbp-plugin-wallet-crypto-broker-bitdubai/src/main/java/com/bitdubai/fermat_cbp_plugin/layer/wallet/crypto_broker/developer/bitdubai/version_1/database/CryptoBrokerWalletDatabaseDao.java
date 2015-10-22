@@ -115,7 +115,7 @@ public class CryptoBrokerWalletDatabaseDao {
         try {
             cryptoBrokerTable = this.database.getTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
             if (cryptoBrokerTable == null) {
-                throw new CantGetUserDeveloperIdentitiesException("Cant get crypto broker identity list, table not found.", "Crypto Broker Identity", "Cant get Crypto Broker identity list, table not found.");
+                throw new CantGetUserDeveloperIdentitiesException("Cant get crypto broker wallet Transaction list, table not found.", "Crypto Broker Wallet", "Cant get Crypto Broker Wallet Transaction list, table not found.");
             }
             cryptoBrokerTable.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_WALLET_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
             cryptoBrokerTable.loadToMemory();
@@ -177,14 +177,6 @@ public class CryptoBrokerWalletDatabaseDao {
     }
     
     /*## END CRYPTO BROKER BALANCE ##*/
-    /*## CRYPTO BROKER MANAGER ##*/
-    
-    /*LOAD WALLETS*/
-
-
-    /*CREATE NEW WALLET*/
-
-    /*## END CRYPTO BROKER MANAGER ##*/
     /*## PRIVATE ##*/
     private long getCurrentBalance(final BalanceType balanceType) throws CantGetBalanceRecordException {
         long balanceAmount = 0;
@@ -271,7 +263,7 @@ public class CryptoBrokerWalletDatabaseDao {
 
             totalBalancesTable.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TOTAL_BALANCES_TABLE_NAME, cryptoBrokerTransactionRecord.getPublicKeyWallet(), DatabaseFilterType.EQUAL );
             totalBalancesTable.loadToMemory();
-            String description = "TRANSACTION: " +transactionType.getCode();
+            String description = "TRANSACTION ID: " +transactionType.getCode()+ ". BALANCE " + balanceType.getCode();
             loadtotalBalancesRecordAsNew(totalBalancesRecord, cryptoBrokerTransactionRecord, runningBookBalance, runningAvailableBalance, description);
             if (totalBalancesTable.getRecords().isEmpty()){
                 totalBalancesTable.insertRecord(totalBalancesRecord);
