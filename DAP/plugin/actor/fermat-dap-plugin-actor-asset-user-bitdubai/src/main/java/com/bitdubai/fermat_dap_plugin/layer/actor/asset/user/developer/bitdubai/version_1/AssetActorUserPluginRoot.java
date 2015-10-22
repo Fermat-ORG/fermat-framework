@@ -460,6 +460,14 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         return list;
     }
 
+   /**
+    * Method getAllAssetUserActorConnected usado para obtener la lista de ActorAssetUser
+    * que tienen CryptoAddress en table REGISTERED
+    * y ser usados en Wallet Issuer para poder enviarles BTC del Asset
+    *
+    * @return List<ActorAssetUser> with CryptoAddress
+    * @see #getAllAssetUserActorConnected();
+    */
     @Override
     public List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUserActorsException {
         List<ActorAssetUser> list; // Asset User Actor list.
@@ -471,6 +479,9 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         return list;
     }
 
+    /*
+     * Metodo para ser usado por el Actor Network Service para Instanciar los ActorAssetUser
+     */
     @Override
     public ActorAssetUser createActorAssetUserFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage, Location assetUserActorlocation) throws CantCreateAssetUserActorException {
         return new AssetUserActorRecord(assetUserActorPublicKey, assetUserActorName, assetUserActorprofileImage, assetUserActorlocation);
@@ -479,6 +490,9 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
     private void registerActorInANS() {
 
         try {//TODO Escuchar EVENTO para confirmar que se Registro Actor Correctamente en el A.N.S
+            /*
+             * Envio del ActorAssetUser para registar en el Actor Network Service
+             */
             assetUserActorNetworkServiceManager.registerActorAssetUser(this.assetUserActorDao.getAssetUserActor());
         } catch (CantRegisterActorAssetUserException | CantGetAssetUsersListException e) {
             e.printStackTrace();
@@ -486,6 +500,10 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 
 
         try {//TODO Escuchar EVENTO para saber cuando "buscar" la informacion
+            /*
+             * Envio de Solicitud al Actor Network Service para obtener List<ActorAseetUser>
+             *     Registrados en el Actor Network Service y registrarlos en table REGISTERED
+             */
             assetUserActorNetworkServiceManager.requestListActorAssetUserRegistered();
         } catch (CantRequestListActorAssetUserRegisteredException e) {
             e.printStackTrace();
