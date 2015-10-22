@@ -156,8 +156,8 @@ public class AssetDistributionDao {
         return isPendingEventsBySource(EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION);
     }
 
-    public boolean isPendingAssetVaultEvents() throws CantExecuteQueryException {
-        return isPendingEventsBySource(EventSource.ASSETS_OVER_BITCOIN_VAULT);
+    public boolean isPendingIncomingCryptoEvents() throws CantExecuteQueryException {
+        return isPendingEventsBySource(EventSource.CRYPTO_ROUTER);
     }
 
     private boolean isPendingEventsBySource(EventSource eventSource) throws CantExecuteQueryException {
@@ -183,8 +183,37 @@ public class AssetDistributionDao {
         return getPendingEventsBySource(EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION);
     }
 
-    public List<String> getPendingAssetVaultEvents() throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
+    public List<String> getPendingCryptoRouterEvents() throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
         return getPendingEventsBySource(EventSource.ASSETS_OVER_BITCOIN_VAULT);
+    }
+
+    public String getEventTypeById(String eventId) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
+
+        try {
+            this.database=openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_TABLE_NAME);
+            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
+            DatabaseTableRecord databaseTableRecord;
+            if (databaseTableRecords.size() > 1){
+                this.database.closeDatabase();
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.",  "Event Id" + eventId);
+            } else {
+                databaseTableRecord = databaseTableRecords.get(0);
+            }
+            this.database.closeDatabase();
+            return databaseTableRecord.getStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_EVENTS_RECORDED_EVENT_COLUMN_NAME);
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetDistributionProgressException(exception, "Trying to get pending events","Cannot find or open the database");
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetDistributionProgressException(exception, "Trying to get pending events","Cannot load the database into memory");
+        } catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantCheckAssetDistributionProgressException(FermatException.wrapException(exception), "Trying to get pending events.", "Unexpected exception");
+        }
     }
 
     private List<String> getPendingEventsBySource(EventSource eventSource) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
@@ -218,6 +247,14 @@ public class AssetDistributionDao {
 
     public List<String> getGenesisTransactionByAssetAcceptedStatus() throws CantCheckAssetDistributionProgressException {
         return getGenesisTransactionByDistributionStatus(DistributionStatus.ASSET_ACCEPTED);
+    }
+
+    public List<String> getGenesisTransactionByAssetRejectedByContractStatus() throws CantCheckAssetDistributionProgressException {
+        return getGenesisTransactionByDistributionStatus(DistributionStatus.ASSET_REJECTED_BY_CONTRACT);
+    }
+
+    public List<String> getGenesisTransactionByAssetRejectedByHashStatus() throws CantCheckAssetDistributionProgressException {
+        return getGenesisTransactionByDistributionStatus(DistributionStatus.ASSET_REJECTED_BY_HASH);
     }
 
     private List<String> getGenesisTransactionByDistributionStatus(DistributionStatus distributionStatus)throws CantCheckAssetDistributionProgressException{
