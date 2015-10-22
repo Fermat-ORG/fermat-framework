@@ -1953,9 +1953,17 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeActivity.setColor("#12aca1");
         //runtimeActivity.setColor("#d07b62");
 
-
         runtimeStatusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
         runtimeStatusBar.setColor("#12aca1");
+
+        runtimeTabStrip = new TabStrip();
+
+        runtimeTabStrip.setTabsColor("#1173aa");
+
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+
+        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
+
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS.getKey());
