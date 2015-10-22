@@ -90,7 +90,9 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
             /*
              * Construct the json object
              */
-            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(packetContentJsonStringRepresentation);
+            JsonObject contentJsonObject = jsonParser.parse(packetContentJsonStringRepresentation).getAsJsonObject();
+            NetworkServiceType networkServiceTypeApplicant = gson.fromJson(contentJsonObject.get(JsonAttNamesConstants.NETWORK_SERVICE_TYPE).getAsString(), NetworkServiceType.class);
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().fromJson(contentJsonObject.get(JsonAttNamesConstants.DISCOVERY_PARAM).getAsString());
 
             /*
              * hold the result list
@@ -120,7 +122,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
              */
             JsonObject jsonObjectRespond = new JsonObject();
             jsonObjectRespond.addProperty(JsonAttNamesConstants.COMPONENT_TYPE,       discoveryQueryParameters.getPlatformComponentType().toString());
-            jsonObjectRespond.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, discoveryQueryParameters.getNetworkServiceType().toString());
+            jsonObjectRespond.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
             jsonObjectRespond.addProperty(JsonAttNamesConstants.RESULT_LIST,          jsonListRepresentation);
 
              /*

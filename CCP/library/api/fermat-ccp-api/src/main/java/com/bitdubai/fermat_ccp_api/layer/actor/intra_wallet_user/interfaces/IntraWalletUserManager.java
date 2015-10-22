@@ -1,8 +1,5 @@
 package com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantGetIntraUserException;
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.IntraUserNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantAcceptIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCancelIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraWalletUserException;
@@ -16,7 +13,7 @@ import java.util.List;
  * The interface <code>IntraWalletUserManager</code>
  * defines the methods to administrate the intra users,
  */
-public interface IntraWalletUserManager {
+public interface IntraWalletUserManager extends com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager {
 
     /**
      * The method <code>askIntraWalletUserForAcceptance</code> registers a new intra user in the list
