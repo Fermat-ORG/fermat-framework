@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.PlatformLayer;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithDatabaseManagers;
@@ -958,7 +959,9 @@ public class Platform implements Serializable {
                     AbstractPlatform ccpPlatform = new CCPPlatform();
                     ccpPlatform.start();
 
-                    LayerReference layerReference = new LayerReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.BASIC_WALLET);
+                    PlatformReference platformReference = new PlatformReference(Platforms.CRYPTO_CURRENCY_PLATFORM);
+
+                    LayerReference layerReference = new LayerReference(platformReference, Layers.BASIC_WALLET);
 
                     Plugin bitcoinWalletBasicWallet = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET));
                     injectPluginReferencesAndStart(bitcoinWalletBasicWallet, Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET);
@@ -971,7 +974,7 @@ public class Platform implements Serializable {
             * Plugin Intra User NetWorkService
             * -----------------------------
             */
-                    layerReference = new LayerReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE);
+                    layerReference = new LayerReference(platformReference, Layers.NETWORK_SERVICE);
 
                     Plugin intraUserNetworkService = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_INTRA_USER_NETWORK_SERVICE));
                     injectLayerReferences(intraUserNetworkService);
@@ -989,21 +992,21 @@ public class Platform implements Serializable {
                     //                Plugin cryptoAddressesNetworkService = ((CCPNetworkServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_NETWORK_SERVICE_LAYER)).getCryptoAddressesPlugin();
                     //                injectPluginReferencesAndStart(cryptoAddressesNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE);
 
-                    layerReference = new LayerReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.MIDDLEWARE);
+                    layerReference = new LayerReference(platformReference, Layers.MIDDLEWARE);
 
                     Plugin walletContactsMiddleware = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE));
                     injectPluginReferencesAndStart(walletContactsMiddleware, Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE);
 
-                    layerReference = new LayerReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.REQUEST);
+                    layerReference = new LayerReference(platformReference, Layers.REQUEST);
 
                     Plugin cryptoPaymentRequest = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_CRYPTO_PAYMENT_REQUEST));
                     injectPluginReferencesAndStart(cryptoPaymentRequest, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST);
 
-                    layerReference = new LayerReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.IDENTITY);
+                    layerReference = new LayerReference(platformReference, Layers.IDENTITY);
                     Plugin ccpIntraWalletUserIdentity = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_INTRA_WALLET_USER_IDENTITY));
                     injectPluginReferencesAndStart(ccpIntraWalletUserIdentity, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY);
 
-                    layerReference = new LayerReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION);
+                    layerReference = new LayerReference(platformReference, Layers.TRANSACTION);
                     Plugin outgoingIntraActorPlugin = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_OUTGOING_INTRA_ACTOR_TRANSACTION));
                     injectPluginReferencesAndStart(outgoingIntraActorPlugin, Plugins.BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION);
 
@@ -1016,14 +1019,14 @@ public class Platform implements Serializable {
                     Plugin incomingIntraUserTransaction = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION));
                     injectPluginReferencesAndStart(incomingIntraUserTransaction, Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION);
 
-                    layerReference = new LayerReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.ACTOR);
+                    layerReference = new LayerReference(platformReference, Layers.ACTOR);
                     Plugin extraUser = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_EXTRA_WALLET_USER_ACTOR));
                     injectPluginReferencesAndStart(extraUser, Plugins.BITDUBAI_ACTOR_EXTRA_USER);
 
                     Plugin intraUserActor = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_INTRA_WALLET_USER_ACTOR));
                     injectPluginReferencesAndStart(intraUserActor, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR);
 
-                    layerReference = new LayerReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.WALLET_MODULE);
+                    layerReference = new LayerReference(platformReference, Layers.WALLET_MODULE);
                     Plugin cryptoWalletWalletModule = ccpPlatform.getPlugin(new PluginReference(layerReference, CCPPlugins.BITDUBAI_CRYPTO_WALLET_MODULE));
                     injectPluginReferencesAndStart(cryptoWalletWalletModule, Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE);
                 } catch (Exception e) {
