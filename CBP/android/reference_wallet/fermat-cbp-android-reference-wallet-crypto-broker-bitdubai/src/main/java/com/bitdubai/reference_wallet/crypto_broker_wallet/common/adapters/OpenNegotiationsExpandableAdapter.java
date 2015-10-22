@@ -6,17 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.NegotiationBasicInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.GrouperViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.OpenNegotiationViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItemData;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.OpenNegotiationsItemData;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItem;
 
 import java.util.List;
 
 
 public class OpenNegotiationsExpandableAdapter
-        extends ExpandableRecyclerAdapter<GrouperViewHolder, OpenNegotiationViewHolder, GrouperItemData, OpenNegotiationsItemData> {
+        extends ExpandableRecyclerAdapter<GrouperViewHolder, OpenNegotiationViewHolder, GrouperItem, NegotiationBasicInformation> {
 
     private LayoutInflater mInflater;
 
@@ -26,7 +26,7 @@ public class OpenNegotiationsExpandableAdapter
      * @param context        the activity context where the RecyclerView is going to be displayed
      * @param parentItemList the list of parent items to be displayed in the RecyclerView
      */
-    public OpenNegotiationsExpandableAdapter(Context context, List<GrouperItemData> parentItemList) {
+    public OpenNegotiationsExpandableAdapter(Context context, List<GrouperItem> parentItemList) {
         super(parentItemList);
         mInflater = LayoutInflater.from(context);
     }
@@ -65,7 +65,7 @@ public class OpenNegotiationsExpandableAdapter
      * @param position         the position in the RecyclerView of the item
      */
     @Override
-    public void onBindParentViewHolder(GrouperViewHolder parentViewHolder, int position, GrouperItemData parentListItem) {
+    public void onBindParentViewHolder(GrouperViewHolder parentViewHolder, int position, GrouperItem parentListItem) {
         parentViewHolder.bind(parentListItem.getParentNumber(), parentListItem.getParentText());
     }
 
@@ -77,7 +77,7 @@ public class OpenNegotiationsExpandableAdapter
      * @param position        the position in the RecyclerView of the item
      */
     @Override
-    public void onBindChildViewHolder(OpenNegotiationViewHolder childViewHolder, int position, OpenNegotiationsItemData childListItem) {
-        childViewHolder.bind(childListItem.getChildText());
+    public void onBindChildViewHolder(OpenNegotiationViewHolder childViewHolder, int position, NegotiationBasicInformation childListItem) {
+        childViewHolder.bind(childListItem.getCryptoCustomerAlias());
     }
 }
