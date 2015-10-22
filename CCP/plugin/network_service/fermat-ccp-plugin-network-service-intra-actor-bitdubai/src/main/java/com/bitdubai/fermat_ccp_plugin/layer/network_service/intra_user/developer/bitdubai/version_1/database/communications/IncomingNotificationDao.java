@@ -2,6 +2,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.develope
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.IntraUserNotFoundException;
@@ -17,6 +19,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.C
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.DAO;
 import java.util.ArrayList;
 import java.util.List;
@@ -159,6 +162,91 @@ public class IncomingNotificationDao implements DAO {
 //            throw new CantCreateCryptoPaymentRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
 //        }
 //    }
+
+
+    @Override
+    public List<ActorNetworkServiceRecord> listNotificationsUnreaded() throws CantListIntraWalletUsersException {
+
+        try {
+            DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
+
+            cryptoPaymentRequestTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME, String.valueOf(false), DatabaseFilterType.EQUAL);
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+            List<com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord> cryptoPaymentList = new ArrayList<>();
+
+            for (DatabaseTableRecord record : records) {
+                cryptoPaymentList.add(buildActorNetworkServiceRecord(record));
+            }
+            return cryptoPaymentList;
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantListIntraWalletUsersException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        } catch(InvalidParameterException exception){
+
+            throw new CantListIntraWalletUsersException("",exception, "Exception invalidParameterException.","");
+        }
+    }
+
+    @Override
+    public void markReadedNotification(UUID notificationId) {
+
+        try {
+            ActorNetworkServiceRecord actorNetworkServiceRecord = getNotificationById(notificationId);
+
+            actorNetworkServiceRecord.setFlagReadead(true);
+
+            update(actorNetworkServiceRecord);
+
+        } catch (CantGetIntraUserException e) {
+            e.printStackTrace();
+        } catch (IntraUserNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantUpdateRecordDataBaseException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    @Override
+    public void update(ActorNetworkServiceRecord entity) throws CantUpdateRecordDataBaseException {
+
+        if (entity == null) {
+            throw new IllegalArgumentException("The entity is required, can not be null");
+        }
+
+        try {
+
+
+            DatabaseTableRecord emptyRecord = getDatabaseTable().getEmptyRecord();
+            /*
+             * 1- Create the record to the entity
+             */
+            DatabaseTableRecord entityRecord = buildDatabaseRecord(emptyRecord,entity);
+
+            /**
+             * 2.- Create a new transaction and execute
+             */
+            DatabaseTransaction transaction = database.newTransaction();
+            transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
+            database.executeTransaction(transaction);
+
+        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+            // Register the failure.
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The record do not exist";
+            CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
+            throw cantUpdateRecordDataBaseException;
+        }
+    }
 
     public com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord getNotificationById(final UUID notificationId) throws CantGetIntraUserException, IntraUserNotFoundException {
 
@@ -334,6 +422,7 @@ public class IncomingNotificationDao implements DAO {
             throw new CantListIntraWalletUsersException("",exception, "Exception invalidParameterException.","");
         }
     }
+
 
     private DatabaseTableRecord buildDatabaseRecord(DatabaseTableRecord                      record                    ,
                                                     com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord cryptoPaymentRequestRecord) {
