@@ -12,7 +12,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.even
 /**
  * Created by Luis Campo (campusprize@gmail.com) on 20/10/15.
  */
-public class ReceivedNewDigitalAssetMetadataNotificationrEventHandler implements FermatEventHandler {
+public class ReceivedNewDigitalAssetMetadataNotificationEventHandler implements FermatEventHandler {
     AssetDistributionRecorderService assetDistributionRecorderService;
 
     public void setAssetDistributionRecorderService(AssetDistributionRecorderService assetDistributionRecorderService) throws CantSetObjectException {

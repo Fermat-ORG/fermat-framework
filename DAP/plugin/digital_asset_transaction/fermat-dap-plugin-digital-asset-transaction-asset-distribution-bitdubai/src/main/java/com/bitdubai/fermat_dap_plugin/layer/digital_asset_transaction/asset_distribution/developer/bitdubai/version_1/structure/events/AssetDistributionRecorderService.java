@@ -131,8 +131,8 @@ public class AssetDistributionRecorderService implements DealsWithEvents, AssetT
             listenersAdded.add(fermatEventListener);
 
             fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
-            fermatEventHandler = new ReceivedNewDigitalAssetMetadataNotificationrEventHandler();
-            ((ReceivedNewDigitalAssetMetadataNotificationrEventHandler) fermatEventHandler).setAssetDistributionRecorderService(this);
+            fermatEventHandler = new ReceivedNewDigitalAssetMetadataNotificationEventHandler();
+            ((ReceivedNewDigitalAssetMetadataNotificationEventHandler) fermatEventHandler).setAssetDistributionRecorderService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);

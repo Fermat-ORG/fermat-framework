@@ -36,10 +36,17 @@ public class MockActorAssetUser implements ActorAssetUser {
         return null;
     }
 
+    //Fix for compilation
     @Override
-    public Location getLocation() {
+    public Double getLocationLatitude() {
         return null;
     }
+
+    @Override
+    public Double getLocationLongitude() {
+        return null;
+    }
+
 
     @Override
     public Genders getGender() {
