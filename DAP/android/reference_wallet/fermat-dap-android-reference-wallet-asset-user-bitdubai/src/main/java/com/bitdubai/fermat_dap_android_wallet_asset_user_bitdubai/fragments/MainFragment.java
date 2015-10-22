@@ -42,9 +42,9 @@ public class MainFragment extends FermatWalletFragment {
             ex.printStackTrace();
         }
         if (manager == null)
-            Toast.makeText(getActivity(), "Wallet Manager is null", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "AssetUserWalletSubAppModuleManager is null", Toast.LENGTH_SHORT).show();
         else {
-            Toast.makeText(getActivity(), "Wallet Manager is connected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "AssetUserWalletSubAppModuleManager is connected", Toast.LENGTH_SHORT).show();
         }
     }
 
