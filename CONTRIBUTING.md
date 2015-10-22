@@ -98,7 +98,7 @@ android sdk
 
 ### Setting up your IDE
 
-You can use either link:https://www.jetbrains.com/idea/[IntelliJ IDEA] or link:http://developer.android.com/intl/es/sdk/index.html[Android Developer Studio] to develop Fermat.
+You can use either [IntelliJ IDEA](https://www.jetbrains.com/idea/) or [Android Developer Studio](http://developer.android.com/intl/es/sdk/index.html) to develop in Fermat.
 
 In either case you must import the project as a Gradle Project and select the settings.gradle file inside your local fermat repository as the source of your project.
 
