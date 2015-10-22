@@ -1,4 +1,4 @@
-=  Fermat Development Environment Installation and Configuration
+=  Fermat Development Environment Installation and Configuration - Linux
 
 You are going to need the following tools in order to develop in Fermat
 
