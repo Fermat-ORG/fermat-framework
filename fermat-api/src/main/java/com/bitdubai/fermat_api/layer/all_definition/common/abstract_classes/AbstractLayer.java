@@ -23,8 +23,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractLayer {
 
-    private Map<FermatAddonsEnum,  Addon > addons ;
-    private Map<FermatPluginsEnum, Plugin> plugins;
+    private final Map<FermatAddonsEnum,  Addon > addons ;
+    private final Map<FermatPluginsEnum, Plugin> plugins;
 
     private final Layers layerEnum;
 

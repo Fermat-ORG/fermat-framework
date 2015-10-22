@@ -3,6 +3,7 @@ package com.bitdubai.fermat_core;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPlatformException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.PlatformNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 
 import java.util.Map;
@@ -16,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SystemContext {
 
-    private Map<Platforms, AbstractPlatform> platforms;
+    private final Map<Platforms, AbstractPlatform> platforms;
 
     public SystemContext() {
 
@@ -53,5 +54,16 @@ public class SystemContext {
         }
     }
 
+    public final AbstractPlatform getPlatform(Platforms platformEnum) throws PlatformNotFoundException {
+
+        if (platforms.containsKey(platformEnum)) {
+            return platforms.get(platformEnum);
+        } else {
+            throw new PlatformNotFoundException(
+                    "platformEnum: " + platformEnum.toString(),
+                    "platform not found in the system context."
+            );
+        }
+    }
 
 }

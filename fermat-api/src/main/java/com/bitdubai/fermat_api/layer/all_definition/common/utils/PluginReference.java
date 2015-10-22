@@ -11,6 +11,9 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
  */
 public class PluginReference {
 
+    private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
+    private static final int HASH_PRIME_NUMBER_ADD = 2819;
+
     private final FermatPluginsEnum plugin ;
     private final Version           version;
 
@@ -29,4 +32,21 @@ public class PluginReference {
         return version;
     }
 
+    @Override
+    public boolean equals(Object o){
+        if(!(o instanceof PluginReference))
+            return false;
+        PluginReference compare = (PluginReference) o;
+
+        return plugin.equals(compare.getPlugin()) &&
+                version.equals(compare.getVersion());
+    }
+
+    @Override
+    public int hashCode() {
+        int c = 0;
+        c += plugin .hashCode();
+        c += version.hashCode();
+        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+    }
 }
