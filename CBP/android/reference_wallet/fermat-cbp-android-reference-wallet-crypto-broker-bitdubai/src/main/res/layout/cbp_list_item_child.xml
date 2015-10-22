@@ -24,7 +24,7 @@
     </FrameLayout>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/list_item_vertical_child_textView"
+        android:id="@+id/cbw_customer_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"

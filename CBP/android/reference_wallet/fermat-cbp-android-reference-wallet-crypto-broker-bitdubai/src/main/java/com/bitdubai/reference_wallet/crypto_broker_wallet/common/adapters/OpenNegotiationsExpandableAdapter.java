@@ -6,18 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
-import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentListItem;
-import com.bitdubai.fermat_android_api.ui.expandableRecicler.VerticalChild;
-import com.bitdubai.fermat_android_api.ui.expandableRecicler.VerticalParent;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.GrouperViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.OpenNegotiationViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItemData;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.OpenNegotiationsItemData;
 
 import java.util.List;
 
 
-public class OpenNegotiationsExpandableAdapter extends ExpandableRecyclerAdapter<GrouperViewHolder, OpenNegotiationViewHolder> {
+public class OpenNegotiationsExpandableAdapter
+        extends ExpandableRecyclerAdapter<GrouperViewHolder, OpenNegotiationViewHolder, GrouperItemData, OpenNegotiationsItemData> {
 
     private LayoutInflater mInflater;
 
@@ -66,9 +65,8 @@ public class OpenNegotiationsExpandableAdapter extends ExpandableRecyclerAdapter
      * @param position         the position in the RecyclerView of the item
      */
     @Override
-    public void onBindParentViewHolder(GrouperViewHolder parentViewHolder, int position, ParentListItem parentListItem) {
-        VerticalParent verticalParent = (VerticalParent) parentListItem;
-        parentViewHolder.bind(verticalParent.getParentNumber(), verticalParent.getParentText());
+    public void onBindParentViewHolder(GrouperViewHolder parentViewHolder, int position, GrouperItemData parentListItem) {
+        parentViewHolder.bind(parentListItem.getParentNumber(), parentListItem.getParentText());
     }
 
     /**
@@ -79,8 +77,7 @@ public class OpenNegotiationsExpandableAdapter extends ExpandableRecyclerAdapter
      * @param position        the position in the RecyclerView of the item
      */
     @Override
-    public void onBindChildViewHolder(OpenNegotiationViewHolder childViewHolder, int position, Object childListItem) {
-        VerticalChild verticalChild = (VerticalChild) childListItem;
-        childViewHolder.bind(verticalChild.getChildText());
+    public void onBindChildViewHolder(OpenNegotiationViewHolder childViewHolder, int position, OpenNegotiationsItemData childListItem) {
+        childViewHolder.bind(childListItem.getChildText());
     }
 }

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
 /**
  * Created by nelson on 21/10/15.
@@ -32,9 +33,9 @@ public class GrouperViewHolder extends ParentViewHolder {
     public GrouperViewHolder(View itemView) {
         super(itemView);
 
-//        mNumberTextView = (TextView) itemView.findViewById(R.id.list_item_parent_vertical_number_textView);
-//        mDataTextView = (TextView) itemView.findViewById(R.id.list_item_parent_vertical_parent_textView);
-//        mArrowExpandImageView = (ImageView) itemView.findViewById(R.id.list_item_parent_horizontal_arrow_imageView);
+        mNumberTextView = (TextView) itemView.findViewById(R.id.cbw_customers_count);
+        mDataTextView = (TextView) itemView.findViewById(R.id.cbw_group_description);
+        mArrowExpandImageView = (ImageView) itemView.findViewById(R.id.cbw_arrow_imageView);
     }
 
     public void bind(int parentNumber, String parentText) {
