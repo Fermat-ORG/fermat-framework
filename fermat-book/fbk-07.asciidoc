@@ -3,13 +3,15 @@
 
 *FERMAT Plug-ins Platform* is open source and run on end users’ devices. It allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment. A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way. +
 This platform encapsulates all the modules that provides the basic services that build the back end infrastructure of FERMAT multiplatform system with the architectural characteristics that we have already explored in the previous section <<architecture>>. +
-The _multilayer architecture_ reveals in this platform its convenience allowing the modules group according to their common functionalities, and taking into account the future requirements of modules and application built on top this platform.
-
+The _multilayer architecture_ reveals in this platform its convenience allowing the modules group into _layers_ according to their common functionalities, and taking into account the future requirements of modules and applications built on top this platform.
+These *low level* layers built with a considerable atomicity in its components (i.e. each component deals with a very specific and contrained kind of events) really render the whole FERMAT system with a strong conceptual foundation and yet a large flexibility and adaptability to further developments. +
 
 
 === _Platform Services layer_
-Error Manager ::
-Event Manager ::
+The modules in this layer handle the very basic tasks that allow plugins interact safely in and uncontrolled environment, taking care of a careful transmission of responsability from one component to another and specially the management of exceptions.
+  
+Error Manager :: it handles the _unexpected exceptions_, contacting the developer of the plugin where the exception occured to let him solve it. 
+Event Manager :: it keeps track of the _events_ occurring alongside the entire platform to let plugins listen to the events that correspond to its function to trigger the corresponding plugin activity. 
 Connectivity Subsystem ::
 Location Subsystem ::
 Power Subsystem ::
@@ -17,14 +19,16 @@ Platform Info :: +
 
 
 === _Hardware layer_
+As FERMAT runs distributed in different devices, this layer has the modules necessary to identify each of this devices _independently_ of the user that is logged in, and also to provide all the device's information that is needed for the system to run.+
 
 Local Device ::
 Device Network :: +
 
 
 === _Users layer_
-
-Device User :: +
+FERMAT is a multiuser and multidevice system. Therefore, depending on how the user interacts with FERMAT, users are divided into certain _users categories_ which allow to properly handle the user's activity within FERMAT. +
+ 
+Device User :: + this module handles transactions that take place inside the same device, an the user is identified in FERMAT as a *Device User*
 
 
 === _Plugin layer_
@@ -34,12 +38,15 @@ Dependency :: +
 
 
 === _License layer_
-
+FERMAT system ensures a _microlicense_ system to let the developer of a certain plug-in or certain wallet or any other module to charge a *fee* for the use of the component, and the revenue is enforced programmatically by FERMAT to reach the license owner.    
 Plugin :: +
 
 
 === _Network Service layer_
-
+Each time that a certain system function must perform any operation *outside* the device where FERMAT is running, a _network service_ is required to follow the execution in other devices until is completed. +
+Network services' modules need to have a * communication channel* stablished and maintained between the parties involved, what is done by the *P2P networks and communication superlayer* ( see the explanation at the previous section <<communicationLayer>> )+
+Each *network service module* running on a _local device_ stablish communication EXCLUSIVELY to its _counterpart_ running in the _remote device_. +
+ 
 Sub App Resources ::
 System Monitor ::
 Error Manager ::
