@@ -99,10 +99,10 @@ public class SubAppSessionManager implements com.bitdubai.fermat_android_api.lay
                 lstSubAppSession.put(subApps, issuerCommunitySubAppSession);
                 return issuerCommunitySubAppSession;
             case DAP_ASSETS_COMMUNITY_USER:
-            AssetUserCommunitySubAppSession userCommunitySubAppSession =
+                AssetUserCommunitySubAppSession userCommunitySubAppSession =
                         new AssetUserCommunitySubAppSession(subApps, errorManager, (AssetUserCommunitySubAppModuleManager) moduleManager);
-            lstSubAppSession.put(subApps, userCommunitySubAppSession);
-            return userCommunitySubAppSession;
+                lstSubAppSession.put(subApps, userCommunitySubAppSession);
+                return userCommunitySubAppSession;
             case DAP_ASSETS_COMMUNITY_REDEEM_POINT:
                 AssetRedeemPointCommunitySubAppSession redeemPointCommunitySubAppSession =
                         new AssetRedeemPointCommunitySubAppSession(subApps, errorManager, (RedeemPointCommunitySubAppModuleManager) moduleManager);
