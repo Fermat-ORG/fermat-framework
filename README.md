@@ -222,7 +222,7 @@ for a list of available Plugins.
 See the [Fermat Niche Wallets Registry](https://github.com/bitDubai/fermat/fermat-documentation)
 for a list of Niche Wallets. 
 
-For installation instructions and running from the source code, see the [Fermat Development Environment Installation and Configuration documentation](https://github.com/bitDubai/fermat/fermat-documentation/installation/Linux.asciidoc).
+For installation instructions and running from the source code, see the [Fermat Development Environment Installation and Configuration documentation](https://github.com/jorgeejgonzalez/fermat/blob/master/fermat-documentation/installation/Linux.asciidoc).
 
 #### Need help?
 
