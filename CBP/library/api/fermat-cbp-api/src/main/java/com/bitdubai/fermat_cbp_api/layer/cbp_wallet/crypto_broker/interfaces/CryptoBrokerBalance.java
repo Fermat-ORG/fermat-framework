@@ -5,8 +5,6 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.Can
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantRegisterDebitException;
 
-import java.util.List;
-
 /**
  * Created by Yordin Alayn on 30.09.15.
  */
@@ -14,11 +12,7 @@ public interface CryptoBrokerBalance {
 
     long getBalance()  throws CantCalculateBalanceException;
 
-    List<CryptoBroker> getBankMoneyBalancesAvailable() throws CantCalculateBalanceException;
+    void debit(CryptoBrokerTransactionRecord BankMoneyTransactionRecord, BalanceType balanceType) throws CantRegisterDebitException;
 
-    List<CryptoBroker> getBankMoneyBalancesBook() throws CantCalculateBalanceException;
-
-    void debit(CryptoBrokerBalanceRecord BankMoneyTransactionRecord, BalanceType balanceType) throws CantRegisterDebitException;
-
-    void credit(CryptoBrokerBalanceRecord BankMoneyTransactionRecord, BalanceType balanceType)  throws CantRegisterCreditException;
+    void credit(CryptoBrokerTransactionRecord BankMoneyTransactionRecord, BalanceType balanceType)  throws CantRegisterCreditException;
 }

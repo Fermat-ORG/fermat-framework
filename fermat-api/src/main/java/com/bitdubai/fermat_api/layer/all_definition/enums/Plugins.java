@@ -288,10 +288,10 @@ public enum Plugins {
                 return BITDUBAI_MIDDLEWARE_NOTIFICATION;
             case "BAIT":
                 return BITDUBAI_ASSET_ISSUING_TRANSACTION;
-            case "BAIR":
-                return BITDUBAI_ASSET_RECEPTION_TRANSACTION;
             case "BADT":
                 return BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION;
+            case "BADR":
+                return BITDUBAI_ASSET_RECEPTION_TRANSACTION;
             case "BAAT":
                 return BITDUBAI_ASSET_APPROPRIATION_TRANSACTION;
             case "BASF":

@@ -34,6 +34,34 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/no_matches_crypto_broker_identity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:src="@drawable/sad_face" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="@string/no_matches"
+            android:textColor="@color/no_identities_text_color"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"

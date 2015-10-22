@@ -174,8 +174,9 @@ public class CryptoAddressBookCryptoModuleDeveloperDatabaseFactory implements De
         }
 
         List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<>();
+
         for (DatabaseTableRecord row : records) {
+            List<String> developerRow = new ArrayList<>();
             /**
              * for each row in the table list
              */

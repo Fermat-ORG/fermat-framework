@@ -1,13 +1,10 @@
 package com.bitdubai.sub_app.intra_user_community.common.popups;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
@@ -15,10 +12,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButto
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantStartRequestException;
-import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserLoginIdentity;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResources;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.intra_user_community.R;

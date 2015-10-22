@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces;
 
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
+
 /**
  * The interface <code>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet</code>
  * haves all consumable methods from the plugin
@@ -9,6 +11,6 @@ package com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces
  */
 public interface CryptoWalletManager {
 
-    CryptoWallet getCryptoWallet() throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
+    CryptoWallet getCryptoWallet() throws CantGetCryptoWalletException;
 
 }
