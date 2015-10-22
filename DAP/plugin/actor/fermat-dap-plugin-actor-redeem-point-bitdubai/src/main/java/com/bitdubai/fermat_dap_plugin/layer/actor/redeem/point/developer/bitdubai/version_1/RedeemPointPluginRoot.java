@@ -28,6 +28,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.developerUtils.RedeemPointActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantAddPendingRedeemPointException;
+import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantGetRedeemPointsListException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantInitializeRedeemPointActorDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.structure.RedeemPointActorAddress;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.structure.RedeemPointActorDao;
@@ -53,6 +54,8 @@ import java.util.UUID;
  */
 
 public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, DealsWithErrors, DatabaseManagerForDevelopers, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
+
+    RedeemPointActorDao redeemPointActorDao;
 
     /**
      * Service Interface member variables.
@@ -164,6 +167,8 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
     @Override
     public void start() throws CantStartPluginException {
         try {
+            redeemPointActorDao = new RedeemPointActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
+
             test();
         } catch (CantInitializeRedeemPointActorDatabaseException e) {
             throw new CantStartPluginException();
@@ -222,10 +227,7 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
     }
 
     private void test() throws CantInitializeRedeemPointActorDatabaseException {
-        RedeemPointActorDao redeemPointActorDao;
-        try {
-            redeemPointActorDao = new RedeemPointActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
-
+//        try {
             for (int i = 0; i < 10; i++) {
 
 //                System.out.println("*******************************************************");
@@ -266,13 +268,13 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
             }
 
 
-        } catch (CantInitializeRedeemPointActorDatabaseException e) {
-            System.out.println("*******************************************************");
-            System.out.println("PRUEBA DE VICTOR - REDEEM POINT: Falló iniciando la base de datos.: ");
-            e.printStackTrace();
-            System.out.println("*******************************************************");
-            throw e;
-        }
+//        } catch (CantInitializeRedeemPointActorDatabaseException e) {
+//            System.out.println("*******************************************************");
+//            System.out.println("PRUEBA DE VICTOR - REDEEM POINT: Falló iniciando la base de datos.: ");
+//            e.printStackTrace();
+//            System.out.println("*******************************************************");
+//            throw e;
+//        }
     }
 
     /**
@@ -294,8 +296,12 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
      */
     @Override
     public List<ActorAssetRedeemPoint> getAllAssetRedeemPointActorRegistered() throws CantGetAssetRedeemPointActorsException {
-        List<ActorAssetRedeemPoint> list = new LinkedList<>();
-
+        List<ActorAssetRedeemPoint> list; // Asset User Actor list.
+        try {
+            list = this.redeemPointActorDao.getAllAssetRedeemPointActorRegistered();
+        } catch (CantGetRedeemPointsListException e) {
+            throw new CantGetAssetRedeemPointActorsException("CAN'T GET ASSET REDEEM POINT REGISTERED ACTOR", e, "", "");
+        }
         return list;
     }
 

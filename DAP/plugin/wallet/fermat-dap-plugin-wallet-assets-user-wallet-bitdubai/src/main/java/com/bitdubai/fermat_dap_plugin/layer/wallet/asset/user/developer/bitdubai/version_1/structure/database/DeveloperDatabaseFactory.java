@@ -77,6 +77,8 @@ public class DeveloperDatabaseFactory {
         assetIssuerWalletTotalBalancesColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME);
         assetIssuerWalletTotalBalancesColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME);
         assetIssuerWalletTotalBalancesColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME);
+        assetIssuerWalletTotalBalancesColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME);
+        assetIssuerWalletTotalBalancesColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME);
 
         /**
          * AssetIssuerWalletTotalBalanceColumns table

@@ -29,6 +29,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.Actor
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.developerUtils.AssetIssuerActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.exceptions.AssetIssuerNotFoundException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.exceptions.CantAddPendingAssetIssuerException;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.exceptions.CantGetAssetIssuersListException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.exceptions.CantInitializeAssetIssuerActorDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.exceptions.CantUpdateAssetIssuerException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerActorDao;
@@ -55,6 +56,7 @@ import java.util.UUID;
 //TODO TERMINAR DE IMPLEMENTAR
 public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, DealsWithErrors, DatabaseManagerForDevelopers, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
 
+    AssetIssuerActorDao assetIssuerActorDao;
     /**
      * Service Interface member variables.
      */
@@ -165,6 +167,8 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
     @Override
     public void start() throws CantStartPluginException {
         try {
+            assetIssuerActorDao = new AssetIssuerActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
+
             test();
         } catch (CantInitializeAssetIssuerActorDatabaseException e) {
             throw new CantStartPluginException();
@@ -222,9 +226,8 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
     }
 
     private void test() throws CantInitializeAssetIssuerActorDatabaseException {
-        AssetIssuerActorDao assetIssuerActorDao;
-        try {
-            assetIssuerActorDao = new AssetIssuerActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
+//        AssetIssuerActorDao assetIssuerActorDao;
+//            assetIssuerActorDao = new AssetIssuerActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
 
             for (int i = 0; i < 10; i++) {
 
@@ -269,13 +272,13 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
             }
 
 
-        } catch (CantInitializeAssetIssuerActorDatabaseException e) {
-            System.out.println("*******************************************************");
-            System.out.println("PRUEBA DE VICTOR - ASSET ISSUER: Falló iniciando la base de datos.: ");
-            e.printStackTrace();
-            System.out.println("*******************************************************");
-            throw e;
-        }
+//        } catch (CantInitializeAssetIssuerActorDatabaseException e) {
+//            System.out.println("*******************************************************");
+//            System.out.println("PRUEBA DE VICTOR - ASSET ISSUER: Falló iniciando la base de datos.: ");
+//            e.printStackTrace();
+//            System.out.println("*******************************************************");
+//            throw e;
+//        }
     }
 
     /**
@@ -297,8 +300,12 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
      */
     @Override
     public List<ActorAssetIssuer> getAllAssetIssuerActorRegistered() throws CantGetAssetIssuerActorsException {
-        List<ActorAssetIssuer> list = new LinkedList<>();
-
+        List<ActorAssetIssuer> list;
+        try {
+            list = this.assetIssuerActorDao.getAllAssetIssuerActorRegistered();
+        } catch (CantGetAssetIssuersListException e) {
+            throw new CantGetAssetIssuerActorsException("CAN'T GET ASSET ISSUER REGISTERED ACTOR", e, "", "");
+        }
         return list;
     }
 
