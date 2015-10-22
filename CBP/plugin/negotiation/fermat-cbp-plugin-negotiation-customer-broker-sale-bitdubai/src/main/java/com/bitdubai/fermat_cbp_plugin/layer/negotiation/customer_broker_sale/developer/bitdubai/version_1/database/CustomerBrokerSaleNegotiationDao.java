@@ -82,7 +82,7 @@ public class CustomerBrokerSaleNegotiationDao {
 
                 SaleNegotiationTable.insertRecord(recordToInsert);
 
-                return newCustomerBrokerSaleNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, NegotiationStatus.OPEN.getCode());
+                return newCustomerBrokerSaleNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, NegotiationStatus.OPEN);
 
             } catch (CantInsertRecordException e) {
                 throw new CantCreateCustomerBrokerSaleException("An exception happened",e,"","");
@@ -243,18 +243,18 @@ public class CustomerBrokerSaleNegotiationDao {
                 String publicKeyCustomer,
                 String publicKeyBroker,
                 long startDataTime,
-                String statusNegotiation
+                NegotiationStatus statusNegotiation
         ){
             return new CustomerBrokerSaleNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation);
         }
 
-        private CustomerBrokerSale constructCustomerBrokerSaleFromRecord(DatabaseTableRecord record){
+        private CustomerBrokerSale constructCustomerBrokerSaleFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
     
             UUID    negotiationId     = record.getUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME);
             String  publicKeyCustomer = record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
             String  publicKeyBroker   = record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
             long    startDataTime     = record.getLongValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME);
-            String  statusNegotiation = record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
+            NegotiationStatus  statusNegotiation = NegotiationStatus.getByCode(record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME));
     
             return new CustomerBrokerSaleNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation);
         }
