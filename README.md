@@ -71,7 +71,7 @@ efficient, secure an private way.
 > To give back the souveraignity over each one's own ressources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.
 
 
-Fermat Principles
+Fermat principles
 ------------------------------------------------
 
 
@@ -236,7 +236,7 @@ you to fix common problems and find extra help if needed.
 
 
 
-Status of the Project:
+Status of the project:
 ------------------------------------------------
 
 As of October 2015 the state of the project is the following:
