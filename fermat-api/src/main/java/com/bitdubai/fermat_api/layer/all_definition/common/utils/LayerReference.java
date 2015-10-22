@@ -11,6 +11,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
  */
 public class LayerReference {
 
+    private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
+    private static final int HASH_PRIME_NUMBER_ADD = 2819;
+
     private       Platforms platform;
     private final Layers    layer   ;
 
@@ -50,9 +53,14 @@ public class LayerReference {
 
     @Override
     public int hashCode() {
-        int result = platform.hashCode();
-        result = 31 * result + layer.hashCode();
-        return result;
+        int c = 0;
+
+        c += layer .hashCode();
+
+        if (platform != null)
+            c += platform.hashCode();
+
+        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
     @Override

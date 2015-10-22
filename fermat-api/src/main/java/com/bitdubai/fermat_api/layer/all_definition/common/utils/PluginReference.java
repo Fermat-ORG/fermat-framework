@@ -66,16 +66,22 @@ public class PluginReference {
         PluginReference compare = (PluginReference) o;
 
         return plugin.equals(compare.getPlugin()) &&
-                version.equals(compare.getVersion()) &&
-                 layerReference.equals(compare.getLayerReference());
+                ((version == null && compare.getVersion() == null) || (version != null && version.equals(compare.getVersion()))) &&
+                ((layerReference == null && compare.getLayerReference() == null) || (layerReference != null && layerReference.equals(compare.getLayerReference())));
     }
 
     @Override
     public int hashCode() {
         int c = 0;
+
         c += plugin .hashCode();
-        c += version.hashCode();
-        c += layerReference.hashCode();
+
+        if (version != null)
+
+            c += version.hashCode();
+
+        if (layerReference != null)
+            c += layerReference.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
