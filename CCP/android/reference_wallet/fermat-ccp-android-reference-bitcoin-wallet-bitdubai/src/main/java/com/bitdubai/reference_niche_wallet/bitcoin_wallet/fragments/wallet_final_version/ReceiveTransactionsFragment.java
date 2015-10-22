@@ -615,6 +615,8 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
             referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
         }
+
+        //cryptoWallet.listAllIntraUserConnections(cryptoWallet.)
         return contacts;
     }
 
