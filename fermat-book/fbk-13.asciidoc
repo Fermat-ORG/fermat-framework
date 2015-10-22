@@ -56,7 +56,6 @@ Asset Issuer Community ::
 Asset User Community ::
 Redeem Point Community ::+
 
-
 === _Wallet Module layer_
 Asset Issuer :: 
 Asset User ::

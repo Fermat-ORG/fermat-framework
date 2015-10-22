@@ -39,6 +39,8 @@ include::fbk-16.asciidoc[]
 
 include::fbk-17.asciidoc[]
 
+include::fbk-18.asciidoc[]
+
 include::conventions.asciidoc[]
 
 include::glossary.asciidoc[]
