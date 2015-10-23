@@ -3,6 +3,8 @@ package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.VersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +22,22 @@ public abstract class AbstractPlugin implements Plugin {
     private Map<AddonReference , AbstractAddon > addons ;
     private Map<PluginReference, AbstractPlugin> plugins;
 
+    private final VersionReference versionReference;
+
+    /**
+     * Default constructor assigning version 1.
+     */
     public AbstractPlugin() {
+
+        this.versionReference = new VersionReference(new Version("1.0.0"));
+
+        this.addons  = new HashMap<>();
+        this.plugins = new HashMap<>();
+    }
+
+    public AbstractPlugin(final VersionReference versionReference) {
+
+        this.versionReference = versionReference;
 
         this.addons  = new HashMap<>();
         this.plugins = new HashMap<>();
@@ -46,6 +63,10 @@ public abstract class AbstractPlugin implements Plugin {
     protected final AbstractPlugin getPluginReference(final PluginReference pluginReference) {
 
         return plugins.get(pluginReference);
+    }
+
+    public final VersionReference getVersionReference() {
+        return versionReference;
     }
 
     public abstract List<AddonReference> getNeededAddonReferences();
