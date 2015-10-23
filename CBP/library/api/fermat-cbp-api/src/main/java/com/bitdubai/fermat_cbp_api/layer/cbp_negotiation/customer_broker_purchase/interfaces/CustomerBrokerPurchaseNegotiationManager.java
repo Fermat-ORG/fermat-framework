@@ -13,8 +13,8 @@ import java.util.Collection;
 public interface CustomerBrokerPurchaseNegotiationManager {
 
     CustomerBrokerPurchaseNegotiation createCustomerBrokerPurchaseNegotiation(String publicKeyCustomer, String publicKeyBroker) throws CantCreateCustomerBrokerPurchaseNegotiationException;
-    void cancelNegotiation(CustomerBrokerPurchase negotiation);
-    void closeNegotiation(CustomerBrokerPurchase negotiation);
+    void cancelNegotiation(CustomerBrokerPurchaseNegotiation negotiation);
+    void closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation);
 
     Collection<CustomerBrokerPurchaseNegotiation> getNegotiations() throws CantListPurchaseNegotianionsException;
     Collection<CustomerBrokerPurchaseNegotiation> getNegotiations(NegotiationStatus status) throws CantListPurchaseNegotianionsException;
