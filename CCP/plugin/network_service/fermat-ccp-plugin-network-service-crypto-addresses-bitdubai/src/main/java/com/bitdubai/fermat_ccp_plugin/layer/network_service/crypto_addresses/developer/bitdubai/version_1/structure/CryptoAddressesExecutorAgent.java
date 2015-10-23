@@ -31,6 +31,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloud
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -124,6 +125,10 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
                 throw new CantInitializeExecutorAgentException(e, "", "Problem initializing Crypto Addresses DAO from Executor Agent.");
             }
+
+            toSend.start();
+
+            toReceive.start();
 
             this.status = AgentStatus.STARTED;
 
@@ -246,6 +251,7 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                     ProtocolState.PROCESSING_RECEIVE
             );
 
+
             for(AddressExchangeRequest cpr : addressExchangeRequestList) {
                 switch(cpr.getAction()) {
 
@@ -327,10 +333,6 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                                 actorPublicKey,
                                 jsonMessage
                         );
-
-                        poolConnectionsWaitingForResponse.remove(actorPublicKey);
-
-                        communicationNetworkServiceConnectionManager.closeConnection(actorPublicKey); // close connection once i send message ?
 
                     } catch (Exception e) {
 

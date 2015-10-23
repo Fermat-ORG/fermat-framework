@@ -2,6 +2,8 @@ package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
@@ -103,6 +105,8 @@ public abstract class AbstractPlugin implements Plugin, Service {
     public abstract List<PluginVersionReference> getNeededPluginReferences();
 
     public abstract List<DevelopersUtilReference> getAvailableDeveloperUtils();
+
+    public abstract FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException;
 
     protected abstract void validateAndAssignReferences();
 

@@ -66,15 +66,15 @@ public class CompleteRequestListComponentRegisteredNotificationEvent extends Abs
     }
 
     /**
-     * Get the NetworkServiceType
-     * @return NetworkServiceType
+     * Get the NetworkServiceTypeApplicant
+     * @return NetworkServiceTypeApplicant
      */
     public NetworkServiceType getNetworkServiceTypeApplicant() {
         return networkServiceTypeApplicant;
     }
 
     /**
-     * Set the NetworkServiceType
+     * Set the NetworkServiceTypeApplicant
      * @param networkServiceTypeApplicant
      */
     public void setNetworkServiceTypeApplicant(NetworkServiceType networkServiceTypeApplicant) {
