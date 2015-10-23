@@ -8,6 +8,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
@@ -20,11 +23,25 @@ import java.util.UUID;
  */
 public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
+    //VARIABLE DECLARATION
     private EventManager eventManager;
     private ServiceStatus status;
+
+    {
+        this.status = ServiceStatus.CREATED;
+    }
+
     private ErrorManager errorManager;
     private UUID pluginId;
     private LogManager logManager;
+    private AssetTransmissionNetworkServiceManager assetTransmissionManager;
+    //CONSTRUCTORS
+
+    //PUBLIC METHODS
+    public void setAssetTransmissionManager(AssetTransmissionNetworkServiceManager assetTransmissionManager) throws CantSetObjectException {
+        Validate.verifySetter(assetTransmissionManager, "assetTransmissionManager is null.");
+        this.assetTransmissionManager = assetTransmissionManager;
+    }
 
     @Override
     public void start() throws CantStartAgentException {
@@ -36,6 +53,10 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
         this.status = ServiceStatus.STOPPED;
     }
 
+    //PRIVATE METHODS
+
+
+    //GETTER AND SETTER
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
@@ -60,4 +81,6 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
     public void setPluginId(UUID pluginId) {
         this.pluginId = pluginId;
     }
+
+    //INNER CLASSES
 }

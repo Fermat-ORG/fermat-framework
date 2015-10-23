@@ -1,16 +1,34 @@
 package com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.events;
 
+import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;
+import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.database.AssetRedeemPointRedemptionDAO;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.ReceivedNewDigitalAssetMetadataNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 23/10/15.
  */
-public class RedeemPointRedemptionRecorderService implements DealsWithEvents, AssetTransactionService {
+public class RedeemPointRedemptionRecorderService implements DealsWithEvents, AssetTransactionService, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
+    //VARIABLE DECLARATION
     private ServiceStatus serviceStatus;
 
     {
@@ -19,16 +37,84 @@ public class RedeemPointRedemptionRecorderService implements DealsWithEvents, As
 
     private EventManager eventManager;
 
+    private PluginDatabaseSystem pluginDatabaseSystem;
+    private UUID pluginId;
+    private List<FermatEventListener> listenersAdded;
+
+    {
+        listenersAdded = new ArrayList<>();
+    }
+    //CONSTRUCTORS
+
+    public RedeemPointRedemptionRecorderService(EventManager eventManager,
+                                                PluginDatabaseSystem pluginDatabaseSystem,
+                                                UUID pluginId) throws CantSetObjectException {
+
+        Validate.verifySetter(eventManager, "eventManager is null");
+        Validate.verifySetter(pluginDatabaseSystem, "pluginDatabaseSystem is null");
+        Validate.verifySetter(pluginId, "pluginId is null");
+
+        this.eventManager = eventManager;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginId = pluginId;
+    }
+
+    //PUBLIC METHODS
+
+    public void receivedNewDigitalAssetMetadataNotificationEvent(ReceivedNewDigitalAssetMetadataNotificationEvent event) throws CantSaveEventException {
+        String context = "pluginDatabaseSystem: " + pluginDatabaseSystem + " - pluginId: " + pluginId + " - event: " + event;
+
+        if (pluginDatabaseSystem == null || pluginId == null) {
+            throw new CantSaveEventException(FermatException.wrapException(new NullPointerException()), context, "PluginDatabaseSystem and PluginId are necessary for receivedNewDigitalAssetMetadataNotificationEvent.");
+        }
+
+        try (AssetRedeemPointRedemptionDAO rprDao = new AssetRedeemPointRedemptionDAO(pluginDatabaseSystem, pluginId)) {
+            rprDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+        } catch (DatabaseNotFoundException | CantOpenDatabaseException e) {
+            throw new CantSaveEventException(e, context, CantSaveEventException.DEFAULT_MESSAGE);
+        } catch (Exception e) {
+            throw new CantSaveEventException(FermatException.wrapException(e), context, CantSaveEventException.DEFAULT_MESSAGE);
+        }
+    }
+
+
     @Override
     public void start() throws CantStartServiceException {
+        String context = "PluginDatabaseSystem: " + pluginDatabaseSystem + " - Plugin ID: " + pluginId + " Event Manager: " + eventManager;
+        if (eventManager == null) {
+            throw new CantStartServiceException(FermatException.wrapException(new NullPointerException()), context, "An event manager has to be submitted.");
+        }
+        FermatEventListener fermatEventListener;
+        fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
+        fermatEventListener.setEventHandler(new ReceivedNewDigitalAssetMetadataNotificationEventHandler(this));
+        addListener(fermatEventListener);
+
         serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
     public void stop() {
+        removeRegisteredListeners();
         serviceStatus = ServiceStatus.STOPPED;
     }
 
+    //PRIVATE METHODS
+
+    private void addListener(FermatEventListener listener) {
+        eventManager.addListener(listener);
+        listenersAdded.add(listener);
+    }
+
+
+    private void removeRegisteredListeners() {
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            if (eventManager == null) break;
+            eventManager.removeListener(fermatEventListener);
+        }
+        listenersAdded.clear();
+    }
+
+    //GETTER AND SETTERS
     @Override
     public ServiceStatus getStatus() {
         return serviceStatus;
@@ -38,4 +124,15 @@ public class RedeemPointRedemptionRecorderService implements DealsWithEvents, As
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
     }
+
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    @Override
+    public void setPluginId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
+    //INNER CLASSES
 }

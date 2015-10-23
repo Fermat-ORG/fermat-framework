@@ -16,10 +16,11 @@ import java.util.UUID;
  */
 public class RedeemPointRedemptionPluginRoot implements Plugin, Service, DealsWithEvents, DealsWithErrors {
 
-    EventManager eventManager;
-    UUID pluginId;
-    ServiceStatus status;
-    ErrorManager errorManager;
+    //VARIABLE DECLARATION
+    private EventManager eventManager;
+    private UUID pluginId;
+    private ServiceStatus status;
+    private ErrorManager errorManager;
 
     {
         status = ServiceStatus.CREATED;
