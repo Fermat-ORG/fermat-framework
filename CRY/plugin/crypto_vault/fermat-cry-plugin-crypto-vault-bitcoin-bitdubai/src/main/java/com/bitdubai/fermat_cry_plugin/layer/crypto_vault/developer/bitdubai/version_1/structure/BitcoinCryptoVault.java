@@ -538,27 +538,25 @@ public class BitcoinCryptoVault implements
             // If we don't have enough money, we'll raise the exception
             Wallet.SendRequest request = Wallet.SendRequest.to(address, Coin.valueOf(amount));
 
+            /**
+             * I will check that it is not an address that belongs to my wallet
+             */
+            Transaction tx = request.tx;
+            String txHash = tx.getHashAsString();
+            // we're ready to go. we'll proceed to save the transaction and commit it.
+            db.persistNewTransaction(fermatTxId.toString(), txHash);
+
             //request.tx.addOutput(Coin.ZERO, new ScriptBuilder().op(ScriptOpCodes.OP_RETURN).data(op_Return.getBytes()).build());
             vault.completeTx(request);
             vault.commitTx(request.tx);
             vault.saveToFile(vaultFile);
 
+
+
             TransactionBroadcast broadcast= peers.broadcastTransaction(request.tx);
             broadcast.future().get();
 
 
-
-
-            /**
-             * I will check that it is not an address that belongs to my wallet
-             */
-            Transaction tx = request.tx;
-
-            String txHash = tx.getHashAsString();
-
-
-            // we're ready to go. we'll proceed to save the transaction and commit it.
-            db.persistNewTransaction(fermatTxId.toString(), txHash);
 
             // after we persist the new Transaction, we'll persist it as a Fermat transaction.
             db.persistnewFermatTransaction(fermatTxId.toString());
