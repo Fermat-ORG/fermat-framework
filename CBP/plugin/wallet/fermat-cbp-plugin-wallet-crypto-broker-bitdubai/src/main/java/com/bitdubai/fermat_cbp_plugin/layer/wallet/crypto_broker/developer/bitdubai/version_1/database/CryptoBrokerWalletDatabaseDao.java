@@ -82,7 +82,7 @@ public class CryptoBrokerWalletDatabaseDao {
             throw new CantInitializeCryptoBrokerWalletDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
-    
+
     /*GET BALANCE BOOKED*/
     public double getCalculateBookBalance() throws CantCalculateBalanceException {
         try {
