@@ -35,11 +35,11 @@ public enum Actors {
                 return Actors.EXTRA_USER;
             case "SHP":
                 return Actors.SHOP;
-            case "DAPAI":
+            case "DAPASIS":
                 return Actors.DAP_ASSET_ISSUER;
-            case "DAPAU":
+            case "DAPASUS":
                 return Actors.DAP_ASSET_USER;
-            case "DAPREPO":
+            case "DAPARP":
                 return Actors.DAP_ASSET_REDEEM_POINT;
             case "CCPIU":
                 return Actors.CCP_INTRA_WALLET_USER;
