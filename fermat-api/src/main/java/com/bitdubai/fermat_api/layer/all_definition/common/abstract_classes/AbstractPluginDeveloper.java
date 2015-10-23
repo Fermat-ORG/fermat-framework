@@ -5,8 +5,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartP
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.DeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.VersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,35 +20,6 @@ public abstract class AbstractPluginDeveloper {
     private final Map<VersionReference, AbstractPlugin> versions;
 
     private final DeveloperReference developerReference;
-
-    /**
-     * default bitdubai constructor (remove in the future).
-     * assigns by default developer bitdubai
-     * by defaults creates the first version of a plugin.
-     *
-     * @param plugin abstract plugin instance.
-     */
-    public AbstractPluginDeveloper(final AbstractPlugin plugin) {
-
-        this.versions = new ConcurrentHashMap<>();
-
-        this.versions.put(new VersionReference(new Version("1.0.0")), plugin);
-
-        this.developerReference = new DeveloperReference(Developers.BITDUBAI);
-    }
-
-    /**
-     * normal constructor with params.
-     * assigns a developer to the plugin developer class
-     *
-     * @param developer an element of developers enum.
-     */
-    public AbstractPluginDeveloper(final Developers developer) {
-
-        this.developerReference = new DeveloperReference(developer);
-
-        this.versions = new ConcurrentHashMap<>();
-    }
 
     /**
      * normal constructor with params.

@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.Abst
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.VersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithDatabaseManagers;
@@ -920,6 +919,10 @@ public class Platform implements Serializable {
                     Plugin intraUserActor = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, CCPPlugins.BITDUBAI_INTRA_WALLET_USER_ACTOR));
                     injectPluginReferencesAndStart(intraUserActor, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR);
 
+                    layerReference = new LayerReference(platformReference, Layers.SUB_APP_MODULE);
+                    Plugin intraUserModule = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, CCPPlugins.BITDUBAI_INTRA_WALLET_USER_MODULE));
+                    injectPluginReferencesAndStart(intraUserModule, Plugins.BITDUBAI_INTRA_USER_FACTORY_MODULE);
+
                     layerReference = new LayerReference(platformReference, Layers.WALLET_MODULE);
                     Plugin cryptoWalletWalletModule = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, CCPPlugins.BITDUBAI_CRYPTO_WALLET_MODULE));
                     injectPluginReferencesAndStart(cryptoWalletWalletModule, Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE);
@@ -1046,12 +1049,7 @@ public class Platform implements Serializable {
 //                Plugin intraUserActor = ((CCPActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_ACTOR_LAYER)).getIntraWalletUserPlugin();
 //                injectPluginReferencesAndStart(intraUserActor, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR);
 
-             /*
-            * Plugin Intra User Module
-            * -----------------------------
-            */
-                Plugin intraUserModule = ((ModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MODULE_LAYER)).getIntraUser();
-                injectPluginReferencesAndStart(intraUserModule, Plugins.BITDUBAI_INTRA_USER_FACTORY_MODULE);
+
 
 
             }

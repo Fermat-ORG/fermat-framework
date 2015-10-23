@@ -22,8 +22,7 @@ public class CryptoPaymentPluginSubsystem extends AbstractPluginSubsystem {
     @Override
     public void start() throws CantStartSubsystemException {
         try {
-            AbstractPluginDeveloper developerBitDubai = new DeveloperBitDubai();
-            plugin = developerBitDubai.getFirstPluginVersion();
+            registerDeveloper(new DeveloperBitDubai());
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);

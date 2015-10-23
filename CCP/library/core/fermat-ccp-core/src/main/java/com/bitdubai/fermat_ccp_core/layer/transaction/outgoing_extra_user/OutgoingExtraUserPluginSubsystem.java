@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_ccp_core.layer.transaction.outgoing_extra_user;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
@@ -21,14 +20,8 @@ public class OutgoingExtraUserPluginSubsystem extends AbstractPluginSubsystem {
 
     @Override
     public void start() throws CantStartSubsystemException {
-        /**
-         * I will choose from the different Developers available which implementation to use. Right now there is only
-         * one, so it is not difficult to choose.
-         */
-
         try {
-            AbstractPluginDeveloper developerBitDubai = new DeveloperBitDubai();
-            plugin = developerBitDubai.getFirstPluginVersion();
+            registerDeveloper(new DeveloperBitDubai());
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);
