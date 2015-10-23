@@ -17,7 +17,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantListPurchaseNegotianionsException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerPurchaseNegotiationDao;
@@ -127,7 +126,7 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot implements CustomerBrok
     }
 
     @Override
-    public void cancelNegotiation(CustomerBrokerPurchase negotiation){
+    public void cancelNegotiation(CustomerBrokerPurchaseNegotiation negotiation){
         try {
             customerBrokerPurchaseNegotiationDao.cancelNegotiation(negotiation);
         } catch (CantUpdateCustomerBrokerPurchaseException e) {
@@ -136,7 +135,7 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot implements CustomerBrok
     }
 
     @Override
-    public void closeNegotiation(CustomerBrokerPurchase negotiation){
+    public void closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation){
         try {
             customerBrokerPurchaseNegotiationDao.closeNegotiation(negotiation);
         } catch (CantUpdateCustomerBrokerPurchaseException e){
