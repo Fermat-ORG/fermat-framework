@@ -25,13 +25,13 @@ import java.util.UUID;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 01/10/15.
  * This class must be started with the AssetIssuing Plugin
  */
-public class DigitalAssetIssuingTransactionVault extends AbstractDigitalAssetVault {
+public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
 
     ErrorManager errorManager;
     //For testing I'm gonna use this type of privacy, change to PRIVATE in production release
     //private final FilePrivacy FILE_PRIVACY=FilePrivacy.PUBLIC;
 
-    public DigitalAssetIssuingTransactionVault(UUID pluginId, PluginFileSystem pluginFileSystem, ErrorManager errorManager) throws CantSetObjectException {
+    public DigitalAssetIssuingVault(UUID pluginId, PluginFileSystem pluginFileSystem, ErrorManager errorManager) throws CantSetObjectException {
         setPluginFileSystem(pluginFileSystem);
         setPluginId(pluginId);
         setErrorManager(errorManager);
@@ -78,16 +78,18 @@ public class DigitalAssetIssuingTransactionVault extends AbstractDigitalAssetVau
         // TODO: Coloque esto porque es la wallet qye tengo hardcore para la wallet y para hacer las pruebas
         this.walletPublicKey = "walletPublicKeyTest";
         /////////////////////////////////////////////
-        System.out.println("Before delivering - Wallet public key:"+this.walletPublicKey);
+        System.out.println("ASSET ISSUING Before delivering - Wallet public key is:"+this.walletPublicKey);
         AssetIssuerWallet assetIssuerWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
         AssetIssuerWalletBalance assetIssuerWalletBalance= assetIssuerWallet.getBookBalance(balanceType);
-        System.out.println("Transaction to deliver: "+genesisTransaction.getTransactionHash());
+        System.out.println("ASSET ISSUING Transaction to deliver: "+genesisTransaction.getTransactionHash());
         AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper=new AssetIssuerWalletTransactionRecordWrapper(
                 digitalAssetMetadata,
                 genesisTransaction,
                 "testActorFromPublicKey",
                 "testActorToPublicKey"
         );
+        System.out.println("ASSET ISSUING AssetIssuerWalletTransactionRecordWrapper: "+ assetIssuerWalletTransactionRecordWrapper.getDescription());
+        System.out.println("ASSET ISSUING Balance Type: "+ assetIssuerWalletTransactionRecordWrapper.getDescription());
         assetIssuerWalletBalance.credit(assetIssuerWalletTransactionRecordWrapper, balanceType);
     }
 

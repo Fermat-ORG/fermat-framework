@@ -50,7 +50,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     AssetIssuingTransactionMonitorAgent assetIssuingTransactionMonitorAgent;
     String userPublicKey;
     EventManager eventManager;
-    DigitalAssetIssuingTransactionVault digitalAssetIssuingVault;
+    DigitalAssetIssuingVault digitalAssetIssuingVault;
     LogManager logManager;
     BitcoinNetworkManager bitcoinNetworkManager;
 
@@ -166,7 +166,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         this.errorManager=errorManager;
     }
 
-    public void setDigitalAssetMetadataVault(DigitalAssetIssuingTransactionVault digitalAssetIssuingVault) throws CantSetObjectException {
+    public void setDigitalAssetMetadataVault(DigitalAssetIssuingVault digitalAssetIssuingVault) throws CantSetObjectException {
         this.digitalAssetIssuingVault=digitalAssetIssuingVault;
         this.digitalAssetCryptoTransactionFactory.setDigitalAssetIssuingVault(digitalAssetIssuingVault);
     }

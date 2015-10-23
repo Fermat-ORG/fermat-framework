@@ -23,7 +23,7 @@ import java.util.UUID;
 public class AssetDistributionTransactionManager implements AssetDistributionManager {
 
     AssetVaultManager assetVaultManager;
-    DigitalAssetDistributorTransaction digitalAssetDistributor;
+    DigitalAssetDistributor digitalAssetDistributor;
     ErrorManager errorManager;
     UUID pluginId;
     PluginDatabaseSystem pluginDatabaseSystem;
@@ -39,7 +39,7 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
         setPluginId(pluginId);
         setPluginDatabaseSystem(pluginDatabaseSystem);
         setPluginFileSystem(pluginFileSystem);
-        this.digitalAssetDistributor=new DigitalAssetDistributorTransaction(assetVaultManager,
+        this.digitalAssetDistributor=new DigitalAssetDistributor(assetVaultManager,
                 errorManager,
                 pluginId,
                 pluginFileSystem);

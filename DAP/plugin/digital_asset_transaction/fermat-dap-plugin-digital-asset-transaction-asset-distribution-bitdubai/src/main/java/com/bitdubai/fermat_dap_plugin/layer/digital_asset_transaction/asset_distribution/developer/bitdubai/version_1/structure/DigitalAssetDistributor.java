@@ -33,7 +33,7 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 26/09/15.
  */
-public class DigitalAssetDistributorTransaction extends AbstractDigitalAssetSwap {
+public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
 
     AssetVaultManager assetVaultManager;
     ErrorManager errorManager;
@@ -43,7 +43,7 @@ public class DigitalAssetDistributorTransaction extends AbstractDigitalAssetSwap
     AssetDistributionDao assetDistributionDao;
     DigitalAssetDistributionVault digitalAssetDistributionVault;
 
-    public DigitalAssetDistributorTransaction(AssetVaultManager assetVaultManager, ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
+    public DigitalAssetDistributor(AssetVaultManager assetVaultManager, ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
         super(assetVaultManager,  pluginId, pluginFileSystem);
         this.errorManager=errorManager;
     }
