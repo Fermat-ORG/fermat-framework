@@ -4,7 +4,11 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantAddNewClausesException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListPurchaseClauseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetNextClauseTypeException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantUpdateClausesException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerPurchaseNegotiationDao;
 
 import java.util.Collection;
@@ -14,7 +18,7 @@ import java.util.UUID;
  *  Created by angel on 19/10/15.
  */
 
-public class CustomerBrokerPurchaseNegotiation implements CustomerBrokerPurchase {
+public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurchaseNegotiation {
 
     private final UUID   negotiationId;
     private final String publicKeyCustomer;
@@ -24,7 +28,7 @@ public class CustomerBrokerPurchaseNegotiation implements CustomerBrokerPurchase
 
     private CustomerBrokerPurchaseNegotiationDao customerBrokerPurchaseNegotiationDao;
 
-    public CustomerBrokerPurchaseNegotiation(
+    public CustomerBrokerPurchaseNegotiationImpl(
             UUID   negotiationId,
             String publicKeyCustomer,
             String publicKeyBroker,
@@ -71,32 +75,32 @@ public class CustomerBrokerPurchaseNegotiation implements CustomerBrokerPurchase
     }
 
     @Override
-    public Collection<Clause> getClauses(){
+    public Collection<Clause> getClauses() throws CantGetListPurchaseClauseException {
         return this.customerBrokerPurchaseNegotiationDao.getClauses(this.negotiationId);
     }
 
     @Override
-    public Clause addNewBrokerClause(ClauseType type, String value) {
+    public Clause addNewBrokerClause(ClauseType type, String value) throws CantAddNewClausesException {
         return this.customerBrokerPurchaseNegotiationDao.addNewClause(this.negotiationId, type, value, this.getBrokerPublicKey());
     }
 
     @Override
-    public Clause addNewCustomerClause(ClauseType type, String value) {
+    public Clause addNewCustomerClause(ClauseType type, String value) throws CantAddNewClausesException {
         return this.customerBrokerPurchaseNegotiationDao.addNewClause(this.negotiationId, type, value, this.getCustomerPublicKey());
     }
 
     @Override
-    public Clause modifyClause(Clause clause, String value) {
+    public Clause modifyClause(Clause clause, String value) throws CantUpdateClausesException {
         return this.customerBrokerPurchaseNegotiationDao.modifyClause(this.negotiationId, clause, value);
     }
 
     @Override
-    public Clause modifyClauseStatus(Clause clause, ClauseStatus status) {
+    public Clause modifyClauseStatus(Clause clause, ClauseStatus status) throws CantUpdateClausesException {
         return this.customerBrokerPurchaseNegotiationDao.modifyClauseStatus(this.negotiationId, clause, status);
     }
 
     @Override
-    public ClauseType getNextClauseType() {
+    public ClauseType getNextClauseType() throws CantGetNextClauseTypeException {
         return this.customerBrokerPurchaseNegotiationDao.getNextClauseType(this.negotiationId);
     }
 }
