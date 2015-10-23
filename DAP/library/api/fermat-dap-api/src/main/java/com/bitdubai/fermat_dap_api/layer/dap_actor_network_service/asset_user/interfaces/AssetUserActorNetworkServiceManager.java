@@ -38,7 +38,7 @@ public interface AssetUserActorNetworkServiceManager {
      *
      * @throws CantRequestListActorAssetUserRegisteredException
      */
-    public void requestListActorAssetUserRegistered()  throws CantRequestListActorAssetUserRegisteredException;
+   // public void requestListActorAssetUserRegistered()  throws CantRequestListActorAssetUserRegisteredException;
 
     /**
      * Get the content of the list previously requested, this method have to call after the

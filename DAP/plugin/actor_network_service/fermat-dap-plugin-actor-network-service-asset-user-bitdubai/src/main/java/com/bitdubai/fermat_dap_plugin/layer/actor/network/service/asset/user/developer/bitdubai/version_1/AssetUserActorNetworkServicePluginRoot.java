@@ -658,12 +658,39 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
         }
     }
 
-    @Override
+    /*@Override
     public void requestListActorAssetUserRegistered() throws CantRequestListActorAssetUserRegisteredException {
 
         /*
          * Construct the discovery query parameters
          */
+    /*    DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_USER, //applicant = who made the request
+                        NetworkServiceType.UNDEFINED,
+                        null,                     // alias
+                        null,                     // identityPublicKey
+                        null,                     // location
+                        null,                     // distance
+                        null,                     // name
+                        null,                     // extraData
+                        null,                     // offset
+                        null,                     // max
+                        null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                        null);*/
+
+        /*
+         * request the list to the server
+         */
+        //requestRemoteNetworkServicesRegisteredList(discoveryQueryParametersAssetUser);
+
+    //}
+
+    @Override
+    public List<ActorAssetUser> getListActorAssetUserRegistered() throws RequestedListNotReadyRecevivedException {
+
+        List<PlatformComponentProfile> platformComponentProfileRegisteredListRemote =null;
+
+
         DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
                 constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_USER, //applicant = who made the request
                         NetworkServiceType.UNDEFINED,
@@ -678,16 +705,45 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
                         null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
                         null);
 
-        /*
-         * request the list to the server
-         */
-        requestRemoteNetworkServicesRegisteredList(discoveryQueryParametersAssetUser);
 
-    }
+        try {
+            platformComponentProfileRegisteredListRemote = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParametersAssetUser);
+        } catch (CantRequestListException e) {
+            e.printStackTrace();
+        }
 
-    @Override
-    public List<ActorAssetUser> getListActorAssetUserRegistered() throws RequestedListNotReadyRecevivedException {
-        return actorAssetUserRegisteredList;
+
+        if(platformComponentProfileRegisteredListRemote!= null && !platformComponentProfileRegisteredListRemote.isEmpty()){
+
+
+            for (PlatformComponentProfile p : platformComponentProfileRegisteredListRemote) {
+
+                Location loca = null;
+
+                ActorAssetUser actorAssetUserNew = null;
+
+                try {
+
+                    actorAssetUserNew = actorAssetUserManager.createActorAssetUserFactory(p.getIdentityPublicKey(), p.getName(), convertoByteArrayfromString(p.getExtraData()), loca);
+
+                } catch (CantCreateAssetUserActorException e) {
+                    e.printStackTrace();
+                }
+
+                actorAssetUserRegisteredList.add(actorAssetUserNew);
+
+            }
+
+
+            return actorAssetUserRegisteredList;
+
+        }else{
+
+            return null;
+
+        }
+
+
     }
 
 
