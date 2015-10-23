@@ -1,5 +1,7 @@
 
-package com.bitdubai.fermat_api.layer.all_definition.util.validations;
+package com.bitdubai.fermat_dap_api.layer.all_definition.util;
+
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -119,6 +121,12 @@ public final class Validate {
     public static Date verifyDate(Date date) {
         if (isValidDate(date)) return date;
         else return DEFAULT_DATE;
+    }
+
+    public static void verifySetter(Object objectToSet, String message) throws CantSetObjectException {
+        if (isObjectNull(objectToSet)) {
+            throw new CantSetObjectException(message);
+        }
     }
 
     private static Date today() {
