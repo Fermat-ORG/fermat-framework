@@ -35,7 +35,7 @@ public class GrouperViewHolder extends ParentViewHolder {
 
         mNumberTextView = (TextView) itemView.findViewById(R.id.cbw_customer_count);
         mDataTextView = (TextView) itemView.findViewById(R.id.cbw_group_description);
-        mArrowExpandImageView = (ImageView) itemView.findViewById(R.id.cbw_arrow_imageView);
+        mArrowExpandImageView = (ImageView) itemView.findViewById(R.id.cbw_arrow);
     }
 
     public void bind(int parentNumber, String parentText) {

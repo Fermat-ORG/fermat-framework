@@ -7,4 +7,6 @@
     <dimen name="cbw_first_line_text_size">16sp</dimen>
     <dimen name="third_line_text_size">14sp</dimen>
     <dimen name="margin_text_bottom_right">2dp</dimen>
+    <dimen name="cbw_customer_count_text_size">14sp</dimen>
+    <dimen name="cbw_grouper_container_padding_vertical">4dp</dimen>
 </resources>

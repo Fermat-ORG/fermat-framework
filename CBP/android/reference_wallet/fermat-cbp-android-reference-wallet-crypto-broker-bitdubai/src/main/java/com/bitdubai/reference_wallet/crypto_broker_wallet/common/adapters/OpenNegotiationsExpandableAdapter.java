@@ -66,7 +66,7 @@ public class OpenNegotiationsExpandableAdapter
      */
     @Override
     public void onBindParentViewHolder(GrouperViewHolder parentViewHolder, int position, GrouperItem parentListItem) {
-        parentViewHolder.bind(parentListItem.getParentNumber(), parentListItem.getParentText());
+        parentViewHolder.bind(parentListItem.getChildCount(), parentListItem.getParentText());
     }
 
     /**
