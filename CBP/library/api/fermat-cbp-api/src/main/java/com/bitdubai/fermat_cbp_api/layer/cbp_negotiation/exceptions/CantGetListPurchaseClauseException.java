@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
