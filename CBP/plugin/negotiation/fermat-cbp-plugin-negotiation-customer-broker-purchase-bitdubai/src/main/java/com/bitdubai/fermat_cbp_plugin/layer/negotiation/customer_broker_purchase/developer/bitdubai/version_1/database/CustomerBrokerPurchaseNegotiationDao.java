@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchas
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -285,29 +286,25 @@ public class CustomerBrokerPurchaseNegotiationDao {
 
             public ClauseType getNextClauseType(UUID negotiationId) throws CantGetNextClauseTypeException {
 
-                /*
                 try {
                     DatabaseTable PurchaseClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
                     PurchaseClauseTable.setUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
+
+                    PurchaseClauseTable.setFilterOrder(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_INDEX_ORDER_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
                     PurchaseClauseTable.loadToMemory();
                     List<DatabaseTableRecord> records = PurchaseClauseTable.getRecords();
                     PurchaseClauseTable.clearAllFilters();
 
-                    Collection<Clause> resultados = new ArrayList<Clause>();
+                    ClauseType type = ClauseType.getByCode(records.get(0).getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TYPE_COLUMN_NAME));
 
-                    for (DatabaseTableRecord record : records) {
-                        resultados.add(constructCustomerBrokerPurchaseClauseFromRecord(record));
-                    }
+                    return nextClauseTypeByType(type);
 
                 } catch (CantLoadTableToMemoryException e) {
                     throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE, e, "", "");
                 } catch (InvalidParameterException e) {
                     throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE, e, "", "");
                 }
-                */
-
-                return null;
             }
 
     /*
@@ -398,5 +395,9 @@ public class CustomerBrokerPurchaseNegotiationDao {
                 int             indexOrder          = record.getIntegerValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_INDEX_ORDER_COLUMN_NAME);
 
                 return newCustomerBrokerPurchaseClause(clauseId, type, value, status, proposedBy, (short) indexOrder);
+            }
+
+            private ClauseType nextClauseTypeByType(ClauseType type){
+                return null;
             }
 }
