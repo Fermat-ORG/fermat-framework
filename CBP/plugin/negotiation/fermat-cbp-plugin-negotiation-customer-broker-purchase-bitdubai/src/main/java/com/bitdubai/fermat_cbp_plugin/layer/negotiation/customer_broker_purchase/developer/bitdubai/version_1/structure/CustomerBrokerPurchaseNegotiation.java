@@ -76,8 +76,13 @@ public class CustomerBrokerPurchaseNegotiation implements CustomerBrokerPurchase
     }
 
     @Override
-    public Clause addNewClause(ClauseType type, String value) {
-        return this.customerBrokerPurchaseNegotiationDao.addNewClause(this.publicKeyCustomer, this.negotiationId, type, value);
+    public Clause addNewBrokerClause(ClauseType type, String value) {
+        return this.customerBrokerPurchaseNegotiationDao.addNewClause(this.negotiationId, type, value, this.getBrokerPublicKey());
+    }
+
+    @Override
+    public Clause addNewCustomerClause(ClauseType type, String value) {
+        return this.customerBrokerPurchaseNegotiationDao.addNewClause(this.negotiationId, type, value, this.getCustomerPublicKey());
     }
 
     @Override
