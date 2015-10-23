@@ -195,8 +195,8 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
             saveWalletFactoryProjectNavigationStructureXML(walletFactoryProject);
 
             //once I have every saved locally (both in db and XML files) I will upload them to github
-            //GithubManager githubManager = new GithubManager("acostarodrigo/fermat", "acostarodrigo", "");
-            //githubManager.saveWalletFactoryProject(walletFactoryProject);
+            GithubManager githubManager = new GithubManager("acostarodrigo/fermat", "acostarodrigo", "fermat2015");
+            githubManager.saveWalletFactoryProject(walletFactoryProject);
 
         } catch (DatabaseOperationException | MissingProjectDataException | CantPersistFileException | CantCreateFileException e) {
             throw new CantSaveWalletFactoryProyect(CantSaveWalletFactoryProyect.DEFAULT_MESSAGE, e, walletFactoryProject.getName(), null);
@@ -400,7 +400,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
     public void uploadWalletFactoryProjectToRepository(WalletFactoryProject walletFactoryProject) throws CantSaveWalletFactoryProyect {
         try{
             //once I have every saved locally (both in db and XML files) I will upload them to github
-            GithubManager githubManager = new GithubManager("acostarodrigo/fermat", "acostarodrigo", "");
+            GithubManager githubManager = new GithubManager("acostarodrigo/fermat", "acostarodrigo", "fermat2015");
             githubManager.saveWalletFactoryProject(walletFactoryProject);
         } catch (Exception e){
             throw new CantSaveWalletFactoryProyect(CantSaveWalletFactoryProyect.DEFAULT_MESSAGE, e, "error trying to upload project to repository", null);

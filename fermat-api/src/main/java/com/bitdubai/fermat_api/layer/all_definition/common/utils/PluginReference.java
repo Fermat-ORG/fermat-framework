@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.utils;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 /**
@@ -11,22 +12,63 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
  */
 public class PluginReference {
 
-    private final FermatPluginsEnum plugin ;
-    private final Version           version;
+    private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
+    private static final int HASH_PRIME_NUMBER_ADD = 2819;
 
-    public PluginReference(final FermatPluginsEnum plugin,
-                           final Version version) {
+    private       LayerReference    layerReference;
+    private final FermatPluginsEnum plugin        ;
 
-        this.plugin  = plugin ;
-        this.version = version;
+    public PluginReference(final FermatPluginsEnum plugin) {
+
+        this.plugin = plugin;
     }
 
-    public FermatPluginsEnum getPlugin() {
+    public PluginReference(final LayerReference    layerReference,
+                           final FermatPluginsEnum plugin        ) {
+
+        this.layerReference = layerReference;
+        this.plugin         = plugin        ;
+    }
+
+
+    public final FermatPluginsEnum getPlugin() {
         return plugin;
     }
 
-    public Version getVersion() {
-        return version;
+    public final LayerReference getLayerReference() {
+        return layerReference;
     }
 
+    public final void setLayerReference(LayerReference layerReference) {
+        this.layerReference = layerReference;
+    }
+
+    @Override
+    public final boolean equals(Object o){
+        if(!(o instanceof PluginReference))
+            return false;
+        PluginReference compare = (PluginReference) o;
+
+        return plugin.equals(compare.getPlugin()) &&
+                ((layerReference == null && compare.getLayerReference() == null) || (layerReference != null && layerReference.equals(compare.getLayerReference())));
+    }
+
+    @Override
+    public final int hashCode() {
+        int c = 0;
+
+        c += plugin .hashCode();
+        if (layerReference != null)
+            c += layerReference.hashCode();
+
+        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+    }
+
+    @Override
+    public final String toString() {
+        return "PluginReference{" +
+                "layerReference=" + layerReference +
+                ", plugin=" + plugin +
+                '}';
+    }
 }

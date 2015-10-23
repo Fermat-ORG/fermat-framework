@@ -5170,7 +5170,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Whosale Crypto Sale"
+						name="Wholesaler Crypto Sale"
 						description=""
 						difficulty="0"
 						code-level="concept"
@@ -5185,7 +5185,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Whosale Fiat Sale"
+						name="Wholesaler Fiat Sale"
 						description=""
 						difficulty="0"
 						code-level="concept"
@@ -7007,6 +7007,13 @@
 	</layers>
 
 	<processes>
+		<process platform="DAP"
+			name="Digital Asset Platform"
+			description=""
+			previous=""
+			>
+		</process>
+
 	    <process platform="CBP" 
 	    	     name="Connection request from customer to broker"
 	             description="A customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation."

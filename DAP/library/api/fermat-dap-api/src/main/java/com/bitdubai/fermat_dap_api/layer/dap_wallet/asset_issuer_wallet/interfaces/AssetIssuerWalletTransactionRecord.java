@@ -25,7 +25,7 @@ public interface AssetIssuerWalletTransactionRecord {
     String getActorToPublicKey();
     Actors getActorToType();
 
-    UUID getIdTransaction();
+    String getIdTransaction();
 
     long getAmount();
 

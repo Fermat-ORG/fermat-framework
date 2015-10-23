@@ -102,7 +102,7 @@ public class GithubManager {
         saveSkinResources(savingPath, skin.getResources());
 
         // I save the skin.xml file
-        savingPath = savingPath + skin.getScreenSize().toString() + "/";
+
         githubConnection.createGitHubTextFile(savingPath + skinFileName, XMLParser.parseObject(skin), "new skin added");
 
         //will save both layouts

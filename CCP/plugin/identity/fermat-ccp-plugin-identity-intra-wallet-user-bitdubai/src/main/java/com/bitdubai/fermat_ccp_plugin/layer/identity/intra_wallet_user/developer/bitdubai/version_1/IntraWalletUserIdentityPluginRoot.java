@@ -5,6 +5,9 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -83,21 +86,22 @@ import java.util.UUID;
  */
 
 
-public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDevelopers,
-                                                          DealsWithCryptoAddressesNetworkService,
-                                                          DealsWithCryptoVault,
-                                                          DealsWithCryptoAddressBook,
-                                                          DealsWithDeviceUser,
-                                                          DealsWithErrors,
-                                                          DealsWithEvents,
-                                                          DealsWithPluginDatabaseSystem,
-                                                          DealsWithPluginFileSystem,
-                                                          DealsWithWalletManager,
-                                                          DealsWithIntraUsersNetworkService,
-                                                          IntraWalletUserManager,
-                                                          LogManagerForDevelopers,
-                                                          Service,
-                                                          Plugin {
+public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
+        implements DatabaseManagerForDevelopers,
+                   DealsWithCryptoAddressesNetworkService,
+                   DealsWithCryptoVault,
+                   DealsWithCryptoAddressBook,
+                   DealsWithDeviceUser,
+                   DealsWithErrors,
+                   DealsWithEvents,
+                   DealsWithPluginDatabaseSystem,
+                   DealsWithPluginFileSystem,
+                   DealsWithWalletManager,
+                   DealsWithIntraUsersNetworkService,
+                   IntraWalletUserManager,
+                   LogManagerForDevelopers,
+                   Service,
+                   Plugin {
 
     private IntraWalletUserIdentityDao intraWalletUserIdentityDao;
 
@@ -499,5 +503,15 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
     @Override
     public void setIntraUserNetworkServiceManager(IntraUserManager intraUserManager) {
         this.intraActorManager = intraUserManager;
+    }
+
+    @Override
+    public List<AddonReference> getNeededAddonReferences() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<PluginReference> getNeededPluginReferences() {
+        return new ArrayList<>();
     }
 }

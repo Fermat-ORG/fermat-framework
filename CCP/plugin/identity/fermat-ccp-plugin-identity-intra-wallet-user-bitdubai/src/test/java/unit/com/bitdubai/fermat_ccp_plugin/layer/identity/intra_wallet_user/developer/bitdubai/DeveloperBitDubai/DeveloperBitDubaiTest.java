@@ -22,6 +22,6 @@ public class DeveloperBitDubaiTest {
 
     @Test
     public void GetPluging() {
-        assertThat(developTest.getPlugin()).isInstanceOf(IntraWalletUserIdentityPluginRoot.class);
+        assertThat(developTest.getFirstPluginVersion()).isInstanceOf(IntraWalletUserIdentityPluginRoot.class);
     }
 }

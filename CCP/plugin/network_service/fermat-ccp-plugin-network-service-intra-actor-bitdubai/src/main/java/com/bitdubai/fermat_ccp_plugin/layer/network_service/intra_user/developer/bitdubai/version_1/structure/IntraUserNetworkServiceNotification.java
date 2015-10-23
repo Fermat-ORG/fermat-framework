@@ -65,6 +65,11 @@ public class IntraUserNetworkServiceNotification implements IntraUserNotificatio
     }
 
     @Override
+    public void setFlagReadead(boolean flagReadead) {
+
+    }
+
+    @Override
     public IntraUserNotificationDescriptor getNotificationDescriptor() {
         return this.notificationDescriptor;
     }

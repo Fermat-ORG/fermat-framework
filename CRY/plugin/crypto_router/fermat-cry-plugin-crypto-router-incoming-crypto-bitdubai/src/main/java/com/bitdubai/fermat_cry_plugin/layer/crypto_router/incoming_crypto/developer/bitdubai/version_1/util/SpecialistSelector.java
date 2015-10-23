@@ -34,6 +34,7 @@ public class SpecialistSelector implements DealsWithCryptoAddressBook {
     public Specialist getSpecialist(CryptoTransaction cryptoTransaction) throws CantSelectSpecialistException {
 
         CryptoAddress cryptoAddress = new CryptoAddress();
+        //todo si la direccion del to es vacia, poner la del from
         cryptoAddress.setAddress(cryptoTransaction.getAddressTo().getAddress());
         cryptoAddress.setCryptoCurrency(cryptoTransaction.getCryptoCurrency());
 
@@ -46,7 +47,7 @@ public class SpecialistSelector implements DealsWithCryptoAddressBook {
                     return Specialist.INTRA_USER_SPECIALIST;
                 case EXTRA_USER:
                     return Specialist.EXTRA_USER_SPECIALIST;
-                case ASSET_ISSUER:
+                case DAP_ASSET_ISSUER:
                     return Specialist.ASSET_ISSUER_SPECIALIST;
                 default:
                     // Here we have a serious problem

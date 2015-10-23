@@ -9,11 +9,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSupAppModule;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.DealsWithAssetRedeemPointWallet;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.module.wallet.redeem.point.developer.bitdubai.version_1.structure.AssetRedeemPointWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -29,29 +28,24 @@ import java.util.UUID;
 /**
  * Created by Franklin on 07/09/15.
  */
-public class AssetWalletRedeemPointModulePluginRoot implements Plugin, DealsWithAssetRedeemPointWallet, Service, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, AssetRedeemPointWalletSupAppModule {
+public class AssetWalletRedeemPointModulePluginRoot implements Plugin, DealsWithAssetRedeemPointWallet, Service, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, AssetRedeemPointWalletSubAppModule {
 
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     AssetRedeemPointWalletManager assetRedeemPointWalletManager;
     AssetRedeemPointWalletModuleManager assetRedeemPointWalletModuleManager;
-
     UUID pluginId;
-
     /**
      * DealsWithErros interface member variable
      */
     ErrorManager errorManager;
-
     /**
      * DealsWithLogger interface member variable
      */
     LogManager logManager;
-
     /**
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     @Override
     public void setId(UUID pluginId) {
@@ -70,7 +64,7 @@ public class AssetWalletRedeemPointModulePluginRoot implements Plugin, DealsWith
             System.out.println("******* Asset Redeem Point Wallet Module Init ******");
             this.serviceStatus = ServiceStatus.STARTED;
         }catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw exception;
         }
     }
