@@ -499,15 +499,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         }
 
 
-        try {//TODO Escuchar EVENTO para saber cuando "buscar" la informacion
-            /*
-             * Envio de Solicitud al Actor Network Service para obtener List<ActorAseetUser>
-             *     Registrados en el Actor Network Service y registrarlos en table REGISTERED
-             */
-            assetUserActorNetworkServiceManager.requestListActorAssetUserRegistered();
-        } catch (CantRequestListActorAssetUserRegisteredException e) {
-            e.printStackTrace();
-        }
+
     }
 
 
