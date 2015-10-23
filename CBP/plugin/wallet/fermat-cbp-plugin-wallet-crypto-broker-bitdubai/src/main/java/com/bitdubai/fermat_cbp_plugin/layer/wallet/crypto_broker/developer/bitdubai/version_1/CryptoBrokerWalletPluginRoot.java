@@ -22,14 +22,15 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantTransactionCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBroker;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerBalance;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerTransaction;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerTransactionSummary;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseDao;
@@ -55,6 +56,7 @@ import java.util.UUID;
  * Created by Yordin Alayn on 19.10.15.
  */
 public class CryptoBrokerWalletPluginRoot implements    CryptoBroker,
+                                                        CryptoBrokerTransaction,
                                                         DatabaseManagerForDevelopers,
                                                         DealsWithPluginDatabaseSystem,
                                                         LogManagerForDevelopers,
@@ -128,6 +130,47 @@ public class CryptoBrokerWalletPluginRoot implements    CryptoBroker,
 
     public CryptoBrokerTransactionSummary getBrokerTransactionSummary(BalanceType balanceType) throws CantTransactionCryptoBrokerException{
         return null;
+    }
+
+    /*CryptoBrokerTransaction Interface Implementation*/
+    public CryptoBrokerTransactionRecord debit(String publickeyWalle, String publickeyBroker, String publicKeyCustomer, BalanceType balanceType, CurrencyType currencyType, float amount, String memo) throws CantRegisterDebitException{
+        try {
+            UUID transactionId              = UUID.randomUUID();
+            KeyPair keyPairWallet           = AsymmetricCryptography.createKeyPair(publickeyWalle);
+            KeyPair keyPairBroker           = AsymmetricCryptography.createKeyPair(publickeyBroker);
+            KeyPair keyPairCustomer         = AsymmetricCryptography.createKeyPair(publicKeyCustomer);
+            TransactionType transactionType = TransactionType.DEBIT;
+            float availableAmount           = balanceType.equals(BalanceType.AVAILABLE) ? amount : 0L;
+            float bookAmount                = balanceType.equals(BalanceType.BOOK) ? amount : 0L;
+            float runningBookBalance        = cryptoBrokerWalletDatabaseDao.calculateBookRunningBalanceByAsset(-bookAmount, keyPairWallet.getPrivateKey());
+            float runningAvailableBalance   = cryptoBrokerWalletDatabaseDao.calculateAvailableRunningBalanceByAsset(-availableAmount, keyPairWallet.getPrivateKey());
+//            long timeStamp = Timestamp(long time);
+            long timeStamp = 0;
+            CryptoBrokerTransactionRecord cryptoBrokerTransaction = new CryptoBrokerWalletImpl(
+                    transactionId,
+                    keyPairWallet,
+                    keyPairBroker,
+                    keyPairCustomer,
+                    balanceType,
+                    transactionType,
+                    currencyType,
+                    amount,
+                    runningBookBalance,
+                    runningAvailableBalance,
+                    timeStamp,
+                    memo
+            );
+            cryptoBrokerWalletDatabaseDao.addDebit(cryptoBrokerTransaction, balanceType, keyPairWallet.getPrivateKey());
+            return cryptoBrokerTransaction;
+        } catch (CantRegisterDebitException e) {
+            throw new CantRegisterDebitException("CAN'T GET CRYPTO BROKER WALLET TRANSACTION", e, "", "");
+        } catch (Exception e) {
+            throw new CantRegisterDebitException("CAN'T GET CRYPTO BROKER WALLET TRANSACTION", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    public void credit(CryptoBrokerTransactionRecord cryptoBrokerTransactionRecord, BalanceType balanceType)  throws CantRegisterCreditException{
+
     }
 
     /*DatabaseManagerForDevelopers Interface Implementation.*/
