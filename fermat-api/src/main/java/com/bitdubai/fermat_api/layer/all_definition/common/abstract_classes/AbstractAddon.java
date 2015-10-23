@@ -1,13 +1,15 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddonsEnum;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.Addon;
+import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -16,11 +18,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */
-public abstract class AbstractAddon {
+public abstract class AbstractAddon implements Addon, Service {
 
     private final Map<AddonVersionReference, AbstractAddon> addons;
 
-    private final AddonVersionReference addonVersionReference  ;
+    private final AddonVersionReference addonVersionReference;
+    private       ServiceStatus         serviceStatus        ;
 
     public AbstractAddon(final AddonVersionReference addonVersionReference) {
 
@@ -44,7 +47,33 @@ public abstract class AbstractAddon {
         return addonVersionReference;
     }
 
-    public abstract List<AddonVersionReference> getNeededAddonReferences();
+    @Override
+    public final ServiceStatus getStatus() {
+        return serviceStatus;
+    }
 
-    public abstract void setId(UUID pluginId);
+    public final boolean isStarted() {
+        return serviceStatus == ServiceStatus.STARTED;
+    }
+
+    public final boolean isCreated() {
+        return serviceStatus == ServiceStatus.CREATED;
+    }
+
+    public final boolean isStopped() {
+        return serviceStatus == ServiceStatus.STOPPED;
+    }
+
+    public final boolean isPaused() {
+        return serviceStatus == ServiceStatus.PAUSED;
+    }
+
+    public abstract List<AddonVersionReference > getNeededAddonReferences();
+
+    public abstract List<DevelopersUtilReference> getAvailableDeveloperUtils();
+
+    public abstract FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException;
+
+    protected abstract void validateAndAssignReferences();
+
 }

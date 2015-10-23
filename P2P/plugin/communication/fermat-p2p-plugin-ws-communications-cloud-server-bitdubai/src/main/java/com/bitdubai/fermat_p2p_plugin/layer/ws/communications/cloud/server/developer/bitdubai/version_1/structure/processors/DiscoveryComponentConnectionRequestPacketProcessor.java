@@ -128,7 +128,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
             System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - participantsList.size() = "+participantsList.size());
 
             //Create a new vpn
-            WsCommunicationVPNServer vpnServer = getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().createNewWsCommunicationVPNServer(participantsList, getWsCommunicationCloudServer());
+            WsCommunicationVPNServer vpnServer = getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().createNewWsCommunicationVPNServer(participantsList, getWsCommunicationCloudServer(), networkServiceApplicant.getNetworkServiceType());
 
             /*
              * Notify to the participants of the vpn
@@ -146,7 +146,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
         }catch (Exception e){
 
             System.out.println("DiscoveryComponentConnectionRequestPacketProcessor - requested connection is no possible ");
-            e.printStackTrace();
+            //e.printStackTrace();
 
             /*
              * Get the client connection destination

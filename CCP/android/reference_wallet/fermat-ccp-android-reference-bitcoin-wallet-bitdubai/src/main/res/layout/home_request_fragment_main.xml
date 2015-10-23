@@ -68,7 +68,7 @@
                                 android:ems="10"
                                 android:layout_weight="0.2"
                                 android:background="@null"
-
+                                android:fontFamily="roboto"
                                 />
 
                             <ImageView
@@ -157,7 +157,8 @@
                                 android:layout_weight="0.54"
                                 android:inputType="numberDecimal"
                                 android:state_selected = "true"
-                                android:background="@null"/>
+                                android:background="@null"
+                                android:fontFamily="roboto"/>
 
                         </LinearLayout>
 
@@ -190,7 +191,8 @@
                                 android:paddingBottom="7dip"
                                 android:layout_gravity="end"
                                 android:state_selected = "false"
-                                android:background="@null"/>
+                                android:background="@null"
+                                android:fontFamily="roboto"/>
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -266,7 +268,8 @@
             android:gravity="center"
             android:text="You don t have\n request"
             android:textColor="#000"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:fontFamily="roboto"/>
 
     </LinearLayout>
 
