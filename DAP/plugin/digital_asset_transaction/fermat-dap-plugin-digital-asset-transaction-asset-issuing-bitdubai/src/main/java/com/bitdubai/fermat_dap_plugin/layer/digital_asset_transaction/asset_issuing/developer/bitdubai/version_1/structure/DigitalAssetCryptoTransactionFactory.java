@@ -116,7 +116,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
     String walletPublicKey;
-    boolean SEND_BTC_FROM_ASSET_VAULT=true;
+    boolean SEND_BTC_FROM_ASSET_VAULT=false;
     long genesisAmount=100000;
 //TODO: delete this useless object in production, I'm using it just for testing
     Logger LOG = Logger.getGlobal();

@@ -4,6 +4,9 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -39,7 +42,7 @@ import java.util.UUID;
  * Created by Ezequiel.Postan on 20/02/15.
  * Modified by lnacosta (laion.cj91@gmail.com) on 15/10/2015.
  */
-public class OutgoingExtraUserTransactionPluginRoot implements
+public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers ,
         DealsWithBitcoinWallet       ,
         DealsWithCryptoVault         ,
@@ -49,6 +52,15 @@ public class OutgoingExtraUserTransactionPluginRoot implements
         Plugin                       ,
         Service                      {
 
+    @Override
+    public List<AddonReference> getNeededAddonReferences() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<PluginReference> getNeededPluginReferences() {
+        return new ArrayList<>();
+    }
 
     /**
      * DealsWithBitcoinWallet Interface member variables.

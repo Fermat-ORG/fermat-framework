@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
 
-import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
@@ -15,7 +14,7 @@ public abstract class AbstractPluginSubsystem {
 
     private final PluginReference pluginReference;
 
-    protected Plugin plugin;
+    protected AbstractPlugin plugin;
 
     public AbstractPluginSubsystem(final FermatPluginsEnum pluginEnum) {
 
@@ -27,7 +26,7 @@ public abstract class AbstractPluginSubsystem {
         this.pluginReference = pluginReference;
     }
 
-    public final Plugin getPlugin() {
+    public final AbstractPlugin getPlugin() {
         return plugin;
     }
 
