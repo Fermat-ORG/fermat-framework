@@ -2,20 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:background="#9fffa5"
-    >
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp">
 
-    <TextView
-        android:id="@+id/cbw_customers_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:textColor="@color/black"
-        android:textSize="25sp"
-        tools:text="X"/>
 
     <TextView
         android:id="@+id/cbw_group_description"
@@ -24,11 +15,24 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_toEndOf="@id/cbw_customers_count"
-        android:layout_toRightOf="@id/cbw_customers_count"
         android:textColor="@color/black"
-        android:textSize="25sp"
-        tools:text="XXX"/>
+        android:textSize="@dimen/cbw_first_line_text_size"
+        tools:text="Waiting for the customer"/>
+
+    <TextView
+        android:id="@+id/cbw_customer_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_toLeftOf="@+id/cbw_arrow_imageView"
+        android:layout_toStartOf="@+id/cbw_arrow_imageView"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/cbw_customer_count_background"
+        android:textSize="@dimen/cbw_first_line_text_size"
+        android:gravity="center"
+        tools:text="2"/>
 
 
     <ImageView
