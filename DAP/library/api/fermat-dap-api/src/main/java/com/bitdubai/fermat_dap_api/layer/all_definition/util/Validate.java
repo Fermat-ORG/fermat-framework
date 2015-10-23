@@ -123,10 +123,11 @@ public final class Validate {
         else return DEFAULT_DATE;
     }
 
-    public static void verifySetter(Object objectToSet, String message) throws CantSetObjectException {
+    public static <T> T verifySetter(T objectToSet, String message) throws CantSetObjectException {
         if (isObjectNull(objectToSet)) {
             throw new CantSetObjectException(message);
         }
+        return objectToSet;
     }
 
     private static Date today() {

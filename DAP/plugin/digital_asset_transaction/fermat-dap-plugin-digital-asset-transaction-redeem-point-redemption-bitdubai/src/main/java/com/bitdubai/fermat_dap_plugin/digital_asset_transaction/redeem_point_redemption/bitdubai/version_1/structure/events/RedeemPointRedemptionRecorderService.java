@@ -50,23 +50,17 @@ public class RedeemPointRedemptionRecorderService implements DealsWithEvents, As
                                                 PluginDatabaseSystem pluginDatabaseSystem,
                                                 UUID pluginId) throws CantSetObjectException {
 
-        Validate.verifySetter(eventManager, "eventManager is null");
-        Validate.verifySetter(pluginDatabaseSystem, "pluginDatabaseSystem is null");
-        Validate.verifySetter(pluginId, "pluginId is null");
 
-        this.eventManager = eventManager;
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId = pluginId;
+        this.eventManager = Validate.verifySetter(eventManager, "eventManager is null");
+        this.pluginDatabaseSystem = Validate.verifySetter(pluginDatabaseSystem, "pluginDatabaseSystem is null");
+        this.pluginId = Validate.verifySetter(pluginId, "pluginId is null");
+
     }
 
     //PUBLIC METHODS
 
     public void receivedNewDigitalAssetMetadataNotificationEvent(ReceivedNewDigitalAssetMetadataNotificationEvent event) throws CantSaveEventException {
         String context = "pluginDatabaseSystem: " + pluginDatabaseSystem + " - pluginId: " + pluginId + " - event: " + event;
-
-        if (pluginDatabaseSystem == null || pluginId == null) {
-            throw new CantSaveEventException(FermatException.wrapException(new NullPointerException()), context, "PluginDatabaseSystem and PluginId are necessary for receivedNewDigitalAssetMetadataNotificationEvent.");
-        }
 
         try (AssetRedeemPointRedemptionDAO rprDao = new AssetRedeemPointRedemptionDAO(pluginDatabaseSystem, pluginId)) {
             rprDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
@@ -81,9 +75,7 @@ public class RedeemPointRedemptionRecorderService implements DealsWithEvents, As
     @Override
     public void start() throws CantStartServiceException {
         String context = "PluginDatabaseSystem: " + pluginDatabaseSystem + " - Plugin ID: " + pluginId + " Event Manager: " + eventManager;
-        if (eventManager == null) {
-            throw new CantStartServiceException(FermatException.wrapException(new NullPointerException()), context, "An event manager has to be submitted.");
-        }
+
         FermatEventListener fermatEventListener;
         fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
         fermatEventListener.setEventHandler(new ReceivedNewDigitalAssetMetadataNotificationEventHandler(this));
@@ -108,7 +100,6 @@ public class RedeemPointRedemptionRecorderService implements DealsWithEvents, As
 
     private void removeRegisteredListeners() {
         for (FermatEventListener fermatEventListener : listenersAdded) {
-            if (eventManager == null) break;
             eventManager.removeListener(fermatEventListener);
         }
         listenersAdded.clear();

@@ -39,8 +39,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
 
     //PUBLIC METHODS
     public void setAssetTransmissionManager(AssetTransmissionNetworkServiceManager assetTransmissionManager) throws CantSetObjectException {
-        Validate.verifySetter(assetTransmissionManager, "assetTransmissionManager is null.");
-        this.assetTransmissionManager = assetTransmissionManager;
+        this.assetTransmissionManager = Validate.verifySetter(assetTransmissionManager, "assetTransmissionManager is null.");
     }
 
     @Override
