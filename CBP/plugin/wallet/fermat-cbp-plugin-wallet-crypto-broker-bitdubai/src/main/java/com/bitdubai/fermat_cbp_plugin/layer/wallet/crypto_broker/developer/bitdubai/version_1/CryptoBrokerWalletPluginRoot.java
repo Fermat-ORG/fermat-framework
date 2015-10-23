@@ -35,6 +35,8 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.Cry
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerTransactionSummary;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantAddCreditException;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantAddDebitException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerWalletDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantListCryptoBrokerWalletTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletImpl;
@@ -162,15 +164,47 @@ public class CryptoBrokerWalletPluginRoot implements    CryptoBroker,
             );
             cryptoBrokerWalletDatabaseDao.addDebit(cryptoBrokerTransaction, balanceType, keyPairWallet.getPrivateKey());
             return cryptoBrokerTransaction;
-        } catch (CantRegisterDebitException e) {
-            throw new CantRegisterDebitException("CAN'T GET CRYPTO BROKER WALLET TRANSACTION", e, "", "");
+        } catch (CantAddDebitException e) {
+            throw new CantRegisterDebitException("CAN'T ADD CRYPTO BROKER WALLET TRANSACTION DEBIT", e, "", "");
         } catch (Exception e) {
-            throw new CantRegisterDebitException("CAN'T GET CRYPTO BROKER WALLET TRANSACTION", FermatException.wrapException(e), "", "");
+            throw new CantRegisterDebitException("CAN'T ADD CRYPTO BROKER WALLET TRANSACTION DEBIT", FermatException.wrapException(e), "", "");
         }
     }
 
-    public void credit(CryptoBrokerTransactionRecord cryptoBrokerTransactionRecord, BalanceType balanceType)  throws CantRegisterCreditException{
-
+    public CryptoBrokerTransactionRecord credit(String publickeyWalle, String publickeyBroker, String publicKeyCustomer, BalanceType balanceType, CurrencyType currencyType, float amount, String memo) throws CantRegisterCreditException{
+        try {
+            UUID transactionId              = UUID.randomUUID();
+            KeyPair keyPairWallet           = AsymmetricCryptography.createKeyPair(publickeyWalle);
+            KeyPair keyPairBroker           = AsymmetricCryptography.createKeyPair(publickeyBroker);
+            KeyPair keyPairCustomer         = AsymmetricCryptography.createKeyPair(publicKeyCustomer);
+            TransactionType transactionType = TransactionType.DEBIT;
+            float availableAmount           = balanceType.equals(BalanceType.AVAILABLE) ? amount : 0L;
+            float bookAmount                = balanceType.equals(BalanceType.BOOK) ? amount : 0L;
+            float runningBookBalance        = cryptoBrokerWalletDatabaseDao.calculateBookRunningBalanceByAsset(-bookAmount, keyPairWallet.getPrivateKey());
+            float runningAvailableBalance   = cryptoBrokerWalletDatabaseDao.calculateAvailableRunningBalanceByAsset(-availableAmount, keyPairWallet.getPrivateKey());
+//            long timeStamp = Timestamp(long time);
+            long timeStamp = 0;
+            CryptoBrokerTransactionRecord cryptoBrokerTransaction = new CryptoBrokerWalletImpl(
+                    transactionId,
+                    keyPairWallet,
+                    keyPairBroker,
+                    keyPairCustomer,
+                    balanceType,
+                    transactionType,
+                    currencyType,
+                    amount,
+                    runningBookBalance,
+                    runningAvailableBalance,
+                    timeStamp,
+                    memo
+            );
+            cryptoBrokerWalletDatabaseDao.addCredit(cryptoBrokerTransaction, balanceType, keyPairWallet.getPrivateKey());
+            return cryptoBrokerTransaction;
+        } catch (CantAddCreditException e) {
+            throw new CantRegisterCreditException("CAN'T ADD CRYPTO BROKER WALLET TRANSACTION DEBIT", e, "", "");
+        } catch (Exception e) {
+            throw new CantRegisterCreditException("CAN'T ADD CRYPTO BROKER WALLET TRANSACTION DEBIT", FermatException.wrapException(e), "", "");
+        }
     }
 
     /*DatabaseManagerForDevelopers Interface Implementation.*/
