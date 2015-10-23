@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegist
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.ModuleManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.VersionNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.VersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_ccp_core.CCPPlatform;
 
@@ -49,31 +49,31 @@ public class FermatSystem {
      * Throw the method <code>getModuleManager</code> the graphic interface can access to the modules of
      * its sub-apps and wallets.
      *
-     * @param versionReference plugin version reference data.
+     * @param pluginVersionReference plugin version reference data.
      *
      * @return an instance of the requested module manager.
      *
      * @throws CantGetModuleManagerException   if something goes wrong.
      * @throws ModuleManagerNotFoundException  if we can't find the requested module manager.
      */
-    public final ModuleManager getModuleManager(final VersionReference versionReference) throws CantGetModuleManagerException  ,
+    public final ModuleManager getModuleManager(final PluginVersionReference pluginVersionReference) throws CantGetModuleManagerException  ,
                                                                                                 ModuleManagerNotFoundException {
 
         try {
 
-            Plugin moduleManager = fermatSystemContext.getPluginVersion(versionReference);
+            Plugin moduleManager = fermatSystemContext.getPluginVersion(pluginVersionReference);
 
             if (moduleManager instanceof ModuleManager)
                 return (ModuleManager) moduleManager;
             else
-                throw new CantGetModuleManagerException(versionReference.toString(), "The plugin version requested not implements module manager interface.");
+                throw new CantGetModuleManagerException(pluginVersionReference.toString(), "The plugin version requested not implements module manager interface.");
 
         } catch(VersionNotFoundException e) {
 
-            throw new ModuleManagerNotFoundException(e, versionReference.toString(), "The module manager cannot be found.");
+            throw new ModuleManagerNotFoundException(e, pluginVersionReference.toString(), "The module manager cannot be found.");
         } catch (Exception e) {
 
-            throw new CantGetModuleManagerException(e, versionReference.toString(), "Unhandled error.");
+            throw new CantGetModuleManagerException(e, pluginVersionReference.toString(), "Unhandled error.");
         }
     }
 

@@ -3,12 +3,12 @@ package com.bitdubai.fermat_api.layer.all_definition.common.utils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 
 /**
- * The class <code>com.bitdubai.fermat_api.layer.all_definition.common.utils.DeveloperReference</code>
- * haves all the information of a Developer Reference.
+ * The class <code>com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginDeveloperReference</code>
+ * haves all the information of a Plugin Developer Reference.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/10/2015.
  */
-public class DeveloperReference {
+public class PluginDeveloperReference {
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
     private static final int HASH_PRIME_NUMBER_ADD = 2819;
@@ -16,13 +16,13 @@ public class DeveloperReference {
     private       PluginReference pluginReference;
     private final Developers      developer      ;
 
-    public DeveloperReference(final Developers developer) {
+    public PluginDeveloperReference(final Developers developer) {
 
         this.developer = developer;
     }
 
-    public DeveloperReference(final PluginReference pluginReference,
-                              final Developers      developer      ) {
+    public PluginDeveloperReference(final PluginReference pluginReference,
+                                    final Developers      developer      ) {
 
         this.pluginReference = pluginReference;
         this.developer       = developer      ;
@@ -43,9 +43,9 @@ public class DeveloperReference {
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DeveloperReference)) return false;
+        if (!(o instanceof PluginDeveloperReference)) return false;
 
-        DeveloperReference that = (DeveloperReference) o;
+        PluginDeveloperReference that = (PluginDeveloperReference) o;
 
         return developer.equals(that.developer) &&
                 ((pluginReference == null && that.getPluginReference() == null) || (pluginReference != null && pluginReference.equals(that.getPluginReference())));
@@ -62,7 +62,7 @@ public class DeveloperReference {
 
     @Override
     public String toString() {
-        return "DeveloperReference{" +
+        return "PluginDeveloperReference{" +
                 "pluginReference=" + pluginReference +
                 ", developer=" + developer +
                 '}';
