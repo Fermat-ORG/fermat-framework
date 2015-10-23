@@ -12,6 +12,7 @@ import com.bitdubai.fermat_ccp_core.layer.actor.ActorLayer;
 import com.bitdubai.fermat_ccp_core.layer.basic_wallet.BasicWalletLayer;
 import com.bitdubai.fermat_ccp_core.layer.identity.IdentityLayer;
 import com.bitdubai.fermat_ccp_core.layer.middleware.MiddlewareLayer;
+import com.bitdubai.fermat_ccp_core.layer.module.ModuleLayer;
 import com.bitdubai.fermat_ccp_core.layer.network_service.NetworkServiceLayer;
 import com.bitdubai.fermat_ccp_core.layer.request.RequestLayer;
 import com.bitdubai.fermat_ccp_core.layer.transaction.TransactionLayer;
@@ -38,6 +39,7 @@ public class CCPPlatform extends AbstractPlatform {
             registerLayer(new BasicWalletLayer()   );
             registerLayer(new IdentityLayer()      );
             registerLayer(new MiddlewareLayer()    );
+            registerLayer(new ModuleLayer()        );
             registerLayer(new NetworkServiceLayer());
             registerLayer(new RequestLayer()       );
             registerLayer(new TransactionLayer()   );

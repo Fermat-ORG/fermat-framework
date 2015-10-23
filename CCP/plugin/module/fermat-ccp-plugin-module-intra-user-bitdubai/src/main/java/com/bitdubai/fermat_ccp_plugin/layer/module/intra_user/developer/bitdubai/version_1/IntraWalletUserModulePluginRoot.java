@@ -6,6 +6,9 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 
 import com.bitdubai.fermat_api.layer.all_definition.IntraUsers.IntraUserSettings;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -82,7 +85,17 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class IntraWalletUserModulePluginRoot implements   DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithCCPIntraWalletUser,DealsWithCCPIntraWalletUsers, DealsWithPluginFileSystem, LogManagerForDevelopers, IntraUserModuleManager, Plugin, Service  {
+public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements   DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithCCPIntraWalletUser,DealsWithCCPIntraWalletUsers, DealsWithPluginFileSystem, LogManagerForDevelopers, IntraUserModuleManager, Plugin, Service  {
+
+    @Override
+    public List<AddonReference> getNeededAddonReferences() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<PluginReference> getNeededPluginReferences() {
+        return new ArrayList<>();
+    }
 
     private static String INTRA_USER_LOGIN_FILE_NAME = "intraUsersLogin";
 

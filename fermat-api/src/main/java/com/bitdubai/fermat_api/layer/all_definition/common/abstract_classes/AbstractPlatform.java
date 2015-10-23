@@ -1,21 +1,20 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
 
-import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.AddonNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPluginIdsManagerException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.DeveloperNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.LayerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.PluginNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddonsEnum;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.DeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.VersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 
@@ -90,7 +89,49 @@ public abstract class AbstractPlatform {
         }
     }
 
-    public final AbstractPlugin getPlugin(final PluginReference pluginReference) throws PluginNotFoundException {
+    /**
+     * Throw the method <code>getPluginVersion</code> you can get a plugin version instance passing like parameter a version reference instance.
+     *
+     * @param versionReference plugin version reference data.
+     *
+     * @return a plugin version instance.
+     *
+     * @throws VersionNotFoundException   if we can't find a plugin version with the given version reference parameters.
+     */
+    public final AbstractPlugin getPluginVersion(final VersionReference versionReference) throws VersionNotFoundException {
+
+        try {
+
+            return getPluginDeveloper(versionReference.getDeveloperReference()).getPluginByVersion(versionReference);
+
+        } catch (DeveloperNotFoundException e) {
+
+            throw new VersionNotFoundException(e, versionReference.toString(), "version not found in the platform of the system context.");
+        }
+    }
+
+    /**
+     * Throw the method <code>getPluginDeveloper</code> you can get a pluginDeveloper instance passing like parameter a developer reference instance.
+     *
+     * @param developerReference plugin developer reference data.
+     *
+     * @return a plugin developer instance.
+     *
+     * @throws DeveloperNotFoundException   if we can't find a plugin developer with the given developer reference parameters.
+     */
+    public final AbstractPluginDeveloper getPluginDeveloper(final DeveloperReference developerReference) throws DeveloperNotFoundException {
+
+        try {
+
+            return getPluginSubsystem(developerReference.getPluginReference()).getDeveloperByReference(developerReference);
+
+        } catch (PluginNotFoundException e) {
+
+            throw new DeveloperNotFoundException(e, developerReference.toString(), "plugin not found in the platform of the system context.");
+        }
+    }
+
+    public final AbstractPluginSubsystem getPluginSubsystem(final PluginReference pluginReference) throws PluginNotFoundException {
 
         try {
 
