@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -29,7 +30,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CommonLogger;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor;
-import com.bitdubai.sub_app.crypto_broker_identity.util.UtilsFuncs;
 
 import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.EXCEPTION_THROWN;
 import static com.bitdubai.sub_app.crypto_broker_identity.util.CreateBrokerIdentityExecutor.INVALID_ENTRY_DATA;
@@ -90,7 +90,7 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
         mBrokerName.requestFocus();
 
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
-        RoundedBitmapDrawable roundedBitmap = UtilsFuncs.getRoundedBitmap(getResources(), R.drawable.img_new_user_camera);
+        RoundedBitmapDrawable roundedBitmap = ImagesUtils.getRoundedBitmap(getResources(), R.drawable.img_new_user_camera);
         mBrokerImage.setImageDrawable(roundedBitmap);
         mBrokerImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,7 +135,7 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
             }
 
             if (pictureView != null && cryptoBrokerBitmap != null) {
-                RoundedBitmapDrawable roundedBitmap = UtilsFuncs.getRoundedBitmap(getResources(), cryptoBrokerBitmap);
+                RoundedBitmapDrawable roundedBitmap = ImagesUtils.getRoundedBitmap(getResources(), cryptoBrokerBitmap);
                 pictureView.setImageDrawable(roundedBitmap);
             }
         }
@@ -170,7 +170,7 @@ public class CreateCryptoBrokerIdentityFragment extends FermatFragment {
     private void createNewIdentity() {
 
         String brokerNameText = mBrokerName.getText().toString();
-        byte[] imgInBytes = UtilsFuncs.toByteArray(cryptoBrokerBitmap);
+        byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
 
         CreateBrokerIdentityExecutor executor = new CreateBrokerIdentityExecutor(subAppsSession, brokerNameText, imgInBytes);
         int resultKey = executor.execute();

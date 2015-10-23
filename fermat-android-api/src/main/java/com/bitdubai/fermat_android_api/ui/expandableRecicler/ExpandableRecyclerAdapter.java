@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * RecyclerView.Adapter implementation that
  * adds the ability to expand and collapse list items.
- *
+ * <p/>
  * Changes should be notified through:
  * {@link #notifyParentItemInserted(int)}
  * {@link #notifyParentItemRemoved(int)}
@@ -28,7 +28,7 @@ import java.util.List;
  * @version 1.0
  * @since 5/27/2015
  */
-public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CVH extends ChildViewHolder>
+public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CVH extends ChildViewHolder, PI extends ParentListItem, CI>
         extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ParentViewHolder.ParentListItemExpandCollapseListener {
 
     private static final String EXPANDED_STATE_MAP = "ExpandableRecyclerAdapter.ExpandedStateMap";
@@ -49,7 +49,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     /**
      * Allows objects to register themselves as expand/collapse listeners to be
      * notified of change events.
-     * <p>
+     * <p/>
      * Implement this in your {@link Activity} or {@link android.app.Fragment}
      * to receive these callbacks.
      */
@@ -72,7 +72,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
 
     /**
      * Primary constructor. Sets up {@link #mParentItemList} and {@link #mItemList}.
-     *
+     * <p/>
      * Changes to {@link #mParentItemList} should be made through add/remove methods in
      * {@link ExpandableRecyclerAdapter}
      *
@@ -95,9 +95,9 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      *
      * @param viewGroup The {@link ViewGroup} into which the new {@link android.view.View}
      *                  will be added after it is bound to an adapter position.
-     * @param viewType The view type of the new {@code android.view.View}.
+     * @param viewType  The view type of the new {@code android.view.View}.
      * @return A new RecyclerView.ViewHolder
-     *         that holds a {@code android.view.View} of the given view type.
+     * that holds a {@code android.view.View} of the given view type.
      */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -118,10 +118,10 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * to the appropriate implementation of either {@link #onBindParentViewHolder(ParentViewHolder, int, ParentListItem)}
      * or {@link #onBindChildViewHolder(ChildViewHolder, int, Object)}.
      *
-     * @param holder The RecyclerView.ViewHolder to bind data to
+     * @param holder   The RecyclerView.ViewHolder to bind data to
      * @param position The index in the list at which to bind
      * @throws IllegalStateException if the item in the list is either null or
-     *         not of type {@link ParentListItem}
+     *                               not of type {@link ParentListItem}
      */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
@@ -135,11 +135,11 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
 
             ParentWrapper parentWrapper = (ParentWrapper) listItem;
             parentViewHolder.setExpanded(parentWrapper.isExpanded());
-            onBindParentViewHolder(parentViewHolder, position, parentWrapper.getParentListItem());
+            onBindParentViewHolder(parentViewHolder, position, (PI) parentWrapper.getParentListItem());
         } else if (listItem == null) {
             throw new IllegalStateException("Incorrect ViewHolder found");
         } else {
-            onBindChildViewHolder((CVH) holder, position, listItem);
+            onBindChildViewHolder((CVH) holder, position, (CI) listItem);
         }
     }
 
@@ -150,7 +150,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * @param parentViewGroup The {@link ViewGroup} in the list for which a {@link PVH}
      *                        is being created
      * @return A {@code PVH} corresponding to the {@link ParentListItem} with
-     *         the {@code ViewGroup} parentViewGroup
+     * the {@code ViewGroup} parentViewGroup
      */
     public abstract PVH onCreateParentViewHolder(ViewGroup parentViewGroup);
 
@@ -161,35 +161,35 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * @param childViewGroup The {@link ViewGroup} in the list for which a {@link CVH}
      *                       is being created
      * @return A {@code CVH} corresponding to the child list item with the
-     *         {@code ViewGroup} childViewGroup
+     * {@code ViewGroup} childViewGroup
      */
     public abstract CVH onCreateChildViewHolder(ViewGroup childViewGroup);
 
     /**
      * Callback called from onBindViewHolder(RecyclerView.ViewHolder, int)
      * when the list item bound to is a parent.
-     * <p>
+     * <p/>
      * Bind data to the {@link PVH} here.
      *
      * @param parentViewHolder The {@code PVH} to bind data to
-     * @param position The index in the list at which to bind
-     * @param parentListItem The {@link ParentListItem} which holds the data to
-     *                       be bound to the {@code PVH}
+     * @param position         The index in the list at which to bind
+     * @param parentListItem   The {@link ParentListItem} which holds the data to
+     *                         be bound to the {@code PVH}
      */
-    public abstract void onBindParentViewHolder(PVH parentViewHolder, int position, ParentListItem parentListItem);
+    public abstract void onBindParentViewHolder(PVH parentViewHolder, int position, PI parentListItem);
 
     /**
      * Callback called from onBindViewHolder(RecyclerView.ViewHolder, int)
      * when the list item bound to is a child.
-     * <p>
+     * <p/>
      * Bind data to the {@link CVH} here.
      *
      * @param childViewHolder The {@code CVH} to bind data to
-     * @param position The index in the list at which to bind
-     * @param childListItem The child list item which holds that data to be
-     *                      bound to the {@code CVH}
+     * @param position        The index in the list at which to bind
+     * @param childListItem   The child list item which holds that data to be
+     *                        bound to the {@code CVH}
      */
-    public abstract void onBindChildViewHolder(CVH childViewHolder, int position, Object childListItem);
+    public abstract void onBindChildViewHolder(CVH childViewHolder, int position, CI childListItem);
 
     /**
      * Gets the number of parent and child objects currently expanded.
@@ -206,7 +206,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      *
      * @param position The index in the list to get the view type of
      * @return {@value #TYPE_PARENT} for {@link ParentListItem} and {@value #TYPE_CHILD}
-     *         for child list items
+     * for child list items
      * @throws IllegalStateException if the item at the given position in the list is null
      */
     @Override
@@ -233,7 +233,6 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * {@link #notifyChildItemChanged(int, int)}
      * methods.
      *
-     *
      * @return The list of ParentListItems that this adapter represents
      */
     public List<? extends ParentListItem> getParentItemList() {
@@ -241,7 +240,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     }
 
     /**
-     * <p>
+     * <p/>
      * Called when a {@link ParentListItem} is triggered to expand.
      *
      * @param position The index of the item in the list being expanded
@@ -255,7 +254,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     }
 
     /**
-     * <p>
+     * <p/>
      * Called when a {@link ParentListItem} is triggered to collapse.
      *
      * @param position The index of the item in the list being collapsed
@@ -270,7 +269,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
 
     /**
      * Implementation of Adapter#onAttachedToRecyclerView(RecyclerView).
-     * <p>
+     * <p/>
      * Called when this {@link ExpandableRecyclerAdapter} is attached to a RecyclerView.
      *
      * @param recyclerView The {@code RecyclerView} this {@code ExpandableRecyclerAdapter}
@@ -284,7 +283,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
 
     /**
      * Implementation of Adapter.onDetachedFromRecyclerView(RecyclerView)
-     * <p>
+     * <p/>
      * Called when this ExpandableRecyclerAdapter is detached from a RecyclerView.
      *
      * @param recyclerView The {@code RecyclerView} this {@code ExpandableRecyclerAdapter}
@@ -313,7 +312,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
         Object listItem = getListItem(parentWrapperIndex);
         ParentWrapper parentWrapper;
         if (listItem instanceof ParentWrapper) {
-             parentWrapper = (ParentWrapper) listItem;
+            parentWrapper = (ParentWrapper) listItem;
         } else {
             return;
         }
@@ -392,11 +391,11 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
 
     /**
      * Stores the expanded state map across state loss.
-     * <p>
+     * <p/>
      * Should be called from {@link Activity#onSaveInstanceState(Bundle)} in
      * the {@link Activity} that hosts the RecyclerView that this
      * {@link ExpandableRecyclerAdapter} is attached to.
-     * <p>
+     * <p/>
      * This will make sure to add the expanded state map as an extra to the
      * instance state bundle to be used in {@link #onRestoreInstanceState(Bundle)}.
      *
@@ -410,11 +409,11 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     /**
      * Fetches the expandable state map from the saved instance state {@link Bundle}
      * and restores the expanded states of all of the list items.
-     * <p>
+     * <p/>
      * Should be called from {@link Activity#onRestoreInstanceState(Bundle)} in
      * the {@link Activity} that hosts the RecyclerView that this
      * {@link ExpandableRecyclerAdapter} is attached to.
-     * <p>
+     * <p/>
      * Assumes that the list of parent list items is the same as when the saved
      * instance state was stored.
      *
@@ -486,7 +485,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     /**
      * Calls through to the ParentViewHolder to expand views for each
      * RecyclerView the specified parent is a child of.
-     *
+     * <p/>
      * These calls to the ParentViewHolder are made so that animations can be
      * triggered at the ViewHolder level.
      *
@@ -508,7 +507,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     /**
      * Calls through to the ParentViewHolder to collapse views for each
      * RecyclerView a specified parent is a child of.
-     *
+     * <p/>
      * These calls to the ParentViewHolder are made so that animations can be
      * triggered at the ViewHolder level.
      *
@@ -532,8 +531,8 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * ExpandCollapseListener and adds children of the specified parent to the
      * total list of items.
      *
-     * @param parentWrapper The ParentWrapper of the parent to expand
-     * @param parentIndex The index of the parent to expand
+     * @param parentWrapper                     The ParentWrapper of the parent to expand
+     * @param parentIndex                       The index of the parent to expand
      * @param expansionTriggeredByListItemClick true if expansion was triggered
      *                                          by a click event, false otherwise.
      */
@@ -562,8 +561,8 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * ExpandCollapseListener and adds children of the specified parent to the
      * total list of items.
      *
-     * @param parentWrapper The ParentWrapper of the parent to collapse
-     * @param parentIndex The index of the parent to collapse
+     * @param parentWrapper                    The ParentWrapper of the parent to collapse
+     * @param parentIndex                      The index of the parent to collapse
      * @param collapseTriggeredByListItemClick true if expansion was triggered
      *                                         by a click event, false otherwise.
      */
@@ -616,14 +615,13 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * Notify any registered observers that the ParentListItem reflected at {@code parentPosition}
      * has been newly inserted. The ParentListItem previously at {@code parentPosition} is now at
      * position {@code parentPosition + 1}.
-     * <p>
+     * <p/>
      * This is a structural change event. Representations of other existing items in the
      * data set are still considered up to date and will not be rebound, though their
      * positions may be altered.
      *
      * @param parentPosition Position of the newly inserted ParentListItem in the data set, relative
      *                       to list of ParentListItems only.
-     *
      * @see #notifyParentItemRangeInserted(int, int)
      */
     public void notifyParentItemInserted(int parentPosition) {
@@ -645,15 +643,14 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * ParentListItems starting at {@code parentPositionStart} have been newly inserted.
      * The ParentListItems previously located at {@code parentPositionStart} and beyond
      * can now be found starting at position {@code parentPositionStart + itemCount}.
-     * <p>
+     * <p/>
      * This is a structural change event. Representations of other existing items in the
      * data set are still considered up to date and will not be rebound, though their positions
      * may be altered.
      *
      * @param parentPositionStart Position of the first ParentListItem that was inserted, relative
      *                            to list of ParentListItems only.
-     * @param itemCount Number of items inserted
-     *
+     * @param itemCount           Number of items inserted
      * @see #notifyParentItemInserted(int)
      */
     public void notifyParentItemRangeInserted(int parentPositionStart, int itemCount) {
@@ -695,7 +692,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * Notify any registered observers that the ParentListItem previously located at {@code parentPosition}
      * has been removed from the data set. The ParentListItems previously located at and after
      * {@code parentPosition} may now be found at {@code oldPosition - 1}.
-     * <p>
+     * <p/>
      * This is a structural change event. Representations of other existing items in the
      * data set are still considered up to date and will not be rebound, though their positions
      * may be altered.
@@ -721,7 +718,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     /**
      * Notify any registered observers that the ParentListItem at {@code parentPosition} has changed.
      * This will also trigger an item changed for children of the ParentList specified.
-     * <p>
+     * <p/>
      * This is an item change event, not a structural change event. It indicates that any
      * reflection of the data at {@code parentPosition} is out of date and should be updated.
      * The ParentListItem at {@code parentPosition} retains the same identity. This means
@@ -754,20 +751,19 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * has a ChildItem that has been newly inserted at {@code childPosition}.
      * The ChildItem previously at {@code childPosition} is now at
      * position {@code childPosition + 1}.
-     * <p>
+     * <p/>
      * This is a structural change event. Representations of other existing items in the
      * data set are still considered up to date and will not be rebound, though their
      * positions may be altered.
      *
      * @param parentPosition Position of the ParentListItem which has been added a child, relative
      *                       to list of ParentListItems only.
-     * @param childPosition Position of the child object that has been inserted, relative to children
-     *                      of the ParentListItem specified by {@code parentPosition} only.
-     *
+     * @param childPosition  Position of the child object that has been inserted, relative to children
+     *                       of the ParentListItem specified by {@code parentPosition} only.
      */
     public void notifyChildItemInserted(int parentPosition, int childPosition) {
         ParentListItem parentListItem = mParentItemList.get(parentPosition);
-        Object child =  parentListItem.getChildItemList().get(childPosition);
+        Object child = parentListItem.getChildItemList().get(childPosition);
 
         int parentWrapperIndex = getParentWrapperIndex(parentPosition);
         ParentWrapper parentWrapper = (ParentWrapper) mItemList.get(parentWrapperIndex);
@@ -782,15 +778,15 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * has a ChildItem that has been removed from the data set, previously located at {@code childPosition}.
      * The ChildItem previously located at and after {@code childPosition} may
      * now be found at {@code childPosition - 1}.
-     * <p>
+     * <p/>
      * This is a structural change event. Representations of other existing items in the
      * data set are still considered up to date and will not be rebound, though their positions
      * may be altered.
      *
      * @param parentPosition Position of the ParentListItem which has a child removed from, relative
      *                       to list of ParentListItems only.
-     * @param childPosition Position of the child object that has been removed, relative to children
-     *                      of the ParentListItem specified by {@code parentPosition} only.
+     * @param childPosition  Position of the child object that has been removed, relative to children
+     *                       of the ParentListItem specified by {@code parentPosition} only.
      */
     public void notifyChildItemRemoved(int parentPosition, int childPosition) {
         int parentWrapperIndex = getParentWrapperIndex(parentPosition);
@@ -805,13 +801,13 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     /**
      * Notify any registered observers that the ParentListItem at {@code parentPosition} has
      * a child located at {@code childPosition} that has changed.
-     * <p>
+     * <p/>
      * This is an item change event, not a structural change event. It indicates that any
      * reflection of the data at {@code childPosition} is out of date and should be updated.
      * The ParentListItem at {@code childPosition} retains the same identity.
      *
      * @param parentPosition Position of the ParentListItem who has a child that has changed
-     * @param childPosition Position of the child that has changed
+     * @param childPosition  Position of the child that has changed
      */
     public void notifyChildItemChanged(int parentPosition, int childPosition) {
         ParentListItem parentListItem = mParentItemList.get(parentPosition);
@@ -825,7 +821,6 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             notifyItemChanged(listChildPosition);
         }
     }
-
 
 
     // endregion
@@ -887,7 +882,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      *
      * @param parentListItem A ParentListItem in the list of parents
      * @return If the parent exists on the list, returns its ParentWrapper.
-     *         Otherwise, returns null.
+     * Otherwise, returns null.
      */
     private ParentWrapper getParentWrapper(ParentListItem parentListItem) {
         int listItemCount = mItemList.size();

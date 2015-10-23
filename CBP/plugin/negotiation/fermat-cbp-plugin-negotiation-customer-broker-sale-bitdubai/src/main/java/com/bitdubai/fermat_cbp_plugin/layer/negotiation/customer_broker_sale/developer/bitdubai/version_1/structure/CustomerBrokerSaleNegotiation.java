@@ -83,7 +83,7 @@ public class CustomerBrokerSaleNegotiation implements CustomerBrokerSale {
     }
 
     @Override
-    public Clause modifyClause(Clause clause, ClauseStatus status) {
+    public Clause modifyClauseStatus(Clause clause, ClauseStatus status) {
         return null;
     }
 
