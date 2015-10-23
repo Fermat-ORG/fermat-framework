@@ -14,7 +14,7 @@ public class LayerReference {
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
     private static final int HASH_PRIME_NUMBER_ADD = 2819;
 
-    private       Platforms platform;
+    private       PlatformReference platformReference;
     private final Layers    layer   ;
 
     public LayerReference(final Layers    layer   ) {
@@ -22,19 +22,19 @@ public class LayerReference {
         this.layer    = layer   ;
     }
 
-    public LayerReference(final Platforms platform,
-                          final Layers    layer   ) {
+    public LayerReference(final PlatformReference platformReference,
+                          final Layers            layer           ) {
 
-        this.platform = platform;
+        this.platformReference = platformReference;
         this.layer    = layer   ;
     }
 
-    public Platforms getPlatform() {
-        return platform;
+    public PlatformReference getPlatformReference() {
+        return platformReference;
     }
 
-    public void setPlatform(Platforms platform) {
-        this.platform = platform;
+    public void setPlatformReference(PlatformReference platformReference) {
+        this.platformReference = platformReference;
     }
 
     public Layers getLayer() {
@@ -48,7 +48,7 @@ public class LayerReference {
 
         LayerReference that = (LayerReference) o;
 
-        return platform.equals(that.platform) && layer.equals(that.layer);
+        return platformReference.equals(that.platformReference) && layer.equals(that.layer);
     }
 
     @Override
@@ -57,8 +57,8 @@ public class LayerReference {
 
         c += layer .hashCode();
 
-        if (platform != null)
-            c += platform.hashCode();
+        if (platformReference != null)
+            c += platformReference.hashCode();
 
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
@@ -66,7 +66,7 @@ public class LayerReference {
     @Override
     public String toString() {
         return "LayerReference{" +
-                "platform=" + platform +
+                "platformReference=" + platformReference +
                 ", layer=" + layer +
                 '}';
     }
