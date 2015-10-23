@@ -24,7 +24,7 @@ public class FermatPluginManager {
         this.systemContext = systemContext;
     }
 
-    public final void startPlugin(final PluginVersionReference pluginVersionReference) throws CantStartPluginException,
+    public final void startPlugin(final PluginVersionReference pluginVersionReference) throws CantStartPluginException ,
                                                                                               VersionNotFoundException {
 
         AbstractPlugin abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
