@@ -455,6 +455,21 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
          */
         validateInjectedResources();
 
+        // initialize crypto payment request dao
+
+        try {
+
+            cryptoPaymentRequestNetworkServiceDao = new CryptoPaymentRequestNetworkServiceDao(pluginDatabaseSystem, pluginId);
+
+            cryptoPaymentRequestNetworkServiceDao.initialize();
+
+        } catch(CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException e) {
+
+            CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto payment request dao.");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            throw pluginStartException;
+        }
+
         try {
 
             /*
@@ -502,20 +517,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
             throw pluginStartException;
         }
 
-        // initialize crypto payment request dao
 
-        try {
-            
-            cryptoPaymentRequestNetworkServiceDao = new CryptoPaymentRequestNetworkServiceDao(pluginDatabaseSystem, pluginId);
-            
-            cryptoPaymentRequestNetworkServiceDao.initialize();
-            
-        } catch(CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException e) {
-            
-            CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto payment request dao.");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-            throw pluginStartException;
-        }
 
     }
 
