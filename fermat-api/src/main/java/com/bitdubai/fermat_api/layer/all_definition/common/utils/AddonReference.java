@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddo
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 /**
- * The class <code>com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference</code>
+ * The class <code>com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference</code>
  * haves all the information of a AddonReference.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
@@ -49,11 +49,11 @@ public class AddonReference {
 
     @Override
     public boolean equals(Object o){
-        if(!(o instanceof PluginReference))
+        if(!(o instanceof AddonReference))
             return false;
-        PluginReference compare = (PluginReference) o;
+        AddonReference compare = (AddonReference) o;
 
-        return addon.equals(compare.getPlugin()) &&
+        return addon.equals(compare.getAddon()) &&
                 version.equals(compare.getVersion()) &&
                 layerReference.equals(compare.getLayerReference());
     }

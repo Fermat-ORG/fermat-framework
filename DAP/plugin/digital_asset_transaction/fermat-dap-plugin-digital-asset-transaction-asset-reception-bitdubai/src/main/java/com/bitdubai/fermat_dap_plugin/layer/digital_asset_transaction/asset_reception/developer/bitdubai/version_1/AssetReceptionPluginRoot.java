@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -23,13 +24,18 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_reception.interfaces.AssetReceptionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.DealsWithAssetIssuerWallet;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.AbstractDigitalAssetReceptionVault;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.events.AssetReceptionRecorderService;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
@@ -54,6 +60,7 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
     UUID pluginId;
     PluginFileSystem pluginFileSystem;
     ServiceStatus serviceStatus= ServiceStatus.CREATED;
+    AssetReceptionRecorderService assetReceptionRecorderService;
 
     //TODO: Delete this log object
     Logger LOG = Logger.getGlobal();
@@ -123,7 +130,7 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
 
     @Override
     public void start() throws CantStartPluginException {
-        System.out.println(">>> starting asset reception plugin");
+        printSomething(">>> starting asset reception plugin");
         try{
             try {
                 this.assetReceptionDatabase=this.pluginDatabaseSystem.openDatabase(pluginId, AssetReceptionDatabaseConstants.ASSET_RECEPTION_DATABASE);
@@ -140,14 +147,30 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
                     pluginFileSystem,
                     errorManager);
             digitalAssetReceptionVault.setAssetIssuerWalletManager(this.assetIssuerWalletManager);
+            AssetReceptionDao assetReceptionDao=new AssetReceptionDao(this.pluginDatabaseSystem, this.pluginId);
+            this.assetReceptionRecorderService =new AssetReceptionRecorderService(assetReceptionDao, eventManager);
+            try{
+                this.assetReceptionRecorderService.start();
+            } catch(CantStartServiceException exception){
+                //This plugin must be stopped if this happens.
+                this.serviceStatus = ServiceStatus.STOPPED;
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                throw new CantStartPluginException("Asset reception Event Recorded could not be started", exception, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION.getKey(), "The plugin event recorder is not started");
+            }
 
-            testRaiseEvent();
         } catch (CantSetObjectException exception) {
             this.serviceStatus=ServiceStatus.STOPPED;
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Reception plugin", "Cannot set an object, probably is null");
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.serviceStatus=ServiceStatus.STOPPED;
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Reception plugin", "Cannot execute a database operation");
+        } catch (CantStartServiceException exception) {
+            this.serviceStatus=ServiceStatus.STOPPED;
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Reception plugin", "Cannot start event recorder service");
         }
 
         this.serviceStatus=ServiceStatus.STARTED;
+        testRaiseEvent();
     }
 
     @Override
@@ -183,13 +206,13 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
     private void testRaiseEvent(){
         printSomething("Start event test");
         FermatEvent eventToRaise = eventManager.getNewEvent(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
-        eventToRaise.setSource(EventSource.CRYPTO_ROUTER);
+        eventToRaise.setSource(EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION);
         eventManager.raiseEvent(eventToRaise);
         printSomething("End event test");
     }
 
     //TODO: DELETE THIS USELESS METHOD
     private void printSomething(String information){
-        LOG.info("ASSET_ISSUING: " + information);
+        LOG.info("ASSET RECEPTION: " + information);
     }
 }
