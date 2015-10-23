@@ -195,10 +195,6 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
 
                 try {
 
-                    ((DealsWithPluginFileSystem) bitcoinWalletManager).setPluginFileSystem(this.pluginFileSystem);
-                    ((DealsWithErrors) bitcoinWalletManager).setErrorManager(this.errorManager);
-                    ((DealsWithPluginDatabaseSystem) bitcoinWalletManager).setPluginDatabaseSystem(this.pluginDatabaseSystem);
-
                     bitcoinWalletManager.createWallet(walletPublicKey);
 
                     //Save wallet id on file

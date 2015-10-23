@@ -196,6 +196,22 @@ public class CryptoAddressesNetworkServicePluginRoot implements
          */
         validateInjectedResources();
 
+
+        // initialize crypto payment request dao
+
+        try {
+
+            cryptoAddressesNetworkServiceDao = new CryptoAddressesNetworkServiceDao(pluginDatabaseSystem, pluginId);
+
+            cryptoAddressesNetworkServiceDao.initialize();
+
+        } catch(CantInitializeCryptoAddressesNetworkServiceDatabaseException e) {
+
+            CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto addresses dao.");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            throw pluginStartException;
+        }
+
         try {
 
             /*
@@ -243,20 +259,6 @@ public class CryptoAddressesNetworkServicePluginRoot implements
             throw pluginStartException;
         }
 
-        // initialize crypto payment request dao
-
-        try {
-
-            cryptoAddressesNetworkServiceDao = new CryptoAddressesNetworkServiceDao(pluginDatabaseSystem, pluginId);
-
-            cryptoAddressesNetworkServiceDao.initialize();
-
-        } catch(CantInitializeCryptoAddressesNetworkServiceDatabaseException e) {
-
-            CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto addresses dao.");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-            throw pluginStartException;
-        }
 
     }
 
