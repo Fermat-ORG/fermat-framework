@@ -13,9 +13,9 @@
 * a *decentralized financial network* based on _blockchain technology_. 
 
 === The vision
-As we firmly believe that the next decade will witness crypto currencies going mainstream and governments issuing digital currency as well, we expect paper money is going to disappear within the next 5 to 10 years. Thus a strong consumer demand for *digital wallets* will inevitably emerge. In order to meet this demand thousands of diferent wallets should be available, different not only in terms of the level of abstraction they apply (some of them showing crypto currencies while others digital fiat over crypto or even digital assets) but also with respect to their appearance and how they feel to the user, as well as differencies in their functionalities.
-However, although a huge step has been made by Sakamoto's invention - in fact Bitcoin that has already become the first widely accepted cryptocurrency and its technology has become a standard - there is still too many technical aspects in using blockchain tech that this prevents it for being mass adopted. 
-What's more, in the last years, there has been a lot of fin tech investment money given to a myriad of startup initiating in bitcoin, cryptocurrencies and blockchain technology, and everything has gone so far that after "bitcoin revolution" the new trending wave of investenment is focus on what has been called "cryptocurrency 2.0". Nevertheless, there is still a point of view that is "out of tune" with the very nature and essence of this inventions: is not so wise to run "solo"the race to conquer the world market, because there is so much that has to be done, that is better to do it in a collaborative way, relying on the lessons of open source software and global projects with a "systemic view" of the interaction between the involved parties (individual or organizations) and the whole.
+As we firmly believe that the next decade will witness *crypto currencies* going mainstream and governments issuing digital currency as well, we expect *paper money* is going to _disappear_ within the next 5 to 10 years. Thus a strong consumer demand for *digital wallets* will inevitably emerge. In order to meet this demand thousands of diferent wallets should be available, different not only in terms of the level of abstraction they apply (some of them showing crypto currencies while others digital fiat over crypto or even digital assets) but also with respect to their appearance and how they feel to the user, as well as differencies in their functionalities.
+However, although a huge step has been made by Sakamoto's invention - in fact *Bitcoin* that has already become the first widely accepted cryptocurrency and its technology has become a standard - there is still too many technical aspects in using blockchain tech that this prevents it for being mass adopted. 
+What's more, in the last years, there has been a lot of fin tech investment money given to a myriad of startup initiating in bitcoin, cryptocurrencies and blockchain technology, and everything has gone so far that after "bitcoin revolution" the new trending wave of investenment is focus on what has been called *"cryptocurrency 2.0"*. Nevertheless, there is still a point of view that is "out of tune" with the very nature and essence of this inventions: is not so wise to run "solo" the race to conquer the world market, because there is so much that has to be done, that is better to do it in a *_collaborative way_*, relying on the lessons of *open source software* and *global projects* with a _"systemic view"_ of the interaction between the involved parties (individual or organizations) and the whole.
  
 So, the challenge that we are nowadays facing in this industry is related to finding the answers to the following questions:
 
@@ -28,18 +28,20 @@ So, the challenge that we are nowadays facing in this industry is related to fin
 The answers to each of these questions are addressed within FERMAT.
 
 In this era of a digitalised world, there are so many people who earn their living generating products and services at the heart of this digital world, being interconnected in an complex pattern of giving and receiving, services, money, assets, knowledge, permanently exchanging information of all kinds, weaving relationships, building a *global community*. + 
-We do *believe* the community collectively has more talent than any of us individually. We *believe* it is important to build on top of services and knowledge that others took time and effort to build. + 
-We _believe_ in *collaborative environments*. + 
-We _believe_ that growth of individums may generate growth and wealth for everybody if only we dedicate effort to build collectively rather than individually, sharing a *common vision* with a certain level of attained consensus on a "master plan for development". +
-We also believe in *decentralization* . +
+We do *_believe_* the community collectively has more talent than any of us individually. +
+We *_believe_* it is important to build on top of services and knowledge that others took time and effort to build. + 
+We *_believe_* in *collaborative environments*. + 
+We *_believe_* that growth of individums may generate growth and wealth for everybody if only we dedicate effort to build collectively rather than individually, sharing a *common vision* with a certain level of attained consensus on a "master plan for development". +
+We *_believe_* in *decentralization* . +
 
 NOTE: With the rising of Internet and the giant proliferation of computers permanently connected , what turn "the web" nowadays into "the cloud, among the huge benefits of a myriad of services running 24 hours on-line, we have also witnessed some vulnerability of systems totally dependent on a specific server ( or net of servers) when they crashed victim of hackers attack or when they were banned or controlled by goverments or central institutions not only causing data and money loses, but also spreading an awkward feeling of mistrust and being abused.
 At the contrary, a new era of *distributed systems* which run on a *decentralized peer-to-peer networks*, secured by the use of *cryptographic signatures* is being born, turning the old systems based on a "central" servers or central point of control gradually obsolete. The demand of such distributed systems is getting bigger because they are naturally safer ( ther's no central point to attack or control) and they honor the integrity of every participant and are provably fair and honest.
 
 
-In FERMAT we believe in people with passion and commitment to attain higher purposes, who are "crazy enough" and corageous to step forward and follow an *inspired vision*, to create a *critical mass* and start a *movement* that can change the world. We do believe we are collectively going to change this world and move forward to a prosperous future.
+In FERMAT we *_believe_* in people with passion and commitment to attain higher purposes, who are "crazy enough" and corageous to step forward and follow an *inspired vision*, to create a *critical mass* and start a *movement* that can change the world. + 
+We do *_believe_* we are collectively going to change this world and move forward to a prosperous future.
 
-We believe in a vision of humanity as a COLLABORATIVE LEARNING SPECIES which can trascend current limitations of the mainstream worldview of survival and scarcity into an unlimited and (re)evolutionary conception of humanity leading the path towards a thriving ECOSYSTEM of a *Global Integral Civilisation*.
+We *_believe_* in a vision of humanity as a COLLABORATIVE LEARNING SPECIES which can trascend current limitations of the mainstream worldview of survival and scarcity into an unlimited and (re)evolutionary conception of humanity leading the path towards a thriving ECOSYSTEM of a *Global Integral Civilisation*.
 
 === FERMAT's Mission: 
 

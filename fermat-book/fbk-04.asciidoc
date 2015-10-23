@@ -1,5 +1,5 @@
 :numbered:
-
+[[superlayers]]
 == FERMAT Operating Systems Superlayer
 
 NOTE: We call in FERMAT *Superlayer* to a group of layers whose modules offer services to be consumed system-wide, i.e. offering an infrastructure that hold the different *platforms* running over FERMAT. (it is like a "common ground" where different "towers" (the platforms) are built, sharing basics level services - like water, electricity and gas supply for a real world building-. )
@@ -8,7 +8,7 @@ This superlayer allow the connectivity of OS dependant modules to the rest of FE
 
 === _Android layer_
 In this layer, we find the different modules to allow FERMAT function on a device running Android. The usual requirements of storing and retrieving information, managing files, managing user log-on, checking the device status, location, etc are taken by each specific modules.
-This modules are written in a _android system_ developing language.
+This modules are written in a _android language_.
 This low level layer allows to build in sucesive layer the modules to implement the *Applications* and Subapplications running on Android.
 
 File System :: it allows creation of files in a reserved memory area for each plug-in (it functions as a "private folder")

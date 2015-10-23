@@ -1,79 +1,41 @@
 :numbered:
-== FERMAT Plug-ins Platform
+[[layersExplanation]]
+== FERMAT layers explanation
 
-*FERMAT Plug-ins Platform* is open source and run on end users’ devices. It allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment. A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way. +
-This platform encapsulates all the modules that provides the basic services that build the back end infrastructure of FERMAT multiplatform system with the architectural characteristics that we have already explored in the previous section <<architecture>>. +
-The _multilayer architecture_ reveals in this platform its convenience allowing the modules group into _layers_ according to their common functionalities, and taking into account the future requirements of modules and applications built on top this platform.
-These *low level* layers built with a considerable atomicity in its components (i.e. each component deals with a very specific and contrained kind of events) really render the whole FERMAT system with a strong conceptual foundation and yet a large flexibility and adaptability to further developments. +
-
+The _multilayer architecture_ reveals useful when grouping the plugins according to their common functionalities, which on one hand gives a certain order and structure to the system and lets identify common challenges to solve when writing code, but on the other hand, the conceptual strength of using _layers_ stimulate the creation of future plugins that reveal to be necessary when decomposing the big task in smaller steps to solve and implement. What's more, plugins originally conceived to serve a certain function, afterwards appear to be reusable for new developments. +
+We have already explored in the previous sections how FERMAT is initialized, the main role of the Core Platform to deploy the whole system structure, and the first available services provided by the system-wide _superlayers_ . +
+Now, let us explore the next _layers_ folowing on top, which are similar in every following _platforms_ within FERMAT. +
+Layers are built with a considerable atomicity in its components (i.e. each component deals with a very specific and contrained kind of events) what really renders the whole FERMAT system with a strong, structured and solid foundation and at the same time a large flexibility and adaptability for further developments adn evolution. +
 
 === _Platform Services layer_
-The modules in this layer handle the very basic tasks that allow plugins interact safely in and uncontrolled environment, taking care of a careful transmission of responsability from one component to another and specially the management of exceptions.
-  
-Error Manager :: it handles the _unexpected exceptions_, contacting the developer of the plugin where the exception occured to let him solve it. 
-Event Manager :: it keeps track of the _events_ occurring alongside the entire platform to let plugins listen to the events that correspond to its function to trigger the corresponding plugin activity. 
-Connectivity Subsystem ::
-Location Subsystem ::
-Power Subsystem ::
-Platform Info :: + 
+The modules in this layer handle the very basic tasks that allow plugins interact safely in and uncontrolled environment, taking care of a careful transmission of responsability from one component to another and specially the management of exceptions and track of all systemś *events*.
 
-
+////
 === _Hardware layer_
 As FERMAT runs distributed in different devices, this layer has the modules necessary to identify each of this devices _independently_ of the user that is logged in, and also to provide all the device's information that is needed for the system to run.+
 
-Local Device ::
-Device Network :: +
-
-
 === _Users layer_
 FERMAT is a multiuser and multidevice system. Therefore, depending on how the user interacts with FERMAT, users are divided into certain _users categories_ which allow to properly handle the user's activity within FERMAT. +
- 
-Device User :: + this module handles transactions that take place inside the same device, an the user is identified in FERMAT as a *Device User*
-
-
 === _Plugin layer_
-
-Identity ::
-Dependency :: +
-
-
 === _License layer_
 FERMAT system ensures a _microlicense_ system to let the developer of a certain plug-in or certain wallet or any other module to charge a *fee* for the use of the component, and the revenue is enforced programmatically by FERMAT to reach the license owner.    
 Plugin :: +
-
+////
 
 === _Network Service layer_
 Each time that a certain system function must perform any operation *outside* the device where FERMAT is running, a _network service_ is required to follow the execution in other devices until is completed. +
-Network services' modules need to have a * communication channel* stablished and maintained between the parties involved, what is done by the *P2P networks and communication superlayer* ( see the explanation at the previous section <<communicationLayer>> )+
-Each *network service module* running on a _local device_ stablish communication EXCLUSIVELY to its _counterpart_ running in the _remote device_. +
- 
-Sub App Resources ::
-System Monitor ::
-Error Manager ::
-Messenger ::
-Technical Support :: +
-
-
+Network services' modules need to have a *communication channel* stablished and maintained between the parties involved, what is done by the *P2P networks and communication superlayer* ( see the explanation at the previous section <<communicationLayer>> ) +
+Each *network service module* running on a _local device_ stablishes communication EXCLUSIVELY to its _counterpart_ running in the _remote device_. + The module handles a table of request and responses to communicate with the counterpart and so perform the required task. +
 
 === _Actor Network Service layer_
-Developer:: +
-
+As we have already introduced the concept of system *actors* to guide the functionalities to match the specific needs of FERMATs users, in this layer live the modules that provide *network services* specifically to interconnect the *actors* intervining in the operations held by a specific platform within FERMAT. + 
 
 === _Identity layer_
-Developer :: gathers information about developers of modules of FERMAT, not only to identify his products, but also to give technical support.
-Designer :: +
-
+This layer holds the plugins to manage all the necessary information about the actors *identity* within FERMAT. 
 
 === _World layer_
-Location :: +
 
 === _Middleware layer_
-
-Intra User Technical Report ::
-Developer User Technical Report ::
-Developer Error Manager ::
-Sub App Settings ::
-Notification :: +
 
 === _Actor layer_
 Developer ::

@@ -1,77 +1,41 @@
-[[DigitalAssets]]
-== FERMAT Digital Asset Platform. Blockchain beyond currency 
+== FERMAT Crypto Commodity Money
 
-=== What is a Digital Asset ?
+This platform ....
 
-
- 
 
 === _Network Service layer_
 Each time that a certain system function must perform any operation *outside* the device where FERMAT is running, a _network service_ is required to follow the execution in other devices until is completed. +
 Network services' modules need to have a * communication channel* stablished and maintained between the parties involved, what is done by the *P2P networks and communication superlayer* ( see the explanation at the previous section <<communicationLayer>> )+
 Each *network service module* running on a _local device_ stablish communication EXCLUSIVELY to its _counterpart_ running in the _remote device_. +
  
-Asset Transmission :: +
+Money Request ::
+Money Transmission :: +
 
-=== _Actor Network Service layer_
-Asset Issuer :: 
-Asset User ::
-Redeem Point :: +
-
-=== _Identity layer_
-Asset Issuer :: 
-Asset User ::
-Redeem Point :: +
 
 === _Wallet layer_
-Asset Issuer Wallet ::
-Asset User Wallet ::
-Redeem Point Wallet :: +
+Crypto Commodity Wallet :: 
+Discount Walet :: +
 
-=== _Digital Asset Transaction_
-Asset Distribution ::
-Asset Reception :: 
-Asset Issuing :: 
-Issuer Redemption :: 
-User Redemption ::
-Redeem Point Redemption ::
-Asset Appropiation :: 
-Appropiation Stats :: +
 
-=== _Middleware layer_
-Asset Factory :: +
+=== _Composite Wallet layer_
+Multiaccount Wallet :: +
 
-=== _Actor layer_
-Asset Issuer :: 
-Asset User ::
-Redeem Point :: +
 
-=== _Desktop Module layer_
-Sub App Manager :: 
-Wallet Manager :: +
+=== _Crypto Money Transaction layer_
+Incoming Device User ::
+Incoming Extra Actor ::
+Incoming Intra Actor ::
+Intra Wallet ::
+Outgoing Device User ::
+Outgoing Extra Actor ::
+Outgoing Intra Actor ::
+Inter Account :: + 
 
-=== _Sub App Module layer_
-Asset Factory :: :: 
-Asset Issuer Community :: 
-Asset User Community ::
-Redeem Point Community ::+
 
-=== _Wallet Module layer_
-Asset Issuer :: 
-Asset User ::
-Redeem Point :: +
-
-=== _Desktop layer_
-Sub App Manager :: 
-Wallet Manager :: +
-
-=== _Sub App layer_
-Asset Factory :: :: 
-Asset Issuer Community :: 
-Asset User Community ::
-Redeem Point Community ::+
+=== _Request layer_
+Money Request :: +
 
 === _Reference Wallet layer_
-Asset Issuer :: 
-Asset User ::
-Redeem Point :: +
+Discount Wallet :: +
+
+

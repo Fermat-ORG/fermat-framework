@@ -1,24 +1,56 @@
-:numbered:
-
-== FERMAT Cash & FERMAT Bank Platforms 
+== FERMAT Shoping Platform: + 
 
 
-=== FERMAT Cash platform
 
-==== _Wallet layer_
-Cash Money :: +
+=== _Network Service layer_
+Each time that a certain system function must perform any operation *outside* the device where FERMAT is running, a _network service_ is required to follow the execution in other devices until is completed. +
+Network services' modules need to have a * communication channel* stablished and maintained between the parties involved, what is done by the *P2P networks and communication superlayer* ( see the explanation at the previous section <<communicationLayer>> )+
+Each *network service module* running on a _local device_ stablish communication EXCLUSIVELY to its _counterpart_ running in the _remote device_. +
+ 
+Purchase Transmission :: +
 
-==== _Cash Money Transaction layer_
-Give Cash On Hand ::
-Receive Cash On Hand ::
-Send Cash Delivery ::
-Receive Cash Delivery :: +
+=== _Actor Network Service layer_
+Shop :: 
+Brand ::
+Retailer :: +
 
-=== FERMAT Bank platform
+=== _Identity layer_
+Shop :: 
+Brand ::
+Retailer :: +
 
-==== _Wallet layer_
-Bank Money :: +
+=== _Wallet layer_
+Shop Wallet :: 
+Brand Wallet ::
+Retailer Wallet :: +
 
-==== _Bank Money Transaction layer_
-Make Offline Bank Transfer ::
-Receive Offline Bank Transfer :: +
+=== _Crypto Money Transaction_
+Purchase ::
+Sale :: +
+
+=== _Actor layer_
+Shop :: 
+Brand ::
+Retailer :: +
+
+=== _Subapp Module layer_
+Shop :: 
+Brand ::
+Retailer :: +
+
+=== _Wallet Module layer_
+Shop Wallet :: 
+Brand Wallet ::
+Retailer Wallet :: +
+
+
+=== _Subapp layer_
+Shop :: 
+Brand ::
+Retailer :: +
+
+=== _Reference Wallet layer_
+Shop Wallet :: 
+Brand Wallet ::
+Retailer Wallet :: +
+
