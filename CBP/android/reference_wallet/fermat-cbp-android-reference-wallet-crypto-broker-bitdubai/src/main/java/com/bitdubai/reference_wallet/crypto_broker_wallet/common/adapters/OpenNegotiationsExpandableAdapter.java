@@ -40,7 +40,7 @@ public class OpenNegotiationsExpandableAdapter
      */
     @Override
     public GrouperViewHolder onCreateParentViewHolder(ViewGroup parent) {
-        View view = mInflater.inflate(R.layout.cbp_list_item_parent, parent, false);
+        View view = mInflater.inflate(R.layout.cbp_grouper_list_item, parent, false);
         return new GrouperViewHolder(view);
     }
 
@@ -53,7 +53,7 @@ public class OpenNegotiationsExpandableAdapter
      */
     @Override
     public OpenNegotiationViewHolder onCreateChildViewHolder(ViewGroup parent) {
-        View view = mInflater.inflate(R.layout.cbp_list_item_child, parent, false);
+        View view = mInflater.inflate(R.layout.cbp_negotiation_list_item, parent, false);
         return new OpenNegotiationViewHolder(view);
     }
 
