@@ -17,9 +17,10 @@ import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistsTransactionUUIDException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.DigitalAssetSwap;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetSwap;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantDeliverDigitalAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -32,7 +33,7 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 26/09/15.
  */
-public class DigitalAssetDistributor extends DigitalAssetSwap {
+public class DigitalAssetDistributorTransaction extends AbstractDigitalAssetSwap {
 
     AssetVaultManager assetVaultManager;
     ErrorManager errorManager;
@@ -42,7 +43,7 @@ public class DigitalAssetDistributor extends DigitalAssetSwap {
     AssetDistributionDao assetDistributionDao;
     DigitalAssetDistributionVault digitalAssetDistributionVault;
 
-    public DigitalAssetDistributor(AssetVaultManager assetVaultManager, ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
+    public DigitalAssetDistributorTransaction(AssetVaultManager assetVaultManager, ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
         super(assetVaultManager,  pluginId, pluginFileSystem);
         this.errorManager=errorManager;
     }
@@ -175,7 +176,14 @@ public class DigitalAssetDistributor extends DigitalAssetSwap {
         //DigitalAsset Path structure: digital-asset-distribution/hash/digital-asset.xml
         //DigitalAssetMetadata Path structure: digital-asset-distribution/hash/digital-asset-metadata.xml
         //TODO: create an UUID for this asset and persists in database
-        this.digitalAssetDistributionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata,"");
+        try{
+            UUID distributionId=UUID.randomUUID();
+            this.assetDistributionDao.persistDistributionId(digitalAssetMetadata.getGenesisTransaction(),distributionId);
+            this.digitalAssetDistributionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, distributionId.toString());
+        } catch (CantPersistsTransactionUUIDException exception) {
+            throw new CantCreateDigitalAssetFileException(exception, "Persisting Internal distribution id", "Cannot update the internal Id by genesis transaction");
+        }
+
 
     }
 

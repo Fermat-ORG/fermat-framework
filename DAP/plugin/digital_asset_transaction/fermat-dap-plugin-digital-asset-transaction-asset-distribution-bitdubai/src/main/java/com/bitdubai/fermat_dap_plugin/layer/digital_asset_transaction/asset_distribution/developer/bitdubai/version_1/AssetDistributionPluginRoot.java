@@ -23,6 +23,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.DealsWithBitcoinNetwork;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.DealsWithAssetVault;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
@@ -61,7 +63,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/09/15.
  */
-public class AssetDistributionPluginRoot implements AssetDistributionManager, DealsWithAssetIssuerWallet, DealsWithAssetTransmissionNetworkServiceManager, DealsWithBitcoinCryptoNetwork, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
+public class AssetDistributionPluginRoot implements AssetDistributionManager, DealsWithAssetIssuerWallet, DealsWithAssetTransmissionNetworkServiceManager, DealsWithBitcoinNetwork, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     AssetDistributionTransactionManager assetDistributionTransactionManager;
@@ -74,7 +76,7 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
     UUID pluginId;
     ServiceStatus serviceStatus= ServiceStatus.CREATED;
     PluginFileSystem pluginFileSystem;
-    BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
+    BitcoinNetworkManager bitcoinNetworkManager;
     //TODO: Delete this log object
     Logger LOG = Logger.getGlobal();
 
@@ -131,11 +133,11 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
             this.assetDistributionTransactionManager.setDigitalAssetDistributionVault(digitalAssetDistributionVault);
             this.assetDistributionTransactionManager.setAssetDistributionDatabaseDao(assetDistributionDao);
             this.assetDistributionTransactionManager.setAssetTransmissionNetworkServiceManager(this.assetTransmissionNetworkServiceManager);
-            this.assetDistributionTransactionManager.setBitcoinManager(this.bitcoinCryptoNetworkManager);
+            this.assetDistributionTransactionManager.setBitcoinManager(this.bitcoinNetworkManager);
         }catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Distribution plugin", "Cannot set an object, probably is null");
         } catch (CantExecuteDatabaseOperationException exception) {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting pluginDatabaseSystem in DigitalAssetDistributor", "Error in constructor method AssetDistributor");
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting pluginDatabaseSystem in DigitalAssetDistributorTransaction", "Error in constructor method AssetDistributor");
         }
         this.serviceStatus=ServiceStatus.STARTED;
         //testRaiseEvent();
@@ -163,7 +165,7 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
 
     //TODO: DELETE THIS USELESS METHOD
     private void printSomething(String information){
-        LOG.info("ASSET_DISTRIBUTION: "+information);
+        LOG.info("ASSET_DISTRIBUTION: " + information);
     }
 
     @Override
@@ -259,10 +261,6 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
         this.assetTransmissionNetworkServiceManager=assetTransmissionNetworkServiceManager;
     }
 
-    @Override
-    public void setBitcoinCryptoNetworkManager(BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager) {
-        this.bitcoinCryptoNetworkManager=bitcoinCryptoNetworkManager;
-    }
     EventManager eventManager;
     private void testRaiseEvent(){
         printSomething("Start event RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION");
@@ -270,5 +268,10 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
         eventToRaise.setSource(EventSource.CRYPTO_ROUTER);
         eventManager.raiseEvent(eventToRaise);
         printSomething("End event RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION");
+    }
+
+    @Override
+    public void setBitcoinNetworkManager(BitcoinNetworkManager bitcoinNetworkManager) {
+        this.bitcoinNetworkManager=bitcoinNetworkManager;
     }
 }

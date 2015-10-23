@@ -185,7 +185,8 @@ class BitcoinCryptoNetworkMonitor implements Agent {
          */
         public void broadcastTransaction(Transaction tx) throws CantBroadcastTransactionException {
             try{
-                peerGroup.broadcastTransaction(tx);
+                peerGroup.broadcastTransaction(tx).future().get();
+
             } catch (Exception e){
                 throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, e, null, null);
             }

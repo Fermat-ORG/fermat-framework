@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.*;
+import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
 
@@ -15,10 +15,10 @@ import java.util.UUID;
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */
-public abstract class AbstractPlugin {
+public abstract class AbstractPlugin implements Plugin {
 
-    private Map<FermatAddonsEnum , AbstractAddon > addons ;
-    private Map<FermatPluginsEnum, AbstractPlugin> plugins;
+    private Map<AddonReference , AbstractAddon > addons ;
+    private Map<PluginReference, AbstractPlugin> plugins;
 
     public AbstractPlugin() {
 
@@ -26,26 +26,26 @@ public abstract class AbstractPlugin {
         this.plugins = new HashMap<>();
     }
 
-    public final void addAddonReference(final FermatAddonsEnum descriptor,
-                                        final AbstractAddon    addon     ) {
+    public final void addAddonReference(final AddonReference addonReference,
+                                        final AbstractAddon  addon         ) {
 
-        addons.put(descriptor, addon);
+        addons.put(addonReference, addon);
     }
 
-    public final void addPluginReference(final FermatPluginsEnum descriptor,
-                                         final AbstractPlugin    plugin    ) {
+    public final void addPluginReference(final PluginReference pluginReference,
+                                         final AbstractPlugin  plugin         ) {
 
-        plugins.put(descriptor, plugin);
+        plugins.put(pluginReference, plugin);
     }
 
-    protected final AbstractAddon getAddonReference(final FermatAddonsEnum descriptor) {
+    protected final AbstractAddon getAddonReference(final AddonReference addonReference) {
 
-        return addons.get(descriptor);
+        return addons.get(addonReference);
     }
 
-    protected final AbstractPlugin getPluginReference(final FermatPluginsEnum descriptor) {
+    protected final AbstractPlugin getPluginReference(final PluginReference pluginReference) {
 
-        return plugins.get(descriptor);
+        return plugins.get(pluginReference);
     }
 
     public abstract List<AddonReference> getNeededAddonReferences();
