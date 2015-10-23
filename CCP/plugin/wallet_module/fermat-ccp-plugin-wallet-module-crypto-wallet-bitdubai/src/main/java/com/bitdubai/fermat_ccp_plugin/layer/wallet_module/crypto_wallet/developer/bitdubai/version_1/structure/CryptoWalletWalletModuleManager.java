@@ -852,6 +852,20 @@ public class CryptoWalletWalletModuleManager implements DealsWithCryptoTransmiss
         }
     }
 
+    @Override
+    public List<com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser> getActiveIdentities() {
+
+       try{
+
+           return intraWalletUserManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 
     private String createActor(String actorName, Actors actorType, byte[] photo) throws CantCreateOrRegisterActorException {
         switch (actorType){

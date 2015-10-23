@@ -1,7 +1,10 @@
 package com.bitdubai.fermat_ccp_core.layer.transaction.incoming_extra_user;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.CCPPlugins;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.DeveloperBitDubai;
 
 /**
@@ -12,6 +15,10 @@ import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.deve
  */
 public class IncomingExtraUserPluginSubsystem extends AbstractPluginSubsystem {
 
+    public IncomingExtraUserPluginSubsystem() {
+        super(new PluginReference(CCPPlugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION));
+    }
+
     @Override
     public void start() throws CantStartSubsystemException {
         /**
@@ -20,7 +27,7 @@ public class IncomingExtraUserPluginSubsystem extends AbstractPluginSubsystem {
          */
 
         try {
-            DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
+            AbstractPluginDeveloper developerBitDubai = new DeveloperBitDubai();
             plugin = developerBitDubai.getPlugin();
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());

@@ -130,14 +130,8 @@ public class WalletFactoryProjectMiddlewarePluginRoot implements  DatabaseManage
         }
 
         //create initial data in the database
-        test(WalletFactoryProjectState.CLOSED);
-        test(WalletFactoryProjectState.IN_PROGRESS);
-
-        /**
-         * Test para subir a github
-         */
-
-
+        //test(WalletFactoryProjectState.CLOSED);
+        //test(WalletFactoryProjectState.IN_PROGRESS);
         this.serviceStatus = ServiceStatus.STARTED;
     }
     @Override

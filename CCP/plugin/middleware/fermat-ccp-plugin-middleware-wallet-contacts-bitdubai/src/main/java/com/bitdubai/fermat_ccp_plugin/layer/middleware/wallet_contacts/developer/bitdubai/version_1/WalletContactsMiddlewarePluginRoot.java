@@ -4,6 +4,9 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -59,16 +62,27 @@ import java.util.regex.Pattern;
  * * * * * *
  */
 
-public class WalletContactsMiddlewarePluginRoot implements DatabaseManagerForDevelopers          ,
-                                                           DealsWithCryptoAddressesNetworkService,
-                                                           DealsWithErrors                       ,
-                                                           DealsWithEvents                       ,
-                                                           DealsWithPluginDatabaseSystem         ,
-                                                           DealsWithLogger                       ,
-                                                           LogManagerForDevelopers               ,
-                                                           Plugin                                ,
-                                                           Service                               ,
-                                                           WalletContactsManager                 {
+public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
+        implements DatabaseManagerForDevelopers          ,
+                   DealsWithCryptoAddressesNetworkService,
+                   DealsWithErrors                       ,
+                   DealsWithEvents                       ,
+                   DealsWithPluginDatabaseSystem         ,
+                   DealsWithLogger                       ,
+                   LogManagerForDevelopers               ,
+                   Plugin                                ,
+                   Service                               ,
+                   WalletContactsManager                 {
+
+    @Override
+    public List<AddonReference> getNeededAddonReferences() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<PluginReference> getNeededPluginReferences() {
+        return new ArrayList<>();
+    }
 
     /**
      * DealsWithCryptoAddressesNetworkService Interface member variables.

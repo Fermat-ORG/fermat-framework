@@ -11,13 +11,17 @@ public class AssetRedeemPointWalletBalance implements AssetRedeemPointWalletList
     String description;
     long bookBalance;
     long availableBalance;
+    long quantityBookBalance;
+    long quantityAvailableBalance;
 
-    public AssetRedeemPointWalletBalance(String assetPublicKey, String name, String description, long bookBalance, long availableBalance){
+    public AssetRedeemPointWalletBalance(String assetPublicKey, String name, String description, long bookBalance, long availableBalance, long quantityBookBalance, long quantityAvailableBalance){
         this.assetPublicKey = assetPublicKey;
         this.name = name;
         this.description = description;
         this.bookBalance = bookBalance;
         this.availableBalance = availableBalance;
+        this.quantityAvailableBalance = quantityAvailableBalance;
+        this.quantityBookBalance = quantityBookBalance;
     };
 
     public AssetRedeemPointWalletBalance(){};
@@ -55,5 +59,25 @@ public class AssetRedeemPointWalletBalance implements AssetRedeemPointWalletList
     }
     public void setAvailableBalance(long availableBalance) {
         this.availableBalance = availableBalance;
+    }
+
+    @Override
+    public long getQuantityBookBalance() {
+        return quantityBookBalance;
+    }
+
+    @Override
+    public void setQuantityBookBalance(long quantityBookBalance) {
+        this.quantityBookBalance = quantityBookBalance;
+    }
+
+    @Override
+    public long getQuantityAvailableBalance() {
+        return quantityAvailableBalance;
+    }
+
+    @Override
+    public void setQuantityAvailableBalance(long quantityAvailableBalance) {
+        this.quantityAvailableBalance = quantityAvailableBalance;
     }
 }

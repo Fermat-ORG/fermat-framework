@@ -216,4 +216,14 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, Da
     public UTXOProvider getUTXOProvider(BlockchainNetworkType blockchainNetworkType) {
         return bitcoinCryptoNetworkManager.getUTXOProvider(blockchainNetworkType);
     }
+
+    /**
+     * Gets the specified bitcoin transaction
+     * @param transactionHash
+     * @return
+     */
+    @Override
+    public Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
+        return bitcoinCryptoNetworkManager.getBitcoinTransaction(blockchainNetworkType, transactionHash);
+    }
 }
