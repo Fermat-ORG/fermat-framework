@@ -19,10 +19,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/10/2015.
  */
-public abstract class AbstractDeveloperUtilsPlugin<T extends DeveloperTool, Z extends FeatureForDevelopers> {
+public abstract class AbstractDeveloperUtilsPlugin<T extends DeveloperTool> extends AbstractPlugin {
 
-    private final Map<AddonVersionReference , AbstractAddon > addonReferences ;
-    private final Map<PluginVersionReference, AbstractPlugin> pluginReferences;
+    private final Map<AddonVersionReference , AbstractAddon > availableAddonReferences ;
+    private final Map<PluginVersionReference, AbstractPlugin> availablePluginReferences;
 
     private final DevelopersUtilReference developersUtilReference;
 
@@ -30,54 +30,38 @@ public abstract class AbstractDeveloperUtilsPlugin<T extends DeveloperTool, Z ex
 
         this.developersUtilReference = developersUtilReference;
 
-        this.addonReferences  = new ConcurrentHashMap<>();
-        this.pluginReferences = new ConcurrentHashMap<>();
+        this.availableAddonReferences  = new ConcurrentHashMap<>();
+        this.availablePluginReferences = new ConcurrentHashMap<>();
     }
 
     public final void registerAvailableAddon(final AddonVersionReference addonVersionReference,
                                              final AbstractAddon         abstractAddon        ) {
 
-        addonReferences.put(addonVersionReference, abstractAddon);
+        availableAddonReferences.put(addonVersionReference, abstractAddon);
     }
 
     protected final List<AddonVersionReference> listAvailableAddons() {
-        return Arrays.asList((AddonVersionReference[]) addonReferences.keySet().toArray());
+        return Arrays.asList((AddonVersionReference[]) availableAddonReferences.keySet().toArray());
     }
 
     public final void registerAvailablePlugin(final PluginVersionReference pluginVersionReference,
                                               final AbstractPlugin         abstractPlugin        ) {
 
-        pluginReferences.put(pluginVersionReference, abstractPlugin);
+        availablePluginReferences.put(pluginVersionReference, abstractPlugin);
     }
 
     protected final List<PluginVersionReference> listAvailablePlugins() {
-        return Arrays.asList((PluginVersionReference[]) pluginReferences.keySet().toArray());
+        return Arrays.asList((PluginVersionReference[]) availablePluginReferences.keySet().toArray());
     }
 
-    @SuppressWarnings("unchecked")
-    protected final Z getFeatureForDevelopers(final AddonVersionReference addonVersionReference) throws CantGetFeatureForDevelopersException {
+    protected final FeatureForDevelopers getFeatureForDevelopers(final AddonVersionReference addonVersionReference) throws CantGetFeatureForDevelopersException {
 
-        try {
-
-            return (Z) addonReferences.get(addonVersionReference).getFeatureForDevelopers(this.developersUtilReference);
-
-        } catch (ClassCastException e) {
-
-            throw new CantGetFeatureForDevelopersException(e, addonVersionReference.toString(), "Feature for developers is not the expected.");
-        }
+        return availableAddonReferences.get(addonVersionReference).getFeatureForDevelopers(this.developersUtilReference);
     }
 
-    @SuppressWarnings("unchecked")
-    protected final Z getFeatureForDevelopers(final PluginVersionReference pluginVersionReference) throws CantGetFeatureForDevelopersException {
+    protected final FeatureForDevelopers getFeatureForDevelopers(final PluginVersionReference pluginVersionReference) throws CantGetFeatureForDevelopersException {
 
-        try {
-
-            return (Z) pluginReferences.get(pluginVersionReference).getFeatureForDevelopers(this.developersUtilReference);
-
-        } catch (ClassCastException e) {
-
-            throw new CantGetFeatureForDevelopersException(e, pluginVersionReference.toString(), "Feature for developers is not the expected.");
-        }
+        return availablePluginReferences.get(pluginVersionReference).getFeatureForDevelopers(this.developersUtilReference);
     }
 
     public final DevelopersUtilReference getDevelopersUtilReference() {
