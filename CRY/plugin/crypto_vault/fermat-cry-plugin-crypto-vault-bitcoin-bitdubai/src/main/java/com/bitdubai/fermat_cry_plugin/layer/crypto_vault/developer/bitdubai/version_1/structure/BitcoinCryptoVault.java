@@ -58,6 +58,7 @@ import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.script.ScriptBuilder;
+import org.bitcoinj.script.ScriptOpCodes;
 import org.bitcoinj.store.UnreadableWalletException;
 import org.bitcoinj.wallet.DeterministicSeed;
 
@@ -422,14 +423,15 @@ public class BitcoinCryptoVault implements
             Address address = new Address(this.networkParameters, addressTo.getAddress());
 
             // If we don't have enough money, we'll raise the exception
-            Wallet.SendRequest request = Wallet.SendRequest.to(address, Coin.valueOf(amount));
-
-            vault.completeTx(request);
-
+            //Wallet.SendRequest request = Wallet.SendRequest.to(address, Coin.valueOf(amount));
+            PeerGroup peers = (PeerGroup) bitcoinCryptoNetworkManager.getBroadcasters();
+            Wallet.SendResult result = vault.sendCoins(peers, address, Coin.valueOf(amount));
+            //vault.completeTx(request);
+            result.broadcastComplete.get();
             /**
              * I will check that it is not an address that belongs to my wallet
              */
-            Transaction tx = request.tx;
+            Transaction tx = result.tx;
 
             String txHash = tx.getHashAsString();
 
@@ -446,19 +448,20 @@ public class BitcoinCryptoVault implements
             // after we persist the new Transaction, we'll persist it as a Fermat transaction.
             db.persistnewFermatTransaction(fermatTxId.toString());
 
-            vault.commitTx(request.tx);
 
-            PeerGroup peers = (PeerGroup) bitcoinCryptoNetworkManager.getBroadcasters();
+            //vault.commitTx(request.tx);
+
+
 
             // well broadcast and wait for the confirmation of the network
-            TransactionBroadcast transactionBroadcast = peers.broadcastTransaction(request.tx);
-            ListenableFuture<Transaction> listenableFuture = transactionBroadcast.broadcast();
+            //TransactionBroadcast transactionBroadcast = peers.broadcastTransaction(request.tx);
+            //ListenableFuture<Transaction> listenableFuture = transactionBroadcast.broadcast();
 
             /*
              * the transaction was broadcasted and accepted by the nwetwork
              * I will persist it to inform it when the confidence level changes
              */
-            listenableFuture.get();
+            //listenableFuture.get();
 
             vault.saveToFile(vaultFile);
 
@@ -530,16 +533,21 @@ public class BitcoinCryptoVault implements
             // generate the address in the BitcoinJ format
             Address address = new Address(this.networkParameters, addressTo.getAddress());
 
+            PeerGroup peers = (PeerGroup) bitcoinCryptoNetworkManager.getBroadcasters();
+
             // If we don't have enough money, we'll raise the exception
             Wallet.SendRequest request = Wallet.SendRequest.to(address, Coin.valueOf(amount));
 
-
+            //request.tx.addOutput(Coin.ZERO, new ScriptBuilder().op(ScriptOpCodes.OP_RETURN).data(op_Return.getBytes()).build());
             vault.completeTx(request);
+            vault.commitTx(request.tx);
+            vault.saveToFile(vaultFile);
 
-            /**
-             * after the transaction is completed, I will hadd the op_return value into a new output.
-             */
-            request.tx.addOutput(Coin.ZERO, new ScriptBuilder().op(0x6a).data(op_Return.getBytes()).build());
+            TransactionBroadcast broadcast= peers.broadcastTransaction(request.tx);
+            broadcast.future().get();
+
+
+
 
             /**
              * I will check that it is not an address that belongs to my wallet
@@ -548,12 +556,6 @@ public class BitcoinCryptoVault implements
 
             String txHash = tx.getHashAsString();
 
-            if (isSendingMoneyToMyself(tx)) {
-                throw new InvalidSendToAddressException(
-                        "Address to:" + addressTo.getAddress(),
-                        "The user entered an address given by his own vault."
-                );
-            }
 
             // we're ready to go. we'll proceed to save the transaction and commit it.
             db.persistNewTransaction(fermatTxId.toString(), txHash);
@@ -561,31 +563,11 @@ public class BitcoinCryptoVault implements
             // after we persist the new Transaction, we'll persist it as a Fermat transaction.
             db.persistnewFermatTransaction(fermatTxId.toString());
 
-            vault.commitTx(request.tx);
-
-            PeerGroup peers = (PeerGroup) bitcoinCryptoNetworkManager.getBroadcasters();
-
-            // well broadcast and wait for the confirmation of the network
-            TransactionBroadcast transactionBroadcast = peers.broadcastTransaction(request.tx);
-            ListenableFuture<Transaction> listenableFuture = transactionBroadcast.broadcast();
-
-            /*
-             * the transaction was broadcasted and accepted by the nwetwork
-             * I will persist it to inform it when the confidence level changes
-             */
-            listenableFuture.get();
-
-            vault.saveToFile(vaultFile);
 
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: bitcoin sent!!!", "Address to: " + addressTo.getAddress(), "Amount: " + amount);
 
             //returns the created transaction id
             return txHash;
-
-        } catch(InvalidSendToAddressException         |
-                CryptoTransactionAlreadySentException e) {
-
-            throw e;
 
         } catch (InterruptedException interruptedException) {
 
@@ -788,7 +770,12 @@ public class BitcoinCryptoVault implements
                     /**
                      * This is address To
                      */
+                try{
                     addresses[1] = output.getScriptPubKey().getToAddress(networkParameters).toString();
+                } catch (Exception e){
+
+                }
+                    addresses[1] = "";
                 }
 
             }

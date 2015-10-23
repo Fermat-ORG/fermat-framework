@@ -638,7 +638,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
          */
         try {
 
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfile, discoveryQueryParameters);
 
         } catch (CantRequestListException e) {
 
@@ -721,7 +721,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
     }
 
     @Override
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
 
         System.out.println(" AssetTransmissionPluginRoot - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
@@ -768,19 +768,25 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                     }
 
                     @Override
-                    public Double getLocationLatitude() {
+                    public ConnectionState getContactState() {
                         return null;
                     }
 
                     @Override
-                    public Double getLocationLongitude() {
+                    public String getDescription() {
                         return null;
                     }
 
                     @Override
-                    public ConnectionState getConnectionState() {
+                    public Location getLocation() {
                         return null;
                     }
+
+                    @Override
+                    public CryptoAddress getCryptoAddress() {
+                        return null;
+                    }
+
 
                 };
 

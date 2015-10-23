@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -21,17 +22,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantRequestCryptoAddressException;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantRequestCryptoAddressException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.google.zxing.WriterException;
-
-import java.util.UUID;
 
 /**
  * Created by Matias Furszyfer on 2015.08.12..
@@ -85,7 +83,7 @@ public class ReceiveFragmentDialog extends Dialog implements
      */
     static public int MARGIN_AUTOMATIC = -1;
 
-
+    private Typeface tf;
     /**
      *
      * @param a
@@ -114,19 +112,16 @@ public class ReceiveFragmentDialog extends Dialog implements
 
         showQRCodeAndAddress();
 
-
     }
 
     private void setUpScreenComponents(){
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.popup);
 
-
         share_btn = (Button) findViewById(R.id.share_btn);
         back_btn = (Button) findViewById(R.id.back_btn);
         txtAddress = (TextView) findViewById(R.id.txtAddress);
         imageView_qr_code = (ImageView) findViewById(R.id.imageView_qr_code);
-
 
         back_btn.setOnClickListener(this);
         share_btn.setOnClickListener(this);

@@ -70,18 +70,6 @@ class BitcoinCryptoNetworkMonitor implements Agent {
         isSupposedToBeRunning = true;
 
         /**
-         * I will also start another agent that will double check that we don't miss any transactions from the events
-         * raised by bitcoinj
-         * //todo this agent still needs some work.
-         */
-        BitcoinCryptoNetworkMissingTransactionsWatcherAgent transactionsWatcherAgent = new BitcoinCryptoNetworkMissingTransactionsWatcherAgent(this.wallet, this.pluginDatabaseSystem, this.plugId);
-        try {
-            transactionsWatcherAgent.start();
-        } catch (com.bitdubai.fermat_api.CantStartAgentException e) {
-            e.printStackTrace();
-        }
-
-        /**
          * Then I will start the agent that connects to the bitcoin network to get new transactions
          */
         bitcoinCryptoNetworkMonitorAgent = new BitcoinCryptoNetworkMonitorAgent();
@@ -92,6 +80,12 @@ class BitcoinCryptoNetworkMonitor implements Agent {
     @Override
     public void stop() {
         isSupposedToBeRunning = false;
+        /**
+         * will wait until the peer agent stops.
+         */
+        while(bitcoinCryptoNetworkMonitorAgent.getPeerGroup().isRunning()){
+
+        }
 
     }
 
@@ -196,6 +190,14 @@ class BitcoinCryptoNetworkMonitor implements Agent {
                 throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, e, null, null);
             }
 
+        }
+
+        /**
+         * gets the peer group
+         * @return
+         */
+        public PeerGroup getPeerGroup() {
+            return peerGroup;
         }
     }
 }

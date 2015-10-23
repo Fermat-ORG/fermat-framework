@@ -196,6 +196,22 @@ public class CryptoAddressesNetworkServicePluginRoot implements
          */
         validateInjectedResources();
 
+
+        // initialize crypto payment request dao
+
+        try {
+
+            cryptoAddressesNetworkServiceDao = new CryptoAddressesNetworkServiceDao(pluginDatabaseSystem, pluginId);
+
+            cryptoAddressesNetworkServiceDao.initialize();
+
+        } catch(CantInitializeCryptoAddressesNetworkServiceDatabaseException e) {
+
+            CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto addresses dao.");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            throw pluginStartException;
+        }
+
         try {
 
             /*
@@ -243,20 +259,6 @@ public class CryptoAddressesNetworkServicePluginRoot implements
             throw pluginStartException;
         }
 
-        // initialize crypto payment request dao
-
-        try {
-
-            cryptoAddressesNetworkServiceDao = new CryptoAddressesNetworkServiceDao(pluginDatabaseSystem, pluginId);
-
-            cryptoAddressesNetworkServiceDao.initialize();
-
-        } catch(CantInitializeCryptoAddressesNetworkServiceDatabaseException e) {
-
-            CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto addresses dao.");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-            throw pluginStartException;
-        }
 
     }
 
@@ -592,7 +594,7 @@ public class CryptoAddressesNetworkServicePluginRoot implements
             /*
              * Request the list of component registers
              */
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfile, discoveryQueryParameters);
 
         } catch (CantRequestListException e) {
 
@@ -785,20 +787,6 @@ public class CryptoAddressesNetworkServicePluginRoot implements
 
     }
 
-    /**
-     * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
-     */
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(final List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
-
-        System.out.println(" Crypto Payment Request Network Service - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
-
-        /*
-         * save into the cache
-         */
-        remoteNetworkServicesRegisteredList = platformComponentProfileRegisteredList;
-
-    }
-
     @Override
     public void handleFailureComponentRegistrationNotificationEvent(final PlatformComponentProfile networkServiceApplicant,
                                                                     final PlatformComponentProfile remoteParticipant      ) {
@@ -807,7 +795,7 @@ public class CryptoAddressesNetworkServicePluginRoot implements
     }
 
     @Override
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList, DiscoveryQueryParameters discoveryQueryParameters) {
+    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
 
         System.out.println(" Crypto Addresses Network Service - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent");
 

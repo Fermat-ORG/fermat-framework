@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purcha
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSale;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantListPurchaseNegotianionsException;
 
 import java.util.Collection;
 
@@ -12,12 +12,12 @@ import java.util.Collection;
  */
 public interface CustomerBrokerPurchaseManager {
 
-    CustomerBrokerPurchase createNegotiation() throws CantCreateCustomerBrokerPurchaseException;
-    void cancelNegotiation(CustomerBrokerSale negotiation);
-    void closeNegotiation(CustomerBrokerSale negotiation);
+    CustomerBrokerPurchase createCustomerBrokerPurchaseNegotiation(String publicKeyCustomer, String publicKeyBroker) throws CantCreateCustomerBrokerPurchaseException;
+    void cancelNegotiation(CustomerBrokerPurchase negotiation);
+    void closeNegotiation(CustomerBrokerPurchase negotiation);
 
-    Collection<CustomerBrokerPurchase> getNegotiations();
-    Collection<CustomerBrokerPurchase> getNegotiations(NegotiationStatus status);
-    Collection<CustomerBrokerPurchase> getNegotiationsByCustomer(ActorIdentity customer);
-    Collection<CustomerBrokerPurchase> getNegotiationsByBroker(ActorIdentity broker);
+    Collection<CustomerBrokerPurchase> getNegotiations() throws CantListPurchaseNegotianionsException;
+    Collection<CustomerBrokerPurchase> getNegotiations(NegotiationStatus status) throws CantListPurchaseNegotianionsException;
+    Collection<CustomerBrokerPurchase> getNegotiationsByCustomer(ActorIdentity customer) throws CantListPurchaseNegotianionsException;
+    Collection<CustomerBrokerPurchase> getNegotiationsByBroker(ActorIdentity broker) throws CantListPurchaseNegotianionsException;
 }

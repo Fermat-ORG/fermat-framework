@@ -130,7 +130,7 @@ public class IntraWalletUserActorDao implements Serializable {
                 /**
                  * Persist profile image on a file
                  */
-                persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
+                if(profileImage!=null) persistNewUserProfileImage(intraUserToAddPublicKey, profileImage);
 
                 database.closeDatabase();
             }
@@ -250,7 +250,7 @@ public class IntraWalletUserActorDao implements Serializable {
                 // Add records to list.
                 list.add(new IntraWalletUserActor(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_NAME_COLUMN_NAME),
                         record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME),
-                        getIntraUserProfileImagePrivateKey(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
+                        null,//getIntraUserProfileImagePrivateKey(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME),
                         ConnectionState.getByCode(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME))));
             }
@@ -258,9 +258,9 @@ public class IntraWalletUserActorDao implements Serializable {
         } catch (CantLoadTableToMemoryException e) {
 
             throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Cant load " + IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME + " table in memory.");
-        } catch (CantGetIntraWalletUserActorProfileImageException e) {
+        //} catch (CantGetIntraWalletUserActorProfileImageException e) {
             // Failure unknown.
-            throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Can't get profile ImageMiddleware.");
+       //     throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Can't get profile ImageMiddleware.");
 
         } catch (Exception e) {
 
@@ -310,7 +310,7 @@ public class IntraWalletUserActorDao implements Serializable {
                 // Add records to list.
                 list.add(new com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.structure.IntraWalletUserActor(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_NAME_COLUMN_NAME),
                         record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME),
-                        getIntraUserProfileImagePrivateKey(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
+                        null,//getIntraUserProfileImagePrivateKey(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME)),
                         record.getLongValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME),
                         ConnectionState.getByCode(record.getStringValue(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME))));
             }
@@ -318,9 +318,9 @@ public class IntraWalletUserActorDao implements Serializable {
         } catch (CantLoadTableToMemoryException e) {
 
             throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Cant load " + IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME + " table in memory.");
-        } catch (CantGetIntraWalletUserActorProfileImageException e) {
+       //} catch (CantGetIntraWalletUserActorProfileImageException e) {
             // Failure unknown.
-            throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Can't get profile ImageMiddleware.");
+         //   throw new CantGetIntraWalletUsersListException(e.getMessage(), e, "Intra User Actor", "Can't get profile ImageMiddleware.");
 
         } catch (Exception e) {
 

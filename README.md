@@ -200,10 +200,6 @@ Fermat principles
 * Crypto Brokers concept.
 
 
-
-
-
-
 How to install and run Fermat
 -------------------------------
 
@@ -224,7 +220,7 @@ for a list of available Plugins.
 See the [Fermat Niche Wallets Registry](https://github.com/bitDubai/fermat/fermat-documentation)
 for a list of Niche Wallets. 
 
-For installation instructions and running from the source code, see the [documentation](https://github.com/bitDubai/fermat/fermat-documentation).
+For installation instructions and running from the source code, see the [Fermat Development Environment Installation and Configuration documentation](https://github.com/bitDubai/fermat/blob/master/fermat-documentation/installation/Linux.asciidoc).
 
 
 #### Need help?
@@ -233,10 +229,14 @@ Having problems compiling or running Fermat the first time, or not sure how to u
 review [Troubleshooting](https://github.com/bitDubai/fermat/fermat-documentation), which helps 
 you to fix common problems and find extra help if needed.
 
+<<<<<<< HEAD
+Status of the Project:
+=======
 
 
 
 Status of the project:
+>>>>>>> c920cc774fb23b5b67d2667b67c291e43ecdc43b
 ------------------------------------------------
 
 As of October 2015 the state of the project is the following:
@@ -244,8 +244,6 @@ As of October 2015 the state of the project is the following:
 State of the code: Under development for 5 months. No realeses yet. 24 full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
 
 Future path of development: Active (First release with very limited features schedulled for late November 2015).
-
-
 
 I want to join the team!
 ------------------------------------------------

@@ -84,14 +84,19 @@ public enum Activities {
     DAP_DESKTOP("DAPD"),
     CBP_DESKTOP("CBPD"),
     DAP_MAIN("DAPM"),
-    DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN("DAUCAM"),
+    DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN("DAPAUCAM"),
+    DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN("DAPAICAM"),
+    DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN("DAPARPCAM"),
 
     // Crypto Broker Wallet
     CBP_CRYPTO_BROKER_WALLET_HOME("CBPCBWH"),
-    CBP_CRYPTO_BROKER_WALLET_DEALS("CBPCBWD"),
-    CBP_CRYPTO_BROKER_WALLET_CONTRACTS("CBPCBWC"),
-    CBP_CRYPTO_BROKER_WALLET_STOCK_PREFERENCE("CBPCBWSP"),
+    CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY("CBPCBCH"),
+    CBP_CRYPTO_BROKER_WALLET_EARNINGS("CBPCBWE"),
     CBP_CRYPTO_BROKER_WALLET_SETTINGS("CBPCBWS"),
+    CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS("CBPCBWOND"),
+    CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS("CBPCBWCND"),
+    CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS("CBPCBWOCD"),
+    CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS("CBPCBWCCD"),
 
     // Crypto Broker Identity
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY("CBPSACBI"),
@@ -101,6 +106,7 @@ public enum Activities {
     // Crypto Customer Identity
     CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY("CBPSACCI"),
     CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY("CBPSACCICI"),
+    CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY("CBPSACCIEI"),
 
     // CCP Comunity
     CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST("CCPSAIUCR"),
@@ -219,45 +225,70 @@ public enum Activities {
             case "DSAAFM":
                 return Activities.DAP_SUB_APP_ASSET_FACTORY_MAIN;
             case "CIUA":
-                return CWP_INTRA_USER_ACTIVITY;
+                return Activities.CWP_INTRA_USER_ACTIVITY;
             case "CIUCA":
-                return CWP_INTRA_USER_CREATE_ACTIVITY;
+                return Activities.CWP_INTRA_USER_CREATE_ACTIVITY;
             case "CWRWBWBV1PR":
-                return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST;
+                return Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST;
             case "CWRWBWBV1S":
-                return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_SETTINGS;
+                return Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_SETTINGS;
             case "CCPD":
-                return CCP_DESKTOP;
+                return Activities.CCP_DESKTOP;
             case "DAPD":
-                return DAP_DESKTOP;
+                return Activities.DAP_DESKTOP;
             case "CBPD":
-                return CBP_DESKTOP;
+                return Activities.CBP_DESKTOP;
             case "DAEA":
-                return DAP_ASSET_EDITOR_ACTIVITY;
+                return Activities.DAP_ASSET_EDITOR_ACTIVITY;
             case "DAPM":
-                return DAP_MAIN;
+                return Activities.DAP_MAIN;
             case "CWRWBWBV1C":
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS;
             case "CWRWBWBV1M":
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN;
             case "DAUCAM":
                 return DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN;
+            case "CBPCBWH":
+                return CBP_CRYPTO_BROKER_WALLET_HOME;
+            case "CBPCBCH":
+                return CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY;
+            case "CBPCBWE":
+                return CBP_CRYPTO_BROKER_WALLET_EARNINGS;
+            case "CBPCBWS":
+                return CBP_CRYPTO_BROKER_WALLET_SETTINGS;
+            case "CBPCBWOND":
+                return CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS;
+            case "CBPCBWCND":
+                return CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS;
+            case "CBPCBWOCD":
+                return CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS;
+            case "CBPCBWCCD":
+                return CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS;
+            case "DAICAM":
+            case "DAPAUCAM":
+                return Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN;
+            case "DAPAICAM":
+                return Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN;
+            case "DAPARPCAM":
+                return Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN;
             case "CBPSACBI":
-                return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY;
+                return Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY;
             case "CBPSACBICI":
-                return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY;
+                return Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY;
             case "CBPSACBIEI":
-                return CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY;
+                return Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY;
             case "CBPSACCI":
-                return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY;
+                return Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY;
             case "CBPSACCICI":
                 return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY;
+            case "CBPSACCIEI":
+                return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY;
             case "CCPSAISI":
-                return CCP_SUB_APP_INTRA_USER_IDENTITY;
+                return Activities.CCP_SUB_APP_INTRA_USER_IDENTITY;
             case "CCPSAIICI":
-                return CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY;
+                return Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY;
             case "CCPSAIUCR":
-                return CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST;
+                return Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

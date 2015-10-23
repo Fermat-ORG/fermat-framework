@@ -116,11 +116,40 @@ public class AssetIssuerActorDeveloperDatabaseFactory  implements DealsWithPlugi
         assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_STATE_COLUMN_NAME);
         assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_REGISTRATION_DATE_COLUMN_NAME);
         assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_MODIFIED_DATE_COLUMN_NAME);
+        assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME);
+        assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME);
+        assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_LOCATION_LATITUDE_COLUMN_NAME);
+        assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME);
+        assetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_DESCRIPTION_COLUMN_NAME);
+
+
         /*
          * Redeem Point database addition.
          */
         DeveloperDatabaseTable assetIssuerActorTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_TABLE_NAME, assetIssuerActorColumns);
         tables.add(assetIssuerActorTable);
+
+
+        List<String> registeredAssetIssuerActorColumns = new ArrayList<String>();
+
+        registeredAssetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_PUBLIC_KEY_COLUMN_NAME);
+        registeredAssetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        registeredAssetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_NAME_COLUMN_NAME);
+        registeredAssetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_STATE_COLUMN_NAME);
+        registeredAssetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_REGISTRATION_DATE_COLUMN_NAME);
+        registeredAssetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_MODIFIED_DATE_COLUMN_NAME);
+        registeredAssetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME);
+        registeredAssetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME);
+        registeredAssetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_LOCATION_LATITUDE_COLUMN_NAME);
+        registeredAssetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME);
+        registeredAssetIssuerActorColumns.add(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_DESCRIPTION_COLUMN_NAME);
+
+
+        /*
+         * Redeem Point database addition.
+         */
+        DeveloperDatabaseTable registeredAssetIssuerActorTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TABLE_NAME, registeredAssetIssuerActorColumns);
+        tables.add(registeredAssetIssuerActorTable);
 
         /**
          * Asset Issuer relation Redeem Point Associate columns.

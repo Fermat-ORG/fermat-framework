@@ -29,7 +29,7 @@ public class IntraWalletUserActor implements IntraWalletUser {
 
         this.name             = name                ;
         this.publicKey        = publicKey           ;
-        this.profileImage     = profileImage.clone();
+        this.profileImage     = (profileImage!=null) ? profileImage.clone(): null;
         this.registrationDate = registrationDate    ;
         this.contactState     = contactState        ;
 
@@ -52,7 +52,7 @@ public class IntraWalletUserActor implements IntraWalletUser {
 
     @Override
     public byte[] getProfileImage() {
-        return this.profileImage.clone();
+        return (profileImage!=null) ? this.profileImage.clone() : null;
 
     }
 

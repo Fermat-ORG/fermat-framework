@@ -7,10 +7,10 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterExc
  */
 public enum ClauseStatus {
     DRAFT("DRA"),
-    SENTTOBROKER("STB"),
-    WAITINGFORBROKER("WFB"),
-    SENTTOCUSTOMER("STC"),
-    WAITINGFORCUSTOMER("WFC"),
+    SENT_TO_BROKER("STB"),
+    WAITING_FOR_BROKER("WFB"),
+    SENT_TO_CUSTOMER("STC"),
+    WAITING_FOR_CUSTOMER("WFC"),
     AGREED("AGR"),
     REJECTED("REJ");
 
@@ -27,10 +27,10 @@ public enum ClauseStatus {
     public static ClauseStatus getByCode(String code) throws InvalidParameterException {
         switch (code) {
             case "DRA": return DRAFT;
-            case "STB": return SENTTOBROKER;
-            case "WFB": return WAITINGFORBROKER;
-            case "STC": return SENTTOCUSTOMER;
-            case "WFC": return WAITINGFORCUSTOMER;
+            case "STB": return SENT_TO_BROKER;
+            case "WFB": return WAITING_FOR_BROKER;
+            case "STC": return SENT_TO_CUSTOMER;
+            case "WFC": return WAITING_FOR_CUSTOMER;
             case "AGR": return AGREED;
             case "REJ": return REJECTED;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ClauseStatus enum");

@@ -19,8 +19,10 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.UTXOProvider;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.store.UnreadableWalletException;
+import org.bitcoinj.wallet.WalletTransaction;
 
 import java.io.File;
 import java.io.IOException;
@@ -107,7 +109,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
             wallet = getWallet(blockchainNetworkType);
 
             /**
-             * add new keys (if any) and reset the wallet.
+             * add new keys (if any).
              */
             boolean isWalletReset = false;
             if (areNewKeysAdded(wallet, keyList)){
@@ -117,7 +119,11 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                wallet.reset();
+                /**
+                 * I do not need to reset the wallet because I will
+                 * always be importing fresh (unused) keys.
+                 */
+                //wallet.reset();
                 isWalletReset = true;
             }
 
@@ -306,5 +312,16 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      */
     public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx) throws CantBroadcastTransactionException {
         runningAgents.get(blockchainNetworkType).broadcastTransaction(tx);
+    }
+
+
+    /**
+     * Gets the UTXO provider from the CryptoNetwork on the specified Network
+     * @param blockchainNetworkType
+     * @return
+     */
+    public UTXOProvider getUTXOProvider(BlockchainNetworkType blockchainNetworkType) {
+        Wallet utxoProvider = getWallet(blockchainNetworkType);
+        return utxoProvider.getUTXOProvider();
     }
 }

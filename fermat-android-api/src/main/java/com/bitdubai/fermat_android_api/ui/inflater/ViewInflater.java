@@ -358,6 +358,7 @@ public class ViewInflater {
                                 //view.setBackground();
                                 view.setBackgroundColor(Color.parseColor(value));
                         }else{
+
                                 // view.setBackgroundColor(Color.parseColor(value));
                         }
                 }

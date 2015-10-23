@@ -121,7 +121,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
+						</authors>-
 						<mantainers>
 						</mantainers>
 						<certifications>
@@ -204,7 +204,8 @@
 					</library>
 				</libraries>
 			</layer>
-			
+
+
 			<layer name="Niche Wallet" language="java-android"></layer>
 			<layer name="Reference Wallet" language="java-android"></layer>
 			<layer name="Sub App" language="java-android"></layer>
@@ -242,7 +243,9 @@
 			<layer name="Platform Service" language="java"></layer>
 			<layer name="empty layer 5"></layer>
 			<layer super_layer="OSA"></layer>
+
 			
+
 			<layer name="Api" language="java">
 				<libraries>
 					<library
@@ -7006,6 +7009,13 @@
 	</layers>
 
 	<processes>
+		<process platform="DAP"
+			name="Digital Asset Platform"
+			description=""
+			previous=""
+			>
+		</process>
+
 	    <process platform="CBP" 
 	    	     name="Connection request from customer to broker"
 	             description="A customer sends a connection request to crypto broker in order to be able to see his products and start a negotiation."
