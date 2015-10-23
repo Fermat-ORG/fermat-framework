@@ -29,7 +29,7 @@ public class ActorExtraUserSubsystem implements ActorSubsystem {
 
         try {
             DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-            plugin = developerBitDubai.getPlugin();
+            plugin = developerBitDubai.getFirstPluginVersion();
         }
         catch (Exception e)
         {

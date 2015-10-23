@@ -23,7 +23,7 @@ public class CryptoTransmissionPluginSubsystem extends AbstractPluginSubsystem {
     public void start() throws CantStartSubsystemException {
         try {
             AbstractPluginDeveloper developerBitDubai = new DeveloperBitDubai();
-            plugin = developerBitDubai.getPlugin();
+            plugin = developerBitDubai.getFirstPluginVersion();
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);

@@ -4,16 +4,22 @@ import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.Abst
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.AddonNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPlatformException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.DeveloperNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.LayerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.PlatformNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.PluginNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.DeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.VersionReference;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -90,15 +96,57 @@ public class FermatSystemContext {
     }
 
     /**
-     * Throw the method <code>getPlugin</code> you can get a Plugin instance passing like parameter a plugin reference instance.
+     * Throw the method <code>getPluginVersion</code> you can get a plugin version instance passing like parameter a version reference instance.
+     *
+     * @param versionReference plugin version reference data.
+     *
+     * @return a plugin version instance.
+     *
+     * @throws VersionNotFoundException   if we can't find a plugin version with the given version reference parameters.
+     */
+    public final AbstractPlugin getPluginVersion(final VersionReference versionReference) throws VersionNotFoundException {
+
+        try {
+
+            return getPluginDeveloper(versionReference.getDeveloperReference()).getPluginByVersion(versionReference);
+
+        } catch (DeveloperNotFoundException e) {
+
+            throw new VersionNotFoundException(e, versionReference.toString(), "version not found in the platform of the system context.");
+        }
+    }
+
+    /**
+     * Throw the method <code>getPluginDeveloper</code> you can get a pluginDeveloper instance passing like parameter a developer reference instance.
+     *
+     * @param developerReference plugin developer reference data.
+     *
+     * @return a plugin developer instance.
+     *
+     * @throws DeveloperNotFoundException   if we can't find a plugin developer with the given developer reference parameters.
+     */
+    public final AbstractPluginDeveloper getPluginDeveloper(final DeveloperReference developerReference) throws DeveloperNotFoundException {
+
+        try {
+
+            return getPluginSubsystem(developerReference.getPluginReference()).getDeveloperByReference(developerReference);
+
+        } catch (PluginNotFoundException e) {
+
+            throw new DeveloperNotFoundException(e, developerReference.toString(), "plugin not found in the platform of the system context.");
+        }
+    }
+
+    /**
+     * Throw the method <code>getPluginSubsystem</code> you can get a subsystem instance passing like parameter a plugin reference instance.
      *
      * @param pluginReference plugin reference data.
      *
-     * @return a plugin instance.
+     * @return a plugin subsystem instance.
      *
      * @throws PluginNotFoundException   if we can't find a plugin with the given plugin reference parameters.
      */
-    public final AbstractPlugin getPlugin(final PluginReference pluginReference) throws PluginNotFoundException {
+    public final AbstractPluginSubsystem getPluginSubsystem(final PluginReference pluginReference) throws PluginNotFoundException {
 
         try {
 

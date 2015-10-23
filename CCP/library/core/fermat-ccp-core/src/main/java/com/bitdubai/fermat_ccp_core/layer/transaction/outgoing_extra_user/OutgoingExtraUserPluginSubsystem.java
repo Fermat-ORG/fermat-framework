@@ -28,7 +28,7 @@ public class OutgoingExtraUserPluginSubsystem extends AbstractPluginSubsystem {
 
         try {
             AbstractPluginDeveloper developerBitDubai = new DeveloperBitDubai();
-            plugin = developerBitDubai.getPlugin();
+            plugin = developerBitDubai.getFirstPluginVersion();
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);

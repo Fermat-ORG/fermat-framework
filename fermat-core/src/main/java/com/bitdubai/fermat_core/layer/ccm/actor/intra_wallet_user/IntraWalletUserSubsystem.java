@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_core.layer.ccm.actor.intra_wallet_user;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_ccm_api.layer.actor.ActorSubsystemCCM;
 import com.bitdubai.fermat_ccm_api.layer.actor.CantStartSubsystemException;
@@ -23,7 +22,7 @@ public class IntraWalletUserSubsystem implements ActorSubsystemCCM {
     public void start() throws CantStartSubsystemException {
         try {
             AbstractPluginDeveloper developer = new DeveloperBitDubai();
-            plugin = developer.getPlugin();
+            plugin = developer.getFirstPluginVersion();
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);
