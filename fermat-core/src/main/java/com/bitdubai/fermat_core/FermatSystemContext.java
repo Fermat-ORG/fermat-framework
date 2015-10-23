@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_core;
 
-import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.AddonNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPlatformException;
@@ -77,7 +77,7 @@ public class FermatSystemContext {
      *
      * @throws AddonNotFoundException  if we can't find an addon with the given addon reference parameters.
      */
-    public final Addon getAddon(final AddonReference addonReference) throws AddonNotFoundException {
+    public final AbstractAddon getAddon(final AddonReference addonReference) throws AddonNotFoundException {
 
         try {
 
@@ -98,7 +98,7 @@ public class FermatSystemContext {
      *
      * @throws PluginNotFoundException   if we can't find a plugin with the given plugin reference parameters.
      */
-    public final Plugin getPlugin(final PluginReference pluginReference) throws PluginNotFoundException {
+    public final AbstractPlugin getPlugin(final PluginReference pluginReference) throws PluginNotFoundException {
 
         try {
 
