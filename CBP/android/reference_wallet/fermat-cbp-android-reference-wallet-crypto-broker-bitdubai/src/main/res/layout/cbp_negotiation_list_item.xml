@@ -7,7 +7,7 @@
                 android:layout_marginTop="16dp">
 
     <ImageView
-        android:id="@+id/crypto_broker_identity_image"
+        android:id="@+id/cbw_customer_image"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginEnd="10dp"
@@ -22,8 +22,8 @@
         android:layout_alignParentTop="true"
         android:layout_gravity="center_vertical"
         android:layout_marginBottom="5dp"
-        android:layout_toEndOf="@+id/crypto_broker_identity_image"
-        android:layout_toRightOf="@+id/crypto_broker_identity_image"
+        android:layout_toEndOf="@+id/cbw_customer_image"
+        android:layout_toRightOf="@+id/cbw_customer_image"
         android:singleLine="true"
         android:textColor="@color/blue"
         android:textSize="@dimen/first_line_text_size"
@@ -36,10 +36,10 @@
         android:layout_below="@+id/cbw_customer_name"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_toEndOf="@+id/crypto_broker_identity_image"
-        android:layout_toRightOf="@+id/crypto_broker_identity_image"
+        android:layout_toEndOf="@+id/cbw_customer_image"
+        android:layout_toRightOf="@+id/cbw_customer_image"
         android:singleLine="true"
-        android:text="Buy"
+        android:text="@string/buy"
         android:textColor="@color/black"
         android:textSize="@dimen/second_line_text_size"/>
 
@@ -76,8 +76,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/crypto_broker_identity_image"
-        android:layout_toRightOf="@+id/crypto_broker_identity_image"
+        android:layout_toEndOf="@+id/cbw_customer_image"
+        android:layout_toRightOf="@+id/cbw_customer_image"
         android:singleLine="true"
         android:textColor="@color/black"
         android:textSize="@dimen/third_line_text_size"
@@ -99,11 +99,12 @@
             android:layout_weight="1"
             android:gravity="end"
             android:singleLine="true"
+            android:text="@string/unit_number"
             android:textColor="@color/black"
-            android:textSize="@dimen/third_line_text_size"
-            tools:text="1"/>
+            android:textSize="@dimen/third_line_text_size"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbw_merchandise_currency"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_text_bottom_right"
@@ -119,7 +120,7 @@
             android:layout_marginEnd="@dimen/margin_text_bottom_right"
             android:layout_marginRight="@dimen/margin_text_bottom_right"
             android:singleLine="true"
-            android:text="@string/exchange_rate_separator"
+            android:text="@string/at"
             android:textColor="@color/black"
             android:textSize="@dimen/third_line_text_size"/>
 
