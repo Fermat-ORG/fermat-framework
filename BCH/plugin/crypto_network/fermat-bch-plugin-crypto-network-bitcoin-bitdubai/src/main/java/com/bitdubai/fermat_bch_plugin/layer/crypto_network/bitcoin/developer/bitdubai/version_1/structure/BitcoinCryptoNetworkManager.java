@@ -288,6 +288,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager, 
                  * and Add it to the list
                  */
                 transactionList.add(transaction);
+                
+                //// TODO: 10/22/15 After this I need to modify this transaction to Sending Notified in the Protocol Status 
             }
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantDeliverPendingTransactionsException(CantDeliverPendingTransactionsException.DEFAULT_MESSAGE, e, "database error getting the pending transactions.", "database issue");
