@@ -11,7 +11,10 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -110,13 +113,23 @@ import java.util.regex.Pattern;
 public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin implements CryptoTransmissionNetworkServiceManager, Service, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, DatabaseManagerForDevelopers {
 
     @Override
-    public List<AddonReference> getNeededAddonReferences() {
+    public List<AddonVersionReference> getNeededAddonReferences() {
         return new ArrayList<>();
     }
 
     @Override
-    public List<PluginReference> getNeededPluginReferences() {
+    public List<PluginVersionReference> getNeededPluginReferences() {
         return new ArrayList<>();
+    }
+
+    @Override
+    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    protected void validateAndAssignReferences() {
+
     }
 
     /**
@@ -644,15 +657,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
          */
         this.serviceStatus = ServiceStatus.STOPPED;
 
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see Service#getStatus()
-     */
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
     }
 
     /**
