@@ -144,8 +144,12 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * Updates the database to active a new network
      * @param blockchainNetworkType
      */
-    public void setActiveNetwork(BlockchainNetworkType blockchainNetworkType) {
-        //todo update table active_Networks and add (if missing) this blockchainNetworkType
+    private void setActiveNetwork(BlockchainNetworkType blockchainNetworkType) {
+        try {
+            getDao().setActiveNetworkType(blockchainNetworkType);
+        } catch (CantExecuteDatabaseOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.AddonNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPluginIdsManagerException;
@@ -10,6 +11,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.LayerNotFo
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.PluginNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddonsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
@@ -25,94 +30,83 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractPlatform {
 
-    private Map<Layers, AbstractLayer> layers;
+    private Map<LayerReference, AbstractLayer> layers;
 
-    private final Platforms platform;
+    private final PlatformReference platformReference;
 
-    public AbstractPlatform(final Platforms platform) {
+    public AbstractPlatform(final Platforms platformEnum) {
 
         this.layers   = new ConcurrentHashMap<>();
-        this.platform = platform;
+        this.platformReference = new PlatformReference(platformEnum);
     }
 
     /**
      * Throw the method <code>registerLayer</code> you can add new layers to the platform.
      * Here we'll corroborate too that the layer is not added twice.
      *
-     * @param layer          layer descriptor (element of enum).
      * @param abstractLayer  layer instance.
      *
-     * @throws CantStartPlatformException if something goes wrong.
+     * @throws CantRegisterLayerException if something goes wrong.
      */
-    protected final void registerLayer(final Layers        layer        ,
-                                       final AbstractLayer abstractLayer) throws CantStartPlatformException {
+    protected final void registerLayer(final AbstractLayer abstractLayer) throws CantRegisterLayerException {
+
+        LayerReference layerReference = abstractLayer.getLayerReference();
+        layerReference.setPlatformReference(platformReference);
 
         try {
 
-            if(layers.get(layer) != null)
-                throw new CantStartPlatformException("layer: " + layer.toString(), "Layer already exists in this platform.");
+            if(layers.containsKey(layerReference))
+                throw new CantRegisterLayerException("layer: " + layerReference.toString(), "Layer already exists in this platform.");
 
             abstractLayer.start();
 
             layers.put(
-                    layer,
+                    layerReference,
                     abstractLayer
             );
 
         } catch (final CantStartLayerException e) {
 
-            throw new CantStartPlatformException(e, "layer: " + layer.toString(), "Error trying to start the platform.");
+            throw new CantRegisterLayerException(e, "layer: " + layerReference.toString(), "Error trying to start the layer.");
         }
     }
 
-    public final AbstractLayer getLayer(Layers layer) throws LayerNotFoundException {
-        if (layers.containsKey(layer))
-            return layers.get(layer);
+    public final AbstractLayer getLayer(final LayerReference layerReference) throws LayerNotFoundException {
+        if (layers.containsKey(layerReference))
+            return layers.get(layerReference);
         else
-            throw new LayerNotFoundException("layer: "+layer, "layer not found.");
+            throw new LayerNotFoundException("layer: "+layerReference.getLayer(), "layer not found.");
     }
 
-    public final Addon getAddon(final FermatAddonsEnum addon) throws AddonNotFoundException {
+    public final Addon getAddon(final AddonReference addonReference) throws AddonNotFoundException {
 
         try {
 
-            return getLayer(addon.getLayer()).getAddon(addon);
+            return getLayer(addonReference.getLayerReference()).getAddon(addonReference);
 
         } catch (LayerNotFoundException e) {
 
-            String context =
-                    "addon: "      + addon.toString() +
-                    " - layer: "    + addon.getLayer() +
-                    " - platform: " + addon.getPlatform();
-            throw new AddonNotFoundException(e, context, "layer not found for the specified addon.");
-        } catch (AddonNotFoundException e) {
-
-            throw e;
+            throw new AddonNotFoundException(e, "addon:"+addonReference.toString(), "layer not found for the specified addon.");
         }
     }
 
-    public final Plugin getPlugin(final FermatPluginsEnum plugin) throws PluginNotFoundException {
+    public final Plugin getPlugin(final PluginReference pluginReference) throws PluginNotFoundException {
 
         try {
 
-            return getLayer(plugin.getLayer()).getPlugin(plugin);
+            return getLayer(pluginReference.getLayerReference()).getPlugin(pluginReference);
 
         } catch (LayerNotFoundException e) {
 
-            String context =
-                    "plugin: "      + plugin.toString() +
-                    " - layer: "    + plugin.getLayer() +
-                    " - platform: " + plugin.getPlatform();
-            throw new PluginNotFoundException(e, context, "layer not found for the specified plugin.");
-        } catch (PluginNotFoundException e) {
-
-            throw e;
+            throw new PluginNotFoundException(e, "plugin: "+pluginReference.toString(), "layer not found for the specified plugin.");
         }
+    }
+
+    public final PlatformReference getPlatformReference() {
+        return platformReference;
     }
 
     public abstract void start() throws CantStartPlatformException;
-
-    public final Platforms getPlatform() { return platform; }
 
     public abstract AbstractPluginIdsManager getPluginIdsManager(final PlatformFileSystem platformFileSystem) throws CantStartPluginIdsManagerException;
 
