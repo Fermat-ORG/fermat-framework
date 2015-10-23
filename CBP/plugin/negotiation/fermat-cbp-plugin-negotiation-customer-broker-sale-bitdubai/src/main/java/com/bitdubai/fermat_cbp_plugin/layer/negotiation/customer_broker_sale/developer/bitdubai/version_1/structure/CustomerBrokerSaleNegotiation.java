@@ -3,14 +3,13 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.de
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSale;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantAddNewClausesException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantUpdateClausesException;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by angel on 19/10/15.
@@ -73,7 +72,12 @@ public class CustomerBrokerSaleNegotiation implements CustomerBrokerSale {
     }
 
     @Override
-    public Clause addNewClause(ClauseType type, String value) {
+    public Clause addNewBrokerClause(ClauseType type, String value) throws CantAddNewClausesException {
+        return null;
+    }
+
+    @Override
+    public Clause addNewCustomerClause(ClauseType type, String value) throws CantAddNewClausesException {
         return null;
     }
 
@@ -83,7 +87,7 @@ public class CustomerBrokerSaleNegotiation implements CustomerBrokerSale {
     }
 
     @Override
-    public Clause modifyClause(Clause clause, ClauseStatus status) {
+    public Clause modifyClauseStatus(Clause clause, ClauseStatus status) throws CantUpdateClausesException {
         return null;
     }
 
