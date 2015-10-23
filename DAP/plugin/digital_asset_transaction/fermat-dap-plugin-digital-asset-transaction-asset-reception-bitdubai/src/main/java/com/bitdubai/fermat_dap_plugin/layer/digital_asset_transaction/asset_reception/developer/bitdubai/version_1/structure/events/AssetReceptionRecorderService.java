@@ -15,6 +15,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.inte
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/10/15.
@@ -32,9 +33,10 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
      */
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
-    public AssetReceptionRecorderService(AssetReceptionDao assetReceptionDao) throws CantStartServiceException {
+    public AssetReceptionRecorderService(AssetReceptionDao assetReceptionDao, EventManager eventManager) throws CantStartServiceException {
         try {
             setAssetReceptionDao(assetReceptionDao);
+            setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
             throw new CantStartServiceException(exception, "Cannot set the asset distribution database handler","The database handler is null");
         }
@@ -48,10 +50,10 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
     }
 
     public void receivedNewDigitalAssetMetadataNotificationEvent(ReceivedNewDigitalAssetMetadataNotificationEvent event) throws CantSaveEventException {
-        //Logger LOG = Logger.getGlobal();
-        //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
+        Logger LOG = Logger.getGlobal();
+        LOG.info("ASSET RECEPTION EVENT TEST, I GOT AN EVENT:\n"+event);
         this.assetReceptionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        //LOG.info("CHECK THE DATABASE");
+        LOG.info("ASSET RECEPTION CHECK THE DATABASE");
     }
 
     @Override
@@ -64,12 +66,12 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
             FermatEventListener fermatEventListener;
             FermatEventHandler fermatEventHandler;
             //TODO: change for the proper event
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER);
+            //fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER);
             //fermatEventHandler = new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEventHandler();
             //((IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEventHandler) fermatEventHandler).setAssetIssuingRecorderService(this);
             //fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
+            //eventManager.addListener(fermatEventListener);
+            //listenersAdded.add(fermatEventListener);
 
             fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
             fermatEventHandler = new ReceivedNewDigitalAssetMetadataNotificationEventHandler();
@@ -77,11 +79,11 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
-            //Logger LOG = Logger.getGlobal();
-            //LOG.info("ASSET ISSUING EVENT RECORDER STARTED");
+            Logger LOG = Logger.getGlobal();
+            LOG.info("ASSET RECEPTION EVENT RECORDER STARTED");
             this.serviceStatus=ServiceStatus.STARTED;
         } catch (CantSetObjectException exception){
-            throw new CantStartServiceException(exception,"Starting the AssetIssuingRecorderService", "The AssetIssuingRecorderService is probably null");
+            throw new CantStartServiceException(exception,"Starting the AssetReceptionRecorderService", "The AssetReceptionRecorderService is probably null");
         }
     }
 

@@ -9,6 +9,8 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.ReceivedNewDigitalAssetMetadataNotificationEvent;
 
+import java.util.logging.Logger;
+
 /**
  * Created by Frank Contreras on 20/10/15.
  */
@@ -17,7 +19,7 @@ public class ReceivedNewDigitalAssetMetadataNotificationEventHandler implements 
 
     public void setAssetReceptionRecorderService(AssetReceptionRecorderService assetReceptionRecorderService) throws CantSetObjectException {
         if(assetReceptionRecorderService==null){
-            throw new CantSetObjectException("assetIssuingRecorderService is null");
+            throw new CantSetObjectException("assetReceptionRecorderService is null");
         }
         this.assetReceptionRecorderService=assetReceptionRecorderService;
     }
@@ -31,9 +33,9 @@ public class ReceivedNewDigitalAssetMetadataNotificationEventHandler implements 
             } catch(CantSaveEventException exception){
                 throw new CantSaveEventException(exception,"Handling the ReceivedNewDigitalAssetMetadataNotificationEvent", "Check the cause");
             } catch(ClassCastException exception){
-                //Logger LOG = Logger.getGlobal();
-                //LOG.info("EXCEPTION DETECTOR----------------------------------");
-                //exception.printStackTrace();
+                Logger LOG = Logger.getGlobal();
+                LOG.info("ASSET RECEPTION EXCEPTION DETECTOR----------------------------------");
+                exception.printStackTrace();
                 throw new CantSaveEventException(FermatException.wrapException(exception), "Handling the ReceivedNewDigitalAssetMetadataNotificationEvent", "Cannot cast this event");
             } catch(Exception exception){
                 throw new CantSaveEventException(exception,"Handling the ReceivedNewDigitalAssetMetadataNotificationEvent", "Unexpected exception");
