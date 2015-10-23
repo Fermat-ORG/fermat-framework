@@ -78,7 +78,7 @@ public abstract class AbstractPlatform {
             throw new LayerNotFoundException("layer: "+layerReference.getLayer(), "layer not found.");
     }
 
-    public final Addon getAddon(final AddonReference addonReference) throws AddonNotFoundException {
+    public final AbstractAddon getAddon(final AddonReference addonReference) throws AddonNotFoundException {
 
         try {
 
@@ -90,7 +90,7 @@ public abstract class AbstractPlatform {
         }
     }
 
-    public final Plugin getPlugin(final PluginReference pluginReference) throws PluginNotFoundException {
+    public final AbstractPlugin getPlugin(final PluginReference pluginReference) throws PluginNotFoundException {
 
         try {
 

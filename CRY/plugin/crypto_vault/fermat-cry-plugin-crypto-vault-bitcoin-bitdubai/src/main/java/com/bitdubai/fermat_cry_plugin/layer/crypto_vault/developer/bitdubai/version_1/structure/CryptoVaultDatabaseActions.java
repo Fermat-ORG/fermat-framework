@@ -131,7 +131,7 @@ public class CryptoVaultDatabaseActions {
 
             // if i don't find records, i think is a new incoming transaction, if i find, y return the type of transaction it is.
             if (fermatTxTable.getRecords().isEmpty())
-                return CryptoTransactionType.OUTGOING;
+                return CryptoTransactionType.INCOMING;
             else
                 return CryptoTransactionType.getByCode(fermatTxTable.getRecords().get(0).getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_TYPE_COLUMN_NAME));
 

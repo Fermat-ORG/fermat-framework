@@ -100,7 +100,7 @@ public class CryptoAddressBookCryptoModuleDao implements DealsWithPluginDatabase
         try {
             DatabaseTable cryptoAddressBookTable = database.getTable(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
             cryptoAddressBookTable.setStringFilter(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress(), DatabaseFilterType.EQUAL);
-            cryptoAddressBookTable.setStringFilter(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode(), DatabaseFilterType.EQUAL);
+            //cryptoAddressBookTable.setStringFilter(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode(), DatabaseFilterType.EQUAL);
             cryptoAddressBookTable.loadToMemory();
 
             List<DatabaseTableRecord> records = cryptoAddressBookTable.getRecords();
