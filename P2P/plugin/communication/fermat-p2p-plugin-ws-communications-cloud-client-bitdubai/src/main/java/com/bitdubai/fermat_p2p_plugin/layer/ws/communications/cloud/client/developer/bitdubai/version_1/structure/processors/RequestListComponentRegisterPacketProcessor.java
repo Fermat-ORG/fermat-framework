@@ -69,7 +69,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         List<PlatformComponentProfile> receivedList = gson.fromJson(respond.get(JsonAttNamesConstants.RESULT_LIST).getAsString(), new TypeToken<List<PlatformComponentProfileCommunication>>() {
         }.getType());
 
-        System.out.println("RequestListComponentRegisterPacketProcessor - receivedlist.size() = " + receivedList.size());
+        System.out.println("RequestListComponentRegisterPacketProcessor - receivedList.size() = " + receivedList.size());
 
          /*
          * Create a new event whit the receivedlist

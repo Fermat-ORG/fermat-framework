@@ -266,6 +266,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         System.out.print("-----------------------\n" +
                                 "ACEPTARON EL REQUEST!!!!!-----------------------\n" +
                                 "-----------------------\n NOTIFICAION: " + cpr);
+                        break;
 
 
                     case DISCONNECTED:
@@ -331,8 +332,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
                     try {
 
-                        //actorNetworkServiceRecord.changeState(ActorProtocolState.SENT);
-
                         System.out.println("----------------------------\n" +
                                 "ENVIANDO MENSAJE:" + actorNetworkServiceRecord
                                 + "\n-------------------------------------------------");
@@ -353,13 +352,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         reportUnexpectedError(FermatException.wrapException(e));
                     }
                 }
-//                else if (actorNetworkServicePluginRoot.getNetworkServiceConnectionManager().
-//                        getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey()) == null
-//                        &&
-//                        poolConnectionsWaitingForResponse.containsKey(actorNetworkServiceRecord.getActorDestinationPublicKey())){
-//                    poolConnectionsWaitingForResponse.remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
-//
-//                }
             }
 
 
