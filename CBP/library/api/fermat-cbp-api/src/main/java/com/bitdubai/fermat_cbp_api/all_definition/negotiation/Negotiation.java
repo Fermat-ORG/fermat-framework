@@ -18,7 +18,9 @@ public interface Negotiation {
 
     Collection<Clause> getClauses();
 
-    Clause addNewClause(ClauseType type, String value);
+    Clause addNewBrokerClause(ClauseType type, String value);
+    Clause addNewCustomerClause(ClauseType type, String value);
+    
     Clause modifyClause(Clause clause, String value);
     Clause modifyClauseStatus(Clause clause, ClauseStatus status);
 
