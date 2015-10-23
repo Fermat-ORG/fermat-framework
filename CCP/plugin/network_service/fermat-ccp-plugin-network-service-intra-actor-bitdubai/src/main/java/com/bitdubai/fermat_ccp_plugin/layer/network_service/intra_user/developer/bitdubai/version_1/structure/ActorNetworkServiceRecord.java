@@ -109,6 +109,14 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
         this.flagReadead = flagReadead;
     }
 
+    public void setActorSenderPublicKey(String actorSenderPublicKey) {
+        this.actorSenderPublicKey = actorSenderPublicKey;
+    }
+
+    public void setActorDestinationPublicKey(String actorDestinationPublicKey) {
+        this.actorDestinationPublicKey = actorDestinationPublicKey;
+    }
+
     public String toJson() {
 
         Gson gson = new Gson();

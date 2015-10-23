@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_dap_api.layer.dap_module.CantStartSubsystemException;
 import com.bitdubai.fermat_dap_api.layer.dap_module.DAPModuleSubsystem;
-import com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_dap_plugin.layer.module.wallet.redeem.point.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by franklin on 16/10/15.

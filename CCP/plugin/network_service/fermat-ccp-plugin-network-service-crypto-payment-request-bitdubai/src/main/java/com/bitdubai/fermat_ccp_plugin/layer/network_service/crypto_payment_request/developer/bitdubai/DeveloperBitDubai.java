@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_requ
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
@@ -10,14 +11,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 01/10/2015.
  */
-public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
-
-    Plugin plugin;
-
-    @Override
-    public Plugin getPlugin() {
-        return plugin;
-    }
+public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
     public DeveloperBitDubai() {
 
@@ -26,7 +20,7 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
          * it is easy to choose.
          */
 
-        plugin = new CryptoPaymentRequestNetworkServicePluginRoot();
+        super(new CryptoPaymentRequestNetworkServicePluginRoot());
 
     }
 

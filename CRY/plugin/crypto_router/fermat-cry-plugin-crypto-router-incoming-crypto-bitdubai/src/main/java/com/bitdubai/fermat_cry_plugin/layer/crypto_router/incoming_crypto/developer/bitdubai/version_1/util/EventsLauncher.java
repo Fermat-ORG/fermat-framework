@@ -142,6 +142,7 @@ public class EventsLauncher implements DealsWithEvents {
                 }
                 break;
 
+
                     default:
                 String message       = "I could not find the event for this specialist";
                 String context       = "Specialist: " + specialist.name() + " with code: " + specialist.getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "Crypto Status: " + cryptoStatus.name() + " with code: " + cryptoStatus.getCode();

@@ -1,7 +1,10 @@
 package com.bitdubai.fermat_ccp_core.layer.wallet_module.crypto;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.CCPPlugins;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.DeveloperBitDubai;
 
 /**
@@ -12,6 +15,10 @@ import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.develope
  */
 public class CryptoPluginSubsystem extends AbstractPluginSubsystem {
 
+    public CryptoPluginSubsystem() {
+        super(new PluginReference(CCPPlugins.BITDUBAI_CRYPTO_WALLET_MODULE));
+    }
+
     @Override
     public void start() throws CantStartSubsystemException {
         /**
@@ -20,7 +27,7 @@ public class CryptoPluginSubsystem extends AbstractPluginSubsystem {
          */
 
         try {
-            DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
+            AbstractPluginDeveloper developerBitDubai = new DeveloperBitDubai();
             plugin = developerBitDubai.getPlugin();
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());

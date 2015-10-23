@@ -9,7 +9,7 @@ import java.util.List;
  * Created by rodrigo on 9/10/15.
  */
 public interface ActorNetworkServiceRedeemPoint {
-    public void handleCompleteRequestListRegisteredAssetRedeemPointActorNetworksNotificationEvent(List<ActorAssetRedeemPoint> assetRedeemPointList);
+    public void handleCompleteRequestListRegisteredAssetRedeemPointActorNetworksNotificationEvent(List<ActorAssetRedeemPoint> actorAssetRedeemPointList);
     public void handleCompleteClientAssetRedeemPointActorRegistrationNotificationEvent(ActorAssetRedeemPoint actorAssetRedeemPoint);
 
 }

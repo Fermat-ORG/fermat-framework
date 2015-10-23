@@ -63,29 +63,18 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     /**
      * Represent the WS_PROTOCOL
      */
-    public static final String WS_PROTOCOL = "ws://";
-
-    /**
-     * Represent the HTTP_PROTOCOL
-     */
-    public static final String HTTP_PROTOCOL = "http://";
+    private static final String WS_PROTOCOL = "ws://";
 
     /**
      * Represent the SERVER_IP
      */
-    //public static final String SERVER_IP = "52.11.156.16"; //AWS
-    public static final String SERVER_IP = "192.168.1.3";
-
+    public static final String SERVER_IP = "52.11.156.16"; //AWS
+    //public static final String SERVER_IP = "192.168.56.1";
+    //public static final String SERVER_IP = "127.0.0.1";
     /**
      * Represent the DEFAULT_PORT
      */
-    public static final int DEFAULT_PORT = 9090;
-
-    /**
-     * Represent the WEB_SERVICE_PORT
-     */
-    public static final int WEB_SERVICE_PORT = 8080;
-
+    private static final int DEFAULT_PORT = 9090;
     /**
      * Represent the newLoggingLevel
      */
@@ -135,8 +124,8 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      */
     public WsCommunicationsCloudClientPluginRoot(){
         super();
-        this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.ENABLE_CLIENT;
-        //this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.DISABLE_CLIENT;
+        //this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.ENABLE_CLIENT;
+        this.disableClientFlag = WsCommunicationsCloudClientPluginRoot.DISABLE_CLIENT;
     }
 
     /**

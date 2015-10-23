@@ -21,7 +21,7 @@ public class PluginIdsManager extends AbstractPluginIdsManager {
     }
 
     @Override
-    protected com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum getPluginByKey(String key) throws InvalidParameterException {
+    protected FermatPluginsEnum getPluginByKey(String key) throws InvalidParameterException {
         return CCPPlugins.getByCode(key);
     }
 

@@ -91,7 +91,8 @@ public class DigitalAssetReceptor extends DigitalAssetSwap {
 
     @Override
     public void persistInLocalStorage(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateDigitalAssetFileException {
-        this.digitalAssetReceptionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata);
+        //TODO: I need to asing an internal UUID and persist it in database, for now this id is null
+        this.digitalAssetReceptionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata,null);
     }
 
     @Override

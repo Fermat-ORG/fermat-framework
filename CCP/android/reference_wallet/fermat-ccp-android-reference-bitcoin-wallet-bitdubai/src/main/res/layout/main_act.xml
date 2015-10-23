@@ -75,7 +75,7 @@
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="35dp"
             android:layout_marginRight="35dp"
-            android:src="@drawable/ic_action_add_person"
+            android:src="@drawable/btn_contact_send"
             fab:fab_colorNormal="#6563a4"
             fab:fab_colorPressed="@color/material_blue_grey_800"
             fab:fab_colorRipple="@color/ripple_material_dark"/>
