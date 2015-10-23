@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
@@ -12,15 +14,25 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.Get
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDao;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.InvalidSeedException;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionOutput;
+import org.bitcoinj.core.UTXO;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.wallet.DeterministicSeed;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -40,6 +52,7 @@ public class AssetCryptoVaultManager  {
      */
     UUID pluginId;
     VaultKeyHierarchyGenerator vaultKeyHierarchyGenerator;
+    AssetsOverBitcoinCryptoVaultDao dao;
 
 
     /**
@@ -137,35 +150,23 @@ public class AssetCryptoVaultManager  {
      * @throws CantSendAssetBitcoinsToUserException
      */
     public void sendBitcoinAssetToUser(String genesisTransactionId, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException {
-        /**
-         * I get the network Parameters from the passed address.
-         */
-        NetworkParameters networkParameters = null;
-        Wallet wallet = null;
-        try {
-            networkParameters = Address.getParametersFromAddress(addressTo.getAddress());
-        } catch (AddressFormatException e) {
-            e.printStackTrace();
+        BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.DEFAULT;
+
+    }
+
+    /**
+     * instantiates and creates the dao object to access the database
+     * @return
+     */
+    private AssetsOverBitcoinCryptoVaultDao getDao(){
+        if (dao == null){
+            try {
+                dao = new AssetsOverBitcoinCryptoVaultDao(this.pluginDatabaseSystem, this.pluginId);
+            } catch (CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException e) {
+                e.printStackTrace();
+            }
         }
 
-        /**
-         * I create the wallet from my seed, and imported the Keys that are being used at the Crypto Network. This list was generated and is maintained
-         * by the HierarchyMaintainer and passed to the Hierarchy Generator.
-         */
-        try {
-            wallet = Wallet.fromSeed(networkParameters, getAssetVaultSeed());
-            wallet.importKeys(vaultKeyHierarchyGenerator.getAllAccountsKeyList());
-        } catch (InvalidSeedException e) {
-            e.printStackTrace();
-        }
-
-        /**
-         * I get the UTXO provider from the Crypto Network and set it to the wallet with the keys
-         */
-        //wallet.setUTXOProvider(bitcoinNetworkManager.getUTXOProvider());
-
-        //todo esto probablemente lo tendria que poner en el vault Key Hierarchy porque ahi tengo que actualizar la red a la que debo monitorear
-        //en este punto ya tengo todo listo para armar la transacción y enviarla.
-
+        return dao;
     }
 }

@@ -25,7 +25,7 @@ public class AssetRedeemPointWalletTransactionRecordWrapper implements AssetRede
     private final long timeStamp;
     private final String memo;
     private final String digitalAssetMetadataHash;
-    private final UUID transactionId;
+    private final String transactionId;
 
     public AssetRedeemPointWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
                                                      String assetIssuingPublicKey,
@@ -41,7 +41,7 @@ public class AssetRedeemPointWalletTransactionRecordWrapper implements AssetRede
                                                      long timeStamp,
                                                      String memo,
                                                      String digitalAssetMetadataHash,
-                                                     UUID transactionId){
+                                                     String transactionId){
         this.digitalAsset = digitalAsset;
         this.assetIssuingPublicKey = assetIssuingPublicKey;
         this.name = name;
@@ -109,7 +109,7 @@ public class AssetRedeemPointWalletTransactionRecordWrapper implements AssetRede
     }
 
     @Override
-    public UUID getIdTransaction() {
+    public String getIdTransaction() {
         return transactionId;
     }
 

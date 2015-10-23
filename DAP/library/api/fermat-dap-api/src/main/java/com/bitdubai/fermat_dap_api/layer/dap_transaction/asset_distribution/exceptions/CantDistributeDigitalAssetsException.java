@@ -11,4 +11,8 @@ public class CantDistributeDigitalAssetsException extends DAPException {
     public CantDistributeDigitalAssetsException(Exception cause, String context, String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
+
+    public CantDistributeDigitalAssetsException(final String message) {
+        this(null, DEFAULT_MESSAGE, message);
+    }
 }
