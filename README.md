@@ -1,5 +1,5 @@
-Readme
-========= 
+![alt text](https://github.com/bitDubai/fermat-graphic-design/blob/master/Dise%C3%B1o%20plano/Fermat/Logo%20Fermat/logo_jpg/logo_github_readme.jpg "Fermat Logo")
+
 
 Welcome to Fermat! 
 -------------------
@@ -71,7 +71,7 @@ efficient, secure an private way.
 > To give back the souveraignity over each one's own ressources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.
 
 
-Fermat Principles
+Fermat principles
 ------------------------------------------------
 
 
@@ -202,6 +202,8 @@ Fermat Principles
 
 How to install and run Fermat
 -------------------------------
+
+
 #### Download
 
 Installers for the latest stable build for Android, Mac, Windows and Linux (Debian/Ubuntu) can be [downloaded here](http://fermat.org/download/).
@@ -220,20 +222,28 @@ for a list of Niche Wallets.
 
 For installation instructions and running from the source code, see the [Fermat Development Environment Installation and Configuration documentation](https://github.com/bitDubai/fermat/blob/master/fermat-documentation/installation/Linux.asciidoc).
 
+
 #### Need help?
 
 Having problems compiling or running Fermat the first time, or not sure how to use Fermat?  Please 
 review [Troubleshooting](https://github.com/bitDubai/fermat/fermat-documentation), which helps 
 you to fix common problems and find extra help if needed.
 
+<<<<<<< HEAD
 Status of the Project:
+=======
+
+
+
+Status of the project:
+>>>>>>> c920cc774fb23b5b67d2667b67c291e43ecdc43b
 ------------------------------------------------
 
-As of August 2015 the state of the project is the following:
+As of October 2015 the state of the project is the following:
 
-State of the code: Under development for 2 months. No realeses yet. 17 full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
+State of the code: Under development for 5 months. No realeses yet. 24 full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
 
-Future path of development: Active (First release with very limited features schedulled for late September 2015).
+Future path of development: Active (First release with very limited features schedulled for late November 2015).
 
 I want to join the team!
 ------------------------------------------------

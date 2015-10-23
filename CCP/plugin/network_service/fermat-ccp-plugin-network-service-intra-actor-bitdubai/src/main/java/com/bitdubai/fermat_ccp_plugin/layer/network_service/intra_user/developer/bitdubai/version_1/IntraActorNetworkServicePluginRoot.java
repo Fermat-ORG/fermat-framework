@@ -85,7 +85,9 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecordedAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.Identity;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNSInformation;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceNotification;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.MessageType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
@@ -97,6 +99,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -722,22 +725,24 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
              * This is for test and example of how to use
              * Construct the filter
              */
-                DiscoveryQueryParameters discoveryQueryParameters = constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_INTRA_USER, //PlatformComponentType you want to find
-                        NetworkServiceType.UNDEFINED,     //NetworkServiceType you want to find
-                        null,                     // alias
-                        null,                     // identityPublicKey
-                        null,                     // location
-                        null,                     // distance
-                        null,                     // name
-                        null,                     // extraData
-                        null,                     // offset
-                        null,                     // max
-                        null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                        null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+//                DiscoveryQueryParameters discoveryQueryParameters = constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_INTRA_USER, //PlatformComponentType you want to find
+//                        NetworkServiceType.UNDEFINED,     //NetworkServiceType you want to find
+//                        null,                     // alias
+//                        null,                     // identityPublicKey
+//                        null,                     // location
+//                        null,                     // distance
+//                        null,                     // name
+//                        null,                     // extraData
+//                        null,                     // offset
+//                        null,                     // max
+//                        null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+//                        null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+//
+//
+//
+//                requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
 
 
-
-                requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
 
 
 
@@ -1048,21 +1053,21 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         List<IntraUserInformation> lstIntraUser = new ArrayList<>();
 
         try {
-                if(remoteNetworkServicesRegisteredList!=null) {
-                    byte[] image = null;
-                        for (PlatformComponentProfile platformComponentProfile : remoteNetworkServicesRegisteredList) {
-                            if (platformComponentProfile.getExtraData() != null) {
-                                JsonObject jsonObject = new JsonObject();
-                                jsonObject =new JsonParser().parse(platformComponentProfile.getExtraData()).getAsJsonObject();
-                                image = jsonObject.get(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants.PROFILE_IMAGE).getAsString().getBytes();
-                            }
-
-
-                            IntraUserInformation intraUser = new IntraUserNSInformation(platformComponentProfile.getAlias(), platformComponentProfile.getIdentityPublicKey(), image);
-
-                            lstIntraUser.add(intraUser);
-                        }
-                }
+//                if(remoteNetworkServicesRegisteredList!=null) {
+//                    byte[] image = null;
+//                        for (PlatformComponentProfile platformComponentProfile : remoteNetworkServicesRegisteredList) {
+//                            if (platformComponentProfile.getExtraData() != null) {
+//                                JsonObject jsonObject = new JsonObject();
+//                                jsonObject =new JsonParser().parse(platformComponentProfile.getExtraData()).getAsJsonObject();
+//                                image = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString().getBytes();
+//                            }
+//
+//
+//                            IntraUserInformation intraUser = new IntraUserNSInformation(platformComponentProfile.getAlias(), platformComponentProfile.getIdentityPublicKey(), image);
+//
+//                            lstIntraUser.add(intraUser);
+//                        }
+//                }
 
             /* This is for test and example of how to use
                     * Construct the filter
@@ -1082,7 +1087,17 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
 
 
-            requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
+            List<PlatformComponentProfile> list = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+
+            for(PlatformComponentProfile platformComponentProfile : list){
+
+                JsonObject jsonObject =new JsonParser().parse(platformComponentProfile.getExtraData()).getAsJsonObject();
+                byte[] image = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString().getBytes();
+                lstIntraUser.add(new IntraUserNetworkService(platformComponentProfile.getIdentityPublicKey(),image, platformComponentProfile.getAlias()));
+            }
+
+
+            //requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
 
         }catch (Exception e){
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -1236,7 +1251,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     @Override
     public void confirmNotification(UUID notificationID) throws ErrorConfirmNotificationsIntraUserException {
+
+        if(incomingNotificationsDao!=null)
         incomingNotificationsDao.markReadedNotification(notificationID);
+        else{
+            throw new ErrorConfirmNotificationsIntraUserException("DAO null",null,"Error","");
+        }
     }
 
     @Override
@@ -1306,7 +1326,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 receiverType
         );
 
-        communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfile, remoteParticipant);
+        try {
+            communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfile, remoteParticipant);
+        } catch (CantEstablishConnectionException e) {
+            e.printStackTrace();
+        }
     }
 
 

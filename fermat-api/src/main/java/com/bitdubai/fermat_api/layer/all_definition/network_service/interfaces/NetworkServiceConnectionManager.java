@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 
@@ -33,7 +34,7 @@ public interface NetworkServiceConnectionManager {
      * @param applicantNetworkService the profile of the network service which it makes the request
      * @param remoteParticipant the remote participant of the vpn
      */
-    public void connectTo(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant);
+    public void connectTo(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant) throws FermatException;
 
 
     /**
