@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionRe
 
 /**
  * The class <code>com.bitdubai.fermat_core.FermatPluginManager</code>
- * centralizes all start actions for the plugins of fermat.
+ * centralizes all service actions of the plugins in fermat.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/10/2015.
  */
