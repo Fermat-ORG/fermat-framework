@@ -89,6 +89,25 @@ public interface CryptoWallet extends Serializable {
                                                   String        walletPublicKey) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
 
     /**
+     * Convert a intra user connection to a new wallet contact
+     *
+     * @param actorAlias
+     * @param actorType
+     * @param actorPublicKey
+     * @param actorPhoto
+     * @param walletPublicKey
+     * @return
+     * @throws CantCreateWalletContactException
+     * @throws ContactNameAlreadyExistsException
+     */
+    CryptoWalletWalletContact convertConnectionToContact( String        actorAlias,
+                                                          Actors        actorType,
+                                                          String        actorPublicKey,
+                                                          byte[]        actorPhoto,
+                                                          String        walletPublicKey) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
+
+
+    /**
      * Create a new contact with a photo for an specific wallet
      *
      * @param receivedCryptoAddress the crypto address of the contact

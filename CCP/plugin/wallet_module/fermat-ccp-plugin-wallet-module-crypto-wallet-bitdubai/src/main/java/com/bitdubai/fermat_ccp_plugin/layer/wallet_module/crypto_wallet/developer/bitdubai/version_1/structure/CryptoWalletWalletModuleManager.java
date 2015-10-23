@@ -167,6 +167,7 @@ public class CryptoWalletWalletModuleManager implements DealsWithCryptoTransmiss
      */
     private CryptoAddressBookManager cryptoAddressBookManager;
 
+
     /**
      * DealsWithMoneyRequestNetworkService Interface member variable
      */
@@ -307,6 +308,54 @@ public class CryptoWalletWalletModuleManager implements DealsWithCryptoTransmiss
             throw new CantEnrichIntraUserException(CantEnrichIntraUserException.DEFAULT_MESSAGE, e, "", "There was a problem trying to enrich the intra user record.");
         }
     }
+
+    @Override
+    public CryptoWalletWalletContact convertConnectionToContact( String        actorAlias,
+                                                          Actors        actorType,
+                                                          String        actorConnectedPublicKey,
+                                                          byte[]        actorPhoto,
+                                                          String        walletPublicKey) throws CantCreateWalletContactException, ContactNameAlreadyExistsException{
+        try{
+
+            CryptoAddress actorCryptoAddress = null;
+
+         //get to Crypto Address NS the intra user actor address
+
+            try {
+                walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorAlias, walletPublicKey);
+                throw new ContactNameAlreadyExistsException(ContactNameAlreadyExistsException.DEFAULT_MESSAGE, null, null, null);
+
+            } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
+                String actorPublicKey = createActor(actorAlias, actorType, actorPhoto);
+
+                List<CryptoAddress> cryptoAddresses = new ArrayList<>();
+                cryptoAddresses.add(actorCryptoAddress);
+                WalletContactRecord walletContactRecord = walletContactsRegistry.createWalletContact(
+                        actorPublicKey,
+                        actorAlias,
+                        "",
+                        "",
+                        actorType,
+                        cryptoAddresses,
+                        walletPublicKey
+                );
+                return new CryptoWalletWalletModuleWalletContact(walletContactRecord, actorPhoto);
+            }
+
+        } catch (ContactNameAlreadyExistsException e) {
+            throw e;
+        } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactException e) {
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e);
+        } catch (CantCreateOrRegisterActorException e) {
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e, "Error creating or registering actor.", null);
+        } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantCreateWalletContactException e) {
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e, "Error creation a wallet contact.", null);
+        } catch (Exception e) {
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+    }
+
+
 
     @Override
     public CryptoWalletWalletContact createWalletContactWithPhoto(CryptoAddress receivedCryptoAddress,
