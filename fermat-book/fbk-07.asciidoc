@@ -2,13 +2,13 @@
 [[layersExplanation]]
 == FERMAT layers explanation
 
-The _multilayer architecture_ reveals useful when grouping the plugins according to their common functionalities, which on one hand gives a certain order and structure to the system and lets identify common challenges to solve when writing code, but on the other hand, the conceptual strength of using _layers_ stimulate the creation of future plugins that reveal to be necessary when decomposing the big task in smaller steps to solve and implement. What's more, plugins originally conceived to serve a certain function, afterwards appear to be reusable for new developments. +
-We have already explored in the previous sections how FERMAT is initialized, the main role of the Core Platform to deploy the whole system structure, and the first available services provided by the system-wide _superlayers_ . +
-Now, let us explore the next _layers_ folowing on top, which are similar in every following _platforms_ within FERMAT. +
-Layers are built with a considerable atomicity in its components (i.e. each component deals with a very specific and contrained kind of events) what really renders the whole FERMAT system with a strong, structured and solid foundation and at the same time a large flexibility and adaptability for further developments adn evolution. +
+The *_multilayer architecture_* reveals useful when grouping the plugins according to their common functionalities, which on one hand gives a certain order and structure to the system and lets identify common challenges to solve when writing code, but on the other hand, the conceptual strength of using _layers_ stimulate the creation of future plugins that reveal to be necessary when decomposing the big task in smaller steps to solve and implement. What's more, plugins originally conceived to serve a certain function, afterwards appear to be reusable for new developments. +
+We have already explored in the previous sections how FERMAT is initialized, the main role of the *Core Platform* to deploy the whole system structure, and the first available services provided by the system-wide *_superlayers_* . +
+Now, let us explore the next *_layers_* following on top, which are similar in every following *_FERMAT platforms_*. +
+*Layers* are built with a considerable atomicity in its components (i.e. each component deals with a very specific and contrained kind of events) what really renders the whole FERMAT system with a strong, structured and solid foundation and at the same time a large flexibility and adaptability for further development and evolution. +
 
 === _Platform Services layer_
-The modules in this layer handle the very basic tasks that allow plugins interact safely in and uncontrolled environment, taking care of a careful transmission of responsability from one component to another and specially the management of exceptions and track of all systemś *events*.
+The modules in this layer handle the very basic tasks that allow plugins interact safely in and uncontrolled environment, taking care of a careful transmission of responsability from one component to another and specially the management of exceptions and track of all system's *events*.
 
 ////
 === _Hardware layer_
@@ -25,53 +25,50 @@ Plugin :: +
 === _Network Service layer_
 Each time that a certain system function must perform any operation *outside* the device where FERMAT is running, a _network service_ is required to follow the execution in other devices until is completed. +
 Network services' modules need to have a *communication channel* stablished and maintained between the parties involved, what is done by the *P2P networks and communication superlayer* ( see the explanation at the previous section <<communicationLayer>> ) +
-Each *network service module* running on a _local device_ stablishes communication EXCLUSIVELY to its _counterpart_ running in the _remote device_. + The module handles a table of request and responses to communicate with the counterpart and so perform the required task. +
+Each *network service module* running on a _local device_ stablishes communication EXCLUSIVELY to its _counterpart_ running in the _remote device_. +
+The module handles a table of request and responses to communicate with the counterpart and so perform the required task. +
 
 === _Actor Network Service layer_
-As we have already introduced the concept of system *actors* to guide the functionalities to match the specific needs of FERMATs users, in this layer live the modules that provide *network services* specifically to interconnect the *actors* intervining in the operations held by a specific platform within FERMAT. + 
+As we have already introduced the concept of system *actors* to guide the functionalities to match the specific needs of FERMATs users, in this layer live the modules that provide *network services* specifically to interconnect the *actors* intervining in the operations held by a specific platform within FERMAT, by "mapping" the *actor identity* with the *user identity* on which it depends. + 
 
 === _Identity layer_
-This layer holds the plugins to manage all the necessary information about the actors *identity* within FERMAT. 
+This layer holds the plugins to manage all the necessary information about the actors *identity* within FERMAT. This *identity* is a pair of privat/public key that act like a credential to access to certain functionalities in FERMAT specific for the user, for example, to access to his own *wallets*. +
+To interact with third parties, another "credential" is used to represent the *user*, that is what in FERMAT we call *actor identity*, and it is defined in the <<actorLayer>>. 
 
 === _World layer_
 
+=== _Wallet layer_
+=== _Request layer_
 === _Middleware layer_
 
+[[actorLayer]]
 === _Actor layer_
-Developer ::
-Designer :: +
+This is the layer where the different *actor identities* are held to be presented to third party *actors* interacting with a specific *user* who is "playing a specific role" within FERMAT. For example, an user "John Smith", who has his *identity* within Fermat, decides to _act_ as *crypto broker*, so he opens a *crypto broker wallet* in the _Cryto Borker Platform_, he defines his alias to operate with it, and therefore this becomes the name of his *actor identity* as *cryptobroker*, so he does not need to reveal his *user* identity to run his business as cryptobroker.
 
+=== _Agent layer_
 
 === _Desktop Module layer_
-Sub App Manager :: +
+*Desktop* :: is an sub-application (sub-program) that concentrate functionalities provided by several other sub-applications to present them in a _graphic user interface (GUI) _ to interact with the user. ( see <<desktopLayer>> ) +
 
+Plugins in this layer act as a "general manager" of all the functionalities that a *desktop* needs to consume from FERMAT, delivering to it what is required in a transparent way (without the desktop program actually managing anything inside FERMAT, but querying the _desktop module_ to get what it needs).
 
-=== _Subapp Module layer_
-Shell ::
-Designer ::
-Developer ::
-Technical Support ::
-Sys Monitor ::
-Feedback ::
-Reviews :: +
+=== _Sub App Module layer_
+Similar to the _Desktop Module layer_ but applied to the _Sub Applications_ that run *below* _desktops_. +
+These _sub app_ do *NOT* manage money.
 
-=== _Engine layer_
+=== _Wallet Module layer_
+Similar to the _Sub App  Module layer_ but applied to _Wallets_, i.e. "sub apps" that *DO* manage money. +
 
-Sub App Runtime ::
-Desktop Runtime :: +
+NOTE: Until now, the _layers_ presented are written in *JAVA*. +
+The next layers are NOT *code portable*, i.e. they depend on the Operating Systems where they run, and therefore are written in each OS's specific language.
 
+[[desktopLayer]]
+=== *_Desktop layer_*
+In this layer live the part of the *desktop application* responsible of the GUI (Graphic User Interface) which has a *one-on-one* relationship to the component of the same name in the _Desktop Module Layer_
 
-=== _Desktop layer_
+=== *_Subapp layer_*
+In this layer live the part of the *sub app* responsible of the GUI (Graphic User Interface) which has a *one-on-one* relationship to the component of the same name in the _Sub App Module Layer_
 
-Sub App Manager :: +
-
-
-=== _Subapp layer_
-Shell ::
-Designer ::
-Developer ::
-Technical Support ::
-Sys Monitor ::
-Feedback ::
-Reviews :: +
+=== *_Reference Wallet layer_*
+In this layer live the part of the *wallet* responsible of the GUI (Graphic User Interface) and which manages the *wallets resources* (multimedia) and the *wallet navigation structure*. This also has a  *one-on-one* relationship to the component of the same name  in the _Wallet Module Layer_
 

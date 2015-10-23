@@ -1641,15 +1641,15 @@ Plug-ins in this layer essentially consist on the modules needed for the impleme
 <h2 id="layersExplanation">7. FERMAT layers explanation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <em>multilayer architecture</em> reveals useful when grouping the plugins according to their common functionalities, which on one hand gives a certain order and structure to the system and lets identify common challenges to solve when writing code, but on the other hand, the conceptual strength of using <em>layers</em> stimulate the creation of future plugins that reveal to be necessary when decomposing the big task in smaller steps to solve and implement. What&#8217;s more, plugins originally conceived to serve a certain function, afterwards appear to be reusable for new developments.<br>
-We have already explored in the previous sections how FERMAT is initialized, the main role of the Core Platform to deploy the whole system structure, and the first available services provided by the system-wide <em>superlayers</em> .<br>
-Now, let us explore the next <em>layers</em> folowing on top, which are similar in every following <em>platforms</em> within FERMAT.<br>
-Layers are built with a considerable atomicity in its components (i.e. each component deals with a very specific and contrained kind of events) what really renders the whole FERMAT system with a strong, structured and solid foundation and at the same time a large flexibility and adaptability for further developments adn evolution.<br></p>
+<p>The <strong><em>multilayer architecture</em></strong> reveals useful when grouping the plugins according to their common functionalities, which on one hand gives a certain order and structure to the system and lets identify common challenges to solve when writing code, but on the other hand, the conceptual strength of using <em>layers</em> stimulate the creation of future plugins that reveal to be necessary when decomposing the big task in smaller steps to solve and implement. What&#8217;s more, plugins originally conceived to serve a certain function, afterwards appear to be reusable for new developments.<br>
+We have already explored in the previous sections how FERMAT is initialized, the main role of the <strong>Core Platform</strong> to deploy the whole system structure, and the first available services provided by the system-wide <strong><em>superlayers</em></strong> .<br>
+Now, let us explore the next <strong><em>layers</em></strong> following on top, which are similar in every following <strong><em>FERMAT platforms</em></strong>.<br>
+<strong>Layers</strong> are built with a considerable atomicity in its components (i.e. each component deals with a very specific and contrained kind of events) what really renders the whole FERMAT system with a strong, structured and solid foundation and at the same time a large flexibility and adaptability for further development and evolution.<br></p>
 </div>
 <div class="sect2">
 <h3 id="__em_platform_services_layer_em">7.1. <em>Platform Services layer</em></h3>
 <div class="paragraph">
-<p>The modules in this layer handle the very basic tasks that allow plugins interact safely in and uncontrolled environment, taking care of a careful transmission of responsability from one component to another and specially the management of exceptions and track of all systemś <strong>events</strong>.</p>
+<p>The modules in this layer handle the very basic tasks that allow plugins interact safely in and uncontrolled environment, taking care of a careful transmission of responsability from one component to another and specially the management of exceptions and track of all system&#8217;s <strong>events</strong>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1657,105 +1657,105 @@ Layers are built with a considerable atomicity in its components (i.e. each comp
 <div class="paragraph">
 <p>Each time that a certain system function must perform any operation <strong>outside</strong> the device where FERMAT is running, a <em>network service</em> is required to follow the execution in other devices until is completed.<br>
 Network services' modules need to have a <strong>communication channel</strong> stablished and maintained between the parties involved, what is done by the <strong>P2P networks and communication superlayer</strong> ( see the explanation at the previous section <a href="#communicationLayer"><em>Communication Layer</em></a> )<br>
-Each <strong>network service module</strong> running on a <em>local device</em> stablishes communication EXCLUSIVELY to its <em>counterpart</em> running in the <em>remote device</em>. + The module handles a table of request and responses to communicate with the counterpart and so perform the required task.<br></p>
+Each <strong>network service module</strong> running on a <em>local device</em> stablishes communication EXCLUSIVELY to its <em>counterpart</em> running in the <em>remote device</em>.<br>
+The module handles a table of request and responses to communicate with the counterpart and so perform the required task.<br></p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="__em_actor_network_service_layer_em">7.3. <em>Actor Network Service layer</em></h3>
 <div class="paragraph">
-<p>As we have already introduced the concept of system <strong>actors</strong> to guide the functionalities to match the specific needs of FERMATs users, in this layer live the modules that provide <strong>network services</strong> specifically to interconnect the <strong>actors</strong> intervining in the operations held by a specific platform within FERMAT.<br></p>
+<p>As we have already introduced the concept of system <strong>actors</strong> to guide the functionalities to match the specific needs of FERMATs users, in this layer live the modules that provide <strong>network services</strong> specifically to interconnect the <strong>actors</strong> intervining in the operations held by a specific platform within FERMAT, by "mapping" the <strong>actor identity</strong> with the <strong>user identity</strong> on which it depends.<br></p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="__em_identity_layer_em">7.4. <em>Identity layer</em></h3>
-
+<div class="paragraph">
+<p>This layer holds the plugins to manage all the necessary information about the actors <strong>identity</strong> within FERMAT. This <strong>identity</strong> is a pair of privat/public key that act like a credential to access to certain functionalities in FERMAT specific for the user, for example, to access to his own <strong>wallets</strong>.<br>
+To interact with third parties, another "credential" is used to represent the <strong>user</strong>, that is what in FERMAT we call <strong>actor identity</strong>, and it is defined in the <a href="#actorLayer"><em>Actor layer</em></a>.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="__em_world_layer_em">7.5. <em>World layer</em></h3>
 
 </div>
 <div class="sect2">
-<h3 id="__em_middleware_layer_em">7.6. <em>Middleware layer</em></h3>
+<h3 id="__em_wallet_layer_em">7.6. <em>Wallet layer</em></h3>
 
 </div>
 <div class="sect2">
-<h3 id="__em_actor_layer_em">7.7. <em>Actor layer</em></h3>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Developer </dt>
-<dt class="hdlist1">Designer </dt>
-<dd>
-<p>+</p>
-</dd>
-</dl>
+<h3 id="__em_request_layer_em">7.7. <em>Request layer</em></h3>
+
+</div>
+<div class="sect2">
+<h3 id="__em_middleware_layer_em">7.8. <em>Middleware layer</em></h3>
+
+</div>
+<div class="sect2">
+<h3 id="actorLayer">7.9. <em>Actor layer</em></h3>
+<div class="paragraph">
+<p>This is the layer where the different <strong>actor identities</strong> are held to be presented to third party <strong>actors</strong> interacting with a specific <strong>user</strong> who is "playing a specific role" within FERMAT. For example, an user "John Smith", who has his <strong>identity</strong> within Fermat, decides to <em>act</em> as <strong>crypto broker</strong>, so he opens a <strong>crypto broker wallet</strong> in the <em>Cryto Borker Platform</em>, he defines his alias to operate with it, and therefore this becomes the name of his <strong>actor identity</strong> as <strong>cryptobroker</strong>, so he does not need to reveal his <strong>user</strong> identity to run his business as cryptobroker.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_desktop_module_layer_em">7.8. <em>Desktop Module layer</em></h3>
+<h3 id="__em_agent_layer_em">7.10. <em>Agent layer</em></h3>
+
+</div>
+<div class="sect2">
+<h3 id="__em_desktop_module_layer_em">7.11. <em>Desktop Module layer</em></h3>
 <div class="dlist">
 <dl>
-<dt class="hdlist1">Sub App Manager </dt>
+<dt class="hdlist1"><strong>Desktop</strong> </dt>
 <dd>
-<p>+</p>
+<p>is an sub-application (sub-program) that concentrate functionalities provided by several other sub-applications to present them in a _graphic user interface (GUI) _ to interact with the user. ( see <a href="#desktopLayer"><strong><em>Desktop layer</em></strong></a> )<br></p>
 </dd>
 </dl>
+</div>
+<div class="paragraph">
+<p>Plugins in this layer act as a "general manager" of all the functionalities that a <strong>desktop</strong> needs to consume from FERMAT, delivering to it what is required in a transparent way (without the desktop program actually managing anything inside FERMAT, but querying the <em>desktop module</em> to get what it needs).</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_subapp_module_layer_em">7.9. <em>Subapp Module layer</em></h3>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Shell </dt>
-<dt class="hdlist1">Designer </dt>
-<dt class="hdlist1">Developer </dt>
-<dt class="hdlist1">Technical Support </dt>
-<dt class="hdlist1">Sys Monitor </dt>
-<dt class="hdlist1">Feedback </dt>
-<dt class="hdlist1">Reviews </dt>
-<dd>
-<p>+</p>
-</dd>
-</dl>
+<h3 id="__em_sub_app_module_layer_em">7.12. <em>Sub App Module layer</em></h3>
+<div class="paragraph">
+<p>Similar to the <em>Desktop Module layer</em> but applied to the <em>Sub Applications</em> that run <strong>below</strong> <em>desktops</em>.<br>
+These <em>sub app</em> do <strong>NOT</strong> manage money.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_engine_layer_em">7.10. <em>Engine layer</em></h3>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Sub App Runtime </dt>
-<dt class="hdlist1">Desktop Runtime </dt>
-<dd>
-<p>+</p>
-</dd>
-</dl>
+<h3 id="__em_wallet_module_layer_em">7.13. <em>Wallet Module layer</em></h3>
+<div class="paragraph">
+<p>Similar to the <em>Sub App  Module layer</em> but applied to <em>Wallets</em>, i.e. "sub apps" that <strong>DO</strong> manage money.<br></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Until now, the <em>layers</em> presented are written in <strong>JAVA</strong>.<br>
+The next layers are NOT <strong>code portable</strong>, i.e. they depend on the Operating Systems where they run, and therefore are written in each OS&#8217;s specific language.
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_desktop_layer_em">7.11. <em>Desktop layer</em></h3>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Sub App Manager </dt>
-<dd>
-<p>+</p>
-</dd>
-</dl>
+<h3 id="desktopLayer">7.14. <strong><em>Desktop layer</em></strong></h3>
+<div class="paragraph">
+<p>In this layer live the part of the <strong>desktop application</strong> responsible of the GUI (Graphic User Interface) which has a <strong>one-on-one</strong> relationship to the component of the same name in the <em>Desktop Module Layer</em></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_subapp_layer_em">7.12. <em>Subapp layer</em></h3>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">Shell </dt>
-<dt class="hdlist1">Designer </dt>
-<dt class="hdlist1">Developer </dt>
-<dt class="hdlist1">Technical Support </dt>
-<dt class="hdlist1">Sys Monitor </dt>
-<dt class="hdlist1">Feedback </dt>
-<dt class="hdlist1">Reviews </dt>
-<dd>
-<p>+</p>
-</dd>
-</dl>
+<h3 id="__strong_em_subapp_layer_em_strong">7.15. <strong><em>Subapp layer</em></strong></h3>
+<div class="paragraph">
+<p>In this layer live the part of the <strong>sub app</strong> responsible of the GUI (Graphic User Interface) which has a <strong>one-on-one</strong> relationship to the component of the same name in the <em>Sub App Module Layer</em></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__strong_em_reference_wallet_layer_em_strong">7.16. <strong><em>Reference Wallet layer</em></strong></h3>
+<div class="paragraph">
+<p>In this layer live the part of the <strong>wallet</strong> responsible of the GUI (Graphic User Interface) and which manages the <strong>wallets resources</strong> (multimedia) and the <strong>wallet navigation structure</strong>. This also has a  <strong>one-on-one</strong> relationship to the component of the same name  in the <em>Wallet Module Layer</em></p>
 </div>
 </div>
 </div>
@@ -1847,7 +1847,7 @@ FERMAT <a href="#multilayer">multilayer architecture</a> and <a href="#layersExp
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_actor_layer_em_2">8.7. <em>Actor layer</em></h3>
+<h3 id="__em_actor_layer_em">8.7. <em>Actor layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Developer </dt>
@@ -1870,7 +1870,7 @@ FERMAT <a href="#multilayer">multilayer architecture</a> and <a href="#layersExp
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_subapp_module_layer_em_2">8.9. <em>Subapp Module layer</em></h3>
+<h3 id="__em_subapp_module_layer_em">8.9. <em>Subapp Module layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Shell </dt>
@@ -1887,7 +1887,7 @@ FERMAT <a href="#multilayer">multilayer architecture</a> and <a href="#layersExp
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_engine_layer_em_2">8.10. <em>Engine layer</em></h3>
+<h3 id="__em_engine_layer_em">8.10. <em>Engine layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Sub App Runtime </dt>
@@ -1899,7 +1899,7 @@ FERMAT <a href="#multilayer">multilayer architecture</a> and <a href="#layersExp
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_desktop_layer_em_2">8.11. <em>Desktop layer</em></h3>
+<h3 id="__em_desktop_layer_em">8.11. <em>Desktop layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Sub App Manager </dt>
@@ -1910,7 +1910,7 @@ FERMAT <a href="#multilayer">multilayer architecture</a> and <a href="#layersExp
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_subapp_layer_em_2">8.12. <em>Subapp layer</em></h3>
+<h3 id="__em_subapp_layer_em">8.12. <em>Subapp layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Shell </dt>
@@ -2189,7 +2189,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_wallet_layer_em">13.2. <em>Wallet layer</em></h3>
+<h3 id="__em_wallet_layer_em_2">13.2. <em>Wallet layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Crypto Commodity Wallet </dt>
@@ -2230,7 +2230,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_request_layer_em">13.5. <em>Request layer</em></h3>
+<h3 id="__em_request_layer_em_2">13.5. <em>Request layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Money Request </dt>
@@ -2276,7 +2276,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_wallet_layer_em_2">14.2. <em>Wallet layer</em></h3>
+<h3 id="__em_wallet_layer_em_3">14.2. <em>Wallet layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Bank Notes </dt>
@@ -2298,7 +2298,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_wallet_module_layer_em">14.4. <em>Wallet Module layer</em></h3>
+<h3 id="__em_wallet_module_layer_em_2">14.4. <em>Wallet Module layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Bank Notes Wallet </dt>
@@ -2367,7 +2367,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_wallet_layer_em_3">15.4. <em>Wallet layer</em></h3>
+<h3 id="__em_wallet_layer_em_4">15.4. <em>Wallet layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Shop Wallet </dt>
@@ -2392,7 +2392,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_actor_layer_em_3">15.6. <em>Actor layer</em></h3>
+<h3 id="__em_actor_layer_em_2">15.6. <em>Actor layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Shop </dt>
@@ -2405,7 +2405,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_subapp_module_layer_em_3">15.7. <em>Subapp Module layer</em></h3>
+<h3 id="__em_subapp_module_layer_em_2">15.7. <em>Subapp Module layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Shop </dt>
@@ -2418,7 +2418,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_wallet_module_layer_em_2">15.8. <em>Wallet Module layer</em></h3>
+<h3 id="__em_wallet_module_layer_em_3">15.8. <em>Wallet Module layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Shop Wallet </dt>
@@ -2431,7 +2431,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_subapp_layer_em_3">15.9. <em>Subapp layer</em></h3>
+<h3 id="__em_subapp_layer_em_2">15.9. <em>Subapp layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Shop </dt>
@@ -2464,7 +2464,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 <div class="sect2">
 <h3 id="_fermat_cash_platform">16.1. FERMAT Cash platform</h3>
 <div class="sect3">
-<h4 id="__em_wallet_layer_em_4">16.1.1. <em>Wallet layer</em></h4>
+<h4 id="__em_wallet_layer_em_5">16.1.1. <em>Wallet layer</em></h4>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Cash Money </dt>
@@ -2492,7 +2492,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 <div class="sect2">
 <h3 id="_fermat_bank_platform">16.2. FERMAT Bank platform</h3>
 <div class="sect3">
-<h4 id="__em_wallet_layer_em_5">16.2.1. <em>Wallet layer</em></h4>
+<h4 id="__em_wallet_layer_em_6">16.2.1. <em>Wallet layer</em></h4>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Bank Money </dt>
@@ -2612,7 +2612,7 @@ Key functionalities are:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_wallet_layer_em_6">17.5. <em>Wallet layer</em></h3>
+<h3 id="__em_wallet_layer_em_7">17.5. <em>Wallet layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Crypto Broker </dt>
@@ -2662,7 +2662,7 @@ Key functionalities are:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_request_layer_em_2">17.8. <em>Request layer</em></h3>
+<h3 id="__em_request_layer_em_3">17.8. <em>Request layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Customer Broker Purchase </dt>
@@ -2689,7 +2689,7 @@ Key functionalities are:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_actor_layer_em_4">17.10. <em>Actor layer</em></h3>
+<h3 id="__em_actor_layer_em_3">17.10. <em>Actor layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Crypto Broker </dt>
@@ -2701,7 +2701,7 @@ Key functionalities are:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_agent_layer_em">17.11. <em>Agent layer</em></h3>
+<h3 id="__em_agent_layer_em_2">17.11. <em>Agent layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Crypto Broker </dt>
@@ -2724,7 +2724,7 @@ Key functionalities are:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_subapp_module_layer_em_4">17.13. <em>Subapp Module layer</em></h3>
+<h3 id="__em_subapp_module_layer_em_3">17.13. <em>Subapp Module layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Crypto Broker Identity </dt>
@@ -2740,7 +2740,7 @@ Key functionalities are:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_wallet_module_layer_em_3">17.14. <em>Wallet Module layer</em></h3>
+<h3 id="__em_wallet_module_layer_em_4">17.14. <em>Wallet Module layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Crypto Broker </dt>
@@ -2752,7 +2752,7 @@ Key functionalities are:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_desktop_layer_em_3">17.15. <em>Desktop layer</em></h3>
+<h3 id="__em_desktop_layer_em_2">17.15. <em>Desktop layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Sub App Manager </dt>
@@ -2872,7 +2872,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_wallet_layer_em_7">19.5. <em>Wallet layer</em></h3>
+<h3 id="__em_wallet_layer_em_8">19.5. <em>Wallet layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Asset Issuer Wallet </dt>
@@ -2914,7 +2914,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_actor_layer_em_5">19.8. <em>Actor layer</em></h3>
+<h3 id="__em_actor_layer_em_4">19.8. <em>Actor layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Asset Issuer </dt>
@@ -2939,7 +2939,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_sub_app_module_layer_em">19.10. <em>Sub App Module layer</em></h3>
+<h3 id="__em_sub_app_module_layer_em_2">19.10. <em>Sub App Module layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Asset Factory </dt>
@@ -2955,7 +2955,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_wallet_module_layer_em_4">19.11. <em>Wallet Module layer</em></h3>
+<h3 id="__em_wallet_module_layer_em_5">19.11. <em>Wallet Module layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Asset Issuer </dt>
@@ -2968,7 +2968,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_desktop_layer_em_4">19.12. <em>Desktop layer</em></h3>
+<h3 id="__em_desktop_layer_em_3">19.12. <em>Desktop layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Sub App Manager </dt>
@@ -3025,7 +3025,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_wallet_layer_em_8">20.2. <em>Wallet layer</em></h3>
+<h3 id="__em_wallet_layer_em_9">20.2. <em>Wallet layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Voucher  </dt>
@@ -3054,7 +3054,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_actor_layer_em_6">20.4. <em>Actor layer</em></h3>
+<h3 id="__em_actor_layer_em_5">20.4. <em>Actor layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Marketer </dt>
@@ -3065,7 +3065,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_sub_app_module_layer_em_2">20.5. <em>Sub App Module layer</em></h3>
+<h3 id="__em_sub_app_module_layer_em_3">20.5. <em>Sub App Module layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Wallet Branding </dt>
@@ -3077,7 +3077,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_wallet_module_layer_em_5">20.6. <em>Wallet Module layer</em></h3>
+<h3 id="__em_wallet_module_layer_em_6">20.6. <em>Wallet Module layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Voucher Wallet </dt>
