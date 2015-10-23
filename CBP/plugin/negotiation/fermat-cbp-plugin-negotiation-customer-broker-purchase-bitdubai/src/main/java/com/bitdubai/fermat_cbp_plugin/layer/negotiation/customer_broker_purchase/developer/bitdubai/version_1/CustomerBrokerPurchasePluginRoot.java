@@ -122,8 +122,7 @@ public class CustomerBrokerPurchasePluginRoot implements CustomerBrokerPurchaseM
 
     @Override
     public CustomerBrokerPurchase createCustomerBrokerPurchaseNegotiation(String publicKeyCustomer, String publicKeyBroker) throws CantCreateCustomerBrokerPurchaseException {
-        long startDateTime = System.currentTimeMillis();
-        return customerBrokerPurchaseNegotiationDao.createCustomerBrokerPurchaseNegotiation(publicKeyCustomer, publicKeyBroker, startDateTime);
+        return customerBrokerPurchaseNegotiationDao.createCustomerBrokerPurchaseNegotiation(publicKeyCustomer, publicKeyBroker);
     }
 
     @Override

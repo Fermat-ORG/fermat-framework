@@ -77,7 +77,7 @@ public class CustomerBrokerPurchaseNegotiation implements CustomerBrokerPurchase
 
     @Override
     public Clause addNewClause(ClauseType type, String value) {
-        return this.customerBrokerPurchaseNegotiationDao.addNewClause(this.negotiationId, type, value);
+        return this.customerBrokerPurchaseNegotiationDao.addNewClause(this.publicKeyCustomer, this.negotiationId, type, value);
     }
 
     @Override

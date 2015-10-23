@@ -21,6 +21,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantAddNewPurchaseClausesException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantGetListPurchaseClauseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseNegotiationDaoException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.structure.CustomerBrokerPurchaseClause;
@@ -73,8 +74,7 @@ public class CustomerBrokerPurchaseNegotiationDao {
 
         public CustomerBrokerPurchase createCustomerBrokerPurchaseNegotiation(
                 String publicKeyCustomer,
-                String publicKeyBroker,
-                long startDateTime
+                String publicKeyBroker
         ) throws CantCreateCustomerBrokerPurchaseException {
 
             try {
@@ -82,6 +82,7 @@ public class CustomerBrokerPurchaseNegotiationDao {
                 DatabaseTableRecord recordToInsert   = PurchaseNegotiationTable.getEmptyRecord();
 
                 UUID negotiationId = UUID.randomUUID();
+                long startDateTime = System.currentTimeMillis();
 
                 loadRecordAsNew(
                         recordToInsert,
@@ -237,7 +238,24 @@ public class CustomerBrokerPurchaseNegotiationDao {
                 return null;
             }
 
-            public Clause addNewClause(UUID clauseId, ClauseType type, String value) {
+            public Clause addNewClause(UUID negotiationId, ClauseType type, String value, String proposedBy){
+                try {
+                    DatabaseTable PurchaseClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
+                    DatabaseTableRecord recordToInsert = PurchaseClauseTable.getEmptyRecord();
+                    loadRecordAsNewClause(
+                            recordToInsert,
+                            negotiationId,
+                            type,
+                            value,
+                            proposedBy
+                    );
+                    PurchaseClauseTable.insertRecord(recordToInsert);
+                    return constructCustomerBrokerPurchaseClauseFromRecord(recordToInsert);
+                } catch (CantInsertRecordException e) {
+                    new CantAddNewPurchaseClausesException(CantAddNewPurchaseClausesException.DEFAULT_MESSAGE, e, "", "");
+                } catch (InvalidParameterException e) {
+                    new CantAddNewPurchaseClausesException(CantAddNewPurchaseClausesException.DEFAULT_MESSAGE, e, "", "");
+                }
                 return null;
             }
 
@@ -257,61 +275,89 @@ public class CustomerBrokerPurchaseNegotiationDao {
         Private methods
      */
 
-        private void loadRecordAsNew(
-                DatabaseTableRecord databaseTableRecord,
-                UUID   negotiationId,
-                String publicKeyCustomer,
-                String publicKeyBroker,
-                long startDataTime
-        ) {
-            databaseTableRecord.setUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME, negotiationId);
-            databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKeyCustomer);
-            databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKeyBroker);
-            databaseTableRecord.setLongValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME, startDataTime);
-            databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, NegotiationStatus.OPEN.getCode());
-        }
+        /*
+            Negotiations
+         */
 
-        private CustomerBrokerPurchase newCustomerBrokerPurchaseNegotiation(
-                UUID   negotiationId,
-                String publicKeyCustomer,
-                String publicKeyBroker,
-                long startDateTime,
-                NegotiationStatus statusNegotiation
-        ){
-            return new CustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDateTime, statusNegotiation, this);
-        }
+            private void loadRecordAsNew(
+                    DatabaseTableRecord databaseTableRecord,
+                    UUID   negotiationId,
+                    String publicKeyCustomer,
+                    String publicKeyBroker,
+                    long startDataTime
+            ) {
+                databaseTableRecord.setUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME, negotiationId);
+                databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKeyCustomer);
+                databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKeyBroker);
+                databaseTableRecord.setLongValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME, startDataTime);
+                databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, NegotiationStatus.OPEN.getCode());
+            }
 
-        private CustomerBrokerPurchase constructCustomerBrokerPurchaseFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
+            private CustomerBrokerPurchase newCustomerBrokerPurchaseNegotiation(
+                    UUID   negotiationId,
+                    String publicKeyCustomer,
+                    String publicKeyBroker,
+                    long startDateTime,
+                    NegotiationStatus statusNegotiation
+            ){
+                return new CustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDateTime, statusNegotiation, this);
+            }
 
-            UUID    negotiationId     = record.getUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME);
-            String  publicKeyCustomer = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
-            String  publicKeyBroker   = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
-            long    startDataTime     = record.getLongValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME);
-            NegotiationStatus  statusNegotiation = NegotiationStatus.getByCode(record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME));
+            private CustomerBrokerPurchase constructCustomerBrokerPurchaseFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
 
-            return newCustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation);
-        }
+                UUID    negotiationId     = record.getUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME);
+                String  publicKeyCustomer = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
+                String  publicKeyBroker   = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
+                long    startDataTime     = record.getLongValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME);
+                NegotiationStatus  statusNegotiation = NegotiationStatus.getByCode(record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME));
 
-        private CustomerBrokerPurchaseClause newCustomerBrokerPurchaseClause(
-                UUID            clauseId,
-                ClauseType      type,
-                String          value,
-                ClauseStatus    status,
-                String          proposedBy,
-                short           indexOrder
-        ){
-            return new CustomerBrokerPurchaseClause(clauseId, type, value, status, proposedBy, indexOrder);
-        }
+                return newCustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation);
+            }
 
-        private CustomerBrokerPurchaseClause constructCustomerBrokerPurchaseClauseFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
+        /*
+            Clauses
+         */
 
-            UUID            clauseId            = record.getUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_CLAUSE_ID_COLUMN_NAME);
-            ClauseType      type                = ClauseType.getByCode(record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TYPE_COLUMN_NAME));
-            String          value               = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_VALUE_COLUMN_NAME);
-            ClauseStatus    status              = ClauseStatus.getByCode(record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_STATUS_COLUMN_NAME));
-            String          proposedBy          = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PROPOSED_BY_COLUMN_NAME);
-            int             indexOrder          = record.getIntegerValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_INDEX_ORDER_COLUMN_NAME);
+            private void loadRecordAsNewClause(
+                    DatabaseTableRecord databaseTableRecord,
+                    UUID   negotiationId,
+                    ClauseType type,
+                    String value,
+                    String proposedBy
+            ) {
 
-            return newCustomerBrokerPurchaseClause(clauseId, type, value, status, proposedBy, (short) indexOrder);
-        }
+                UUID clauseId = UUID.randomUUID();
+
+                databaseTableRecord.setUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_CLAUSE_ID_COLUMN_NAME, clauseId);
+                databaseTableRecord.setUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_NEGOTIATION_ID_COLUMN_NAME, negotiationId);
+                databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TYPE_COLUMN_NAME, type.getCode());
+                databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_VALUE_COLUMN_NAME, value);
+                databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_STATUS_COLUMN_NAME, ClauseStatus.DRAFT.getCode());
+                databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PROPOSED_BY_COLUMN_NAME, proposedBy);
+                databaseTableRecord.setIntegerValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_INDEX_ORDER_COLUMN_NAME, 0);
+
+            }
+
+            private CustomerBrokerPurchaseClause newCustomerBrokerPurchaseClause(
+                    UUID            clauseId,
+                    ClauseType      type,
+                    String          value,
+                    ClauseStatus    status,
+                    String          proposedBy,
+                    short           indexOrder
+            ){
+                return new CustomerBrokerPurchaseClause(clauseId, type, value, status, proposedBy, indexOrder);
+            }
+
+            private CustomerBrokerPurchaseClause constructCustomerBrokerPurchaseClauseFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
+
+                UUID            clauseId            = record.getUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_CLAUSE_ID_COLUMN_NAME);
+                ClauseType      type                = ClauseType.getByCode(record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TYPE_COLUMN_NAME));
+                String          value               = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_VALUE_COLUMN_NAME);
+                ClauseStatus    status              = ClauseStatus.getByCode(record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_STATUS_COLUMN_NAME));
+                String          proposedBy          = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PROPOSED_BY_COLUMN_NAME);
+                int             indexOrder          = record.getIntegerValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_INDEX_ORDER_COLUMN_NAME);
+
+                return newCustomerBrokerPurchaseClause(clauseId, type, value, status, proposedBy, (short) indexOrder);
+            }
 }
