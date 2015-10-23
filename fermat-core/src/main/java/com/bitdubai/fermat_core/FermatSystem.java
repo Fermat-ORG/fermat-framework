@@ -2,11 +2,13 @@ package com.bitdubai.fermat_core;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetModuleManagerException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.ModuleManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.PluginNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_ccp_core.CCPPlatform;
 
 /**
  * The class <code>com.bitdubai.fermat_core.FermatSystem</code>
@@ -22,7 +24,24 @@ public class FermatSystem {
         fermatSystemContext = new FermatSystemContext();
     }
 
+    /**
+     * Here we start all the platforms of Fermat, one by one.
+     *
+     * @throws CantStartSystemException if something goes wrong.
+     */
     public final void start() throws CantStartSystemException {
+
+        try {
+
+            fermatSystemContext.registerPlatform(new CCPPlatform());
+
+        } catch(CantRegisterPlatformException e) {
+
+            throw new CantStartSystemException(e, "", "There was a problem registering a Platform.");
+        } catch(Exception e) {
+
+            throw new CantStartSystemException(e, "", "Unhandled Exception.");
+        }
 
     }
 
