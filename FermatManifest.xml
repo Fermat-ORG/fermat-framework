@@ -5169,7 +5169,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Whosale Crypto Sale"
+						name="Wholesaler Crypto Sale"
 						description=""
 						difficulty="0"
 						code-level="concept"
@@ -5184,7 +5184,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Whosale Fiat Sale"
+						name="Wholesaler Fiat Sale"
 						description=""
 						difficulty="0"
 						code-level="concept"
