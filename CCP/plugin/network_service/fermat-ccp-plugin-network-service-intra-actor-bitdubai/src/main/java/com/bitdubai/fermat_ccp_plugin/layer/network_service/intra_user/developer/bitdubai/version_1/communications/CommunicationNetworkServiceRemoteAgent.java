@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
+import java.util.concurrent.ExecutorService;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceRemoteAgent</code>
@@ -137,6 +138,8 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                     processMessageToSend();
             }
         });
+
+//        ExecutorService executorService =
 
     }
 

@@ -94,6 +94,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -1237,7 +1238,12 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     @Override
     public void confirmNotification(UUID notificationID) throws ErrorConfirmNotificationsIntraUserException {
+
+        if(incomingNotificationsDao!=null)
         incomingNotificationsDao.markReadedNotification(notificationID);
+        else{
+            throw new ErrorConfirmNotificationsIntraUserException("DAO null",null,"Error","");
+        }
     }
 
     @Override
@@ -1307,7 +1313,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 receiverType
         );
 
-        communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfile, remoteParticipant);
+        try {
+            communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfile, remoteParticipant);
+        } catch (CantEstablishConnectionException e) {
+            e.printStackTrace();
+        }
     }
 
 
