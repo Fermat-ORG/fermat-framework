@@ -138,7 +138,7 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting pluginDatabaseSystem in DigitalAssetDistributor", "Error in constructor method AssetDistributor");
         }
         this.serviceStatus=ServiceStatus.STARTED;
-        testRaiseEvent();
+        //testRaiseEvent();
     }
 
     @Override
