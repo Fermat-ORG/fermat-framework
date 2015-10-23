@@ -3,26 +3,22 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantGetActorTransactionHistoryException;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.ActorTransactionSummary;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_api.layer.dmp_wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetActorTransactionHistoryException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.ActorTransactionSummary;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.TransactionItemViewHolder;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -105,15 +101,15 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
            // }
 
 
-            holder.getTxt_amount().setText(formatBalanceString(data.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
+            holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
 
             holder.getTxt_contactName().setText(data.getInvolvedActor().getName());//data.getContact().getActorName());
 
-            holder.getTxt_notes().setText(data.getBitcoinWalletTransaction().getMemo());
+            holder.getTxt_notes().setText(data.getMemo());
 
 
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            holder.getTxt_time().setText(sdf.format(data.getBitcoinWalletTransaction().getTimestamp()));
+            holder.getTxt_time().setText(sdf.format(data.getTimestamp()));
 
             ActorTransactionSummary actorTransactionSummary = null;
 
@@ -188,12 +184,12 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
 //
 //            FermatTextView txt_amount = (FermatTextView) convertView.findViewById( R.id.txt_amount);
 //
-//            txt_amount.setText(formatBalanceString(getItem(position).getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
+//            txt_amount.setText(formatBalanceString(getItem(position).getAmount(), referenceWalletSession.getTypeAmount()));
 //
 //            FermatTextView txt_date = (FermatTextView) convertView.findViewById(R.id.txt_date);
 //
 //            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-//            txt_date.setText(sdf.format(getItem(position).getBitcoinWalletTransaction().getTimestamp()));
+//            txt_date.setText(sdf.format(getItem(position).getTimestamp()));
 //
 //            return convertView;
 //        }
@@ -270,12 +266,12 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
 //
 //                FermatTextView txt_amount = (FermatTextView) convertView.findViewById(R.id.txt_amount);
 //
-//                txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
+//                txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), referenceWalletSession.getTypeAmount()));
 //
 //                FermatTextView txt_date = (FermatTextView) convertView.findViewById(R.id.txt_date);
 //
 //                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-//                txt_date.setText(sdf.format(cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));
+//                txt_date.setText(sdf.format(cryptoWalletTransaction.getTimestamp()));
 //
 //
 //            return convertView;
@@ -299,9 +295,9 @@ public class TransactionNewAdapter extends FermatAdapter<CryptoWalletTransaction
             //holder.txt_date.setTypeface(font);
 
             CryptoWalletTransaction cryptoWalletTransaction = (CryptoWalletTransaction)this.getItem(position);
-            holder.txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getBitcoinWalletTransaction().getAmount(), referenceWalletSession.getTypeAmount()));
+            holder.txt_amount.setText(formatBalanceString(cryptoWalletTransaction.getAmount(), referenceWalletSession.getTypeAmount()));
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            holder.txt_date.setText(sdf.format(cryptoWalletTransaction.getBitcoinWalletTransaction().getTimestamp()));
+            holder.txt_date.setText(sdf.format(cryptoWalletTransaction.getTimestamp()));
 
             holder.txt_amount.setFont(FontType.ROBOTO_REGULAR);
             holder.txt_date.setFont(FontType.ROBOTO_REGULAR);

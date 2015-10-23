@@ -5,11 +5,10 @@ import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,16 +21,18 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.exceptions.CouldNotCreateCryptoCustomerException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
-import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CommonLogger;
+import com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerIdentityExecutor;
 
-import java.io.ByteArrayOutputStream;
+import static com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerIdentityExecutor.EXCEPTION_THROWN;
+import static com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerIdentityExecutor.INVALID_ENTRY_DATA;
+import static com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerIdentityExecutor.SUCCESS;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,25 +40,18 @@ import java.io.ByteArrayOutputStream;
 public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
     private static final String TAG = "CreateCustomerIdentity";
 
-    private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
-    private static final int CREATE_IDENTITY_FAIL_NO_VALID_DATA = 1;
-    private static final int CREATE_IDENTITY_FAIL_MODULE_EXCEPTION = 2;
-    private static final int CREATE_IDENTITY_SUCCESS = 3;
-
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
 
-    private byte[] brokerImageByteArray;
+    private Bitmap cryptoCustomerBitmap;
 
-    private CryptoCustomerIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
 
-    private Button createButton;
-    private EditText mBrokerName;
-    private ImageView mBrokerImage;
+    private EditText mCustomerName;
+    private ImageView mCustomerImage;
 
 
     public static CreateCryptoCustomerIdentityFragment newInstance() {
@@ -69,7 +63,6 @@ public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoCustomerIdentitySubAppSession) subAppsSession).getModuleManager();
             errorManager = subAppsSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -77,12 +70,10 @@ public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View rootLayout = inflater.inflate(R.layout.fragment_create_crypto_customer_identity, container, false);
         initViews(rootLayout);
-
 
         return rootLayout;
     }
@@ -93,41 +84,25 @@ public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        createButton = (Button) layout.findViewById(R.id.create_crypto_customer_button);
-        mBrokerName = (EditText) layout.findViewById(R.id.crypto_customer_name);
-        mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_customer_image);
+        mCustomerName = (EditText) layout.findViewById(R.id.crypto_customer_name);
+        mCustomerName.requestFocus();
 
-        mBrokerName.requestFocus();
-
-        mBrokerImage.setOnClickListener(new View.OnClickListener() {
+        mCustomerImage = (ImageView) layout.findViewById(R.id.crypto_customer_image);
+        RoundedBitmapDrawable roundedBitmap = ImagesUtils.getRoundedBitmap(getResources(), R.drawable.img_new_user_camera);
+        mCustomerImage.setImageDrawable(roundedBitmap);
+        mCustomerImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CommonLogger.debug(TAG, "Entrando en mBrokerImage.setOnClickListener");
-                registerForContextMenu(mBrokerImage);
-                getActivity().openContextMenu(mBrokerImage);
+                registerForContextMenu(mCustomerImage);
+                getActivity().openContextMenu(mCustomerImage);
             }
         });
 
+        Button createButton = (Button) layout.findViewById(R.id.create_crypto_customer_button);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
-
-                int resultKey = createNewIdentity();
-                switch (resultKey) {
-                    case CREATE_IDENTITY_SUCCESS:
-                        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode());
-                        break;
-                    case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
-                        Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
-                        break;
-                    case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
-                        Toast.makeText(getActivity(), "La data no es valida", Toast.LENGTH_LONG).show();
-                        break;
-                    case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
-                        Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
-                        break;
-                }
+                createNewIdentity();
             }
         });
     }
@@ -135,41 +110,41 @@ public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            Bitmap imageBitmap = null;
-            ImageView pictureView = mBrokerImage;
+            ImageView pictureView = mCustomerImage;
 
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
-                    imageBitmap = (Bitmap) extras.get("data");
+                    cryptoCustomerBitmap = (Bitmap) extras.get("data");
                     break;
                 case REQUEST_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
                     try {
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
-                            imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-                            imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
-                            brokerImageByteArray = toByteArray(imageBitmap);
+                            cryptoCustomerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
+                            cryptoCustomerBitmap = Bitmap.createScaledBitmap(cryptoCustomerBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                    } catch (Exception ex) {
+                        errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, ex);
+                        Toast.makeText(getActivity(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
 
-            if (pictureView != null && imageBitmap != null)
-                pictureView.setImageDrawable(new BitmapDrawable(getResources(), imageBitmap));
+            if (pictureView != null && cryptoCustomerBitmap != null) {
+                RoundedBitmapDrawable roundedBitmap = ImagesUtils.getRoundedBitmap(getResources(), cryptoCustomerBitmap);
+                pictureView.setImageDrawable(roundedBitmap);
+            }
         }
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.setHeaderTitle("Choose mode");
+        menu.setHeaderTitle(R.string.title_photo_context_menu);
         menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.ic_camera_green));
-        menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
-        menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
+        menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, R.string.camera_option_context_menu);
+        menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, R.string.gallery_option_context_menu);
 
         super.onCreateContextMenu(menu, view, menuInfo);
     }
@@ -188,41 +163,31 @@ public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
     }
 
     /**
-     * Crea una nueva identidad para un crypto broker
-     *
-     * @return key con el resultado de la operacion:<br/><br/>
-     * <code>CREATE_IDENTITY_SUCCESS</code>: Se creo exitosamente una identidad <br/>
-     * <code>CREATE_IDENTITY_FAIL_MODULE_EXCEPTION</code>: Se genero una excepcion cuando se ejecuto el metodo para crear la identidad en el Module Manager <br/>
-     * <code>CREATE_IDENTITY_FAIL_MODULE_IS_NULL</code>: No se tiene una referencia al Module Manager <br/>
-     * <code>CREATE_IDENTITY_FAIL_NO_VALID_DATA</code>: Los datos ingresados para crear la identidad no son validos (faltan datos, no tiene el formato correcto, etc) <br/>
+     * Crea una nueva identidad para un crypto customer
      */
-    private int createNewIdentity() {
+    private void createNewIdentity() {
 
-        String brokerNameText = mBrokerName.getText().toString();
-        boolean dataIsValid = validateIdentityData(brokerNameText, brokerImageByteArray);
+        String customerNameText = mCustomerName.getText().toString();
+        byte[] imgInBytes = ImagesUtils.toByteArray(cryptoCustomerBitmap);
 
-        if (dataIsValid) {
-            if (moduleManager != null) {
-                try {
-                    CryptoCustomerIdentityInformation identity = moduleManager.createCryptoCustomerIdentity(brokerNameText, brokerImageByteArray);
-                    if (identity == null)
-                        return CREATE_IDENTITY_FAIL_MODULE_EXCEPTION;
-                    return CREATE_IDENTITY_SUCCESS;
+        CreateCustomerIdentityExecutor executor = new CreateCustomerIdentityExecutor(subAppsSession, customerNameText, imgInBytes);
+        int resultKey = executor.execute();
 
-                } catch (CouldNotCreateCryptoCustomerException ex) {
-                    CommonLogger.exception(TAG, ex.getMessage(), ex);
-                    return CREATE_IDENTITY_FAIL_MODULE_EXCEPTION;
-                }
-            }
-            return CREATE_IDENTITY_FAIL_MODULE_IS_NULL;
+        switch (resultKey) {
+            case SUCCESS:
+                changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode());
+                break;
+            case EXCEPTION_THROWN:
+                Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
+                break;
+            case INVALID_ENTRY_DATA:
+                Toast.makeText(getActivity(), "Los datos para crear la indentidad no son validos", Toast.LENGTH_LONG).show();
+                break;
         }
-        return CREATE_IDENTITY_FAIL_NO_VALID_DATA;
 
     }
 
     private void dispatchTakePictureIntent() {
-        Log.i(TAG, "Opening Camera app to take the picture...");
-
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -230,32 +195,7 @@ public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
     }
 
     private void loadImageFromGallery() {
-        Log.i(TAG, "Loading Image from Gallery...");
-
         Intent loadImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
-    }
-
-    private boolean validateIdentityData(String brokerNameText, byte[] brokerImageBytes) {
-        if (brokerNameText.isEmpty())
-            return false;
-        if (brokerImageBytes == null)
-            return false;
-        if (brokerImageBytes.length <= 0)
-            return false;
-
-        return true;
-    }
-
-    /**
-     * Bitmap to byte[]
-     *
-     * @param bitmap Bitmap
-     * @return byte array
-     */
-    private byte[] toByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
     }
 }

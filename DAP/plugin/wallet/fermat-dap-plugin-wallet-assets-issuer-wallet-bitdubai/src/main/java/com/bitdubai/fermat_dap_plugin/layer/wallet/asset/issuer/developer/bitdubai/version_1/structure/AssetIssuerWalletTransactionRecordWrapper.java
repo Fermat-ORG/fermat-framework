@@ -26,7 +26,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
     private final long timeStamp;
     private final String memo;
     private final String digitalAssetMetadataHash;
-    private final UUID transactionId;
+    private final String transactionId;
 
     public AssetIssuerWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
                                               String assetIssuingPublicKey,
@@ -42,7 +42,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
                                               long timeStamp,
                                               String memo,
                                               String digitalAssetMetadataHash,
-                                              UUID transactionId){
+                                              String transactionId){
         this.digitalAsset = digitalAsset;
         this.assetIssuingPublicKey = assetIssuingPublicKey;
         this.name = name;
@@ -110,7 +110,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
     }
 
     @Override
-    public UUID getIdTransaction() {
+    public String getIdTransaction() {
         return transactionId;
     }
 

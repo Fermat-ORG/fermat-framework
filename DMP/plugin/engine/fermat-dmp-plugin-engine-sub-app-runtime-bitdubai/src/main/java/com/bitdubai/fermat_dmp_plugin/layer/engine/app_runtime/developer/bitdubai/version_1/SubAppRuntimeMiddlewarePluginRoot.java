@@ -924,24 +924,24 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST);
             runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST.getCode());
-            runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.addActivity(runtimeActivity);
+            runtimeActivity.setBackActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+            runtimeActivity.setColor("#FF0B46F0");
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Crypto Customer Identity");
+            runtimeTitleBar.setLabel("Request list");
             runtimeTitleBar.setColor("#FFFFFF");
             runtimeTitleBar.setLabelSize(16);
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
             statusBar = new StatusBar();
-            statusBar.setColor("#0288D1");
+            statusBar.setColor("#FF0B46F0");
             runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT.getKey());
-            runtimeSubApp.addActivity(runtimeActivity);
+            subAppIntraUser.addActivity(runtimeActivity);
 
             /**
              * End of community intra user CCP
@@ -988,11 +988,37 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
 
             listSubApp.put(SubApps.DAP_ASSETS_FACTORY, dapFactory);
 
-            // DAP ASSET USER COMMUNITY
-            // DAP
-            RuntimeSubApp dapUserCommunity = new RuntimeSubApp();
-            dapUserCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_USER);
-            dapUserCommunity.setStartActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
+           /**
+             * Dap Asset Issuer Community
+             */
+            RuntimeSubApp dapAssetIssuerCommunity = new RuntimeSubApp();
+            dapAssetIssuerCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_ISSUER);
+            dapAssetIssuerCommunity.setStartActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
+
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
+            runtimeActivity.setColor("#0072bc");
+
+            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#0072bc");
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Asset Issuer Community");
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+            runtimeActivity.setStartFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN.getKey());
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN.getKey());
+            runtimeActivity.addFragment(Fragments.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN.getKey(), runtimeFragment);
+
+            dapAssetIssuerCommunity.addActivity(runtimeActivity);
+            listSubApp.put(SubApps.DAP_ASSETS_COMMUNITY_ISSUER, dapAssetIssuerCommunity);
+
+            /**
+             * Dap Asset User Community
+             */
+            RuntimeSubApp dapAssetUserCommunity = new RuntimeSubApp();
+            dapAssetUserCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_USER);
+            dapAssetUserCommunity.setStartActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
 
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
@@ -1009,8 +1035,33 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey());
             runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getKey(), runtimeFragment);
 
-            dapUserCommunity.addActivity(runtimeActivity);
-            listSubApp.put(SubApps.DAP_ASSETS_COMMUNITY_USER, dapUserCommunity);
+            dapAssetUserCommunity.addActivity(runtimeActivity);
+            listSubApp.put(SubApps.DAP_ASSETS_COMMUNITY_USER, dapAssetUserCommunity);
+
+            /**
+              * Dap Asset Redeem Point Community
+              */
+            RuntimeSubApp dapAssetRedeemPointCommunity = new RuntimeSubApp();
+            dapAssetRedeemPointCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT);
+            dapAssetRedeemPointCommunity.setStartActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
+
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
+            runtimeActivity.setColor("#0072bc");
+
+            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+            statusBar.setColor("#0072bc");
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Asset Redeem Point Community");
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+            runtimeActivity.setStartFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN.getKey());
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN.getKey());
+            runtimeActivity.addFragment(Fragments.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN.getKey(), runtimeFragment);
+
+            dapAssetRedeemPointCommunity.addActivity(runtimeActivity);
+            listSubApp.put(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT, dapAssetRedeemPointCommunity);
 
             /**
              * End of DAP
@@ -1144,6 +1195,29 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+            // Activity: Edit Identity
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY);
+            runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY.getCode());
+            runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
+            runtimeActivity.setColor("#1189a5");
+            runtimeSubApp.addActivity(runtimeActivity);
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Edit Identity");
+            runtimeTitleBar.setColor("#FFFFFF");
+            runtimeTitleBar.setLabelSize(16);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#0288D1");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
 
             listSubApp.put(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY, runtimeSubApp);
 

@@ -5,6 +5,9 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -16,9 +19,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_api.layer.dmp_actor.Actor;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.DealsWithIntraUsersNetworkService;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.interfaces.IntraUserManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.DealsWithIntraUsersNetworkService;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
+
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.DealsWithWalletManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
@@ -82,21 +86,22 @@ import java.util.UUID;
  */
 
 
-public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDevelopers,
-                                                          DealsWithCryptoAddressesNetworkService,
-                                                          DealsWithCryptoVault,
-                                                          DealsWithCryptoAddressBook,
-                                                          DealsWithDeviceUser,
-                                                          DealsWithErrors,
-                                                          DealsWithEvents,
-                                                          DealsWithPluginDatabaseSystem,
-                                                          DealsWithPluginFileSystem,
-                                                          DealsWithWalletManager,
-                                                          DealsWithIntraUsersNetworkService,
-                                                          IntraWalletUserManager,
-                                                          LogManagerForDevelopers,
-                                                          Service,
-                                                          Plugin {
+public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
+        implements DatabaseManagerForDevelopers,
+                   DealsWithCryptoAddressesNetworkService,
+                   DealsWithCryptoVault,
+                   DealsWithCryptoAddressBook,
+                   DealsWithDeviceUser,
+                   DealsWithErrors,
+                   DealsWithEvents,
+                   DealsWithPluginDatabaseSystem,
+                   DealsWithPluginFileSystem,
+                   DealsWithWalletManager,
+                   DealsWithIntraUsersNetworkService,
+                   IntraWalletUserManager,
+                   LogManagerForDevelopers,
+                   Service,
+                   Plugin {
 
     private IntraWalletUserIdentityDao intraWalletUserIdentityDao;
 
@@ -498,5 +503,15 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
     @Override
     public void setIntraUserNetworkServiceManager(IntraUserManager intraUserManager) {
         this.intraActorManager = intraUserManager;
+    }
+
+    @Override
+    public List<AddonReference> getNeededAddonReferences() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<PluginReference> getNeededPluginReferences() {
+        return new ArrayList<>();
     }
 }

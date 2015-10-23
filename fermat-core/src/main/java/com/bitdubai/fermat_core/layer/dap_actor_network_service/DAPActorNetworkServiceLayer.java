@@ -10,10 +10,12 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_core.layer.dap_actor_network_service.actor_issuer.AssetIssuerActorNetworkServiceSubsystem;
+import com.bitdubai.fermat_core.layer.dap_actor_network_service.actor_redeem_point.AssetRedeemPointActorNetworkServiceSubsystem;
 import com.bitdubai.fermat_core.layer.dap_actor_network_service.asset_user.AssetUserActorNetworkServiceSubsystem;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.DAPAssetIssuerActorNetworkServiceSubsystem;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.DAPAssetUserActorNetworkServiceSubsystem;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantStartSubsystemException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.DAPAssetRedeemPointActorNetworkServiceSubsystem;
 
 
 /**
@@ -26,8 +28,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.ex
  */
 public class DAPActorNetworkServiceLayer  implements PlatformLayer {
 
-    private Plugin   assetUserActorNetworService;
-    private Plugin assetIssuerActorNetwokService;
+    private Plugin        assetUserActorNetworService;
+    private Plugin      assetIssuerActorNetwokService;
+    private Plugin asserRedeemPointActorNetworService;
 
     public Plugin getAssetUserActorNetworService() {
         return assetUserActorNetworService;
@@ -35,6 +38,10 @@ public class DAPActorNetworkServiceLayer  implements PlatformLayer {
 
     public Plugin getAssetIssuerActorNetwokService(){
         return assetIssuerActorNetwokService;
+    }
+
+    public Plugin getAssetRedeemPointActorNetwokService(){
+        return asserRedeemPointActorNetworService;
     }
 
     private Plugin getPlugin(DAPAssetUserActorNetworkServiceSubsystem dAPAssetUserActorNetworkServiceSubsystem) throws CantStartLayerException{
@@ -60,9 +67,20 @@ public class DAPActorNetworkServiceLayer  implements PlatformLayer {
         }
     }
 
+    private Plugin getPlugin(DAPAssetRedeemPointActorNetworkServiceSubsystem dapAssetRedeemPointActorNetworkServiceSubsystem) throws CantStartLayerException{
+        try
+        {
+            dapAssetRedeemPointActorNetworkServiceSubsystem.start();
+            return dapAssetRedeemPointActorNetworkServiceSubsystem.getPlugin();
+        }catch(com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantStartSubsystemException e){
+            throw new CantStartLayerException();
+        }
+    }
+
     @Override
     public void start() throws CantStartLayerException {
         assetUserActorNetworService   = getPlugin(new AssetUserActorNetworkServiceSubsystem());
         assetIssuerActorNetwokService = getPlugin(new AssetIssuerActorNetworkServiceSubsystem());
+        asserRedeemPointActorNetworService = getPlugin(new AssetRedeemPointActorNetworkServiceSubsystem());
     }
 }
