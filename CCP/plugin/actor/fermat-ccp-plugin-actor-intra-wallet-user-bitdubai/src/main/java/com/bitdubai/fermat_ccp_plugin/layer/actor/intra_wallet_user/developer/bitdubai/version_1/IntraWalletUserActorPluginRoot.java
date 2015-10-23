@@ -8,7 +8,10 @@ import com.bitdubai.fermat_api.Service;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -86,6 +89,26 @@ import java.util.UUID;
 //TODO: hay que arreglar esto, hay metodos sin implementar abajo de todo
 
 public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements IntraWalletUserManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithEvents, DealsWithIntraUsersNetworkService, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service, Serializable {
+
+    @Override
+    public List<AddonVersionReference> getNeededAddonReferences() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<PluginVersionReference> getNeededPluginReferences() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    protected void validateAndAssignReferences() {
+
+    }
 
     private IntraWalletUserActorDao intraWalletUserActorDao;
 
@@ -465,11 +488,6 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }
-
     /**
      * PlugIn Interface implementation.
      */
@@ -654,13 +672,4 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
         return false;
     }
 
-    @Override
-    public List<AddonReference> getNeededAddonReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<PluginReference> getNeededPluginReferences() {
-        return new ArrayList<>();
-    }
 }

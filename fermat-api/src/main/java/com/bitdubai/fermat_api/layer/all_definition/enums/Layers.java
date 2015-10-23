@@ -4,8 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * The class <code>com.bitdubai.fermat_api.layer.all_definition.enums.Layers</code>
- * contains all the layers of fermat.
+ * The enum class <code>com.bitdubai.fermat_api.layer.all_definition.enums.Layers</code>
+ * enumerates all the layers type of fermat.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */

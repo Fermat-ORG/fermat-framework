@@ -8,7 +8,10 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.IntraUsers.IntraUserSettings;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -88,13 +91,23 @@ import java.util.UUID;
 public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements   DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithCCPIntraWalletUser,DealsWithCCPIntraWalletUsers, DealsWithPluginFileSystem, LogManagerForDevelopers, IntraUserModuleManager, Plugin, Service  {
 
     @Override
-    public List<AddonReference> getNeededAddonReferences() {
+    public List<AddonVersionReference> getNeededAddonReferences() {
         return new ArrayList<>();
     }
 
     @Override
-    public List<PluginReference> getNeededPluginReferences() {
+    public List<PluginVersionReference> getNeededPluginReferences() {
         return new ArrayList<>();
+    }
+
+    @Override
+    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    protected void validateAndAssignReferences() {
+
     }
 
     private static String INTRA_USER_LOGIN_FILE_NAME = "intraUsersLogin";
@@ -805,12 +818,6 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements  
         this.serviceStatus = ServiceStatus.STOPPED;
 
     }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }
-
 
     @Override
     public void setId(UUID pluginId) {

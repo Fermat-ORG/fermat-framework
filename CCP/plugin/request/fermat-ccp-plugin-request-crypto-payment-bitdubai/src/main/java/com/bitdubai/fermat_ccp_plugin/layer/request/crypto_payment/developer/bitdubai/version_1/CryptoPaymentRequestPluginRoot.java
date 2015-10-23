@@ -6,7 +6,10 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
@@ -60,9 +63,27 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
         DealsWithEvents,
         DealsWithOutgoingIntraActor,
         DealsWithPluginDatabaseSystem,
-        DealsWithWalletManager,
-        Plugin,
-        Service {
+        DealsWithWalletManager {
+
+    @Override
+    public List<AddonVersionReference> getNeededAddonReferences() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<PluginVersionReference> getNeededPluginReferences() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    protected void validateAndAssignReferences() {
+
+    }
 
     /**
      * DealsWithCryptoPaymentRequestNetworkService Interface member variables
@@ -241,12 +262,6 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
-
-
     private void reportUnexpectedException(Exception e) {
         this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
     }
@@ -301,13 +316,4 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
         this.walletManagerManager = walletManagerManager;
     }
 
-    @Override
-    public List<AddonReference> getNeededAddonReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<PluginReference> getNeededPluginReferences() {
-        return new ArrayList<>();
-    }
 }
