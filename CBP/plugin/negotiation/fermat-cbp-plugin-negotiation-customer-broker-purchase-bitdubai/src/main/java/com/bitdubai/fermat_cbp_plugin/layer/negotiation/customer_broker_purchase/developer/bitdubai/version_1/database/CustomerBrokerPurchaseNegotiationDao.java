@@ -398,6 +398,19 @@ public class CustomerBrokerPurchaseNegotiationDao {
             }
 
             private ClauseType nextClauseTypeByType(ClauseType type){
+
+                if( type == ClauseType.CUSTOMER_CURRENCY){
+                    return ClauseType.EXCHANGE_RATE;
+                }
+
+                if( type == ClauseType.EXCHANGE_RATE){
+                    return ClauseType.CUSTOMER_CURRENCY_QUANTITY;
+                }
+
+                if( type == ClauseType.CUSTOMER_CURRENCY_QUANTITY){
+                    return ClauseType.CUSTOMER_PAYMENT_METHOD;
+                }
+
                 return null;
             }
 }
