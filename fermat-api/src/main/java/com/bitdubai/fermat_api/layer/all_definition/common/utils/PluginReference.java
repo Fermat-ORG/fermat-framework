@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.utils;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 /**
@@ -15,8 +16,9 @@ public class PluginReference {
     private static final int HASH_PRIME_NUMBER_ADD = 2819;
 
     private       LayerReference    layerReference;
-    private       Version           version       ;
     private final FermatPluginsEnum plugin        ;
+    private       Developers        developer     ;
+    private       Version           version       ;
 
     public PluginReference(final FermatPluginsEnum plugin) {
 
@@ -39,6 +41,17 @@ public class PluginReference {
         this.version        = version       ;
     }
 
+    public PluginReference(final LayerReference    layerReference,
+                           final FermatPluginsEnum plugin        ,
+                           final Developers        developer     ,
+                           final Version           version       ) {
+
+        this.layerReference = layerReference;
+        this.plugin         = plugin        ;
+        this.developer      = developer     ;
+        this.version        = version       ;
+    }
+
     public final FermatPluginsEnum getPlugin() {
         return plugin;
     }
@@ -47,7 +60,7 @@ public class PluginReference {
         return version;
     }
 
-    public void setVersion(Version version) {
+    public final void setVersion(Version version) {
         this.version = version;
     }
 
@@ -55,12 +68,20 @@ public class PluginReference {
         return layerReference;
     }
 
+    public final Developers getDeveloper() {
+        return developer;
+    }
+
+    public final void setDeveloper(Developers developer) {
+        this.developer = developer;
+    }
+
     public final void setLayerReference(LayerReference layerReference) {
         this.layerReference = layerReference;
     }
 
     @Override
-    public boolean equals(Object o){
+    public final boolean equals(Object o){
         if(!(o instanceof PluginReference))
             return false;
         PluginReference compare = (PluginReference) o;
@@ -71,7 +92,7 @@ public class PluginReference {
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         int c = 0;
 
         c += plugin .hashCode();
@@ -86,7 +107,7 @@ public class PluginReference {
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return "PluginReference{" +
                 "layerReference=" + layerReference +
                 ", plugin=" + plugin +

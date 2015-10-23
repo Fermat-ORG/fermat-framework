@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddo
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -31,12 +32,12 @@ public abstract class AbstractPlatform {
 
     private Map<LayerReference, AbstractLayer> layers;
 
-    private final Platforms platformEnum;
+    private final PlatformReference platformReference;
 
     public AbstractPlatform(final Platforms platformEnum) {
 
         this.layers   = new ConcurrentHashMap<>();
-        this.platformEnum = platformEnum;
+        this.platformReference = new PlatformReference(platformEnum);
     }
 
     /**
@@ -50,7 +51,7 @@ public abstract class AbstractPlatform {
     protected final void registerLayer(final AbstractLayer abstractLayer) throws CantRegisterLayerException {
 
         LayerReference layerReference = abstractLayer.getLayerReference();
-        layerReference.setPlatform(platformEnum);
+        layerReference.setPlatformReference(platformReference);
 
         try {
 
@@ -101,7 +102,9 @@ public abstract class AbstractPlatform {
         }
     }
 
-    public final Platforms getPlatformEnum() { return platformEnum; }
+    public final PlatformReference getPlatformReference() {
+        return platformReference;
+    }
 
     public abstract void start() throws CantStartPlatformException;
 
