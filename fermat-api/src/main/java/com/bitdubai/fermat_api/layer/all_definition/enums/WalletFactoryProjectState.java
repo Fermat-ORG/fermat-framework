@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
@@ -11,7 +12,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * @version 1.0
  * @since Java JDK 1.7
  */
-public enum WalletFactoryProjectState {
+public enum WalletFactoryProjectState implements FermatEnum {
+
     IN_PROGRESS("In_Progress"),//draft
     CLOSED("Closed"),//versioned
     PUBLISHED("Published"),
@@ -19,14 +21,10 @@ public enum WalletFactoryProjectState {
 
     public static WalletFactoryProjectState getByCode(String key) throws InvalidParameterException {
         switch(key) {
-            case"In_Progress":
-                return IN_PROGRESS;
-            case"Closed":
-                return CLOSED;
-            case"Published":
-                return PUBLISHED;
-            case"Deleted":
-                return DELETED;
+            case"In_Progress": return IN_PROGRESS;
+            case"Closed":      return CLOSED;
+            case"Published":   return PUBLISHED;
+            case"Deleted":     return DELETED;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + key, "This Code Is Not Valid for the Plugins enum");
         }
@@ -42,4 +40,7 @@ public enum WalletFactoryProjectState {
     }
 
     public String value() { return this.code; }
+
+    @Override
+    public String getCode() { return this.code; }
 }

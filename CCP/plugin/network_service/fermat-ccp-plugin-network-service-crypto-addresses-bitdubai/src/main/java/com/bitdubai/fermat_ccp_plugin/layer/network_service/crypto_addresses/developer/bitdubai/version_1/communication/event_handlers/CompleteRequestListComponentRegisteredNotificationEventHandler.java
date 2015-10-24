@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
@@ -50,8 +49,8 @@ public class CompleteRequestListComponentRegisteredNotificationEventHandler impl
             CompleteRequestListComponentRegisteredNotificationEvent completeRequestListComponentRegisteredNotificationEvent = (CompleteRequestListComponentRegisteredNotificationEvent) platformEvent;
 
 
-            if (completeRequestListComponentRegisteredNotificationEvent.getPlatformComponentType()  == PlatformComponentType.ACTOR_NETWORK_SERVICE &&
-                    completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceTypeApplicant() == NetworkServiceType.CRYPTO_ADDRESSES){
+
+            if(completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceTypeApplicant() == cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot().getNetworkServiceType()){
 
                  /*
                  *  TemplateManager make the job

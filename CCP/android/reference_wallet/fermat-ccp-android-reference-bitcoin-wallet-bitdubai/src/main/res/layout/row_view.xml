@@ -24,7 +24,7 @@
 
         <ImageView
             android:layout_width="110dp"
-            android:layout_height="60dp"
+            android:layout_height="40dp"
             android:layout_weight="0.6"
             android:id="@+id/imageView_contact"
             android:src="@drawable/person1"/>
@@ -38,9 +38,10 @@
             android:padding="10dp"
             android:layout_marginLeft="10dp"
             android:singleLine="true"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:textColor="#292929"
             android:text="Nelson Alfonso Ramirez Noguera"
+            android:fontFamily="roboto"
             />
 
 

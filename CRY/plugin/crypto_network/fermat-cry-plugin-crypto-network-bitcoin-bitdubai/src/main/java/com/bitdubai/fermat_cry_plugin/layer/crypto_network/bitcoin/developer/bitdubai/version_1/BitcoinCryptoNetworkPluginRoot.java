@@ -23,6 +23,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantCreateBlockStoreFileException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkMonitoringAgent;
 
+import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.DeterministicKey;
 
@@ -261,5 +262,10 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
      */
     public int getConnectedPeers() {
         return bitcoinCryptoNetworkMonitoringAgent.getConnectedPeers();
+    }
+
+    @Override
+    public void broadcastTransaction(Transaction transaction) {
+        bitcoinCryptoNetworkMonitoringAgent.broadcastTransaction(transaction);
     }
 }

@@ -15,11 +15,14 @@ public class RedeemPointActorDatabaseConstants {
     public static final String REDEEM_POINT_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "linked_identity_publicKey";
     public static final String REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME = "publicKey";
     public static final String REDEEM_POINT_NAME_COLUMN_NAME = "name";
-    public static final String REDEEM_POINT_STATE_COLUMN_NAME = "redeem_point_state";
-    public static final String REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME = "crypto_address";
-    public static final String REDEEM_POINT_CRYPTO_CURRENCY_COLUMN_NAME = "crypto_currency";
+    public static final String REDEEM_POINT_CONNECTION_STATE_COLUMN_NAME = "redeem_point_connection_state";
+    public static final String REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME = "registration_date";
+    public static final String REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME = "modified_date";
     public static final String REDEEM_POINT_LOCATION_LATITUDE_COLUMN_NAME = "location_latitude";
     public static final String REDEEM_POINT_LOCATION_LONGITUDE_COLUMN_NAME = "location_longitude";
+    public static final String REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME = "crypto_address";
+    public static final String REDEEM_POINT_CRYPTO_CURRENCY_COLUMN_NAME = "crypto_currency";
+    public static final String REDEEM_POINT_CONTACT_INFORMATION_COLUMN_NAME = "contact_information";
     public static final String REDEEM_POINT_ADDRESS_COUNTRY_NAME_COLUMN_NAME = "address_country_name";
     public static final String REDEEM_POINT_ADDRESS_PROVINCE_NAME_COLUMN_NAME = "address_province_name";
     public static final String REDEEM_POINT_ADDRESS_CITY_NAME_COLUMN_NAME = "address_city_name";
@@ -27,22 +30,25 @@ public class RedeemPointActorDatabaseConstants {
     public static final String REDEEM_POINT_ADDRESS_STREET_NAME_COLUMN_NAME = "address_street_name";
     public static final String REDEEM_POINT_ADDRESS_HOUSE_NUMBER_COLUMN_NAME = "address_house_number";
     public static final String REDEEM_POINT_HOURS_OF_OPERATION_COLUMN_NAME = "hours_of_operation";
-    public static final String REDEEM_POINT_CONTACT_INFORMATION_COLUMN_NAME = "contact_information";
-    public static final String REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME = "registration_date";
-    public static final String REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME = "modified_date";
 
     public static final String REDEEM_POINT_FIRST_KEY_COLUMN = REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME;
 
+    /**
+     * Redeem Point Actor REGISTERED in Actor Network Service Redeem Point database table definition.
+     */
     public static final String REDEEM_POINT_REGISTERED_TABLE_NAME = "registered_redeem_point_actor";
 
     public static final String REDEEM_POINT_REGISTERED_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "register_linked_identity_publicKey";
     public static final String REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME = "register_publicKey";
     public static final String REDEEM_POINT_REGISTERED_NAME_COLUMN_NAME = "register_name";
-    public static final String REDEEM_POINT_REGISTERED_STATE_COLUMN_NAME = "register_redeem_point_state";
-    public static final String REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME = "register_crypto_address";
-    public static final String REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME = "register_crypto_currency";
+    public static final String REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME = "register_redeem_point_connection_state";
+    public static final String REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME = "register_registration_date";
+    public static final String REDEEM_POINT_REGISTERED_MODIFIED_DATE_COLUMN_NAME = "register_modified_date";
     public static final String REDEEM_POINT_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME = "register_location_latitude";
     public static final String REDEEM_POINT_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME = "register_location_longitude";
+    public static final String REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME = "register_crypto_address";
+    public static final String REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME = "register_crypto_currency";
+    public static final String REDEEM_POINT_REGISTERED_CONTACT_INFORMATION_COLUMN_NAME = "register_contact_information";
     public static final String REDEEM_POINT_REGISTERED_ADDRESS_COUNTRY_NAME_COLUMN_NAME = "register_address_country_name";
     public static final String REDEEM_POINT_REGISTERED_ADDRESS_PROVINCE_NAME_COLUMN_NAME = "register_address_province_name";
     public static final String REDEEM_POINT_REGISTERED_ADDRESS_CITY_NAME_COLUMN_NAME = "register_address_city_name";
@@ -50,9 +56,6 @@ public class RedeemPointActorDatabaseConstants {
     public static final String REDEEM_POINT_REGISTERED_ADDRESS_STREET_NAME_COLUMN_NAME = "register_address_street_name";
     public static final String REDEEM_POINT_REGISTERED_ADDRESS_HOUSE_NUMBER_COLUMN_NAME = "register_address_house_number";
     public static final String REDEEM_POINT_REGISTERED_HOURS_OF_OPERATION_COLUMN_NAME = "register_hours_of_operation";
-    public static final String REDEEM_POINT_REGISTERED_CONTACT_INFORMATION_COLUMN_NAME = "register_contact_information";
-    public static final String REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME = "register_registration_date";
-    public static final String REDEEM_POINT_REGISTERED_MODIFIED_DATE_COLUMN_NAME = "register_modified_date";
 
     public static final String REDEEM_POINT_REGISTERED_FIRST_KEY_COLUMN = REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME;
 
