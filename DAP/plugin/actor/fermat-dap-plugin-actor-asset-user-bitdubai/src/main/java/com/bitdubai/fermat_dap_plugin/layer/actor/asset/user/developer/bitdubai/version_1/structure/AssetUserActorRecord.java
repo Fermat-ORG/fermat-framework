@@ -53,34 +53,6 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     }
 
-    public AssetUserActorRecord(String name, String publicKey, byte[] profileImage, long registrationDate, Genders genders, String age) {
-
-        this.name = name;
-        this.publicKey = publicKey;
-        this.profileImage = profileImage.clone();
-        this.registrationDate = registrationDate;
-//        this.location = location;
-        this.genders = genders;
-        this.age = age;
-//        this.cryptoAddress = cryptoAddress;
-        this.connectionState = ConnectionState.CONNECTED;
-
-    }
-
-    public AssetUserActorRecord(String name, String publicKey, byte[] profileImage, long registrationDate, Genders genders, String age, String cryptoAddress, String cryptoCurrency) throws InvalidParameterException {
-
-        this.name = name;
-        this.publicKey = publicKey;
-        this.profileImage = profileImage.clone();
-        this.registrationDate = registrationDate;
-//        this.location = location;
-        this.genders = genders;
-        this.age = age;
-        this.cryptoAddress = new CryptoAddress(cryptoAddress, CryptoCurrency.getByCode(cryptoCurrency));
-        this.connectionState = ConnectionState.CONNECTED;
-
-    }
-
     public AssetUserActorRecord(String publicKey, String name, String age, Genders genders,
                                 ConnectionState connectionState, Double locationLatitude,
                                 Double locationLongitude, CryptoAddress cryptoAddress,
@@ -101,9 +73,8 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     }
 
-
     /**
-     * The metho <code>getPublicKey</code> gives us the public key of the represented Asset User
+     * The method <code>getPublicKey</code> gives us the public key of the represented Asset User
      *
      * @return the public key
      */

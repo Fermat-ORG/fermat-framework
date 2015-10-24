@@ -239,7 +239,7 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
                 DeviceLocation location = new DeviceLocation();
                 location.setLongitude(new Random().nextDouble());
                 location.setLatitude(new Random().nextDouble());
-                RedeemPointActorRecord record = new RedeemPointActorRecord("Thunder User_" + i, publicKey);
+                RedeemPointActorRecord record = new RedeemPointActorRecord("RedeemP_" + i, publicKey);
                 record.setConnectionState(ConnectionState.CONNECTED);
                 record.setProfileImage(new byte[0]);
                 record.setLocation(location);

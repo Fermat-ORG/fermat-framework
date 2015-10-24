@@ -226,8 +226,6 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
     }
 
     private void test() throws CantInitializeAssetIssuerActorDatabaseException {
-//        AssetIssuerActorDao assetIssuerActorDao;
-//            assetIssuerActorDao = new AssetIssuerActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
 
             for (int i = 0; i < 10; i++) {
 
@@ -240,7 +238,7 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
                 DeviceLocation location = new DeviceLocation();
                 location.setLongitude(new Random().nextDouble());
                 location.setLatitude(new Random().nextDouble());
-                AssetIssuerActorRecord record = new AssetIssuerActorRecord("Thunder User_" + i, assetIssuerActorPublicKey);
+                AssetIssuerActorRecord record = new AssetIssuerActorRecord("Issuer_" + i, assetIssuerActorPublicKey);
                 record.setDescription("Asset Issuer de Prueba");
                 record.setContactState(ConnectionState.CONNECTED);
                     record.setProfileImage(new byte[0]);
