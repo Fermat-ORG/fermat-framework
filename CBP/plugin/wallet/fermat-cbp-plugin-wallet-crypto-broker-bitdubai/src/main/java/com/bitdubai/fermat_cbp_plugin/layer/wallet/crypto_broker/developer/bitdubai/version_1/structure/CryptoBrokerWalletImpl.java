@@ -12,12 +12,14 @@ import java.util.UUID;
  * Created by Yordin Alayn on 19.10.15.
  */
 public class CryptoBrokerWalletImpl implements CryptoBrokerTransactionRecord {
+    //CAMBIAR ESTOS NUMEROS PRIIMOS POR OTRS DE LA LISTA
     private static final int HASH_PRIME_NUMBER_PRODUCT = 7681;
     private static final int HASH_PRIME_NUMBER_ADD = 3581;
 
     private UUID transactionId;
     private KeyPair keyPairWallet;
     private KeyPair keyPairBroker;
+    private KeyPair keyPairCustomer;
     private BalanceType balanceType;
     private TransactionType transactionType;
     private float amount;
@@ -31,6 +33,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerTransactionRecord {
             UUID transactionId,
             KeyPair keyPairWallet,
             KeyPair keyPairBroker,
+            KeyPair keyPairCustomer,
             BalanceType balanceType,
             TransactionType transactionType,
             CurrencyType currencyType,
@@ -43,6 +46,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerTransactionRecord {
         this.transactionId = transactionId;
         this.keyPairWallet = keyPairWallet;
         this.keyPairBroker = keyPairBroker;
+        this.keyPairCustomer = keyPairCustomer;
         this.balanceType = balanceType;
         this.transactionType = transactionType;
         this.amount = amount;
@@ -78,6 +82,10 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerTransactionRecord {
     public void setPublicKeyBroker(String publicKey) { this.keyPairBroker = keyPairBroker; }
 
     @Override
+    public String getPublicKeyCustomer() { return this.keyPairCustomer.getPublicKey(); }
+    public void setPublicKeyCustomer(String publicKey) { this.keyPairCustomer = keyPairCustomer; }
+
+    @Override
     public float getAmount() { return this.amount; }
     public void setAmount(float amount) { this.amount = amount; }
 
@@ -97,18 +105,18 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerTransactionRecord {
     public String getMemo() { return this.memo; }
     public void setMemo(String memo) { this.memo = memo; }
 
-    /*public boolean equals(Object o){
-        if(!(o instanceof CryptoBrokerIdentity))
+    public boolean equals(Object o){
+        if(!(o instanceof CryptoBrokerTransactionRecord))
             return false;
-        CryptoBrokerIdentity compare = (CryptoBrokerIdentity) o;
-        return alias.equals(compare.getAlias()) && keyPair.getPublicKey().equals(compare.getPublicKey());
+        CryptoBrokerTransactionRecord compare = (CryptoBrokerTransactionRecord) o;
+        return keyPairBroker.getPublicKey().equals(compare.getPublicKeyBroker()) && keyPairWallet.getPublicKey().equals(compare.getPublicKeyWallet());
     }
 
     @Override
     public int hashCode(){
         int c = 0;
-        c += alias.hashCode();
-        c += keyPair.hashCode();
+        c += keyPairBroker.hashCode();
+        c += keyPairWallet.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
-    }*/
+    }
 }

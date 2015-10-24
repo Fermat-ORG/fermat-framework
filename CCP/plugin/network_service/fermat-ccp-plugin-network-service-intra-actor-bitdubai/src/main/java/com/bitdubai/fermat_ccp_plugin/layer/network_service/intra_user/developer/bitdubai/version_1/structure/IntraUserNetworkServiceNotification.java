@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.IntraUserNotificationDescriptor;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserNotification;
 
+
 import java.util.UUID;
 
 /**
@@ -61,6 +62,11 @@ public class IntraUserNetworkServiceNotification implements IntraUserNotificatio
     @Override
     public Actors getActorSenderType() {
         return null;
+    }
+
+    @Override
+    public void setFlagReadead(boolean flagReadead) {
+
     }
 
     @Override

@@ -5,6 +5,14 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -19,6 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.DealsWithIntraUsersNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
+
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.DealsWithWalletManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
@@ -82,21 +91,47 @@ import java.util.UUID;
  */
 
 
-public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDevelopers,
-                                                          DealsWithCryptoAddressesNetworkService,
-                                                          DealsWithCryptoVault,
-                                                          DealsWithCryptoAddressBook,
-                                                          DealsWithDeviceUser,
-                                                          DealsWithErrors,
-                                                          DealsWithEvents,
-                                                          DealsWithPluginDatabaseSystem,
-                                                          DealsWithPluginFileSystem,
-                                                          DealsWithWalletManager,
-                                                          DealsWithIntraUsersNetworkService,
-                                                          IntraWalletUserManager,
-                                                          LogManagerForDevelopers,
-                                                          Service,
-                                                          Plugin {
+public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
+        implements DatabaseManagerForDevelopers,
+                   DealsWithCryptoAddressesNetworkService,
+                   DealsWithCryptoVault,
+                   DealsWithCryptoAddressBook,
+                   DealsWithDeviceUser,
+                   DealsWithErrors,
+                   DealsWithEvents,
+                   DealsWithPluginDatabaseSystem,
+                   DealsWithPluginFileSystem,
+                   DealsWithWalletManager,
+                   DealsWithIntraUsersNetworkService,
+                   IntraWalletUserManager,
+                   LogManagerForDevelopers,
+                   Service,
+                   Plugin {
+
+    @Override
+    public List<AddonVersionReference> getNeededAddonReferences() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<PluginVersionReference> getNeededPluginReferences() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    protected void validateAndAssignReferences() {
+
+    }
+
+    @Override
+    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
+        return null;
+    }
 
     private IntraWalletUserIdentityDao intraWalletUserIdentityDao;
 
@@ -341,11 +376,6 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }
-
     /**
      * DatabaseManagerForDevelopers Interface implementation.
      */
@@ -499,4 +529,5 @@ public class IntraWalletUserIdentityPluginRoot implements DatabaseManagerForDeve
     public void setIntraUserNetworkServiceManager(IntraUserManager intraUserManager) {
         this.intraActorManager = intraUserManager;
     }
+
 }

@@ -8,15 +8,20 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.ui.Views.DividerItemDecoration;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_api.layer.dmp_module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
+
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.IntraUserIdentityInfoAdapter;
@@ -29,12 +34,17 @@ import java.util.List;
 /**
  */
 public class RequestConnectionsFragment extends FermatListFragment<IntraUserInformation>
-        implements FermatListItemListeners<CryptoBrokerIdentityInformation> {
+        implements FermatListItemListeners<IntraUserInformation> {
+
+
 
 
     private IntraUserModuleManager moduleManager;
     private ErrorManager errorManager;
     private ArrayList<IntraUserInformation> identityInformationList;
+
+    private static final int MAX = 15;
+    private int offset=0;
 
 
     public static RequestConnectionsFragment newInstance() {
@@ -58,19 +68,6 @@ public class RequestConnectionsFragment extends FermatListFragment<IntraUserInfo
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
-
-//        FloatingActionButton newIdentityButton = (FloatingActionButton) layout.findViewById(R.id.new_crypto_broker_identity_float_action_button);
-//        newIdentityButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
-//            }
-//        });
-//
-//        if (getActivity().getActionBar() != null) {
-//            getActivity().getActionBar().setDisplayShowHomeEnabled(false);
-//        }
-
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
     }
@@ -82,7 +79,7 @@ public class RequestConnectionsFragment extends FermatListFragment<IntraUserInfo
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_intra_user_identity_list;
+        return R.layout.fragment_intra_user_connection_list_main;
     }
 
     @Override
@@ -92,7 +89,7 @@ public class RequestConnectionsFragment extends FermatListFragment<IntraUserInfo
 
     @Override
     protected int getRecyclerLayoutId() {
-        return R.id.crypto_broker_identity_recycler_view;
+        return R.id.recycler_view;
     }
 
     @Override
@@ -143,24 +140,37 @@ public class RequestConnectionsFragment extends FermatListFragment<IntraUserInfo
     @Override
     public List<IntraUserInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<IntraUserInformation> data = new ArrayList<>();
-        if (moduleManager == null) {
-            for (int i = 0; i < 20; i++) {
-                //data.add(new IntraUserIdentityInformationImp("Broker Name " + i));
+        try {
+            if (moduleManager != null) {
+                data = moduleManager.getIntraUsersWaitingYourAcceptance(moduleManager.getActiveIntraUserIdentity().getPublicKey(),MAX, offset);
+                offset = data.size();
+            } else {
             }
-        } else {
-            //data = moduleManager.getAllCryptoBrokersIdentities(0, 0);
-        }
 
+        }catch(CantGetIntraUsersListException e) {
+            e.printStackTrace();
+        } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
+        }
         return data;
     }
 
     @Override
-    public void onItemClickListener(CryptoBrokerIdentityInformation data, int position) {
+    public void onItemClickListener(IntraUserInformation data, int position) {
+        Toast.makeText(getActivity(),data.getName(),Toast.LENGTH_SHORT).show();
+        try {
 
+            moduleManager.acceptIntraUser(moduleManager.getActiveIntraUserIdentity().getPublicKey(),data.getName(),data.getPublicKey(),data.getProfileImage());
+            
+        } catch (CantAcceptRequestException e) {
+            e.printStackTrace();
+        } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void onLongItemClickListener(CryptoBrokerIdentityInformation data, int position) {
+    public void onLongItemClickListener(IntraUserInformation data, int position) {
 
     }
 }

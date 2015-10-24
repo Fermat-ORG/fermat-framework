@@ -10,6 +10,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.CryptoVaults;
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.UTXOProvider;
 
 import java.util.List;
 
@@ -40,4 +41,20 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * @throws CantBroadcastTransactionException
      */
     void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx) throws CantBroadcastTransactionException;
+
+    /**
+     * Gets the UTXO provider from the CryptoNetwork on the specified Network
+     * @param blockchainNetworkType
+     * @return
+     */
+    UTXOProvider getUTXOProvider(BlockchainNetworkType blockchainNetworkType);
+
+
+    /**
+     * Gets the specified bitcoin transaction
+     * @param transactionHash
+     * @return
+     */
+    Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash);
+
 }

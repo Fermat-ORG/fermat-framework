@@ -1,12 +1,14 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.View;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterNew;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
+
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders.PaymentRequestItemViewHolder;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -26,11 +28,13 @@ public class PaymentRequestPendingAdapter extends FermatAdapterNew<PaymentReques
 
     ViewInflater viewInflater;
     ReferenceWalletSession referenceWalletSession;
+    Typeface tf;
 
     public PaymentRequestPendingAdapter(Context context, List<PaymentRequest> dataSet,ViewInflater viewInflater,ReferenceWalletSession referenceWalletSession) {
         super(context, dataSet,viewInflater,referenceWalletSession.getWalletResourcesProviderManager());
         this.referenceWalletSession = referenceWalletSession;
         this.viewInflater = viewInflater;
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
     }
 
     @Override
@@ -49,13 +53,16 @@ public class PaymentRequestPendingAdapter extends FermatAdapterNew<PaymentReques
         holder.getContactIcon().setImageResource(R.drawable.mati_profile);
 
         holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
+        holder.getTxt_amount().setTypeface(tf);
 
         holder.getTxt_contactName().setText("Juan");//data.getContact().getActorName());
+        holder.getTxt_contactName().setTypeface(tf);
 
         holder.getTxt_notes().setText(data.getReason());
+        holder.getTxt_notes().setTypeface(tf);
 
         holder.getTxt_time().setText(data.getDate());
-
+        holder.getTxt_time().setTypeface(tf);
 
 
 //        holder.getWalletName().setText(data.getWalletName());

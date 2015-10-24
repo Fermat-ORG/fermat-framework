@@ -27,20 +27,32 @@ public class BitcoinNetworkSelector {
     }
 
     /**
-     * For Asset Vault key hierarchy configuration, we need to provide the correct Account Number
-     * @param blockchainNetworkType
+     * Gets the correct BlockchainNetworkType based in the passed NetworkParameters
+     * @param networkParameters
      * @return
      */
-    public static int getNetworkAccountNumber(BlockchainNetworkType blockchainNetworkType){
-        switch (blockchainNetworkType){
-            case PRODUCTION:
-                return 0;
-            case TEST:
-                return 1;
-            case REG_TEST:
-                return 2;
-            default:
-                return 2;
+    public static BlockchainNetworkType getBlockchainNetworkType(NetworkParameters networkParameters){
+        /**
+         * if this is the default network type, I will return it.
+         */
+        if (BitcoinNetworkConfiguration.DEFAULT_NETWORK_PARAMETERS == networkParameters){
+            return BlockchainNetworkType.DEFAULT;
         }
+
+        /**
+         * I will return the correct network type.
+         */
+        BlockchainNetworkType blockchainNetworkType = null;
+        if (networkParameters == RegTestParams.get()){
+            blockchainNetworkType = BlockchainNetworkType.REG_TEST;
+        } else if(networkParameters == MainNetParams.get()){
+            blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
+        } else if(networkParameters == TestNet3Params.get()){
+            blockchainNetworkType = BlockchainNetworkType.TEST;
+        }
+
+        return blockchainNetworkType;
     }
+
+
 }

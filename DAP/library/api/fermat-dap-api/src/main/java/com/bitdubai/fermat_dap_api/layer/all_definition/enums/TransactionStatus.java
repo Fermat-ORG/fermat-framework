@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum TransactionStatus {
 
+    CRYPTO_SENT("RXC"),
     DELIVERED("DELD"),
     DELIVERING("DELG"),
     FORMING_GENESIS("FGEN"),
@@ -31,6 +32,8 @@ public enum TransactionStatus {
 
     public static TransactionStatus getByCode(String code)throws InvalidParameterException {
         switch (code) {
+            case "RXC":
+                return TransactionStatus.CRYPTO_SENT;
             case "DELD":
                 return TransactionStatus.DELIVERED;
             case "DELG":

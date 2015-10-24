@@ -55,6 +55,7 @@ public class VaultEventListeners extends AbstractWalletEventListener {
 
     @Override
     public void onCoinsReceived(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
+        System.out.println("Money Received at crypto vault");
         logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: Ney money received!!! New balance: " + newBalance.getValue(), null, null);
         /**
          * I save this transaction in the database
@@ -69,6 +70,8 @@ public class VaultEventListeners extends AbstractWalletEventListener {
 
     @Override
     public void onCoinsSent(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
+
+        System.out.println("Money sent from crypto vault. " + tx.toString());
         try {
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Money sent.", "Prev Balance: " + prevBalance.getValue() + " New Balance:" + newBalance.getValue(), "Transaction: " + tx.toString());
         } catch (Exception e) {

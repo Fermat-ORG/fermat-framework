@@ -4,9 +4,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
+import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.*;
 
 import java.io.Serializable;
 import java.util.List;
@@ -28,9 +31,9 @@ public interface CryptoWallet extends Serializable {
      *
      * @return a list of instances of wallet contact records
      *
-     * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException if something goes wrong
+     * @throws CantGetAllWalletContactsException if something goes wrong
      */
-    List<CryptoWalletWalletContact> listWalletContacts(String walletPublicKey) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
+    List<CryptoWalletWalletContact> listWalletContacts(String walletPublicKey) throws CantGetAllWalletContactsException;
 
     /**
      * List all wallet contact related to an specific wallet.
@@ -41,11 +44,11 @@ public interface CryptoWallet extends Serializable {
      *
      * @return a list of instances of wallet contact records
      *
-     * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException if something goes wrong
+     * @throws CantGetAllWalletContactsException if something goes wrong
      */
     List<CryptoWalletWalletContact> listWalletContactsScrolling(String  walletPublicKey,
                                                                 Integer max,
-                                                                Integer offset) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
+                                                                Integer offset) throws CantGetAllWalletContactsException;
 
     /**
      * Throw the method <code>listAllIntraUserConnections</code> you can get all the connections of the intra user selected.
@@ -57,12 +60,12 @@ public interface CryptoWallet extends Serializable {
      *
      * @return a list of crypto wallet intra user actors
      *
-     * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllIntraUserConnectionsException if something goes wrong.
+     * @throws CantGetAllIntraUserConnectionsException if something goes wrong.
      */
     List<CryptoWalletIntraUserActor> listAllIntraUserConnections(String  intraUserSelectedPublicKey,
                                                                  String  walletPublicKey,
                                                                  Integer max,
-                                                                 Integer offset) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllIntraUserConnectionsException;
+                                                                 Integer offset) throws CantGetAllIntraUserConnectionsException;
 
     /**
      * Create a new contact for an specific wallet
@@ -76,14 +79,14 @@ public interface CryptoWallet extends Serializable {
      *
      * @return an instance of the created public key
      *
-     * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException if something goes wrong
+     * @throws CantCreateWalletContactException if something goes wrong
      */
     CryptoWalletWalletContact createWalletContact(CryptoAddress receivedCryptoAddress,
                                                   String        actorAlias,
                                                   String        actorFirstName,
                                                   String        actorLastName,
                                                   Actors        actorType,
-                                                  String        walletPublicKey) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException, com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
+                                                  String        walletPublicKey) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
 
     /**
      * Create a new contact with a photo for an specific wallet
@@ -98,8 +101,8 @@ public interface CryptoWallet extends Serializable {
      *
      * @return an instance of the created wallet contact
      *
-     * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException if something goes wrong
-     * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException if the name of the contact already exists
+     * @throws CantCreateWalletContactException if something goes wrong
+     * @throws ContactNameAlreadyExistsException if the name of the contact already exists
      */
     CryptoWalletWalletContact createWalletContactWithPhoto(CryptoAddress receivedCryptoAddress,
                                                            String        actorAlias,
@@ -107,7 +110,7 @@ public interface CryptoWallet extends Serializable {
                                                            String        actorLastName,
                                                            Actors        actorType,
                                                            String        walletPublicKey,
-                                                           byte[]        photo) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException, com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
+                                                           byte[]        photo) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
 
     /**
      * Throw the method <code>addIntraUserActorLikeContact</code> you can add an intra user connection like contact
@@ -120,13 +123,13 @@ public interface CryptoWallet extends Serializable {
      *
      * @return an instance of the created wallet contact
      *
-     * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException if something goes wrong.
+     * @throws CantCreateWalletContactException if something goes wrong.
      */
     CryptoWalletWalletContact addIntraUserActorLikeContact(String intraUserPublicKey,
                                                            String alias,
                                                            String actorFirstName,
                                                            String actorLastName,
-                                                           String walletPublicKey) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
+                                                           String walletPublicKey) throws CantCreateWalletContactException;
 
     /**
      * updates the photo of an actor
@@ -134,15 +137,15 @@ public interface CryptoWallet extends Serializable {
      * @param actorPublicKey actor's public key
      * @param actor type
      * @param photo byte array with photo information
-     * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantUpdateWalletContactException
+     * @throws CantUpdateWalletContactException
      */
     void updateContactPhoto(String actorPublicKey,
                             Actors actor,
-                            byte[] photo) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantUpdateWalletContactException;
+                            byte[] photo) throws CantUpdateWalletContactException;
 
     void updateWalletContact(UUID contactId,
                              CryptoAddress receivedCryptoAddress,
-                             String actorName) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantUpdateWalletContactException;
+                             String actorName) throws CantUpdateWalletContactException;
 
 
 
@@ -150,19 +153,19 @@ public interface CryptoWallet extends Serializable {
      * deletes a contact having in count the contact id
      *
      * @param contactId specific id of the contact that you're trying to delete
-     * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantDeleteWalletContactException
+     * @throws CantDeleteWalletContactException
      */
-    void deleteWalletContact(UUID contactId) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantDeleteWalletContactException;
+    void deleteWalletContact(UUID contactId) throws CantDeleteWalletContactException;
 
     /**
      * find a wallet contact having in count its id
      *
      * @param contactId specific id of the contact that you're trying to find
      * @return instance of a crypto wallet contact
-     * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantFindWalletContactException
-     * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.WalletContactNotFoundException
+     * @throws CantFindWalletContactException
+     * @throws WalletContactNotFoundException
      */
-    CryptoWalletWalletContact findWalletContactById(UUID contactId) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantFindWalletContactException, com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.WalletContactNotFoundException;
+    CryptoWalletWalletContact findWalletContactById(UUID contactId) throws CantFindWalletContactException, WalletContactNotFoundException;
 
     /**
      * Throw the method <code>isValidAddress</code> you can validate in the specific vault if a specific crypto address is valid.
@@ -182,7 +185,7 @@ public interface CryptoWallet extends Serializable {
                                             VaultType vaultType,
                                             String vaultIdentifier,
                                             String walletPublicKey,
-                                            ReferenceWallet walletType) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantRequestCryptoAddressException;
+                                            ReferenceWallet walletType) throws CantRequestCryptoAddressException;
     // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
 
     CryptoAddress requestAddressToNewExtraUser(String deliveredByActorPublicKey,
@@ -192,7 +195,7 @@ public interface CryptoWallet extends Serializable {
                                                VaultType vaultType,
                                                String vaultIdentifier,
                                                String walletPublicKey,
-                                               ReferenceWallet walletType) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantRequestCryptoAddressException;
+                                               ReferenceWallet walletType) throws CantRequestCryptoAddressException;
     // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
 
     void send(long cryptoAmount,
@@ -202,7 +205,7 @@ public interface CryptoWallet extends Serializable {
               Actors deliveredByActorType,
               String deliveredToActorPublicKey,
               Actors deliveredToActorType,
-              ReferenceWallet referenceWallet) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantSendCryptoException, com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.InsufficientFundsException;
+              ReferenceWallet referenceWallet) throws CantSendCryptoException, InsufficientFundsException;
 
 
     /**
@@ -213,10 +216,10 @@ public interface CryptoWallet extends Serializable {
      *
      * @return the balance of the wallet in long format.
      *
-     * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetBalanceException if something goes wrong
+     * @throws CantGetBalanceException if something goes wrong
      */
     long getBalance(BalanceType balanceType,
-                    String      walletPublicKey) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
+                    String      walletPublicKey) throws CantGetBalanceException;
 
     /**
      * Throw the method <code>getTransactions</code> you cant get all the transactions for an specific balance type.
@@ -228,13 +231,13 @@ public interface CryptoWallet extends Serializable {
      *
      * @return a list of crypto wallet transactions (enriched crypto transactions).
      *
-     * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException if something goes wrong.
+     * @throws CantListTransactionsException if something goes wrong.
      */
     List<CryptoWalletTransaction> getTransactions(BalanceType balanceType,
-                                                  TransactionType transactionType,
-                                                  String      walletPublicKey,
-                                                  int         max,
-                                                  int         offset) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
+                                                                                                             TransactionType transactionType,
+                                                                                                             String walletPublicKey,
+                                                                                                             int max,
+                                                                                                             int offset) throws CantListTransactionsException;
 
     /**
      * Throw the method <code>listTransactionsByActor</code> you cant get all the transactions related with an specific actor.
@@ -247,13 +250,13 @@ public interface CryptoWallet extends Serializable {
      *
      * @return a list of crypto wallet transactions (enriched crypto transactions).
      *
-     * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException if something goes wrong.
+     * @throws CantListTransactionsException if something goes wrong.
      */
     List<CryptoWalletTransaction> listTransactionsByActor(BalanceType balanceType,
-                                                          String      walletPublicKey,
-                                                          String      actorPublicKey,
-                                                          int         max,
-                                                          int         offset) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
+                                                                                                                     String walletPublicKey,
+                                                                                                                     String actorPublicKey,
+                                                                                                                     int max,
+                                                                                                                     int offset) throws CantListTransactionsException;
 
     /**
      * Throw the method <code>getActorTransactionHistory</code> you can get the transaction history of an specific actor.
@@ -264,11 +267,11 @@ public interface CryptoWallet extends Serializable {
      *
      * @return an instance of ActorTransactionSummary
      *
-     * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetActorTransactionHistoryException if something goes wrong.
+     * @throws CantGetActorTransactionHistoryException if something goes wrong.
      */
     ActorTransactionSummary getActorTransactionHistory(BalanceType balanceType,
                                                        String      walletPublicKey,
-                                                       String      actorPublicKey) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetActorTransactionHistoryException;
+                                                       String      actorPublicKey) throws CantGetActorTransactionHistoryException;
 
     /**
      * Throw the method <code>listLastActorTransactionsByTransactionType</code> you can get the last transaction for each actor
@@ -282,13 +285,13 @@ public interface CryptoWallet extends Serializable {
      *
      * @return a list of crypto wallet transactions (enriched crypto transactions).
      *
-     * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException if something goes wrong.
+     * @throws CantListTransactionsException if something goes wrong.
      */
-    List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType     balanceType,
-                                                                             TransactionType transactionType,
-                                                                             String          walletPublicKey,
-                                                                             int             max,
-                                                                             int             offset) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
+    List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
+                                                                                                                                        TransactionType transactionType,
+                                                                                                                                        String walletPublicKey,
+                                                                                                                                        int max,
+                                                                                                                                        int offset) throws CantListTransactionsException;
 
     /**
      * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.
@@ -297,12 +300,12 @@ public interface CryptoWallet extends Serializable {
      * @param transactionID   to identify the transaction.
      * @param description     string describing the transaction
      *
-     * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantSaveTransactionDescriptionException if something goes wrong.
-     * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.TransactionNotFoundException if we cant find the transaction.
+     * @throws CantSaveTransactionDescriptionException if something goes wrong.
+     * @throws TransactionNotFoundException if we cant find the transaction.
      */
     void setTransactionDescription(String walletPublicKey,
                                    UUID   transactionID,
-                                   String description) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantSaveTransactionDescriptionException, com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.TransactionNotFoundException;
+                                   String description) throws CantSaveTransactionDescriptionException, TransactionNotFoundException;
 
     /**
      *The method <code>listSentPaymentRequest</code> list the wallet send payments request.
@@ -310,7 +313,7 @@ public interface CryptoWallet extends Serializable {
      * @param walletPublicKey
      * @return List of PaymentRequest object
      */
-    List<PaymentRequest> listSentPaymentRequest(String  walletPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListSentPaymentRequestException;
+    List<PaymentRequest> listSentPaymentRequest(String  walletPublicKey,int max,int offset) throws CantListSentPaymentRequestException;
 
     /**
      *The method <code>listReceivedPaymentRequest</code> list the wallet receive payments request.
@@ -318,7 +321,7 @@ public interface CryptoWallet extends Serializable {
      * @param walletPublicKey
      * @return List of PaymentRequest object
      */
-    List<PaymentRequest> listReceivedPaymentRequest(String  walletPublicKey,int max,int offset)throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListReceivePaymentRequestException;
+    List<PaymentRequest> listReceivedPaymentRequest(String  walletPublicKey,int max,int offset)throws CantListReceivePaymentRequestException;
 
     /**
      * The method <code>listPaymentRequestDateOrder</code> list the wallet payments requests order by date.
@@ -326,15 +329,15 @@ public interface CryptoWallet extends Serializable {
      * @param walletPublicKey
      * @return List of PaymentRequest object
      */
-    List<PaymentRequest> listPaymentRequestDateOrder(String  walletPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListPaymentRequestDateOrderException;
+    List<PaymentRequest> listPaymentRequestDateOrder(String  walletPublicKey,int max,int offset) throws CantListPaymentRequestDateOrderException;
 
     /**
      *
      * @return
-     * @throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException
+     * @throws CantListCryptoWalletIntraUserIdentityException
      */
 
-    List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
+    List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListCryptoWalletIntraUserIdentityException;
 
     /**
      *
@@ -354,5 +357,7 @@ public interface CryptoWallet extends Serializable {
                                   Actors deliveredByActorType,
                                   String deliveredToActorPublicKey,
                                   Actors deliveredToActorType);
+
+    List<IntraWalletUser> getActiveIdentities();
 
 }

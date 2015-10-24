@@ -174,7 +174,8 @@ public class DigitalAssetDistributor extends DigitalAssetSwap {
     public void persistInLocalStorage(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateDigitalAssetFileException {
         //DigitalAsset Path structure: digital-asset-distribution/hash/digital-asset.xml
         //DigitalAssetMetadata Path structure: digital-asset-distribution/hash/digital-asset-metadata.xml
-        this.digitalAssetDistributionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata);
+        //TODO: create an UUID for this asset and persists in database
+        this.digitalAssetDistributionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata,"");
 
     }
 

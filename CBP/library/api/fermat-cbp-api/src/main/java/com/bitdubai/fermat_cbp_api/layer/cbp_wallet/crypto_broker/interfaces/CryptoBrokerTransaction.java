@@ -1,36 +1,31 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
-
-
-import java.util.UUID;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantRegisterCreditException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantRegisterDebitException;
 
 /**
- * Created by Yordin Alayn on 02.10.15.
+ * Created by Yordin Alayn on 30.09.15.
  */
 public interface CryptoBrokerTransaction {
 
-    UUID getTransactionId();
+    CryptoBrokerTransactionRecord debit(String publickeyWalle,
+                                        String publickeyBroker,
+                                        String publicKeyCustomer,
+                                        BalanceType balanceType,
+                                        CurrencyType currencyType,
+                                        float amount,
+                                        String memo
+    ) throws CantRegisterDebitException;
 
-    BalanceType getBalanceType();
-
-    TransactionType getTransactionType();
-
-    CurrencyType getCurrencyType();
-
-    String getPublicKeyActorFrom();
-
-    String getPublicKeyActorTo();
-
-    float getAmount();
-
-    long getTimestamp();
-
-    long getRunningBookBalance();
-
-    long getRunningAvailableBalance();
-
-    String getMemo();
+    CryptoBrokerTransactionRecord credit(String publickeyWalle,
+                                         String publickeyBroker,
+                                         String publicKeyCustomer,
+                                         BalanceType balanceType,
+                                         CurrencyType currencyType,
+                                         float amount,
+                                         String memo
+    ) throws CantRegisterCreditException;
 }

@@ -2,8 +2,9 @@
 <resources>
 
     <color name="background_tab_pressed">#6633B5E5</color>
-    <color name="home_activity_primary_color">#03A9F4</color>
-    <color name="home_activity_primary_color_dark">#0288D1</color>
-    <color name="home_activity_title_bar_color">#FFFFFF</color>
+    <color name="app_background">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="blue">#0048ff</color>
+    <color name="withe">#FFFFFF</color>
 
 </resources>

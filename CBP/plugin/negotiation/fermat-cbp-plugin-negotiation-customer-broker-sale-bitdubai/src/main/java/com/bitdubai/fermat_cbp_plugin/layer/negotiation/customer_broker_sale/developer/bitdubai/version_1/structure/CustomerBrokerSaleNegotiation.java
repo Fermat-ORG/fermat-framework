@@ -86,7 +86,6 @@ public class CustomerBrokerSaleNegotiation implements CustomerBrokerSale {
         return null;
     }
 
-    @Override
     public Clause modifyClauseStatus(Clause clause, ClauseStatus status) throws CantUpdateClausesException {
         return null;
     }

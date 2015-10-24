@@ -276,70 +276,14 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         return null;
     }
 
-    public void distributionAssets(String assetPublicKey, String walletPublicKey, ActorAssetUser actorAssetUser)  throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException {
+    public void distributionAssets(String assetPublicKey, String walletPublicKey, List<ActorAssetUser> actorAssetUsers)  throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException {
         try{
             //Buscar el Asset Balance con la data para traerse las propiedades del Digital Asset que me entrego el Issuing en su momento.
             List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions;
-            //TODO: Este actor es temporal mockActorAssetUser
-            ActorAssetUser mockActorAssetUser = new ActorAssetUser() {
-                @Override
-                public String getPublicKey() {
-                    return "publicKeyActor";
-                }
 
-                @Override
-                public String getName() {
-                    return "mock Actor";
-                }
-
-                @Override
-                public long getContactRegistrationDate() {
-                    return 0;
-                }
-
-                @Override
-                public byte[] getProfileImage() {
-                    return new byte[0];
-                }
-
-                @Override
-                public ConnectionState getConnectionState() {
-                    return null;
-                }
-
-                @Override
-                public Double getLocationLatitude() {
-                    return null;
-                }
-
-                @Override
-                public Double getLocationLongitude() {
-                    return null;
-                }
-
-//                @Override
-//                public Location getLocation() {
-//                    return null;
-//                }
-
-                @Override
-                public Genders getGender() {
-                    return null;
-                }
-
-                @Override
-                public String getAge() {
-                    return null;
-                }
-
-                @Override
-                public CryptoAddress getCryptoAddress() {
-                    return null;
-                }
-            };
-            actorAssetUser = mockActorAssetUser;
             HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
             assetIssuerWalletTransactions = assetIssuerWalletDao.distributeAssets(assetPublicKey);
+            int i = 0;
             for (AssetIssuerWalletTransaction assetIssuerWalletTransactionList : assetIssuerWalletTransactions){
                 //TODO: Optimizar para que vea el registro de la tabla Balance Wallet
                 DigitalAsset digitalAsset = new  DigitalAsset();
@@ -349,7 +293,13 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
                 DigitalAssetMetadata digitalAssetMetadata = new DigitalAssetMetadata();
                 digitalAssetMetadata.setDigitalAsset(digitalAsset);
                 digitalAssetMetadata.setGenesisTransaction(assetIssuerWalletTransactionList.getTransactionHash());
-                hashMap.put(digitalAssetMetadata, actorAssetUser);
+                hashMap.put(digitalAssetMetadata, actorAssetUsers.get(i));
+
+                if (i > actorAssetUsers.size()){
+                    break;
+                }
+
+                i++;
             }
             assetDistributionManager.distributeAssets(hashMap, walletPublicKey);
 

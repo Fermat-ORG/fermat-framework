@@ -12,7 +12,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.DealsWithActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.DealsWithAssetIssuerWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
@@ -37,11 +41,17 @@ import java.util.UUID;
 /**
  * Created by Franklin on 07/09/15.
  */
-public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAssetIssuerWallet, Service, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, AssetIssuerWalletSupAppModuleManager {
-    //AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
+public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithActorAssetUser, DealsWithAssetIssuerWallet, Service, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, AssetIssuerWalletSupAppModuleManager {
+    /**
+     * DealsWithAssetIssuerWallet interface member variable
+     */
     AssetIssuerWalletManager assetIssuerWalletManager;
-    //AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
+
     AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
+    /**
+     * DealsWithActorAssetUser interface member variable
+     */
+    ActorAssetUserManager actorAssetUserManager;
 
     UUID pluginId;
 
@@ -76,8 +86,13 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAsset
     @Override
     public void start() throws CantStartPluginException {
         try {
-            assetIssuerWalletModuleManager = new AssetIssuerWalletModuleManager(assetIssuerWalletManager);
+            assetIssuerWalletModuleManager = new AssetIssuerWalletModuleManager(assetIssuerWalletManager, actorAssetUserManager);
             System.out.println("******* Asset Issuer Wallet Module Init ******");
+//            for (ActorAssetUser actorAssetUser : getAllAssetUserActorConnected())
+//            {
+//                System.out.println("Actor Public Key: " + actorAssetUser.getPublicKey());
+//                System.out.println("Actor Name      : " + actorAssetUser.getName());
+//            }
             this.serviceStatus = ServiceStatus.STARTED;
         }catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
@@ -105,6 +120,10 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAsset
         return this.serviceStatus;
     }
 
+    @Override
+    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
+        this.actorAssetUserManager = actorAssetUserManager;
+    }
 
     @Override
     public void setAssetIssuerManager(AssetIssuerWalletManager assetIssuerWalletManager) {
@@ -162,7 +181,11 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithAsset
     }
 
     @Override
-    public void distributionAssets(String assetPublicKey, String walletPublicKey, ActorAssetUser actorAssetUser) throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException {
-        assetIssuerWalletModuleManager.distributionAssets(assetPublicKey, walletPublicKey, actorAssetUser);
+    public void distributionAssets(String assetPublicKey, String walletPublicKey, List<ActorAssetUser> actorAssetUsers) throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException {
+        assetIssuerWalletModuleManager.distributionAssets(assetPublicKey, walletPublicKey, actorAssetUsers);
+    }
+
+    public List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUserActorsException{
+        return assetIssuerWalletModuleManager.getAllAssetUserActorConnected();
     }
 }

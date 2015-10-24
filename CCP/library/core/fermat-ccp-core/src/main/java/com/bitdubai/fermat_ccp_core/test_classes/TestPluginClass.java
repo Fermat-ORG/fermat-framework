@@ -1,7 +1,14 @@
 package com.bitdubai.fermat_ccp_core.test_classes;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CCPPlugins;
 
 import java.util.ArrayList;
@@ -14,28 +21,58 @@ import java.util.UUID;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */
-public class TestPluginClass extends FermatPlugin {
+public class TestPluginClass extends AbstractPlugin {
 
     private UUID pluginId;
 
     public TestPluginClass() {
-        super(Developers.BITDUBAI, new Version("1.0.0"));
+        super();
     }
 
-    @Override
-    public List<FermatAddonReference> getNeededAddonReferences() {
 
+    @Override
+    public List<AddonVersionReference> getNeededAddonReferences() {
         return new ArrayList<>();
     }
 
     @Override
-    public List<FermatPluginReference> getNeededPluginReferences() {
+    public List<PluginVersionReference> getNeededPluginReferences() {
+        return new ArrayList<>();
+    }
 
-        List<FermatPluginReference> pluginReferences = new ArrayList<>();
+    @Override
+    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
+        return new ArrayList<>();
+    }
 
-        pluginReferences.add(new FermatPluginReference(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_ACTOR, null));
+    @Override
+    protected void validateAndAssignReferences() {
 
-        return pluginReferences;
+    }
+
+    @Override
+    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
+        return null;
+    }
+
+    @Override
+    public void start() throws CantStartPluginException {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void stop() {
+
     }
 
     @Override

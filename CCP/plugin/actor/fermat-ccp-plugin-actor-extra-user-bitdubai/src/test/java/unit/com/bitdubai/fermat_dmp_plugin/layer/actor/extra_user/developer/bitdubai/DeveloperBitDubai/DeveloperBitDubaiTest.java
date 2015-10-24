@@ -22,7 +22,7 @@ public class DeveloperBitDubaiTest {
 
     @Test
     public void getPluging() {
-        assertThat(developTest.getPlugin()).isInstanceOf(ExtraUserActorPluginRoot.class);
+        assertThat(developTest.getFirstPluginVersion()).isInstanceOf(ExtraUserActorPluginRoot.class);
     }
 
     @Test

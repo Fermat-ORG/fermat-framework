@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.IntraUserNotificationDescriptor;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
@@ -265,6 +266,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         System.out.print("-----------------------\n" +
                                 "ACEPTARON EL REQUEST!!!!!-----------------------\n" +
                                 "-----------------------\n NOTIFICAION: " + cpr);
+                        break;
 
 
                     case DISCONNECTED:
@@ -330,8 +332,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
                     try {
 
-                        //actorNetworkServiceRecord.changeState(ActorProtocolState.SENT);
-
                         System.out.println("----------------------------\n" +
                                 "ENVIANDO MENSAJE:" + actorNetworkServiceRecord
                                 + "\n-------------------------------------------------");
@@ -353,6 +353,8 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     }
                 }
             }
+
+
         } catch (Exception z) {
 
             reportUnexpectedError(FermatException.wrapException(z));
@@ -364,8 +366,8 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
         switch (type) {
 
             case INTRA_USER  : return PlatformComponentType.ACTOR_INTRA_USER  ;
-            case ASSET_ISSUER: return PlatformComponentType.ACTOR_ASSET_ISSUER;
-            case ASSET_USER  : return PlatformComponentType.ACTOR_ASSET_USER  ;
+            case DAP_ASSET_ISSUER: return PlatformComponentType.ACTOR_ASSET_ISSUER;
+            case DAP_ASSET_USER  : return PlatformComponentType.ACTOR_ASSET_USER  ;
 
             default: throw new InvalidParameterException(
                     " actor type: "+type.name()+"  type-code: "+type.getCode(),
@@ -458,6 +460,18 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                     actorNetworkServicePluginRoot.getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
 
                     launchIncomingRequestConnectionNotificationEvent(actorNetworkServiceRecord);
+
+                    actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
+                    actorNetworkServiceRecord.changeDescriptor(IntraUserNotificationDescriptor.RECEIVED);
+                    communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorSenderPublicKey()).sendMessage(actorNetworkServiceRecord.getActorDestinationPublicKey(),actorNetworkServiceRecord.getActorSenderAlias(),actorNetworkServiceRecord.toJson());
+
+//                    try{
+//                        //TOOD: ver si esto funciona
+//                        communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorSenderPublicKey());
+//
+//                    }catch (Exception e){
+//                        e.printStackTrace();
+//                    }
 
                     break;
                 case ACCEPTED:
