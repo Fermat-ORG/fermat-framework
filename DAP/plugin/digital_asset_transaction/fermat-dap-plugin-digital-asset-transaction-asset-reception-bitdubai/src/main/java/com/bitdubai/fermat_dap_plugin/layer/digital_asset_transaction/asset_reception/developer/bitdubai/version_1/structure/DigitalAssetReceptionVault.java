@@ -10,11 +10,11 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/10/15.
  */
-public class AbstractDigitalAssetReceptionVault extends AbstractDigitalAssetVault {
+public class DigitalAssetReceptionVault extends AbstractDigitalAssetVault {
 
     ErrorManager errorManager;
 
-    public AbstractDigitalAssetReceptionVault(UUID pluginId, PluginFileSystem pluginFileSystem, ErrorManager errorManager) throws CantSetObjectException {
+    public DigitalAssetReceptionVault(UUID pluginId, PluginFileSystem pluginFileSystem, ErrorManager errorManager) throws CantSetObjectException {
         setPluginFileSystem(pluginFileSystem);
         setPluginId(pluginId);
         setErrorManager(errorManager);
