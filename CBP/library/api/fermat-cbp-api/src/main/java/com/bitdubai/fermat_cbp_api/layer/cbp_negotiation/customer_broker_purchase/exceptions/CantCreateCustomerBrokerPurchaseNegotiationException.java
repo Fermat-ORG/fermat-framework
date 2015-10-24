@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by jorge on 10-10-2015.
  */
-public class CantCreateCustomerBrokerPurchaseException extends FermatException {
+public class CantCreateCustomerBrokerPurchaseNegotiationException extends FermatException {
     public static final String DEFAULT_MESSAGE = "CAN'T CREATE CUSTOMER BROKER PURCHASE NEGOTIATION";
 
     /**
@@ -16,7 +16,7 @@ public class CantCreateCustomerBrokerPurchaseException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantCreateCustomerBrokerPurchaseException(String message, Exception cause, String context, String possibleReason) {
+    public CantCreateCustomerBrokerPurchaseNegotiationException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
