@@ -78,7 +78,12 @@ public class RedeemPointRedemptionRecorderService implements DealsWithEvents, As
 
         FermatEventListener fermatEventListener;
         fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
-        fermatEventListener.setEventHandler(new ReceivedNewDigitalAssetMetadataNotificationEventHandler(this));
+        try {
+            fermatEventListener.setEventHandler(new ReceivedNewDigitalAssetMetadataNotificationEventHandler(this));
+        } catch (CantSetObjectException e) {
+            //This should like never happen because I'm passing a self reference.
+            throw new CantStartServiceException(e, context, "recorderService is null.");
+        }
         addListener(fermatEventListener);
 
         serviceStatus = ServiceStatus.STARTED;
