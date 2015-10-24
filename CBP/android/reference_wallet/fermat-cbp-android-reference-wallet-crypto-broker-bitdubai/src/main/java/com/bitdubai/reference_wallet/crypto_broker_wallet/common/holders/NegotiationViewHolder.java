@@ -11,6 +11,10 @@ import com.bitdubai.fermat_android_api.ui.expandableRecicler.ChildViewHolder;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.NegotiationBasicInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 /**
  * Created by nelson on 21/10/15.
  */
@@ -23,6 +27,7 @@ public class NegotiationViewHolder extends ChildViewHolder {
     public FermatTextView merchandise;
     public FermatTextView typeOfPayment;
     public FermatTextView merchandiseCurrency;
+    public FermatTextView exchangeRateAmount;
     public FermatTextView paymentCurrency;
 
 
@@ -42,21 +47,25 @@ public class NegotiationViewHolder extends ChildViewHolder {
         merchandise = (FermatTextView) itemView.findViewById(R.id.cbw_merchandise);
         typeOfPayment = (FermatTextView) itemView.findViewById(R.id.cbw_type_of_payment);
         merchandiseCurrency = (FermatTextView) itemView.findViewById(R.id.cbw_merchandise_currency);
+        exchangeRateAmount = (FermatTextView) itemView.findViewById(R.id.cbw_exchange_rate_amount);
         paymentCurrency = (FermatTextView) itemView.findViewById(R.id.cbw_payment_currency);
     }
 
     public void bind(NegotiationBasicInformation itemInfo) {
+        DecimalFormat df = (DecimalFormat) NumberFormat.getInstance();
+
+        merchandiseAmount.setText(df.format(itemInfo.getAmount()));
+        exchangeRateAmount.setText(df.format(itemInfo.getExchangeRateAmount()));
 
         customerName.setText(itemInfo.getCryptoCustomerAlias());
-        merchandiseAmount.setText(String.valueOf(itemInfo.getAmount()));
         merchandise.setText(itemInfo.getMerchandise());
         typeOfPayment.setText(itemInfo.getTypeOfPayment());
         merchandiseCurrency.setText(itemInfo.getMerchandise());
         paymentCurrency.setText(itemInfo.getPaymentCurrency());
 
-        byte[] customerImage = itemInfo.getCryptoCustomerImage();
-        if (customerImage != null && customerImage.length > 0) {
-            this.customerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(res, customerImage));
+        byte[] customerImg = itemInfo.getCryptoCustomerImage();
+        if (customerImg != null && customerImg.length > 0) {
+            this.customerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(res, customerImg));
         } else {
             this.customerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(res, R.drawable.person));
         }

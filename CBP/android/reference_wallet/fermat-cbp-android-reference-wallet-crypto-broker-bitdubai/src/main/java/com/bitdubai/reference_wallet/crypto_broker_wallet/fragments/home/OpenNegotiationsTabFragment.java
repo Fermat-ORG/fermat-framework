@@ -42,7 +42,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
 
     // UI
     private RecyclerView mRecyclerView;
-    private OpenNegotiationsExpandableAdapter mExpandableAdapter;
+    private OpenNegotiationsExpandableAdapter adapter;
 
     // MANAGERS
     private CryptoBrokerWalletModuleManager moduleManager;
@@ -93,22 +93,22 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
 
     private void initViews(View layout) {
         ArrayList<GrouperItem> openNegotiations = getOpenNegotiations();
-        mExpandableAdapter = new OpenNegotiationsExpandableAdapter(getActivity(), openNegotiations);
-        mExpandableAdapter.setExpandCollapseListener(this);
+        adapter = new OpenNegotiationsExpandableAdapter(getActivity(), openNegotiations);
+        adapter.setExpandCollapseListener(this);
 
         mRecyclerView = (RecyclerView) layout.findViewById(R.id.open_negotiations_recycler_view);
-        mRecyclerView.setAdapter(mExpandableAdapter);
+        mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     @Override
     public void onListItemExpanded(int position) {
-        Toast.makeText(getActivity(), "item expanded", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Item expanded: " + position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onListItemCollapsed(int position) {
-        Toast.makeText(getActivity(), "Item collapsed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Item collapsed: " + position, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -117,7 +117,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
      */
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        mExpandableAdapter.onSaveInstanceState(outState);
+        adapter.onSaveInstanceState(outState);
     }
 
     /**
