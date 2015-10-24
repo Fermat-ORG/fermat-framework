@@ -51,7 +51,7 @@ Mathematicians say their specialty is an archipelago of small certainties scatte
 
 All representatives of number theory are enumerated in that book, however, the most remarkable of all is an unnamed colleague, who when facing Wiles as he was triumphantly leaving the stage addressed him with undisguised obfuscation: *“And now that you have taken away the problem, what are you going to give us in return?”.*
 
-=== The new Problem
+=== The New Problem
 
 
 The secret of Fermat’s Last Theorem had been deciphered at last, however, even as of today the world is abundant in puzzles, which despite the tremendous advances in technology, are still waiting to be solved. All my adult life I seem to have been attracted to problems the complexity of which would deter even the most enthusiastic experts of the field. Inspired by the difficulty of the task I have always managed to rise to the challenge and sparing no time and energy succeeded in unraveling the mystery surrounding it.
