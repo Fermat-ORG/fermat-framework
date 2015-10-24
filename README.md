@@ -25,7 +25,7 @@ We believe in people with passion who are crazy enough to think they can change 
 The challenge
 ---------------------
 
- While designing Fermat we tried to find the answer to the following questions. :
+ While designing Fermat we tried to find the answer to the following questions:
 
 * How can we isolate ordinary people from the perceived complexity of crypto currencies?
 * How can we use the collective intelligence of the developer community?
