@@ -1,6 +1,10 @@
-# CONTRIBUTING
 
-## Fermat Development Environment Installation and Configuration - Linux
+<br>
+Contributing to Fermat
+------------------------
+
+<br>
+### Fermat Development Environment Installation and Configuration - Linux
 
 You are going to need the following tools in order to develop in Fermat
 
@@ -12,6 +16,7 @@ You are going to need the following tools in order to develop in Fermat
 
 Although there are many ways to configure these tools, we'll provide you with a recommended configuration for your development environment
 
+<br>
 ### Installing Git
 
 Fortunately, `git` is part of the common set of tools that you can find in any Distro of Linux.
@@ -23,6 +28,7 @@ sudo apt-get update
 sudo apt-get install git
 ```
 
+<br>
 ### Installing JDK 7
 
 You can get a running OpenJDK in most distros, but it's advised that we use the oficial Oracle JVM when we're going to code in Fermat.
@@ -40,6 +46,7 @@ tar xvzf jdk-7u79-linux-i586.tar.gz
 sudo mv jdk* /opt/java
 ```
 
+<br>
 ### Installing Gradle
 
 We can also install Gradle using the `apt` service, although the version we'll get might be out of date, so we recommend that you download one available in [gradle.org](http://gradle.org/)
@@ -51,6 +58,7 @@ unzip -e gradle-2.8-all.zip
 sudo mv gradle-2.8/ /opt/gradle
 ```
 
+<br>
 ### Installing Android SDK Tools
 
 We can obtain the Android SDK Tools directly through [this link](http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz)
@@ -62,6 +70,7 @@ tar xvzf android-sdk_r24.4.1-linux.tgz
 sudo mv android-sdk-linux/ /opt/android-sdk
 ```
 
+<br>
 ### Setting Up The Environment Variables
 
 We recommend that you configure your environment to recognize the tools you've downloaded and placed inside **/opt** as a part of the *bash profile*.
@@ -82,6 +91,7 @@ IMPORTANT: For these changes to set effect you should log out of your current se
 
 TIP: You can verify that these variables are properly using the command `env`
 
+<br>
 ### Downloading the Android SDKs and Build Tools
 
 Before you can compile Fermat properly, you need to download the SDKs and build tools that Gradle will use to build Fermat.
@@ -96,6 +106,7 @@ To do these installations, we use the Android SDK Manager, this is a graphical t
 android sdk
 ```
 
+<br>
 ### Setting up your IDE
 
 You can use either [IntelliJ IDEA](https://www.jetbrains.com/idea/) or [Android Developer Studio](http://developer.android.com/intl/es/sdk/index.html) to develop in Fermat.
@@ -107,5 +118,7 @@ This will import all the subprojects and configure the IDE to start developing i
 If this is your first execution of the IDE, it might ask you to point to where Java and Gradle are configured as part of the initial settings they need to assemble the *.idea* folder; you must point them to the */opt/java* and */opt/gradle* folder respectively.
 
 You can also modify these values after the project is imported; you can change the JDK location in the *__File->Project Structure__* menu, and the Gradle location through the *__File->Settings__* menu
+
+<br>
 
 TIP: Android Developer Studio incorporates an SDK Tools package inside of its installation, it's better and more manageable if you configure the tools you've downloaded and handle these dependencies yourself, you can do this in the *__File->Project Structure__* menu. You must always configure this value when using IntelliJ IDEA
