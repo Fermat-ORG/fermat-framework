@@ -231,7 +231,7 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
             for (int i = 0; i < 10; i++) {
 
 //                System.out.println("*******************************************************");
-//                System.out.println("PRUEBA DE VICTOR - REDEEM POINT: iniciando a crear el record: " + i);
+//                System.out.println("REDEEM POINT: iniciando a crear el record: " + i);
 //                System.out.println("*******************************************************");
                 String identityPublicKey = i + UUID.randomUUID().toString();
                 String publicKey = i + UUID.randomUUID().toString();
@@ -239,9 +239,9 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
                 DeviceLocation location = new DeviceLocation();
                 location.setLongitude(new Random().nextDouble());
                 location.setLatitude(new Random().nextDouble());
-                RedeemPointActorRecord record = new RedeemPointActorRecord("Thunder_RePo_User_" + i, publicKey);
+                RedeemPointActorRecord record = new RedeemPointActorRecord("Thunder User_" + i, publicKey);
                 record.setConnectionState(ConnectionState.CONNECTED);
-                record.setProfileImage(new byte[5]);
+                record.setProfileImage(new byte[0]);
                 record.setLocation(location);
                 RedeemPointActorAddress address = new RedeemPointActorAddress();
                 address.setCountryName("Venezuela");
@@ -261,7 +261,7 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
                     redeemPointActorDao.createNewRedeemPointRegisterInNetworkService(record);
                 } catch (CantAddPendingRedeemPointException e) {
                     System.out.println("*******************************************************");
-                    System.out.println("PRUEBA DE VICTOR - REDEEM POINT: Falló creando el record número: " + i);
+                    System.out.println("REDEEM POINT: Falló creando el record número: " + i);
                     e.printStackTrace();
                     System.out.println("*******************************************************");
                 }
@@ -270,7 +270,7 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
 
 //        } catch (CantInitializeRedeemPointActorDatabaseException e) {
 //            System.out.println("*******************************************************");
-//            System.out.println("PRUEBA DE VICTOR - REDEEM POINT: Falló iniciando la base de datos.: ");
+//            System.out.println("REDEEM POINT: Falló iniciando la base de datos.: ");
 //            e.printStackTrace();
 //            System.out.println("*******************************************************");
 //            throw e;

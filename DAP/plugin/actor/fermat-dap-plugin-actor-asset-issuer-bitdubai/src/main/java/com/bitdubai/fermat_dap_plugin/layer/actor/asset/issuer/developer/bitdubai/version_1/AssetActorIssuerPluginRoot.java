@@ -232,7 +232,7 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
             for (int i = 0; i < 10; i++) {
 
 //                System.out.println("*******************************************************");
-//                System.out.println("PRUEBA DE VICTOR - ASSET ISSUER: iniciando a crear el record: " + i);
+//                System.out.println("ASSET ISSUER: iniciando a crear el record: " + i);
 //                System.out.println("*******************************************************");
                 String assetIssuerActorIdentityToLinkPublicKey = i + UUID.randomUUID().toString();
                 String assetIssuerActorPublicKey = i + UUID.randomUUID().toString();
@@ -240,24 +240,24 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
                 DeviceLocation location = new DeviceLocation();
                 location.setLongitude(new Random().nextDouble());
                 location.setLatitude(new Random().nextDouble());
-                AssetIssuerActorRecord record = new AssetIssuerActorRecord("Thunder_User_" + i, assetIssuerActorPublicKey);
+                AssetIssuerActorRecord record = new AssetIssuerActorRecord("Thunder User_" + i, assetIssuerActorPublicKey);
                 record.setDescription("Asset Issuer de Prueba");
                 record.setContactState(ConnectionState.CONNECTED);
-                record.setProfileImage(new byte[5]);
+                    record.setProfileImage(new byte[0]);
                 record.setCryptoAddress(cryptoAddress);
                 record.setLocation(location);
                 try {
                     if (i == 0) {
                         assetIssuerActorDao.createNewAssetIssuer(assetIssuerActorIdentityToLinkPublicKey, record);
                         record.setDescription("Asset Issuer de Prueba cuya información fue modificada.");
-                        record.setProfileImage(new byte[8]);
+                        record.setProfileImage(new byte[0]);
                         record.setContactState(ConnectionState.DISCONNECTED_LOCALLY);
                         record.setName("Modificación hecha por Víctor!");
                         try {
                             assetIssuerActorDao.updateAssetIssuer(record);
                         } catch (CantUpdateAssetIssuerException | AssetIssuerNotFoundException e) {
                             System.out.println("*******************************************************");
-                            System.out.println("PRUEBA DE VICTOR - ASSET ISSUER: Falló actualizando el record número: " + i);
+                            System.out.println("ASSET ISSUER: Falló actualizando el record número: " + i);
                             e.printStackTrace();
                             System.out.println("*******************************************************");
                         }
@@ -265,7 +265,7 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
                     assetIssuerActorDao.createNewAssetIssuerRegistered(record);
                 } catch (CantAddPendingAssetIssuerException e) {
                     System.out.println("*******************************************************");
-                    System.out.println("PRUEBA DE VICTOR - ASSET ISSUER: Falló creando el record número: " + i);
+                    System.out.println("ASSET ISSUER: Falló creando el record número: " + i);
                     e.printStackTrace();
                     System.out.println("*******************************************************");
                 }
@@ -274,7 +274,7 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
 
 //        } catch (CantInitializeAssetIssuerActorDatabaseException e) {
 //            System.out.println("*******************************************************");
-//            System.out.println("PRUEBA DE VICTOR - ASSET ISSUER: Falló iniciando la base de datos.: ");
+//            System.out.println("ASSET ISSUER: Falló iniciando la base de datos.: ");
 //            e.printStackTrace();
 //            System.out.println("*******************************************************");
 //            throw e;

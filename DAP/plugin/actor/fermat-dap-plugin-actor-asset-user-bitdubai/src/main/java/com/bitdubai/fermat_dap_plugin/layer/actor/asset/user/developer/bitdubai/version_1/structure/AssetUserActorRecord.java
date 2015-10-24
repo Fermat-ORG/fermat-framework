@@ -13,27 +13,33 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
  */
 public class AssetUserActorRecord implements ActorAssetUser {
 
-    private String linkedIdentity;
+    private String publiclinkedIdentity;
     private String publicKey;
     private String name;
-    private byte[] profileImage;
-    private Location location;
+    private String age;
+    private Genders genders;
+    private ConnectionState connectionState;
     private Double locationLatitude;
     private Double locationLongitude;
     private long registrationDate;
-    private ConnectionState connectionState;
-    private Genders genders;
-    private String age;
+    private long lastConnectionDate;
     private CryptoAddress cryptoAddress;
+
+    private byte[] profileImage;
 
     /**
      * Constructor
      */
 
-   /*
-    * Para el Registro del Actor en el Actor Network Service
+    public AssetUserActorRecord(){
+
+    }
+
+   /**
+    *  Register in Actor Network Service
     */
     public AssetUserActorRecord(String name, String publicKey, byte[] profileImage, Location location) {
+
 
         this.name = name;
         this.publicKey = publicKey;
@@ -75,18 +81,23 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     }
 
-    public AssetUserActorRecord(String linkedIdentity, String publicKey, String name, Double locationLatitude, Double locationLongitude, Genders genders, String age){
+    public AssetUserActorRecord(String publicKey, String name, String age, Genders genders,
+                                ConnectionState connectionState, Double locationLatitude,
+                                Double locationLongitude, CryptoAddress cryptoAddress,
+                                Long registrationDate, Long lastConnectionDate,
+                                byte[] profileImage){
 
-        this.linkedIdentity = linkedIdentity;
         this.publicKey = publicKey;
         this.name = name;
-        this.profileImage = profileImage.clone();
+        this.age = age;
+        this.genders = genders;
+        this.connectionState = connectionState;
+        this.cryptoAddress = cryptoAddress;
         this.locationLatitude = locationLatitude;
         this.locationLongitude = locationLongitude;
-        this.genders = genders;
-        this.age = age;
-//        this.cryptoAddress = cryptoAddress;
-        this.connectionState = ConnectionState.CONNECTED;
+        this.registrationDate = registrationDate;
+        this.lastConnectionDate = lastConnectionDate;
+        this.profileImage = profileImage.clone();
 
     }
 
@@ -118,8 +129,13 @@ public class AssetUserActorRecord implements ActorAssetUser {
      * @return the date
      */
     @Override
-    public long getContactRegistrationDate() {
+    public long getRegistrationDate() {
         return this.registrationDate;
+    }
+
+    @Override
+    public long getLastConnectionDate() {
+        return this.lastConnectionDate;
     }
 
     /**
