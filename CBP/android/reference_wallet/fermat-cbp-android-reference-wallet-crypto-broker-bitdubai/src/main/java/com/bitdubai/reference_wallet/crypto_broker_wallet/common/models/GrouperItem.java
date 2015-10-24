@@ -24,8 +24,10 @@ public class GrouperItem<CHILD_TYPE> implements ParentListItem {
         this.initiallyExpanded = initiallyExpanded;
     }
 
-    public void getChildCount(int parentNumber) {
-        childCount = parentNumber;
+    public int getChildCount() {
+        if (childItemList != null)
+            childCount = this.childItemList.size();
+        return childCount;
     }
 
     /**
@@ -45,7 +47,8 @@ public class GrouperItem<CHILD_TYPE> implements ParentListItem {
      */
     public void setChildItemList(List<CHILD_TYPE> childItemList) {
         this.childItemList = childItemList;
-        childCount = this.childItemList.size();
+        if (childItemList != null)
+            childCount = this.childItemList.size();
     }
 
     @Override
@@ -57,15 +60,7 @@ public class GrouperItem<CHILD_TYPE> implements ParentListItem {
         this.initiallyExpanded = initiallyExpanded;
     }
 
-    public int getParentNumber() {
-        return childCount;
-    }
-
     public String getParentText() {
         return mParentText;
-    }
-
-    public void setParentText(String parentText) {
-        mParentText = parentText;
     }
 }

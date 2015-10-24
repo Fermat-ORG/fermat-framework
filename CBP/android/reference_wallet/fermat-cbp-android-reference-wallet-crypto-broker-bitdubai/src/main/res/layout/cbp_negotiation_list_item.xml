@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="16dp">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_marginBottom="8dp"
+    android:layout_marginTop="8dp"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingStart="@dimen/activity_horizontal_margin">
 
     <ImageView
         android:id="@+id/cbw_customer_image"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:contentDescription="@string/identity_img"
@@ -21,12 +26,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_gravity="center_vertical"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="2dp"
         android:layout_toEndOf="@+id/cbw_customer_image"
         android:layout_toRightOf="@+id/cbw_customer_image"
         android:singleLine="true"
         android:textColor="@color/blue"
-        android:textSize="@dimen/first_line_text_size"
+        android:textSize="@dimen/cbw_first_line_text_size"
         tools:text="Nelson Alfonso Ramirez Noguera"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -52,6 +57,7 @@
         android:layout_marginRight="8dp"
         android:layout_toEndOf="@+id/buyText"
         android:layout_toRightOf="@+id/buyText"
+        android:inputType="numberDecimal"
         android:singleLine="true"
         android:textColor="@color/black"
         android:textSize="@dimen/second_line_text_size"
@@ -123,6 +129,18 @@
             android:text="@string/at"
             android:textColor="@color/black"
             android:textSize="@dimen/third_line_text_size"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbw_exchange_rate_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_text_bottom_right"
+            android:layout_marginRight="@dimen/margin_text_bottom_right"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/third_line_text_size"
+            tools:text="0.2"
+            />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/cbw_payment_currency"

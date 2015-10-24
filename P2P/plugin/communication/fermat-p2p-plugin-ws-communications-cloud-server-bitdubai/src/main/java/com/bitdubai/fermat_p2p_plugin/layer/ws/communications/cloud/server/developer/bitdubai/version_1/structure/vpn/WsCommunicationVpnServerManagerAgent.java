@@ -8,6 +8,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.deve
 
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationCloudServer;
 
 import java.net.InetSocketAddress;
@@ -68,10 +69,10 @@ public class WsCommunicationVpnServerManagerAgent extends Thread{
      *
      * @param participants
      */
-    public WsCommunicationVPNServer createNewWsCommunicationVPNServer(List<PlatformComponentProfile> participants, WsCommunicationCloudServer wsCommunicationCloudServer) {
+    public WsCommunicationVPNServer createNewWsCommunicationVPNServer(List<PlatformComponentProfile> participants, WsCommunicationCloudServer wsCommunicationCloudServer, NetworkServiceType networkServiceTypeApplicant) {
 
         InetSocketAddress inetSocketAddress = new InetSocketAddress(hostIp, (lastPortAssigned+=1));
-        WsCommunicationVPNServer vpnServer = new WsCommunicationVPNServer(inetSocketAddress, participants, wsCommunicationCloudServer);
+        WsCommunicationVPNServer vpnServer = new WsCommunicationVPNServer(inetSocketAddress, participants, wsCommunicationCloudServer, networkServiceTypeApplicant);
         vpnServersActivesCache.add(vpnServer);
         vpnServer.start();
 
