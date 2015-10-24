@@ -63,9 +63,7 @@ Fermat is moving towards version 1, but we're not stopping there. We have many f
 [documentation](https://github.com/bitDubai/fermat/tree/master/fermat-documentation) that we're anxious to add.
 So take Fermat out for a spin and let us know how we can make it your favorite platform to launch your own digital wallet.
 
-You can learn more and see some cool visualizations of Fermat's architecture and its P2P network at
-[Fermat.org](http://www.fermat.org).
-
+You can learn more, see some cool visualizations of Fermat's architecture and its P2P network and explore the design space at [Fermat.org](http://www.fermat.org).
 
 <br>
 Mission / Purpose
@@ -219,12 +217,6 @@ Installers for the latest stable build for Android, Mac, Windows and Linux (Debi
 
 In addition to the core features built into Fermat, there is a large and growing
 community of developers building plugins and niche wallets that add all sorts of useful functionality.
-
-See the [Fermat Plugins Registry](https://github.com/bitDubai/fermat/fermat-documentation)
-for a list of available Plugins.
-
-See the [Fermat Niche Wallets Registry](https://github.com/bitDubai/fermat/fermat-documentation)
-for a list of Niche Wallets.
 
 For installation instructions and running from the source code, see the [Fermat Development Environment Installation and Configuration documentation](https://github.com/bitDubai/fermat/blob/master/fermat-documentation/installation/Linux.asciidoc).
 
