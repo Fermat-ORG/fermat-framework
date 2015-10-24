@@ -22,7 +22,7 @@ We believe the open source community collectively has more talent than any of us
 We believe in people with passion who are crazy enough to think they can change the world. We do believe we are going to change this world with a lot of hard work and not stopping until we reach our goal.
 
 <br>
-The challenge
+The Challenge
 ---------------------
 
  While designing Fermat we tried to find the answer to the following questions:
@@ -66,16 +66,24 @@ So take Fermat out for a spin and let us know how we can make it your favorite p
 You can learn more, see some cool visualizations of Fermat's architecture and its P2P network and explore the design space at [Fermat.org](http://www.fermat.org).
 
 <br>
-Mission / Purpose
+Fermat's Purpose
 ------------------------------------------------
 
-> To get cryptocurrencies mass adopted as soon as possible, and by doing this, to empower every person in the world with the appropriate tools to save and move their money in a digital format in an
-efficient, secure an private way.
+> Empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way. 
 
-> To give back the souveraignity over each one's own ressources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.
+> Give back the sovereignty over each one's own resources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.
 
 <br>
-Fermat principles
+Fermat's Mission
+------------------------------------------------
+
+> To get cryptocurrencies mass adopted as soon as possible.
+
+> To build the best possible integrated system able to handle the finances of not only all the human world population but also of companies and machines in the context of the IoT.  
+
+
+<br>
+Fermat Principles
 ------------------------------------------------
 
 
@@ -204,7 +212,7 @@ Fermat principles
 * Crypto Brokers concept.
 
 <br>
-How to install and run Fermat
+How to Install and Run Fermat
 -------------------------------
 
 
@@ -227,7 +235,7 @@ Having problems compiling or running Fermat the first time, or not sure how to u
 review [Troubleshooting](https://github.com/bitDubai/fermat/fermat-documentation), which helps
 you to fix common problems and find extra help if needed.
 
-#### Status of the project:
+#### Status of the Project:
 
 As of October 2015 the state of the project is the following:
 
@@ -236,7 +244,7 @@ State of the code: Under development for 5 months. No realeses yet. 24 full time
 Future path of development: Active (First release with very limited features schedulled for late November 2015).
 
 <br>
-I want to join the team!
+I Want to Join the Team!
 ------------------------------------------------
 
 Awesome! _There are lots of ways you can help._ First read
