@@ -235,7 +235,7 @@ Having problems compiling or running Fermat the first time, or not sure how to u
 review [Troubleshooting](https://github.com/bitDubai/fermat/fermat-documentation), which helps
 you to fix common problems and find extra help if needed.
 
-### Status of the project:
+#### Status of the project:
 
 As of October 2015 the state of the project is the following:
 
