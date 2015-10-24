@@ -113,7 +113,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     UUID pluginId;
     String walletPublicKey;
     //This flag must be used to select the way to send bitcoins from this plugin
-    boolean SEND_BTC_FROM_CRYPTO_NETWORK =false;
+    boolean SEND_BTC_FROM_CRYPTO_VAULT =false;
     long genesisAmount=100000;
 //TODO: delete this useless object in production, I'm using it just for testing
     Logger LOG = Logger.getGlobal();
@@ -138,12 +138,13 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
          * Warning: this message is only for testing, TODO: delete on production
          */
         String message;
-        if(SEND_BTC_FROM_CRYPTO_NETWORK){
-            message="Crypto Network";
+        if(SEND_BTC_FROM_CRYPTO_VAULT){
+            message="Crypto Vault";
         }else{
             message="Outgoing Intra Actor";
         }
-        System.out.println("ASSET ISSUING DigitalAssetCryptoTransactionFactory will send the BTC from "+message+" the current value of SEND_BTC_FROM_CRYPTO_NETWORK is"+SEND_BTC_FROM_CRYPTO_NETWORK);
+        System.out.println("ASSET ISSUING DigitalAssetCryptoTransactionFactory will send the BTC from "+message+"\n" +
+                "the current value of SEND_BTC_FROM_CRYPTO_VAULT is "+ SEND_BTC_FROM_CRYPTO_VAULT);
     }
 
     @Override
@@ -385,7 +386,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             areObjectsSettled();
             //FOR TESTING
             this.genesisAmount=this.digitalAsset.getGenesisAmount();
-            if(!SEND_BTC_FROM_CRYPTO_NETWORK){
+            if(!SEND_BTC_FROM_CRYPTO_VAULT){
                 isPublicKeyInDatabase(this.digitalAsset.getPublicKey());
             }
             //Persist the digital asset in local storage
@@ -393,7 +394,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             persistInLocalStorage();
             LOG.info("ASSET ISSUING Digital Asset persist: " + digitalAssetFileStoragePath + "/" + digitalAssetFileName);
             //Persist the digital asset in database
-            if(SEND_BTC_FROM_CRYPTO_NETWORK){
+            if(SEND_BTC_FROM_CRYPTO_VAULT){
                 if(!this.assetIssuingTransactionDao.isPublicKeyUsed(this.digitalAsset.getPublicKey())){
                     persistFormingGenesisDigitalAsset();
                 }
@@ -613,7 +614,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
         if(!isDigitalAssetComplete(digitalAsset, digitalAssetMetadata)){
             throw new CantDeliverDigitalAssetToAssetWalletException("Cannot deliver the digital asset - is not complete:"+digitalAssetMetadata);
         }
-        if(SEND_BTC_FROM_CRYPTO_NETWORK){
+        if(SEND_BTC_FROM_CRYPTO_VAULT){
             this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.ISSUING);
         }else{
             this.assetIssuingTransactionDao.updateDigitalAssetTransactionStatus(transactionId, TransactionStatus.ISSUING);
@@ -759,7 +760,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             UUID transactionUUID=generateTransactionUUID();
             String transactionId=transactionUUID.toString();
             //Check the available balance
-            if(!SEND_BTC_FROM_CRYPTO_NETWORK){
+            if(!SEND_BTC_FROM_CRYPTO_VAULT){
                 checkCryptoWalletBalance();
             }
             //Request the genesisAddress
@@ -778,7 +779,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             LOG.info("ASSET ISSUING Digital Asset Metadata Hash: " + digitalAssetHash);
             //BTC Sending
             /*String genesisTransaction=*/
-            if(SEND_BTC_FROM_CRYPTO_NETWORK){
+            if(SEND_BTC_FROM_CRYPTO_VAULT){
                 sendBitcoinsFromCryptoVault(genesisAddress, digitalAssetHash, transactionId, digitalAssetMetadata);
             }else{
                 sendBitcoins(genesisAddress, digitalAssetHash, transactionId);
