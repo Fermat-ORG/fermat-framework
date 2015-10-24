@@ -81,6 +81,7 @@ Fermat's Mission
 
 > To build the best possible integrated system able to handle the finances of not only all the human world population but also of companies and machines in the context of the IoT.  
 
+> To achieve “parity” with the state-of-the-art and to push towards new frontiers in computer science. 
 
 <br>
 Fermat Principles
