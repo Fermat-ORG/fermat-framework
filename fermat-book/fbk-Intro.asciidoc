@@ -58,6 +58,6 @@ Learning about Fermat is very easy. It's just a matter of continuing reading thi
 
 === Next
 
-link:asciidoc[fbk-01.asciidoc]
+link:asciidoc[chapter-01.asciidoc]
 
 
