@@ -9,12 +9,14 @@ import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.DeveloperN
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.LayerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.PluginNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.DeveloperReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.VersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 
@@ -77,7 +79,49 @@ public abstract class AbstractPlatform {
             throw new LayerNotFoundException("layer: "+layerReference.getLayer(), "layer not found.");
     }
 
-    public final AbstractAddon getAddon(final AddonReference addonReference) throws AddonNotFoundException {
+    /**
+     * Throw the method <code>getAddonVersion</code> you can get a addon version instance passing like parameter a version reference instance.
+     *
+     * @param addonVersionReference addon version reference data.
+     *
+     * @return a addon version instance.
+     *
+     * @throws VersionNotFoundException   if we can't find a addon version with the given version reference parameters.
+     */
+    public final AbstractAddon getAddonVersion(final AddonVersionReference addonVersionReference) throws VersionNotFoundException {
+
+        try {
+
+            return getAddonDeveloper(addonVersionReference.getAddonDeveloperReference()).getAddonByVersion(addonVersionReference);
+
+        } catch (DeveloperNotFoundException e) {
+
+            throw new VersionNotFoundException(e, addonVersionReference.toString(), "addon version not found in the platform of the system context.");
+        }
+    }
+
+    /**
+     * Throw the method <code>getAddonDeveloper</code> you can get a addonDeveloper instance passing like parameter a developer reference instance.
+     *
+     * @param addonDeveloperReference addon developer reference data.
+     *
+     * @return a addon developer instance.
+     *
+     * @throws DeveloperNotFoundException   if we can't find a addon developer with the given developer reference parameters.
+     */
+    public final AbstractAddonDeveloper getAddonDeveloper(final AddonDeveloperReference addonDeveloperReference) throws DeveloperNotFoundException {
+
+        try {
+
+            return getAddonSubsystem(addonDeveloperReference.getAddonReference()).getDeveloperByReference(addonDeveloperReference);
+
+        } catch (AddonNotFoundException e) {
+
+            throw new DeveloperNotFoundException(e, addonDeveloperReference.toString(), "addon developer not found in the platform of the system context.");
+        }
+    }
+
+    public final AbstractAddonSubsystem getAddonSubsystem(final AddonReference addonReference) throws AddonNotFoundException {
 
         try {
 
@@ -85,49 +129,49 @@ public abstract class AbstractPlatform {
 
         } catch (LayerNotFoundException e) {
 
-            throw new AddonNotFoundException(e, "addon:"+addonReference.toString(), "layer not found for the specified addon.");
+            throw new AddonNotFoundException(e, "addon: "+addonReference.toString(), "layer not found for the specified addon.");
         }
     }
 
     /**
      * Throw the method <code>getPluginVersion</code> you can get a plugin version instance passing like parameter a version reference instance.
      *
-     * @param versionReference plugin version reference data.
+     * @param pluginVersionReference plugin version reference data.
      *
      * @return a plugin version instance.
      *
      * @throws VersionNotFoundException   if we can't find a plugin version with the given version reference parameters.
      */
-    public final AbstractPlugin getPluginVersion(final VersionReference versionReference) throws VersionNotFoundException {
+    public final AbstractPlugin getPluginVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException {
 
         try {
 
-            return getPluginDeveloper(versionReference.getDeveloperReference()).getPluginByVersion(versionReference);
+            return getPluginDeveloper(pluginVersionReference.getPluginDeveloperReference()).getPluginByVersion(pluginVersionReference);
 
         } catch (DeveloperNotFoundException e) {
 
-            throw new VersionNotFoundException(e, versionReference.toString(), "version not found in the platform of the system context.");
+            throw new VersionNotFoundException(e, pluginVersionReference.toString(), "plugin version not found in the platform of the system context.");
         }
     }
 
     /**
      * Throw the method <code>getPluginDeveloper</code> you can get a pluginDeveloper instance passing like parameter a developer reference instance.
      *
-     * @param developerReference plugin developer reference data.
+     * @param pluginDeveloperReference plugin developer reference data.
      *
      * @return a plugin developer instance.
      *
      * @throws DeveloperNotFoundException   if we can't find a plugin developer with the given developer reference parameters.
      */
-    public final AbstractPluginDeveloper getPluginDeveloper(final DeveloperReference developerReference) throws DeveloperNotFoundException {
+    public final AbstractPluginDeveloper getPluginDeveloper(final PluginDeveloperReference pluginDeveloperReference) throws DeveloperNotFoundException {
 
         try {
 
-            return getPluginSubsystem(developerReference.getPluginReference()).getDeveloperByReference(developerReference);
+            return getPluginSubsystem(pluginDeveloperReference.getPluginReference()).getDeveloperByReference(pluginDeveloperReference);
 
         } catch (PluginNotFoundException e) {
 
-            throw new DeveloperNotFoundException(e, developerReference.toString(), "plugin not found in the platform of the system context.");
+            throw new DeveloperNotFoundException(e, pluginDeveloperReference.toString(), "plugin developer not found in the platform of the system context.");
         }
     }
 

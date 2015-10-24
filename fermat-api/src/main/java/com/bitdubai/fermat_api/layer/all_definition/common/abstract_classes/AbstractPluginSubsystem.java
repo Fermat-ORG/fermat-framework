@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegist
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPluginDeveloperException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.DeveloperNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.DeveloperReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
 
 import java.util.Map;
@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractPluginSubsystem {
 
-    private final Map<DeveloperReference, AbstractPluginDeveloper> developers;
+    private final Map<PluginDeveloperReference, AbstractPluginDeveloper> developers;
 
     private final PluginReference pluginReference;
 
@@ -39,36 +39,36 @@ public abstract class AbstractPluginSubsystem {
      */
     protected final void registerDeveloper(final AbstractPluginDeveloper pluginDeveloper) throws CantRegisterDeveloperException {
 
-        DeveloperReference developerReference = pluginDeveloper.getDeveloperReference();
+        PluginDeveloperReference pluginDeveloperReference = pluginDeveloper.getPluginDeveloperReference();
 
-        developerReference.setPluginReference(this.pluginReference);
+        pluginDeveloperReference.setPluginReference(this.pluginReference);
 
         try {
 
-            if(developers.containsKey(developerReference))
-                throw new CantRegisterDeveloperException(developerReference.toString(), "developer already exists for this plugin.");
+            if(developers.containsKey(pluginDeveloperReference))
+                throw new CantRegisterDeveloperException(pluginDeveloperReference.toString(), "developer already exists for this plugin.");
 
             pluginDeveloper.start();
 
             developers.put(
-                    developerReference,
+                    pluginDeveloperReference,
                     pluginDeveloper
             );
 
         } catch (final CantStartPluginDeveloperException e) {
 
-            throw new CantRegisterDeveloperException(e, developerReference.toString(), "Error trying to start the developer.");
+            throw new CantRegisterDeveloperException(e, pluginDeveloperReference.toString(), "Error trying to start the developer.");
         }
 
     }
 
-    public final AbstractPluginDeveloper getDeveloperByReference(final DeveloperReference developerReference) throws DeveloperNotFoundException {
+    public final AbstractPluginDeveloper getDeveloperByReference(final PluginDeveloperReference pluginDeveloperReference) throws DeveloperNotFoundException {
 
-        if (developers.containsKey(developerReference)) {
-            return developers.get(developerReference);
+        if (developers.containsKey(pluginDeveloperReference)) {
+            return developers.get(pluginDeveloperReference);
         } else {
 
-            throw new DeveloperNotFoundException(developerReference.toString(), "developer not found in the specified plugin subsystem.");
+            throw new DeveloperNotFoundException(pluginDeveloperReference.toString(), "developer not found in the specified plugin subsystem.");
         }
     }
 

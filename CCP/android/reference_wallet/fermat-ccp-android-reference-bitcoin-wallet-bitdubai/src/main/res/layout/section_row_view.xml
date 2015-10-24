@@ -13,14 +13,14 @@
      android:paddingLeft="16dp"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
-     android:textStyle="bold"
-     android:textSize="18sp"
+
+     android:textSize="14sp"
      android:textColor="@color/hint_foreground_material_light"
      android:clickable="false"
      android:enabled="false"
      android:focusable="false"
     android:text="holas"
-      />
+     android:fontFamily="roboto" />
 
     <View
         android:layout_width="match_parent"

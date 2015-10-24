@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.Abst
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.VersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithDatabaseManagers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithLogManagers;
@@ -1233,7 +1233,7 @@ public class Platform implements Serializable {
             * Plugin Asset Reception Transaction
             * -----------------------------
             */
-                Plugin assetReceptionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetDistributionPlugin();
+                Plugin assetReceptionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetReceptionPlugin();
                 injectPluginReferencesAndStart(assetReceptionTransaction, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION);
 
            /*
@@ -1506,9 +1506,9 @@ public class Platform implements Serializable {
 
     }
 
-    private VersionReference newCCPVersionReference(LayerReference layer, FermatPluginsEnum fermatPluginsEnum) {
+    private PluginVersionReference newCCPVersionReference(LayerReference layer, FermatPluginsEnum fermatPluginsEnum) {
 
-        return new VersionReference(
+        return new PluginVersionReference(
                 layer.getPlatformReference().getPlatform(),
                 layer.getLayer(),
                 fermatPluginsEnum,

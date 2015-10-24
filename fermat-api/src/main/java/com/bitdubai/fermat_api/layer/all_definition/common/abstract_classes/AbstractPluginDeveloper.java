@@ -3,8 +3,8 @@ package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterVersionException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPluginDeveloperException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.VersionNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.DeveloperReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.VersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginDeveloperReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,19 +17,19 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractPluginDeveloper {
 
-    private final Map<VersionReference, AbstractPlugin> versions;
+    private final Map<PluginVersionReference, AbstractPlugin> versions;
 
-    private final DeveloperReference developerReference;
+    private final PluginDeveloperReference pluginDeveloperReference;
 
     /**
      * normal constructor with params.
      * assigns a developer to the plugin developer class
      *
-     * @param developerReference a directly built developer reference.
+     * @param pluginDeveloperReference a directly built developer reference.
      */
-    public AbstractPluginDeveloper(final DeveloperReference developerReference) {
+    public AbstractPluginDeveloper(final PluginDeveloperReference pluginDeveloperReference) {
 
-        this.developerReference = developerReference;
+        this.pluginDeveloperReference = pluginDeveloperReference;
 
         this.versions = new ConcurrentHashMap<>();
     }
@@ -44,31 +44,31 @@ public abstract class AbstractPluginDeveloper {
      */
     protected final void registerVersion(final AbstractPlugin abstractPlugin) throws CantRegisterVersionException {
 
-        VersionReference versionReference = abstractPlugin.getVersionReference();
+        PluginVersionReference pluginVersionReference = abstractPlugin.getPluginVersionReference();
 
-        versionReference.setDeveloperReference(this.developerReference);
+        pluginVersionReference.setPluginDeveloperReference(this.pluginDeveloperReference);
 
-        if(versions.containsKey(versionReference))
-            throw new CantRegisterVersionException(versionReference.toString(), "version already exists for this plugin developer.");
+        if(versions.containsKey(pluginVersionReference))
+            throw new CantRegisterVersionException(pluginVersionReference.toString(), "version already exists for this plugin developer.");
 
         versions.put(
-                versionReference,
+                pluginVersionReference,
                 abstractPlugin
         );
 
     }
 
-    public final AbstractPlugin getPluginByVersion(final VersionReference versionReference) throws VersionNotFoundException {
-        if (versions.containsKey(versionReference)) {
-            return versions.get(versionReference);
+    public final AbstractPlugin getPluginByVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException {
+        if (versions.containsKey(pluginVersionReference)) {
+            return versions.get(pluginVersionReference);
         } else {
 
-            throw new VersionNotFoundException(versionReference.toString(), "version not found in the specified plugin developer.");
+            throw new VersionNotFoundException(pluginVersionReference.toString(), "version not found in the specified plugin developer.");
         }
     }
 
-    public final DeveloperReference getDeveloperReference() {
-        return developerReference;
+    public final PluginDeveloperReference getPluginDeveloperReference() {
+        return pluginDeveloperReference;
     }
 
     public abstract void start() throws CantStartPluginDeveloperException;

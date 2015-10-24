@@ -423,15 +423,16 @@ public class BitcoinCryptoVault implements
             Address address = new Address(this.networkParameters, addressTo.getAddress());
 
             // If we don't have enough money, we'll raise the exception
-            //Wallet.SendRequest request = Wallet.SendRequest.to(address, Coin.valueOf(amount));
+            Wallet.SendRequest request = Wallet.SendRequest.to(address, Coin.valueOf(amount));
             PeerGroup peers = (PeerGroup) bitcoinCryptoNetworkManager.getBroadcasters();
-            Wallet.SendResult result = vault.sendCoins(peers, address, Coin.valueOf(amount));
-            //vault.completeTx(request);
-            result.broadcastComplete.get();
+
+            vault.completeTx(request);
+            vault.commitTx(request.tx);
+
             /**
              * I will check that it is not an address that belongs to my wallet
              */
-            Transaction tx = result.tx;
+            Transaction tx = request.tx;
 
             String txHash = tx.getHashAsString();
 
@@ -448,21 +449,10 @@ public class BitcoinCryptoVault implements
             // after we persist the new Transaction, we'll persist it as a Fermat transaction.
             db.persistnewFermatTransaction(fermatTxId.toString());
 
-
             //vault.commitTx(request.tx);
 
-
-
             // well broadcast and wait for the confirmation of the network
-            //TransactionBroadcast transactionBroadcast = peers.broadcastTransaction(request.tx);
-            //ListenableFuture<Transaction> listenableFuture = transactionBroadcast.broadcast();
-
-            /*
-             * the transaction was broadcasted and accepted by the nwetwork
-             * I will persist it to inform it when the confidence level changes
-             */
-            //listenableFuture.get();
-
+            peers.broadcastTransaction(request.tx).broadcast().get();
             vault.saveToFile(vaultFile);
 
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: bitcoin sent!!!", "Address to: " + addressTo.getAddress(), "Amount: " + amount);

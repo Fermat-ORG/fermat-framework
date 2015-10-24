@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractLayer {
 
-    private final Map<AddonReference , AbstractAddon > addons ;
+    private final Map<AddonReference , AbstractAddonSubsystem > addons ;
     private final Map<PluginReference, AbstractPluginSubsystem> plugins;
 
     private final LayerReference layerReference;
@@ -61,7 +61,7 @@ public abstract class AbstractLayer {
 
             addons.put(
                     addonReference,
-                    abstractAddonSubsystem.getAddon()
+                    abstractAddonSubsystem
             );
 
         } catch (final CantStartSubsystemException e) {
@@ -104,7 +104,7 @@ public abstract class AbstractLayer {
         }
     }
 
-    public final AbstractAddon getAddon(AddonReference addonReference) throws AddonNotFoundException {
+    public final AbstractAddonSubsystem getAddon(AddonReference addonReference) throws AddonNotFoundException {
 
         if (addons.containsKey(addonReference)) {
             return addons.get(addonReference);

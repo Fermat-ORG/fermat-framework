@@ -15,28 +15,22 @@ public class AddonReference {
     private static final int HASH_PRIME_NUMBER_ADD = 2819;
 
     private       LayerReference   layerReference;
-
     private final FermatAddonsEnum addon         ;
-    private       Version          version       ;
 
     public AddonReference(final FermatAddonsEnum addon) {
 
         this.addon = addon;
     }
 
-    public AddonReference(final FermatAddonsEnum  addon         ,
-                          final Version           version       ) {
+    public AddonReference(final LayerReference   layerReference,
+                          final FermatAddonsEnum addon         ) {
 
+        this.layerReference = layerReference;
         this.addon          = addon         ;
-        this.version        = version       ;
     }
 
     public final FermatAddonsEnum getAddon() {
         return addon;
-    }
-
-    public final Version getVersion() {
-        return version;
     }
 
     public final LayerReference getLayerReference() {
@@ -54,16 +48,15 @@ public class AddonReference {
         AddonReference compare = (AddonReference) o;
 
         return addon.equals(compare.getAddon()) &&
-                version.equals(compare.getVersion()) &&
-                layerReference.equals(compare.getLayerReference());
+                ((layerReference == null && compare.getLayerReference() == null) || (layerReference != null && layerReference.equals(compare.getLayerReference())));
     }
 
     @Override
     public int hashCode() {
         int c = 0;
         c += addon .hashCode();
-        c += version.hashCode();
-        c += layerReference.hashCode();
+        if (layerReference != null)
+            c += layerReference.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
@@ -72,7 +65,6 @@ public class AddonReference {
         return "AddonReference{" +
                 "layerReference=" + layerReference +
                 ", addon=" + addon +
-                ", version=" + version +
                 '}';
     }
 }

@@ -9,8 +9,13 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -74,16 +79,31 @@ import java.util.UUID;
  * * * 
  */
 
-public class IncomingExtraUserTransactionPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, DealsWithBitcoinWallet, DealsWithErrors, DealsWithEvents, DealsWithIncomingCrypto, DealsWithPluginDatabaseSystem, DealsWithCryptoAddressBook,IncomingExtraUserManager, Plugin, Service {
+public class IncomingExtraUserTransactionPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, DealsWithBitcoinWallet, DealsWithErrors, DealsWithEvents, DealsWithIncomingCrypto, DealsWithPluginDatabaseSystem, DealsWithCryptoAddressBook,IncomingExtraUserManager {
 
     @Override
-    public List<AddonReference> getNeededAddonReferences() {
+    public List<AddonVersionReference> getNeededAddonReferences() {
         return new ArrayList<>();
     }
 
     @Override
-    public List<PluginReference> getNeededPluginReferences() {
+    public List<PluginVersionReference> getNeededPluginReferences() {
         return new ArrayList<>();
+    }
+
+    @Override
+    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    protected void validateAndAssignReferences() {
+
+    }
+
+    @Override
+    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
+        return null;
     }
 
     /*
@@ -368,9 +388,5 @@ public class IncomingExtraUserTransactionPluginRoot extends AbstractPlugin imple
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
 
 }
