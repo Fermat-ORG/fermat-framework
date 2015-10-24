@@ -24,7 +24,7 @@ public interface CashMoneyTransaction{
 
     TransactionType getTransactionType();
 
-    float getAmount();
+    double getAmount();
 
     CashCurrencyType getCashCurrencyType();
 

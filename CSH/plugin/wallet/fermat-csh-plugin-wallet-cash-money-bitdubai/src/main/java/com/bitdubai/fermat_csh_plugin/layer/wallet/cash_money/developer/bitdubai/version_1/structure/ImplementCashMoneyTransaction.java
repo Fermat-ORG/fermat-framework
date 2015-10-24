@@ -1,28 +1,17 @@
 package com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.CashCurrencyType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.CashTransactionStatus;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.interfaces.CashMoneyBalanceRecord;
-import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.database.CashMoneyWalletDao;
-import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetCashMoneyBalance;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.interfaces.CashMoneyTransaction;
 
 import java.util.UUID;
 
 /**
- * Created by francisco on 17/10/15.
+ * Created by francisco on 21/10/15.
  */
-public class implementCashMoneyBalanceRecord implements CashMoneyBalanceRecord {
-
-    PluginDatabaseSystem pluginDatabaseSystem;
-
-    private double amountBalance;
-
-    CashMoneyWalletDao cashMoneyWalletDao = new CashMoneyWalletDao(pluginDatabaseSystem);
-    CashMoney cashMoney = new CashMoney();
-
+public class ImplementCashMoneyTransaction implements CashMoneyTransaction {
     @Override
     public UUID getCashTransactionId() {
         return null;
@@ -30,7 +19,6 @@ public class implementCashMoneyBalanceRecord implements CashMoneyBalanceRecord {
 
     @Override
     public String getPublicKeyActorFrom() {
-
         return null;
     }
 
@@ -56,19 +44,7 @@ public class implementCashMoneyBalanceRecord implements CashMoneyBalanceRecord {
 
     @Override
     public double getAmount() {
-        try {
-            if (cashMoneyWalletDao.getCashMoneyBalance().size() !=0 ){
-                cashMoneyWalletDao.getCashMoneyBalance();
-                amountBalance = Double.parseDouble(cashMoney.getGetAmount());
-            }
-            else  {
-                amountBalance=0;
-            }
-        } catch (CantGetCashMoneyBalance cantGetCashMoneyBalance) {
-            cantGetCashMoneyBalance.printStackTrace();
-        }
-
-        return amountBalance;
+        return 0;
     }
 
     @Override
@@ -83,6 +59,16 @@ public class implementCashMoneyBalanceRecord implements CashMoneyBalanceRecord {
 
     @Override
     public long getTimestamp() {
+        return 0;
+    }
+
+    @Override
+    public long getRunningBookBalance() {
+        return 0;
+    }
+
+    @Override
+    public long getRunningAvailableBalance() {
         return 0;
     }
 

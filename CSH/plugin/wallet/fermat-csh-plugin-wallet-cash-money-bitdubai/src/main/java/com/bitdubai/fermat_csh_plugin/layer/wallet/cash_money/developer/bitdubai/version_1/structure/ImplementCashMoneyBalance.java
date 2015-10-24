@@ -31,7 +31,7 @@ public class ImplementCashMoneyBalance implements CashMoneyBalance{
     UUID idTransaction;
 
     CashMoneyWalletDao cashMoneyWalletDao = new CashMoneyWalletDao(pluginDatabaseSystem);
-    implementCashMoneyBalanceRecord implementCashMoneyBalanceRecord = new implementCashMoneyBalanceRecord();
+    ImplementCashMoneyBalanceRecord implementCashMoneyBalanceRecord = new ImplementCashMoneyBalanceRecord();
     @Override
     public double getBalance() throws CantCalculateBalanceException {
         return 0;
