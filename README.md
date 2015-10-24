@@ -9,7 +9,7 @@ In the last 20 years virtually everything went digital: pictures, music, videos,
 
 The reason is that digital information can be cloned, and if digital cash could be cloned it would render it useless. When bitcoin was invented it brought with it the solution to the last barrier preventing money to be digital: the solution to the double spend problem.
 
-So now we firmly believe that the next decade will witness governments issuing digital currency based on bitcoin technology. We expect paper money is going to disappear within the next 5 to 10 years. Thus a strong consumer demand for digital wallets will inevitably emerge.
+So now we firmly believe that the next decade will witness governments issuing digital currency based on blockchain technology. We expect paper money is going to disappear within the next 5 to 10 years. Thus a strong consumer demand for digital wallets will inevitably emerge.
 
 We believe crypto currencies will expand worldwide while that happens and tons of crypto wallets will be needed for different use cases. Our mission is to make this happen as soon as possible.
 
@@ -87,14 +87,14 @@ Fermat Principles
 ------------------------------------------------
 
 
-##### 1. Fermat should not allow censorship.
+##### 1. Fermat must not allow censorship.
 
 
 * Open Source.
 * P2P architecture.
 
 
-##### 2. Fermat should not allow spying on their user base.
+##### 2. Fermat must not allow spying on their user base.
 
 
 * Point to point encrypted communications.
@@ -102,7 +102,7 @@ Fermat Principles
 * Multi-technology communication layer (cloud, p2p, wifi, bluetooth, nfc, mesh, etc.).
 
 
-##### 3. Fermat should be secure and resistant to all kind of attacks.
+##### 3. Fermat must be secure and resistant to all kind of attacks.
 
 
 * No centralized point to be attacked.
@@ -112,28 +112,28 @@ Fermat Principles
 * Reviews and Reputation concepts.
 
 
-##### 4. Fermat should never loose a user's funds.
+##### 4. Fermat must never loose a user's funds.
 
 
 * Transaction responsability transmission protocols.
 * Remote technical support by wallet and plugins developers.
 
 
-##### 5. Fermat should be usefull to each segment of the world population.
+##### 5. Fermat must be usefull to each segment of the world population.
 
 
 * Niche wallets concept.
 * Branded wallets concept.
 
 
-##### 6. Fermat should be extensible and open to innovation.
+##### 6. Fermat must be extensible and open to innovation.
 
 
 * Plugins architecture.
 * Multi dimensional layer architecture.
 
 
-##### 7. Fermat should be open and inclusive.
+##### 7. Fermat must be open and inclusive.
 
 
 * Any developer could contribute to the shared infraestructure.
@@ -144,7 +144,7 @@ Fermat Principles
 * Anyone could provide language packs to existing wallets.
 
 
-##### 8. Each developer should be compesated by their contribution to Fermat.
+##### 8. Each developer must be compesated by their contribution to Fermat.
 
 
 * Micro license concept.
@@ -156,20 +156,20 @@ Fermat Principles
 * Master plan design comcept, wiht no overlaping functionality but shared ownership.
 
 
-##### 9. Fermat user base should be a shared asset.
+##### 9. Fermat user base must be a shared asset.
 
 
-* Any developer should be able to profit from the growing Fermat user base by writing Plugins this user base could consume via the developers of the wallets they are using.
+* Any developer must be able to profit from the growing Fermat user base by writing Plugins this user base could consume via the developers of the wallets they are using.
 
 
-##### 10. Fermat should be inclusive with crypto currency industry members.
+##### 10. Fermat must be inclusive with crypto currency industry members.
 
 
 * Any bitcoin | crypto | blockchain established startup could write their own plugins and expose their services to both Fermat developers and the Fermat user base.
 * Any alt-coin community could write plugins to enable their crypto currency within the Fermat wallet ecosystem.
 
 
-##### 11. Fermat should be inclusive with the current financial system.
+##### 11. Fermat must be inclusive with the current financial system.
 
 
 * Banks and financial institutions could write plugins to enable Fermat wallets hold funds in banks and other financial institutions.
@@ -177,35 +177,35 @@ Fermat Principles
 * Fermat allows it users to move money both through public value transport networks as crypto currency networks and also thwough private or legacy financial networks.
 
 
-##### 12. Fermat should be unbanked-people friendly.
+##### 12. Fermat must be unbanked-people friendly.
 
 
 * Multiple logins per device (Device user concept)
 * Crypto banking concept.
 
 
-##### 13. Fermat should be OS agnostic.
+##### 13. Fermat must be OS agnostic.
 
 
 * OSA layer concept (Operative System API).
 * OS dependent UI on top of Fermat concept.
 
 
-##### 14. Fermat should learn from its user base.
+##### 14. Fermat must learn from its user base.
 
 
 * Integrated feedback functionality.
 * Voting over feature wish-lists concept.
 
 
-##### 15. Fermat should be the finacially most efficient way to move or spend the end user's money.
+##### 15. Fermat must be the finacially most efficient way to move or spend the end user's money.
 
 
 * Crypto Vault for multiple wallets concept.
 * Financial AI Agents concept.
 
 
-##### 16. Fermat should facilitate the regional distribution and access to crypto currencies.
+##### 16. Fermat must facilitate the regional distribution and access to crypto currencies.
 
 
 * Crypto Distribution Network concept.
