@@ -33,11 +33,10 @@ public enum ConnectionState implements FermatEnum {
             case "DEN": return DENIED_LOCALLY             ;
             case "CAN": return CANCELLED                  ;
             case "CTC": return CONNECTED                  ;
-            case "DIS": return DISCONNECTED_LOCALLY       ;
+            case "DSL": return DISCONNECTED_LOCALLY       ;
             case "DSR": return DISCONNECTED_REMOTELY      ;
             case "PRA": return PENDING_REMOTELY_ACCEPTANCE;
-
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");
+            default:    throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");
         }
     }
 

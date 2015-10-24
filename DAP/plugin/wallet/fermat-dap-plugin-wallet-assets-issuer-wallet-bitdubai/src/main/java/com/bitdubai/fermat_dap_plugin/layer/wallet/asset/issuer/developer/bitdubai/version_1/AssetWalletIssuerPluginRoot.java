@@ -407,7 +407,12 @@ public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, 
                 }
 
                 @Override
-                public long getContactRegistrationDate() {
+                public long getRegistrationDate() {
+                    return 0;
+                }
+
+                @Override
+                public long getLastConnectionDate() {
                     return 0;
                 }
 
