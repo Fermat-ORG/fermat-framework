@@ -82,11 +82,11 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
                 System.out.println("ComponentConnectionRequestPacketProcessor - participant = "+participant.getIdentityPublicKey());
             }
 
-            //Create a new vpn
-            WsCommunicationVPNServer vpnServer = getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().createNewWsCommunicationVPNServer(participantsList, getWsCommunicationCloudServer());
-
             PlatformComponentProfile peer1 = participantsList.get(0);
-            PlatformComponentProfile peer2 = participantsList.get((participantsList.size() -1));
+            PlatformComponentProfile peer2 = participantsList.get((participantsList.size() - 1));
+
+            //Create a new vpn
+            WsCommunicationVPNServer vpnServer = getWsCommunicationCloudServer().getWsCommunicationVpnServerManagerAgent().createNewWsCommunicationVPNServer(participantsList, getWsCommunicationCloudServer(), peer1.getNetworkServiceType());
 
             constructRespondPacketAndSend(vpnServer, peer1, peer2, peer2);
             constructRespondPacketAndSend(vpnServer, peer2, peer1, peer1);
@@ -101,7 +101,7 @@ public class ComponentConnectionRequestPacketProcessor extends FermatPacketProce
         }catch (Exception e){
 
             System.out.println("ComponentConnectionRequestPacketProcessor - requested connection is no possible ");
-            e.printStackTrace();
+           // e.printStackTrace();
 
             /*
              * Get the client connection destination

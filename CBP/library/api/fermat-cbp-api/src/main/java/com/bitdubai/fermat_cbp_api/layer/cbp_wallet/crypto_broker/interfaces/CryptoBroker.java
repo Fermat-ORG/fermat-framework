@@ -10,9 +10,9 @@ import java.util.List;
  */
 public interface CryptoBroker {
 
-    CryptoBrokerBalance getBookBalance(BalanceType balanceType) throws CantTransactionCryptoBrokerException;
+    double getBookBalance() throws CantTransactionCryptoBrokerException;
 
-    CryptoBrokerBalance getAvailableBalance(BalanceType balanceType) throws CantTransactionCryptoBrokerException;
+    double getAvailableBalance() throws CantTransactionCryptoBrokerException;
 
     List<CryptoBrokerTransactionRecord> getTransactions(BalanceType balanceType, int max, int offset)throws CantTransactionCryptoBrokerException;
 

@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.Abst
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.VersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithDatabaseManagers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithLogManagers;
@@ -1506,9 +1506,9 @@ public class Platform implements Serializable {
 
     }
 
-    private VersionReference newCCPVersionReference(LayerReference layer, FermatPluginsEnum fermatPluginsEnum) {
+    private PluginVersionReference newCCPVersionReference(LayerReference layer, FermatPluginsEnum fermatPluginsEnum) {
 
-        return new VersionReference(
+        return new PluginVersionReference(
                 layer.getPlatformReference().getPlatform(),
                 layer.getLayer(),
                 fermatPluginsEnum,

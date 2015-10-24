@@ -125,6 +125,10 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                 throw new CantInitializeExecutorAgentException(e, "", "Problem initializing Crypto Addresses DAO from Executor Agent.");
             }
 
+            toSend.start();
+
+            toReceive.start();
+
             this.status = AgentStatus.STARTED;
 
         } catch (Exception exception) {
@@ -246,6 +250,7 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                     ProtocolState.PROCESSING_RECEIVE
             );
 
+
             for(AddressExchangeRequest cpr : addressExchangeRequestList) {
                 switch(cpr.getAction()) {
 
@@ -289,7 +294,7 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
                     if (wsCommunicationsCloudClientManager != null) {
 
-                        if (cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfile() != null) {
+                        if (cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot() != null) {
 
                             PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(
                                     identityPublicKey,
@@ -304,7 +309,7 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
                             communicationNetworkServiceConnectionManager.connectTo(
                                     applicantParticipant,
-                                    cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfile(),
+                                    cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot(),
                                     remoteParticipant
                             );
 
@@ -327,10 +332,6 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                                 actorPublicKey,
                                 jsonMessage
                         );
-
-                        poolConnectionsWaitingForResponse.remove(actorPublicKey);
-
-                        communicationNetworkServiceConnectionManager.closeConnection(actorPublicKey); // close connection once i send message ?
 
                     } catch (Exception e) {
 

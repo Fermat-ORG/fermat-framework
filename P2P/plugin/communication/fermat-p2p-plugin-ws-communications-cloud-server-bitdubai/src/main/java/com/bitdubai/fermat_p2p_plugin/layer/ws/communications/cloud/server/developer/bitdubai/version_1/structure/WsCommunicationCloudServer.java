@@ -520,4 +520,12 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
     public Map<NetworkServiceType, List<PlatformComponentProfile>> getRegisteredNetworkServicesCache() {
         return registeredNetworkServicesCache;
     }
+
+    /**
+     * Get the PacketProcessorsRegister
+     * @return Map<FermatPacketType, List<FermatPacketProcessor>>
+     */
+    public Map<FermatPacketType, List<FermatPacketProcessor>> getPacketProcessorsRegister() {
+        return packetProcessorsRegister;
+    }
 }

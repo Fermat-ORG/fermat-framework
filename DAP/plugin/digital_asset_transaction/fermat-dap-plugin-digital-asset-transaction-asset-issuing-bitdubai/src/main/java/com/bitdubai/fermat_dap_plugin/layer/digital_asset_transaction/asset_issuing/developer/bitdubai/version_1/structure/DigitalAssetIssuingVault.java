@@ -89,7 +89,7 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
                 "testActorToPublicKey"
         );
         System.out.println("ASSET ISSUING AssetIssuerWalletTransactionRecordWrapper: "+ assetIssuerWalletTransactionRecordWrapper.getDescription());
-        System.out.println("ASSET ISSUING Balance Type: "+ assetIssuerWalletTransactionRecordWrapper.getDescription());
+        System.out.println("ASSET ISSUING Balance Type: "+ balanceType);
         assetIssuerWalletBalance.credit(assetIssuerWalletTransactionRecordWrapper, balanceType);
     }
 

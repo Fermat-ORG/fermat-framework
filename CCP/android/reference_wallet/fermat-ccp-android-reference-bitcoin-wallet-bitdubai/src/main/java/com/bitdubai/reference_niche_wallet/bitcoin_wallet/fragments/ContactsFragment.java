@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -318,6 +319,8 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         View previewTextView = inflater.inflate(R.layout.preview_view, mListView, false);
         mListView.setPreviewView(previewTextView);
 
+
+
         // for configure pinned header view on scroll change
         mListView.setOnScrollListener(mPinnedHeaderAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -326,7 +329,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
                 try {
 
                     PinnedHeaderAdapter adapter = (PinnedHeaderAdapter) adapterView.getAdapter();
-//
+
                     referenceWalletSession.setAccountName(String.valueOf(adapter.getItem(position)));
                     CryptoWalletWalletContact cryptoWalletWalletContact;
 
@@ -352,7 +355,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         mListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getActivity(), mListItems.get(i).toString(), Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(getActivity(), mListItems.get(i).toString(), Toast.LENGTH_SHORT).show();
             }
 
             @Override

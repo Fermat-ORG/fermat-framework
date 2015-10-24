@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces;
 
-import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -16,7 +15,7 @@ public interface ContractBasicInformation {
     /**
      * @return the crypto customer name (or alias)
      */
-    String getCryptoCustomerName();
+    String getCryptoCustomerAlias();
 
     /**
      * @return the contract ID
@@ -24,12 +23,22 @@ public interface ContractBasicInformation {
     UUID getContractId();
 
     /**
-     * @return the date of the last update made to the contract
+     * @return the amount of merchandise the customer want to buy
      */
-    Date getDateOfLastUpdate();
+    float getAmount();
 
     /**
-     * @return String with the merchandise and the amount of it. Ej: 1.1254 BTC
+     * @return the merchandise to buy
      */
-    String getAmountAndMerchandise();
+    String getMerchandise();
+
+    /**
+     * @return the type of payment in a human readable way
+     */
+    String getTypeOfPayment();
+
+    /**
+     * @return the exchange rate the merchandise is going to be sell
+     */
+    String getExchangeRate();
 }

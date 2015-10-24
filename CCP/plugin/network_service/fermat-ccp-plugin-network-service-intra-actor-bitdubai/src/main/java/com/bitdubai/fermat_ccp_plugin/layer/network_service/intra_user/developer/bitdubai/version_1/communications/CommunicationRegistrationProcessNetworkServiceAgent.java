@@ -82,7 +82,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     /*
                      * Configure my new profile
                      */
-                    templateNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
+                    templateNetworkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
 
                     /*
                      * Initialize the connection manager
