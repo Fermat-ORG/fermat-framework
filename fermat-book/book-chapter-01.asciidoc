@@ -1,13 +1,7 @@
 
 == Chapter 1: Fermat Master Plan
 
-As a Master Plan, Fermat has it's own vision of how a collaborative project should be carried out. The main concept is to define a large master plan far into the future, and start building it phase by phase adjusing the target when needed. This approach allows the optimization on the use of available resources as instead of competing between each other they are collaborating to produce the best possible resoult between all of them.
-
-
-
-
-
-
+As a Master Plan, Fermat has it's own vision of how a collaborative project should be carried out. The main concept is to define a large master plan far into the future, and start building it phase by phase adjusting the target when needed. It is designed in this way to absorb the efforts of thousands of contributors over the years into a unified architectural vision.
 
 
 
