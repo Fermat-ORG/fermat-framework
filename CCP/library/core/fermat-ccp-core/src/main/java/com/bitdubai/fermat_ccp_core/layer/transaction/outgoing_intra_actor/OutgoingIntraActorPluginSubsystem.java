@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_ccp_core.layer.transaction.outgoing_intra_actor;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
@@ -18,17 +17,10 @@ public class OutgoingIntraActorPluginSubsystem extends AbstractPluginSubsystem {
     public OutgoingIntraActorPluginSubsystem() {
         super(new PluginReference(CCPPlugins.BITDUBAI_OUTGOING_INTRA_ACTOR_TRANSACTION));
     }
-
     @Override
     public void start() throws CantStartSubsystemException {
-        /**
-         * I will choose from the different Developers available which implementation to use. Right now there is only
-         * one, so it is not difficult to choose.
-         */
-
         try {
-            AbstractPluginDeveloper developerBitDubai = new DeveloperBitDubai();
-            plugin = developerBitDubai.getPlugin();
+            registerDeveloper(new DeveloperBitDubai());
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);

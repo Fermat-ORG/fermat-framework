@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai;
 
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterVersionException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPluginDeveloperException;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.CryptoPaymentRequestNetworkServicePluginRoot;
@@ -14,17 +16,20 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
     public DeveloperBitDubai() {
-
-        /**
-         * I will choose from the different versions of my implementations which one to start. Now there is only one, so
-         * it is easy to choose.
-         */
-
-        super(new CryptoPaymentRequestNetworkServicePluginRoot());
-
+        super(new PluginDeveloperReference(Developers.BITDUBAI));
     }
 
+    @Override
+    public void start() throws CantStartPluginDeveloperException {
+        try {
 
+            this.registerVersion(new CryptoPaymentRequestNetworkServicePluginRoot());
+
+        } catch (CantRegisterVersionException e) {
+
+            throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
+        }
+    }
     @Override
     public int getAmountToPay() {
         return 100;

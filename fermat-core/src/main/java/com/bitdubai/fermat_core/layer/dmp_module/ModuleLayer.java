@@ -5,12 +5,8 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer.dmp_module.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.dmp_module.ModuleSubsystem;
-import com.bitdubai.fermat_core.layer.dmp_module.intra_user.IntraUserSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_module.notification.NotificationSubSystem;
-//import WalletFactorySubsystem;
-//import WalletPublisherSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_module.wallet_runtime.WalletRuntimeSubsystem;
-//import WalletStoreSubsystem;
 
 /**
  * Created by ciencias on 03.01.15.
@@ -19,17 +15,12 @@ import com.bitdubai.fermat_core.layer.dmp_module.wallet_runtime.WalletRuntimeSub
  */
 public class ModuleLayer implements PlatformLayer {
 
-    Plugin mIntraUser;
-
-
     Plugin mWalletRuntime;
 
     Plugin mNotification;
 
     @Override
     public void start() throws CantStartLayerException {
-
-        mIntraUser = getPlugin(new IntraUserSubsystem());
 
         mWalletRuntime = getPlugin(new WalletRuntimeSubsystem());
 
@@ -44,10 +35,6 @@ public class ModuleLayer implements PlatformLayer {
         } catch (CantStartSubsystemException e) {
             throw new CantStartLayerException();
         }
-    }
-
-    public Plugin getIntraUser() {
-        return mIntraUser;
     }
 
     public Plugin getWalletRuntime() {

@@ -12,6 +12,7 @@ import java.util.UUID;
  * Created by Yordin Alayn on 19.10.15.
  */
 public class CryptoBrokerWalletImpl implements CryptoBrokerTransactionRecord {
+    //CAMBIAR ESTOS NUMEROS PRIIMOS POR OTRS DE LA LISTA
     private static final int HASH_PRIME_NUMBER_PRODUCT = 7681;
     private static final int HASH_PRIME_NUMBER_ADD = 3581;
 

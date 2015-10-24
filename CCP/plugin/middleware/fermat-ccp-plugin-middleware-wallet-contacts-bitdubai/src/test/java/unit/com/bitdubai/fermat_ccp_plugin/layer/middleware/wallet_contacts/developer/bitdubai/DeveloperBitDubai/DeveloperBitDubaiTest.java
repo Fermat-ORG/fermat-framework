@@ -27,7 +27,7 @@ public class DeveloperBitDubaiTest  {
     @Test
     public void constructorTest (){
         DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-        Assert.assertNotNull(developerBitDubai.getPlugin());
+        Assert.assertNotNull(developerBitDubai.getFirstPluginVersion());
     }
 
     @Test
@@ -44,7 +44,7 @@ public class DeveloperBitDubaiTest  {
 
     @Test
     public void getPluging() {
-        assertThat(developTest.getPlugin()).isInstanceOf(WalletContactsMiddlewarePluginRoot.class);
+        assertThat(developTest.getFirstPluginVersion()).isInstanceOf(WalletContactsMiddlewarePluginRoot.class);
     }
 }
 
