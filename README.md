@@ -19,19 +19,21 @@ Fermat is a master plan to avoid getting to that future through waiting for inde
 
 We believe the open source community collectively has more talent than any of us individually. We believe it is important to build on top of services that others took time and effort to build. We believe in decentralization.
 
-We believe in people with passion who are crazy enough to think they can change the world. We do believe we are going to change this world.
+We believe in people with passion who are crazy enough to think they can change the world. We do believe we are going to change this world with a lot of hard work and not stopping until we reach our goal.
 
 <br>
-How will we do it?
+The challenge
 ---------------------
 
-With a lot of hard work and not stopping until we reach our goal. Also finding the answers to the following questions:
+ While designing Fermat we tried to find the answer to the following questions. :
 
-* How can we isolate ordinary people from the perceived complexity?
+* How can we isolate ordinary people from the perceived complexity of crypto currencies?
 * How can we use the collective intelligence of the developer community?
 * How can we reuse the entire current infrastructure already in place?
 * How do we integrate legacy financial institutions in a way they feel comfortable?
 * How do we integrate merchants, retailers and brands of all sizes in a clever way?
+* How can we allow people to create digital wallets without programming anything at all?
+
 
 The answers to each of these questions are addressed within Fermat.
 
