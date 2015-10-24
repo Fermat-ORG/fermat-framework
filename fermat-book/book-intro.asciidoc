@@ -13,11 +13,11 @@ The goal is the allow any company big or small, brand or institution to have the
 
 === Fermat Community
 
-Fermat is an Open Source project and there is an active community of developers, designers and academics contributing to it. The project's mantainer is bitDubai, a joint venture of some of them.
+Fermat is an Open Source project and there is an active community of developers, designers and academics contributing to it. The project's maintainer community is bitDubai, a joint venture of some of them.
 
-The project started on August 2014 and the early first version of its core was written from January to May 2015 by a handfull of people. From there many more developers joined in. 
+The project started on August 2014 and the early first version of its core was written from January to May 2015 by a handful of people. From there many more developers joined in.
 
-Today Fermat is a vibrant community spanning several countries and diciplines.
+Today Fermat is a vibrant community spanning several countries and disciplines.
 
 === The Vision
 
