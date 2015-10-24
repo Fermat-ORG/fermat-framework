@@ -18,7 +18,7 @@ public class IsValidContractTest {
     public IsValidContractTest(){
 
         datePropertySetAsActual=new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE.toString(), null);
-        Date date= new java.util.Date();
+        Date date= new Date();
         datePropertySetAsActual.setValue(new Timestamp(date.getTime()));
         System.out.println("Present time: " + datePropertySetAsActual.getValue());
     }
@@ -34,7 +34,7 @@ public class IsValidContractTest {
     @Test
     public void afterTest(){
         Timestamp expirationDate= (Timestamp)datePropertySetAsActual.getValue();
-        Date date= new java.util.Date();
+        Date date= new Date();
         Timestamp actualTime=new Timestamp(date.getTime());
         System.out.println("Before Test - Timestamp from ContractProperty: " + expirationDate);
         System.out.println("Before Test - Timestamp from ActualTime: " + actualTime);
