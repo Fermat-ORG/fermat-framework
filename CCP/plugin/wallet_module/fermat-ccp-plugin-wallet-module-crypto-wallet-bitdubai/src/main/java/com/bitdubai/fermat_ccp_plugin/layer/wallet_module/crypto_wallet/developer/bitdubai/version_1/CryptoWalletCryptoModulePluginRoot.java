@@ -25,6 +25,8 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.DealsWithCryptoTransmissionNetworkService;
 
@@ -57,7 +59,7 @@ import java.util.regex.Pattern;
 /**
  * Created by loui on 27/05/15.a
  */
-public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implements DealsWithCryptoTransmissionNetworkService,CryptoWalletManager,DealsWithCCPIntraWalletUser, DealsWithBitcoinWallet, DealsWithCryptoVault, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithExtraUsers,DealsWithOutgoingExtraUser, DealsWithOutgoingIntraActor,DealsWithWalletContacts, DealsWithCryptoAddressBook,DealsWithCryptoPayment, Plugin, Service {
+public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implements DealsWithCryptoTransmissionNetworkService,DealsWithCryptoAddressesNetworkService,CryptoWalletManager,DealsWithCCPIntraWalletUser, DealsWithBitcoinWallet, DealsWithCryptoVault, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithExtraUsers,DealsWithOutgoingExtraUser, DealsWithOutgoingIntraActor,DealsWithWalletContacts, DealsWithCryptoAddressBook,DealsWithCryptoPayment, Plugin, Service {
 
     @Override
     public List<AddonVersionReference> getNeededAddonReferences() {
@@ -135,6 +137,11 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
 
 
     /**
+     * DealsWithCryptoAddressesNetworkService Interface member variables
+     */
+    private CryptoAddressesManager cryptoAddressesNSManager;
+
+    /**
      * DealsWithCCPIntraWalletUser Interface member variables.
      */
 
@@ -199,6 +206,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
 //            walletModuleCryptoWallet.setActorIntraUserManager(this.intraUserManager);
             walletModuleCryptoWallet.setCryptoPaymentManager(this.cryptoPaymentManager);
             walletModuleCryptoWallet.setOutgoingIntraActorManager(this.outgoingIntraActorManager);
+            walletModuleCryptoWallet.setCryptoAddressesManager(this.cryptoAddressesNSManager);
             walletModuleCryptoWallet.initialize();
 
             logManager.log(CryptoWalletCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation finished successfully.", null, null);
@@ -325,6 +333,11 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
     @Override
     public void setOutgoingIntraActorManager(OutgoingIntraActorManager outgoingIntraActorManager) {
         this.outgoingIntraActorManager = outgoingIntraActorManager;
+    }
+
+    @Override
+    public void setCryptoAddressesManager(CryptoAddressesManager cryptoAddressesNetworkServiceManager) {
+        this.cryptoAddressesNSManager = cryptoAddressesNetworkServiceManager;
     }
 
 //    @Override

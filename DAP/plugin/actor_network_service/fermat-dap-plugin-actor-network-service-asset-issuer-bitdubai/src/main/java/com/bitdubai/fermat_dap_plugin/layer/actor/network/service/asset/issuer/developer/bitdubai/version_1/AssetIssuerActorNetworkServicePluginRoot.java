@@ -738,7 +738,7 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
     }
 
     @Override
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
 
