@@ -783,7 +783,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractPlugin
         return extraData;
     }
 
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
 

@@ -26,7 +26,7 @@ public interface NetworkService {
      * Get the PlatformComponentProfile for this network service
      * @return PlatformComponentProfile
      */
-    public PlatformComponentProfile getPlatformComponentProfile();
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot();
 
     /**
      * Get the PlatformComponentType for this network service
@@ -110,5 +110,6 @@ public interface NetworkService {
      * @param applicantComponentProfile
      */
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile);
+
 
 }

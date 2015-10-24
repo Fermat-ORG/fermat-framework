@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.IncomingMessageDao;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
@@ -54,17 +56,17 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
     /**
      * Holds all references to the communication network service remote agents
      */
-    private Map<String, com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceRemoteAgent> communicationNetworkServiceRemoteAgentsCache;
+    private Map<String,CommunicationNetworkServiceRemoteAgent> communicationNetworkServiceRemoteAgentsCache;
 
     /**
      * Represent the incomingMessageDao
      */
-    private com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.IncomingMessageDao incomingMessageDao;
+    private IncomingMessageDao incomingMessageDao;
 
     /**
      * Represent the outgoingMessageDao
      */
-    private com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.OutgoingMessageDao outgoingMessageDao;
+    private OutgoingMessageDao outgoingMessageDao;
 
     /**
      * Represent the identity
@@ -85,8 +87,8 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
         this.communicationsClientConnection = communicationsClientConnection;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
-        this.incomingMessageDao = new com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.IncomingMessageDao(dataBase);
-        this.outgoingMessageDao = new com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.OutgoingMessageDao(dataBase);
+        this.incomingMessageDao = new IncomingMessageDao(dataBase);
+        this.outgoingMessageDao = new OutgoingMessageDao(dataBase);
         this.communicationNetworkServiceLocalsCache = new HashMap<>();
         this.communicationNetworkServiceRemoteAgentsCache = new HashMap<>();
     }
@@ -127,14 +129,17 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
     }
 
+
+    //TODO: COPIAR ESTO A TODOS LOS OTROS NETWORK SERVICES;  XXOO. te quiero robert xD
+
     /**
      * (non-javadoc)
      * @see NetworkServiceConnectionManager#closeConnection(String)
      */
     @Override
     public void closeConnection(String remoteNetworkServicePublicKey) {
-
         //Remove the instance and stop his threads
+        if(communicationNetworkServiceLocalsCache.containsKey(remoteNetworkServicePublicKey))
         communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
 
     }
@@ -176,7 +181,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
                  /*
                  * Instantiate the local reference
                  */
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao);
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao,platformComponentProfile.getNetworkServiceType());
 
                 /*
                  * Instantiate the remote reference

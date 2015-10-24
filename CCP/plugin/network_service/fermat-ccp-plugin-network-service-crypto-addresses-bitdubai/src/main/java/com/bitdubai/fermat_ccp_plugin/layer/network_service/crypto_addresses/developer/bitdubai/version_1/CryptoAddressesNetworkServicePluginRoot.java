@@ -662,7 +662,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
         return extraData;
     }
 
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
 
