@@ -61,7 +61,9 @@ Learning about Fermat is very easy. It's just a matter of continuing reading thi
 === Continue Reading
 
 link:book-chapter-01.asciidoc[Chapter 1]
+
 link:book-appendix-01-principles.asciidoc[Appendix: Fermat Principles in Detail]
+
 link:book-appendix-02-history.asciidoc[Appendix: Fermat History in Detail]
 
 
