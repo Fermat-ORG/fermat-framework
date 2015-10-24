@@ -2,7 +2,7 @@
 == Appendix 02: Fermat's History
 
 
-=== The story
+=== The Story
 
 
 Pythagoras had to pay his first student to convince him to study with him. He gave him three oboli (about a penny) per lesson until one day he said there was no more money. The student replied that he preferred to pay, provided that they continued with the lessons. The rumor ran through the Greek islands and so the Pythagorean School, also known as the Secret Brotherhood, a philosophical / religious monastic order counting 300 members, was formed. By then counting and calculating had been widely practiced by the Babylonians and Egyptians but the Pythagoreans went far beyond that. “All is Number” was their motto attesting to their conviction that numbers were the key to life itself. Pythagoras strongly believed that relationships between numbers could reveal, through logical demonstration, all the secrets of the universe, hence he started producing his theorems. The Brotherhood walked briskly with his theorems but did nothing to share the secrets of the universe arousing the ire of the people who one day set the school on fire.
@@ -16,7 +16,7 @@ Euclid was put in charge of the math section and by inventing the “reductio ad
 Though the Pythagoreans had discovered irrational numbers (pi, or the square root of two) such was their fear of the “unutterable” numbers that their study was immediately forbidden and the disciple who came up with the concept of the “square root of two” was executed. Euclid announced to everyone that Pythagoras was abominable and advocated that irrational numbers would open a new door for mathematics and as such encouraged them to think about them without fear.
 
 
-=== The first peer to peer network
+=== The First Peer to Peer Network
 
 
 Julius Caesar’s attack on Alexandria marked the demise of the Royal Library as it was burnt down in a devastating fire and the invaluable collection of scrolls was reduced to ashes. In an attempt to win Cleopatra’s heart Mark Antony bought the entire Library of Pergamos, which had been second only to the Great Library of Alexandria, and presented the 200,000 volumes to Cleopatra. By having done so, Alexandria continued to boast the greatest library in the world until its eradication by Islamic troops entering the city in the 7th century under the leadership of Caliph Omar. The Caliph ordered the destruction of all books on account of either opposing the Koran, which was considered to be heresy or for being superfluous. For years the water of the public baths of Alexandria was heated using those books to feed the fire. Mathematicians learned their lesson: in order not to disappear the Brotherhood expanded to everywhere without having a center but its members continued keeping in close contact with each other. This marked the beginning of the mathematical tradition of sharing every doubt, every finding and every gossip with the near and distant colleagues (they tell feedback). Should we call it the first and oldest peer to peer network?
@@ -28,7 +28,7 @@ One day he took the famous theorem of Pythagoras (the square of the hypotenuse e
 “It is impossible for a cube to be the sum of two cubes, a fourth power to be the sum of two fourth powers, or in general for any number that is a power greater than the second to be the sum of two like powers. I have discovered a truly marvelous demonstration of this proposition that this margin is too narrow to contain.” he scribbled in the margin of his copy of the ancient Greek text Arithmetica by Diophantus thereby creating one of the most notable puzzles in mathematics driving many mathematicians to insanity until proven three hundred and fifty years later.
 
 
-=== The prize
+=== The Prize
 
 
 In the first two hundred and fifty years it was a puzzle merely for young mathematicians who immediately abandoned it as soon as they had arrived to the conclusion, previously drawn by Gauss, that solving this puzzle would not contribute to the progress of mathematics. It was toward the end of the nineteenth century that a German amateur mathematician Paul Wolfskehl struck by love sickness was on the verge of committing suicide.
@@ -38,7 +38,7 @@ While waiting for the stroke of midnight to shoot himself in the head he passed 
 The young Wolfskehl turned out to have more talent for business than for pure numbers and over the years he had become a millionaire, however, he never forgot that night. In order to repay the debt he rewrote his will bequeathing 100,000 Marks to the first person who could solve the puzzle. Following his death in 1906 the Wolfskehl Prize was announced fueling public desire to prove Fermat’s Last Theorem, which greatly contributed to the progress of number theory.
 
 
-=== The solution
+=== The Solution
 
 
 A mountain of failed attempts to win the prize had been accumulating in the basement of the University of Göttingen, 621 proofs, all flawed had been sent just within the first year of Wolfskehl’s death. By 1993 no serious mathematician would engage in trying to solve the longstanding riddle of Fermat’s Last Theorem, only fans, mostly inmates and lunatics, persisted.
@@ -64,7 +64,7 @@ It was in Dubai, where I was setting up my company, that I first learned about b
 It was in 2008 that crypto-currencies were first introduced, however, while the CD player and the digital camera have already conquered the world by enabling the wide-spread use of the inventions which called them to life, the technology equivalent to these designed to facilitate the mass conversion of users of paper money to users of digital money is yet to be created. Creation of such a technology is the new problem to solve.  The problem is as complex as it can be, as 6 years have passed and some hundreds of millions of dollars of venture capital has been poured into start-ups working in this space since the solution for the double spending problem was found.
 We suspect the solution involves finding the islands not yet discovered and building bridges to connect them both with each other and with the entire current archipelago.
 
-=== Divine sign
+=== Divine Sign
 
 I delved into studying the problem with newfound enthusiasm, however, my commitments at Nomad Inception prevented me from devoting all my attention to finding the solution until a business meeting changed my life forever.
 
