@@ -25,13 +25,17 @@ The Fermat Community believe that the next decade will witness *crypto currencie
 
 The Fermat Community is contributing to that future with a System to build and run any kind of digital wallets easily by any developer or even non-developers.
 
-=== Fermat's Mission 
+=== Fermat's Purpose
 
 The ultimate mission of the Fermat Project is:
 
 * To get cryptocurrencies mass adopted as soon as possible, and by doing this, to empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way. 
 
-* To give back the souveraignity over each one's own ressources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.
+* To give back the sovereignty over each one's own resources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.
+
+=== Fermat's Mission
+
+To build the best possible integrated system able to handle the finances not only of the human world population but also of companies and machines in the context of the IoT.
 
 === The challenge
 
