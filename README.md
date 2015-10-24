@@ -248,5 +248,5 @@ I want to join the team!
 ------------------------------------------------
 
 Awesome! _There are lots of ways you can help._ First read
-[CONTRIBUTING.md](https://github.com/bitDubai/fermat/CONTRIBUTING.md),
-then learn how to [pull the repo and hack on Fermat](https://github.com/bitDubai/fermat/fermat-documentation/How-to-Hack-on-Fermat).
+[CONTRIBUTING.md](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md),
+then learn how to pull the repo and hack on Fermat.
