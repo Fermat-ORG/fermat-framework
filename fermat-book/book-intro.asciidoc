@@ -17,15 +17,17 @@ Fermat is an Open Source project and there is an active community of developers,
 
 The project started on August 2014 and the early first version of its core was written from January to May 2015 by a handfull of people. From there many more developers joined in. 
 
+Today Fermat is a vibrant community spanning several countries and diciplines.
+
 === The Vision
 
 The Fermat Community believe that the next decade will witness *crypto currencies* going mainstream and governments issuing digital currency as well. They expect *paper money* is going to _disappear_ within the next 5 to 10 years. Thus a strong consumer demand for *digital wallets* will inevitably emerge. In order to meet this demand thousands of diferent wallets should be available, different not only in terms of the level of abstraction they apply (some of them showing crypto currencies while others digital fiat over crypto or even digital assets) but also with respect to their appearance and how they feel to the user, as well as differencies in their functionalities.
 
-The Fermat Community will contribute to that future with a System to build and run any kind of digital wallets easily by any developer or even non-developers in the world.
+The Fermat Community is contributing to that future with a System to build and run any kind of digital wallets easily by any developer or even non-developers.
 
 === Fermat's Mission 
 
-The ultimate mission of the Fermat Community is this:
+The ultimate mission of the Fermat Project is:
 
 * To get cryptocurrencies mass adopted as soon as possible, and by doing this, to empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way. 
 
