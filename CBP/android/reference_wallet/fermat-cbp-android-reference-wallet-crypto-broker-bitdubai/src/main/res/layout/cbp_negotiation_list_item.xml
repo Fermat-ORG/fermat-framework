@@ -6,10 +6,10 @@
     android:layout_height="60dp"
     android:layout_marginBottom="8dp"
     android:layout_marginTop="8dp"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingStart="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingEnd="@dimen/activity_horizontal_margin">
+    android:paddingStart="@dimen/activity_horizontal_margin">
 
     <ImageView
         android:id="@+id/cbw_customer_image"
@@ -57,9 +57,9 @@
         android:layout_marginRight="8dp"
         android:layout_toEndOf="@+id/buyText"
         android:layout_toRightOf="@+id/buyText"
+        android:inputType="numberDecimal"
         android:singleLine="true"
         android:textColor="@color/black"
-        android:inputType="numberDecimal"
         android:textSize="@dimen/second_line_text_size"
         tools:text="400"/>
 
@@ -129,6 +129,18 @@
             android:text="@string/at"
             android:textColor="@color/black"
             android:textSize="@dimen/third_line_text_size"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbw_exchange_rate_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_text_bottom_right"
+            android:layout_marginRight="@dimen/margin_text_bottom_right"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/third_line_text_size"
+            tools:text="0.2"
+            />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/cbw_payment_currency"

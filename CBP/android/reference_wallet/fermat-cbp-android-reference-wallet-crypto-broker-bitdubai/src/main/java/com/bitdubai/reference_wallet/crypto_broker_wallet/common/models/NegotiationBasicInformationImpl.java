@@ -16,6 +16,7 @@ import java.util.UUID;
  * @since 5/27/2015
  */
 public class NegotiationBasicInformationImpl implements NegotiationBasicInformation {
+    private static Random random = new Random(321515131);
 
     private String customerAlias;
     private byte[] imageBytes;
@@ -33,8 +34,7 @@ public class NegotiationBasicInformationImpl implements NegotiationBasicInformat
         this.typeOfPayment = typeOfPayment;
         this.paymentCurrency = paymentCurrency;
 
-        Random random = new Random(321515131);
-        amount = random.nextFloat();
+        amount = random.nextFloat() * 100;
         exchangeRateAmount = random.nextFloat();
 
         imageBytes = new byte[0];
