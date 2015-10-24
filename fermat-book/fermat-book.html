@@ -1676,53 +1676,107 @@ To interact with third parties, another "credential" is used to represent the <s
 </div>
 <div class="sect2">
 <h3 id="__em_world_layer_em">7.5. <em>World layer</em></h3>
-
+<div class="paragraph">
+<p>In this layer the components consult certain specific information from the world "outside"of FERMAT, usually checking indexes on webpages, or gathering any kind of information offered in the web, to make this available to FERMATs plugins to consume the collected data.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="__em_wallet_layer_em">7.6. <em>Wallet layer</em></h3>
-
+<div class="paragraph">
+<p><strong>Wallets</strong> are essentially programs that manage money, in this case, money whose value is stored in a <strong>blockchain ledger</strong>.<br>
+<strong>Wallets</strong> in FERMAT require several services provided by different plugins in different <em>layers</em>, and there are plugins related to the <strong>storage of value</strong> (those belonging to the <em>Block Chain Superlayer</em>, the <strong>vaults</strong>) and others that do the registration of the <strong>transaction information (metadata)</strong> and the necesary functions to display the result in the way required by the <strong>wallet</strong>.<br>
+The modules in this layer do all the <strong>accountancy operations</strong> related to the wallets.</p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="__em_request_layer_em">7.7. <em>Request layer</em></h3>
-
+<h3 id="__em_transaction_layers_em">7.7. <em>Transaction layers</em></h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Transaction </dt>
+<dd>
+<p>any operation that includes <strong>money</strong>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>A transaction is dependent on the <em>atomicity</em> of the changes of status in the operations involved, so each <em>transaction plugin</em> should aknowledge wether the operation was succesfully ACCEPTED or at the contrary, it was REFUSED.
+Each plugin deals with a certain <em>transaction type</em> defined by different criteria, mostly of the time, according to the <strong>actors</strong> involved and the <strong>direction</strong> (incoming / outgoing).<br>
+In FERMAT the <strong>transport of value</strong> goes on a parallel path to the <strong>transport of information (metadata)</strong> of the transaction, so both transports are managed by the <em>transaction plugins</em>.</p>
+</div>
+<div class="sect3">
+<h4 id="__em_digital_money_transaction_layer_em">7.7.1. <em>Digital Money Transaction layer</em></h4>
+<div class="paragraph">
+<p>This type of transaction layer deals with <strong>digital money transaction</strong></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__em_cash_money_transaction_layer_em">7.7.2. <em>Cash Money Transaction layer</em></h4>
+<div class="paragraph">
+<p>This type of transaction layer deals with <strong>cash money transaction</strong></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__em_money_transaction_layer_em">7.7.3. <em>Money Transaction layer</em></h4>
+<div class="paragraph">
+<p>This type of transaction layer deals with <strong>digital money transaction</strong></p>
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="__em_middleware_layer_em">7.8. <em>Middleware layer</em></h3>
-
+<h3 id="__em_business_transaction_layers_em">7.8. <em>Business Transaction layers</em></h3>
+<div class="paragraph">
+<p>More complex plugins that deal with multiple transactions that occur at the same time to reflect a desired <strong>business transaction</strong></p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="actorLayer">7.9. <em>Actor layer</em></h3>
+<h3 id="__em_request_layer_em">7.9. <em>Request layer</em></h3>
+<div class="paragraph">
+<p>Plugins in this layer gather the differents <em>requests</em> than have been triggered in the system and deliver them to the appropiated plugin to manage and fullfill the request.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__em_middleware_layer_em">7.10. <em>Middleware layer</em></h3>
+<div class="paragraph">
+<p>Every plugin that cover any other functionality required and that is not included in the other layers.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="actorLayer">7.11. <em>Actor layer</em></h3>
 <div class="paragraph">
 <p>This is the layer where the different <strong>actor identities</strong> are held to be presented to third party <strong>actors</strong> interacting with a specific <strong>user</strong> who is "playing a specific role" within FERMAT. For example, an user "John Smith", who has his <strong>identity</strong> within Fermat, decides to <em>act</em> as <strong>crypto broker</strong>, so he opens a <strong>crypto broker wallet</strong> in the <em>Cryto Borker Platform</em>, he defines his alias to operate with it, and therefore this becomes the name of his <strong>actor identity</strong> as <strong>cryptobroker</strong>, so he does not need to reveal his <strong>user</strong> identity to run his business as cryptobroker.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_agent_layer_em">7.10. <em>Agent layer</em></h3>
-
+<h3 id="__em_agent_layer_em">7.12. <em>Agent layer</em></h3>
+<div class="paragraph">
+<p>High level plugins (near to the <strong>end user</strong>) that by means of a certain kind of <em>Artificial Intelligence (AI)</em> can take decisions on the <strong>user&#8217;s</strong> behalf, to simplify the management of wallets  with high abstraction levels. For example, when the user wants to make a payment, an agent could choose where to withdraw the fund from to be more profitable financially to the user.</p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="__em_desktop_module_layer_em">7.11. <em>Desktop Module layer</em></h3>
+<h3 id="__em_modules_layers_em">7.13. <em>Modules layers</em></h3>
+<div class="paragraph">
+<p><strong>Modules</strong> plugins in this layers act as a "general manager" of all the functionalities that a <strong>desktop</strong> needs to consume from FERMAT, delivering to it what is required in a transparent way (without the desktop program actually managing anything inside FERMAT, but querying the <em>desktop module</em> to get what it needs).</p>
+</div>
+<div class="sect3">
+<h4 id="__em_desktop_module_layer_em">7.13.1. <em>Desktop Module layer</em></h4>
 <div class="dlist">
 <dl>
 <dt class="hdlist1"><strong>Desktop</strong> </dt>
 <dd>
-<p>is an sub-application (sub-program) that concentrate functionalities provided by several other sub-applications to present them in a _graphic user interface (GUI) _ to interact with the user. ( see <a href="#desktopLayer"><strong><em>Desktop layer</em></strong></a> )<br></p>
+<p>is an sub-application (sub-program) that concentrate functionalities provided by several other sub-applications to present them in a <em>graphic user interface (GUI)</em> to interact with the user. ( see <a href="#desktopLayer"><strong><em>Desktop layer</em></strong></a> )<br></p>
 </dd>
 </dl>
 </div>
-<div class="paragraph">
-<p>Plugins in this layer act as a "general manager" of all the functionalities that a <strong>desktop</strong> needs to consume from FERMAT, delivering to it what is required in a transparent way (without the desktop program actually managing anything inside FERMAT, but querying the <em>desktop module</em> to get what it needs).</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="__em_sub_app_module_layer_em">7.12. <em>Sub App Module layer</em></h3>
+<div class="sect3">
+<h4 id="__em_sub_app_module_layer_em">7.13.2. <em>Sub App Module layer</em></h4>
 <div class="paragraph">
 <p>Similar to the <em>Desktop Module layer</em> but applied to the <em>Sub Applications</em> that run <strong>below</strong> <em>desktops</em>.<br>
 These <em>sub app</em> do <strong>NOT</strong> manage money.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="__em_wallet_module_layer_em">7.13. <em>Wallet Module layer</em></h3>
+<div class="sect3">
+<h4 id="__em_wallet_module_layer_em">7.13.3. <em>Wallet Module layer</em></h4>
 <div class="paragraph">
 <p>Similar to the <em>Sub App  Module layer</em> but applied to <em>Wallets</em>, i.e. "sub apps" that <strong>DO</strong> manage money.<br></p>
 </div>
@@ -1738,6 +1792,7 @@ The next layers are NOT <strong>code portable</strong>, i.e. they depend on the 
 </td>
 </tr>
 </table>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -2475,7 +2530,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect3">
-<h4 id="__em_cash_money_transaction_layer_em">16.1.2. <em>Cash Money Transaction layer</em></h4>
+<h4 id="__em_cash_money_transaction_layer_em_2">16.1.2. <em>Cash Money Transaction layer</em></h4>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Give Cash On Hand </dt>
@@ -2826,16 +2881,7 @@ Key functionalities are:</p>
 <h2 id="DigitalAssets">19. FERMAT Digital Asset Platform. Blockchain beyond currency</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_what_is_a_digital_asset_2">19.1. What is a Digital Asset ?</h3>
-
-</div>
-<div class="sect2">
-<h3 id="__em_network_service_layer_em_6">19.2. <em>Network Service layer</em></h3>
-<div class="paragraph">
-<p>Each time that a certain system function must perform any operation <strong>outside</strong> the device where FERMAT is running, a <em>network service</em> is required to follow the execution in other devices until is completed.<br>
-Network services' modules need to have a * communication channel* stablished and maintained between the parties involved, what is done by the <strong>P2P networks and communication superlayer</strong> ( see the explanation at the previous section <a href="#communicationLayer"><em>Communication Layer</em></a> )+
-Each <strong>network service module</strong> running on a <em>local device</em> stablish communication EXCLUSIVELY to its <em>counterpart</em> running in the <em>remote device</em>.<br></p>
-</div>
+<h3 id="__em_network_service_layer_em_6">19.1. <em>Network Service layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Asset Transmission </dt>
@@ -2846,7 +2892,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_actor_network_service_layer_em_5">19.3. <em>Actor Network Service layer</em></h3>
+<h3 id="__em_actor_network_service_layer_em_5">19.2. <em>Actor Network Service layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Asset Issuer </dt>
@@ -2859,7 +2905,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_identity_layer_em_5">19.4. <em>Identity layer</em></h3>
+<h3 id="__em_identity_layer_em_5">19.3. <em>Identity layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Asset Issuer </dt>
@@ -2872,7 +2918,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_wallet_layer_em_8">19.5. <em>Wallet layer</em></h3>
+<h3 id="__em_wallet_layer_em_8">19.4. <em>Wallet layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Asset Issuer Wallet </dt>
@@ -2885,7 +2931,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_digital_asset_transaction_em">19.6. <em>Digital Asset Transaction</em></h3>
+<h3 id="__em_digital_asset_transaction_em">19.5. <em>Digital Asset Transaction</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Asset Distribution </dt>
@@ -2903,7 +2949,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_middleware_layer_em_5">19.7. <em>Middleware layer</em></h3>
+<h3 id="__em_middleware_layer_em_5">19.6. <em>Middleware layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Asset Factory </dt>
@@ -2914,7 +2960,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_actor_layer_em_4">19.8. <em>Actor layer</em></h3>
+<h3 id="__em_actor_layer_em_4">19.7. <em>Actor layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Asset Issuer </dt>
@@ -2927,7 +2973,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_desktop_module_layer_em_4">19.9. <em>Desktop Module layer</em></h3>
+<h3 id="__em_desktop_module_layer_em_4">19.8. <em>Desktop Module layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Sub App Manager </dt>
@@ -2939,7 +2985,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_sub_app_module_layer_em_2">19.10. <em>Sub App Module layer</em></h3>
+<h3 id="__em_sub_app_module_layer_em_2">19.9. <em>Sub App Module layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Asset Factory </dt>
@@ -2955,7 +3001,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_wallet_module_layer_em_5">19.11. <em>Wallet Module layer</em></h3>
+<h3 id="__em_wallet_module_layer_em_5">19.10. <em>Wallet Module layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Asset Issuer </dt>
@@ -2968,7 +3014,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_desktop_layer_em_3">19.12. <em>Desktop layer</em></h3>
+<h3 id="__em_desktop_layer_em_3">19.11. <em>Desktop layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Sub App Manager </dt>
@@ -2980,7 +3026,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_sub_app_layer_em_2">19.13. <em>Sub App layer</em></h3>
+<h3 id="__em_sub_app_layer_em_2">19.12. <em>Sub App layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Asset Factory </dt>
@@ -2996,7 +3042,7 @@ Each <strong>network service module</strong> running on a <em>local device</em> 
 </div>
 </div>
 <div class="sect2">
-<h3 id="__em_reference_wallet_layer_em_5">19.14. <em>Reference Wallet layer</em></h3>
+<h3 id="__em_reference_wallet_layer_em_5">19.13. <em>Reference Wallet layer</em></h3>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Asset Issuer </dt>
