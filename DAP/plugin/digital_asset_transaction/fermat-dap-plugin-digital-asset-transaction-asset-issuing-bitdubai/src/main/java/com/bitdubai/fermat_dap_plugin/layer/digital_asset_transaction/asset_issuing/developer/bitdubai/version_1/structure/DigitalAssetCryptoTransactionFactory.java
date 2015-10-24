@@ -113,7 +113,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     UUID pluginId;
     String walletPublicKey;
     //This flag must be used to select the way to send bitcoins from this plugin
-    boolean SEND_BTC_FROM_CRYPTO_NETWORK =true;
+    boolean SEND_BTC_FROM_CRYPTO_NETWORK =false;
     long genesisAmount=100000;
 //TODO: delete this useless object in production, I'm using it just for testing
     Logger LOG = Logger.getGlobal();
