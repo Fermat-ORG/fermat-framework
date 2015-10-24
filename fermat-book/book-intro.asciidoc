@@ -51,22 +51,22 @@ The answers to each of these questions are addressed within Fermat.
 
 The community developing the Fermat System agreed on the following founding principles:
 
-1. Fermat should not allow censorship.
-2. Fermat should not allow spying on their user base.
-3. Fermat should be secure and resistant to all kind of attacks.
-4. Fermat should never loose a user's funds or assets. 
-5. Fermat should be usefull to each segment of the world population.
-6. Fermat should be extensible and open to innovation with a master plan approach.
-7. Fermat should be open to any developer to participate. 
-8. Fermat should compensate each developer by their contribution.
-9. Fermat's user base should be a shared asset.
-10. Fermat should be inclusive with crypto currency industry members. 
-11. Fermat should be inclusive with the legacy financial industry members.
-12. Fermat should be unbanked-people friendly.
-13. Fermat should be OS agnostic. 
-14. Fermat should learn from its user base.
-15. Fermat should be the finacially most efficient way to hold, move or spend the end user's money. 
-16. Fermat should facilitate the regional distribution and access to crypto currencies.
+1. Fermat must not allow censorship.
+2. Fermat must not allow spying on their user base.
+3. Fermat must be secure and resistant to all kind of attacks.
+4. Fermat must never loose a user's funds or assets.
+5. Fermat must be useful to each segment of the world population.
+6. Fermat must be extensible and open to innovation with a master plan approach.
+7. Fermat must be open to any developer to participate.
+8. Fermat must compensate each developer by their contribution.
+9. Fermat's user base must be a shared asset.
+10. Fermat must be inclusive with crypto currency industry members.
+11. Fermat must be inclusive with the legacy financial industry members.
+12. Fermat must be un-banked-people friendly.
+13. Fermat must be OS agnostic.
+14. Fermat must learn from its user base.
+15. Fermat must be the financially most efficient way to hold, move or spend the end user's money.
+16. Fermat must facilitate the regional distribution and access to crypto currencies.
 
 === Fermat Book
 
