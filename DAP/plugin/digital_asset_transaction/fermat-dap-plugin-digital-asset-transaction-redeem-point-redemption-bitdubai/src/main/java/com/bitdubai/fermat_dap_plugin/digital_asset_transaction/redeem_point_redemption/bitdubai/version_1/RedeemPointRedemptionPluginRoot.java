@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -14,7 +15,7 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 16/09/15.
  */
-public class RedeemPointRedemptionPluginRoot implements Plugin, Service, DealsWithEvents, DealsWithErrors {
+public class RedeemPointRedemptionPluginRoot implements Plugin, Service, DealsWithEvents, DealsWithErrors, DealsWithPluginIdentity {
 
     //VARIABLE DECLARATION
     private EventManager eventManager;
@@ -26,6 +27,18 @@ public class RedeemPointRedemptionPluginRoot implements Plugin, Service, DealsWi
         status = ServiceStatus.CREATED;
     }
 
+    //CONSTRUCTORS
+
+    public RedeemPointRedemptionPluginRoot() {
+    }
+
+
+    //PUBLIC METHODS
+
+
+    //PRIVATE METHODS
+
+    //GETTER AND SETTERS
     @Override
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
@@ -65,4 +78,11 @@ public class RedeemPointRedemptionPluginRoot implements Plugin, Service, DealsWi
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
     }
+
+    @Override
+    public void setPluginId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
+
+    //INNER CLASSES
 }

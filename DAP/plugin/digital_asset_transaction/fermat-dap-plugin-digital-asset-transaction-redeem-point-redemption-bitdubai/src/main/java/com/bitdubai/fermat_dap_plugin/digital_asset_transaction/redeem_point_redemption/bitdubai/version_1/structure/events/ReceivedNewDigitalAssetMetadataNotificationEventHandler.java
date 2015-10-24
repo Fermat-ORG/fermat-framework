@@ -28,7 +28,7 @@ public class ReceivedNewDigitalAssetMetadataNotificationEventHandler implements 
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         if (!(fermatEvent instanceof ReceivedNewDigitalAssetMetadataNotificationEvent)) {
-            throw new CantSaveEventException(null, "Handling the ReceivedNewDigitalAssetMetadataNotificationEvent", "Illegal Argument, this method takes an ReceivedNewDigitalAssetMetadataNotificationEvent and was passed an : " + fermatEvent.getClass().getName());
+            throw new CantSaveEventException(null, "Handling the ReceivedNewDigitalAssetMetadataNotificationEvent", "Illegal Argument, this method takes an ReceivedNewDigitalAssetMetadataNotificationEvent and was passed an : " + fermatEvent == null ? "null" : fermatEvent.getClass().getName());
         }
         if (recorderService.getStatus() != ServiceStatus.STARTED) {
             throw new TransactionServiceNotStartedException();
