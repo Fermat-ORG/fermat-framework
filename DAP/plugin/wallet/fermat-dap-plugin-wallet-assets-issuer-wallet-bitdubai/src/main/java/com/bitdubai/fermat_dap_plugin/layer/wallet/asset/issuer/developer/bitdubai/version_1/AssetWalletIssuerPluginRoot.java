@@ -297,7 +297,7 @@ public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, 
         AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper3 = new AssetIssuerWalletTransactionRecordWrapper(
                 digitalAsset1,
                 "",
-                "Coupon Patriotico",
+                "Asset for Distribution",
                 "2x1  La Patria te Da Mas",
                 cryptoFromAddress1,
                 cryptoToAddress1,
