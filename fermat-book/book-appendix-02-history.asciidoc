@@ -49,7 +49,7 @@ Returning from his classes at Princeton University he would sat alone at the tab
 
 Mathematicians say their specialty is an archipelago of small certainties scattered in a sea of ignorance. The real advances in mathematics are made when the bridges connecting these islands are built. In his dissertation Andrew Wiles established so many bridges that the entire history of mathematics could be reconstructed based on that, and that is exactly what the Hindu Simon Singh did by writing his beautiful book entitled Fermat’s Last Theorem.
 
-All representatives of number theory are enumerated in that book, however, the most remarkable of all is an unnamed colleague, who when facing Wiles as he was triumphantly leaving the stage addressed him with undisguised obfuscation: *“And now that you have taken away the problem, what are you going to give us in return?”.*
+All representatives of number theory are enumerated in that book, however, the most remarkable of all is an unnamed colleague, who when facing Wiles as he was triumphantly leaving the stage addressed him with undisguised obfuscation: “And now that you have taken away the problem, what are you going to give us in return?”.
 
 === The New Problem
 
@@ -61,7 +61,9 @@ After having designed mission critical systems for banks for more than a decade,
 Being Argentinean I have absolutely no relation to the Arabic culture, however, my fascination with the amazing intricacy and sophistication of Islamic geometric patterns helped me grasp the secrets of a traditional art form mastered by a handful of artisans only. Solving a thousand-year-old historical puzzle and thereby potentially contributing to the preservation of our cultural heritage is a vastly rewarding experience worth all the effort invested in it.
 
 It was in Dubai, where I was setting up my company, that I first learned about bitcoin and having spotted the excellent opportunity my new mission conceived. This era has witnessed the digitalization of music and images. By solving the “problem of double spending” i.e., preventing a digital item to be sent to multiple people more than once, the last obstacle to the digitalization of money was eliminated.
+
 It was in 2008 that crypto-currencies were first introduced, however, while the CD player and the digital camera have already conquered the world by enabling the wide-spread use of the inventions which called them to life, the technology equivalent to these designed to facilitate the mass conversion of users of paper money to users of digital money is yet to be created. Creation of such a technology is the new problem to solve.  The problem is as complex as it can be, as 6 years have passed and some hundreds of millions of dollars of venture capital has been poured into start-ups working in this space since the solution for the double spending problem was found.
+
 We suspect the solution involves finding the islands not yet discovered and building bridges to connect them both with each other and with the entire current archipelago.
 
 === Divine Sign
