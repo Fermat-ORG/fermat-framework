@@ -205,7 +205,7 @@ Fermat principles
 * Crypto Distribution Network concept.
 * Crypto Brokers concept.
 
-
+<br>
 How to install and run Fermat
 -------------------------------
 
