@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_core;
 
-import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSystemException;
@@ -57,11 +57,11 @@ public class FermatSystem {
      * @throws ModuleManagerNotFoundException  if we can't find the requested module manager.
      */
     public final ModuleManager getModuleManager(final PluginVersionReference pluginVersionReference) throws CantGetModuleManagerException  ,
-                                                                                                ModuleManagerNotFoundException {
+                                                                                                            ModuleManagerNotFoundException {
 
         try {
 
-            Plugin moduleManager = fermatSystemContext.getPluginVersion(pluginVersionReference);
+            AbstractPlugin moduleManager = fermatSystemContext.getPluginVersion(pluginVersionReference);
 
             if (moduleManager instanceof ModuleManager)
                 return (ModuleManager) moduleManager;
