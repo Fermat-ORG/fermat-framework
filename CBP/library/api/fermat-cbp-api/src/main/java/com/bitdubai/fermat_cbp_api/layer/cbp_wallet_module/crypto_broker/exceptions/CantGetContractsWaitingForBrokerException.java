@@ -1,13 +1,11 @@
-package com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions;
+package com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by jorge on 10-10-2015.
+ * Created by nelson on 22/10/15.
  */
-public class CantCreateCustomerBrokerPurchaseException extends FermatException {
-    public static final String DEFAULT_MESSAGE = "CAN'T CREATE CUSTOMER BROKER PURCHASE NEGOTIATION";
-
+public class CantGetContractsWaitingForBrokerException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -16,7 +14,7 @@ public class CantCreateCustomerBrokerPurchaseException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantCreateCustomerBrokerPurchaseException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetContractsWaitingForBrokerException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

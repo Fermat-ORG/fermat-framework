@@ -14,11 +14,11 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantListPurchaseNegotianionsException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerPurchaseNegotiationDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseNegotiationDaoException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -34,7 +34,7 @@ import java.util.UUID;
 /**
  * Created by jorge on 12-10-2015.
  */
-public class CustomerBrokerPurchasePluginRoot implements CustomerBrokerPurchaseManager, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Service, Plugin {
+public class CustomerBrokerPurchaseNegotiationPluginRoot implements CustomerBrokerPurchaseNegotiationManager, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Service, Plugin {
 
     private ErrorManager errorManager;
     private LogManager logManager;
@@ -74,11 +74,11 @@ public class CustomerBrokerPurchasePluginRoot implements CustomerBrokerPurchaseM
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
         for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-            if (CustomerBrokerPurchasePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                CustomerBrokerPurchasePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                CustomerBrokerPurchasePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (CustomerBrokerPurchaseNegotiationPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                CustomerBrokerPurchaseNegotiationPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                CustomerBrokerPurchaseNegotiationPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                CustomerBrokerPurchasePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                CustomerBrokerPurchaseNegotiationPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
     }
@@ -121,13 +121,12 @@ public class CustomerBrokerPurchasePluginRoot implements CustomerBrokerPurchaseM
     }
 
     @Override
-    public CustomerBrokerPurchase createCustomerBrokerPurchaseNegotiation(String publicKeyCustomer, String publicKeyBroker) throws CantCreateCustomerBrokerPurchaseException {
-        long startDateTime = System.currentTimeMillis();
-        return customerBrokerPurchaseNegotiationDao.createCustomerBrokerPurchaseNegotiation(publicKeyCustomer, publicKeyBroker, startDateTime);
+    public CustomerBrokerPurchaseNegotiation createCustomerBrokerPurchaseNegotiation(String publicKeyCustomer, String publicKeyBroker) throws CantCreateCustomerBrokerPurchaseNegotiationException {
+        return customerBrokerPurchaseNegotiationDao.createCustomerBrokerPurchaseNegotiation(publicKeyCustomer, publicKeyBroker);
     }
 
     @Override
-    public void cancelNegotiation(CustomerBrokerPurchase negotiation){
+    public void cancelNegotiation(CustomerBrokerPurchaseNegotiation negotiation){
         try {
             customerBrokerPurchaseNegotiationDao.cancelNegotiation(negotiation);
         } catch (CantUpdateCustomerBrokerPurchaseException e) {
@@ -136,7 +135,7 @@ public class CustomerBrokerPurchasePluginRoot implements CustomerBrokerPurchaseM
     }
 
     @Override
-    public void closeNegotiation(CustomerBrokerPurchase negotiation){
+    public void closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation){
         try {
             customerBrokerPurchaseNegotiationDao.closeNegotiation(negotiation);
         } catch (CantUpdateCustomerBrokerPurchaseException e){
@@ -145,9 +144,9 @@ public class CustomerBrokerPurchasePluginRoot implements CustomerBrokerPurchaseM
     }
 
     @Override
-    public Collection<CustomerBrokerPurchase> getNegotiations() throws CantListPurchaseNegotianionsException{
+    public Collection<CustomerBrokerPurchaseNegotiation> getNegotiations() throws CantListPurchaseNegotianionsException{
         try {
-            Collection<CustomerBrokerPurchase> negotiations = new ArrayList<CustomerBrokerPurchase>();
+            Collection<CustomerBrokerPurchaseNegotiation> negotiations = new ArrayList<CustomerBrokerPurchaseNegotiation>();
             negotiations = customerBrokerPurchaseNegotiationDao.getNegotiations();
             return negotiations;
         } catch (CantLoadTableToMemoryException e) {
@@ -158,9 +157,9 @@ public class CustomerBrokerPurchasePluginRoot implements CustomerBrokerPurchaseM
     }
 
     @Override
-    public Collection<CustomerBrokerPurchase> getNegotiations(NegotiationStatus status) throws CantListPurchaseNegotianionsException {
+    public Collection<CustomerBrokerPurchaseNegotiation> getNegotiations(NegotiationStatus status) throws CantListPurchaseNegotianionsException {
         try {
-            Collection<CustomerBrokerPurchase> negotiations = new ArrayList<CustomerBrokerPurchase>();
+            Collection<CustomerBrokerPurchaseNegotiation> negotiations = new ArrayList<CustomerBrokerPurchaseNegotiation>();
             negotiations = customerBrokerPurchaseNegotiationDao.getNegotiations(status);
             return negotiations;
         } catch (CantLoadTableToMemoryException e) {
@@ -171,9 +170,9 @@ public class CustomerBrokerPurchasePluginRoot implements CustomerBrokerPurchaseM
     }
 
     @Override
-    public Collection<CustomerBrokerPurchase> getNegotiationsByCustomer(ActorIdentity customer) throws CantListPurchaseNegotianionsException {
+    public Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsByCustomer(ActorIdentity customer) throws CantListPurchaseNegotianionsException {
         try {
-            Collection<CustomerBrokerPurchase> negotiations = new ArrayList<CustomerBrokerPurchase>();
+            Collection<CustomerBrokerPurchaseNegotiation> negotiations = new ArrayList<CustomerBrokerPurchaseNegotiation>();
             negotiations = customerBrokerPurchaseNegotiationDao.getNegotiationsByCustomer(customer);
             return negotiations;
         } catch (CantLoadTableToMemoryException e) {
@@ -184,9 +183,9 @@ public class CustomerBrokerPurchasePluginRoot implements CustomerBrokerPurchaseM
     }
 
     @Override
-    public Collection<CustomerBrokerPurchase> getNegotiationsByBroker(ActorIdentity broker) throws CantListPurchaseNegotianionsException {
+    public Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsByBroker(ActorIdentity broker) throws CantListPurchaseNegotianionsException {
         try {
-            Collection<CustomerBrokerPurchase> negotiations = new ArrayList<CustomerBrokerPurchase>();
+            Collection<CustomerBrokerPurchaseNegotiation> negotiations = new ArrayList<CustomerBrokerPurchaseNegotiation>();
             negotiations = customerBrokerPurchaseNegotiationDao.getNegotiationsByBroker(broker);
             return negotiations;
         } catch (CantLoadTableToMemoryException e) {
