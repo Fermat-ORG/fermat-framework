@@ -1,6 +1,7 @@
 ![alt text](https://github.com/bitDubai/fermat-graphic-design/blob/master/2D%20Design/Fermat/Fermat%20Logotype/logo_jpg/logo_github_readme.jpg "Fermat Logo")
 
 
+<br>
 Welcome to Fermat!
 -------------------
 
@@ -20,6 +21,7 @@ We believe the open source community collectively has more talent than any of us
 
 We believe in people with passion who are crazy enough to think they can change the world. We do believe we are going to change this world.
 
+<br>
 How will we do it?
 ---------------------
 
@@ -33,6 +35,7 @@ With a lot of hard work and not stopping until we reach our goal. Also finding t
 
 The answers to each of these questions are addressed within Fermat.
 
+<br>
 What is Fermat?
 ----------------------
 
@@ -62,6 +65,7 @@ You can learn more and see some cool visualizations of Fermat's architecture and
 [Fermat.org](http://www.fermat.org).
 
 
+<br>
 Mission / Purpose
 ------------------------------------------------
 
@@ -70,7 +74,7 @@ efficient, secure an private way.
 
 > To give back the souveraignity over each one's own ressources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.
 
-
+<br>
 Fermat principles
 ------------------------------------------------
 
@@ -237,6 +241,7 @@ State of the code: Under development for 5 months. No realeses yet. 24 full time
 
 Future path of development: Active (First release with very limited features schedulled for late November 2015).
 
+<br>
 I want to join the team!
 ------------------------------------------------
 
