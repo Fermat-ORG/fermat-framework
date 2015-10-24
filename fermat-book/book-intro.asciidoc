@@ -33,6 +33,20 @@ The ultimate mission of the Fermat Project is:
 
 * To give back the souveraignity over each one's own ressources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.
 
+=== The challenge
+
+The design of Fermat addressed the answers to the following questions:
+
+  *  How can the perception of complexity on crypto currencies by ordinary people be isolated?
+  *  How can the collective intelligence of the developer community be used?
+  *  How can the entire current infrastructure already in place be reused?
+  *  How can legacy financial institutions be integrated in a way they feel comfortable?
+  *  How can merchants, retailers and brands of all sizes be integrated in a clever way?
+  *  How can non-developers be allowed to create digital wallets without programming anything at all?
+
+The answers to each of these questions are addressed within Fermat.
+
+
 === Fermat's Principles
 
 The community developing the Fermat System agreed on the following founding principles:

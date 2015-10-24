@@ -1,7 +1,7 @@
 
-== Chapter 1
+== Chapter 1: Fermat Master Plan
 
-
+As a Master Plan, Fermat has it's own vision of how a collaborative project should be carried out. The main concept is to define a large master plan far into the future, and start building it phase by phase adjusing the target when needed. This approach allows the optimization on the use of available resources as instead of competing between each other they are collaborating to produce the best possible resoult between all of them.
 
 
 
@@ -35,15 +35,10 @@ However, although a huge step has been made by Sakamoto's invention - in fact *B
 
 What's more, in the last years, there has been a lot of fin tech investment money given to a myriad of startup initiating in bitcoin, cryptocurrencies and blockchain technology, and everything has gone so far that after "bitcoin revolution" the new trending wave of investenment is focus on what has been called *"cryptocurrency 2.0"*. Nevertheless, there is still a point of view that is "out of tune" with the very nature and essence of this inventions: is not so wise to run "solo" the race to conquer the world market, because there is so much that has to be done, that is better to do it in a *_collaborative way_*, relying on the lessons of *open source software* and *global projects* with a _"systemic view"_ of the interaction between the involved parties (individual or organizations) and the whole.
  
-So, the challenge in this industry is related to finding the answers to the following questions:
 
-* How can we isolate ordinary people from the perceived complexity? 
-* How can we use the collective intelligence of the developer community? 
-* How can we reuse the entire current infrastructure already in place? 
-* How do we integrate legacy financial institutions in a way they feel comfortable? 
-* How do we integrate merchants, retailers and brands of all sizes in a clever way?
 
-The answers to each of these questions are addressed within the Fermat System.
+
+
 
 In this era of a digitalised world, there are so many people who earn their living generating products and services at the heart of this digital world, being interconnected in an complex pattern of giving and receiving, services, money, assets, knowledge, permanently exchanging information of all kinds, weaving relationships, building a *global community*. + 
 
