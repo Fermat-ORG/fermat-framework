@@ -21,9 +21,14 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.CCPPlugins;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.DealsWithIntraUsersNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
@@ -93,7 +98,7 @@ import java.util.UUID;
 
 public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
         implements DatabaseManagerForDevelopers,
-                   DealsWithCryptoAddressesNetworkService,
+                   DealsWithCryptoAddressesNetworkService,//
                    DealsWithCryptoVault,
                    DealsWithCryptoAddressBook,
                    DealsWithDeviceUser,
@@ -102,7 +107,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
                    DealsWithPluginDatabaseSystem,
                    DealsWithPluginFileSystem,
                    DealsWithWalletManager,
-                   DealsWithIntraUsersNetworkService,
+                   DealsWithIntraUsersNetworkService,//
                    IntraWalletUserManager,
                    LogManagerForDevelopers,
                    Service,
@@ -115,7 +120,12 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
 
     @Override
     public List<PluginVersionReference> getNeededPluginReferences() {
-        return new ArrayList<>();
+        List<PluginVersionReference> rList = new ArrayList<>();
+
+        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, CCPPlugins.CRYPTO_ADDRESSES_NETWORK_SERVICE, Developers.BITDUBAI, new Version()));
+        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, CCPPlugins.INTRA_USER_NETWORK_SERVICE      , Developers.BITDUBAI, new Version()));
+
+        return rList;
     }
 
     @Override

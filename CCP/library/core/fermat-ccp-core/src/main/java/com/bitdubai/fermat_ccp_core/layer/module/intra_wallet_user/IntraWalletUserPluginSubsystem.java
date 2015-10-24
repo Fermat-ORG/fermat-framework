@@ -15,7 +15,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai
 public class IntraWalletUserPluginSubsystem extends AbstractPluginSubsystem {
 
     public IntraWalletUserPluginSubsystem() {
-        super(new PluginReference(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_MODULE));
+        super(new PluginReference(CCPPlugins.INTRA_WALLET_USER_MODULE));
     }
 
     @Override

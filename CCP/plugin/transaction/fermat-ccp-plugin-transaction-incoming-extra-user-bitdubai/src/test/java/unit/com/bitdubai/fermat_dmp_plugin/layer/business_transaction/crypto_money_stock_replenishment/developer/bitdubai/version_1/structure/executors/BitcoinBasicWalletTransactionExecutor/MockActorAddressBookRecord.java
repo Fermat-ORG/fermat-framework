@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.executors.BitcoinBasicWalletTransactionExecutor;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -7,9 +8,11 @@ import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interf
 
 import java.util.UUID;
 
+*/
 /**
  * Created by jorgegonzalez on 2015.07.14..
- */
+ *//*
+
 public class MockActorAddressBookRecord implements ActorAddressBookRecord {
     @Override
     public UUID getDeliveredByActorId() {
@@ -36,3 +39,4 @@ public class MockActorAddressBookRecord implements ActorAddressBookRecord {
         return new CryptoAddress("156jBLBvtaDccomhbiWDoySKuzx1AbWUG8", CryptoCurrency.BITCOIN);
     }
 }
+*/

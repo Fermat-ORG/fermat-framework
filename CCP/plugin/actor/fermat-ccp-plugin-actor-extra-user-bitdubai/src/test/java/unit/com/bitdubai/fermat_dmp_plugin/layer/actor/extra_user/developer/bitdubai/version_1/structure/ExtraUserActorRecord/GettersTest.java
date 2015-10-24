@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUserActorRecord;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -11,9 +12,11 @@ import org.mockito.Mock;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+*/
 /**
  * Created by natalia on 03/09/15.
- */
+ *//*
+
 public class GettersTest {
 
     ExtraUserActorRecord extraUserActorRecord;
@@ -65,3 +68,4 @@ public class GettersTest {
 
 
 
+*/

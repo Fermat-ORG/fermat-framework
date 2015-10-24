@@ -15,7 +15,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer
 public class WalletContactsPluginSubsystem extends AbstractPluginSubsystem {
 
     public WalletContactsPluginSubsystem() {
-        super(new PluginReference(CCPPlugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE));
+        super(new PluginReference(CCPPlugins.WALLET_CONTACTS_MIDDLEWARE));
     }
 
     @Override

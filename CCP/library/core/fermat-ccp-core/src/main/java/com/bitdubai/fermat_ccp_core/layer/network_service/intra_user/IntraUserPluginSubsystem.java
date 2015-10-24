@@ -15,7 +15,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 public class IntraUserPluginSubsystem extends AbstractPluginSubsystem {
 
     public IntraUserPluginSubsystem() {
-        super(new PluginReference(CCPPlugins.BITDUBAI_INTRA_USER_NETWORK_SERVICE));
+        super(new PluginReference(CCPPlugins.INTRA_USER_NETWORK_SERVICE));
     }
 
     @Override

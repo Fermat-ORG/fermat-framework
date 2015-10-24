@@ -15,7 +15,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.dev
 public class CryptoAddressesPluginSubsystem extends AbstractPluginSubsystem {
 
     public CryptoAddressesPluginSubsystem() {
-        super(new PluginReference(CCPPlugins.BITDUBAI_CRYPTO_ADDRESSES_NETWORK_SERVICE));
+        super(new PluginReference(CCPPlugins.CRYPTO_ADDRESSES_NETWORK_SERVICE));
     }
 
     @Override

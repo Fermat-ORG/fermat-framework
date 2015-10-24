@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.ExtraUserActorPluginRoot;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
@@ -25,9 +26,11 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
+*/
 /**
  * Created by natalia on 03/09/15.
- */
+ *//*
+
 @RunWith(MockitoJUnitRunner.class)
 public class SetLoggingLevelPerClassTest {
 
@@ -67,4 +70,4 @@ public class SetLoggingLevelPerClassTest {
 
         pluginRoot.setLoggingLevelPerClass(newLoggingLevel);
     }
-}
+}*/

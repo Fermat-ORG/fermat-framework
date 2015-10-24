@@ -15,7 +15,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.deve
 public class IncomingExtraUserPluginSubsystem extends AbstractPluginSubsystem {
 
     public IncomingExtraUserPluginSubsystem() {
-        super(new PluginReference(CCPPlugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION));
+        super(new PluginReference(CCPPlugins.INCOMING_EXTRA_USER_TRANSACTION));
     }
 
     @Override

@@ -15,7 +15,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.develope
 public class CryptoPluginSubsystem extends AbstractPluginSubsystem {
 
     public CryptoPluginSubsystem() {
-        super(new PluginReference(CCPPlugins.BITDUBAI_CRYPTO_WALLET_MODULE));
+        super(new PluginReference(CCPPlugins.CRYPTO_WALLET_MODULE));
     }
 
     @Override

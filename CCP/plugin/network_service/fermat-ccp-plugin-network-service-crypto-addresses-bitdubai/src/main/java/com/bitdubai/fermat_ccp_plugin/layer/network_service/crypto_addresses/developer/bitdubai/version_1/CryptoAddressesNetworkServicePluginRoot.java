@@ -97,9 +97,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
         DealsWithErrors,
         DealsWithEvents,
         DealsWithPluginDatabaseSystem,
-        NetworkService,
-        Plugin,
-        Service {
+        NetworkService {
 
     @Override
     public List<AddonVersionReference> getNeededAddonReferences() {

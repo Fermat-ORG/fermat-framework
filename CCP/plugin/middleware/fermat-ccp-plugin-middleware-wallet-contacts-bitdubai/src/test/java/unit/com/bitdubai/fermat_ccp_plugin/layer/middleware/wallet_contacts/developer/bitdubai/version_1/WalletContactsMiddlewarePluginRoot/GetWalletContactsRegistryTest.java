@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactRegistryException;
@@ -27,9 +28,11 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
+*/
 /**
  * Created by natalia on 10/09/15.
- */
+ *//*
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class GetWalletContactsRegistryTest
@@ -99,3 +102,4 @@ private WalletContactsMiddlewarePluginRoot pluginRoot;
 
     }
 }
+*/

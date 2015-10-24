@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
@@ -23,9 +24,11 @@ import java.util.UUID;
 
 import static org.mockito.Matchers.any;
 
+*/
 /**
  * Created by natalia on 10/09/15.
- */
+ *//*
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class SetLoggingLevelPerClassTest {
@@ -70,3 +73,4 @@ public class SetLoggingLevelPerClassTest {
     }
 }
 
+*/

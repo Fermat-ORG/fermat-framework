@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.structure.OutgoingExtraUserTransactionPluginRoot;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -27,9 +28,11 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
+*/
 /**
  * Created by natalia on 10/07/15.
- */
+ *//*
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class StartTest  {
@@ -98,3 +101,4 @@ public class StartTest  {
     }
 
 }
+*/

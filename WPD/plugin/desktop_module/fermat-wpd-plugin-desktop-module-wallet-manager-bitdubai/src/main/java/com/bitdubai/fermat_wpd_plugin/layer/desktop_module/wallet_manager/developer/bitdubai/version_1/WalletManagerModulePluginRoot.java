@@ -698,7 +698,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
                  * * * *
                  */
 
-                //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadFileException);
+                //errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadFileException);
 
                 throw new CantLoadWalletsException();
             }

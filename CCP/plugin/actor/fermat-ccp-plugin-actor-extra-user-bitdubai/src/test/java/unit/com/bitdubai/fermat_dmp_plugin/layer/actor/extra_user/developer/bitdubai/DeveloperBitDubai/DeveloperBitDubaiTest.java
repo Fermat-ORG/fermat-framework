@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.DeveloperBitDubai;
 
 import com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.DeveloperBitDubai;
@@ -8,9 +9,11 @@ import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+*/
 /**
  * Created by natalia on 03/09/15.
- */
+ *//*
+
 public class DeveloperBitDubaiTest {
 
     DeveloperBitDubai developTest;
@@ -47,3 +50,4 @@ public class DeveloperBitDubaiTest {
 }
 
 
+*/

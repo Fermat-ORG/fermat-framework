@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEventHandler;
 
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
@@ -13,9 +14,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+*/
 /**
  * Created by jorgegonzalez on 2015.07.03..
- */
+ *//*
+
 public class HandleEventTest {
 
     @Mock
@@ -38,3 +41,4 @@ public class HandleEventTest {
         assertThat(caughtException()).isInstanceOf(TransactionServiceNotStartedException.class);
     }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraUserModulePluginRoot;
 
 import com.bitdubai.fermat_api.layer.all_definition.IntraUsers.IntraUserSettings;
@@ -29,34 +30,44 @@ import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+*/
 /**
  * Created by natalia on 20/08/15.
- */
+ *//*
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class AcceptIntraUserTest extends TestCase {
-    /**
+    */
+/**
      * DealsWithErrors interface Mocked
-     */
+     *//*
+
     @Mock
     private ErrorManager mockErrorManager;
 
-    /**
+    */
+/**
      * UsesFileSystem Interface member variables.
-     */
+     *//*
+
     @Mock
     private PluginFileSystem mockPluginFileSystem;
 
-    /**
+    */
+/**
      * DealWithActorIntraUserManager Interface member variables.
-     */
+     *//*
+
     @Mock
     private IntraWalletUserManager mockIntraWalletUserManager;
 
 
-    /**
+    */
+/**
      * DealWithIntraUserNetworkServiceManager Interface member variables.
-     */
+     *//*
+
     @Mock
     private IntraUserManager mockIntraUserNetworkServiceManager;
 
@@ -135,3 +146,4 @@ public class AcceptIntraUserTest extends TestCase {
     }
 }
 
+*/

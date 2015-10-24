@@ -1,6 +1,7 @@
+/*
 package unit.com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.structure.IntraWalletUserActor;
 
-import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.enums.ContactState;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.enums.ContactState;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.structure.IntraWalletUserActor;
 
@@ -10,9 +11,11 @@ import org.mockito.Mock;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+*/
 /**
  * Created by natalia on 24/08/15.
- */
+ *//*
+
 public class Getters_Identity_Test {
 
     IntraWalletUserActor intraUserActor;
@@ -67,3 +70,4 @@ public class Getters_Identity_Test {
 }
 
 
+*/

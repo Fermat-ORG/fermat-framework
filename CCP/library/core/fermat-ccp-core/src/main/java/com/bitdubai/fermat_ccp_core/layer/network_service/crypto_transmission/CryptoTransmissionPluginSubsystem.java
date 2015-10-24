@@ -15,7 +15,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.
 public class CryptoTransmissionPluginSubsystem extends AbstractPluginSubsystem {
 
     public CryptoTransmissionPluginSubsystem() {
-        super(new PluginReference(CCPPlugins.BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE));
+        super(new PluginReference(CCPPlugins.CRYPTO_TRANSMISSION_NETWORK_SERVICE));
     }
 
     @Override

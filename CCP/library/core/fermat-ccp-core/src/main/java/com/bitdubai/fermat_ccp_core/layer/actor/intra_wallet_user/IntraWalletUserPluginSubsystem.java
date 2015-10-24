@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_ccp_core.layer.actor.intra_wallet_user;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
@@ -16,7 +15,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bi
 public class IntraWalletUserPluginSubsystem extends AbstractPluginSubsystem {
 
     public IntraWalletUserPluginSubsystem() {
-        super(new PluginReference(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_ACTOR));
+        super(new PluginReference(CCPPlugins.INTRA_WALLET_USER_ACTOR));
     }
 
     @Override

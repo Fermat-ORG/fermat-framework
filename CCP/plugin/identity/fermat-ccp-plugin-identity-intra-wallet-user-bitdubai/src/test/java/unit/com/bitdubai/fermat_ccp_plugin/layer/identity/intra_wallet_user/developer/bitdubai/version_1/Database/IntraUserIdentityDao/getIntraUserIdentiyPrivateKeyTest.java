@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.Database.IntraUserIdentityDao;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
@@ -38,9 +39,11 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
+*/
 /**
  * Created by angel on 25/8/15.
- */
+ *//*
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class getIntraUserIdentiyPrivateKeyTest {
@@ -123,3 +126,4 @@ public class getIntraUserIdentiyPrivateKeyTest {
         assertThat(caughtException()).isNotNull().isInstanceOf(CantGetIntraWalletUserIdentityProfileImageException.class);
     }
 }
+*/

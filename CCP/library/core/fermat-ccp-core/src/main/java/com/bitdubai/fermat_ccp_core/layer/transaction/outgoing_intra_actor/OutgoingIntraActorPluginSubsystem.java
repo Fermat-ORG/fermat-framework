@@ -15,7 +15,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_actor.dev
 public class OutgoingIntraActorPluginSubsystem extends AbstractPluginSubsystem {
 
     public OutgoingIntraActorPluginSubsystem() {
-        super(new PluginReference(CCPPlugins.BITDUBAI_OUTGOING_INTRA_ACTOR_TRANSACTION));
+        super(new PluginReference(CCPPlugins.OUTGOING_INTRA_ACTOR_TRANSACTION));
     }
     @Override
     public void start() throws CantStartSubsystemException {

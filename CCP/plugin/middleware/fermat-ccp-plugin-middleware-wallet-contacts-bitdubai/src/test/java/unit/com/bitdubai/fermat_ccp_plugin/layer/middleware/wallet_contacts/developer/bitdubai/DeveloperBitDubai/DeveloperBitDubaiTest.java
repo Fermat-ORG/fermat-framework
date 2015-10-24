@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.DeveloperBitDubai;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -12,9 +13,11 @@ import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+*/
 /**
  * Created by natalia on 10/09/15.
- */
+ *//*
+
 public class DeveloperBitDubaiTest  {
 
     DeveloperBitDubai developTest;
@@ -48,3 +51,4 @@ public class DeveloperBitDubaiTest  {
     }
 }
 
+*/

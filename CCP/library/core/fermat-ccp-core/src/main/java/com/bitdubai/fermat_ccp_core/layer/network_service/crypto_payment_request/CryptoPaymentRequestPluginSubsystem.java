@@ -15,7 +15,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 public class CryptoPaymentRequestPluginSubsystem extends AbstractPluginSubsystem {
 
     public CryptoPaymentRequestPluginSubsystem() {
-        super(new PluginReference(CCPPlugins.BITDUBAI_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE));
+        super(new PluginReference(CCPPlugins.CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE));
     }
 
     @Override

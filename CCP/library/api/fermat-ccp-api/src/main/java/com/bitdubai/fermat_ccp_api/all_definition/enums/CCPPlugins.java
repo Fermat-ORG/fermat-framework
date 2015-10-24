@@ -16,22 +16,22 @@ public enum CCPPlugins implements FermatPluginsEnum {
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
 
-    BITDUBAI_BITCOIN_WALLET_BASIC_WALLET            ("BBWBW" ),
-    BITDUBAI_CRYPTO_ADDRESSES_NETWORK_SERVICE       ("BCANS" ),
-    BITDUBAI_CRYPTO_PAYMENT_REQUEST                 ("BCPR"  ),
-    BITDUBAI_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE ("BCPRNS"),
-    BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE    ("BCTNS" ),
-    BITDUBAI_CRYPTO_WALLET_MODULE                   ("BCWM"  ),
-    BITDUBAI_EXTRA_WALLET_USER_ACTOR                ("BEWUA" ),
-    BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION        ("BIEUT" ),
-    BITDUBAI_INCOMING_INTRA_USER_TRANSACTION        ("BIIUT" ),
-    BITDUBAI_INTRA_USER_NETWORK_SERVICE             ("BIUNS" ),
-    BITDUBAI_INTRA_WALLET_USER_ACTOR                ("BIWUA" ),
-    BITDUBAI_INTRA_WALLET_USER_IDENTITY             ("BIUI"  ),
-    BITDUBAI_INTRA_WALLET_USER_MODULE               ("BIUM"  ),
-    BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION        ("BOEUT" ),
-    BITDUBAI_OUTGOING_INTRA_ACTOR_TRANSACTION       ("BOIAT" ),
-    BITDUBAI_WALLET_CONTACTS_MIDDLEWARE             ("BWCM"  ),
+    BITCOIN_WALLET_BASIC_WALLET           ("BWBW" ),
+    CRYPTO_ADDRESSES_NETWORK_SERVICE      ("CANS" ),
+    CRYPTO_PAYMENT_REQUEST                ("CPR"  ),
+    CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE("CPRNS"),
+    CRYPTO_TRANSMISSION_NETWORK_SERVICE   ("CTNS" ),
+    CRYPTO_WALLET_MODULE                  ("CWM"  ),
+    EXTRA_WALLET_USER_ACTOR               ("EWUA" ),
+    INCOMING_EXTRA_USER_TRANSACTION       ("IEUT" ),
+    INCOMING_INTRA_USER_TRANSACTION       ("IIUT" ),
+    INTRA_USER_NETWORK_SERVICE            ("IUNS" ),
+    INTRA_WALLET_USER_ACTOR               ("IWUA" ),
+    INTRA_WALLET_USER_IDENTITY            ("IUI"  ),
+    INTRA_WALLET_USER_MODULE              ("IUM"  ),
+    OUTGOING_EXTRA_USER_TRANSACTION       ("OEUT" ),
+    OUTGOING_INTRA_ACTOR_TRANSACTION      ("OIAT" ),
+    WALLET_CONTACTS_MIDDLEWARE            ("WCM"  ),
 
     ;
 
@@ -46,22 +46,22 @@ public enum CCPPlugins implements FermatPluginsEnum {
 
         switch (code) {
 
-            case "BBWBW" : return BITDUBAI_BITCOIN_WALLET_BASIC_WALLET           ;
-            case "BCANS" : return BITDUBAI_CRYPTO_ADDRESSES_NETWORK_SERVICE      ;
-            case "BCPR"  : return BITDUBAI_CRYPTO_PAYMENT_REQUEST                ;
-            case "BCPRNS": return BITDUBAI_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE;
-            case "BCTNS" : return BITDUBAI_CRYPTO_TRANSMISSION_NETWORK_SERVICE   ;
-            case "BCWM"  : return BITDUBAI_CRYPTO_WALLET_MODULE                  ;
-            case "BEWUA" : return BITDUBAI_EXTRA_WALLET_USER_ACTOR               ;
-            case "BIEUT" : return BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION       ;
-            case "BIIUT" : return BITDUBAI_INCOMING_INTRA_USER_TRANSACTION       ;
-            case "BIUNS" : return BITDUBAI_INTRA_USER_NETWORK_SERVICE            ;
-            case "BIWUA" : return BITDUBAI_INTRA_WALLET_USER_ACTOR               ;
-            case "BIUI"  : return BITDUBAI_INTRA_WALLET_USER_IDENTITY            ;
-            case "BIUM"  : return BITDUBAI_INTRA_WALLET_USER_MODULE              ;
-            case "BOEUT" : return BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION       ;
-            case "BOIAT" : return BITDUBAI_OUTGOING_INTRA_ACTOR_TRANSACTION      ;
-            case "BWCM"  : return BITDUBAI_WALLET_CONTACTS_MIDDLEWARE            ;
+            case "BWBW" : return BITCOIN_WALLET_BASIC_WALLET           ;
+            case "CANS" : return CRYPTO_ADDRESSES_NETWORK_SERVICE      ;
+            case "CPR"  : return CRYPTO_PAYMENT_REQUEST                ;
+            case "CPRNS": return CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE;
+            case "CTNS" : return CRYPTO_TRANSMISSION_NETWORK_SERVICE   ;
+            case "CWM"  : return CRYPTO_WALLET_MODULE                  ;
+            case "EWUA" : return EXTRA_WALLET_USER_ACTOR               ;
+            case "IEUT" : return INCOMING_EXTRA_USER_TRANSACTION       ;
+            case "IIUT" : return INCOMING_INTRA_USER_TRANSACTION       ;
+            case "IUNS" : return INTRA_USER_NETWORK_SERVICE            ;
+            case "IWUA" : return INTRA_WALLET_USER_ACTOR               ;
+            case "IUI"  : return INTRA_WALLET_USER_IDENTITY            ;
+            case "IUM"  : return INTRA_WALLET_USER_MODULE              ;
+            case "OEUT" : return OUTGOING_EXTRA_USER_TRANSACTION       ;
+            case "OIAT" : return OUTGOING_INTRA_ACTOR_TRANSACTION      ;
+            case "WCM"  : return WALLET_CONTACTS_MIDDLEWARE            ;
 
             default:
                 throw new InvalidParameterException(

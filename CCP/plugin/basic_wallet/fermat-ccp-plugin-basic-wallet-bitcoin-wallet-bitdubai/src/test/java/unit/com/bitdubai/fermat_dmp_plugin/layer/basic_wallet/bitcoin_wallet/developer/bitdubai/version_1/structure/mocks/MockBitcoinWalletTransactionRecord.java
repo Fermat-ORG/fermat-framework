@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.mocks;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
@@ -8,9 +9,11 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.
 
 import java.util.UUID;
 
+*/
 /**
  * Created by jorgegonzalez on 2015.07.14..
- */
+ *//*
+
 public class MockBitcoinWalletTransactionRecord implements BitcoinWalletTransactionRecord {
 
     private static String ANY_BITCOIN_PUBLIC_ADDRESS_FROM = "11NvDRnGsX57oNsmEWRqzv8QQuK1GU9g6Mb";
@@ -71,3 +74,4 @@ public class MockBitcoinWalletTransactionRecord implements BitcoinWalletTransact
         return Actors.EXTRA_USER;
     }
 }
+*/

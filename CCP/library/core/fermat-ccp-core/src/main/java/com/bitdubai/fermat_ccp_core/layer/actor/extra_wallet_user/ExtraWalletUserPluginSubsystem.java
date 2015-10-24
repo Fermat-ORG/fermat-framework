@@ -15,7 +15,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.actor.extra_user.developer.bitdubai.
 public class ExtraWalletUserPluginSubsystem extends AbstractPluginSubsystem {
 
     public ExtraWalletUserPluginSubsystem() {
-        super(new PluginReference(CCPPlugins.BITDUBAI_EXTRA_WALLET_USER_ACTOR));
+        super(new PluginReference(CCPPlugins.EXTRA_WALLET_USER_ACTOR));
     }
 
     @Override
