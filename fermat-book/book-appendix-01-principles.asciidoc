@@ -1,5 +1,5 @@
 
-== Apendix 1 - Fermat's Principles in Detail
+== Appendix 01 - Fermat's Principles in Detail
 
 Here is an in deapth analisys of Fermat's principles. 
 
