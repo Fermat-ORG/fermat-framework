@@ -58,8 +58,10 @@ The community developing the Fermat System agreed on the following founding prin
 
 Learning about Fermat is very easy. It's just a matter of continuing reading this book that will guide you step by step all the way until you reach a complete understanding of this amazing techology.
 
-=== Next
+=== Continue Reading
 
 link:book-chapter-01.asciidoc[Chapter 1]
+link:book-appendix-01-principles.asciidoc[Appendix: Fermat Principles in Detail]
+link:book-appendix-02-history.asciidoc[Appendix: Fermat History in Detail]
 
 
