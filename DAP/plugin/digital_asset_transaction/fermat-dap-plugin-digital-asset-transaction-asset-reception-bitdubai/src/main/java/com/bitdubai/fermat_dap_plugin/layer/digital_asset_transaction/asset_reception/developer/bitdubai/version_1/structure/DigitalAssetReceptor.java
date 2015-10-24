@@ -18,7 +18,7 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 10/10/15.
  */
-public class AbstractDigitalAssetReceptor extends AbstractDigitalAssetSwap {
+public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
 
     ErrorManager errorManager;
     final String LOCAL_STORAGE_PATH="digital-asset-reception/";
@@ -26,19 +26,19 @@ public class AbstractDigitalAssetReceptor extends AbstractDigitalAssetSwap {
     //String digitalAssetMetadataFileStoragePath;
     //AssetReceptionDao assetReceptionnDao;
 
-    AbstractDigitalAssetReceptionVault digitalAssetReceptionVault;
+    DigitalAssetReceptionVault digitalAssetReceptionVault;
     AssetVaultManager assetVaultManager;
 
-    public AbstractDigitalAssetReceptor(AssetVaultManager assetVaultManager, ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
+    public DigitalAssetReceptor(AssetVaultManager assetVaultManager, ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
         super(assetVaultManager,  pluginId, pluginFileSystem);
         this.errorManager=errorManager;
     }
 
     //TODO set DAO
 
-    public void setDigitalAssetReceptionVault(AbstractDigitalAssetReceptionVault digitalAssetReceptionVault) throws CantSetObjectException {
+    public void setDigitalAssetReceptionVault(DigitalAssetReceptionVault digitalAssetReceptionVault) throws CantSetObjectException {
         if(digitalAssetReceptionVault==null){
-            throw new CantSetObjectException("AbstractDigitalAssetReceptionVault is null");
+            throw new CantSetObjectException("DigitalAssetReceptionVault is null");
         }
         this.digitalAssetReceptionVault=digitalAssetReceptionVault;
     }
