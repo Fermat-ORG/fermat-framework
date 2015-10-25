@@ -5,9 +5,14 @@ Contributing Guide
 <br>
 ### Introduction
 
-Anybody can contribute to Fermat and you are welcome to do so. There is a stable community of mantainers called bitDubai. You might want to join this community and specifically one of their teams which are working on specifics area of the system. Visit their [site](https://bitDubai.com) to learn how to join in.
+Anybody can contribute to Fermat and you are welcome to do so. There is a stable community of mantainers called bitDubai. You might want to join this community and specifically one of their teams which are working on different areas of the system. Visit their [site](https://bitDubai.com) to learn how to join in.
+
+Also, you might want to add your own functionality to Fermat, perhaps your own platform, plugins, reference wallet or build your own niche wallet. All of these options are covered within this guide.
 
 Depending on where the changes you propose belogns to the procedure may vary a little bit. 
+
+<br>
+### Part I: Casual Contribution
 
 <br>
 #### Contributing to a Component
@@ -57,7 +62,7 @@ Although there are many ways to configure these tools, we'll provide you with a 
 
 <br>
 
-#### Part I: Linux
+#### Working on Linux
 
 Most Fermat developers are on Linux since compilation is faster there than in Windows. 
 
@@ -165,3 +170,37 @@ You can also modify these values after the project is imported; you can change t
 <br>
 
 TIP: Android Developer Studio incorporates an SDK Tools package inside of its installation, it's better and more manageable if you configure the tools you've downloaded and handle these dependencies yourself, you can do this in the *__File->Project Structure__* menu. You must always configure this value when using IntelliJ IDEA
+
+
+<br>
+### Part II: Expanding Fermat Functionality
+
+<br>
+#### Expanding the Master Plan
+
+
+<br>
+#### Adding a New Platform
+
+
+<br>
+#### Adding a New Addon
+
+
+<br>
+#### Adding a New Plugin
+
+
+<br>
+#### Adding a New Reference Wallet
+
+
+<br>
+#### Adding a New Niche Wallet
+
+
+<br>
+#### Creating a Branded Wallet
+
+
+
