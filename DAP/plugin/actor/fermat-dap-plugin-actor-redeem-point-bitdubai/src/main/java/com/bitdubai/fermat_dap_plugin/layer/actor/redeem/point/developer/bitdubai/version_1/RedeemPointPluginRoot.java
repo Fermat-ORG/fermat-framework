@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -283,9 +284,15 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
      * @throws CantGetAssetRedeemPointActorsException
      */
     @Override
-    public ActorAssetRedeemPoint getActorPublicKey() throws CantGetAssetRedeemPointActorsException {
+    public ActorAssetRedeemPoint getActorAssetRedeemPoint() throws CantGetAssetRedeemPointActorsException {
 
-        return null;
+        ActorAssetRedeemPoint actorAssetRedeemPoint;
+        try {
+            actorAssetRedeemPoint = this.redeemPointActorDao.getActorAssetRedeemPoint();
+        } catch (Exception e) {
+            throw new CantGetAssetRedeemPointActorsException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
+        }
+        return actorAssetRedeemPoint;
     }
 
     /**
@@ -300,7 +307,7 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
         try {
             list = this.redeemPointActorDao.getAllAssetRedeemPointActorRegistered();
         } catch (CantGetRedeemPointsListException e) {
-            throw new CantGetAssetRedeemPointActorsException("CAN'T GET ASSET REDEEM POINT REGISTERED ACTOR", e, "", "");
+            throw new CantGetAssetRedeemPointActorsException("CAN'T GET REDEEM POINT ACTOR REGISTERED", e, "", "");
         }
         return list;
     }
@@ -312,8 +319,12 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
      */
     @Override
     public List<ActorAssetRedeemPoint> getAllRedeemPointActorConnected() throws CantGetAssetRedeemPointActorsException {
-        List<ActorAssetRedeemPoint> list = new LinkedList<>();
-
+        List<ActorAssetRedeemPoint> list; // Asset User Actor list.
+        try {
+            list = this.redeemPointActorDao.getAllAssetRedeemPointActorConnected();
+        } catch (CantGetRedeemPointsListException e) {
+            throw new CantGetAssetRedeemPointActorsException("CAN'T GET REDEEM POINT ACTOR CONNECTED ", e, "", "");
+        }
         return list;
     }
 
