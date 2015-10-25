@@ -3,7 +3,6 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -15,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.RequestedListNotReadyRecevivedException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.AssetActorUserPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantAddPendingAssetUserException;
@@ -26,7 +26,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -143,15 +142,36 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
 
         private void doTheMainTask() throws CantCreateAssetUserActorException {
             try {
-                test_RegisterActorNetworkService();
+//                test_RegisterActorNetworkService();
+
+                test_listByActorNetworkServiceUser();
+
             } catch (CantCreateAssetUserActorException e) {
+                throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
+            }
+        }
+
+        private void test_listByActorNetworkServiceUser() throws CantCreateAssetUserActorException {
+            List<ActorAssetUser> list;
+//                Procedimiento para Obtener lista de Actores del Actor Network Service User
+            try {
+                list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
+
+                if (list.isEmpty()) {
+                    System.out.println("Lista de Actores de Actor Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
+                } else {
+                    System.out.println("Se Recibio Lista de: " + list.size() + " Actors desde Actor Network Service - SE PROCEDE A SU REGISTRO");
+                    assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(list);
+                    System.out.println("Se Registro en tabla ASSET_USER_REGISTER_ACTOR Lista de: " + list.size() + " Actors desde Actor Network Service");
+                }
+            } catch (RequestedListNotReadyRecevivedException e) {
                 e.printStackTrace();
-                throw new CantCreateAssetUserActorException("CAN'T ADD (TEST) NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
+            } catch (CantAddPendingAssetUserException e) {
+                throw new CantCreateAssetUserActorException("CAN'T ADD TEST NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
             }
         }
 
         private void test_RegisterActorNetworkService() throws CantCreateAssetUserActorException {
-            List<ActorAssetUser> list;
             try {
                 //Comentar CICLO FOR para realizar prueba directa con Actor Network Service
                 for (int i = 0; i < 10; i++) {
@@ -175,19 +195,7 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
 
                     assetActorUserPluginRoot.registerGenesisAddressInCryptoAddressBook(genesisAddress);
                 }
-                System.out.println("Actores SIMULANDO Actor Network Service: GUARDADOS - Nuevo intento en: "+SLEEP_TIME/1000/60+" minute (s)");
-
-//                Procedimiento para Obtener lista de Actores del Actor Network Service User
-
-//                list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
-//                if(list.isEmpty()){
-//                    System.out.println("Lista de Actores de Actor Network Service: RECIBIDA VACIA - Nuevo intento en: "+SLEEP_TIME/1000/60+" minute (s)");
-//                }else {
-//                    System.out.println("Se Recibio Lista de: " + list.size() + " Actors desde Actor Network Service - SE PROCEDE A SU REGISTRO");
-//                    assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(list);
-//                    System.out.println("Se Registro en tabla ASSET_USER_REGISTER_ACTOR Lista de: " + list.size() + " Actors desde Actor Network Service");
-//                }
-
+                System.out.println("Actores SIMULANDO Actor Network Service: GUARDADOS - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
             } catch (CantAddPendingAssetUserException e) {
                 throw new CantCreateAssetUserActorException("CAN'T ADD (TEST) NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
             } catch (Exception e) {
