@@ -6,11 +6,13 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.Bitco
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantGetActorAssetIssuerException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -28,6 +30,7 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
     UUID pluginId;
     PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
+    //ActorAssetIssuerManager actorAssetIssuerManager;
     //DigitalAssetDistributionVault digitalAssetDistributionVault;
 
     public AssetDistributionTransactionManager(AssetVaultManager assetVaultManager,
@@ -97,6 +100,17 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
             throw new CantSetObjectException("AssetVaultManager is null");
         }
         this.assetVaultManager=assetVaultManager;
+    }
+
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException{
+        if(actorAssetIssuerManager==null){
+            throw new CantSetObjectException("actorAssetIssuerManager is null");
+        }try{
+            this.digitalAssetDistributor.setActorAssetIssuerManager(actorAssetIssuerManager);
+        } catch (CantGetActorAssetIssuerException exception) {
+            throw new CantSetObjectException(exception, "Setting the Actor Asset Issuer Manager", "Getting the Actor Asset Issuer" );
+        }
+
     }
 
     @Override
