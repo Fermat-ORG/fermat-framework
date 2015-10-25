@@ -14,11 +14,11 @@ import java.util.List;
 public interface ActorAssetRedeemPointManager {
 
     /**
-     * The method <code>getActorPublicKey</code> get All Information about Actor
+     * The method <code>getActorAssetRedeemPoint</code> get All Information about Actor
      *
      * @throws CantGetAssetRedeemPointActorsException
      */
-    ActorAssetRedeemPoint getActorPublicKey() throws CantGetAssetRedeemPointActorsException;
+    ActorAssetRedeemPoint getActorAssetRedeemPoint() throws CantGetAssetRedeemPointActorsException;
 
     /**
      * The method <code>getAllAssetUserActorRegistered</code> get All Actors Registered in Actor Network Service

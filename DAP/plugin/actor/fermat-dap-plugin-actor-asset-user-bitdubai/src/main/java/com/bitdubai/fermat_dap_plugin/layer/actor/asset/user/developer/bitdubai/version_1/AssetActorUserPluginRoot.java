@@ -453,11 +453,10 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
     }
 
     @Override
-    public ActorAssetUser getActorPublicKey() throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
+    public ActorAssetUser getActorAssetUser() throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
 
         ActorAssetUser actorAssetUser;
         try {
-//            actorAssetUser = this.assetUserActorDao.getActorPublicKey();
             actorAssetUser = this.assetUserActorDao.getActorAssetUser();
         } catch (Exception e) {
             throw new CantGetAssetUserActorsException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
