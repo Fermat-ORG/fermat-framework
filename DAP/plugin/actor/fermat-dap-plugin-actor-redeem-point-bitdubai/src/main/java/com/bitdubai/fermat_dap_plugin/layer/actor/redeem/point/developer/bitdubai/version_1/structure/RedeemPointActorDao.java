@@ -503,6 +503,131 @@ public class RedeemPointActorDao implements Serializable {
         return list;
     }
 
+    public ActorAssetRedeemPoint getActorAssetRedeemPoint() throws CantGetRedeemPointsListException {
+
+        ActorAssetRedeemPoint actorAssetRedeemPoint = new RedeemPointActorRecord();
+        DatabaseTable table;
+
+        // Get Asset Users identities list.
+        try {
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get asset User identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
+            }
+            table.loadToMemory();
+            // 3) Get Asset Users Record.
+            actorAssetRedeemPoint = this.addRecords(table.getRecords());
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetRedeemPointsListException(e.getMessage(), e, "Asset User Actor", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_TABLE_NAME + " table in memory.");
+        } catch (CantGetRedeemPointActorProfileImageException e) {
+            throw new CantGetRedeemPointsListException(e.getMessage(), e, "Asset User Actor", "Can't get profile ImageMiddleware.");
+        } catch (Exception e) {
+            throw new CantGetRedeemPointsListException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
+        } finally {
+            database.closeDatabase();
+        }
+        // Return the values.
+        return actorAssetRedeemPoint;
+    }
+
+    public List<ActorAssetRedeemPoint> getAllAssetRedeemPointActorRegistered() throws CantGetRedeemPointsListException {
+        List<ActorAssetRedeemPoint> list = new ArrayList<>(); // Asset Issuer Actor list.
+
+        DatabaseTable table;
+
+        // Get Asset Issuer identities list.
+        try {
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get asset Issuer identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
+            }
+
+            table.loadToMemory();
+
+            // 3) Get Asset Issuer Recorod.
+            for (DatabaseTableRecord record : table.getRecords()) {
+                // Add records to list.
+                list.add(new RedeemPointActorRecord(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_NAME_COLUMN_NAME),
+                        record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME),
+                        getRedeemPointProfileImagePrivateKey(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME)),
+                        record.getLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME)));           }
+
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException e) {
+            database.closeDatabase();
+            throw new CantGetRedeemPointsListException(e.getMessage(), e, "Redeem Point Actor Registered", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME + " table in memory.");
+        } catch (CantGetRedeemPointActorProfileImageException e) {
+            database.closeDatabase();
+            // Failure unknown.
+            throw new CantGetRedeemPointsListException(e.getMessage(), e, "Redeem Point Actor Registered", "Can't get profile ImageMiddleware.");
+        } catch (Exception e) {
+            database.closeDatabase();
+            throw new CantGetRedeemPointsListException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Actor Registered", "Cant get Redeem Point Actor Registered list, unknown failure.");
+        }
+        // Return the list values.
+        return list;
+    }
+
+    public List<ActorAssetRedeemPoint> getAllAssetRedeemPointActorConnected() throws CantGetRedeemPointsListException {
+        List<ActorAssetRedeemPoint> list = new ArrayList<>(); // Asset Issuer Actor list.
+
+        DatabaseTable table;
+
+        // Get Asset Issuer identities list.
+        try {
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get asset Issuer identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
+            }
+
+            table.loadToMemory();
+
+            // 3) Get Asset Issuer Recorod.
+            for (DatabaseTableRecord record : table.getRecords()) {
+                // Add records to list.
+                list.add(new RedeemPointActorRecord(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_NAME_COLUMN_NAME),
+                        record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME),
+                        getRedeemPointProfileImagePrivateKey(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME)),
+                        record.getLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME)));           }
+
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException e) {
+            database.closeDatabase();
+            throw new CantGetRedeemPointsListException(e.getMessage(), e, "Redeem Point Actor Registered", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME + " table in memory.");
+        } catch (CantGetRedeemPointActorProfileImageException e) {
+            database.closeDatabase();
+            // Failure unknown.
+            throw new CantGetRedeemPointsListException(e.getMessage(), e, "Redeem Point Actor Registered", "Can't get profile ImageMiddleware.");
+        } catch (Exception e) {
+            database.closeDatabase();
+            throw new CantGetRedeemPointsListException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Actor Registered", "Cant get Redeem Point Actor Registered list, unknown failure.");
+        }
+        // Return the list values.
+        return list;
+    }
+
     private void addRecordsToList(List<ActorAssetRedeemPoint> list, List<DatabaseTableRecord> records) throws InvalidParameterException, CantGetRedeemPointActorProfileImageException {
 
         for (DatabaseTableRecord record : records) {
@@ -704,48 +829,46 @@ public class RedeemPointActorDao implements Serializable {
         }
     }
 
-    public List<ActorAssetRedeemPoint> getAllAssetRedeemPointActorRegistered() throws CantGetRedeemPointsListException {
-        List<ActorAssetRedeemPoint> list = new ArrayList<>(); // Asset Issuer Actor list.
+    private ActorAssetRedeemPoint addRecords(List<DatabaseTableRecord> records) throws InvalidParameterException, CantGetRedeemPointActorProfileImageException {
+        RedeemPointActorRecord redeemPointActor = null;
+        for (DatabaseTableRecord record : records) {
 
-        DatabaseTable table;
+//            CryptoAddress cryptoAddress = new CryptoAddress(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME),
+//                    CryptoCurrency.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME)));
 
-        // Get Asset Issuer identities list.
-        try {
-            /**
-             * 1) Get the table.
-             */
-            table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
-
-            if (table == null) {
-                /**
-                 * Table not found.
-                 */
-                throw new CantGetUserDeveloperIdentitiesException("Cant get asset Issuer identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
-            }
-
-            table.loadToMemory();
-
-            // 3) Get Asset Issuer Recorod.
-            for (DatabaseTableRecord record : table.getRecords()) {
-                // Add records to list.
-                list.add(new RedeemPointActorRecord(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_NAME_COLUMN_NAME),
-                        record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME),
-                        getRedeemPointProfileImagePrivateKey(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME)),
-                        record.getLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME)));           }
-
-            database.closeDatabase();
-        } catch (CantLoadTableToMemoryException e) {
-            database.closeDatabase();
-            throw new CantGetRedeemPointsListException(e.getMessage(), e, "Redeem Point Actor Registered", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME + " table in memory.");
-        } catch (CantGetRedeemPointActorProfileImageException e) {
-            database.closeDatabase();
-            // Failure unknown.
-            throw new CantGetRedeemPointsListException(e.getMessage(), e, "Redeem Point Actor Registered", "Can't get profile ImageMiddleware.");
-        } catch (Exception e) {
-            database.closeDatabase();
-            throw new CantGetRedeemPointsListException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Actor Registered", "Cant get Redeem Point Actor Registered list, unknown failure.");
+            redeemPointActor = new RedeemPointActorRecord(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME),
+                    record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_NAME_COLUMN_NAME),
+//                    record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_AGE_COLUMN_NAME),
+//                    Genders.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.REDEEM_POINT_GENDER_COLUMN_NAME)),
+                    ConnectionState.getByCode(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CONNECTION_STATE_COLUMN_NAME)),
+                    record.getDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOCATION_LATITUDE_COLUMN_NAME),
+                    record.getDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOCATION_LONGITUDE_COLUMN_NAME),
+//                    cryptoAddress,
+                    record.getLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME),
+//                    record.getLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LAST_CONNECTION_DATE_COLUMN_NAME),
+                    getRedeemPointProfileImagePrivateKey(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME)));
         }
-        // Return the list values.
-        return list;
+        return redeemPointActor;
+    }
+
+    private void addRecordsTableRegisteredToList(List<ActorAssetRedeemPoint> list, List<DatabaseTableRecord> records) throws InvalidParameterException, CantGetRedeemPointActorProfileImageException {
+
+        for (DatabaseTableRecord record : records) {
+
+//            CryptoAddress cryptoAddress = new CryptoAddress(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME),
+//                    CryptoCurrency.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME)));
+
+            list.add(new RedeemPointActorRecord(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME),
+                    record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_NAME_COLUMN_NAME),
+//                    record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_AGE_COLUMN_NAME),
+//                    Genders.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_GENDER_COLUMN_NAME)),
+                    ConnectionState.getByCode(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME)),
+                    record.getDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME),
+                    record.getDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME),
+//                    cryptoAddress,
+                    record.getLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME),
+//                    record.getLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME),
+                    getRedeemPointProfileImagePrivateKey(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME))));
+        }
     }
 }

@@ -33,7 +33,7 @@ public interface ActorAssetUserManager {
    *
    * @throws CantGetAssetUserActorsException
    */
-  ActorAssetUser getActorPublicKey() throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
+  ActorAssetUser getActorAssetUser() throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
 
   /**
    * The method <code>getAllAssetUserActorRegistered</code> get All Actors Registered in Actor Network Service
