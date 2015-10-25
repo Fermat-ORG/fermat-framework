@@ -1,11 +1,13 @@
 
 <br>
-Contributing to Fermat
+Contributing Guide
 ------------------------
 <br>
 ### Introduction
 
-Anybody can contribute to Fermat and you are welcome to do so. Depending on where the changes you propose belogns to the procedure may vary a little bit. 
+Anybody can contribute to Fermat and you are welcome to do so. There is a stable community of mantainers called bitDubai. You might want to join this community and specifically one of their teams which are working on specifics area of the system. Visit their [site](https://bitDubai.com) to learn how to join in.
+
+Depending on where the changes you propose belogns to the procedure may vary a little bit. 
 
 <br>
 #### Contributing to a Component
