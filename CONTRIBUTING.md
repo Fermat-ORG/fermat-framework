@@ -7,6 +7,7 @@ Contributing to Fermat
 
 Anybody can contribute to Fermat and you are welcome to do so. Depending on where the changes you propose belogns to the procedure may vary a little bit. 
 
+<br>
 #### Contributing to a Component
 
 Whatever you find that can make Fermat better is welcome and it will be considered. Follow these steps to find the best way for your case: 
@@ -33,7 +34,7 @@ Fork the *username*/fermat repo, and submit a pull request there when done.
 <br>
 #### Contributing to the Fermat Book
 
-It is very easy to contribute to the book, just edit the desired file and at the end you will find the "Propose file change" button.
+It is very easy to contribute to the book, just edit the desired file and at the end you will find the "Propose file change" button. You can find the Fermat Book [here](https://github.com/bitDubai/fermat/tree/master/fermat-book).
 
 
 <br>
@@ -42,7 +43,7 @@ It is very easy to contribute to the book, just edit the desired file and at the
 <br>
 #### Overview
 
-You are going to need the following tools in order to develop in Fermat
+You will need the following tools in order to develop in Fermat
 
 * **Git**
 * **Java Standard Development Kit 7**
@@ -122,7 +123,6 @@ This can be done in several ways but we recommend adding a file to **/etc/profil
 export JAVA_HOME=/opt/java
 export GRADLE_HOME=/opt/gradle
 export ANDROID_HOME=/opt/android-sdk
-
 export PATH=$PATH:$JAVA_HOME/bin:$GRADLE_HOME/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools
 ```
 
