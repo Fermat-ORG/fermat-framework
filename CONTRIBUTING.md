@@ -3,8 +3,41 @@
 Contributing to Fermat
 ------------------------
 
+### Introduction
+
+Anybody can contribute to the Fermat Project and you are welcome to do so. Depending on where the changes you propose belogns to the procedure may vary a little bit. 
+
+#### Contributing to a Component
+
+Whatever you find that can make Fermat better is welcome and it will be considered. Follow these steps to find the best way for your case: 
+
+In fermat, every component (plugin, addon, library, etc) has a Author and a Mantainer.
+
+1. Open www.fermat.org, go to the Architecture view and zoom in until you find the component you will suggest to change.
+2. Click on that component to select it.
+3. You will find there a picture of the author. If he/she is not the current mantainer, you will also find the mantainers picture. 
+4. Click again their the picture to get more detailed info including their github username.
+5. Go to https://github.com/*username*/fermat.
+
+If your change don't need to be compiled and tested or you prefer not to do that yourself, then you can go through the _Casual or Minor Change_ section. Otherwise, if you prefer to get deeper and finish the job by yourself, then go throught the _Major Change_ section.
+
+##### Casual or Minor Change
+
+Find the file in *username*/fermat repo, open it on edit mode and hit  the "Propose file change" button when you are done.
+
+##### Major Change
+
+Fork the *username*/fermat repo, and submit a pull request there when done.
+
+
 <br>
-### Fermat Development Environment Installation and Configuration - Linux
+#### Contributing to the Fermat Book
+
+It is very easy to contribute to the book, just edit the desired file and at the end you will find the "Propose file change" button.
+
+
+<br>
+#### Fermat Development Environment Installation and Configuration - Linux
 
 You are going to need the following tools in order to develop in Fermat
 
@@ -17,7 +50,7 @@ You are going to need the following tools in order to develop in Fermat
 Although there are many ways to configure these tools, we'll provide you with a recommended configuration for your development environment
 
 <br>
-### Installing Git
+#### Installing Git
 
 Fortunately, `git` is part of the common set of tools that you can find in any Distro of Linux.
 
@@ -29,7 +62,7 @@ sudo apt-get install git
 ```
 
 <br>
-### Installing JDK 7
+#### Installing JDK 7
 
 You can get a running OpenJDK in most distros, but it's advised that we use the oficial Oracle JVM when we're going to code in Fermat.
 
@@ -47,7 +80,7 @@ sudo mv jdk* /opt/java
 ```
 
 <br>
-### Installing Gradle
+#### Installing Gradle
 
 We can also install Gradle using the `apt` service, although the version we'll get might be out of date, so we recommend that you download one available in [gradle.org](http://gradle.org/)
 
@@ -59,7 +92,7 @@ sudo mv gradle-2.8/ /opt/gradle
 ```
 
 <br>
-### Installing Android SDK Tools
+#### Installing Android SDK Tools
 
 We can obtain the Android SDK Tools directly through [this link](http://dl.google.com/android/android-sdk_r24.4.1-linux.tgz)
 
@@ -71,7 +104,7 @@ sudo mv android-sdk-linux/ /opt/android-sdk
 ```
 
 <br>
-### Setting Up The Environment Variables
+#### Setting Up The Environment Variables
 
 We recommend that you configure your environment to recognize the tools you've downloaded and placed inside **/opt** as a part of the *bash profile*.
 
@@ -107,7 +140,7 @@ android sdk
 ```
 
 <br>
-### Setting up your IDE
+#### Setting up your IDE
 
 You can use either [IntelliJ IDEA](https://www.jetbrains.com/idea/) or [Android Developer Studio](http://developer.android.com/intl/es/sdk/index.html) to develop in Fermat.
 
