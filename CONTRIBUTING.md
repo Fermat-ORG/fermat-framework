@@ -1,7 +1,7 @@
 
 <br>
 #Contributing Guide
-------------------------
+
 <br>
 ## Introduction
 
