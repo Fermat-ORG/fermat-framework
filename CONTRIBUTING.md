@@ -133,7 +133,7 @@ IMPORTANT: For these changes to set effect you should log out of your current se
 TIP: You can verify that these variables are properly using the command `env`
 
 <br>
-#### Downloading the Android SDKs and Build Tools
+##### Downloading the Android SDKs and Build Tools
 
 Before you can compile Fermat properly, you need to download the SDKs and build tools that Gradle will use to build Fermat.
 
