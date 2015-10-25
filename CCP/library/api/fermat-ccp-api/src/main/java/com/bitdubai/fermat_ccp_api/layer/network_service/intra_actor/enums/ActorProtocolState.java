@@ -14,7 +14,8 @@ public enum ActorProtocolState implements FermatEnum {
     PROCESSING_RECEIVE ("PCR"), // when an action from the network service is needed receiving.
     PROCESSING_SEND    ("PCS"), // when an action from the network service is needed sending.
     WAITING_RESPONSE   ("WRE"),  // waiting response from the counterpart.
-    SENT("SENT");
+    SENT("SENT"),
+    DELIVERY("DELIVERY");
 
     private String code;
 
@@ -32,6 +33,7 @@ public enum ActorProtocolState implements FermatEnum {
             case "PCS": return PROCESSING_SEND    ;
             case "WRE": return WAITING_RESPONSE   ;
             case "SENT": return SENT;
+            case "DELIVERY": return DELIVERY;
 
             default:
                 throw new InvalidParameterException(
