@@ -127,7 +127,7 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implements IntraUserManager, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithPluginFileSystem,DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, DatabaseManagerForDevelopers {
+public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implements IntraUserManager, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithPluginFileSystem,DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, DatabaseManagerForDevelopers,Service {
 
 
     @Override
@@ -211,7 +211,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     /**
      * Represent the status of the network service
      */
-    private ServiceStatus serviceStatus;
+    //private ServiceStatus serviceStatus;
 
     /**
      * DealWithEvents Interface member variables.
@@ -497,6 +497,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             this.serviceStatus = ServiceStatus.STARTED;
 
 
+
        } catch (CantInitializeTemplateNetworkServiceDatabaseException exception) {
 
             StringBuffer contextBuffer = new StringBuffer();
@@ -575,6 +576,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
          */
         this.serviceStatus = ServiceStatus.STOPPED;
 
+    }
+
+    public ServiceStatus getServiceStatus(){
+        return serviceStatus;
     }
 
     /**
@@ -821,7 +826,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                     //byte[] profile_image = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString().getBytes();
 
-                    actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);;
+                    actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
 
                     getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
 
@@ -886,10 +891,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
         actorNetworkServiceRecord.changeDescriptor(IntraUserNotificationDescriptor.RECEIVED);
 
-        // change actor
-        String actorDestination = actorNetworkServiceRecord.getActorDestinationPublicKey();
-        actorNetworkServiceRecord.setActorDestinationPublicKey(actorNetworkServiceRecord.getActorSenderPublicKey());
-        actorNetworkServiceRecord.setActorSenderPublicKey(actorDestination);
+        changeActor(actorNetworkServiceRecord);
 
 
         communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey())
@@ -897,6 +899,13 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                         actorNetworkServiceRecord.getActorSenderPublicKey(),
                         actorNetworkServiceRecord.getActorSenderAlias(),
                         actorNetworkServiceRecord.toJson());
+    }
+
+    private void changeActor(ActorNetworkServiceRecord actorNetworkServiceRecord){
+        // change actor
+        String actorDestination = actorNetworkServiceRecord.getActorDestinationPublicKey();
+        actorNetworkServiceRecord.setActorDestinationPublicKey(actorNetworkServiceRecord.getActorSenderPublicKey());
+        actorNetworkServiceRecord.setActorSenderPublicKey(actorDestination);
     }
 
      private void launchIncomingRequestConnectionNotificationEvent(ActorNetworkServiceRecord actorNetworkServiceRecord) {
@@ -1184,9 +1193,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToAddPublicKey, IntraUserNotificationDescriptor.ACCEPTED, ActorProtocolState.DONE);
 
-            actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToAddPublicKey);
+//            actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToAddPublicKey);
+//
+//            actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
 
-            actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
+            changeActor(actorNetworkServiceRecord);
 
             actorNetworkServiceRecord.changeDescriptor(IntraUserNotificationDescriptor.ACCEPTED);
 
