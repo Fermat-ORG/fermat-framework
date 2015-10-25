@@ -14,6 +14,9 @@ Depending on where the changes you propose belogns to the procedure may vary a l
 <br>
 ### Part I: Casual Contribution
 
+We consider a _casual contribution_ a bug fix or any other change big or small done in casual way, without assuming any responsability for the mantainance of the code submited.  _Casual contributions_ don't get to the size of adding new components to the system.
+
+
 <br>
 #### Contributing to a Component
 
