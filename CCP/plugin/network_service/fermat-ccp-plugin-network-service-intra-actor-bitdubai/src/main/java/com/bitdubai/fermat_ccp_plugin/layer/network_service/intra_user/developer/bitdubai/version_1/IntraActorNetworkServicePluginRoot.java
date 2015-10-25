@@ -829,37 +829,26 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                     launchIncomingRequestConnectionNotificationEvent(actorNetworkServiceRecord);
 
-                    actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
-                    actorNetworkServiceRecord.changeDescriptor(IntraUserNotificationDescriptor.RECEIVED);
+                    respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
 
-                    // change actor
-                    String actorDestination = actorNetworkServiceRecord.getActorDestinationPublicKey();
-                    actorNetworkServiceRecord.setActorDestinationPublicKey(actorNetworkServiceRecord.getActorSenderPublicKey());
-                    actorNetworkServiceRecord.setActorSenderPublicKey(actorDestination);
-
-
-                    communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey())
-                            .sendMessage(
-                                    actorNetworkServiceRecord.getActorSenderPublicKey(),
-                                    actorNetworkServiceRecord.getActorSenderAlias(),
-                                    actorNetworkServiceRecord.toJson());
-
-//                    try{
-//                        //TOOD: ver si esto funciona
-//                        communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorSenderPublicKey());
-//
-//                    }catch (Exception e){
-//                        e.printStackTrace();
-//                    }
 
                     break;
                 case ACCEPTED:
                     //TODO: ver si me conviene guardarlo en el outogoing DAO o usar el incoming para las que llegan directamente
-                    actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
+                    actorNetworkServiceRecord.changeDescriptor(IntraUserNotificationDescriptor.ACCEPTED);
+                    actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
                     getOutgoingNotificationDao().update(actorNetworkServiceRecord);
+
+                    actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
+
+                    getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
                     System.out.println("----------------------------\n" +
                             "MENSAJE ACCEPTED LLEGÓ BIEN:" + actorNetworkServiceRecord
                             + "\n-------------------------------------------------");
+
+
+                    respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
+
                     break;
 
 
@@ -890,6 +879,24 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         System.out.println("---------------------------\n" +
                 "Llegaron mensajes!!!!\n" +
                 "-----------------------------------------");
+    }
+
+    // respond receive and done notification
+    private void respondReceiveAndDoneCommunication(ActorNetworkServiceRecord actorNetworkServiceRecord){
+        actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
+        actorNetworkServiceRecord.changeDescriptor(IntraUserNotificationDescriptor.RECEIVED);
+
+        // change actor
+        String actorDestination = actorNetworkServiceRecord.getActorDestinationPublicKey();
+        actorNetworkServiceRecord.setActorDestinationPublicKey(actorNetworkServiceRecord.getActorSenderPublicKey());
+        actorNetworkServiceRecord.setActorSenderPublicKey(actorDestination);
+
+
+        communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey())
+                .sendMessage(
+                        actorNetworkServiceRecord.getActorSenderPublicKey(),
+                        actorNetworkServiceRecord.getActorSenderAlias(),
+                        actorNetworkServiceRecord.toJson());
     }
 
      private void launchIncomingRequestConnectionNotificationEvent(ActorNetworkServiceRecord actorNetworkServiceRecord) {
