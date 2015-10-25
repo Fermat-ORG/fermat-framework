@@ -97,11 +97,11 @@ You will need the following tools in order to develop in Fermat
 Although there are many ways to configure these tools, we'll provide you with a recommended configuration for your development environment
 
 <br>
-
 ### Working on Linux
 
 Most Fermat developers are on Linux since compilation is faster there than in Windows. 
 
+<br>
 #### Installing Git
 
 Fortunately, `git` is part of the common set of tools that you can find in any Distro of Linux.
