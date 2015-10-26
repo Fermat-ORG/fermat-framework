@@ -1,6 +1,9 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.cash_money_stock_replenishment.interfaces;
 
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.BusinessTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.cash_money_stock_replenishment.exceptions.CantCreateCashMoneyStockReplenishmentException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.cash_money_stock_replenishment.exceptions.CantGetCashMoneyStockReplenishmentException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.cash_money_stock_replenishment.exceptions.CantUpdateStatusCashMoneyStockReplenishmentException;
@@ -18,12 +21,12 @@ public interface CashMoneyStockReplenishmentManager {
 
     CashMoneyStockReplenishment createCashMoneyStockReplenishment(
          final String publicKeyBroker
-        ,final String merchandiseCurrency
+        ,final CurrencyType merchandiseCurrency
         ,final float merchandiseAmount
-        ,final String executionTransactionId
-        ,final String cashCurrencyType
+        ,final UUID executionTransactionId
+        ,final CashCurrencyType cashCurrencyType
     ) throws CantCreateCashMoneyStockReplenishmentException;
 
-    void updateStatusCashMoneyStockReplenishment(final UUID transactionId) throws CantUpdateStatusCashMoneyStockReplenishmentException;
+    void updateStatusCashMoneyStockReplenishment(final UUID transactionId,final BusinessTransactionStatus transactionStatus) throws CantUpdateStatusCashMoneyStockReplenishmentException;
 
 }

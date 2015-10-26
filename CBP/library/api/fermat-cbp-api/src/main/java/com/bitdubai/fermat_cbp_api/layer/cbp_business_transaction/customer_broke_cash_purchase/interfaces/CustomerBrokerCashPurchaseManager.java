@@ -1,6 +1,9 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.customer_broke_cash_purchase.interfaces;
 
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.BusinessTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.customer_broke_cash_purchase.exceptions.CantCreateCustomerBrokerCashPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.customer_broke_cash_purchase.exceptions.CantGetCustomerBrokerCashPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.customer_broke_cash_purchase.exceptions.CantUpdateStatusCustomerBrokerCashPurchaseException;
@@ -18,17 +21,17 @@ public interface CustomerBrokerCashPurchaseManager {
     List<CustomerBrokerCashPurchase> getAllCustomerBrokerCashPurchaseFromCurrentDeviceUser() throws CantGetCustomerBrokerCashPurchaseException;
 
     CustomerBrokerCashPurchase createCustomerBrokerCashPurchase(
-             final String contractId
-            ,final String publicKeyCustomer
-            ,final String paymentTransactionId
-            ,final String paymentCurrency
+             final UUID contractId
             ,final String publicKeyBroker
-            ,final String merchandiseCurrency
+            ,final String publicKeyCustomer
+            ,final UUID paymentTransactionId
+            ,final CurrencyType paymentCurrency
+            ,final CurrencyType merchandiseCurrency
             ,final float merchandiseAmount
-            ,final String executionTransactionId
-            ,final String cashCurrencyType
+            ,final UUID executionTransactionId
+            ,final CashCurrencyType cashCurrencyType
     ) throws CantCreateCustomerBrokerCashPurchaseException;
 
-    void updateStatusCustomerBrokerCashPurchase(final UUID transactionId) throws CantUpdateStatusCustomerBrokerCashPurchaseException;
+    void updateStatusCustomerBrokerCashPurchase(final UUID transactionId,final BusinessTransactionStatus transactionStatus) throws CantUpdateStatusCustomerBrokerCashPurchaseException;
 
 }
