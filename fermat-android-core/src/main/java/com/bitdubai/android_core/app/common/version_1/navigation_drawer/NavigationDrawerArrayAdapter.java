@@ -30,14 +30,12 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
     public NavigationDrawerArrayAdapter(Context context, List<String> values) {
         super(context, R.layout.wallet_framework_activity_main_navigation_drawer_row_layout_empty, values);
-        try
-        {
+        try {
 
             this.context = context;
             this.values = values;
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             throw e;
         }
 
@@ -49,8 +47,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
     public View getView(int position, View convertView, ViewGroup parent) {
         Typeface tf=Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
         View rowView = convertView;
-        try
-        {
+        try {
             if (position == 0) {
 
 
