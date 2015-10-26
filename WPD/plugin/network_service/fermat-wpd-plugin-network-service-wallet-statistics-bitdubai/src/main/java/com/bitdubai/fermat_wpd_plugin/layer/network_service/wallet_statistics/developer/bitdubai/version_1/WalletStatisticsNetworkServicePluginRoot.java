@@ -103,7 +103,7 @@ public class WalletStatisticsNetworkServicePluginRoot implements DealsWithErrors
     }
 
     @Override
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return null;
     }
 

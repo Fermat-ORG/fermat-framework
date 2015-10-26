@@ -17,8 +17,6 @@ public class PluginReference {
 
     private       LayerReference    layerReference;
     private final FermatPluginsEnum plugin        ;
-    private       Developers        developer     ;
-    private       Version           version       ;
 
     public PluginReference(final FermatPluginsEnum plugin) {
 
@@ -32,48 +30,13 @@ public class PluginReference {
         this.plugin         = plugin        ;
     }
 
-    public PluginReference(final LayerReference    layerReference,
-                           final FermatPluginsEnum plugin        ,
-                           final Version           version       ) {
-
-        this.layerReference = layerReference;
-        this.plugin         = plugin        ;
-        this.version        = version       ;
-    }
-
-    public PluginReference(final LayerReference    layerReference,
-                           final FermatPluginsEnum plugin        ,
-                           final Developers        developer     ,
-                           final Version           version       ) {
-
-        this.layerReference = layerReference;
-        this.plugin         = plugin        ;
-        this.developer      = developer     ;
-        this.version        = version       ;
-    }
 
     public final FermatPluginsEnum getPlugin() {
         return plugin;
     }
 
-    public final Version getVersion() {
-        return version;
-    }
-
-    public final void setVersion(Version version) {
-        this.version = version;
-    }
-
     public final LayerReference getLayerReference() {
         return layerReference;
-    }
-
-    public final Developers getDeveloper() {
-        return developer;
-    }
-
-    public final void setDeveloper(Developers developer) {
-        this.developer = developer;
     }
 
     public final void setLayerReference(LayerReference layerReference) {
@@ -87,7 +50,6 @@ public class PluginReference {
         PluginReference compare = (PluginReference) o;
 
         return plugin.equals(compare.getPlugin()) &&
-                ((version == null && compare.getVersion() == null) || (version != null && version.equals(compare.getVersion()))) &&
                 ((layerReference == null && compare.getLayerReference() == null) || (layerReference != null && layerReference.equals(compare.getLayerReference())));
     }
 
@@ -96,13 +58,9 @@ public class PluginReference {
         int c = 0;
 
         c += plugin .hashCode();
-
-        if (version != null)
-
-            c += version.hashCode();
-
         if (layerReference != null)
             c += layerReference.hashCode();
+
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 
@@ -111,7 +69,6 @@ public class PluginReference {
         return "PluginReference{" +
                 "layerReference=" + layerReference +
                 ", plugin=" + plugin +
-                ", version=" + version +
                 '}';
     }
 }

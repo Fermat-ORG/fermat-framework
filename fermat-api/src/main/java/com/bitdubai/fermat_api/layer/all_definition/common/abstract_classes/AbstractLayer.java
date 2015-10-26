@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
 
-import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.AddonNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterPluginException;
@@ -24,8 +22,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractLayer {
 
-    private final Map<AddonReference , Addon > addons ;
-    private final Map<PluginReference, Plugin> plugins;
+    private final Map<AddonReference , AbstractAddonSubsystem > addons ;
+    private final Map<PluginReference, AbstractPluginSubsystem> plugins;
 
     private final LayerReference layerReference;
 
@@ -63,7 +61,7 @@ public abstract class AbstractLayer {
 
             addons.put(
                     addonReference,
-                    abstractAddonSubsystem.getAddon()
+                    abstractAddonSubsystem
             );
 
         } catch (final CantStartSubsystemException e) {
@@ -97,7 +95,7 @@ public abstract class AbstractLayer {
 
             plugins.put(
                     pluginReference,
-                    abstractPluginSubsystem.getPlugin()
+                    abstractPluginSubsystem
             );
 
         } catch (final CantStartSubsystemException e) {
@@ -106,7 +104,7 @@ public abstract class AbstractLayer {
         }
     }
 
-    public final Addon getAddon(AddonReference addonReference) throws AddonNotFoundException {
+    public final AbstractAddonSubsystem getAddon(AddonReference addonReference) throws AddonNotFoundException {
 
         if (addons.containsKey(addonReference)) {
             return addons.get(addonReference);
@@ -116,7 +114,7 @@ public abstract class AbstractLayer {
         }
     }
 
-    public final Plugin getPlugin(PluginReference pluginReference) throws PluginNotFoundException {
+    public final AbstractPluginSubsystem getPlugin(PluginReference pluginReference) throws PluginNotFoundException {
 
         if (plugins.containsKey(pluginReference)) {
             return plugins.get(pluginReference);

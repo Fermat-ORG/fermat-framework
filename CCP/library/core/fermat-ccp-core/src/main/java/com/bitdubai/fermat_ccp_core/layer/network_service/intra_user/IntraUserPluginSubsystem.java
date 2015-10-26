@@ -21,12 +21,10 @@ public class IntraUserPluginSubsystem extends AbstractPluginSubsystem {
     @Override
     public void start() throws CantStartSubsystemException {
         try {
-            DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-            plugin = developerBitDubai.getPlugin();
+            registerDeveloper(new DeveloperBitDubai());
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);
         }
     }
-
 }

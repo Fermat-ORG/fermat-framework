@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -28,6 +29,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceU
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Executors;
 
 /**
  * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.CryptoVaultAssetsOverBitcoinPluginRoot</code>
@@ -165,6 +167,7 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager
          * Test
          */
         //generateAddress();
+        //sendBitcoinsTest();
 
 
 
@@ -186,6 +189,27 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot implements AssetVaultManager
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (GetNewCryptoAddressException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendBitcoinsTest(){
+        try {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(5000);
+                        assetCryptoVaultManager.sendBitcoinAssetToUser("af91c3ef08a279bfc3205d7ec5e801f7843e54de482a51c8fe396dbd05cc7374", new CryptoAddress("mwUNWLnvPP38zDKsj8VkRjviPUxWBLV9U9", CryptoCurrency.BITCOIN));
+                    } catch (CantSendAssetBitcoinsToUserException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

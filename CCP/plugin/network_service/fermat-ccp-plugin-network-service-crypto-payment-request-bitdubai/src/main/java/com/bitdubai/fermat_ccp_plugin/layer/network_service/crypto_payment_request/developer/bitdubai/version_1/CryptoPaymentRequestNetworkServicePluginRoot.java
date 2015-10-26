@@ -4,6 +4,14 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -85,7 +93,7 @@ import java.util.UUID;
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 01/10/2015.
  */
-public class CryptoPaymentRequestNetworkServicePluginRoot implements
+public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractPlugin implements
         CryptoPaymentRequestManager,
         DealsWithWsCommunicationsCloudClientManager,
         DealsWithErrors,
@@ -94,6 +102,31 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
         NetworkService,
         Plugin,
         Service {
+
+    @Override
+    public List<AddonVersionReference> getNeededAddonReferences() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<PluginVersionReference> getNeededPluginReferences() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    protected void validateAndAssignReferences() {
+
+    }
+
+    @Override
+    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
+        return null;
+    }
 
     /**
      * DealsWithErrors Interface member variables.
@@ -218,18 +251,18 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
             RequestType          direction     = RequestType         .SENT           ;
 
             cryptoPaymentRequestNetworkServiceDao.createCryptoPaymentRequest(
-                    requestId        ,
+                    requestId,
                     identityPublicKey,
-                    identityType     ,
-                    actorPublicKey   ,
-                    actorType        ,
-                    cryptoAddress    ,
-                    description      ,
-                    amount           ,
-                    startTimeStamp   ,
-                    direction        ,
-                    action           ,
-                    protocolState    ,
+                    identityType,
+                    actorPublicKey,
+                    actorType,
+                    cryptoAddress,
+                    description,
+                    amount,
+                    startTimeStamp,
+                    direction,
+                    action,
+                    protocolState,
                     networkType
             );
 
@@ -634,11 +667,6 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
-
     /**
      * (non-Javadoc)
      * @see NetworkService#getId()
@@ -770,7 +798,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot implements
         return extraData;
     }
 
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
 

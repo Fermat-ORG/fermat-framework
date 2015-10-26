@@ -17,42 +17,34 @@ public enum AgentStatus implements FermatEnum {
     /**
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
-
     CREATED("CREATED"),
-    PAUSED ("PAUSED" ),
+    PAUSED("PAUSED"),
     STARTED("STARTED"),
-    STOPPED("STOPPED")
-
-    ;
+    STOPPED("STOPPED");
 
     public String code;
 
-    AgentStatus(String code){
+    AgentStatus(String code) {
         this.code = code;
     }
 
     public static AgentStatus getByCode(String code) throws InvalidParameterException {
 
-        switch (code){
-
-            case "CREATED": return CREATED;
-            case "PAUSED" : return PAUSED ;
-            case "STARTED": return STARTED;
-            case "STOPPED": return STOPPED;
-
+        switch (code) {
+            case "CREATED": return AgentStatus.CREATED;
+            case "PAUSED":  return AgentStatus.PAUSED;
+            case "STARTED": return AgentStatus.STARTED;
+            case "STOPPED": return AgentStatus.STOPPED;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,
                         "The received code is not valid for the AgentStatus enum."
                 );
-
         }
-
     }
 
     @Override
-    public String getCode(){
+    public String getCode() {
         return this.code;
     }
-
 }

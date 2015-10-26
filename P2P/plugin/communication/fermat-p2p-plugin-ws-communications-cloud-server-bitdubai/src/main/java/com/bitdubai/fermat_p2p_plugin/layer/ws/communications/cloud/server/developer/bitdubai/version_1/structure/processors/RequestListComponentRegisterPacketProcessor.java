@@ -141,7 +141,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         }catch (Exception e){
 
             System.out.println("RequestListComponentRegisterPacketProcessor - requested list is not available");
-            e.printStackTrace();
+            //e.printStackTrace();
 
             /*
              * Get the client connection destination
@@ -218,7 +218,6 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         while (iterator.hasNext()){
 
             PlatformComponentProfile platformComponentProfileRegistered = iterator.next();
-            //TODO: ROBERTO, no se porque carajo haces esto, me estas borrando los actores al registrarlos y querer buscarlos
             if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(receiveFermatPacket.getSender())){
                 System.out.println("RequestListComponentRegisterPacketProcessor - removing ="+platformComponentProfileRegistered.getName());
                 iterator.remove();

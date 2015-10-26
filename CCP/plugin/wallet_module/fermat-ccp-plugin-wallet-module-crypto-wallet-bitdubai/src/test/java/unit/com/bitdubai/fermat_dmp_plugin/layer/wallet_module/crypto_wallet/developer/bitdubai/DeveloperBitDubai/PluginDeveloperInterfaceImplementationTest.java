@@ -22,7 +22,7 @@ public class PluginDeveloperInterfaceImplementationTest extends TestCase {
 
     @Test
     public void testGetPlugin_NotNull() throws Exception {
-        Plugin plugin = developerBitDubai.getPlugin();
+        Plugin plugin = developerBitDubai.getFirstPluginVersion();
         assertNotNull(plugin);
     }
 }

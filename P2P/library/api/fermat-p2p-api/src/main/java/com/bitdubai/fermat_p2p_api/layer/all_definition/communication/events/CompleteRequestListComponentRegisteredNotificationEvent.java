@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.interfaces.CommunicationBaseEvent;
 
 
 import java.util.List;
@@ -23,7 +24,7 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CompleteRequestListComponentRegisteredNotificationEvent extends AbstractP2PFermatEvent {
+public class CompleteRequestListComponentRegisteredNotificationEvent extends AbstractP2PFermatEvent implements CommunicationBaseEvent {
 
     /**
      * Represent the list of registered components
@@ -66,15 +67,15 @@ public class CompleteRequestListComponentRegisteredNotificationEvent extends Abs
     }
 
     /**
-     * Get the NetworkServiceType
-     * @return NetworkServiceType
+     * Get the NetworkServiceTypeApplicant
+     * @return NetworkServiceTypeApplicant
      */
     public NetworkServiceType getNetworkServiceTypeApplicant() {
         return networkServiceTypeApplicant;
     }
 
     /**
-     * Set the NetworkServiceType
+     * Set the NetworkServiceTypeApplicant
      * @param networkServiceTypeApplicant
      */
     public void setNetworkServiceTypeApplicant(NetworkServiceType networkServiceTypeApplicant) {
