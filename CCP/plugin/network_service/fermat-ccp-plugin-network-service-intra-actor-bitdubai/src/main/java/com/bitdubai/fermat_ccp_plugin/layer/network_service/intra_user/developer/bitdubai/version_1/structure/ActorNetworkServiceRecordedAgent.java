@@ -335,6 +335,24 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         }
 
                     }
+                }else{
+                    NetworkServiceLocal communicationNetworkServiceLocal = actorNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey());
+
+                    System.out.println("----------------------------\n" +
+                            "ENVIANDO MENSAJE:" + actorNetworkServiceRecord
+                            + "\n-------------------------------------------------");
+
+                    Gson gson = new Gson();
+
+                    communicationNetworkServiceLocal.sendMessage(
+                            actorNetworkServiceRecord.getActorSenderPublicKey(),
+                            actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                            gson.toJson(actorNetworkServiceRecord)
+                    );
+
+                    actorNetworkServicePluginRoot.getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.SENT);
+
+                    poolConnectionsWaitingForResponse.put(actorNetworkServiceRecord.getActorDestinationPublicKey(), actorNetworkServiceRecord);
                 }
             } else {
 
