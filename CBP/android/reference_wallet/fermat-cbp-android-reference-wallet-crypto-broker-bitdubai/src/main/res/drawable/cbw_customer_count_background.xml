@@ -3,8 +3,8 @@
        android:shape="oval">
     <solid android:color="#327434"/>
     <size
-        android:width="@dimen/cbw_first_line_text_size"
-        android:height="@dimen/cbw_first_line_text_size"/>
+        android:width="@dimen/cbw_subtitle_text"
+        android:height="@dimen/cbw_subtitle_text"/>
 
 </shape>
 

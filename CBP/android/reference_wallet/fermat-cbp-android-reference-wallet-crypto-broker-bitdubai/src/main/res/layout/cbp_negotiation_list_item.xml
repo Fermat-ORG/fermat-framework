@@ -16,80 +16,85 @@
         android:layout_width="60dp"
         android:layout_height="match_parent"
         android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="8dp"
         android:contentDescription="@string/identity_img"
         tools:src="@drawable/person"/>
-
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/cbw_customer_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="center_vertical"
-        android:layout_marginBottom="2dp"
-        android:layout_toEndOf="@+id/cbw_customer_image"
-        android:layout_toRightOf="@+id/cbw_customer_image"
-        android:singleLine="true"
-        android:textColor="@color/blue"
-        android:textSize="@dimen/cbw_first_line_text_size"
-        tools:text="Nelson Alfonso Ramirez Noguera"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/buyText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/cbw_customer_name"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="@dimen/margin_text"
+        android:layout_marginRight="@dimen/margin_text"
         android:layout_toEndOf="@+id/cbw_customer_image"
         android:layout_toRightOf="@+id/cbw_customer_image"
+        android:paddingTop="4dp"
         android:singleLine="true"
         android:text="@string/buy"
         android:textColor="@color/black"
-        android:textSize="@dimen/second_line_text_size"/>
+        android:textSize="@dimen/cbw_title_text_size"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/cbw_customer_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buyText"
+        android:layout_gravity="center_vertical"
+        android:layout_toEndOf="@+id/cbw_customer_image"
+        android:layout_toLeftOf="@+id/cbw_update_date"
+        android:layout_toRightOf="@+id/cbw_customer_image"
+        android:layout_toStartOf="@+id/cbw_update_date"
+        android:singleLine="true"
+        android:textColor="@color/customer_name_text"
+        android:textSize="@dimen/cbw_subtitle_text"
+        tools:text="Nelson Ramirez"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/cbw_merchandise_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/cbw_customer_name"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="@dimen/margin_text"
+        android:layout_marginRight="@dimen/margin_text"
         android:layout_toEndOf="@+id/buyText"
         android:layout_toRightOf="@+id/buyText"
         android:inputType="numberDecimal"
+        android:paddingTop="4dp"
         android:singleLine="true"
         android:textColor="@color/black"
-        android:textSize="@dimen/second_line_text_size"
+        android:textSize="@dimen/cbw_title_text_size"
         tools:text="400"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/cbw_merchandise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/cbw_customer_name"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="@dimen/margin_text"
+        android:layout_marginRight="@dimen/margin_text"
         android:layout_toEndOf="@+id/cbw_merchandise_amount"
         android:layout_toRightOf="@+id/cbw_merchandise_amount"
+        android:paddingTop="4dp"
         android:singleLine="true"
         android:textColor="@color/black"
-        android:textSize="@dimen/second_line_text_size"
+        android:textSize="@dimen/cbw_title_text_size"
         tools:text="USD"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/cbw_type_of_payment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/cbw_customer_image"
-        android:layout_toRightOf="@+id/cbw_customer_image"
+        android:layout_alignLeft="@+id/cbw_customer_name"
+        android:layout_alignStart="@+id/cbw_customer_name"
+        android:layout_below="@+id/cbw_customer_name"
         android:singleLine="true"
-        android:textColor="@color/black"
-        android:textSize="@dimen/third_line_text_size"
+        android:textColor="@color/dark_grey"
+        android:textSize="@dimen/cbw_subtitle_text"
+        android:visibility="gone"
         tools:text="Crypto Transfer"/>
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -97,59 +102,76 @@
         android:layout_toRightOf="@+id/cbw_type_of_payment"
         android:orientation="horizontal">
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_text_bottom_right"
-            android:layout_marginRight="@dimen/margin_text_bottom_right"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:singleLine="true"
-            android:text="@string/unit_number"
-            android:textColor="@color/black"
-            android:textSize="@dimen/third_line_text_size"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/cbw_merchandise_currency"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_text_bottom_right"
-            android:layout_marginRight="@dimen/margin_text_bottom_right"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textSize="@dimen/third_line_text_size"
-            tools:text="USD"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_text_bottom_right"
-            android:layout_marginRight="@dimen/margin_text_bottom_right"
-            android:singleLine="true"
-            android:text="@string/at"
-            android:textColor="@color/black"
-            android:textSize="@dimen/third_line_text_size"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/cbw_exchange_rate_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_text_bottom_right"
-            android:layout_marginRight="@dimen/margin_text_bottom_right"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textSize="@dimen/third_line_text_size"
-            tools:text="0.2"
-            />
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/cbw_payment_currency"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textSize="@dimen/third_line_text_size"
-            tools:text="BTC"
-            />
     </LinearLayout>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="@dimen/margin_text"
+        android:layout_marginRight="@dimen/margin_text"
+        android:layout_toEndOf="@+id/cbw_merchandise"
+        android:layout_toRightOf="@+id/cbw_merchandise"
+        android:paddingTop="4dp"
+        android:singleLine="true"
+        android:text="@string/at"
+        android:textColor="@color/black"
+        android:textSize="14sp"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/cbw_exchange_rate_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="@dimen/margin_text"
+        android:layout_marginRight="@dimen/margin_text"
+        android:layout_toEndOf="@+id/view"
+        android:layout_toRightOf="@+id/view"
+        android:paddingTop="4dp"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textSize="@dimen/cbw_title_text_size"
+        tools:text="0.2"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/cbw_payment_currency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/cbw_exchange_rate_amount"
+        android:layout_marginEnd="@dimen/margin_text"
+        android:layout_marginRight="@dimen/margin_text"
+        android:layout_toEndOf="@+id/cbw_exchange_rate_amount"
+        android:layout_toRightOf="@+id/cbw_exchange_rate_amount"
+        android:paddingTop="4dp"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textSize="@dimen/cbw_title_text_size"
+        tools:text="BTC"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/cbw_waiting_for_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/view"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_toEndOf="@+id/cbw_payment_currency"
+        android:layout_toRightOf="@+id/cbw_payment_currency"
+        android:gravity="end"
+        android:paddingTop="4dp"
+        android:textColor="@color/waiting_for_text"
+        android:textSize="@dimen/cbw_regular_text_size"
+        tools:text="Waiting for you"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/cbw_update_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/cbw_customer_name"
+        android:layout_alignEnd="@+id/cbw_waiting_for_text"
+        android:layout_alignRight="@+id/cbw_waiting_for_text"
+        android:textColor="@color/negotiation_date_text"
+        android:textSize="@dimen/cbw_regular_text_size"
+        tools:text="03 Feb 2015"/>
 </RelativeLayout>
