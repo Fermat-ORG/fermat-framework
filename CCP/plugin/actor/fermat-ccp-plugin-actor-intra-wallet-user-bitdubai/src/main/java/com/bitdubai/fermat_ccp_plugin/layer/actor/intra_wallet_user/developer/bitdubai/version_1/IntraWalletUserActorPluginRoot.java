@@ -168,7 +168,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
     /**
      * Service Interface member variables.
      */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    //ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
 
     /**
@@ -609,9 +609,11 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
                 String intraUserToConnectPublicKey = notification.getActorDestinationPublicKey();
 
                 switch (notification.getNotificationDescriptor()) {
+                    //ASKFORACCEPTANCE occurs when other user request you a connection
                     case ASKFORACCEPTANCE:
 
-                        this.askIntraWalletUserForAcceptance(intraUserToConnectPublicKey, notification.getActorSenderAlias(), intraUserSendingPublicKey, notification.getActorSenderProfileImage());
+                        //this.askIntraWalletUserForAcceptance(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserSendingPublicKey, notification.getActorSenderProfileImage());
+                        this.receivingIntraWalletUserRequestConnection(intraUserToConnectPublicKey, notification.getActorSenderAlias(), intraUserSendingPublicKey, notification.getActorSenderProfileImage());
                         break;
                     case CANCEL:
                         this.cancelIntraWalletUser(intraUserToConnectPublicKey,intraUserSendingPublicKey);
@@ -627,11 +629,10 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
                         this.disconnectIntraWalletUser(intraUserToConnectPublicKey, intraUserSendingPublicKey);
                         break;
                     case RECEIVED:
-                        this.receivingIntraWalletUserRequestConnection(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserToConnectPublicKey, notification.getActorSenderProfileImage());
                         /**
                          * fire event "INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION"
                          */
-                        eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION));
+                        //eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION));
                         break;
                     case DENIED:
                         this.denyConnection(intraUserSendingPublicKey, intraUserToConnectPublicKey);

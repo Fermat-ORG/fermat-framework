@@ -501,13 +501,17 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
              * Envio de Solicitud al Actor Network Service para obtener List<ActorAseetUser>
              *     Registrados en el Actor Network Service y registrarlos en table REGISTERED
              */
+
 //        List<ActorAssetUser> list = new LinkedList<>();
-////            assetUserActorNetworkServiceManager.requestListActorAssetUserRegistered();
-//        try {
-//            list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
-//        } catch (RequestedListNotReadyRecevivedException e) {
-//            e.printStackTrace();
-//        }
+//            assetUserActorNetworkServiceManager.requestListActorAssetUserRegistered();
+        /*
+        TODO: COMENTADO POR CAMBÏOS EN LA INTERFACE
+        try {
+
+            list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
+        } catch (CantRequestListActorAssetUserRegisteredException e) {
+            e.printStackTrace();
+        }*/
     }
 
 

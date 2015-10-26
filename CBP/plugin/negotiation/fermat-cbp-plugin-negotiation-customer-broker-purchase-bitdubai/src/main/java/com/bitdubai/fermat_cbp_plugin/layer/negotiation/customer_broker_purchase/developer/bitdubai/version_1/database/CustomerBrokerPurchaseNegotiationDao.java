@@ -296,13 +296,31 @@ public class CustomerBrokerPurchaseNegotiationDao {
                     List<DatabaseTableRecord> records = PurchaseClauseTable.getRecords();
                     PurchaseClauseTable.clearAllFilters();
 
-                    ClauseType type = ClauseType.getByCode(records.get(0).getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TYPE_COLUMN_NAME));
-
-                    return nextClauseTypeByType(type);
+                    return ClauseType.getByCode(records.get(0).getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TYPE_COLUMN_NAME));
 
                 } catch (CantLoadTableToMemoryException e) {
                     throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE, e, "", "");
                 } catch (InvalidParameterException e) {
+                    throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE, e, "", "");
+                }
+            }
+
+            public String getPaymentMethod(UUID negotiationId) throws CantGetNextClauseTypeException {
+
+                try {
+                    DatabaseTable PurchaseClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
+                    PurchaseClauseTable.setUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
+                    PurchaseClauseTable.setStringFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TYPE_COLUMN_NAME, ClauseType.CUSTOMER_PAYMENT_METHOD.getCode(), DatabaseFilterType.EQUAL);
+
+                    PurchaseClauseTable.setFilterOrder(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_INDEX_ORDER_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+                    PurchaseClauseTable.loadToMemory();
+                    List<DatabaseTableRecord> records = PurchaseClauseTable.getRecords();
+                    PurchaseClauseTable.clearAllFilters();
+
+                    return records.get(0).getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_VALUE_COLUMN_NAME);
+
+                } catch (CantLoadTableToMemoryException e) {
                     throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE, e, "", "");
                 }
             }
@@ -397,20 +415,4 @@ public class CustomerBrokerPurchaseNegotiationDao {
                 return newCustomerBrokerPurchaseClause(clauseId, type, value, status, proposedBy, (short) indexOrder);
             }
 
-            private ClauseType nextClauseTypeByType(ClauseType type){
-
-                if( type == ClauseType.CUSTOMER_CURRENCY){
-                    return ClauseType.EXCHANGE_RATE;
-                }
-
-                if( type == ClauseType.EXCHANGE_RATE){
-                    return ClauseType.CUSTOMER_CURRENCY_QUANTITY;
-                }
-
-                if( type == ClauseType.CUSTOMER_CURRENCY_QUANTITY){
-                    return ClauseType.CUSTOMER_PAYMENT_METHOD;
-                }
-
-                return null;
-            }
 }

@@ -216,15 +216,22 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
 
 
             peers.setUserAgent(BitcoinManager.FERMAT_AGENT_NAME, BitcoinManager.FERMAT_AGENT_VERSION);
-            peers.setUseLocalhostPeerWhenPossible(true);
+            peers.setUseLocalhostPeerWhenPossible(false);
             /**
              * If we are using RegTest network, we will connect to local server
              */
             if (networkParameters == RegTestParams.get()) {
-                InetSocketAddress inetSocketAddress = new InetSocketAddress(REGTEST_SERVER_ADDRESS, REGTEST_SERVER_PORT);
-                PeerAddress peerAddress = new PeerAddress(inetSocketAddress);
-                peers.addAddress(peerAddress);
-                logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoNetwork information: Using RegTest. Connecting to " + inetSocketAddress.toString(), null, null);
+                InetSocketAddress inetSocketAddress1 = new InetSocketAddress(REGTEST_SERVER_1_ADDRESS, REGTEST_SERVER_1_PORT);
+                PeerAddress peerAddress1 = new PeerAddress(inetSocketAddress1);
+                peers.addAddress(peerAddress1);
+
+                InetSocketAddress inetSocketAddress2 = new InetSocketAddress(REGTEST_SERVER_2_ADDRESS, REGTEST_SERVER_2_PORT);
+                PeerAddress peerAddress2 = new PeerAddress(inetSocketAddress2);
+                peers.addAddress(peerAddress2);
+
+                InetSocketAddress inetSocketAddress3 = new InetSocketAddress(REGTEST_SERVER_3_ADDRESS, REGTEST_SERVER_3_PORT);
+                PeerAddress peerAddress3 = new PeerAddress(inetSocketAddress3);
+                peers.addAddress(peerAddress3);
             } else
             /**
              * If it is not RegTest, then I will get the Peers by DNSDiscovery
@@ -275,7 +282,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
     }
 
     public void broadcastTransaction(Transaction transaction) {
-        TransactionBroadcast broadcast = peers.broadcastTransaction(transaction);
+        TransactionBroadcast broadcast = peers.broadcastTransaction(transaction, 2);
         broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
             @Override
             public void onBroadcastProgress(double progress) {
