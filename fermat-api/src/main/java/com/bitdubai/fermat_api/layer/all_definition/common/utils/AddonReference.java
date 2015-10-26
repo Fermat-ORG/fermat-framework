@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.utils;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddonsEnum;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 
 /**
  * The class <code>com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference</code>
@@ -15,21 +14,21 @@ public class AddonReference {
     private static final int HASH_PRIME_NUMBER_ADD = 2819;
 
     private       LayerReference   layerReference;
-    private final FermatAddonsEnum addon         ;
+    private final Addons           addon         ;
 
-    public AddonReference(final FermatAddonsEnum addon) {
+    public AddonReference(final Addons addon) {
 
         this.addon = addon;
     }
 
     public AddonReference(final LayerReference   layerReference,
-                          final FermatAddonsEnum addon         ) {
+                          final Addons           addon         ) {
 
         this.layerReference = layerReference;
         this.addon          = addon         ;
     }
 
-    public final FermatAddonsEnum getAddon() {
+    public final Addons getAddon() {
         return addon;
     }
 

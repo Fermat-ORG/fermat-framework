@@ -1,10 +1,13 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.utils;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+
+import java.util.regex.Pattern;
 
 /**
  * The class <code>com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference</code>
@@ -14,11 +17,13 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
  */
 public class PluginVersionReference {
 
-    private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
-    private static final int HASH_PRIME_NUMBER_ADD = 2819;
+    private static final String KEY_SEPARATOR = "+";
 
-    private PluginDeveloperReference pluginDeveloperReference;
-    private final Version            version           ;
+    private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
+    private static final int HASH_PRIME_NUMBER_ADD     = 2819;
+
+    private       PluginDeveloperReference pluginDeveloperReference;
+    private final Version                  version                 ;
 
     public PluginVersionReference(final Version version) {
 
@@ -26,24 +31,61 @@ public class PluginVersionReference {
     }
 
     public PluginVersionReference(final PluginDeveloperReference pluginDeveloperReference,
-                                  final Version            version           ) {
+                                  final Version                  version                 ) {
 
         this.pluginDeveloperReference = pluginDeveloperReference;
-        this.version            = version           ;
+        this.version                  = version                 ;
     }
 
-    public PluginVersionReference(final Platforms platform,
-                                  final Layers layer,
-                                  final FermatPluginsEnum pluginEnum,
-                                  final Developers developer,
-                                  final Version version){
+    public PluginVersionReference(final Platforms  platform  ,
+                                  final Layers     layer     ,
+                                  final Plugins    pluginEnum,
+                                  final Developers developer ,
+                                  final Version    version   ) {
 
-        PlatformReference platformReference = new PlatformReference(platform);
-        LayerReference layerReference = new LayerReference(platformReference, layer);
-        PluginReference pluginReference = new PluginReference(layerReference, pluginEnum);
+        PlatformReference platformReference = new PlatformReference(platform         );
+        LayerReference    layerReference    = new LayerReference   (platformReference, layer     );
+        PluginReference   pluginReference   = new PluginReference  (layerReference   , pluginEnum);
 
         this.pluginDeveloperReference = new PluginDeveloperReference(pluginReference, developer);;
-        this.version            = version           ;
+        this.version                  = version;
+    }
+
+    public static PluginVersionReference getByKey(final String key) throws InvalidParameterException {
+
+        String[] keySplit = key.split(Pattern.quote(KEY_SEPARATOR));
+
+        final String platformString   = keySplit[0];
+        final String layerString      = keySplit[0];
+        final String pluginEnumString = keySplit[0];
+        final String developerString  = keySplit[0];
+        final String versionString    = keySplit[0];
+
+        final Platforms  platform   = Platforms .getByCode(platformString);
+        final Layers     layer      = Layers    .getByCode(layerString);
+        final Plugins    pluginEnum = Plugins   .getByKey(pluginEnumString);
+        final Developers developer  = Developers.getByCode(developerString);
+        final Version    version    = new Version(versionString);
+
+        return new PluginVersionReference(platform, layer, pluginEnum, developer, version);
+    }
+
+    public String toKey() {
+
+        PluginReference   pluginReference   = pluginDeveloperReference.getPluginReference()  ;
+        LayerReference    layerReference    = pluginReference         .getLayerReference()   ;
+        PlatformReference platformReference = layerReference          .getPlatformReference();
+
+        Platforms  platform  = platformReference       .getPlatform() ;
+        Layers     layer     = layerReference          .getLayer()    ;
+        Plugins    plugin    = pluginReference         .getPlugin()   ;
+        Developers developer = pluginDeveloperReference.getDeveloper();
+
+        return platform .getCode() + KEY_SEPARATOR +
+               layer    .getCode() + KEY_SEPARATOR +
+               plugin   .getCode() + KEY_SEPARATOR +
+               developer.getCode() + KEY_SEPARATOR +
+               version  .toString();
     }
 
     public final Version getVersion() {
@@ -79,7 +121,7 @@ public class PluginVersionReference {
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return "PluginVersionReference{" +
                 "pluginDeveloperReference=" + pluginDeveloperReference +
                 ", version=" + version +

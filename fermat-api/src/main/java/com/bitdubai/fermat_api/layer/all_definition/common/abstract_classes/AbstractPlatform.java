@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.AddonNotFo
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPlatformException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPluginIdsManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.DeveloperNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.LayerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.PluginNotFoundException;
@@ -17,8 +16,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
