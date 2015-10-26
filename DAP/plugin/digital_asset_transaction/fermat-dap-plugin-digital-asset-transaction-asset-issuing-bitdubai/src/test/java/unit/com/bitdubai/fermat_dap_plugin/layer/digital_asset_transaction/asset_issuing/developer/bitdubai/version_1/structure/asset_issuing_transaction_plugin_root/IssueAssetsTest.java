@@ -122,8 +122,7 @@ public class IssueAssetsTest {
     DatabaseTableRecord mockDatabaseTableRecord = Mockito.mock(DatabaseTableRecord.class);
     Database mockDatabase = Mockito.mock(Database.class);
 
-    @Spy
-    AssetIssuingTransactionMonitorAgent assetIssuingTransactionMonitorAgent = new AssetIssuingTransactionMonitorAgent();
+    AssetIssuingTransactionMonitorAgent assetIssuingTransactionMonitorAgent;
 
     @Mock
     DigitalAsset digitalAsset;
@@ -140,7 +139,6 @@ public class IssueAssetsTest {
                 "publicKey",
                 assetVaultManager,
                 outgoingIntraActorManager);
-        initMocks(assetIssuingTransactionMonitorAgent);
 
         pluginId = UUID.randomUUID();
         assetIssuingPluginRoot.setId(pluginId);
