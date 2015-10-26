@@ -52,7 +52,7 @@ public class CompleteComponentRegistrationNotificationEventHandler implements Fe
 
         System.out.println("CompleteComponentRegistrationNotificationEventHandler - handleEvent platformEvent ="+platformEvent );
 
-        if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
+        if (((Service) this.networkService).getStatus().equals(ServiceStatus.STARTED)) {
 
 
             CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent = (CompleteComponentRegistrationNotificationEvent) platformEvent;

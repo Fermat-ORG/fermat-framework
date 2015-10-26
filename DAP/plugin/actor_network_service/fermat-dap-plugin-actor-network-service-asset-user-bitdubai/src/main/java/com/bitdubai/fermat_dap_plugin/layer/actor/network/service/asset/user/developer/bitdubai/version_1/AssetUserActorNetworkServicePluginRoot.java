@@ -839,7 +839,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
     }
 
     @Override
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
 

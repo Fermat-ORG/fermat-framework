@@ -425,7 +425,8 @@ public class Platform implements Serializable {
         ((DealWithDatabaseManagers) corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE)).setDatabaseManagers(dealsWithDatabaseManagersPlugins, dealsWithDatabaseManagersAddons);
         ((DealsWithLogManagers) corePlatformContext.getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE)).setLogManagers(dealsWithLogManagersPlugins, dealsWithLogManagersAddons);
 
-        System.err.println("Tamaño de Platform en runtime es: " + (RamUsageEstimator.sizeOf(this)/1024/1024) + " MB");
+        //TODO: NO LO SIGAN PONIENDO QUE ME TIRA ABAJO LA APP. CUANDO LO SUBAN SAQUENLO COMO YO SACO LA CAPA P2P. Gracias XXOO Mati.
+//        System.err.println("Tamaño de Platform en runtime es: " + (RamUsageEstimator.sizeOf(this)/1024/1024) + " MB");
     }
 
     /**
@@ -870,9 +871,9 @@ public class Platform implements Serializable {
 
                     layerReference = new LayerReference(platformReference, Layers.NETWORK_SERVICE);
 
-                    Plugin cryptoPaymentRequestNetworkService = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, CCPPlugins.BITDUBAI_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE));
-                    injectLayerReferences(cryptoPaymentRequestNetworkService);
-                    injectPluginReferencesAndStart(cryptoPaymentRequestNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE);
+//                    Plugin cryptoPaymentRequestNetworkService = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, CCPPlugins.BITDUBAI_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE));
+//                    injectLayerReferences(cryptoPaymentRequestNetworkService);
+//                    injectPluginReferencesAndStart(cryptoPaymentRequestNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE);
 
                     Plugin intraUserNetworkService = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, CCPPlugins.BITDUBAI_INTRA_USER_NETWORK_SERVICE));
                     injectLayerReferences(intraUserNetworkService);
@@ -882,8 +883,8 @@ public class Platform implements Serializable {
                     injectLayerReferences(cryptoTransmissionNetworkService);
                     injectPluginReferencesAndStart(cryptoTransmissionNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_CRYPTO_TRANSMISSION_NETWORK_SERVICE);
 
-                    Plugin cryptoAddressesNetworkService = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, CCPPlugins.BITDUBAI_CRYPTO_ADDRESSES_NETWORK_SERVICE));
-                    injectPluginReferencesAndStart(cryptoAddressesNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE);
+//                    Plugin cryptoAddressesNetworkService = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, CCPPlugins.BITDUBAI_CRYPTO_ADDRESSES_NETWORK_SERVICE));
+//                    injectPluginReferencesAndStart(cryptoAddressesNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE);
 
                     layerReference = new LayerReference(platformReference, Layers.MIDDLEWARE);
 
@@ -1233,7 +1234,7 @@ public class Platform implements Serializable {
             * Plugin Asset Reception Transaction
             * -----------------------------
             */
-                Plugin assetReceptionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetDistributionPlugin();
+                Plugin assetReceptionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetReceptionPlugin();
                 injectPluginReferencesAndStart(assetReceptionTransaction, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION);
 
            /*

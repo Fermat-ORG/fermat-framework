@@ -78,9 +78,9 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issu
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisAddressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsTransactionUUIDException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.AssetIssuingTransactionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistsTransactionUUIDException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetIssuingVault;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.AssetIssuingTransactionManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseFactory;
@@ -275,7 +275,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
                     this.outgoingIntraActorManager);
             this.assetIssuingTransactionMonitorAgent.setDigitalAssetIssuingVault(digitalAssetIssuingVault);
             this.assetIssuingTransactionMonitorAgent.setLogManager(this.logManager);
-            this.setBitcoinNetworkManager(bitcoinNetworkManager);
+            this.assetIssuingTransactionMonitorAgent.setBitcoinNetworkManager(bitcoinNetworkManager);
             this.assetIssuingTransactionMonitorAgent.start();
         }else{
                 this.assetIssuingTransactionMonitorAgent.start();

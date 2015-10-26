@@ -7,4 +7,7 @@
     <string name="no_new_open_negotiations">No New\nOpen Negotiations</string>
     <string name="identity_img">person_img</string>
     <string name="arrow">arrow</string>
+    <string name="at">\@</string>
+    <string name="buy">Buy</string>
+    <string name="unit_number">1</string>
 </resources>
