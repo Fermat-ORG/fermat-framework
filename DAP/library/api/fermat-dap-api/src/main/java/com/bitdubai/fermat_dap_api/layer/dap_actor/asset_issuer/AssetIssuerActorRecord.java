@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -47,7 +47,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
     public AssetIssuerActorRecord(String publicKey, String name, ConnectionState connectionState,
                                   double locationLatitude, double locationLongitude, long registrationDate,
-                                  byte[] profileImage) {
+                                  byte[] profileImage, String description) {
         this.publicKey = publicKey;
         this.name = name;
         this.connectionState = connectionState;
@@ -55,6 +55,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         this.locationLongitude = locationLongitude;
         this.registrationDate = registrationDate;
         this.profileImage = profileImage.clone();
+        this.description = description;
     }
 
 
