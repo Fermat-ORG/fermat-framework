@@ -1,7 +1,6 @@
 ![alt text](https://github.com/bitDubai/fermat-graphic-design/blob/master/2D%20Design/Fermat/Fermat%20Logotype/logo_jpg/logo_github_readme.jpg "Fermat Logo")
 
-Welcome to Fermat!
--------------------
+# Welcome to Fermat!
 
 In the last 20 years virtually everything went digital: pictures, music, videos, mails, etc. Nevertheless we still have cash as paper money. Why isn't cash money digital yet?
 
@@ -19,11 +18,9 @@ We believe the open source community collectively has more talent than any of us
 
 We believe in people with passion who are crazy enough to think they can change the world. We do believe we are going to change this world with a lot of hard work and not stopping until we reach our goal.
 
-<br>
-The Challenge
----------------------
+## The Challenge
 
- While designing Fermat we tried to find the answer to the following questions:
+While designing Fermat we tried to find the answer to the following questions:
 
 * How can we isolate ordinary people from the perceived complexity of crypto currencies?
 * How can we use the collective intelligence of the developer community?
@@ -32,12 +29,10 @@ The Challenge
 * How do we integrate merchants, retailers and brands of all sizes in a clever way?
 * How can we allow people to create digital wallets without programming anything at all?
 
-
 The answers to each of these questions are addressed within Fermat.
 
-<br>
-What is Fermat?
-----------------------
+## What is Fermat?
+
 
 Fermat is a system for experimentation on what needs to be done to get crypto currencies mass adopted.
 
@@ -60,26 +55,16 @@ What makes Fermat different from other wallet systems or services?
 Fermat is moving towards version 1, but we're not stopping there. We have many feature ideas on our
 [documentation](https://github.com/bitDubai/fermat/tree/master/fermat-documentation) that we're anxious to add.
 So take Fermat out for a spin and let us know how we can make it your favorite platform to launch your own digital wallet.
-<<<<<<< HEAD
 
 You can learn more, see some cool visualizations of Fermat's architecture and its P2P network and explore the design space at [Fermat.org](http://www.fermat.org).
 
-<br>
-Fermat's Purpose
-------------------------------------------------
+### Fermat's Purpose
 
 > Empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way.
-=======
-
-You can learn more and see some cool visualizations of Fermat's architecture and its P2P network at
-[Fermat.org](http://www.fermat.org).
->>>>>>> origin/develop
 
 > Give back the sovereignty over each one's own resources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.
 
-<br>
-Fermat's Mission
-------------------------------------------------
+### Fermat's Mission
 
 > To get cryptocurrencies mass adopted as soon as possible.
 
@@ -87,28 +72,20 @@ Fermat's Mission
 
 > To achieve “parity” with the state-of-the-art and to push towards new frontiers in computer science.
 
-<br>
-Fermat Principles
-------------------------------------------------
-
+### Fermat Principles
 
 ##### 1. Fermat must not allow censorship.
-
 
 * Open Source.
 * P2P architecture.
 
-
 ##### 2. Fermat must not allow spying on their user base.
-
 
 * Point to point encrypted communications.
 * Geofenced P2P network enabling the shortest communication path between peers.
 * Multi-technology communication layer (cloud, p2p, wifi, bluetooth, nfc, mesh, etc.).
 
-
 ##### 3. Fermat must be secure and resistant to all kind of attacks.
-
 
 * No centralized point to be attacked.
 * Multiple identities and roles per user.
@@ -116,30 +93,22 @@ Fermat Principles
 * Pocket Money concept and a Multi-Signature Vault owned by the DPN.
 * Reviews and Reputation concepts.
 
-
 ##### 4. Fermat must never loose a user's funds.
-
 
 * Transaction responsability transmission protocols.
 * Remote technical support by wallet and plugins developers.
 
-
 ##### 5. Fermat must be usefull to each segment of the world population.
-
 
 * Niche wallets concept.
 * Branded wallets concept.
 
-
 ##### 6. Fermat must be extensible and open to innovation.
-
 
 * Plugins architecture.
 * Multi dimensional layer architecture.
 
-
 ##### 7. Fermat must be open and inclusive.
-
 
 * Any developer could contribute to the shared infraestructure.
 * Any developer could write code for new plugins.
@@ -148,9 +117,7 @@ Fermat Principles
 * Any graphic / UX designer could provide skins to existing wallets.
 * Anyone could provide language packs to existing wallets.
 
-
 ##### 8. Each developer must be compesated by their contribution to Fermat.
-
 
 * Micro license concept.
 * Micro license structure concept.
@@ -160,70 +127,50 @@ Fermat Principles
 * Branded wallet onwnership concept.
 * Master plan design comcept, wiht no overlaping functionality but shared ownership.
 
-
 ##### 9. Fermat user base must be a shared asset.
-
 
 * Any developer must be able to profit from the growing Fermat user base by writing Plugins this user base could consume via the developers of the wallets they are using.
 
-
 ##### 10. Fermat must be inclusive with crypto currency industry members.
-
 
 * Any bitcoin | crypto | blockchain established startup could write their own plugins and expose their services to both Fermat developers and the Fermat user base.
 * Any alt-coin community could write plugins to enable their crypto currency within the Fermat wallet ecosystem.
 
-
 ##### 11. Fermat must be inclusive with the current financial system.
-
 
 * Banks and financial institutions could write plugins to enable Fermat wallets hold funds in banks and other financial institutions.
 * Fermat allows it users to move money both through public value transport networks as crypto currency networks and also thwough private or legacy financial networks.
 
-
 ##### 12. Fermat must be unbanked-people friendly.
-
 
 * Multiple logins per device (Device user concept)
 * Crypto banking concept.
 
-
 ##### 13. Fermat must be OS agnostic.
-
 
 * OSA layer concept (Operative System API).
 * OS dependent UI on top of Fermat concept.
 
-
 ##### 14. Fermat must learn from its user base.
-
 
 * Integrated feedback functionality.
 * Voting over feature wish-lists concept.
 
-
 ##### 15. Fermat must be the financially most efficient way to move or spend the end user's money.
-
 
 * Crypto Vault for multiple wallets concept.
 * Financial AI Agents concept.
 
-
 ##### 16. Fermat must facilitate the regional distribution and access to crypto currencies.
-
 
 * Crypto Distribution Network concept.
 * Crypto Brokers concept.
 
-<br>
-How to Install and Run Fermat
--------------------------------
-
+## How to Install and Run Fermat
 
 #### Download
 
 Installers for the latest stable build for Android, Mac, Windows and Linux (Debian/Ubuntu) can be [downloaded here](http://fermat.org/download/).
-
 
 #### Usage
 
@@ -231,7 +178,6 @@ In addition to the core features built into Fermat, there is a large and growing
 community of developers building plugins and niche wallets that add all sorts of useful functionality.
 
 For installation instructions and running from the source code, see the [Fermat Development Environment Installation and Configuration documentation](https://github.com/bitDubai/fermat/blob/master/fermat-documentation/installation/Linux.asciidoc).
-
 
 #### Need help?
 
@@ -247,9 +193,7 @@ State of the code: Under development for 5 months. No realeses yet. 24 full time
 
 Future path of development: Active (First release with very limited features schedulled for late November 2015).
 
-<br>
-I Want to Join the Team!
-------------------------------------------------
+## I Want to Join the Team!
 
 Awesome! _There are lots of ways you can help._ First read
 [CONTRIBUTING.md](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md),
