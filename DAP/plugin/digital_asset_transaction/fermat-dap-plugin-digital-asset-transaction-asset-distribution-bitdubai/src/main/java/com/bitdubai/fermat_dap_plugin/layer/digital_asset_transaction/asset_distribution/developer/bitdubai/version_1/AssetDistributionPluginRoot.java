@@ -143,13 +143,17 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
             this.assetDistributionTransactionManager.setAssetTransmissionNetworkServiceManager(this.assetTransmissionNetworkServiceManager);
             this.assetDistributionTransactionManager.setBitcoinManager(this.bitcoinNetworkManager);
             this.assetDistributionTransactionManager.setActorAssetIssuerManager(this.actorAssetIssuerManager);
+            distributeAssets(null, null);
         }catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Distribution plugin", "Cannot set an object, probably is null");
         } catch (CantExecuteDatabaseOperationException exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting pluginDatabaseSystem in DigitalAssetDistributor", "Error in constructor method AssetDistributor");
+        } catch (CantDistributeDigitalAssetsException e) {
+            e.printStackTrace();
         }
         this.serviceStatus=ServiceStatus.STARTED;
         //testRaiseEvent();
+
     }
 
     @Override
