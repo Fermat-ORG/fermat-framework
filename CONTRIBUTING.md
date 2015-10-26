@@ -1,4 +1,4 @@
-![alt text](https://raw.githubusercontent.com/bitDubai/fermat-graphic-design/c94e69f611108e78ab49b1ecfdbbeb85d7e4c1a3/Drafts/3D%20Design/Cover_OSA_2.png?token=ANBHS7_PavnUUaoQ9hmSD3xCT0NRd6AUks5WNrkAwA%3D%3D "Fermat Logo")
+![alt text](https://raw.githubusercontent.com/bitDubai/fermat-graphic-design/36cac2f9961a0a55f78df85ff602157b66fa13d4/Drafts/3D%20Design/Cover_OSA_2.png?token=ANBHS_GNU7x8fda7hVGiJIlP-h7kNvOQks5WNsR2wA%3D%3D "Fermat Logo")
 
 
 <br>
