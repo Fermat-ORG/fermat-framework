@@ -176,7 +176,12 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
             //TODO: Implementar ese metodo que tendra toda la logica que tendra el Agente
             try
             {
+                int assetFactoryQuantity = 10;
                 int numberOfIssuedAssets = assetIssuingManager.getNumberOfIssuedAssets("");
+                int totalFaltante = assetFactoryQuantity - numberOfIssuedAssets;
+                if (totalFaltante == 10){
+                    logManager.log(AssetFactoryMiddlewarePluginRoot.getLogLevelByClass(this.getClass().getName()), "Faltante Assets Factory " + totalFaltante, null, null);
+                }
             }
             catch (Exception exception){
 

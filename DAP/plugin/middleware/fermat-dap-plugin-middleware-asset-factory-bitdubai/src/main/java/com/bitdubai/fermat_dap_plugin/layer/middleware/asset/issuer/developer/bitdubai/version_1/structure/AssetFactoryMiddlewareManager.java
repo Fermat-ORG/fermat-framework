@@ -395,7 +395,7 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
     public boolean checkAssetDraft() throws CantLoadTableToMemoryException{
         //TODO: Descomentar el metodo getAssetFactoryMiddlewareDao, cuando sepamos que funciona el agente
         boolean isAssetDraft  = getAssetFactoryMiddlewareDao().checkAssetDraft();
-        isAssetDraft = false;
+        isAssetDraft = true;
         return isAssetDraft;
     }
 
