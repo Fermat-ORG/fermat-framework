@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -15,22 +17,35 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.BankOperationType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.BusinessTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.exceptions.CantCreateBankMoneyStockReplenishmentException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.exceptions.CantGetBankMoneyStockReplenishmentException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.exceptions.CantUpdateStatusBankMoneyStockReplenishmentException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.interfaces.BankMoneyStockReplenishment;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.interfaces.BankMoneyStockReplenishmentManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.database.BankMoneyStockReplenishmentBusinessTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.database.BankMoneyStockReplenishmentBusinessTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantInitializeBankMoneyStockReplenishmentBusinessTransactionDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantInsertRecordBankMoneyStockReplenishmentBusinessTransactionException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantUpdateStatusBankMoneyStockReplenishmentBusinessTransactionException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.structure.BankMoneyStockReplenishmentBusinessTransactionImpl;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
@@ -45,7 +60,7 @@ import java.util.regex.Pattern;
  */
 
 public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
-//        BankMoneyStockReplenishmentManager,
+        BankMoneyStockReplenishmentManager,
         DatabaseManagerForDevelopers,
         DealsWithPluginDatabaseSystem,
         LogManagerForDevelopers,
@@ -55,6 +70,8 @@ public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
         DealsWithPluginFileSystem,
         Plugin,
         Service {
+
+    private BankMoneyStockReplenishmentBusinessTransactionDatabaseDao bankMoneyStockReplenishmentBusinessTransactionDatabaseDao;
 
     private ErrorManager errorManager;
 
@@ -73,20 +90,58 @@ public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     /*BankMoneyStockReplenishmentManager Interface Implementation*/
-//    List<BankMoneyStockReplenishment> getAllBankMoneyStockReplenishmentFromCurrentDeviceUser() throws CantGetBankMoneyStockReplenishmentException(){
-//        return null;
-//    }
-//
-//    BankMoneyStockReplenishment createBankMoneyStockReplenishment(
-//            final String publicKeyBroker
-//            ,final String merchandiseCurrency
-//            ,final float merchandiseAmount
-//            ,final String executionTransactionId
-//            ,final String bankCurrencyType
-//            ,final String bankOperationType
-//    ) throws CantCreateBankMoneyStockReplenishmentException;
-//
-//    void updateStatusBankMoneyStockReplenishment(final UUID transactionId) throws CantUpdateStatusBankMoneyStockReplenishmentException;
+    public List<BankMoneyStockReplenishment> getAllBankMoneyStockReplenishmentFromCurrentDeviceUser() throws CantGetBankMoneyStockReplenishmentException{
+        try {
+            List<BankMoneyStockReplenishment> bankMoneyStockReplenishmentList = new ArrayList<BankMoneyStockReplenishment>();
+            bankMoneyStockReplenishmentList = bankMoneyStockReplenishmentBusinessTransactionDatabaseDao.getAllBankMoneyStockReplenishmentListFromCurrentDeviceUser();
+            return bankMoneyStockReplenishmentList;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetBankMoneyStockReplenishmentException("CAN'T GET CRYPTO BROKER IDENTITIES", e, "", "");
+        } catch (Exception e) {
+            throw new CantGetBankMoneyStockReplenishmentException("CAN'T GET CRYPTO BROKER IDENTITIES", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    public BankMoneyStockReplenishment createBankMoneyStockReplenishment(
+             final String publicKeyBroker
+            ,final CurrencyType merchandiseCurrency
+            ,final float merchandiseAmount
+            ,final UUID executionTransactionId
+            ,final BankCurrencyType bankCurrencyType
+            ,final BankOperationType bankOperationType
+    ) throws CantCreateBankMoneyStockReplenishmentException{
+        try {
+            UUID transactionId = UUID.randomUUID();
+            BusinessTransactionStatus transactionStatus = BusinessTransactionStatus.PENDING_PAYMENT;
+            KeyPair keyPairBroker = AsymmetricCryptography.createKeyPair(publicKeyBroker);
+            BankMoneyStockReplenishment bankMoneyStockReplenishment = new BankMoneyStockReplenishmentBusinessTransactionImpl(
+                transactionId,
+                keyPairBroker,
+                merchandiseCurrency,
+                merchandiseAmount,
+                executionTransactionId,
+                bankCurrencyType,
+                bankOperationType,
+                transactionStatus
+            );
+            bankMoneyStockReplenishmentBusinessTransactionDatabaseDao.createNewBankMoneyStockReplenishment(bankMoneyStockReplenishment);
+            return bankMoneyStockReplenishment;
+        } catch (CantInsertRecordBankMoneyStockReplenishmentBusinessTransactionException e) {
+            throw new CantCreateBankMoneyStockReplenishmentException("CAN'T CREATE NEW CRYPTO BROKER IDENTITY", e, "Error save user on database", "");
+        } catch (Exception e) {
+            throw new CantCreateBankMoneyStockReplenishmentException("CAN'T CREATE NEW CRYPTO BROKER IDENTITY", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    public void updateStatusBankMoneyStockReplenishment(final UUID transactionId, final BusinessTransactionStatus transactionStatus) throws CantUpdateStatusBankMoneyStockReplenishmentException{
+        try {
+            bankMoneyStockReplenishmentBusinessTransactionDatabaseDao.updateStatusBankMoneyStockReplenishmentTransaction(transactionId, transactionStatus);
+        } catch (CantUpdateStatusBankMoneyStockReplenishmentBusinessTransactionException e) {
+            throw new CantUpdateStatusBankMoneyStockReplenishmentException("CAN'T UPDATE STATUS BANK MONEY REPLENISHMENT BUSINESS TRANSTION", e, "Error save user on database", "");
+        } catch (Exception e) {
+            throw new CantUpdateStatusBankMoneyStockReplenishmentException("CAN'T UPDATE STATUS BANK MONEY REPLENISHMENT BUSINESS TRANSTION", FermatException.wrapException(e), "", "");
+        }
+    }
 
     /*DatabaseManagerForDevelopers Interface implementation.*/
     @Override
