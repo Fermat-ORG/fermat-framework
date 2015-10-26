@@ -33,12 +33,12 @@ public abstract class AbstractPlatform {
 
     private Map<LayerReference, AbstractLayer> layers;
 
-    private final PlatformReference platformReference;
+    private final PlatformReference        platformReference;
 
-    public AbstractPlatform(final Platforms platformEnum) {
+    public AbstractPlatform(final PlatformReference platformReference) {
 
-        this.layers   = new ConcurrentHashMap<>();
-        this.platformReference = new PlatformReference(platformEnum);
+        this.layers            = new ConcurrentHashMap<>();
+        this.platformReference = platformReference;
     }
 
     /**
@@ -192,7 +192,5 @@ public abstract class AbstractPlatform {
     }
 
     public abstract void start() throws CantStartPlatformException;
-
-    public abstract AbstractPluginIdsManager getPluginIdsManager(final PlatformFileSystem platformFileSystem) throws CantStartPluginIdsManagerException;
 
 }

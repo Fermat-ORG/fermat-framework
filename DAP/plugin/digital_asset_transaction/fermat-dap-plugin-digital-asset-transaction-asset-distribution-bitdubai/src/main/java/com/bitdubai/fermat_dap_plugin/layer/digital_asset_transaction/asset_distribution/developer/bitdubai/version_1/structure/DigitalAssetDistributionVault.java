@@ -41,7 +41,7 @@ public class DigitalAssetDistributionVault extends AbstractDigitalAssetVault {
         this.errorManager=errorManager;
     }
 
-    public void setDigitalAssetMetadataCredit(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterDebitException {
+    public void setDigitalAssetMetadataDebit(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterDebitException {
         AssetIssuerWallet assetIssuerWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
         AssetIssuerWalletBalance assetIssuerWalletBalance= assetIssuerWallet.getBookBalance(balanceType);
         AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper=new AssetIssuerWalletTransactionRecordWrapper(
@@ -50,6 +50,8 @@ public class DigitalAssetDistributionVault extends AbstractDigitalAssetVault {
                 "testActorFromPublicKey",
                 "testActorToPublicKey"
         );
+        System.out.println("ASSET DISTRIBUTION AssetIssuerWalletTransactionRecordWrapper:"+assetIssuerWalletTransactionRecordWrapper.getDescription());
+        System.out.println("ASSET DISTRIBUTION Balance Type:"+balanceType);
         assetIssuerWalletBalance.debit(assetIssuerWalletTransactionRecordWrapper, balanceType);
     }
 

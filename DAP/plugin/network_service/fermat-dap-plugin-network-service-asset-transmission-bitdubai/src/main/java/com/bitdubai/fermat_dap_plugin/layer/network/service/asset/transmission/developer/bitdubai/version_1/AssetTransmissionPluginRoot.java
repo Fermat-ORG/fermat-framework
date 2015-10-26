@@ -758,7 +758,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                     }
 
                     @Override
-                    public long getContactRegistrationDate() {
+                    public long getRegistrationDate() {
                         return 0;
                     }
 
@@ -768,7 +768,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                     }
 
                     @Override
-                    public ConnectionState getContactState() {
+                    public ConnectionState getConnectionState() {
                         return null;
                     }
 
@@ -783,11 +783,19 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                     }
 
                     @Override
-                    public CryptoAddress getCryptoAddress() {
+                    public Double getLocationLatitude() {
                         return null;
                     }
 
+                    @Override
+                    public Double getLocationLongitude() {
+                        return null;
+                    }
 
+                    @Override
+                    public CryptoAddress getCryptoAddress() {
+                        return null;
+                    }
                 };
 
                 ActorAssetUser actorAssetUser = new ActorAssetUser() {

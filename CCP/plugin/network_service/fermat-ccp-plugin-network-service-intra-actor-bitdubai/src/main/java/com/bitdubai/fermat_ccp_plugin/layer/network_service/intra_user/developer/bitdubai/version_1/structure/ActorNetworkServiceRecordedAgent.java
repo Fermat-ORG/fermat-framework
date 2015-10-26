@@ -223,9 +223,8 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         System.out.println("----------------------------\n" +
                                 "MENSAJE PROCESANDOSE:" + cpr
                                 + "\n-------------------------------------------------");
-                        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS);
-                        ActorNetworkServicePendingsNotificationEvent intraUserActorRequestConnectionEvent = (ActorNetworkServicePendingsNotificationEvent) fermatEvent;
-                        eventManager.raiseEvent(intraUserActorRequestConnectionEvent);
+
+                        lauchNotification();
 
                         try {
 
@@ -239,8 +238,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                             e.printStackTrace();
                         }
 
-                        //TODO: antes de cerrar la conexion deberia poner un
-                        //communicationNetworkServiceConnectionManager.closeConnection(cpr.getActorSenderPublicKey());
 
 //                        Gson gson = new Gson();
 //
@@ -266,6 +263,21 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         System.out.print("-----------------------\n" +
                                 "ACEPTARON EL REQUEST!!!!!-----------------------\n" +
                                 "-----------------------\n NOTIFICAION: " + cpr);
+
+                        lauchNotification();
+
+                        try {
+
+                            actorNetworkServicePluginRoot.getIncomingNotificationsDao().changeProtocolState(cpr.getId(),ActorProtocolState.PENDING_ACTION);
+
+                        } catch (CantUpdateRecordDataBaseException e) {
+                            e.printStackTrace();
+                        } catch (CantUpdateRecordException e) {
+                            e.printStackTrace();
+                        } catch (RequestNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
                         break;
 
 
@@ -323,6 +335,24 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         }
 
                     }
+                }else{
+                    NetworkServiceLocal communicationNetworkServiceLocal = actorNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey());
+
+                    System.out.println("----------------------------\n" +
+                            "ENVIANDO MENSAJE:" + actorNetworkServiceRecord
+                            + "\n-------------------------------------------------");
+
+                    Gson gson = new Gson();
+
+                    communicationNetworkServiceLocal.sendMessage(
+                            actorNetworkServiceRecord.getActorSenderPublicKey(),
+                            actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                            gson.toJson(actorNetworkServiceRecord)
+                    );
+
+                    actorNetworkServicePluginRoot.getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.SENT);
+
+                    poolConnectionsWaitingForResponse.put(actorNetworkServiceRecord.getActorDestinationPublicKey(), actorNetworkServiceRecord);
                 }
             } else {
 
@@ -409,5 +439,10 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
         return poolConnectionsWaitingForResponse;
     }
 
+    private void lauchNotification(){
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS);
+        ActorNetworkServicePendingsNotificationEvent intraUserActorRequestConnectionEvent = (ActorNetworkServicePendingsNotificationEvent) fermatEvent;
+        eventManager.raiseEvent(intraUserActorRequestConnectionEvent);
+    }
 
 }

@@ -42,7 +42,7 @@ public class FermatSystem {
 
             fermatSystemContext.registerPlatform(new CCPPlatform());
 
-            List<PluginVersionReference> referenceList = new FermatPluginReferencesCalculator(fermatSystemContext).listReferencesByInstantiationOrder(
+            final List<PluginVersionReference> referenceList = new FermatPluginReferencesCalculator(fermatSystemContext).listReferencesByInstantiationOrder(
                 new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.WALLET_MODULE, CCPPlugins.CRYPTO_WALLET_MODULE, Developers.BITDUBAI, new Version())
             );
 

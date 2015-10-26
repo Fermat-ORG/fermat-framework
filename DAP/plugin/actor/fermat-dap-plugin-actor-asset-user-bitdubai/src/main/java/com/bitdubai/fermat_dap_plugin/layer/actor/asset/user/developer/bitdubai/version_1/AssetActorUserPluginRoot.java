@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -54,6 +55,7 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantAddPendingAssetUserException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUsersListException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserActorDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.monitorAgent.AssetUserActorMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure.AssetUserActorDao;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure.AssetUserActorRecord;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -62,6 +64,9 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -76,11 +81,11 @@ import java.util.UUID;
  * Created by Nerio on 09/09/15.
  */
 //TODO TERMINAR DE IMPLEMENTAR
-public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNetworkServiceAssetUser, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithCryptoAddressBook, DealsWithErrors, DealsWithEvents, DealsWithAssetUserActorNetworkServiceManager, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
+public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNetworkServiceAssetUser, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithCryptoAddressBook, DealsWithDeviceUser, DealsWithErrors, DealsWithEvents, DealsWithAssetUserActorNetworkServiceManager, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
 
     private AssetUserActorDao assetUserActorDao;
-
-    boolean banderaUser = Boolean.TRUE;
+    private AssetUserActorMonitorAgent assetUserActorMonitorAgent;
+    DeviceUserManager deviceUserManager;
     /**
      * Service Interface member variables.
      */
@@ -183,6 +188,11 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
     }
 
     @Override
+    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
+        this.deviceUserManager = deviceUserManager;
+    }
+
+    @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
         returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.ActorIssuerPluginRoot");
@@ -265,6 +275,11 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 
             test();
 
+            /**
+             * Agent for Search Actor Asset User REGISTERED in Actor Network Service User
+             */
+            startMonitorAgent();
+
 //            registerActorInANS();
 //            getAllAssetUserActorConnected();
 
@@ -287,7 +302,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         System.out.println("End event test");
     }
 
-    private CryptoAddress obtenerGenesisAddress() throws CantGetGenesisAddressException {
+    public CryptoAddress getGenesisAddress() throws CantGetGenesisAddressException {
         try {
 //            System.out.println("La BlockChain es: " + blockchainNetworkType);
             CryptoAddress genesisAddress = this.assetVaultManager.getNewAssetVaultCryptoAddress(this.blockchainNetworkType);
@@ -305,7 +320,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
      * @param genesisAddress
      * @throws CantRegisterCryptoAddressBookRecordException
      */
-    private void registerGenesisAddressInCryptoAddressBook(CryptoAddress genesisAddress) throws CantRegisterCryptoAddressBookRecordException {
+    public void registerGenesisAddressInCryptoAddressBook(CryptoAddress genesisAddress) throws CantRegisterCryptoAddressBookRecordException {
         //TODO: solicitar la publickey del Issuer, la publicKey de la wallet
         try {
             this.cryptoAddressBookManager.registerCryptoAddress(genesisAddress,
@@ -367,6 +382,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 
     @Override
     public void stop() {
+        this.assetUserActorMonitorAgent.stop();
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
@@ -437,11 +453,10 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
     }
 
     @Override
-    public ActorAssetUser getActorPublicKey() throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
+    public ActorAssetUser getActorAssetUser() throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
 
         ActorAssetUser actorAssetUser;
         try {
-//            actorAssetUser = this.assetUserActorDao.getActorPublicKey();
             actorAssetUser = this.assetUserActorDao.getActorAssetUser();
         } catch (Exception e) {
             throw new CantGetAssetUserActorsException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
@@ -518,13 +533,13 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 //                String assetUserActorIdentityToLinkPublicKey = UUID.randomUUID().toString();
                 String assetUserActorPublicKey = UUID.randomUUID().toString();
 //                CryptoAddress cryptoAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);
-                CryptoAddress genesisAddress = obtenerGenesisAddress();
+                CryptoAddress genesisAddress = getGenesisAddress();
                 Genders genders = Genders.INDEFINITE;
                 String age = "25";
                 ConnectionState connectionState = ConnectionState.CONNECTED;
                 Double locationLatitude = new Random().nextDouble();
                 Double locationLongitude = new Random().nextDouble();
-                AssetUserActorRecord record = new AssetUserActorRecord(assetUserActorPublicKey, "Thunder User_" + new Random().nextInt(9), age, genders,
+                AssetUserActorRecord record = new AssetUserActorRecord(assetUserActorPublicKey, "Thunder User_" + new Random().nextInt(10), age, genders,
                         connectionState, locationLatitude, locationLongitude,
                         genesisAddress, System.currentTimeMillis(),
                         System.currentTimeMillis(), new byte[0]);
@@ -541,12 +556,14 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
                     System.out.println("GenesisAddress in Crypto Address Book: " + actorAssetUser.getCryptoAddress().getAddress());
                     System.out.println("********************************************************************************************************");
                 }
-                registerGenesisAddressInCryptoAddressBook(genesisAddress);
+//                else {
                 /**
                  * Register User in Table Actor Asset User Registered,
                  * Simulating other users on their devices, Registered in (Actor Network Service User)
                  */
-                this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(record);
+//                    this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(record);
+//                }
+                registerGenesisAddressInCryptoAddressBook(genesisAddress);
             }
         } catch (CantAddPendingAssetUserException e) {
             throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR", e, "", "");
@@ -558,6 +575,23 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
     /**
      * Private methods
      */
+    private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantStartAgentException {
+        if (this.assetUserActorMonitorAgent == null) {
+            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+            this.assetUserActorMonitorAgent = new AssetUserActorMonitorAgent(this.eventManager,
+                    this.pluginDatabaseSystem,
+                    this.errorManager,
+                    this.pluginId,
+                    this.assetUserActorNetworkServiceManager,
+                    this.assetUserActorDao,
+                    this);
+//            this.assetUserActorMonitorAgent.setLogManager(this.logManager);
+            this.assetUserActorMonitorAgent.start();
+        } else {
+            this.assetUserActorMonitorAgent.start();
+        }
+    }
+
 //
 //    /**
 //     * Procces the list o f notifications from Intra User Network Services
