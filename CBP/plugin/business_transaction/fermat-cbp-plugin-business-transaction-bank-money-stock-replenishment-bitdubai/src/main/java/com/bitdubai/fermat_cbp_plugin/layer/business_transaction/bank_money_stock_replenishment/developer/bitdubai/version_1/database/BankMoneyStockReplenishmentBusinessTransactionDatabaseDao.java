@@ -21,11 +21,13 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BankOperationType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.interfaces.BankMoneyStockReplenishment;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerTransactionRecord;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.structure.BankMoneyStockReplenishmentBusinessTransactionImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantInitializeBankMoneyStockReplenishmentBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantInsertRecordBankMoneyStockReplenishmentBusinessTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.BankMoneyStockReplenishmentBusinessTransactionInconsistentTableStateException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantUpdateStatusBankMoneyStockReplenishmentBusinessTransactionException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantListBankMoneyStockReplenishmentBusinessTransactionException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,14 +95,21 @@ public class BankMoneyStockReplenishmentBusinessTransactionDatabaseDao {
     }
 
     /*GENERATE LIST TRANSACTION*/
-    public List<BankMoneyStockReplenishment> getAllBankMoneyStockReplenishmentListFromCurrentDeviceUser() throws CantLoadTableToMemoryException, InvalidParameterException {
-        DatabaseTable identityTable = this.database.getTable(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_TABLE_NAME);
-        identityTable.loadToMemory();
-        List<DatabaseTableRecord> records = identityTable.getRecords();
-        identityTable.clearAllFilters();
-        List<BankMoneyStockReplenishment> bankMoneyStockReplenishment = new ArrayList<>();
-        for (DatabaseTableRecord record : records) {
-            bankMoneyStockReplenishment.add(constructBankMoneyStockReplenishmentFromRecord(record));
+    public List<BankMoneyStockReplenishment> getAllBankMoneyStockReplenishmentListFromCurrentDeviceUser() throws CantListBankMoneyStockReplenishmentBusinessTransactionException {
+        List<BankMoneyStockReplenishment> bankMoneyStockReplenishment = new ArrayList<BankMoneyStockReplenishment>();
+        DatabaseTable identityTable;
+        try {
+            identityTable = this.database.getTable(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_TABLE_NAME);
+            identityTable.loadToMemory();
+            identityTable.clearAllFilters();
+            bankMoneyStockReplenishment = new ArrayList<>();
+            for (DatabaseTableRecord record : identityTable.getRecords()) {
+                bankMoneyStockReplenishment.add(constructBankMoneyStockReplenishmentFromRecord(record));
+            }
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantListBankMoneyStockReplenishmentBusinessTransactionException(e.getMessage(), e, "Crypto Broker Wallet", "Cant load " + BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantListBankMoneyStockReplenishmentBusinessTransactionException(e.getMessage(), FermatException.wrapException(e), "Crypto Broker Wallet", "Cant get Crypto Broker Wallet list, unknown failure.");
         }
         return bankMoneyStockReplenishment;
     }
