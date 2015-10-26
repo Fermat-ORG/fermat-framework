@@ -403,5 +403,4 @@ public class CryptoBrokerWalletDatabaseDao {
         }
         return privateKey;
     }
-    /*##END PRIVATE##*/
 }

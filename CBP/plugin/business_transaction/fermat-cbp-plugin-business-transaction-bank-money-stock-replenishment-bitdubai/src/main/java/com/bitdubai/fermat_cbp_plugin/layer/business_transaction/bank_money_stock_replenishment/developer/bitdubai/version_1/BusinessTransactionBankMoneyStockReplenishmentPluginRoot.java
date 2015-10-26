@@ -36,6 +36,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stoc
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.database.BankMoneyStockReplenishmentBusinessTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantInitializeBankMoneyStockReplenishmentBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantInsertRecordBankMoneyStockReplenishmentBusinessTransactionException;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantListBankMoneyStockReplenishmentBusinessTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantUpdateStatusBankMoneyStockReplenishmentBusinessTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.structure.BankMoneyStockReplenishmentBusinessTransactionImpl;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -92,7 +93,7 @@ public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
             List<BankMoneyStockReplenishment> bankMoneyStockReplenishmentList = new ArrayList<BankMoneyStockReplenishment>();
             bankMoneyStockReplenishmentList = bankMoneyStockReplenishmentBusinessTransactionDatabaseDao.getAllBankMoneyStockReplenishmentListFromCurrentDeviceUser();
             return bankMoneyStockReplenishmentList;
-        } catch (CantLoadTableToMemoryException e) {
+        } catch (CantListBankMoneyStockReplenishmentBusinessTransactionException e) {
             throw new CantGetBankMoneyStockReplenishmentException("CAN'T GET BANK MONEY REPLENISHMENT BUSINESS TRANSACTION", e, "", "");
         } catch (Exception e) {
             throw new CantGetBankMoneyStockReplenishmentException("CAN'T GET BANK MONEY REPLENISHMENT BUSINESS TRANSACTION", FermatException.wrapException(e), "", "");

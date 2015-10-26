@@ -114,6 +114,7 @@ public class BankMoneyStockReplenishmentBusinessTransactionDatabaseDao {
         return bankMoneyStockReplenishment;
     }
 
+
     private void loadRecordAsNew(DatabaseTableRecord databaseTableRecord,BankMoneyStockReplenishment bankMoneyStockReplenishment ) {
         databaseTableRecord.setUUIDValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_TRANSACTION_ID_COLUMN_NAME, bankMoneyStockReplenishment.getTransactionId());
         databaseTableRecord.setStringValue(BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants.BANK_MONEY_STOCK_REPLENISHMENT_STATUS_COLUMN_NAME, bankMoneyStockReplenishment.getStatus().getCode());
