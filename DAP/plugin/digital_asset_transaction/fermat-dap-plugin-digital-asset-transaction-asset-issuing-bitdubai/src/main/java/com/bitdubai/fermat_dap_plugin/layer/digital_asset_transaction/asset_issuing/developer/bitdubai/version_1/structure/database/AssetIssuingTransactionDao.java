@@ -26,7 +26,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantP
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisAddressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsTransactionUUIDException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistsTransactionUUIDException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -494,7 +494,7 @@ public class AssetIssuingTransactionDao {
         }
     }
 
-    public void persistOutgoingIntraActorUUID(String transactionID, UUID outgoingId) throws CantPersistsTransactionUUIDException, CantPersistsGenesisAddressException {
+    public void persistOutgoingIntraActorUUID(String transactionID, UUID outgoingId) throws CantPersistsTransactionUUIDException {
         try {
             this.database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME);
@@ -514,10 +514,10 @@ public class AssetIssuingTransactionDao {
             this.database.closeDatabase();
         } catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
-            throw new CantPersistsGenesisAddressException(exception, "Persisting OutgoingId in database", "Cannot open or find the database");
+            throw new CantPersistsTransactionUUIDException(exception, "Persisting OutgoingId in database", "Cannot open or find the database");
         } catch (Exception exception) {
             this.database.closeDatabase();
-            throw new CantPersistsGenesisAddressException(FermatException.wrapException(exception), "Persisting OutgoingId in database", "Unexpected exception");
+            throw new CantPersistsTransactionUUIDException(FermatException.wrapException(exception), "Persisting OutgoingId in database", "Unexpected exception");
         }
     }
 

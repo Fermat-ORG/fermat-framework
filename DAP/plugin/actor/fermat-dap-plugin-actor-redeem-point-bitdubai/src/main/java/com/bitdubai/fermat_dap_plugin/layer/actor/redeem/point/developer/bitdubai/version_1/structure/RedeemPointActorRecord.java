@@ -28,6 +28,11 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     /**
      * Constructor
      */
+
+    public RedeemPointActorRecord() {
+
+    }
+
     public RedeemPointActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, ConnectionState contactState){
         this.name = name;
         this.publicKey = publicKey;
@@ -50,6 +55,19 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         this.connectionState = ConnectionState.CONNECTED;
 
     }
+
+    public RedeemPointActorRecord(String publicKey, String name, ConnectionState connectionState,
+                                  double locationLatitude, double locationLongitude, long registrationDate,
+                                  byte[] profileImage) {
+        this.publicKey = publicKey;
+        this.name = name;
+        this.connectionState = connectionState;
+        this.locationLatitude = locationLatitude;
+        this.locationLongitude = locationLongitude;
+        this.registrationDate = registrationDate;
+        this.profileImage = profileImage.clone();
+    }
+
     /**
      * The metho <code>getPublicKey</code> gives us the public key of the represented Redeem Point
      *

@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum NicheWallet implements FermatWalletEnum {
     /**
      * The value NONE is used to store the information of no wallet
-     *
+     * <p/>
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
     NONE           ("NONE", null),
@@ -20,26 +20,27 @@ public enum NicheWallet implements FermatWalletEnum {
     private String code;
     private ReferenceWallet referenceWallet;
 
-    NicheWallet (String code,ReferenceWallet referenceWallet){
+    NicheWallet(String code, ReferenceWallet referenceWallet) {
         this.code = code;
         this.referenceWallet = referenceWallet;
     }
 
-    public static NicheWallet getByCode(String code) throws InvalidParameterException, CallToGetByCodeOnNONEException{
+    public static NicheWallet getByCode(String code) throws InvalidParameterException, CallToGetByCodeOnNONEException {
         switch (code) {
-            case "NONE" : throw  new CallToGetByCodeOnNONEException("method getByCode called by a NONE wallet",null,"","");
-            case "UNKW" : return UNKNOWN_WALLET;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the NicheWallet enum");
+            case "NONE": throw new CallToGetByCodeOnNONEException("method getByCode called by a NONE wallet", null, "", "");
+            case "UNKW": return UNKNOWN_WALLET;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the NicheWallet enum");
         }
     }
 
     @Override
-    public String getCode(){
+    public String getCode() {
         return this.code;
     }
 
     @Override
-    public ReferenceWallet getReferenceWallet(){
+    public ReferenceWallet getReferenceWallet() {
         return this.referenceWallet;
     }
 

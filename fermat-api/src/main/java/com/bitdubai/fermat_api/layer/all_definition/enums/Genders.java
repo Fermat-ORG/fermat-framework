@@ -23,10 +23,9 @@ public enum Genders implements FermatEnum {
     public static Genders getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "M":  return MALE;
-            case "F":  return FEMALE;
-            case "I":  return INDEFINITE;
-
+            case "M": return Genders.MALE;
+            case "F": return Genders.FEMALE;
+            case "I": return Genders.INDEFINITE;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");
         }
@@ -36,5 +35,4 @@ public enum Genders implements FermatEnum {
     public String getCode() {
         return this.code;
     }
-
 }

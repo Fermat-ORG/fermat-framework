@@ -968,9 +968,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     /**
      * (non-Javadoc)
-     * @see NetworkService#getPlatformComponentProfile()
+     * @see NetworkService#getPlatformComponentProfilePluginRoot()
      */
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
 

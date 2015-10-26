@@ -129,7 +129,7 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
     }
 
     @Override
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return null;
     }
 
