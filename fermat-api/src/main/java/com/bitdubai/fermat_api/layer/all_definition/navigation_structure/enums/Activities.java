@@ -26,6 +26,7 @@ public enum Activities {
     CWP_INTRA_USER_ACTIVITY("CIUA"),
     CWP_INTRA_USER_CREATE_ACTIVITY("CIUCA"),
     CWP_INTRA_USER_CONNECTION_REQUEST_ACTIVITY("CIUCRA"),
+    CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS("CSAIUCC"),
 
     //Wallet store
     CWP_WALLET_STORE_MAIN_ACTIVITY("CWPWSMA"),
@@ -289,6 +290,8 @@ public enum Activities {
                 return Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY;
             case "CCPSAIUCR":
                 return Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST;
+            case "CSAIUCC":
+                return CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }
