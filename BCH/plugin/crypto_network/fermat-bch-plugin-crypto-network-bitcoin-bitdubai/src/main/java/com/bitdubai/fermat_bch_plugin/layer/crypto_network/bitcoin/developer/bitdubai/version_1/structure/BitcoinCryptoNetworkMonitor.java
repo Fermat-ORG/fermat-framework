@@ -149,12 +149,31 @@ class BitcoinCryptoNetworkMonitor implements Agent {
             wallet.addEventListener(events);
 
             /**
-             * I will connect to the regTest server of search for peers if we are in a different network.
+             * I will connect to the regTest server or search for peers if we are in a different network.
              */
             if (NETWORK_PARAMETERS == RegTestParams.get()){
-                InetSocketAddress inetSocketAddress = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_PORT);
-               PeerAddress peerAddress = new PeerAddress(inetSocketAddress);
-                peerGroup.addAddress(peerAddress);
+                /**
+                 * Peer 1
+                 */
+                InetSocketAddress inetSocketAddress1 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_PORT);
+               PeerAddress peerAddress1 = new PeerAddress(inetSocketAddress1);
+                peerGroup.addAddress(peerAddress1);
+
+                /**
+                 * Peer 2
+                 */
+                InetSocketAddress inetSocketAddress2 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_2_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_2_PORT);
+                PeerAddress peerAddress2 = new PeerAddress(inetSocketAddress2);
+                peerGroup.addAddress(peerAddress2);
+
+                /**
+                 * Peer 3
+                 */
+                InetSocketAddress inetSocketAddress3 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_3_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_3_PORT);
+                PeerAddress peerAddress3 = new PeerAddress(inetSocketAddress3);
+                peerGroup.addAddress(peerAddress3);
+
+
             } else
                 peerGroup.addPeerDiscovery(new DnsDiscovery(NETWORK_PARAMETERS));
 
