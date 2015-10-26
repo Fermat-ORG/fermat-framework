@@ -76,6 +76,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantG
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.mocks.MockDigitalAssetMetadataForTesting;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.mocks.MockIdentityAssetIssuerForTest;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckIfExistsPendingAssetsException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisAddressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsTransactionUUIDException;
@@ -163,12 +164,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
              */
             FermatException e = new CantDeliverDatabaseException("Cannot open the database",cantOpenDatabaseException,"DeveloperDatabase: " + developerDatabase.getName(),"");
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-        }
-        catch (DatabaseNotFoundException databaseNotFoundException) {
+        }catch (DatabaseNotFoundException databaseNotFoundException) {
             FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"DeveloperDatabase: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-        } catch(Exception exception){
-            FermatException e = new CantDeliverDatabaseException("Unexpected Exception",FermatException.wrapException(exception),"DeveloperDatabase: " + developerDatabase.getName(),"");
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         // If we are here the database could not be opened, so we return an empty list
@@ -247,8 +244,8 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         }catch(CantExecuteDatabaseOperationException exception){
             this.serviceStatus=ServiceStatus.STOPPED;
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting pluginDatabaseSystem in DigitalAssetCryptoTransactionFactory", "Error in constructor method AssetIssuingTransactionDao");
-        }catch(CantStartAgentException exception){
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin", "cannot start monitor agent");
+        }catch(CantCheckIfExistsPendingAssetsException exception){
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Issuing plugin", "Cannot check if pending assets");
         }catch(Exception exception){
             this.serviceStatus=ServiceStatus.STOPPED;
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(exception),"Starting Asset Issuing plugin", "Unexpected exception");
@@ -289,10 +286,20 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
      * @throws CantSetObjectException
      * @throws CantGetLoggedInDeviceUserException
      */
-    private void checkIfExistsPendingAssets() throws CantCheckAssetIssuingProgressException, CantStartAgentException, CantSetObjectException, CantGetLoggedInDeviceUserException {
-        boolean isPendingAssets=this.assetIssuingTransactionDao.isAnyPendingAsset();
-        if(isPendingAssets){
-            startMonitorAgent();
+    private void checkIfExistsPendingAssets() throws CantCheckIfExistsPendingAssetsException {
+        try {
+            boolean isPendingAssets = this.assetIssuingTransactionDao.isAnyPendingAsset();
+            if (isPendingAssets) {
+                startMonitorAgent();
+            }
+        } catch (CantCheckAssetIssuingProgressException e) {
+            throw new CantCheckIfExistsPendingAssetsException(e, "Checking if exists pending assets", "Problem getting pending Digital Asset public keys");
+        } catch (CantStartAgentException e) {
+            throw new CantCheckIfExistsPendingAssetsException(e, "Checking if exists pending assets", "Problem starting monitor agent");
+        } catch (CantSetObjectException e) {
+            throw new CantCheckIfExistsPendingAssetsException(e, "Checking if exists pending assets", "Can't setting an agent required variable");
+        } catch (CantGetLoggedInDeviceUserException e) {
+            throw new CantCheckIfExistsPendingAssetsException(e, "Checking if exists pending assets", "Can't get logged in user device");
         }
     }
 
