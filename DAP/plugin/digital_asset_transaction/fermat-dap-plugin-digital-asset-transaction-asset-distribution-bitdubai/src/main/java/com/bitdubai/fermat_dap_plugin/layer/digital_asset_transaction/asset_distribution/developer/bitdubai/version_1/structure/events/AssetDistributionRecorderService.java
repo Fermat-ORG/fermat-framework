@@ -89,7 +89,6 @@ public class AssetDistributionRecorderService implements DealsWithEvents, AssetT
         Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         this.assetDistributionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        LOG.info("guardando evento en bd");
         //LOG.info("CHECK THE DATABASE");
     }
 
