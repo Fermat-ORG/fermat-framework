@@ -270,6 +270,17 @@ public class CustomerBrokerSaleNegotiationDao {
             Clauses
          */
 
+            private CustomerBrokerSaleClause newCustomerBrokerSaleClause(
+                    UUID            clauseId,
+                    ClauseType      type,
+                    String          value,
+                    ClauseStatus    status,
+                    String          proposedBy,
+                    short           indexOrder
+            ){
+                return new CustomerBrokerSaleClause(clauseId, type, value, status, proposedBy, indexOrder);
+            }
+
 
             private CustomerBrokerSaleClause constructCustomerBrokerSaleClauseFromRecord(DatabaseTableRecord record) throws InvalidParameterException{
         
