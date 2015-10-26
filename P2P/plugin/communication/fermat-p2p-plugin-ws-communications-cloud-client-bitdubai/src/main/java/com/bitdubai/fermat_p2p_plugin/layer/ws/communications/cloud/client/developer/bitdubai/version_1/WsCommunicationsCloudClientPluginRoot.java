@@ -78,7 +78,8 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     //public static final String SERVER_IP = "192.168.1.3";
 
     /**
-     * Represent the DEFAULT_PORT
+     * Represent the DEFAULT_PORTcd ..
+     *
      */
     public static final int DEFAULT_PORT = 9090;
 

@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.RequestedListNotReadyRecevivedException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.AssetActorUserPluginRoot;
@@ -164,10 +165,11 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
                     assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(list);
                     System.out.println("Se Registro en tabla ASSET_USER_REGISTER_ACTOR Lista de: " + list.size() + " Actors desde Actor Network Service");
                 }
-            } catch (RequestedListNotReadyRecevivedException e) {
-                e.printStackTrace();
-            } catch (CantAddPendingAssetUserException e) {
+
+            } catch (CantRequestListActorAssetUserRegisteredException e) {
                 throw new CantCreateAssetUserActorException("CAN'T ADD TEST NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
+            } catch (CantAddPendingAssetUserException e) {
+                e.printStackTrace();
             }
         }
 

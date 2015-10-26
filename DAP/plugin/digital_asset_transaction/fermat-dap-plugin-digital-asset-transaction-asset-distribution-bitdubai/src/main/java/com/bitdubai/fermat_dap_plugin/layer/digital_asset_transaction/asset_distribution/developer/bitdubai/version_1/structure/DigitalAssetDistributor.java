@@ -149,7 +149,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
             }
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED,genesisTransaction);
             System.out.println("ASSET DISTRIBUTION set debit in asset issuer wallet:" + genesisTransaction);
-            digitalAssetDistributionVault.setDigitalAssetMetadataDebit(digitalAssetMetadata, this.cryptoTransaction, BalanceType.AVAILABLE);
+            digitalAssetDistributionVault.setDigitalAssetMetadataAssetIssuerWalletDebit(digitalAssetMetadata, this.cryptoTransaction, BalanceType.AVAILABLE);
             System.out.println("ASSET DISTRIBUTION Begins the deliver to an remote actor");
             deliverToRemoteActor(digitalAssetMetadata, actorAssetUser);
         } catch (CantPersistDigitalAssetException exception) {
@@ -184,7 +184,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
             genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
             System.out.println("ASSET DISTRIBUTION Delivering genesis transaction "+genesisTransaction);
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.DELIVERING, genesisTransaction);
-            System.out.println("ASSET DISTRIBUTION Sender Actor name"+this.actorAssetIssuer.getName());
+            System.out.println("ASSET DISTRIBUTION Sender Actor name "+this.actorAssetIssuer.getName());
             System.out.println("ASSET DISTRIBUTION Before deliver - remote asset user ");
             this.assetTransmissionNetworkServiceManager.sendDigitalAssetMetadata(this.actorAssetIssuer,remoteActorAssetUser,digitalAssetMetadata);
         } catch (CantExecuteQueryException exception) {
