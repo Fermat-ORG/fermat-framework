@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -285,9 +286,15 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
      * @throws CantGetAssetIssuerActorsException
      */
     @Override
-    public ActorAssetIssuer getActorPublicKey() throws CantGetAssetIssuerActorsException {
+    public ActorAssetIssuer getActorAssetIssuer() throws CantGetAssetIssuerActorsException {
 
-        return null;
+        ActorAssetIssuer actorAssetIssuer;
+        try {
+            actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
+        } catch (Exception e) {
+            throw new CantGetAssetIssuerActorsException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
+        }
+        return actorAssetIssuer;
     }
 
     /**
@@ -314,8 +321,12 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
      */
     @Override
     public List<ActorAssetIssuer> getAllAssetIssuerActorConnected() throws CantGetAssetIssuerActorsException {
-        List<ActorAssetIssuer> list = new LinkedList<>();
-
+        List<ActorAssetIssuer> list; // Asset User Actor list.
+        try {
+            list = this.assetIssuerActorDao.getAllAssetIssuerActorConnected();
+        } catch (CantGetAssetIssuersListException e) {
+            throw new CantGetAssetIssuerActorsException("CAN'T GET ASSET USER ACTORS CONNECTED WITH CRYPTOADDRESS ", e, "", "");
+        }
         return list;
     }
 

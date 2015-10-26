@@ -29,7 +29,7 @@ public interface ActorAssetIssuer {
      *
      * @return the date
      */
-    long getContactRegistrationDate();
+    long getRegistrationDate();
 
     /**
      * The method <coda>getProfileImage</coda> gives us the profile image of the represented Asset Issuer
@@ -44,7 +44,7 @@ public interface ActorAssetIssuer {
      *
      * @return the contact state
      */
-    ConnectionState getContactState();
+    ConnectionState getConnectionState();
 
     /**
      * Método {@code getDescription}
@@ -63,6 +63,10 @@ public interface ActorAssetIssuer {
      * @return {@link Location} con la ubicación del {@link ActorAssetIssuer}
      */
     Location getLocation();
+
+    Double getLocationLatitude();
+
+    Double getLocationLongitude();
 
     /**
      * Método {@code getCryptoAddress}

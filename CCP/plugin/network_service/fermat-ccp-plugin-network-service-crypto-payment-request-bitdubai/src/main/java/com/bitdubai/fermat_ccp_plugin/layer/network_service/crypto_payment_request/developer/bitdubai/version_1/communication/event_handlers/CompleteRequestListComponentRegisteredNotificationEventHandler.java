@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.CryptoPaymentRequestNetworkServicePluginRoot;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.AbstractCommunicationBaseEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
 
 /**
@@ -17,9 +18,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CompleteRequestListComponentRegisteredNotificationEventHandler implements FermatEventHandler {
+public class CompleteRequestListComponentRegisteredNotificationEventHandler extends AbstractCommunicationBaseEventHandler<CompleteRequestListComponentRegisteredNotificationEvent> {
 
-    private final CryptoPaymentRequestNetworkServicePluginRoot cryptoPaymentRequestNetworkServicePluginRoot;
 
     /**
      * Constructor with parameter
@@ -27,40 +27,12 @@ public class CompleteRequestListComponentRegisteredNotificationEventHandler impl
      * @param cryptoPaymentRequestNetworkServicePluginRoot
      */
     public CompleteRequestListComponentRegisteredNotificationEventHandler(final CryptoPaymentRequestNetworkServicePluginRoot cryptoPaymentRequestNetworkServicePluginRoot) {
-        this.cryptoPaymentRequestNetworkServicePluginRoot = cryptoPaymentRequestNetworkServicePluginRoot;
+        super(cryptoPaymentRequestNetworkServicePluginRoot);
     }
 
-    /**
-     * (non-Javadoc)
-     *
-     * @see FermatEventHandler#handleEvent(FermatEvent)
-     *
-     * @param platformEvent
-     * @throws Exception
-     */
     @Override
-    public void handleEvent(FermatEvent platformEvent) throws FermatException {
+    public void processEvent(CompleteRequestListComponentRegisteredNotificationEvent event) {
+        networkService.handleCompleteRequestListComponentRegisteredNotificationEvent(event.getRegisteredComponentList());
 
-        System.out.println("CompleteRequestListComponentRegisteredNotificationEventHandler - handleEvent platformEvent ="+platformEvent+ " | NetworkServiceType: "+NetworkServiceType.CRYPTO_PAYMENT_REQUEST);
-
-
-        if (this.cryptoPaymentRequestNetworkServicePluginRoot.getStatus() == ServiceStatus.STARTED) {
-
-            CompleteRequestListComponentRegisteredNotificationEvent completeRequestListComponentRegisteredNotificationEvent = (CompleteRequestListComponentRegisteredNotificationEvent) platformEvent;
-
-
-
-            if(completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceTypeApplicant() == cryptoPaymentRequestNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot().getNetworkServiceType()){
-
-
-                 /*
-                 *  TemplateManager make the job
-                 */
-                this.cryptoPaymentRequestNetworkServicePluginRoot.handleCompleteRequestListComponentRegisteredNotificationEvent(completeRequestListComponentRegisteredNotificationEvent.getRegisteredComponentList());
-
-            }
-
-
-        }
     }
 }

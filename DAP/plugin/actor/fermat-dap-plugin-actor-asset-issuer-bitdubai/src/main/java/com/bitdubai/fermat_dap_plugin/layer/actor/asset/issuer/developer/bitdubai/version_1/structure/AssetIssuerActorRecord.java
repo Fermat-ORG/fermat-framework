@@ -18,11 +18,18 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     private long registrationDate;
     private ConnectionState connectionState;
     private Location location;
+    private Double locationLatitude;
+    private Double locationLongitude;
+
     private CryptoAddress cryptoAddress;
 
     /**
      * Constructor
      */
+
+    public AssetIssuerActorRecord() {
+
+    }
 
     public AssetIssuerActorRecord(String name, String publicKey) {
         this.name = name;
@@ -38,6 +45,19 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         this.connectionState = ConnectionState.CONNECTED;
 
     }
+
+    public AssetIssuerActorRecord(String publicKey, String name, ConnectionState connectionState,
+                                  double locationLatitude, double locationLongitude, long registrationDate,
+                                  byte[] profileImage) {
+        this.publicKey = publicKey;
+        this.name = name;
+        this.connectionState = connectionState;
+        this.locationLatitude = locationLatitude;
+        this.locationLongitude = locationLongitude;
+        this.registrationDate = registrationDate;
+        this.profileImage = profileImage.clone();
+    }
+
 
     /**
      * The metho <code>getPublicKey</code> gives us the public key of the represented Asset Issuer
@@ -66,7 +86,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
      * @return the date
      */
     @Override
-    public long getContactRegistrationDate() {
+    public long getRegistrationDate() {
         return this.registrationDate;
     }
 
@@ -86,7 +106,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
      * @return the contact state
      */
     @Override
-    public ConnectionState getContactState() {
+    public ConnectionState getConnectionState() {
         return this.connectionState;
     }
 
@@ -102,6 +122,16 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     @Override
     public Location getLocation() {
         return location;
+    }
+
+    @Override
+    public Double getLocationLatitude() {
+        return locationLatitude;
+    }
+
+    @Override
+    public Double getLocationLongitude() {
+        return locationLongitude;
     }
 
     @Override
