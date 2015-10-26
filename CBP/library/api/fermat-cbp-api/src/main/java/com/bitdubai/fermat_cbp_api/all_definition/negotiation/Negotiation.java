@@ -4,7 +4,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantAddNewClausesException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListPurchaseClauseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetNextClauseTypeException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantUpdateClausesException;
 
@@ -20,7 +20,7 @@ public interface Negotiation {
     NegotiationStatus getStatus();
     void setStatus(NegotiationStatus status);
 
-    Collection<Clause> getClauses() throws CantGetListPurchaseClauseException;
+    Collection<Clause> getClauses() throws CantGetListClauseException;
 
     Clause addNewBrokerClause(ClauseType type, String value) throws CantAddNewClausesException;
     Clause addNewCustomerClause(ClauseType type, String value) throws CantAddNewClausesException;

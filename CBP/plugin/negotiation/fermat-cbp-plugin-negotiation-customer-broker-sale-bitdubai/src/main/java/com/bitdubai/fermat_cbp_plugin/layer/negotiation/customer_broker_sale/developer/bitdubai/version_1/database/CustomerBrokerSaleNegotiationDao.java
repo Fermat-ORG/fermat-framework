@@ -16,11 +16,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterExc
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantUpdateCustomerBrokerSaleException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSale;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleClausesDaoException;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleLogsDaoException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleNegotiationDaoException;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.structure.CustomerBrokerSaleNegotiation;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.structure.CustomerBrokerSaleNegotiationImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,7 +58,7 @@ public class CustomerBrokerSaleNegotiationDao {
             }
         }
 
-        public CustomerBrokerSale createCustomerBrokerSaleNegotiation(
+        public CustomerBrokerSaleNegotiation createCustomerBrokerSaleNegotiation(
                 String publicKeyCustomer,
                 String publicKeyBroker,
                 long startDataTime
@@ -90,7 +88,7 @@ public class CustomerBrokerSaleNegotiationDao {
 
         }
 
-        public void cancelNegotiation(CustomerBrokerSale negotiation) throws CantUpdateCustomerBrokerSaleException {
+        public void cancelNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
             try {
                 DatabaseTable SaleNegotiationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
                 DatabaseTableRecord recordToUpdate   = SaleNegotiationTable.getEmptyRecord();
@@ -106,7 +104,7 @@ public class CustomerBrokerSaleNegotiationDao {
     
         }
 
-        public void closeNegotiation(CustomerBrokerSale negotiation) throws CantUpdateCustomerBrokerSaleException {
+        public void closeNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
             try {
                 DatabaseTable SaleNegotiationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
                 DatabaseTableRecord recordToUpdate   = SaleNegotiationTable.getEmptyRecord();
@@ -122,14 +120,14 @@ public class CustomerBrokerSaleNegotiationDao {
     
         }
 
-        public Collection<CustomerBrokerSale> getNegotiations() throws CantLoadTableToMemoryException, InvalidParameterException {
+        public Collection<CustomerBrokerSaleNegotiation> getNegotiations() throws CantLoadTableToMemoryException, InvalidParameterException {
             DatabaseTable identityTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
             identityTable.loadToMemory();
     
             List<DatabaseTableRecord> records = identityTable.getRecords();
             identityTable.clearAllFilters();
     
-            Collection<CustomerBrokerSale> resultados = new ArrayList<CustomerBrokerSale>();
+            Collection<CustomerBrokerSaleNegotiation> resultados = new ArrayList<CustomerBrokerSaleNegotiation>();
     
             for (DatabaseTableRecord record : records) {
                 resultados.add(constructCustomerBrokerSaleFromRecord(record));
@@ -138,7 +136,7 @@ public class CustomerBrokerSaleNegotiationDao {
             return resultados;
         }
 
-        public Collection<CustomerBrokerSale> getNegotiations(NegotiationStatus status) throws CantLoadTableToMemoryException, InvalidParameterException {
+        public Collection<CustomerBrokerSaleNegotiation> getNegotiations(NegotiationStatus status) throws CantLoadTableToMemoryException, InvalidParameterException {
             DatabaseTable identityTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
     
             identityTable.setStringFilter(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
@@ -148,7 +146,7 @@ public class CustomerBrokerSaleNegotiationDao {
             List<DatabaseTableRecord> records = identityTable.getRecords();
             identityTable.clearAllFilters();
     
-            Collection<CustomerBrokerSale> resultados = new ArrayList<CustomerBrokerSale>();
+            Collection<CustomerBrokerSaleNegotiation> resultados = new ArrayList<CustomerBrokerSaleNegotiation>();
     
             for (DatabaseTableRecord record : records) {
                 resultados.add(constructCustomerBrokerSaleFromRecord(record));
@@ -157,7 +155,7 @@ public class CustomerBrokerSaleNegotiationDao {
             return resultados;
         }
 
-        public Collection<CustomerBrokerSale> getNegotiationsByCustomer(ActorIdentity customer) throws CantLoadTableToMemoryException, InvalidParameterException {
+        public Collection<CustomerBrokerSaleNegotiation> getNegotiationsByCustomer(ActorIdentity customer) throws CantLoadTableToMemoryException, InvalidParameterException {
             DatabaseTable identityTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
 
             identityTable.setStringFilter(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, customer.getPublicKey(), DatabaseFilterType.EQUAL);
@@ -167,7 +165,7 @@ public class CustomerBrokerSaleNegotiationDao {
             List<DatabaseTableRecord> records = identityTable.getRecords();
             identityTable.clearAllFilters();
 
-            Collection<CustomerBrokerSale> resultados = new ArrayList<CustomerBrokerSale>();
+            Collection<CustomerBrokerSaleNegotiation> resultados = new ArrayList<CustomerBrokerSaleNegotiation>();
 
             for (DatabaseTableRecord record : records) {
                 resultados.add(constructCustomerBrokerSaleFromRecord(record));
@@ -176,7 +174,7 @@ public class CustomerBrokerSaleNegotiationDao {
             return resultados;
         }
 
-        public Collection<CustomerBrokerSale> getNegotiationsByBroker(ActorIdentity broker) throws CantLoadTableToMemoryException, InvalidParameterException {
+        public Collection<CustomerBrokerSaleNegotiation> getNegotiationsByBroker(ActorIdentity broker) throws CantLoadTableToMemoryException, InvalidParameterException {
             DatabaseTable identityTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
     
             identityTable.setStringFilter(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, broker.getPublicKey(), DatabaseFilterType.EQUAL);
@@ -186,7 +184,7 @@ public class CustomerBrokerSaleNegotiationDao {
             List<DatabaseTableRecord> records = identityTable.getRecords();
             identityTable.clearAllFilters();
     
-            Collection<CustomerBrokerSale> resultados = new ArrayList<CustomerBrokerSale>();
+            Collection<CustomerBrokerSaleNegotiation> resultados = new ArrayList<CustomerBrokerSaleNegotiation>();
     
             for (DatabaseTableRecord record : records) {
                 resultados.add(constructCustomerBrokerSaleFromRecord(record));
@@ -200,30 +198,7 @@ public class CustomerBrokerSaleNegotiationDao {
         Private methods
      */
 
-        private void initializeClause(UUID pluginId) throws CantInitializeCustomerBrokerSaleClausesDaoException {
-            try {
-                this.database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
-            } catch (DatabaseNotFoundException e) {
-
-            } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-                throw new CantInitializeCustomerBrokerSaleClausesDaoException("I couldn't open the database", cantOpenDatabaseException, "Database Name: " + CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_TABLE_NAME, "");
-            } catch (Exception exception) {
-                throw new CantInitializeCustomerBrokerSaleClausesDaoException(CantInitializeCustomerBrokerSaleNegotiationDaoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-            }
-        }
-
-        private void initializeLogs(UUID pluginId) throws CantInitializeCustomerBrokerSaleLogsDaoException {
-            try {
-                this.database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSE_STATUS_LOG_TABLE_NAME);
-            } catch (DatabaseNotFoundException e) {
-
-            } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-                throw new CantInitializeCustomerBrokerSaleLogsDaoException("I couldn't open the database", cantOpenDatabaseException, "Database Name: " + CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSE_STATUS_LOG_TABLE_NAME, "");
-            } catch (Exception exception) {
-                throw new CantInitializeCustomerBrokerSaleLogsDaoException(CantInitializeCustomerBrokerSaleNegotiationDaoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-            }
-        }
-
+       
         private void loadRecordAsNew(
                 DatabaseTableRecord databaseTableRecord,
                 UUID   negotiationId,
@@ -238,17 +213,17 @@ public class CustomerBrokerSaleNegotiationDao {
             databaseTableRecord.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, NegotiationStatus.OPEN.getCode());
         }
 
-        private CustomerBrokerSale newCustomerBrokerSaleNegotiation(
+        private CustomerBrokerSaleNegotiation newCustomerBrokerSaleNegotiation(
                 UUID   negotiationId,
                 String publicKeyCustomer,
                 String publicKeyBroker,
                 long startDataTime,
                 NegotiationStatus statusNegotiation
         ){
-            return new CustomerBrokerSaleNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation);
+            return new CustomerBrokerSaleNegotiationImpl(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation, this);
         }
 
-        private CustomerBrokerSale constructCustomerBrokerSaleFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
+        private CustomerBrokerSaleNegotiation constructCustomerBrokerSaleFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
     
             UUID    negotiationId     = record.getUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME);
             String  publicKeyCustomer = record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
@@ -256,6 +231,6 @@ public class CustomerBrokerSaleNegotiationDao {
             long    startDataTime     = record.getLongValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME);
             NegotiationStatus  statusNegotiation = NegotiationStatus.getByCode(record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME));
     
-            return new CustomerBrokerSaleNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation);
+            return new CustomerBrokerSaleNegotiationImpl(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation, this);
         }
 }
