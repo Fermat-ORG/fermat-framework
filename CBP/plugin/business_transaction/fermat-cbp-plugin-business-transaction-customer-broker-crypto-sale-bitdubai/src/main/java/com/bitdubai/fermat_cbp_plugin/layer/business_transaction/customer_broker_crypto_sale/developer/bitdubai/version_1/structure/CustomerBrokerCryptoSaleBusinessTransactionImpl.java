@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_broker_crypto_sale.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BusinessTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BusinessTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType;
@@ -17,8 +18,8 @@ public class CustomerBrokerCryptoSaleBusinessTransactionImpl implements Business
 
     private UUID transactionId;
     private UUID contractId;
-    private String publicKeyBroker;
-    private String publicKeyCustomer;
+    private KeyPair keyPairBroker;
+    private KeyPair keyPairCustomer;
     private UUID paymentTransactionId;
     private CurrencyType paymentCurrency;
     private CurrencyType merchandiseCurrency;
@@ -30,8 +31,8 @@ public class CustomerBrokerCryptoSaleBusinessTransactionImpl implements Business
     public CustomerBrokerCryptoSaleBusinessTransactionImpl(
             UUID transactionId,
             UUID contractId,
-            String publicKeyBroker,
-            String publicKeyCustomer,
+            KeyPair keyPairBroker,
+            KeyPair keyPairCustomer,
             UUID paymentTransactionId,
             CurrencyType paymentCurrency,
             CurrencyType merchandiseCurrency,
@@ -42,8 +43,8 @@ public class CustomerBrokerCryptoSaleBusinessTransactionImpl implements Business
     ){
         this.transactionId = transactionId;
         this.contractId = contractId;
-        this.publicKeyBroker = publicKeyBroker;
-        this.publicKeyCustomer = publicKeyCustomer;
+        this.keyPairBroker = keyPairBroker;
+        this.keyPairCustomer = keyPairCustomer;
         this.paymentTransactionId = paymentTransactionId;
         this.paymentCurrency = paymentCurrency;
         this.merchandiseCurrency = merchandiseCurrency;
@@ -62,12 +63,12 @@ public class CustomerBrokerCryptoSaleBusinessTransactionImpl implements Business
     public void setContractId(UUID id) { this.contractId = id; }
 
     @Override
-    public String getPublicKeyBroker(){ return this.publicKeyBroker; }
-    public  void setPublicKeyBroker(String publicKey){ this.publicKeyBroker = publicKey; }
+    public String getPublicKeyBroker(){ return this.keyPairBroker.getPublicKey(); }
+    public  void setPublicKeyBroker(String publicKey){ this.keyPairBroker = keyPairBroker; }
 
     @Override
-    public String getPublicKeyCustomer(){ return this.publicKeyCustomer; }
-    public  void setPublicKeyCustomer(String publicKey){ this.publicKeyCustomer = publicKey; }
+    public String getPublicKeyCustomer(){ return this.keyPairCustomer.getPublicKey(); }
+    public  void setPublicKeyCustomer(String publicKey){ this.keyPairCustomer = keyPairCustomer; }
 
     @Override
     public UUID getPaymentTransactionId(){ return this.paymentTransactionId; }
