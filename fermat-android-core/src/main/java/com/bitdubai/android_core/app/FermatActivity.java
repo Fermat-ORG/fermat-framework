@@ -2,6 +2,8 @@ package com.bitdubai.android_core.app;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -78,11 +80,9 @@ import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeMa
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
-import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -132,7 +132,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     /**
      * Navigation menu
      */
-    protected NavigationDrawerFragment NavigationDrawerFragment;
+    protected NavigationDrawerFragment navigationDrawerFragment;
 
     /**
      * Screen adapters
@@ -140,6 +140,11 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     private TabsPagerAdapter adapter;
     private TabsPagerAdapterWithIcons adapterWithIcons;
     private ScreenPagerAdapter screenPagerAdapter;
+
+    /**
+     * Current view
+     */
+    private int currentViewId = -1;
     /**
      * WizardTypes
      */
@@ -672,69 +677,70 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      * @param header
      */
     protected void setMainLayout(SideMenu sidemenu, FermatHeader header) {
-        if (sidemenu != null) {
-            if (ActivityType.ACTIVITY_TYPE_SUB_APP == activityType) {
-                setContentView(R.layout.runtime_app_activity_runtime_navigator);
-            } else if (ActivityType.ACTIVITY_TYPE_WALLET == activityType) {
+        try {
+            if (sidemenu != null) {
+                if (ActivityType.ACTIVITY_TYPE_SUB_APP == activityType) {
+                    setCurrentViewById(R.layout.runtime_app_activity_runtime_navigator);
+                } else if (ActivityType.ACTIVITY_TYPE_WALLET == activityType) {
+                    setCurrentViewById(R.layout.runtime_app_wallet_runtime_navigator);
 
-                setContentView(R.layout.runtime_app_wallet_runtime_navigator);
+                }
+
+
+                //TODO: tengo que agregar el header en los 4 xml base para que esto no se caiga cuando no lo tiene
+                try {
+                    ((RelativeLayout) findViewById(R.id.container_header_balance)).setVisibility((header != null) ? View.VISIBLE : View.GONE);
+                } catch (Exception e) {
+
+                }
+
+                //if (navigationDrawerFragment == null)
+                    //navigationDrawerFragment = (navigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+
+                navigationDrawerFragment = NavigationDrawerFragment.newInstance(this);
+
+                /**
+                 * Set up the navigationDrawer
+                 */
+                navigationDrawerFragment.setUp(
+                        R.id.navigation_drawer,
+                        (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
+
+                navigationDrawerFragment.setMenuVisibility(true);
+
+                FragmentManager     fm = getFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.navigation_drawer, navigationDrawerFragment);
+                ft.commit();
+                fm.executePendingTransactions();
+                ft.show(navigationDrawerFragment);
+
+
+                /**
+                 * Paint layout without navigationDrawer
+                 */
+            }else {
+                if (ActivityType.ACTIVITY_TYPE_SUB_APP == activityType) {
+                    setCurrentViewById(R.layout.runtime_app_activity_runtime);
+                } else if (ActivityType.ACTIVITY_TYPE_WALLET == activityType) {
+                    setCurrentViewById(R.layout.runtime_app_wallet_runtime);
+                }
 
             }
-
-
-            //TODO: tengo que agregar el header en los 4 xml base para que esto no se caiga cuando no lo tiene
-            try {
-                ((RelativeLayout) findViewById(R.id.container_header_balance)).setVisibility((header != null) ? View.VISIBLE : View.GONE);
-            } catch (Exception e) {
-
-            }
-
-
-            //RelativeLayout container_header_balance = getActivityHeader();
-
-//            if(container_header_balance!=null){
-//                LayoutInflater layoutInflater = getLayoutInflater();
-//                layoutInflater =
-//                        (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//
-//                container_header_balance.setVisibility(View.VISIBLE);
-//
-//                View balance_header = layoutInflater.inflate(com.bitdubai.android_fermat_ccp_wallet_bitcoin.R.layout.balance_header, container_header_balance, true);
-//            }
-
-
-            NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
-
-            /**
-             * Set up the navigationDrawer
-             */
-            NavigationDrawerFragment.setUp(
-                    R.id.navigation_drawer,
-                    (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
-
-            NavigationDrawerFragment.setMenuVisibility(true);
-
-            // NavigationDrawerFragment.getmAdapter().setValues(sidemenu.getMenuItems());
-
-//            FragmentTransaction ft = getFragmentManager().beginTransaction();
-//            ft.detach(NavigationDrawerFragment);
-//            ft.attach(NavigationDrawerFragment);
-//            ft.addToBackStack(NavigationDrawerFragment.class.getSimpleName());
-//            ft.commit();
-
+        }catch (Exception e){
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY,UnexpectedUIExceptionSeverity.CRASH,e);
         }
+    }
 
-        /**
-         * Paint layout without navigationDrawer
-         */
-        else {
-            if (ActivityType.ACTIVITY_TYPE_SUB_APP == activityType) {
-                setContentView(R.layout.runtime_app_activity_runtime);
-            } else if (ActivityType.ACTIVITY_TYPE_WALLET == activityType) {
-                setContentView(R.layout.runtime_app_wallet_runtime);
-            }
-
+    public void setCurrentViewById(int id){
+        if(getCurrentViewById() != id) {
+            setContentView(id);
+            currentViewId = id;
         }
+    }
+
+    public int getCurrentViewById(){
+        return currentViewId;
     }
 
     /**
@@ -949,16 +955,18 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             // hide actionBar
             getActionBar().hide();
 
-            if (NavigationDrawerFragment != null) {
+            if (navigationDrawerFragment != null) {
 
 //                getSupportFragmentManager().beginTransaction().
 //                        remove(getSupportFragmentManager().findFragmentById(R.id.only_fragment_container)).commit();
-//                NavigationDrawerFragment.setMenuVisibility(false);
-//                NavigationDrawerFragment.onDetach();
+//                navigationDrawerFragment.setMenuVisibility(false);
+//                navigationDrawerFragment.onDetach();
                 //if()
                 //getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.only_fragment_container)).commit();
-                NavigationDrawerFragment.onDetach();
-                NavigationDrawerFragment = null;
+                navigationDrawerFragment.onDetach();
+                navigationDrawerFragment = null;
+                getFragmentManager().beginTransaction().
+                        remove(getFragmentManager().findFragmentById(R.id.navigation_drawer)).commit();
             }
 
             this.getNotificationManager().deleteObserver(this);
@@ -970,6 +978,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
 
             this.screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
+
+            //currentViewId = -1;
 
             System.gc();
 
@@ -1012,9 +1022,9 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 //            ViewPager pager = (ViewPager) super.findViewById(R.id.pager);
 //            pager.setVisibility(View.INVISIBLE);
 //
-//            if (NavigationDrawerFragment != null) {
-//                this.NavigationDrawerFragment.setMenuVisibility(false);
-//                NavigationDrawerFragment = null;
+//            if (navigationDrawerFragment != null) {
+//                this.navigationDrawerFragment.setMenuVisibility(false);
+//                navigationDrawerFragment = null;
 //            }
 //
 //
@@ -1394,7 +1404,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         super.onDestroy();
         wizards = null;
 
-        //NavigationDrawerFragment.onDetach();
+        //navigationDrawerFragment.onDetach();
         resetThisActivity();
     }
 
@@ -1502,7 +1512,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
     @Override
     public void changeNavigationDrawerAdapter(ListAdapter listAdapter) {
-        NavigationDrawerFragment.changeNavigationDrawerAdapter(listAdapter);
+        //navigationDrawerFragment.changeNavigationDrawerAdapter(listAdapter);
     }
 
 
