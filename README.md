@@ -195,7 +195,9 @@ Future path of development: Active (First release with very limited features sch
 
 ## I Want to Join the Team!
 
-Awesome! *__There are lots of ways you can help.__*
+Awesome!
+
+*__There are lots of ways you can help.__*
 
 First read
 [CONTRIBUTING.md](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md),
