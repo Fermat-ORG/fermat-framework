@@ -17,7 +17,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantUpdateCustomerBrokerSaleException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListClauseException;
@@ -67,7 +67,7 @@ public class CustomerBrokerSaleNegotiationDao {
                 String publicKeyCustomer,
                 String publicKeyBroker,
                 long startDataTime
-        ) throws CantCreateCustomerBrokerSaleException {
+        ) throws CantCreateCustomerBrokerSaleNegotiationException {
 
             try {
                 DatabaseTable SaleNegotiationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
@@ -88,7 +88,7 @@ public class CustomerBrokerSaleNegotiationDao {
                 return newCustomerBrokerSaleNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, NegotiationStatus.WAITING_FOR_CUSTOMER);
 
             } catch (CantInsertRecordException e) {
-                throw new CantCreateCustomerBrokerSaleException("An exception happened",e,"","");
+                throw new CantCreateCustomerBrokerSaleNegotiationException("An exception happened",e,"","");
             }
 
         }
