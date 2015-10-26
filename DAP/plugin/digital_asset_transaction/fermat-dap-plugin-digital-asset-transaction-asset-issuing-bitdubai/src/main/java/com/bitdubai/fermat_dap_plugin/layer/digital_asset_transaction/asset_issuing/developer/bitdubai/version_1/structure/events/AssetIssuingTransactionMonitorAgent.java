@@ -66,9 +66,6 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
     DigitalAssetIssuingVault digitalAssetIssuingVault;
     BitcoinNetworkManager bitcoinNetworkManager;
 //TODO: clean up this class
-    public AssetIssuingTransactionMonitorAgent() {
-
-    }
 
     public AssetIssuingTransactionMonitorAgent(EventManager eventManager,
                                                PluginDatabaseSystem pluginDatabaseSystem,
