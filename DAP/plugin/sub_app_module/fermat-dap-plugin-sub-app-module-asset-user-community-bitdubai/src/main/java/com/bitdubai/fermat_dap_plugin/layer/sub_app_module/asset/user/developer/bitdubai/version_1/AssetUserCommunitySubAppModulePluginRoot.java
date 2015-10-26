@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
@@ -124,6 +125,14 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
 
     @Override
     public List<ActorAssetUser> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException {
+        /**
+         * Test para crear y registrar el asset usser en la nube.
+         */
+        try {
+            actorAssetUserManager.createAndRegisterActorAssetUserTest();
+        } catch (CantCreateAssetUserActorException e) {
+            e.printStackTrace();
+        }
         List<ActorAssetUser> actorAssetList = new ArrayList<>();
 
 //        Location location = new DeviceLocation(00.00, 00.00, 12345678910L, 00.00, LocationProvider.NETWORK);

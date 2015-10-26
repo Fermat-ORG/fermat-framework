@@ -119,9 +119,9 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
             this.digitalAssetDistributor.setWalletPublicKey(walletPublicKey);
             this.digitalAssetDistributor.distributeAssets(digitalAssetsToDistribute);
         } catch (CantSetObjectException exception) {
-            throw new CantDistributeDigitalAssetsException(exception, "Setting wallet public key in asset distribution process", "The wallet public key is null");
+            throw new CantDistributeDigitalAssetsException(exception, "Distributing Assets", "The wallet public key is null");
         } catch(Exception exception){
-            throw new CantDistributeDigitalAssetsException(exception, "Setting wallet public key in asset distribution process", "Unexpected exception");
+            throw new CantDistributeDigitalAssetsException(exception, "Distributing Assets", "Unexpected exception");
         }
 
     }
