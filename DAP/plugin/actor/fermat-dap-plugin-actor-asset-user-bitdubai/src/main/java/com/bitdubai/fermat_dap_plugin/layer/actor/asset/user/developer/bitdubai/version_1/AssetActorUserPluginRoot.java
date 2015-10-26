@@ -271,7 +271,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 
             blockchainNetworkType = BlockchainNetworkType.REG_TEST;
 
-            test();
+            //test();
 
             /**
              * Agent for Search Actor Asset User REGISTERED in Actor Network Service User
@@ -515,10 +515,11 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
     }
 
 
-    private void test() throws CantCreateAssetUserActorException {
+    @Override
+    public void createAndRegisterActorAssetUserTest() throws CantCreateAssetUserActorException {
 
         try {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 9; i < 10; i++) {
 //                String assetUserActorIdentityToLinkPublicKey = UUID.randomUUID().toString();
                 String assetUserActorPublicKey = UUID.randomUUID().toString();
 //                CryptoAddress cryptoAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);
@@ -535,7 +536,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
                 /**
                  * Register User in Table Actor Asset User, Simulating user in Local Device
                  */
-                if (i == 0) {
+                if (i == 9) {
                     this.assetUserActorDao.createNewAssetUser(record);
                     ActorAssetUser actorAssetUser = this.assetUserActorDao.getActorAssetUser();
                     System.out.println("*****************************************Actor Asset User***********************************************");
@@ -544,14 +545,18 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
                     System.out.println("Actor Asset GenesisAddress in Crypto Address Book: " + actorAssetUser.getCryptoAddress().getAddress());
                     System.out.println("********************************************************************************************************");
                 }
+
+                registerActorInANS();
 //                else {
                 /**
                  * Register User in Table Actor Asset User Registered,
                  * Simulating other users on their devices, Registered in (Actor Network Service User)
                  */
-//                    this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(record);
+                  // this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(record);
 //                }
-                registerGenesisAddressInCryptoAddressBook(genesisAddress);
+//                registerGenesisAddressInCryptoAddressBook(genesisAddress);
+
+
             }
         } catch (CantAddPendingAssetUserException e) {
             throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR", e, "", "");
