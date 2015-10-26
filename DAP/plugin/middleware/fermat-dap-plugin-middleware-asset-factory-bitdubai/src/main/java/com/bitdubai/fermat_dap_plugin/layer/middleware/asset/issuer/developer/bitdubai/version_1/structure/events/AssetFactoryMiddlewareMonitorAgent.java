@@ -2,21 +2,30 @@ package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.b
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantInitializeAssetMonitorAgentException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.AssetFactoryMiddlewarePluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.AssetFactoryMiddlewareManager;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssertFactoryMiddlewareDatabaseConstant;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDao;
@@ -26,13 +35,14 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
  * Created by franklin on 12/10/15.
  */
-public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogger, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogger, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity, DealsWithPluginFileSystem {
     Database database;
     Thread agentThread;
     MonitorAgent monitorAgent;
@@ -42,20 +52,29 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
     PluginDatabaseSystem pluginDatabaseSystem;
     AssetFactoryMiddlewareManager assetFactoryMiddlewareManager;
     AssetIssuingManager assetIssuingManager;
+    AssetFactoryMiddlewareDao assetFactoryMiddlewareDao;
     UUID pluginId;
+    /**
+     * DealsWithPluginFileSystem Interface member variables.
+     */
+    private PluginFileSystem pluginFileSystem;
 
     public AssetFactoryMiddlewareMonitorAgent(EventManager eventManager,
                                               PluginDatabaseSystem pluginDatabaseSystem,
                                               ErrorManager errorManager,
                                               AssetFactoryMiddlewareManager assetFactoryMiddlewareManager,
                                               AssetIssuingManager assetIssuingManager,
-                                              UUID pluginId) throws CantSetObjectException {
+                                              UUID pluginId,
+                                              AssetFactoryMiddlewareDao assetFactoryMiddlewareDao,
+                                              PluginFileSystem pluginFileSystem) throws CantSetObjectException {
         this.eventManager= eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
         setAssetFactoryMiddlewareManager(assetFactoryMiddlewareManager);
         setAssetIssuingManager(assetIssuingManager);
         this.pluginId = pluginId;
+        this.assetFactoryMiddlewareDao = assetFactoryMiddlewareDao;
+        this.pluginFileSystem = pluginFileSystem;
 
     }
 
@@ -121,6 +140,11 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
         this.pluginId = pluginId;
     }
 
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
+
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
@@ -176,6 +200,8 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
             //TODO: Implementar ese metodo que tendra toda la logica que tendra el Agente
             try
             {
+                List<AssetFactory> assetFactories = getAssetFactoryAll();
+
                 int assetFactoryQuantity = 10;
                 int numberOfIssuedAssets = assetIssuingManager.getNumberOfIssuedAssets("");
                 int totalFaltante = assetFactoryQuantity - numberOfIssuedAssets;
@@ -188,6 +214,25 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
             }
 
 
+        }
+
+        //TODO: Eliminarlo e implemetarlo del manager
+        private List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException
+        {
+            assetFactoryMiddlewareDao = new AssetFactoryMiddlewareDao(pluginDatabaseSystem, pluginId);
+
+            // I define the filter to null for all
+            DatabaseTableFilter filter = null;
+
+            List<AssetFactory> assetFactories;
+            try {
+                assetFactories = assetFactoryMiddlewareDao.getAssetFactoryList(filter);
+                return assetFactories;
+            }
+            catch (DatabaseOperationException | InvalidParameterException  e)
+            {
+                throw new CantGetAssetFactoryException("Asset Factory", e, "Method: getAssetFactoryAll", "");
+            }
         }
 
         public void Initialize() throws CantInitializeAssetMonitorAgentException {
