@@ -130,7 +130,7 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
 
     @Override
     public void start() throws CantStartPluginException {
-        printSomething(">>> starting asset reception plugin");
+        //printSomething(">>> starting asset reception plugin");
         try{
             try {
                 this.assetReceptionDatabase=this.pluginDatabaseSystem.openDatabase(pluginId, AssetReceptionDatabaseConstants.ASSET_RECEPTION_DATABASE);
@@ -170,7 +170,7 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
         }
 
         this.serviceStatus=ServiceStatus.STARTED;
-        testRaiseEvent();
+        //testRaiseEvent();
     }
 
     @Override
