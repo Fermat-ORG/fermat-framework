@@ -96,9 +96,9 @@ public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
             bankMoneyStockReplenishmentList = bankMoneyStockReplenishmentBusinessTransactionDatabaseDao.getAllBankMoneyStockReplenishmentListFromCurrentDeviceUser();
             return bankMoneyStockReplenishmentList;
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetBankMoneyStockReplenishmentException("CAN'T GET CRYPTO BROKER IDENTITIES", e, "", "");
+            throw new CantGetBankMoneyStockReplenishmentException("CAN'T GET BANK MONEY REPLENISHMENT BUSINESS TRANSACTION", e, "", "");
         } catch (Exception e) {
-            throw new CantGetBankMoneyStockReplenishmentException("CAN'T GET CRYPTO BROKER IDENTITIES", FermatException.wrapException(e), "", "");
+            throw new CantGetBankMoneyStockReplenishmentException("CAN'T GET BANK MONEY REPLENISHMENT BUSINESS TRANSACTION", FermatException.wrapException(e), "", "");
         }
     }
 
@@ -127,9 +127,9 @@ public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
             bankMoneyStockReplenishmentBusinessTransactionDatabaseDao.createNewBankMoneyStockReplenishment(bankMoneyStockReplenishment);
             return bankMoneyStockReplenishment;
         } catch (CantInsertRecordBankMoneyStockReplenishmentBusinessTransactionException e) {
-            throw new CantCreateBankMoneyStockReplenishmentException("CAN'T CREATE NEW CRYPTO BROKER IDENTITY", e, "Error save user on database", "");
+            throw new CantCreateBankMoneyStockReplenishmentException("CAN'T CREATE NEW BANK MONEY REPLENISHMENT BUSINESS TRANSACTION", e, "Error save user on database", "");
         } catch (Exception e) {
-            throw new CantCreateBankMoneyStockReplenishmentException("CAN'T CREATE NEW CRYPTO BROKER IDENTITY", FermatException.wrapException(e), "", "");
+            throw new CantCreateBankMoneyStockReplenishmentException("CAN'T CREATE NEW BANK MONEY REPLENISHMENT BUSINESS TRANSACTION", FermatException.wrapException(e), "", "");
         }
     }
 
@@ -137,9 +137,9 @@ public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
         try {
             bankMoneyStockReplenishmentBusinessTransactionDatabaseDao.updateStatusBankMoneyStockReplenishmentTransaction(transactionId, transactionStatus);
         } catch (CantUpdateStatusBankMoneyStockReplenishmentBusinessTransactionException e) {
-            throw new CantUpdateStatusBankMoneyStockReplenishmentException("CAN'T UPDATE STATUS BANK MONEY REPLENISHMENT BUSINESS TRANSTION", e, "Error save user on database", "");
+            throw new CantUpdateStatusBankMoneyStockReplenishmentException("CAN'T UPDATE STATUS BANK MONEY REPLENISHMENT BUSINESS TRANSACTION", e, "Error save user on database", "");
         } catch (Exception e) {
-            throw new CantUpdateStatusBankMoneyStockReplenishmentException("CAN'T UPDATE STATUS BANK MONEY REPLENISHMENT BUSINESS TRANSTION", FermatException.wrapException(e), "", "");
+            throw new CantUpdateStatusBankMoneyStockReplenishmentException("CAN'T UPDATE STATUS BANK MONEY REPLENISHMENT BUSINESS TRANSACTION", FermatException.wrapException(e), "", "");
         }
     }
 
