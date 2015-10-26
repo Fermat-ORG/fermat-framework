@@ -4,15 +4,30 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 //import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.database.BankMoneyStockReplenishmentBusinessTransactionDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.database.BankMoneyStockReplenishmentBusinessTransactionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantInitializeBankMoneyStockReplenishmentBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,22 +39,76 @@ import java.util.regex.Pattern;
  * Created by Yordin Alayn on 16.09.15.
  */
 
-public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements  DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
+        DatabaseManagerForDevelopers,
+        DealsWithPluginDatabaseSystem,
+        DealsWithErrors,
+        DealsWithLogger,
+        LogManagerForDevelopers,
+        Plugin,
+        Service {
 
-    ErrorManager errorManager;
+    private ErrorManager errorManager;
 
-    UUID pluginId;
+    private LogManager logManager;
 
-    LogManager logManager;
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+    private DeviceUserManager deviceUserManager;
 
+    private PluginFileSystem pluginFileSystem;
+
+    private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+
+    private UUID pluginId;
+
+    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
+
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    /*DatabaseManagerForDevelopers Interface implementation.*/
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        BankMoneyStockReplenishmentBusinessTransactionDeveloperDatabaseFactory dbFactory = new BankMoneyStockReplenishmentBusinessTransactionDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        BankMoneyStockReplenishmentBusinessTransactionDeveloperDatabaseFactory dbFactory = new BankMoneyStockReplenishmentBusinessTransactionDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        try {
+            BankMoneyStockReplenishmentBusinessTransactionDeveloperDatabaseFactory dbFactory = new BankMoneyStockReplenishmentBusinessTransactionDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+            dbFactory.initializeDatabase();
+            return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (CantInitializeBankMoneyStockReplenishmentBusinessTransactionDatabaseException e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+        return new ArrayList<>();
+    }
+
+    /*DealsWithPluginDatabaseSystem interface implementation.*/
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+
+    }
+
+    /*LogManagerForDevelopers Interface implementation.*/
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
         returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.BusinessTransactionBankMoneyStockReplenishmentPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerIdentityImpl");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerIdentityDatabaseDao");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerIdentityDatabaseFactory");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerIdentityDatabaseConstants");
         return returnedClasses;
     }
 
+    //BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY TEMPORAL. AGREGAR BUSINESS TRANSACTION.
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
         try {
@@ -52,11 +121,9 @@ public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
                 }
             }
         } catch (Exception exception) {
-           // this.errorManager.reportUnexpectedPluginException(Plugins., UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
     }
-
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
@@ -66,6 +133,26 @@ public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
     @Override
     public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
+    }
+
+    @Override
+    public ServiceStatus getStatus() {
+        return serviceStatus;
+    }
+
+    @Override
+    public void setId(UUID uuid) {
+        this.pluginId = uuid;
+    }
+
+    public static LogLevel getLogLevelByClass(String className) {
+        try {
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return BusinessTransactionBankMoneyStockReplenishmentPluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e) {
+            System.err.println("CantGetLogLevelByClass: " + e.getMessage());
+            return DEFAULT_LOG_LEVEL;
+        }
     }
 
     @Override
@@ -91,26 +178,4 @@ public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
     public void stop() {
         this.serviceStatus = ServiceStatus.STOPPED;
     }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }
-
-    @Override
-    public void setId(UUID uuid) {
-        this.pluginId = uuid;
-    }
-
-    public static LogLevel getLogLevelByClass(String className) {
-        try {
-            String[] correctedClass = className.split((Pattern.quote("$")));
-            return BusinessTransactionBankMoneyStockReplenishmentPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e) {
-            System.err.println("CantGetLogLevelByClass: " + e.getMessage());
-            return DEFAULT_LOG_LEVEL;
-        }
-    }
-
-
 }
