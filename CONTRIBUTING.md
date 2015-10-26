@@ -1,3 +1,5 @@
+![alt text](https://raw.githubusercontent.com/bitDubai/fermat-graphic-design/c94e69f611108e78ab49b1ecfdbbeb85d7e4c1a3/Drafts/3D%20Design/Cover_OSA_2.png?token=ANBHS7_PavnUUaoQ9hmSD3xCT0NRd6AUks5WNrkAwA%3D%3D "Fermat Logo")
+
 
 <br>
 #Contributing Guide
