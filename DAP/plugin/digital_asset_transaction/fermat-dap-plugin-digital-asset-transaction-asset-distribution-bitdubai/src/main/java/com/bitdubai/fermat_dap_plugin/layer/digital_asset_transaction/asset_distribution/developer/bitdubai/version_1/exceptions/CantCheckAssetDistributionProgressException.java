@@ -11,4 +11,8 @@ public class CantCheckAssetDistributionProgressException extends DAPException {
     public CantCheckAssetDistributionProgressException(Exception cause, String context, String possibleReason) {
         super(DEFAULT_MESSAGE , cause, context, possibleReason);
     }
+
+    public CantCheckAssetDistributionProgressException(final String message) {
+        this(null, DEFAULT_MESSAGE, message);
+    }
 }
