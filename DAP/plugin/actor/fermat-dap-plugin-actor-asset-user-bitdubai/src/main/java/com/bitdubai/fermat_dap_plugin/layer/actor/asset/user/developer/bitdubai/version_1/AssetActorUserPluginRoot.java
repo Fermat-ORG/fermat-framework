@@ -518,11 +518,14 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
              */
         List<ActorAssetUser> list = new LinkedList<>();
 //            assetUserActorNetworkServiceManager.requestListActorAssetUserRegistered();
+        /*
+        TODO: COMENTADO POR CAMBÏOS EN LA INTERFACE
         try {
+
             list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
-        } catch (RequestedListNotReadyRecevivedException e) {
+        } catch (CantRequestListActorAssetUserRegisteredException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
 
