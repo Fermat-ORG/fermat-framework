@@ -9,7 +9,7 @@ Fermat is a P2P Multi-Digital-Wallet system that handles both crypto currencies 
 
 To achieve this a first layer of reference wallets are developed to address different use cases, one per wallet. A second layer of niche wallets combine reference wallets functionalities and add their own touch. This enables a third layer of branded wallets that can be generated just by changing the look and feel and navigation structure of niche wallets.   
 
-The goal is the allow any company big or small, brand or institution to have their own digital wallet with *any* subset of the whole functionality built for the entire community.
+The goal is the allow any company big or small, brand or institution to have their own digital wallet with *any* subset of the whole functionality built for the entire user community.
 
 === Fermat Community
 
