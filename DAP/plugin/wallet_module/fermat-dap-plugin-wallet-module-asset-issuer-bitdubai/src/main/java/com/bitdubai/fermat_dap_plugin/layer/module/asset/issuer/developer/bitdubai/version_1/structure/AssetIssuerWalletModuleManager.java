@@ -56,7 +56,9 @@ public class AssetIssuerWalletModuleManager {
 
     public void distributionAssets(String assetPublicKey, String walletPublicKey, List<ActorAssetUser> actorAssetUsers) throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException {
         try {
-            assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey).distributionAssets(assetPublicKey, walletPublicKey, actorAssetUsers);
+            //assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey).distributionAssets(assetPublicKey, walletPublicKey, actorAssetUsers);
+            //TODO: Solo para prueba de Distribution
+            assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest").distributionAssets(assetPublicKey, walletPublicKey, actorAssetUsers);
         }catch (Exception exception){
             throw new CantLoadWalletException("Error distribution Assets", exception, "Method: distributionAssets", "Class: AssetIssuerWalletModuleManager");
         }

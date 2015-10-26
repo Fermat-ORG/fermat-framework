@@ -78,7 +78,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
 
     public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantGetActorAssetIssuerException {
         try {
-            this.actorAssetIssuer=actorAssetIssuerManager.getActorPublicKey();
+            this.actorAssetIssuer=actorAssetIssuerManager.getActorAssetIssuer();
         } catch (CantGetAssetIssuerActorsException exception) {
             throw new CantGetActorAssetIssuerException(exception, "Setting the Actor Asset Issuer", "Getting the Actor Asset Issuer");
         }
