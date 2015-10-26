@@ -333,10 +333,10 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                         im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                     }
 
-//                   if(walletContact!= null)
-//                        sendCrypto();
-//                    else
-//                        Toast.makeText(getActivity(), "Contact not found, please add it.", Toast.LENGTH_LONG).show();
+                  if(walletContact!= null)
+                        sendCrypto();
+                    else
+                        Toast.makeText(getActivity(), "Contact not found, please add it.", Toast.LENGTH_LONG).show();
 
                     //testing metadata
                          /*   cryptoWallet.sendMetadataLikeChampion(Long.parseLong("100000"),

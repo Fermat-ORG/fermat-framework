@@ -243,6 +243,46 @@ public class CryptoWalletWalletModuleManager implements DealsWithCryptoTransmiss
     }
 
     @Override
+    public List<CryptoWalletWalletContact> listAllActorContactsAndConnections(String intraUserPublicKey,String walletPublicKey,int max, int offset) throws CantGetAllWalletContactsException {
+        try {
+            List<CryptoWalletWalletContact> finalRecordList = new ArrayList<>();
+            finalRecordList.clear();
+
+            //get wallet contacts
+            WalletContactsSearch walletContactsSearch = walletContactsRegistry.searchWalletContact(walletPublicKey);
+            for(WalletContactRecord r : walletContactsSearch.getResult()){
+                byte[] image = null;
+                switch (r.getActorType()) {
+                    case EXTRA_USER:
+                        Actor actor = extraUserManager.getActorByPublicKey(r.getActorPublicKey());
+                        if (actor != null)
+                            image = actor.getPhoto();
+                        break;
+                    default:
+                        throw new CantGetAllWalletContactsException("UNEXPECTED ACTOR TYPE",null,"","incomplete switch");
+                }
+                finalRecordList.add(new CryptoWalletWalletModuleWalletContact(r, image));
+            }
+
+            //get intra user connections
+
+                List<CryptoWalletIntraUserActor> intraUserActorList = new ArrayList<>();
+
+                List<IntraWalletUser> intraUserList = intraUserManager.getAllIntraWalletUsers(intraUserPublicKey, max, offset);
+
+                for(IntraWalletUser intraUser : intraUserList)
+                    finalRecordList.add(new CryptoWalletWalletModuleWalletContact(enrichIntraUser(intraUser, walletPublicKey), walletPublicKey));
+
+            return  finalRecordList;
+        } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException e) {
+            throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, e);
+        }  catch (Exception e) {
+            throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+    }
+
+
+    @Override
     public List<CryptoWalletWalletContact> listWalletContactsScrolling(String  walletPublicKey,
                                                                        Integer max,
                                                                        Integer offset) throws CantGetAllWalletContactsException {

@@ -37,6 +37,19 @@ public interface CryptoWallet extends Serializable {
      */
     List<CryptoWalletWalletContact> listWalletContacts(String walletPublicKey) throws CantGetAllWalletContactsException;
 
+
+    /**
+     * List  wallet contact and intra user connections related to an specific wallet.
+     *
+     * @param intraUserPublicKey
+     * @param walletPublicKey
+     * @param max
+     * @param offset
+     * @return
+     * @throws CantGetAllWalletContactsException
+     */
+    List<CryptoWalletWalletContact> listAllActorContactsAndConnections(String intraUserPublicKey,String walletPublicKey,int max, int offset) throws CantGetAllWalletContactsException;
+
     /**
      * List all wallet contact related to an specific wallet.
      *
