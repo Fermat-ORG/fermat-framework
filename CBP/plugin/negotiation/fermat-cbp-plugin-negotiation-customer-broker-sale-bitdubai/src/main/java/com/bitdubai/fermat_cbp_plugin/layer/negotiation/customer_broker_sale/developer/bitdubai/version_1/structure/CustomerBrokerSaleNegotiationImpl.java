@@ -1,17 +1,15 @@
-package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantAddNewClausesException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetNextClauseTypeException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantUpdateClausesException;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerPurchaseNegotiationDao;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleNegotiationDao;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -20,7 +18,7 @@ import java.util.UUID;
  *  Created by angel on 19/10/15.
  */
 
-public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurchaseNegotiation {
+public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNegotiation {
 
     private final UUID   negotiationId;
     private final String publicKeyCustomer;
@@ -28,22 +26,22 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     private final long   startDataTime;
     private NegotiationStatus statusNegotiation;
 
-    private CustomerBrokerPurchaseNegotiationDao customerBrokerPurchaseNegotiationDao;
+    private CustomerBrokerSaleNegotiationDao customerBrokerSaleNegotiationDao;
 
-    public CustomerBrokerPurchaseNegotiationImpl(
-            UUID   negotiationId,
+    public CustomerBrokerSaleNegotiationImpl(
+            UUID negotiationId,
             String publicKeyCustomer,
             String publicKeyBroker,
             long startDataTime,
             NegotiationStatus statusNegotiation,
-            CustomerBrokerPurchaseNegotiationDao customerBrokerPurchaseNegotiationDao
+            CustomerBrokerSaleNegotiationDao customerBrokerSaleNegotiationDao
     ){
         this.negotiationId = negotiationId;
         this.publicKeyCustomer = publicKeyCustomer;
         this.publicKeyBroker = publicKeyBroker;
         this.startDataTime = startDataTime;
         this.statusNegotiation = statusNegotiation;
-        this.customerBrokerPurchaseNegotiationDao = customerBrokerPurchaseNegotiationDao;
+        this.customerBrokerSaleNegotiationDao = customerBrokerSaleNegotiationDao;
     }
 
     @Override
@@ -78,34 +76,39 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
 
     @Override
     public Collection<Clause> getClauses() throws CantGetListClauseException {
-        return this.customerBrokerPurchaseNegotiationDao.getClauses(this.negotiationId);
+        // return this.customerBrokerSaleNegotiationDao.getClauses(this.negotiationId);
+        return null;
     }
 
     @Override
     public Clause addNewBrokerClause(ClauseType type, String value) throws CantAddNewClausesException {
-        return this.customerBrokerPurchaseNegotiationDao.addNewClause(this.negotiationId, type, value, this.getBrokerPublicKey());
+        // return this.customerBrokerSaleNegotiationDao.addNewClause(this.negotiationId, type, value, this.getBrokerPublicKey());
+        return null;
     }
 
     @Override
     public Clause addNewCustomerClause(ClauseType type, String value) throws CantAddNewClausesException {
-        return this.customerBrokerPurchaseNegotiationDao.addNewClause(this.negotiationId, type, value, this.getCustomerPublicKey());
+        // return this.customerBrokerSaleNegotiationDao.addNewClause(this.negotiationId, type, value, this.getCustomerPublicKey());
+        return null;
     }
 
     @Override
     public Clause modifyClause(Clause clause, String value) throws CantUpdateClausesException {
-        return this.customerBrokerPurchaseNegotiationDao.modifyClause(this.negotiationId, clause, value);
+        // return this.customerBrokerSaleNegotiationDao.modifyClause(this.negotiationId, clause, value);
+        return null;
     }
 
     @Override
     public Clause modifyClauseStatus(Clause clause, ClauseStatus status) throws CantUpdateClausesException {
-        return this.customerBrokerPurchaseNegotiationDao.modifyClauseStatus(this.negotiationId, clause, status);
+        // return this.customerBrokerSaleNegotiationDao.modifyClauseStatus(this.negotiationId, clause, status);
+        return null;
     }
 
     @Override
     public ClauseType getNextClauseType() throws CantGetNextClauseTypeException {
-
+        /*
         try {
-            ClauseType type = this.customerBrokerPurchaseNegotiationDao.getNextClauseType(this.negotiationId);
+            ClauseType type = this.customerBrokerSaleNegotiationDao.getNextClauseType(this.negotiationId);
 
             switch (type) {
                 case CUSTOMER_CURRENCY:
@@ -118,7 +121,7 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
                     return ClauseType.CUSTOMER_PAYMENT_METHOD;
 
                 case CUSTOMER_PAYMENT_METHOD:
-                    CurrencyType paymentMethod = CurrencyType.getByCode(this.customerBrokerPurchaseNegotiationDao.getPaymentMethod(this.negotiationId));
+                    CurrencyType paymentMethod = CurrencyType.getByCode(this.customerBrokerSaleNegotiationDao.getPaymentMethod(this.negotiationId));
 
                     switch (paymentMethod) {
                         case CRYPTO_MONEY:
@@ -152,5 +155,7 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
         } catch (InvalidParameterException e) {
             throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
         }
+        */
+        return null;
     }
 }
