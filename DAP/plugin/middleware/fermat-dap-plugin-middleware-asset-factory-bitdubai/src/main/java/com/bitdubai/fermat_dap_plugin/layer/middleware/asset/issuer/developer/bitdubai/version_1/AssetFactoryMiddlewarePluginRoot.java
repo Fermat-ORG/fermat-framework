@@ -148,11 +148,6 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
 
             assetFactoryMiddlewareMonitorAgent.start();
         }else assetFactoryMiddlewareMonitorAgent.start();
-
-//        this.assetFactoryMiddlewareMonitorAgent.setErrorManager(errorManager);
-//        this.assetFactoryMiddlewareMonitorAgent.setLogManager(logManager);
-//        this.assetFactoryMiddlewareMonitorAgent.setPluginDatabaseSystem(pluginDatabaseSystem);
-//        this.assetFactoryMiddlewareMonitorAgent.setPluginId(pluginId);
     }
     @Override
     public void setId(UUID pluginId) {

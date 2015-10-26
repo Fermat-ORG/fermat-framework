@@ -145,7 +145,7 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
         @Override
         public void run() {
             threadWorking = true;
-            logManager.log( AssetFactoryMiddlewarePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuing Transaction Protocol Notification Agent: running...", null, null);
+            logManager.log(AssetFactoryMiddlewarePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuing Transaction Protocol Notification Agent: running...", null, null);
             while(threadWorking){
                 /**
                  * Increase the iteration counter
@@ -174,6 +174,15 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
 
         private void doTheMainTask(){
             //TODO: Implementar ese metodo que tendra toda la logica que tendra el Agente
+            try
+            {
+                int numberOfIssuedAssets = assetIssuingManager.getNumberOfIssuedAssets("");
+            }
+            catch (Exception exception){
+
+            }
+
+
         }
 
         public void Initialize() throws CantInitializeAssetMonitorAgentException {
