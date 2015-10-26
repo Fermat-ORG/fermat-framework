@@ -154,20 +154,20 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
 
             grouperText = "Waiting for you";
             List<NegotiationBasicInformation> waitingForBroker = new ArrayList<>();
-            child = new NegotiationBasicInformationImpl("Customer 1", "USD", "Crypto Transfer", "BTC");
+            child = new NegotiationBasicInformationImpl("Customer 1", "USD", "Crypto Transfer", "BTC", grouperText);
             waitingForBroker.add(child);
-            child = new NegotiationBasicInformationImpl("Customer 2", "BTC", "Cash in Hand", "USD");
+            child = new NegotiationBasicInformationImpl("Customer 2", "BTC", "Cash in Hand", "USD", grouperText);
             waitingForBroker.add(child);
-            child = new NegotiationBasicInformationImpl("Customer 3", "USD", "Cash in Hand", "BsF");
+            child = new NegotiationBasicInformationImpl("Customer 3", "USD", "Cash in Hand", "BsF", grouperText);
             waitingForBroker.add(child);
             GrouperItem<NegotiationBasicInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
             data.add(waitingForBrokerGrouper);
 
             grouperText = "Waiting for the customer";
             List<NegotiationBasicInformation> waitingForCustomer = new ArrayList<>();
-            child = new NegotiationBasicInformationImpl("Customer 4", "USD", "Bank Transfer", "BTC");
+            child = new NegotiationBasicInformationImpl("Customer 4", "USD", "Bank Transfer", "BTC", grouperText);
             waitingForCustomer.add(child);
-            child = new NegotiationBasicInformationImpl("Customer 5", "BsF", "Cash Delivery", "BTC");
+            child = new NegotiationBasicInformationImpl("Customer 5", "BsF", "Cash Delivery", "BTC", grouperText);
             waitingForCustomer.add(child);
             GrouperItem<NegotiationBasicInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
             data.add(waitingForCustomerGrouper);

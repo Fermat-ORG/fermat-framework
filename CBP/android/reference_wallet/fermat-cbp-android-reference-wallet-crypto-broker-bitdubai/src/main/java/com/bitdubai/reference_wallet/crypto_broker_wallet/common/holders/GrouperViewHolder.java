@@ -3,6 +3,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,7 +34,7 @@ public class GrouperViewHolder extends ParentViewHolder {
     public GrouperViewHolder(View itemView) {
         super(itemView);
 
-        mNumberTextView = (TextView) itemView.findViewById(R.id.cbw_customer_count);
+        mNumberTextView = (TextView) itemView.findViewById(R.id.cbw_customers_count);
         mDataTextView = (TextView) itemView.findViewById(R.id.cbw_group_description);
         mArrowExpandImageView = (ImageView) itemView.findViewById(R.id.cbw_arrow);
     }
@@ -65,10 +66,10 @@ public class GrouperViewHolder extends ParentViewHolder {
     }
 
     @Override
-    public void onExpansionToggled(boolean expanded) {
-        super.onExpansionToggled(expanded);
+    public void onExpansionToggled(boolean wasExpanded) {
+        super.onExpansionToggled(wasExpanded);
 
-        mNumberTextView.setVisibility(expanded ? View.GONE : View.VISIBLE);
+        mNumberTextView.setVisibility(wasExpanded ? View.VISIBLE: View.GONE);
 
         if (!HONEYCOMB_AND_ABOVE) {
             return;
