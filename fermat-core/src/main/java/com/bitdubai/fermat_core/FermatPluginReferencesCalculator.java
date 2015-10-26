@@ -24,8 +24,6 @@ public class FermatPluginReferencesCalculator {
 
     private final FermatSystemContext fermatSystemContext;
 
-    Map<PluginVersionReference, Integer> pluginLevels = new HashMap<>();
-
     public FermatPluginReferencesCalculator(final FermatSystemContext fermatSystemContext) {
 
         this.fermatSystemContext = fermatSystemContext;
@@ -44,8 +42,13 @@ public class FermatPluginReferencesCalculator {
 
     public final List<PluginVersionReference> listReferencesByInstantiationOrder(final PluginVersionReference pluginVersionReference) throws CantListReferencesException {
 
+        final Map<PluginVersionReference, Integer> pluginLevels = new HashMap<>();
+
         try {
-            setLevels(pluginVersionReference, 1);
+            setLevels(pluginVersionReference, 1, pluginLevels);
+
+            return getPluginsInstantiationOrder(pluginLevels);
+
         } catch (VersionNotFoundException e) {
 
             throw new CantListReferencesException(
@@ -68,16 +71,16 @@ public class FermatPluginReferencesCalculator {
                     "Unhandled error trying to get the order of the references of the given plugin version."
             );
         }
-
-        return getPluginsInstantiationOrder();
     }
 
     /**
      * Throw the method <code>orderPluginsByLevel</code> we can order the plugin by instantiation level.
      *
+     * @param pluginLevels map that saves the plugins levels at the moment, the key is the plugin version reference, and the value is an integer indicating the level.
+     *
      * @return a list of plugin version references ordered.
      */
-    private List<PluginVersionReference> getPluginsInstantiationOrder() {
+    private List<PluginVersionReference> getPluginsInstantiationOrder(final Map<PluginVersionReference, Integer> pluginLevels) {
 
         List<Map.Entry<PluginVersionReference, Integer>> list = new LinkedList<>(pluginLevels.entrySet());
         Collections.sort(list, new Comparator<Map.Entry<PluginVersionReference, Integer>>() {
@@ -99,12 +102,14 @@ public class FermatPluginReferencesCalculator {
      *
      * @param prToCalc      plugin version which we are calculating.
      * @param lvlToAssign   level to assign to the plugin version that we are calculating..
+     * @param pluginLevels map that saves the plugins levels at the moment, the key is the plugin version reference, and the value is an integer indicating the level.
      *
      * @throws VersionNotFoundException            if we can't find a the plugin version of one of the references.
      * @throws CyclicalRelationshipFoundException  if we find a cyclical relationship between the references.
      */
     private void setLevels(final PluginVersionReference prToCalc   ,
-                           final Integer                lvlToAssign) throws VersionNotFoundException           ,
+                           final Integer                lvlToAssign,
+                           final Map<PluginVersionReference, Integer> pluginLevels) throws VersionNotFoundException           ,
             CyclicalRelationshipFoundException {
 
         Integer lvlToAssignToReferences = lvlToAssign + 1;
@@ -117,17 +122,17 @@ public class FermatPluginReferencesCalculator {
 
             if (actualLvl < lvlToAssign) {
                 pluginLevels.put(prToCalc, lvlToAssign);
-                assignToReferences(abstractPlugin, lvlToAssignToReferences);
+                assignToReferences(abstractPlugin, lvlToAssignToReferences, pluginLevels);
             } else if (actualLvl.equals(lvlToAssign)) {
-                assignToReferences(abstractPlugin, lvlToAssignToReferences);
+                assignToReferences(abstractPlugin, lvlToAssignToReferences, pluginLevels);
             } else {
                 lvlToAssignToReferences = actualLvl + 1;
-                assignToReferences(abstractPlugin, lvlToAssignToReferences);
+                assignToReferences(abstractPlugin, lvlToAssignToReferences, pluginLevels);
             }
 
         } else {
             pluginLevels.put(prToCalc, lvlToAssign);
-            assignToReferences(abstractPlugin, lvlToAssignToReferences);
+            assignToReferences(abstractPlugin, lvlToAssignToReferences, pluginLevels);
         }
 
     }
@@ -138,13 +143,15 @@ public class FermatPluginReferencesCalculator {
      * @param prToCalc      plugin version which we are calculating.
      * @param prList        list of references of the plugin version which we are calculating.
      * @param lvlToAssign   level to assign to the plugin version that we are calculating..
+     * @param pluginLevels map that saves the plugins levels at the moment, the key is the plugin version reference, and the value is an integer indicating the level.
      *
      * @throws VersionNotFoundException            if we can't find a the plugin version of one of the references.
      * @throws CyclicalRelationshipFoundException  if we find a cyclical relationship between the references.
      */
     private void setLevels(final PluginVersionReference       prToCalc   ,
                            final List<PluginVersionReference> prList     ,
-                           final Integer                      lvlToAssign) throws VersionNotFoundException           ,
+                           final Integer                      lvlToAssign,
+                           final Map<PluginVersionReference, Integer> pluginLevels) throws VersionNotFoundException           ,
             CyclicalRelationshipFoundException {
 
         Integer lvlToAssignToReferences = lvlToAssign + 1;
@@ -155,17 +162,17 @@ public class FermatPluginReferencesCalculator {
 
             if (actualLvl < lvlToAssign) {
                 pluginLevels.put(prToCalc, lvlToAssign);
-                assignToReferences(prToCalc, prList, lvlToAssignToReferences);
+                assignToReferences(prToCalc, prList, lvlToAssignToReferences, pluginLevels);
             } else if (actualLvl.equals(lvlToAssign)) {
-                assignToReferences(prToCalc, prList, lvlToAssignToReferences);
+                assignToReferences(prToCalc, prList, lvlToAssignToReferences, pluginLevels);
             } else {
                 lvlToAssignToReferences = actualLvl + 1;
-                assignToReferences(prToCalc, prList, lvlToAssignToReferences);
+                assignToReferences(prToCalc, prList, lvlToAssignToReferences, pluginLevels);
             }
 
         } else {
             pluginLevels.put(prToCalc, lvlToAssign);
-            assignToReferences(prToCalc, prList, lvlToAssignToReferences);
+            assignToReferences(prToCalc, prList, lvlToAssignToReferences, pluginLevels);
         }
 
     }
@@ -175,18 +182,20 @@ public class FermatPluginReferencesCalculator {
      *
      * @param prToCalc      plugin version which we are calculating.
      * @param lvlToAssign   level to assign to the references.
+     * @param pluginLevels map that saves the plugins levels at the moment, the key is the plugin version reference, and the value is an integer indicating the level.
      *
      * @throws VersionNotFoundException            if we can't find a the plugin version of one of the references.
      * @throws CyclicalRelationshipFoundException  if we find a cyclical relationship between the references.
      */
 
     private void assignToReferences(final AbstractPlugin prToCalc,
-                                    final Integer lvlToAssign) throws VersionNotFoundException, CyclicalRelationshipFoundException  {
+                                    final Integer lvlToAssign,
+                                    final Map<PluginVersionReference, Integer> pluginLevels) throws VersionNotFoundException, CyclicalRelationshipFoundException  {
 
         List<PluginVersionReference> refNeededList = prToCalc.getNeededPluginReferences();
         for (PluginVersionReference refNeeded : refNeededList) {
             List<PluginVersionReference> refNeededReferenceList = fermatSystemContext.getPluginVersion(refNeeded).getNeededPluginReferences();
-            setLevels(refNeeded, refNeededReferenceList, lvlToAssign);
+            setLevels(refNeeded, refNeededReferenceList, lvlToAssign, pluginLevels);
         }
     }
 
@@ -196,19 +205,21 @@ public class FermatPluginReferencesCalculator {
      * @param prToCalc      plugin version which we are calculating.
      * @param prList        list of references of the plugin version which we are calculating.
      * @param lvlToAssign   level to assign to the references.
+     * @param pluginLevels map that saves the plugins levels at the moment, the key is the plugin version reference, and the value is an integer indicating the level.
      *
      * @throws VersionNotFoundException            if we can't find a the plugin version of one of the references.
      * @throws CyclicalRelationshipFoundException  if we find a cyclical relationship between the references.
      */
     private void assignToReferences(final PluginVersionReference       prToCalc   ,
                                     final List<PluginVersionReference> prList     ,
-                                    final Integer                      lvlToAssign) throws VersionNotFoundException           ,
+                                    final Integer                      lvlToAssign,
+                                    final Map<PluginVersionReference, Integer> pluginLevels) throws VersionNotFoundException           ,
             CyclicalRelationshipFoundException {
 
         for (final PluginVersionReference refNeeded : prList) {
             List<PluginVersionReference> refNeededReferenceList = fermatSystemContext.getPluginVersion(refNeeded).getNeededPluginReferences();
             if (compareReferences(prToCalc, refNeeded, refNeededReferenceList))
-                setLevels(refNeeded, refNeededReferenceList, lvlToAssign);
+                setLevels(refNeeded, refNeededReferenceList, lvlToAssign, pluginLevels);
         }
     }
 
