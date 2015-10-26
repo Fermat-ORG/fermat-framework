@@ -10,22 +10,27 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-//import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.database.BankMoneyStockReplenishmentBusinessTransactionDatabaseFactory;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;;
+import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.exceptions.CantCreateBankMoneyStockReplenishmentException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.exceptions.CantGetBankMoneyStockReplenishmentException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.exceptions.CantUpdateStatusBankMoneyStockReplenishmentException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.interfaces.BankMoneyStockReplenishment;
+import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.bank_money_stock_replenishment.interfaces.BankMoneyStockReplenishmentManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.database.BankMoneyStockReplenishmentBusinessTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantInitializeBankMoneyStockReplenishmentBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
@@ -40,11 +45,14 @@ import java.util.regex.Pattern;
  */
 
 public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
+//        BankMoneyStockReplenishmentManager,
         DatabaseManagerForDevelopers,
         DealsWithPluginDatabaseSystem,
+        LogManagerForDevelopers,
         DealsWithErrors,
         DealsWithLogger,
-        LogManagerForDevelopers,
+        DealsWithDeviceUser,
+        DealsWithPluginFileSystem,
         Plugin,
         Service {
 
@@ -63,6 +71,22 @@ public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     private PluginDatabaseSystem pluginDatabaseSystem;
+
+    /*BankMoneyStockReplenishmentManager Interface Implementation*/
+//    List<BankMoneyStockReplenishment> getAllBankMoneyStockReplenishmentFromCurrentDeviceUser() throws CantGetBankMoneyStockReplenishmentException(){
+//        return null;
+//    }
+//
+//    BankMoneyStockReplenishment createBankMoneyStockReplenishment(
+//            final String publicKeyBroker
+//            ,final String merchandiseCurrency
+//            ,final float merchandiseAmount
+//            ,final String executionTransactionId
+//            ,final String bankCurrencyType
+//            ,final String bankOperationType
+//    ) throws CantCreateBankMoneyStockReplenishmentException;
+//
+//    void updateStatusBankMoneyStockReplenishment(final UUID transactionId) throws CantUpdateStatusBankMoneyStockReplenishmentException;
 
     /*DatabaseManagerForDevelopers Interface implementation.*/
     @Override
@@ -100,11 +124,11 @@ public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.BusinessTransactionBankMoneyStockReplenishmentPluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerIdentityImpl");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerIdentityDatabaseDao");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerIdentityDatabaseFactory");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerIdentityDatabaseConstants");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.BusinessTransactionBankMoneyStockReplenishmentPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.structure.CryptoBrokerIdentityImpl");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.database.BankMoneyStockReplenishmentBusinessTransactionDatabaseDao");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.database.BankMoneyStockReplenishmentBusinessTransactionDatabaseFactory");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.database.BankMoneyStockReplenishmentBusinessTransactionDatabaseConstants");
         return returnedClasses;
     }
 
@@ -125,25 +149,6 @@ public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
         }
     }
 
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }
-
-    @Override
-    public void setId(UUID uuid) {
-        this.pluginId = uuid;
-    }
 
     public static LogLevel getLogLevelByClass(String className) {
         try {
@@ -155,6 +160,36 @@ public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
         }
     }
 
+    /*DealWithErrors Interface implementation.*/
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
+
+    /*DealsWithLogger Interface implementation.*/
+    @Override
+    public void setLogManager(LogManager logManager) {
+        this.logManager = logManager;
+    }
+
+    /*DealsWithDeviceUser Interface implementation.*/
+    @Override
+    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
+        this.deviceUserManager = deviceUserManager;
+    }
+
+    /*DealWithPluginFileSystem Interface implementation.*/
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
+
+    @Override
+    public void setId(UUID uuid) {
+        this.pluginId = uuid;
+    }
+
+    /*Service Interface implementation.*/
     @Override
     public void start() throws CantStartPluginException {
         try {
@@ -177,5 +212,11 @@ public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
     @Override
     public void stop() {
         this.serviceStatus = ServiceStatus.STOPPED;
+    }
+
+    /*PlugIn Interface implementation.*/
+    @Override
+    public ServiceStatus getStatus() {
+        return serviceStatus;
     }
 }
