@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.database.AssetUserActorDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.database.AssetUserActorDatabaseFactory;
@@ -67,10 +68,11 @@ public class AssetUserActorDao implements Serializable {
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
 
-    public AssetUserActorDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public AssetUserActorDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) throws CantInitializeAssetUserActorDatabaseException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+        initializeDatabase();
     }
 
     /**
@@ -83,7 +85,7 @@ public class AssetUserActorDao implements Serializable {
      *
      * @throws CantInitializeAssetUserActorDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeAssetUserActorDatabaseException {
+    private void initializeDatabase() throws CantInitializeAssetUserActorDatabaseException {
         try {
              /*
               * Open new database connection
@@ -144,11 +146,11 @@ public class AssetUserActorDao implements Serializable {
                     record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTRATION_DATE_COLUMN_NAME, actorAssetUserRecord.getRegistrationDate());
                     record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_LAST_CONNECTION_DATE_COLUMN_NAME, actorAssetUserRecord.getLastConnectionDate());
 
+                    table.insertRecord(record);
                     /**
                      * Persist profile image on a file
                      */
                     persistNewAssetUserProfileImage(actorAssetUserRecord.getPublicKey(), actorAssetUserRecord.getProfileImage());
-                    table.insertRecord(record);
                 }
             }
             database.closeDatabase();
