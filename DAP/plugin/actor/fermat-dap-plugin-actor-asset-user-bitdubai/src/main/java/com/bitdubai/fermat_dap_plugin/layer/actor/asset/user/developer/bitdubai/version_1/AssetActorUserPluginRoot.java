@@ -278,7 +278,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
              */
             startMonitorAgent();
 
-            registerActorInActorNetowrkSerice();
+//            registerActorInActorNetowrkSerice();
 //            getAllAssetUserActorConnected();
 
 //            CryptoAddress genesisAddress = obtenerGenesisAddress();
@@ -519,7 +519,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
     public void createAndRegisterActorAssetUserTest() throws CantCreateAssetUserActorException {
 
         try {
-            for (int i = 9; i < 10; i++) {
+//            for (int i = 9; i < 10; i++) {
 //                String assetUserActorIdentityToLinkPublicKey = UUID.randomUUID().toString();
                 String assetUserActorPublicKey = UUID.randomUUID().toString();
 //                CryptoAddress cryptoAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);
@@ -536,7 +536,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
                 /**
                  * Register User in Table Actor Asset User, Simulating user in Local Device
                  */
-                if (i == 9) {
+//                if (i == 9) {
                     this.assetUserActorDao.createNewAssetUser(record);
                     ActorAssetUser actorAssetUser = this.assetUserActorDao.getActorAssetUser();
                     System.out.println("*****************************************Actor Asset User***********************************************");
@@ -544,9 +544,9 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
                     System.out.println("Actor Asset Name: " + actorAssetUser.getName());
                     System.out.println("Actor Asset GenesisAddress in Crypto Address Book: " + actorAssetUser.getCryptoAddress().getAddress());
                     System.out.println("********************************************************************************************************");
-                }
+//                }
 
-                registerActorInANS();
+                registerActorInActorNetowrkSerice();
 //                else {
                 /**
                  * Register User in Table Actor Asset User Registered,
@@ -557,7 +557,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 //                registerGenesisAddressInCryptoAddressBook(genesisAddress);
 
 
-            }
+//            }
         } catch (CantAddPendingAssetUserException e) {
             throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR", e, "", "");
         } catch (Exception e) {
