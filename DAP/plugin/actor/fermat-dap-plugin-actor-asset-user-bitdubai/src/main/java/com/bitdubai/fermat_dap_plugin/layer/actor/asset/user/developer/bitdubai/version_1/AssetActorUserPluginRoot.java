@@ -45,7 +45,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorNetworkServiceAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.RequestedListNotReadyRecevivedException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.DealsWithAssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantGetGenesisAddressException;
@@ -57,7 +56,7 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserActorDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.monitorAgent.AssetUserActorMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure.AssetUserActorDao;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure.AssetUserActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -71,7 +70,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceU
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -240,7 +238,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
              */
             this.assetUserActorDao = new AssetUserActorDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
 
-            this.assetUserActorDao.initializeDatabase();
+//            this.assetUserActorDao.initializeDatabase();
             /**
              * I will initialize the handling of com.bitdubai.platform events.
              */
@@ -260,7 +258,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
-//            fermatEventListener = eventManager.getNewListener(EventType.ASSET_USER_CONNECTION_ACCEPTED);
+//            fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
 //            fermatEventHandler = new AssetUserActorConnectionAcceptedEventHandlers();
 //            ((AssetUserActorConnectionAcceptedEventHandlers) fermatEventHandler).setActorAssetUserManager(this);
 //            ((AssetUserActorConnectionAcceptedEventHandlers) fermatEventHandler).setEventManager(eventManager);
@@ -280,7 +278,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
              */
             startMonitorAgent();
 
-//            registerActorInANS();
+//            registerActorInActorNetowrkSerice();
 //            getAllAssetUserActorConnected();
 
 //            CryptoAddress genesisAddress = obtenerGenesisAddress();
@@ -333,19 +331,6 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
                     CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                     UUID.randomUUID().toString(),//this.walletPublicKey,
                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
-
-//            System.out.println("========================================================================");
-//            System.out.println("Genesis Address: " + genesisAddress.getAddress());
-//            System.out.println("Delivered By: " + this.assetUserActorDao.getActorPublicKey().getPublicKey());
-//            System.out.println("Actor: " + Actors.DAP_ASSET_USER);
-//            System.out.println("Delivered To: " + "testDeliveredToActorIssuerPublicKey");
-//            System.out.println("Actor: " + Actors.DAP_ASSET_ISSUER);
-//            System.out.println("Platform: " + Platforms.DIGITAL_ASSET_PLATFORM);
-//            System.out.println("Vault Type: " + VaultType.ASSET_VAULT);
-//            System.out.println("CryptoCurrency Vault: " + CryptoCurrencyVault.BITCOIN_VAULT.getCode());
-//            System.out.println("Wallet PublicKey: " + UUID.randomUUID().toString());
-//            System.out.println("Reference Wallet: " + ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
-//            System.out.println("========================================================================");
         } catch (CantGetAssetUsersListException e) {
             throw new CantRegisterCryptoAddressBookRecordException(e.getMessage(), e, "Asset User Actor", "Can't Register CryptoAddress Book: Review Actor PublicKey");
         }
@@ -502,7 +487,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         return new AssetUserActorRecord(assetUserActorPublicKey, assetUserActorName, assetUserActorprofileImage, assetUserActorlocation);
     }
 
-    private void registerActorInANS() {
+    private void registerActorInActorNetowrkSerice() {
 
         try {//TODO Escuchar EVENTO para confirmar que se Registro Actor Correctamente en el A.N.S
             /*
@@ -516,7 +501,8 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
              * Envio de Solicitud al Actor Network Service para obtener List<ActorAseetUser>
              *     Registrados en el Actor Network Service y registrarlos en table REGISTERED
              */
-        List<ActorAssetUser> list = new LinkedList<>();
+
+//        List<ActorAssetUser> list = new LinkedList<>();
 //            assetUserActorNetworkServiceManager.requestListActorAssetUserRegistered();
         /*
         TODO: COMENTADO POR CAMBÏOS EN LA INTERFACE
@@ -533,12 +519,12 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
     public void createAndRegisterActorAssetUserTest() throws CantCreateAssetUserActorException {
 
         try {
-            for (int i = 9; i < 10; i++) {
+//            for (int i = 9; i < 10; i++) {
 //                String assetUserActorIdentityToLinkPublicKey = UUID.randomUUID().toString();
                 String assetUserActorPublicKey = UUID.randomUUID().toString();
 //                CryptoAddress cryptoAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);
                 CryptoAddress genesisAddress = getGenesisAddress();
-                Genders genders = Genders.INDEFINITE;
+                Genders genders = Genders.MALE;
                 String age = "25";
                 ConnectionState connectionState = ConnectionState.CONNECTED;
                 Double locationLatitude = new Random().nextDouble();
@@ -547,21 +533,20 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
                         connectionState, locationLatitude, locationLongitude,
                         genesisAddress, System.currentTimeMillis(),
                         System.currentTimeMillis(), new byte[0]);
-
                 /**
                  * Register User in Table Actor Asset User, Simulating user in Local Device
                  */
-                if (i == 9) {
+//                if (i == 9) {
                     this.assetUserActorDao.createNewAssetUser(record);
                     ActorAssetUser actorAssetUser = this.assetUserActorDao.getActorAssetUser();
                     System.out.println("*****************************************Actor Asset User***********************************************");
-                    System.out.println("PublicKey: " + actorAssetUser.getPublicKey());
-                    System.out.println("Name: " + actorAssetUser.getName());
-                    System.out.println("GenesisAddress in Crypto Address Book: " + actorAssetUser.getCryptoAddress().getAddress());
+                    System.out.println("Actor Asset PublicKey: " + actorAssetUser.getPublicKey());
+                    System.out.println("Actor Asset Name: " + actorAssetUser.getName());
+                    System.out.println("Actor Asset GenesisAddress in Crypto Address Book: " + actorAssetUser.getCryptoAddress().getAddress());
                     System.out.println("********************************************************************************************************");
-                }
+//                }
 
-                registerActorInANS();
+                registerActorInActorNetowrkSerice();
 //                else {
                 /**
                  * Register User in Table Actor Asset User Registered,
@@ -572,7 +557,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 //                registerGenesisAddressInCryptoAddressBook(genesisAddress);
 
 
-            }
+//            }
         } catch (CantAddPendingAssetUserException e) {
             throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR", e, "", "");
         } catch (Exception e) {

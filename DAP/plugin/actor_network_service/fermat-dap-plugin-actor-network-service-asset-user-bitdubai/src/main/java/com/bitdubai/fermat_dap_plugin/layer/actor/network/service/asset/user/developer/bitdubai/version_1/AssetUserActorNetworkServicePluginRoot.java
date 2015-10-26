@@ -598,11 +598,11 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
              */
             if (this.isRegister()) {
 
-                System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
-
-                System.out.println("Registrar Datos " + actorAssetUserToRegister.getName());
-
-                System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+                System.out.println("***********Registrar Datos Actor Asset User****************");
+                System.out.println("Actor Asset Register: " + this.isRegister());
+                System.out.println("Actor Asset Name: " + actorAssetUserToRegister.getName());
+                System.out.println("Actor Asset PublicKey: " + actorAssetUserToRegister.getPublicKey());
+                System.out.println("***********************************************************");
 
                 /*
                  * Construct the profile
@@ -619,7 +619,10 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfileAssetUser);
 
             } else {
-
+                System.out.println("***********Registrar Datos Actor Asset User****************");
+                System.out.println("Actor Asset Name: " + actorAssetUserToRegister.getName());
+                System.out.println("Actor Asset PublicKey: " + actorAssetUserToRegister.getPublicKey());
+                System.out.println("***********************************************************");
                 /*
                  * Construct the profile
                  */
@@ -705,40 +708,22 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
             throw pluginStartException;
         }
 
-
         if(platformComponentProfileRegisteredListRemote!= null && !platformComponentProfileRegisteredListRemote.isEmpty()){
-
-
             for (PlatformComponentProfile p : platformComponentProfileRegisteredListRemote) {
-
                 Location loca = null;
-
                 ActorAssetUser actorAssetUserNew = null;
-
                 try {
-
                     actorAssetUserNew = actorAssetUserManager.createActorAssetUserFactory(p.getIdentityPublicKey(), p.getName(), convertoByteArrayfromString(p.getExtraData()), loca);
-
                 } catch (CantCreateAssetUserActorException e) {
                     e.printStackTrace();
                 }
-
                 actorAssetUserRegisteredList.add(actorAssetUserNew);
-
             }
-
-
             return actorAssetUserRegisteredList;
-
         }else{
-
-            return null;
-
+            return actorAssetUserRegisteredList;
         }
-
-
     }
-
 
     @Override
     public void requestCryptoAddress(ActorAssetIssuer actorAssetIssuerSender, ActorAssetUser actorAssetUserDestination) throws CantSendMessageException {
@@ -886,7 +871,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
 
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
+        System.out.println(" CommunicationNetworkServiceConnectionManager - Actor Asset Starting method handleCompleteComponentRegistrationNotificationEvent");
 
           /*
          * If the component registered have my profile and my identity public key
@@ -926,21 +911,21 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
 
 //            ReturnAssetUserActorNetworkService returnactor =new AssetUserANS();
 
-            Location loca = null;
-
-            ActorAssetUser actorAssetUserNewRegsitered = null;
-            try {
-                actorAssetUserNewRegsitered = actorAssetUserManager.createActorAssetUserFactory("123456789", "Pedrito", new byte[]{10, 3}, loca);
-//                actorAssetUserNewRegsitered = returnactor.creatActorAssetUser("123456789","Pedrito",new byte[]{10,3}, loca);
-            } catch (CantCreateAssetUserActorException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                registerActorAssetUser(actorAssetUserNewRegsitered);
-            } catch (CantRegisterActorAssetUserException e) {
-                e.printStackTrace();
-            }
+//            Location loca = null;
+//
+//            ActorAssetUser actorAssetUserNewRegsitered = null;
+//            try {
+//                actorAssetUserNewRegsitered = actorAssetUserManager.createActorAssetUserFactory("123456789", "Pedrito", new byte[]{10, 3}, loca);
+////                actorAssetUserNewRegsitered = returnactor.creatActorAssetUser("123456789","Pedrito",new byte[]{10,3}, loca);
+//            } catch (CantCreateAssetUserActorException e) {
+//                e.printStackTrace();
+//            }
+//
+//            try {
+//                registerActorAssetUser(actorAssetUserNewRegsitered);
+//            } catch (CantRegisterActorAssetUserException e) {
+//                e.printStackTrace();
+//            }
            /* test register one actor */
         }
 
@@ -951,7 +936,7 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
                 platformComponentProfileRegistered.getNetworkServiceType() == NetworkServiceType.UNDEFINED) {
 
 
-            System.out.println(" Actor  Asset User Registered " + platformComponentProfileRegistered.getIdentityPublicKey() + "\n Alias " + platformComponentProfileRegistered.getAlias());
+            System.out.println(" Actor Asset User Registered " + platformComponentProfileRegistered.getIdentityPublicKey() + "\n Alias " + platformComponentProfileRegistered.getAlias());
 
 
 //            ReturnAssetUserActorNetworkService returnactor = new AssetUserANS();
@@ -1004,14 +989,12 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
         System.out.println(" Failure ConnectoTo() with "+remoteParticipant.getIdentityPublicKey());
 
         assetUserActorNetworkServiceAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
-
-
     }
 
     @Override
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList) {
 
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
+        System.out.println(" CommunicationNetworkServiceConnectionManager - Actor Asset Starting method handleCompleteComponentRegistrationNotificationEvent");
         /*
          * if have result create a ActorAssetUser
          */
@@ -1278,14 +1261,14 @@ public class AssetUserActorNetworkServicePluginRoot implements ActorNetworkServi
     @Override
     public void handleCompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent(List<ActorAssetUser> actorAssetUserList) {
 
-        System.out.println("Satisfactoriamente llego la lista remota de asset user actor");
+        System.out.println("Satisfactoriamente llego la lista remota de Actor Asset User");
 
     }
 
     @Override
     public void handleCompleteClientAssetUserActorRegistrationNotificationEvent(ActorAssetUser actorAssetUser) {
 
-        System.out.println("==========================================================");
+        System.out.println("====================Actor Asset User======================");
 
         System.out.println("Satisfactoriamente se Registro " + actorAssetUser.getName());
 
