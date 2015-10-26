@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.crypto_money_stock_replenishment.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BusinessTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BusinessTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CryptoCurrencyType;
@@ -14,7 +15,7 @@ import java.util.UUID;
 public class CryptoMoneyStockReplenishmentBusinessTransactionImpl implements BusinessTransaction, CryptoMoneyStockReplenishment{
 
     private UUID transactionId;
-    private String publicKeyBroker;
+    private KeyPair keyPairBroker;
     private CurrencyType merchandiseCurrency;
     private float merchandiseAmount;
     private UUID executionTransactionId;
@@ -23,7 +24,7 @@ public class CryptoMoneyStockReplenishmentBusinessTransactionImpl implements Bus
 
     public CryptoMoneyStockReplenishmentBusinessTransactionImpl(
             UUID transactionId,
-            String publicKeyBroker,
+            KeyPair keyPairBroker,
             CurrencyType merchandiseCurrency,
             float merchandiseAmount,
             UUID executionTransactionId,
@@ -31,7 +32,7 @@ public class CryptoMoneyStockReplenishmentBusinessTransactionImpl implements Bus
             BusinessTransactionStatus transactionStatus
     ){
         this.transactionId = transactionId;
-        this.publicKeyBroker = publicKeyBroker;
+        this.keyPairBroker = keyPairBroker;
         this.merchandiseCurrency = merchandiseCurrency;
         this.merchandiseAmount = merchandiseAmount;
         this.executionTransactionId = executionTransactionId;
@@ -44,8 +45,8 @@ public class CryptoMoneyStockReplenishmentBusinessTransactionImpl implements Bus
     public void setIdTransaction(UUID id) { this.transactionId = id; }
 
     @Override
-    public String getPublicKeyBroker(){ return this.publicKeyBroker; }
-    public  void setPublicKeyBroker(String publicKey){ this.publicKeyBroker = publicKey; }
+    public String getPublicKeyBroker(){ return this.keyPairBroker.getPublicKey(); }
+    public  void setPublicKeyBroker(String publicKey){ this.keyPairBroker = keyPairBroker; }
 
     @Override
     public CurrencyType getMerchandiseCurrency(){ return this.merchandiseCurrency; }
