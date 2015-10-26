@@ -20,14 +20,8 @@ public class CryptoPluginSubsystem extends AbstractPluginSubsystem {
 
     @Override
     public void start() throws CantStartSubsystemException {
-        /**
-         * I will choose from the different Developers available which implementation to use. Right now there is only
-         * one, so it is not difficult to choose.
-         */
-
         try {
-            DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-            plugin = developerBitDubai.getPlugin();
+            registerDeveloper(new DeveloperBitDubai());
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);

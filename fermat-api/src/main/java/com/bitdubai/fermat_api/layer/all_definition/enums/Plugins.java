@@ -1,12 +1,13 @@
 package com.bitdubai.fermat_api.layer.all_definition.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Created by ciencias on 2/13/15.
  * 
  */
-public enum Plugins {
+public enum Plugins implements FermatEnum {
 
     //Modified by Manuel Perez on 03/08/2015
     BITDUBAI_LICENSE_MANAGER("BLICM", Developers.BITDUBAI),
@@ -160,6 +161,11 @@ public enum Plugins {
         return this.code;
     }
 
+    @Override
+    public String getCode() {
+        return this.code;
+    }
+
     public static Plugins getByKey(String code) throws InvalidParameterException {
         switch (code) {
             case "BLICM":
@@ -288,8 +294,6 @@ public enum Plugins {
                 return BITDUBAI_MIDDLEWARE_NOTIFICATION;
             case "BAIT":
                 return BITDUBAI_ASSET_ISSUING_TRANSACTION;
-            case "BAIR":
-                return BITDUBAI_ASSET_RECEPTION_TRANSACTION;
             case "BADT":
                 return BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION;
             case "BADR":

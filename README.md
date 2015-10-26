@@ -1,7 +1,5 @@
 ![alt text](https://github.com/bitDubai/fermat-graphic-design/blob/master/2D%20Design/Fermat/Fermat%20Logotype/logo_jpg/logo_github_readme.jpg "Fermat Logo")
 
-
-<br>
 Welcome to Fermat!
 -------------------
 
@@ -62,6 +60,7 @@ What makes Fermat different from other wallet systems or services?
 Fermat is moving towards version 1, but we're not stopping there. We have many feature ideas on our
 [documentation](https://github.com/bitDubai/fermat/tree/master/fermat-documentation) that we're anxious to add.
 So take Fermat out for a spin and let us know how we can make it your favorite platform to launch your own digital wallet.
+<<<<<<< HEAD
 
 You can learn more, see some cool visualizations of Fermat's architecture and its P2P network and explore the design space at [Fermat.org](http://www.fermat.org).
 
@@ -69,7 +68,12 @@ You can learn more, see some cool visualizations of Fermat's architecture and it
 Fermat's Purpose
 ------------------------------------------------
 
-> Empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way. 
+> Empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way.
+=======
+
+You can learn more and see some cool visualizations of Fermat's architecture and its P2P network at
+[Fermat.org](http://www.fermat.org).
+>>>>>>> origin/develop
 
 > Give back the sovereignty over each one's own resources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.
 
@@ -81,7 +85,7 @@ Fermat's Mission
 
 > To build the best possible integrated system able to handle the finances of not only all the human world population but also of companies and machines in the context of the IoT.  
 
-> To achieve “parity” with the state-of-the-art and to push towards new frontiers in computer science. 
+> To achieve “parity” with the state-of-the-art and to push towards new frontiers in computer science.
 
 <br>
 Fermat Principles
@@ -174,7 +178,6 @@ Fermat Principles
 
 
 * Banks and financial institutions could write plugins to enable Fermat wallets hold funds in banks and other financial institutions.
-
 * Fermat allows it users to move money both through public value transport networks as crypto currency networks and also thwough private or legacy financial networks.
 
 
@@ -199,7 +202,7 @@ Fermat Principles
 * Voting over feature wish-lists concept.
 
 
-##### 15. Fermat must be the finacially most efficient way to move or spend the end user's money.
+##### 15. Fermat must be the financially most efficient way to move or spend the end user's money.
 
 
 * Crypto Vault for multiple wallets concept.

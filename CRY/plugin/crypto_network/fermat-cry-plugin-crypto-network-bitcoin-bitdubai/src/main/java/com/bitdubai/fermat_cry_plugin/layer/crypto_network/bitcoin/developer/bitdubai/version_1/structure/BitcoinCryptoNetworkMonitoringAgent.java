@@ -21,6 +21,8 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bit
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
+import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
 import org.bitcoinj.params.RegTestParams;
@@ -261,14 +263,27 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
             try {
                 peers.start();
                 peers.downloadBlockChain();
-                while (true){
+                //while (true){
                     //endless loop. Since bitcoinj upgrade, this is no longer running as a guava service.
                     // so we need to keep the thread active.
-                }
+               // }
             } catch (Exception exception) {
                 exception.printStackTrace();
                 throw new CantConnectToBitcoinNetwork("Couldn't connect to Bitcoin Network.", exception, "", "Error executing Agent.");
             }
         }
+    }
+
+    public void broadcastTransaction(Transaction transaction) {
+        TransactionBroadcast broadcast = peers.broadcastTransaction(transaction);
+        broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
+            @Override
+            public void onBroadcastProgress(double progress) {
+                System.out.println("broadCast progress: " + progress);
+            }
+        });
+
+        broadcast.setMinConnections(1);
+        broadcast.broadcast();
     }
 }

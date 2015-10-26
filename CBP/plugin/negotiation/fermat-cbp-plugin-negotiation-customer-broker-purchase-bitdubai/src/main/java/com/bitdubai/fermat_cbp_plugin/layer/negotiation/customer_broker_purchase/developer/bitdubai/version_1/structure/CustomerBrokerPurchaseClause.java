@@ -15,17 +15,17 @@ public class CustomerBrokerPurchaseClause implements Clause{
     private final ClauseType type;
     private final String value;
     private final ClauseStatus status;
-    private final String getProposedBy;
-    private final short getIndexOrder;
+    private final String proposedBy;
+    private final short indexOrder;
 
 
-    public CustomerBrokerPurchaseClause(UUID clauseId, ClauseType type, String value, ClauseStatus status, String getProposedBy, short getIndexOrder){
+    public CustomerBrokerPurchaseClause(UUID clauseId, ClauseType type, String value, ClauseStatus status, String proposedBy, short indexOrder){
         this.clauseId = clauseId;
         this.type = type;
         this.value = value;
         this.status = status;
-        this.getProposedBy = getProposedBy;
-        this.getIndexOrder = getIndexOrder;
+        this.proposedBy = proposedBy;
+        this.indexOrder = indexOrder;
     }
 
     @Override
@@ -50,11 +50,11 @@ public class CustomerBrokerPurchaseClause implements Clause{
 
     @Override
     public String getProposedBy() {
-        return this.getProposedBy;
+        return this.proposedBy;
     }
 
     @Override
     public short getIndexOrder() {
-        return this.getIndexOrder;
+        return this.indexOrder;
     }
 }

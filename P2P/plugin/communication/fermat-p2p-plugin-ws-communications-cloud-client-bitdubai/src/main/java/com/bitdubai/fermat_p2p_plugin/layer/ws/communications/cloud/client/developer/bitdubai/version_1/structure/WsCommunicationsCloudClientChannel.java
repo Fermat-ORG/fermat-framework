@@ -440,4 +440,13 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
         event.setMessage("Cloud client communication, registered and established connection.");
         eventManager.raiseEvent(platformEvent);
     }
+
+    /**
+     * Get the IdentityPublicKey
+     * @return String
+     */
+    public String getIdentityPublicKey(){
+        return clientIdentity.getPublicKey();
+    }
+
 }

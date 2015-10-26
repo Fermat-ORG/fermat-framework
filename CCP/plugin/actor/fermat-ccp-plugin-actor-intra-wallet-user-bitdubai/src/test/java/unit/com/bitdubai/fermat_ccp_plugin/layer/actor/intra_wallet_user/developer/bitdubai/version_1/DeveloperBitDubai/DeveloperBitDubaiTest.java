@@ -24,6 +24,6 @@ public class DeveloperBitDubaiTest extends TestCase {
 
     @Test
     public void testGetPlugin() {
-        assertThat(developTest.getPlugin()).isInstanceOf(IntraWalletUserActorPluginRoot.class);
+        assertThat(developTest.getFirstPluginVersion()).isInstanceOf(IntraWalletUserActorPluginRoot.class);
     }
 }

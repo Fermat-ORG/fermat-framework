@@ -6,6 +6,14 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -82,7 +90,32 @@ import java.util.UUID;
 
 //TODO: hay que arreglar esto, hay metodos sin implementar abajo de todo
 
-public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithEvents, DealsWithIntraUsersNetworkService, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service, Serializable {
+public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements IntraWalletUserManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithEvents, DealsWithIntraUsersNetworkService, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service, Serializable {
+
+    @Override
+    public List<AddonVersionReference> getNeededAddonReferences() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<PluginVersionReference> getNeededPluginReferences() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    protected void validateAndAssignReferences() {
+
+    }
+
+    @Override
+    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
+        return null;
+    }
 
     private IntraWalletUserActorDao intraWalletUserActorDao;
 
@@ -135,7 +168,7 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
     /**
      * Service Interface member variables.
      */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    //ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
 
     /**
@@ -462,11 +495,6 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }
-
     /**
      * PlugIn Interface implementation.
      */
@@ -581,9 +609,11 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
                 String intraUserToConnectPublicKey = notification.getActorDestinationPublicKey();
 
                 switch (notification.getNotificationDescriptor()) {
+                    //ASKFORACCEPTANCE occurs when other user request you a connection
                     case ASKFORACCEPTANCE:
 
-                        this.askIntraWalletUserForAcceptance(intraUserToConnectPublicKey, notification.getActorSenderAlias(), intraUserSendingPublicKey, notification.getActorSenderProfileImage());
+                        //this.askIntraWalletUserForAcceptance(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserSendingPublicKey, notification.getActorSenderProfileImage());
+                        this.receivingIntraWalletUserRequestConnection(intraUserToConnectPublicKey, notification.getActorSenderAlias(), intraUserSendingPublicKey, notification.getActorSenderProfileImage());
                         break;
                     case CANCEL:
                         this.cancelIntraWalletUser(intraUserToConnectPublicKey,intraUserSendingPublicKey);
@@ -599,11 +629,10 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
                         this.disconnectIntraWalletUser(intraUserToConnectPublicKey, intraUserSendingPublicKey);
                         break;
                     case RECEIVED:
-                        this.receivingIntraWalletUserRequestConnection(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserToConnectPublicKey, notification.getActorSenderProfileImage());
                         /**
                          * fire event "INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION"
                          */
-                        eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION));
+                        //eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION));
                         break;
                     case DENIED:
                         this.denyConnection(intraUserSendingPublicKey, intraUserToConnectPublicKey);
@@ -651,8 +680,4 @@ public class IntraWalletUserActorPluginRoot implements IntraWalletUserManager, D
         return false;
     }
 
-//    @Override
-//    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
-//        this.deviceUserManager = deviceUserManager;
-//    }
 }

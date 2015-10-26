@@ -18,7 +18,7 @@ public class MockIdentityAssetIssuerForTest implements IdentityAssetIssuer {
     }
 
     @Override
-    public String createMessageSignature(String mensage) throws CantSingMessageException {
+    public String createMessageSignature(String message) throws CantSingMessageException {
         return "signature";
     }
 }

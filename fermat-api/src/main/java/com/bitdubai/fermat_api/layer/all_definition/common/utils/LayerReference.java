@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.utils;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 
 /**
  * The class <code>com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference</code>
@@ -15,18 +14,18 @@ public class LayerReference {
     private static final int HASH_PRIME_NUMBER_ADD = 2819;
 
     private       PlatformReference platformReference;
-    private final Layers    layer   ;
+    private final Layers            layer            ;
 
-    public LayerReference(final Layers    layer   ) {
+    public LayerReference(final Layers layer) {
 
-        this.layer    = layer   ;
+        this.layer = layer;
     }
 
     public LayerReference(final PlatformReference platformReference,
                           final Layers            layer           ) {
 
         this.platformReference = platformReference;
-        this.layer    = layer   ;
+        this.layer             = layer            ;
     }
 
     public PlatformReference getPlatformReference() {
@@ -48,7 +47,8 @@ public class LayerReference {
 
         LayerReference that = (LayerReference) o;
 
-        return platformReference.equals(that.platformReference) && layer.equals(that.layer);
+        return layer.equals(that.layer) &&
+                ((platformReference == null && that.getPlatformReference() == null) || (platformReference != null && platformReference.equals(that.getPlatformReference())));
     }
 
     @Override

@@ -25,7 +25,7 @@ public class PlatformReference {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PlatformReference)) return false;
 
@@ -35,7 +35,7 @@ public class PlatformReference {
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         int c = 0;
         c += platform.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;

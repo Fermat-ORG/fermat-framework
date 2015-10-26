@@ -5,6 +5,14 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -83,7 +91,7 @@ import java.util.UUID;
  *
  * Created by Leon Acosta (laion.cj91@gmail.com) on 22/09/2015.
  */
-public class CryptoAddressesNetworkServicePluginRoot implements
+public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin implements
         CryptoAddressesManager,
         DealsWithWsCommunicationsCloudClientManager,
         DealsWithErrors,
@@ -92,6 +100,31 @@ public class CryptoAddressesNetworkServicePluginRoot implements
         NetworkService,
         Plugin,
         Service {
+
+    @Override
+    public List<AddonVersionReference> getNeededAddonReferences() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<PluginVersionReference> getNeededPluginReferences() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    protected void validateAndAssignReferences() {
+
+    }
+
+    @Override
+    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
+        return null;
+    }
 
     /**
      * Service Interface member variables.
@@ -375,11 +408,6 @@ public class CryptoAddressesNetworkServicePluginRoot implements
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
-
     /**
      * I indicate to the Agent the action that it must take:
      * - Protocol State: PROCESSING_SEND.
@@ -649,7 +677,7 @@ public class CryptoAddressesNetworkServicePluginRoot implements
         return extraData;
     }
 
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
 

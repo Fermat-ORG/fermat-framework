@@ -19,16 +19,4 @@ public interface FermatPluginsEnum extends FermatEnum {
      */
     Platforms getPlatform();
 
-    /**
-     * Throw the method <code>getLayer</code> you can know to which layer the plugin belongs.
-     * @return an element of Layers enum.
-     */
-    Layers getLayer();
-
-    /**
-     * Throw the method <code>getDeveloper</code> you can know to which developer the plugin belongs.
-     * @return an element of Developers enum.
-     */
-    Developers getDeveloper();
-
 }

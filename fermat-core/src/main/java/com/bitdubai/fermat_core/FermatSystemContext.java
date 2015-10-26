@@ -1,19 +1,29 @@
 package com.bitdubai.fermat_core;
 
-import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddon;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddonDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddonSubsystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.AddonNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPlatformException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.DeveloperNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.LayerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.PlatformNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.PluginNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -69,15 +79,48 @@ public class FermatSystemContext {
     }
 
     /**
-     * Throw the method <code>getAddon</code> you can get an Addon instance passing like parameter an addon reference instance.
+     * Throw the method <code>getAddonVersion</code> you can get a addon version instance passing like parameter a version reference instance.
      *
-     * @param addonReference addon reference data.
+     * @param addonVersionReference addon version reference data.
      *
-     * @return an addon instance
+     * @return a addon version instance.
      *
-     * @throws AddonNotFoundException  if we can't find an addon with the given addon reference parameters.
+     * @throws VersionNotFoundException   if we can't find a addon version with the given version reference parameters.
      */
-    public final Addon getAddon(final AddonReference addonReference) throws AddonNotFoundException {
+    public final AbstractAddon getAddonVersion(final AddonVersionReference addonVersionReference) throws VersionNotFoundException {
+
+        try {
+
+            return getAddonDeveloper(addonVersionReference.getAddonDeveloperReference()).getAddonByVersion(addonVersionReference);
+
+        } catch (DeveloperNotFoundException e) {
+
+            throw new VersionNotFoundException(e, addonVersionReference.toString(), "addon version not found in the platform of the system context.");
+        }
+    }
+
+    /**
+     * Throw the method <code>getAddonDeveloper</code> you can get a addonDeveloper instance passing like parameter a developer reference instance.
+     *
+     * @param addonDeveloperReference addon developer reference data.
+     *
+     * @return a addon developer instance.
+     *
+     * @throws DeveloperNotFoundException   if we can't find a addon developer with the given developer reference parameters.
+     */
+    public final AbstractAddonDeveloper getAddonDeveloper(final AddonDeveloperReference addonDeveloperReference) throws DeveloperNotFoundException {
+
+        try {
+
+            return getAddonSubsystem(addonDeveloperReference.getAddonReference()).getDeveloperByReference(addonDeveloperReference);
+
+        } catch (AddonNotFoundException e) {
+
+            throw new DeveloperNotFoundException(e, addonDeveloperReference.toString(), "addon developer not found in the platform of the system context.");
+        }
+    }
+
+    public final AbstractAddonSubsystem getAddonSubsystem(final AddonReference addonReference) throws AddonNotFoundException {
 
         try {
 
@@ -85,20 +128,62 @@ public class FermatSystemContext {
 
         } catch (LayerNotFoundException e) {
 
-            throw new AddonNotFoundException(e, "addon: " + addonReference.toString(), "layer not found in the platform of the system context.");
+            throw new AddonNotFoundException(e, "addon: "+addonReference.toString(), "layer not found for the specified addon.");
         }
     }
 
     /**
-     * Throw the method <code>getPlugin</code> you can get a Plugin instance passing like parameter a plugin reference instance.
+     * Throw the method <code>getPluginVersion</code> you can get a plugin version instance passing like parameter a version reference instance.
+     *
+     * @param pluginVersionReference plugin version reference data.
+     *
+     * @return a plugin version instance.
+     *
+     * @throws VersionNotFoundException   if we can't find a plugin version with the given version reference parameters.
+     */
+    public final AbstractPlugin getPluginVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException {
+
+        try {
+
+            return getPluginDeveloper(pluginVersionReference.getPluginDeveloperReference()).getPluginByVersion(pluginVersionReference);
+
+        } catch (DeveloperNotFoundException e) {
+
+            throw new VersionNotFoundException(e, pluginVersionReference.toString(), "version not found in the platform of the system context.");
+        }
+    }
+
+    /**
+     * Throw the method <code>getPluginDeveloper</code> you can get a pluginDeveloper instance passing like parameter a developer reference instance.
+     *
+     * @param pluginDeveloperReference plugin developer reference data.
+     *
+     * @return a plugin developer instance.
+     *
+     * @throws DeveloperNotFoundException   if we can't find a plugin developer with the given developer reference parameters.
+     */
+    public final AbstractPluginDeveloper getPluginDeveloper(final PluginDeveloperReference pluginDeveloperReference) throws DeveloperNotFoundException {
+
+        try {
+
+            return getPluginSubsystem(pluginDeveloperReference.getPluginReference()).getDeveloperByReference(pluginDeveloperReference);
+
+        } catch (PluginNotFoundException e) {
+
+            throw new DeveloperNotFoundException(e, pluginDeveloperReference.toString(), "plugin not found in the platform of the system context.");
+        }
+    }
+
+    /**
+     * Throw the method <code>getPluginSubsystem</code> you can get a subsystem instance passing like parameter a plugin reference instance.
      *
      * @param pluginReference plugin reference data.
      *
-     * @return a plugin instance.
+     * @return a plugin subsystem instance.
      *
      * @throws PluginNotFoundException   if we can't find a plugin with the given plugin reference parameters.
      */
-    public final Plugin getPlugin(final PluginReference pluginReference) throws PluginNotFoundException {
+    public final AbstractPluginSubsystem getPluginSubsystem(final PluginReference pluginReference) throws PluginNotFoundException {
 
         try {
 
