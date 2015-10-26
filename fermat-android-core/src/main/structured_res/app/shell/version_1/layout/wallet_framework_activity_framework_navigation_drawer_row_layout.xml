@@ -19,7 +19,7 @@
 
         />
 
-    <TextView
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/label"
         android:text="@+id/label"
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
         android:textSize="16sp"
 
         >
-    </TextView>
+    </com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView>
 
 
 
