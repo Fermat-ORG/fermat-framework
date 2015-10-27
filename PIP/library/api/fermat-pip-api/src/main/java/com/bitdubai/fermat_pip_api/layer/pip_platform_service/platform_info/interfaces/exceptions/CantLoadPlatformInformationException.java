@@ -10,4 +10,8 @@ public class CantLoadPlatformInformationException extends FermatException {
     public CantLoadPlatformInformationException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
+    public CantLoadPlatformInformationException(Exception cause, String context, String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
 }

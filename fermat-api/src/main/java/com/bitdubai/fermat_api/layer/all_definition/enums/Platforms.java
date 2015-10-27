@@ -15,6 +15,7 @@ public enum Platforms implements FermatEnum {
     DIGITAL_ASSET_PLATFORM("DAP"),
     BLOCKCHAINS("BCH"),
     COMMUNICATION_PLATFORM("CP"),
+    OPERATIVE_SYSTEM_API("OSA"),
     PLUG_INS_PLATFORM("PIP"),
 
     ;

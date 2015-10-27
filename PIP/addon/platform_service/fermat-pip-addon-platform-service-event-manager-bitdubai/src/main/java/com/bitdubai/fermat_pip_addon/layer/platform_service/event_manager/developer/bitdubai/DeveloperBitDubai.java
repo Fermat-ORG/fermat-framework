@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer;
+package com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer.bitdubai;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddonDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterVersionException;

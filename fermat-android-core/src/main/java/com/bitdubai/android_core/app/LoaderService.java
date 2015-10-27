@@ -25,6 +25,7 @@ import com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.ver
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfoManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.exceptions.CantSetPlatformInformationException;
 
 /**
  * Created by Matias Furszyfer on 2015.08.19..
@@ -170,7 +171,8 @@ public class LoaderService extends Service {
             PlatformInfo platformInfo = platformInfoManager.getPlatformInfo();
             platformInfo.setScreenSize(getScreenSize());
             platformInfoManager.setPlatformInfo(platformInfo);
-        } catch (CantLoadPlatformInformationException e) {
+        } catch(CantSetPlatformInformationException  |
+                CantLoadPlatformInformationException e) {
             e.printStackTrace();
         }
     }

@@ -11,11 +11,13 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.structure.PlatformInfoPlatformService;
+import com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.structure.PlatformInfoPlatformServiceFileData;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfoManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.exceptions.CantSetPlatformInformationException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -102,8 +104,7 @@ public class PlatformInfoPlatformServicePluginRootOld implements Addon, DealsWit
     @Override
     public PlatformInfo getPlatformInfo() throws CantLoadPlatformInformationException {
         if (platformInfoPlatformService == null) {
-            platformInfoPlatformService = new PlatformInfoPlatformService();
-            platformInfoPlatformService.setPlatformFileSystem(this.platformFileSystem);
+            platformInfoPlatformService = new PlatformInfoPlatformService(platformFileSystem);
         }
         return platformInfoPlatformService.getPlatformInfo();
     }
@@ -114,12 +115,11 @@ public class PlatformInfoPlatformServicePluginRootOld implements Addon, DealsWit
      * @throws CantLoadPlatformInformationException
      */
     @Override
-    public void setPlatformInfo(PlatformInfo platformInfo) throws CantLoadPlatformInformationException {
+    public void setPlatformInfo(PlatformInfo platformInfo) throws CantSetPlatformInformationException {
         if (platformInfoPlatformService == null) {
-            platformInfoPlatformService = new PlatformInfoPlatformService();
-            platformInfoPlatformService.setPlatformFileSystem(this.platformFileSystem);
+            platformInfoPlatformService = new PlatformInfoPlatformService(platformFileSystem);
         }
-         platformInfoPlatformService.setPlatformInfo((com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.structure.PlatformInfo) platformInfo);
+         platformInfoPlatformService.setPlatformInfo(platformInfo);
     }
 
     /**

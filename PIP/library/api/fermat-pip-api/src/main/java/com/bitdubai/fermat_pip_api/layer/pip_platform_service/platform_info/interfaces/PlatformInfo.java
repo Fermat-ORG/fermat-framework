@@ -18,12 +18,12 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
  */
 public interface PlatformInfo {
 
-    public Version getVersion();
+    String getJdk();
 
-    public ScreenSize getScreenSize();
+    ScreenSize getScreenSize();
 
-    public void setScreenSize(ScreenSize screenSize);
+    Version getVersion();
 
-    public String getJdk();
+    void setScreenSize(ScreenSize screenSize);
 
 }
