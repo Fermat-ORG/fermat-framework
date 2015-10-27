@@ -4,14 +4,15 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 
 /**
  * Created by Nerio on 08/10/15.
  */
-public class AssetUserActorCompleteRegistrationNotificationEventListener implements FermatEventListener {
+public class ActorAssetUserCompleteRegistrationNotificationEventListener implements FermatEventListener {
 
     FermatEventMonitor fermatEventMonitor;
-    private com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType eventType;
+    private EventType eventType;
     private FermatEventHandler fermatEventHandler;
     /**
      * Constructor with parameters
@@ -19,7 +20,7 @@ public class AssetUserActorCompleteRegistrationNotificationEventListener impleme
      * @param eventType
      * @param fermatEventMonitor
      */
-    public AssetUserActorCompleteRegistrationNotificationEventListener(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType eventType, FermatEventMonitor fermatEventMonitor) {
+    public ActorAssetUserCompleteRegistrationNotificationEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
         this.eventType = eventType;
         this.fermatEventMonitor = fermatEventMonitor;
     }
@@ -30,7 +31,7 @@ public class AssetUserActorCompleteRegistrationNotificationEventListener impleme
      * @return an instance of a Fermat Enum.
      */
     @Override
-    public com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType getEventType() {
+    public EventType getEventType() {
         return eventType;
     }
 
