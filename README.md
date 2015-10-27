@@ -8,8 +8,6 @@ The reason is that digital information can be cloned, and if digital cash could 
 
 So now we firmly believe that the next decade will witness governments issuing digital currency based on blockchain technology. We expect paper money is going to disappear within the next 5 to 10 years. Thus a strong consumer demand for digital wallets will inevitably emerge.
 
-We believe crypto currencies will expand worldwide while that happens and tons of crypto wallets will be needed for different use cases. Our mission is to make this happen as soon as possible.
-
 In order to meet this demand thousands of wallets, different in terms of not only the level of abstraction they apply (some of them showing govermet issued digital money others crypto currencies, and others digital fiat over crypto or even digital assets) but also with respect to their look and feel and their functionalities, should be available. Such a wide variety of wallets is indispensable owing to the diversity characterizing the world's population.
 
 Fermat is a master plan to avoid getting to that future through waiting for independent entrepreneurs to build each of these wallets one at the time, repeating every time all the math, accounting, cryptography and algorithms that are common to all these wallets. The Fermat system is a master platform that handles all that and by doing  the heavy lifting enables any developer in the world to easily create niche wallets on top of its shared infraestructure.
