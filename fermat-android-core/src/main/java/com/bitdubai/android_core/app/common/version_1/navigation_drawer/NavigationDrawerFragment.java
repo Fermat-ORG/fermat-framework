@@ -53,11 +53,8 @@ import java.util.List;
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
 public class NavigationDrawerFragment extends Fragment implements AdapterView.OnItemClickListener {
-    private SubAppRuntimeManager appRuntimeMiddleware;
-    private App app;
-    private SubApp subApp;
-    private com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity activity;
-    private CorePlatformContext platformContext;
+
+
     /**
      * Remember the position of the selected item.
      */
@@ -80,7 +77,7 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
     private ActionBarDrawerToggle mDrawerToggle;
 
     private DrawerLayout mDrawerLayout;
-    private RecyclerView mDrawerListView;
+    private ListView mDrawerListView;
     private View mFragmentContainerView;
 
     private int mCurrentSelectedPosition = 0;
@@ -116,7 +113,7 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
 
             // Read in the flag indicating whether or not the user has demonstrated awareness of the
             // drawer. See PREF_USER_LEARNED_DRAWER for details.
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
             mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
 
             if (savedInstanceState != null) {
@@ -143,8 +140,6 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
         // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
 
-        adapter.addAll(menuOption);
-        adapter.notifyDataSetInvalidated();
     }
 
     @Override
@@ -156,28 +151,27 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
 
             if(mDrawerListView==null) {
 
-                mDrawerListView = (RecyclerView) inflater.inflate(
+                mDrawerListView = (ListView) inflater.inflate(
                         R.layout.wallet_framework_fragment_navigation_drawer, container, false);
 
-                mDrawerListView.setHasFixedSize(true);
-//                mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                        selectItem(position);
-//                    }
-//                });
+                mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        selectItem(position);
+                    }
+                });
             }
 
 
             menuOption = new ArrayList<String>();
 
             if(mDrawerListView!=null) {
-//
-//                adapter = new NavigationDrawerAdapter(
-//                        context,
-//                        menuOption);
-//
-//                mDrawerListView.setAdapter(adapter);
+
+                adapter = new NavigationDrawerArrayAdapter(
+                        getActivity(),
+                        menuOption);
+
+                mDrawerListView.setAdapter(adapter);
 
 
 
@@ -236,11 +230,11 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
 
             if(mDrawerListView!=null)
 
-//            mDrawerListView.setAdapter(new NavigationDrawerArrayAdapter(
-//                    context,
-//                    menuOption));
+            mDrawerListView.setAdapter(new NavigationDrawerArrayAdapter(
+                    getActivity(),
+                    menuOption));
 
-            mFragmentContainerView = context.findViewById(fragmentId);
+            mFragmentContainerView = getActivity().findViewById(fragmentId);
             mDrawerLayout = drawerLayout;
 
             // set a custom shadow that overlays the main content when the drawer opens
@@ -254,7 +248,7 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
             // ActionBarDrawerToggle ties together the the proper interactions
             // between the navigation drawer and the action bar app icon.
             mDrawerToggle = new ActionBarDrawerToggle(
-                    context,                    /* host Activity */
+                    getActivity(),                    /* host Activity */
                     mDrawerLayout,                    /* DrawerLayout object */
                     R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
                     R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
@@ -267,7 +261,7 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
                         return;
                     }
 
-                    context.invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+                    getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
                 }
 
                 @Override
@@ -282,11 +276,11 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
                         // the navigation drawer automatically in the future.
                         mUserLearnedDrawer = true;
                         SharedPreferences sp = PreferenceManager
-                                .getDefaultSharedPreferences(context);
+                                .getDefaultSharedPreferences(getActivity());
                         sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
                     }
 
-                    context.invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+                    getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
                 }
             };
 
@@ -357,7 +351,6 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
         super.onDetach();
         mCallbacks = null;
         mFragmentContainerView = null;
-        this.context = null;
         onPause();
     }
 
@@ -442,7 +435,7 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
     }
 
     private ActionBar getActionBar() {
-        return context.getActionBar();
+        return getActivity().getActionBar();
     }
 
     public void setContext(Activity context) {
@@ -468,7 +461,7 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
         void onNavigationDrawerItemSelected(int position,String activityCode);
     }
 
-    public void changeNavigationDrawerAdapter(RecyclerView.Adapter adapter){
+    public void changeNavigationDrawerAdapter(ListAdapter adapter){
         mDrawerListView.setAdapter( adapter);
         //mDrawerListView.deferNotifyDataSetChanged();
     };
