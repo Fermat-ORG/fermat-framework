@@ -43,7 +43,7 @@ public class PluginDatabaseSystemAndroidAddonRoot extends AbstractAddon implemen
     }
 
     @Override
-    public void start() throws CantStartPluginException {
+    public final void start() throws CantStartPluginException {
 
         if (this.getOsContext() != null && this.getOsContext() instanceof Context) {
             context = (Context) this.getOsContext();
