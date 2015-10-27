@@ -12,14 +12,17 @@ public class WalletContact {
 
     public String address;
 
+    public boolean isConnection;
+
     public WalletContact() {
     }
 
-    public WalletContact(UUID contactId, String actorPublicKey, String name, String address) {
+    public WalletContact(UUID contactId, String actorPublicKey, String name, String address, boolean isConnection) {
         this.contactId = contactId;
         this.actorPublicKey = actorPublicKey;
         this.name = name;
-        this.address = address;
+        this.address = address != null ? address : "";
+        this.isConnection = isConnection;
     }
 
     @Override

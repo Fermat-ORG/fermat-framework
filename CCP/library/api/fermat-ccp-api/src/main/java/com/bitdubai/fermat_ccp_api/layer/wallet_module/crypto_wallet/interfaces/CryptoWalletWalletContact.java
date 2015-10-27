@@ -38,6 +38,12 @@ public interface CryptoWalletWalletContact {
     Actors getActorType();
 
     /**
+     * Return if the contact is a intra user connection
+     * @return true or false
+     */
+    boolean isConnection();
+
+    /**
      * Return the Compatibility
      * @return Compatibility
      */
