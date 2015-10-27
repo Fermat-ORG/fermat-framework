@@ -1,11 +1,11 @@
-package com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by natalia on 13/08/15.
+ * Created by natalia on 05/10/15.
  */
-public class CantUpdateIntraWalletUserConnectionException extends FermatException {
+public class NotificationNotFoundException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantUpdateIntraWalletUserConnectionException extends FermatExceptio
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantUpdateIntraWalletUserConnectionException(String message, Exception cause, String context, String possibleReason) {
+    public NotificationNotFoundException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

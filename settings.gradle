@@ -118,6 +118,11 @@ project(':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai').projectDir 
 // OSA Projects (Android)
 
 // Milestone 1 project:
+
+include ':fermat-osa-android-core'
+project(':fermat-osa-android-core').projectDir = new File('OSA/library/core/fermat-osa-android-core')
+
+
 include ':fermat-osa-addon-android-database-system-bitdubai'
 project(':fermat-osa-addon-android-database-system-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai')
 

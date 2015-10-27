@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by loui on 22/02/15.
  */
-public class CantCreateIntraUserException extends FermatException {
+public class CantCreateNotificationException extends FermatException {
 
 	/**
 	 * 
@@ -14,24 +14,24 @@ public class CantCreateIntraUserException extends FermatException {
 
 	public static final String DEFAULT_MESSAGE = "CAN'T CREATE INTRA USER";
 
-	public CantCreateIntraUserException(final String message, final Exception cause, final String context, final String possibleReason) {
+	public CantCreateNotificationException(final String message, final Exception cause, final String context, final String possibleReason) {
 		super(message, cause, context, possibleReason);
 	}
 
-	public CantCreateIntraUserException(final String message, final Exception cause) {
+	public CantCreateNotificationException(final String message, final Exception cause) {
 		this(message, cause, "", "");
 	}
 
-	public CantCreateIntraUserException(final String message) {
+	public CantCreateNotificationException(final String message) {
 		this(message, null);
 	}
 
-	public CantCreateIntraUserException(final Exception exception) {
+	public CantCreateNotificationException(final Exception exception) {
 		this(exception.getMessage());
 		setStackTrace(exception.getStackTrace());
 	}
 
-	public CantCreateIntraUserException() {
+	public CantCreateNotificationException() {
 		this(DEFAULT_MESSAGE);
 	}
 }
