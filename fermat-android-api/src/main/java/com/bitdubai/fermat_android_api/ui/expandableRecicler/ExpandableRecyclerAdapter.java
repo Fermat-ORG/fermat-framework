@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatParentListItemListeners;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,7 +44,6 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * available in {@link ExpandableRecyclerAdapter}
      */
     protected List<Object> mItemList;
-    protected FermatParentListItemListeners<PI> parentItemEventListeners;
     protected FermatListItemListeners<CI> childItemEventListeners;
 
     private List<? extends ParentListItem> mParentItemList;
@@ -141,7 +139,6 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             ParentWrapper parentWrapper = (ParentWrapper) listItem;
             parentViewHolder.setExpanded(parentWrapper.isExpanded());
             onBindParentViewHolder(parentViewHolder, position, (PI) parentWrapper.getParentListItem());
-            bindParentItemEventListeners(parentViewHolder, position, (PI) parentWrapper.getParentListItem());
 
         } else if (listItem == null) {
             throw new IllegalStateException("Incorrect ViewHolder found");
@@ -172,34 +169,6 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             public boolean onLongClick(View view) {
                 if (childItemEventListeners != null) {
                     childItemEventListeners.onLongItemClickListener(listItem, position);
-                    return true;
-                }
-                return false;
-            }
-        });
-    }
-
-    /**
-     * Bind a event listener to a parent item
-     *
-     * @param holder   the view holder with the views fot this item
-     * @param position the position of the item in the list
-     * @param listItem the item itself
-     */
-    private void bindParentItemEventListeners(RecyclerView.ViewHolder holder, final int position, final PI listItem) {
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (parentItemEventListeners != null) {
-                    parentItemEventListeners.onItemClickListener(listItem, position);
-                }
-            }
-        });
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (parentItemEventListeners != null) {
-                    parentItemEventListeners.onLongItemClickListener(listItem, position);
                     return true;
                 }
                 return false;
@@ -894,16 +863,6 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     public void setChildItemFermatEventListeners(FermatListItemListeners<CI> eventListeners) {
         this.childItemEventListeners = eventListeners;
     }
-
-    /**
-     * Set the event listener fot the child items
-     *
-     * @param eventListeners the object with the event listeners
-     */
-    public void setParentItemFermatEventListeners(FermatParentListItemListeners<PI> eventListeners) {
-        this.parentItemEventListeners = eventListeners;
-    }
-
 
     // endregion
 
