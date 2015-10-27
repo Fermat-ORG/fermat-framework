@@ -1,9 +1,9 @@
-package com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.exceptions;
+package com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The exception <code>com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.exceptions.CantSetPlatformInformationException</code>
+ * The exception <code>CantSetPlatformInformationException</code>
  * is thrown when there is an error trying to set platform information.
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 27/10/2015.

@@ -1,22 +1,21 @@
-package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.listeners;
+package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 
 /**
- * Created by Nerio on 08/10/15.
+ * Created by natalia on 16/10/15.
  */
-public class AssetUserActorRequestListRegisteredNetworksNotificationEventListener implements FermatEventListener {
+public class ActorNetworkServicePendingsNotificationEventListener implements FermatEventListener {
 
     FermatEventMonitor fermatEventMonitor;
     private EventType eventType;
     private FermatEventHandler fermatEventHandler;
 
-
-    public AssetUserActorRequestListRegisteredNetworksNotificationEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
+    public ActorNetworkServicePendingsNotificationEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
         this.eventType = eventType;
         this.fermatEventMonitor = fermatEventMonitor;
     }

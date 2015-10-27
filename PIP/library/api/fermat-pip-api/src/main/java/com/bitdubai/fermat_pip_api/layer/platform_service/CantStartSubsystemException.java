@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_api.layer.pip_platform_service;
+package com.bitdubai.fermat_pip_api.layer.platform_service;
 
 import com.bitdubai.fermat_api.FermatException;
 

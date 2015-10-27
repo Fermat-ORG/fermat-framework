@@ -1,10 +1,9 @@
-package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.listeners;
+package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 
 /**
  * Created by Nerio on 08/10/15.
@@ -12,7 +11,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enum
 public class AssetUserActorCompleteRegistrationNotificationEventListener implements FermatEventListener {
 
     FermatEventMonitor fermatEventMonitor;
-    private EventType eventType;
+    private com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType eventType;
     private FermatEventHandler fermatEventHandler;
     /**
      * Constructor with parameters
@@ -20,7 +19,7 @@ public class AssetUserActorCompleteRegistrationNotificationEventListener impleme
      * @param eventType
      * @param fermatEventMonitor
      */
-    public AssetUserActorCompleteRegistrationNotificationEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
+    public AssetUserActorCompleteRegistrationNotificationEventListener(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType eventType, FermatEventMonitor fermatEventMonitor) {
         this.eventType = eventType;
         this.fermatEventMonitor = fermatEventMonitor;
     }
@@ -31,7 +30,7 @@ public class AssetUserActorCompleteRegistrationNotificationEventListener impleme
      * @return an instance of a Fermat Enum.
      */
     @Override
-    public EventType getEventType() {
+    public com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType getEventType() {
         return eventType;
     }
 

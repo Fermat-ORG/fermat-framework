@@ -1,7 +1,6 @@
-package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events;
+package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events;
 
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 
 /**
  * Created by Nerio on 08/10/15.
@@ -18,7 +17,7 @@ public class AssetUserActorCompleteRegistrationNotificationEvent extends Abstrac
         this.actorAssetUser = actorAssetUser;
     }
 
-    public AssetUserActorCompleteRegistrationNotificationEvent(EventType eventType) {
+    public AssetUserActorCompleteRegistrationNotificationEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType eventType) {
         super(eventType);
     }
 }

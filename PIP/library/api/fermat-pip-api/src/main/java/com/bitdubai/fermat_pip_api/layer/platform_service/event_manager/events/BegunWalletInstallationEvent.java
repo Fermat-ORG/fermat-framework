@@ -1,6 +1,4 @@
-package com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events;
-
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events;
 
 import java.util.UUID;
 
@@ -18,7 +16,7 @@ public class BegunWalletInstallationEvent extends AbstractFermatEvent {
         return this.walletId;
     }
 
-    public BegunWalletInstallationEvent(EventType eventType) {
+    public BegunWalletInstallationEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType eventType) {
         super(eventType);
     }
 
