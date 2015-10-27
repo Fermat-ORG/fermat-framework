@@ -1,5 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.NegotiationBasicInformation;
 
 import java.util.Calendar;
@@ -29,10 +30,10 @@ public class NegotiationBasicInformationImpl implements NegotiationBasicInformat
     private float exchangeRateAmount;
     private String paymentCurrency;
     private long date;
-    private String negotiationStatus;
+    private NegotiationStatus negotiationStatus;
 
 
-    public NegotiationBasicInformationImpl(String customerAlias, String merchandise, String typeOfPayment, String paymentCurrency, String negotiationStatus) {
+    public NegotiationBasicInformationImpl(String customerAlias, String merchandise, String typeOfPayment, String paymentCurrency, NegotiationStatus negotiationStatus) {
         this.customerAlias = customerAlias;
         this.merchandise = merchandise;
         this.typeOfPayment = typeOfPayment;
@@ -80,7 +81,7 @@ public class NegotiationBasicInformationImpl implements NegotiationBasicInformat
     }
 
     @Override
-    public String getStatus() {
+    public NegotiationStatus getStatus() {
         return negotiationStatus;
     }
 

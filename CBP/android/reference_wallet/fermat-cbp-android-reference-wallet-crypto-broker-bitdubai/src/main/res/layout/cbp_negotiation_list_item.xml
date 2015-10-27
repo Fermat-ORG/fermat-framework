@@ -3,18 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/cbw_image_width_and_height"
-    android:layout_marginBottom="8dp"
-    android:layout_marginTop="8dp"
+    android:layout_height="wrap_content"
+    android:background="@color/waiting_for_broker_list_item_background"
+    android:paddingBottom="8dp"
     android:paddingEnd="@dimen/activity_horizontal_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingStart="@dimen/activity_horizontal_margin">
+    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingTop="8dp">
 
     <ImageView
         android:id="@+id/cbw_customer_image"
         android:layout_width="@dimen/cbw_image_width_and_height"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/cbw_image_width_and_height"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="8dp"
         android:contentDescription="@string/identity_img"

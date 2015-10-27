@@ -10,8 +10,12 @@
     <color name="negotiation_date_text">#7b7b7b</color>
     <color name="dark_grey">#7b7b7b</color>
     <color name="withe">#FFFFFF</color>
-    <color name="waiting_for_text">#398f4a</color>
+    <color name="waiting_for_text">#1d5127</color>
     <color name="cbw_waiting_for_broker_grouper_background">#43c4e7</color>
     <color name="cbw_list_divider">#999999</color>
+    <color name="waiting_for_broker_list_item_background">#c8fff9</color>
+    <color name="waiting_for_customer_list_item_background">#ffffff</color>
+    <color name="negotiation_closed_list_item_background">#c6c6c6</color>
+    <color name="negotiation_cancelled_list_item_background">#ff8b8b</color>
 
 </resources>

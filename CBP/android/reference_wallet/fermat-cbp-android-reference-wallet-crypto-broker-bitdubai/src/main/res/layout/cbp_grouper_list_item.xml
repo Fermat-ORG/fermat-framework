@@ -19,7 +19,7 @@
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:textColor="@color/black"
         android:textSize="@dimen/cbw_subtitle_text"
-        tools:text="Waiting for the customer"/>
+        tools:text="@string/waiting_for_you"/>
 
     <TextView
         android:id="@+id/cbw_customers_count"

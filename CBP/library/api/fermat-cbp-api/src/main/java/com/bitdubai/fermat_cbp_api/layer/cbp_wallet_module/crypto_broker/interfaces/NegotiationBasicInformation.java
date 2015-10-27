@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces;
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+
 import java.sql.Date;
 import java.util.UUID;
 
@@ -56,5 +58,5 @@ public interface NegotiationBasicInformation {
     /**
      * @return the negotiation's status:
      */
-    String getStatus();
+    NegotiationStatus getStatus();
 }
