@@ -47,7 +47,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
     public AssetIssuerActorRecord(String publicKey, String name, ConnectionState connectionState,
                                   double locationLatitude, double locationLongitude, long registrationDate,
-                                  byte[] profileImage) {
+                                  byte[] profileImage, String description) {
         this.publicKey = publicKey;
         this.name = name;
         this.connectionState = connectionState;
@@ -55,6 +55,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         this.locationLongitude = locationLongitude;
         this.registrationDate = registrationDate;
         this.profileImage = profileImage.clone();
+        this.description = description;
     }
 
 

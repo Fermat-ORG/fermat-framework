@@ -3,12 +3,14 @@ package com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.dev
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionService;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +32,12 @@ import java.util.List;
  * * * * * * * *
  */
 
-public class IncomingExtraUserEventRecorderService implements com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents, DealsWithRegistry, TransactionService {
+public class IncomingExtraUserEventRecorderService implements DealsWithEvents, DealsWithRegistry, TransactionService {
 
     /**
      * DealsWithEvents Interface member variables.
      */
-    private com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager eventManager;
+    private EventManager eventManager;
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /*
@@ -50,7 +52,7 @@ public class IncomingExtraUserEventRecorderService implements com.bitdubai.ferma
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
 
-    public IncomingExtraUserEventRecorderService(final com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager eventManager, final IncomingExtraUserRegistry registry){
+    public IncomingExtraUserEventRecorderService(final EventManager eventManager, final IncomingExtraUserRegistry registry){
         this.eventManager = eventManager;
         this.registry = registry;
     }
@@ -60,7 +62,7 @@ public class IncomingExtraUserEventRecorderService implements com.bitdubai.ferma
      * DealWithEvents Interface implementation.
      */
     @Override
-    public void setEventManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager eventManager) {
+    public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
     }
 

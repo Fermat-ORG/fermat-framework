@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_cbp_api.all_definition.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+
 /**
  * Created by Yordin Alayn on 24.09.15.
  */
-public enum IdentityPublished {
+public enum IdentityPublished implements FermatEnum {
     PUBLISHED("1"),
     UNPUBLISHED("0");
 
@@ -13,6 +15,7 @@ public enum IdentityPublished {
         this.code = code;
     }
 
+    @Override
     public String getCode()   { return this.code ; }
 
     public static IdentityPublished getByCode(String code) {

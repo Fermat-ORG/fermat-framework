@@ -1,36 +1,35 @@
 package com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai;
 
-import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.AddonDeveloper;
-import com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.PlatformInfoPlatformServicePluginRoot;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddonDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterVersionException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartAddonDeveloperException;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonDeveloperReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.PlatformInfoPlatformServiceAddonRoot;
+
 /**
- * Created by loui on 28/04/15.
+ * The class <code>com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer.bitdubai.DeveloperBitDubai</code>
+ * Haves the logic of instantiation of all versions of Location Manager Platform Service Addon.
+ *
+ * Here we can choose between the different versions of the Location Manager Addon.
+ *
+ * Created by lnacosta (laion.cj91@gmail.com) on 26/10/2015.
  */
-public class DeveloperBitDubai implements AddonDeveloper {
+public class DeveloperBitDubai extends AbstractAddonDeveloper {
 
-    Addon addon;
-
-
-
-
-
-    @Override
-    public Addon getAddon() {
-        return addon;
+    public DeveloperBitDubai() {
+        super(new AddonDeveloperReference(Developers.BITDUBAI));
     }
 
+    @Override
+    public void start() throws CantStartAddonDeveloperException {
+        try {
 
+            this.registerVersion(new PlatformInfoPlatformServiceAddonRoot());
 
+        } catch (CantRegisterVersionException e) {
 
-
-    public DeveloperBitDubai () {
-
-        /**
-         * I will choose from the different versions of my implementations which one to start. Now there is only one, so
-         * it is easy to choose.
-         */
-
-        addon = new PlatformInfoPlatformServicePluginRoot();
-
+            throw new CantStartAddonDeveloperException(e, "", "Error registering addon versions for the developer.");
+        }
     }
 }

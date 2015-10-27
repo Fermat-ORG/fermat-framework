@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
 
 import com.bitdubai.fermat_api.Addon;
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.MissingReferencesException;
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
@@ -23,7 +25,7 @@ public abstract class AbstractAddon implements Addon, Service {
     private final Map<AddonVersionReference, AbstractAddon> addons;
 
     private final AddonVersionReference addonVersionReference;
-    private       ServiceStatus         serviceStatus        ;
+    protected     ServiceStatus         serviceStatus        ;
 
     public AbstractAddon(final AddonVersionReference addonVersionReference) {
 
@@ -68,12 +70,32 @@ public abstract class AbstractAddon implements Addon, Service {
         return serviceStatus == ServiceStatus.PAUSED;
     }
 
+    @Override
+    public void start() throws CantStartPluginException {
+        this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    @Override
+    public void pause() {
+        this.serviceStatus = ServiceStatus.PAUSED;
+    }
+
+    @Override
+    public void resume() {
+        this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    @Override
+    public void stop() {
+        this.serviceStatus = ServiceStatus.STOPPED;
+    }
+
     public abstract List<AddonVersionReference > getNeededAddonReferences();
 
     public abstract List<DevelopersUtilReference> getAvailableDeveloperUtils();
 
     public abstract FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException;
 
-    protected abstract void validateAndAssignReferences();
+    protected abstract void validateAndAssignReferences() throws MissingReferencesException;
 
 }

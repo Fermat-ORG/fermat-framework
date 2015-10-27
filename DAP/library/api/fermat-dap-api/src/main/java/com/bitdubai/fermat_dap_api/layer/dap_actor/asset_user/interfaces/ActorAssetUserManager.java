@@ -58,4 +58,7 @@ public interface ActorAssetUserManager {
    */
   ActorAssetUser createActorAssetUserFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage, Location assetUserActorlocation) throws CantCreateAssetUserActorException;
 
+
+  void createAndRegisterActorAssetUserTest() throws CantCreateAssetUserActorException;
+
 }
