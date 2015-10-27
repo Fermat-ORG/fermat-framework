@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
+import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForBrokerException;
@@ -41,7 +42,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
     private static final String TAG = "OpenNegotiationsTabFragment";
 
     // UI
-    private RecyclerView mRecyclerView;
+    private RecyclerView recyclerView;
     private OpenNegotiationsExpandableAdapter adapter;
 
     // MANAGERS
@@ -92,13 +93,13 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
     }
 
     private void initViews(View layout) {
-        ArrayList<GrouperItem> openNegotiations = getOpenNegotiations();
         adapter = new OpenNegotiationsExpandableAdapter(getActivity(), openNegotiations);
         adapter.setExpandCollapseListener(this);
 
-        mRecyclerView = (RecyclerView) layout.findViewById(R.id.open_negotiations_recycler_view);
-        mRecyclerView.setAdapter(adapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView = (RecyclerView) layout.findViewById(R.id.open_negotiations_recycler_view);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.addItemDecoration(new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape));
     }
 
     @Override
