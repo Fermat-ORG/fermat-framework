@@ -21,10 +21,9 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
  * @since Java JDK 1.7
  */
 public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread {
-
     /*
-    * Represent the sleep time for the read or send (5000 milliseconds)
-    */
+     * Represent the sleep time for the read or send (5000 milliseconds)
+     */
     private static final long SLEEP_TIME = 5000;
     private static final long MAX_SLEEP_TIME = 20000;
 
@@ -62,8 +61,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     public void run() {
 
         while (active){
-
-            try {
+            try{
 
                 if (communicationsClientConnection.isRegister() && !assetUserActorNetworkServicePluginRoot.isRegister()){
 
@@ -85,7 +83,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     /*
                      * Configure my new profile
                      */
-                    assetUserActorNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
+                    assetUserActorNetworkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
 
                     /*
                      * Initialize the connection manager
@@ -119,7 +117,6 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     active = Boolean.FALSE;
                 }
             }
-
         }
     }
 

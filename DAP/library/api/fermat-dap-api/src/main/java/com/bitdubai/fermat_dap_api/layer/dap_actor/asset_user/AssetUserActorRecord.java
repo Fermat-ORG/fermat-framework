@@ -35,17 +35,17 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     }
 
-   /**
-    *  Register in Actor Network Service
-    */
-    public AssetUserActorRecord(String name, String publicKey, byte[] profileImage, Location location) {
+    /**
+     *  Register in Actor Network Service
+     */
+    public AssetUserActorRecord(String publicKey, String name, byte[] profileImage, Location location) {
 
 
         this.name = name;
         this.publicKey = publicKey;
         this.profileImage = profileImage.clone();
-        this.locationLatitude = location.getLatitude();
-        this.locationLongitude = location.getLongitude();
+      //  this.locationLatitude = location.getLatitude();
+        //this.locationLongitude = location.getLongitude();
         this.genders = Genders.INDEFINITE;
 //        this.age = age;
 //        this.cryptoAddress = cryptoAddress;
