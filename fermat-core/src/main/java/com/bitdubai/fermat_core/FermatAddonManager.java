@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_core;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddon;
+import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystems;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantPauseAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantResumeAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartAddonException;
@@ -17,11 +18,17 @@ import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionRef
  */
 public class FermatAddonManager {
 
-    private final FermatSystemContext systemContext;
+    private final FermatSystemContext systemContext  ;
+    private final Object              osContext      ;
+    private final OperativeSystems    operativeSystem;
 
-    public FermatAddonManager(final FermatSystemContext systemContext) {
+    public FermatAddonManager(final Object              osContext      ,
+                              final OperativeSystems    operativeSystem,
+                              final FermatSystemContext systemContext  ) {
 
-        this.systemContext = systemContext;
+        this.osContext       = osContext      ;
+        this.operativeSystem = operativeSystem;
+        this.systemContext   = systemContext  ;
     }
 
     public final void startAddon(final AddonVersionReference addonVersionReference) throws CantStartAddonException  ,
@@ -39,6 +46,10 @@ public class FermatAddonManager {
             return;
 
         try {
+
+            if(abstractAddon.isDealsWithOsContext())
+                abstractAddon.setOsContext(osContext);
+
             abstractAddon.start();
         } catch (com.bitdubai.fermat_api.CantStartPluginException e) {
 

@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystems;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
@@ -378,12 +379,13 @@ public class Platform implements Serializable {
     public void start() throws CantStartPlatformException, CantReportCriticalStartingProblemException {
 
         try {
-            new FermatSystem().start();
+            new FermatSystem(osContext, OperativeSystems.ANDROID).start();
         } catch (FermatException e) {
             System.out.println(e.getPossibleReason());
             System.out.println(e.getFormattedContext());
             System.out.println(e.getFormattedTrace());
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Aparantemente hubo un error....");
         }
 

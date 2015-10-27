@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_core;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystems;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSystemException;
@@ -26,9 +27,15 @@ import java.util.List;
 public class FermatSystem {
 
     private final FermatSystemContext fermatSystemContext;
+    private final Object              osContext          ;
+    private final OperativeSystems    operativeSystem    ;
 
-    public FermatSystem() {
-        fermatSystemContext = new FermatSystemContext();
+    public FermatSystem(final Object           osContext      ,
+                        final OperativeSystems operativeSystem) {
+
+        this.osContext           = osContext;
+        this.operativeSystem     = operativeSystem;
+        this.fermatSystemContext = new FermatSystemContext();
     }
 
     /**
