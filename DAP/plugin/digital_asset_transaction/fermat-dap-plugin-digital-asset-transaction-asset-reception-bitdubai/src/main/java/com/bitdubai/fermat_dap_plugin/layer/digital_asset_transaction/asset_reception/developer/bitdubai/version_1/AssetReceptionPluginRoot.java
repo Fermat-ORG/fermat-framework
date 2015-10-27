@@ -23,11 +23,15 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DealsWithAssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_reception.interfaces.AssetReceptionManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.DealsWithAssetIssuerWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.DealsWithAssetUserWallet;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.DigitalAssetReceptionVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDatabaseConstants;
@@ -40,19 +44,22 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enum
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/09/15.
  */
-public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWithAssetIssuerWallet, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithEvents, LogManagerForDevelopers, Plugin, Service {
+public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWithAssetUserWallet, DealsWithAssetTransmissionNetworkServiceManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithEvents, LogManagerForDevelopers, Plugin, Service {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-    AssetIssuerWalletManager assetIssuerWalletManager;
+    AssetUserWalletManager assetUserWalletManager;
+    AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
     Database assetReceptionDatabase;
     ErrorManager errorManager;
     EventManager eventManager;
@@ -97,7 +104,13 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
 
     @Override
     public List<String> getClassesFullPath() {
-        return null;
+        List<String> returnedClasses = new ArrayList<>();
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_rception.developer.bitdubai.version_1.structure.events.AssetReceptionMonitorAgent");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.AssetReceptionPluginRoot");
+        /**
+         * I return the values.
+         */
+        return returnedClasses;
     }
 
     @Override
@@ -146,7 +159,7 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
                     pluginId,
                     pluginFileSystem,
                     errorManager);
-            digitalAssetReceptionVault.setAssetIssuerWalletManager(this.assetIssuerWalletManager);
+            digitalAssetReceptionVault.setAssetUserWalletManager(this.assetUserWalletManager);
             AssetReceptionDao assetReceptionDao=new AssetReceptionDao(this.pluginDatabaseSystem, this.pluginId);
             this.assetReceptionRecorderService =new AssetReceptionRecorderService(assetReceptionDao, eventManager);
             try{
@@ -194,11 +207,6 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
     }
 
     @Override
-    public void setAssetIssuerManager(AssetIssuerWalletManager assetIssuerWalletManager) {
-        this.assetIssuerWalletManager=assetIssuerWalletManager;
-    }
-
-    @Override
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
     }
@@ -214,5 +222,31 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
     //TODO: DELETE THIS USELESS METHOD
     private void printSomething(String information){
         LOG.info("ASSET RECEPTION: " + information);
+    }
+
+    @Override
+    public void setAssetTransmissionNetworkServiceManager(AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager) {
+        this.assetTransmissionNetworkServiceManager=assetTransmissionNetworkServiceManager;
+    }
+
+    @Override
+    public void setAssetUserManager(AssetUserWalletManager assetUserWalletManager) {
+        this.assetUserWalletManager=assetUserWalletManager;
+    }
+
+    public static LogLevel getLogLevelByClass(String className){
+        try{
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return AssetReceptionPluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e){
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
     }
 }
