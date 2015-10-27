@@ -1,12 +1,13 @@
 package com.bitdubai.fermat_cbp_api.all_definition.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Created by angel on 18/9/15.
  */
  
-public enum NegotiationStatus {
+public enum NegotiationStatus implements FermatEnum {
     WAITING_FOR_BROKER("WFB"),
     WAITING_FOR_CUSTOMER("WFC"),
     SENT_TO_BROKER("STB"),
@@ -20,6 +21,7 @@ public enum NegotiationStatus {
         this.code = code;
     }
 
+    @Override
     public String getCode() {
         return this.code;
     }
