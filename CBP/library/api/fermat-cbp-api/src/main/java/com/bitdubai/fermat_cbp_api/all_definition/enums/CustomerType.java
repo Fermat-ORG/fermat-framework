@@ -1,11 +1,12 @@
 package com.bitdubai.fermat_cbp_api.all_definition.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Created by natalia on 17/09/15.
  */
-public enum CustomerType {
+public enum CustomerType  implements FermatEnum {
     SPORADIC("SPO"),
     FREQUENT ("FRQ");
 
@@ -15,6 +16,7 @@ public enum CustomerType {
         this.code = code;
     }
 
+    @Override
     public String getCode() {
         return this.code;
     }
