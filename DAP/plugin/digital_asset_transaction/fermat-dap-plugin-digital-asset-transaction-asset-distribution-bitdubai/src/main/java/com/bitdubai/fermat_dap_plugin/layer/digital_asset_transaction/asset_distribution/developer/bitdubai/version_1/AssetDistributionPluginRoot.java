@@ -32,6 +32,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoin
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.exceptions.CantDefineContractPropertyException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.DealsWithActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -186,6 +187,16 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
         //I will hardcode the hashmap and wallet public key for testing, TODO: please change this in production
         printSomething("The hashmap to distribute is hardcoded");
         digitalAssetsToDistribute=getDistributionHashMapForTesting();
+
+        ActorAssetUser registeredActorAssetUser = null;
+        for (ActorAssetUser actorAssetUser: digitalAssetsToDistribute.values() ){
+            registeredActorAssetUser = actorAssetUser;
+        }
+
+        for (DigitalAssetMetadata digitalAssetMetadata: digitalAssetsToDistribute.keySet()){
+            digitalAssetsToDistribute.put(digitalAssetMetadata, registeredActorAssetUser);
+        }
+
         printSomething("The Wallet public key is hardcoded");
         walletPublicKey = "walletPublicKeyTest";
         this.assetDistributionTransactionManager.distributeAssets(digitalAssetsToDistribute, walletPublicKey);

@@ -668,10 +668,15 @@ public class AssetUserActorNetworkServicePluginRoot implements  AssetUserActorNe
 
                 for (PlatformComponentProfile p : platformComponentProfileRegisteredListRemote) {
 
-//                    Location loca = null;
-                    Location loca = p.getLocation();
-
-                    ActorAssetUser actorAssetUserNew = new AssetUserActorRecord(p.getIdentityPublicKey(), p.getName(), convertoByteArrayfromString(p.getExtraData()), loca);
+                    Double locaA, locaL;
+                    if(p.getLocation() != null) {
+                        locaA = p.getLocation().getLatitude();
+                        locaL = p.getLocation().getLongitude();
+                    }else{
+                        locaA = Double.valueOf(0);
+                        locaL = Double.valueOf(0);
+                    }
+                    ActorAssetUser actorAssetUserNew = new AssetUserActorRecord(p.getIdentityPublicKey(), p.getName(), convertoByteArrayfromString(p.getExtraData()), locaA, locaL);
 
                     actorAssetUserRegisteredList.add(actorAssetUserNew);
 
@@ -992,12 +997,20 @@ public class AssetUserActorNetworkServicePluginRoot implements  AssetUserActorNe
         if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.ACTOR_ASSET_USER &&
                 platformComponentProfileRegistered.getNetworkServiceType() == NetworkServiceType.UNDEFINED) {
 
+            Double locaA, locaL;
+            if(platformComponentProfileRegistered.getLocation() != null) {
+                locaA = platformComponentProfileRegistered.getLocation().getLatitude();
+                locaL = platformComponentProfileRegistered.getLocation().getLongitude();
+            }else{
+                locaA = Double.valueOf(0);
+                locaL = Double.valueOf(0);
+            }
 
-
-            Location loca = null;
+//            Location loca = null;
 
             ActorAssetUser actorAssetUserNewRegsitered =  new AssetUserActorRecord(platformComponentProfileRegistered.getIdentityPublicKey(),
-                        platformComponentProfileRegistered.getName(), convertoByteArrayfromString(platformComponentProfileRegistered.getExtraData()), loca);
+                        platformComponentProfileRegistered.getName(), convertoByteArrayfromString(platformComponentProfileRegistered.getExtraData()),
+                        locaA, locaL);
 
 
             if(createactorAgentnum==0) {
@@ -1054,8 +1067,17 @@ public class AssetUserActorNetworkServicePluginRoot implements  AssetUserActorNe
              */
             if (remoteNetworkServiceToConnect.getNetworkServiceType() == NetworkServiceType.UNDEFINED && remoteNetworkServiceToConnect.getPlatformComponentType() == PlatformComponentType.ACTOR_ASSET_USER) {
                 for (PlatformComponentProfile p : platformComponentProfileRegisteredList) {
-                    Location loca = null;
-                    ActorAssetUser  actorAssetUserNew = new AssetUserActorRecord(p.getIdentityPublicKey(), p.getName(), convertoByteArrayfromString(p.getExtraData()), loca);
+                    //            Location loca = null;
+                    Double locaA, locaL;
+                    if(p.getLocation() != null) {
+                        locaA = p.getLocation().getLatitude();
+                        locaL = p.getLocation().getLongitude();
+                    }else{
+                        locaA = Double.valueOf(0);
+                        locaL = Double.valueOf(0);
+                    }
+
+                    ActorAssetUser  actorAssetUserNew = new AssetUserActorRecord(p.getIdentityPublicKey(), p.getName(), convertoByteArrayfromString(p.getExtraData()), locaA, locaL);
 
                     actorAssetUserRegisteredList.add(actorAssetUserNew);
                 }

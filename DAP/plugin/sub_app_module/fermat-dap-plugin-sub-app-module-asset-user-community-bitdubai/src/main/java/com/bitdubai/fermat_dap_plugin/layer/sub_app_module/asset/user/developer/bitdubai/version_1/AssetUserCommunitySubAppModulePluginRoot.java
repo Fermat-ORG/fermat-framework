@@ -125,14 +125,7 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
 
     @Override
     public List<ActorAssetUser> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException {
-        /**
-         * Test para crear y registrar el asset usser en la nube.
-         */
-        try {
-            actorAssetUserManager.createAndRegisterActorAssetUserTest();
-        } catch (CantCreateAssetUserActorException e) {
-            e.printStackTrace();
-        }
+
         List<ActorAssetUser> actorAssetList = new ArrayList<>();
 
 //        Location location = new DeviceLocation(00.00, 00.00, 12345678910L, 00.00, LocationProvider.NETWORK);
@@ -144,11 +137,26 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
 
         try {
             actorAssetList = actorAssetUserManager.getAllAssetUserActorRegistered();
+
+            if(actorAssetList.size() == 0){
+                /**
+                 * Test para crear y registrar el asset usser en la nube.
+                 */
+                try {
+                    actorAssetUserManager.createAndRegisterActorAssetUserTest();
+                } catch (CantCreateAssetUserActorException e) {
+                    e.printStackTrace();
+                }
+            }
+
         } catch (CantAssetUserActorNotFoundException e) {
             e.printStackTrace();
         }
         return actorAssetList;
     }
 
+    @Override
+    public void connectToActorAssetUser(ActorAssetUser actorAssetUser) {
 
+    }
 }
