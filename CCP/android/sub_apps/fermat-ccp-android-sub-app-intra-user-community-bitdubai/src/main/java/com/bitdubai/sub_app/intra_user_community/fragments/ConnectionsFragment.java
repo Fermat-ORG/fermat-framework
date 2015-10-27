@@ -19,10 +19,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -41,6 +43,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
+import com.bitdubai.sub_app.intra_user_community.common.Utils.FernatAnimationUtils;
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
@@ -96,9 +99,13 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
     //private ActorAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
 
+    private LinearLayout empty;
+
     // flags
     private boolean isRefreshing = false;
     private View rootView;
+
+    private ProgressDialog dialog;
 
 
     /**
@@ -132,6 +139,15 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
         }
     }
 
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
+    }
+
+
     /**
      * Fragment Class implementation.
      */
@@ -156,7 +172,20 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
 
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
 
-            onRefresh();
+            empty = (LinearLayout) rootView.findViewById(R.id.empty);
+
+            //onRefresh();
+
+            if (dialog != null)
+                dialog.dismiss();
+            dialog = null;
+            dialog = new ProgressDialog(getActivity());
+            dialog.setTitle("Loading connections");
+            dialog.setMessage("Please wait...");
+            dialog.show();
+            FernatAnimationUtils.showView(false, empty);
+            FernatAnimationUtils.showEmpty(isAttached, empty, lstIntraUserInformations);
+
 
         } catch(Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
