@@ -651,6 +651,8 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
             if (this.isRegister()) {
 
+                if(actorAssetUserRegisteredList != null && !actorAssetUserRegisteredList.isEmpty()){ actorAssetUserRegisteredList.clear(); }
+
                 List<PlatformComponentProfile> platformComponentProfileRegisteredListRemote = new ArrayList<PlatformComponentProfile>();
 
 
