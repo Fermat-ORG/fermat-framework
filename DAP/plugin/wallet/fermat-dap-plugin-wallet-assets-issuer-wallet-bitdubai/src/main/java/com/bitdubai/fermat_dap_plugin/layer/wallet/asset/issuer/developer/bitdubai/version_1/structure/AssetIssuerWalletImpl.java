@@ -303,7 +303,11 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 //                i++;
 //            }
             //assetDistributionManager.distributeAssets(hashMap, walletPublicKey);
-            assetDistributionManager.distributeAssets(null, null);
+            HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
+            for (ActorAssetUser actorAssetUser : actorAssetUsers){
+                hashMap.put(null, actorAssetUser);
+            }
+            assetDistributionManager.distributeAssets(hashMap, null);
 
         }//catch(CantDistributeDigitalAssetsException | CantGetTransactionsException | CantCreateFileException | FileNotFoundException  cantDistributeDigitalAssetsException){
         catch(CantDistributeDigitalAssetsException cantDistributeDigitalAssetsException){

@@ -17,7 +17,11 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_extra_user.OutgoingExtraUserManager;
@@ -49,7 +53,7 @@ import java.util.UUID;
  */
 public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers ,
-        DealsWithBitcoinWallet       ,
+        DealsWithBitcoinWallet       ,//
         DealsWithCryptoVault         ,
         DealsWithErrors              ,
         DealsWithPluginDatabaseSystem,
@@ -62,9 +66,12 @@ public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin imple
 
     @Override
     public List<PluginVersionReference> getNeededPluginReferences() {
-        return new ArrayList<>();
-    }
+        List<PluginVersionReference> rList = new ArrayList<>();
 
+        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.BASIC_WALLET, Plugins.BITCOIN_WALLET, Developers.BITDUBAI, new Version()));
+
+        return rList;
+    }
     @Override
     public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
         return new ArrayList<>();
