@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.DealsWithActorAssetIssuer;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -133,15 +135,18 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
         }
     }
 
+    List<ActorAssetUser> actorAssetList;// = new ArrayList<>();
+
     @Override
     public List<ActorAssetUser> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException {
 
-        List<ActorAssetUser> actorAssetList = new ArrayList<>();
+        actorAssetList = new ArrayList<>();
 
 //        Location location = new DeviceLocation(00.00, 00.00, 12345678910L, 00.00, LocationProvider.NETWORK);
         try {
-            actorAssetUserManager.createAndRegisterActorAssetUserTest();
-            actorAssetList = actorAssetUserManager.getAllAssetUserActorRegistered();
+//            actorAssetUserManager.createAndRegisterActorAssetUserTest();
+            actorAssetUserManager.registerActorInActorNetowrkSerice();
+            actorAssetList = actorAssetUserManager.getAllAssetUserActorInTableRegistered();
         } catch (CantAssetUserActorNotFoundException e) {
             e.printStackTrace();
         } catch (CantCreateAssetUserActorException e) {
@@ -150,8 +155,20 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
         return actorAssetList;
     }
 
+    //TODO verificar por posible modificacion de la firma del metodo
     @Override
     public void connectToActorAssetUser(ActorAssetIssuer requester, ActorAssetUser actorAssetUser) throws CantConnectToAssetUserException{
-        //todo implement: llamar al connectoToActorAssetUser del Actor Asset User
+        //todo SE DEBE CONOCER QUIEN ES EL ISSUER SOLICITANTE Y QUIEN EL USER SOLICITADO
+
+        ActorAssetIssuer actorAssetIssuer;
+        //TODO Para Realizacion de TEST se tomara el ISSUER de la BD LOCAL
+        //TODO Se necesita PASAR el ActorAssetUser seleccionado en la Community
+        //TODO Para TEST se usara la lista generada para seleccionar aleatoriamente el User Register
+        try {
+            actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
+            actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetList.get(new Random().nextInt(actorAssetList.size())));
+        } catch (CantGetAssetIssuerActorsException e) {
+            e.printStackTrace();
+        }
     }
 }

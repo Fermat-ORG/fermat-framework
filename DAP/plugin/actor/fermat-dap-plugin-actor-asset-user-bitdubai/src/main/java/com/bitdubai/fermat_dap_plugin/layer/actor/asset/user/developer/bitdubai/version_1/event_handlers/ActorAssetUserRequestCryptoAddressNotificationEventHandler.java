@@ -6,31 +6,31 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorNetworkServiceAssetUser;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ActorAssetUserRequestCryptoAddressNotificationEvent;
 
 /**
- * Created by Nerio on 08/10/15.
+ * Created by Nerio on 27/10/15.
  */
-public class AssetUserActorRequestListRegisteredNetworksNotificationEventHandler implements FermatEventHandler {
+public class ActorAssetUserRequestCryptoAddressNotificationEventHandler implements FermatEventHandler {
 
     private ActorNetworkServiceAssetUser actorNetworkServiceAssetUser;
 
-    public AssetUserActorRequestListRegisteredNetworksNotificationEventHandler(ActorNetworkServiceAssetUser actorNetworkServiceAssetUser) {
+    public ActorAssetUserRequestCryptoAddressNotificationEventHandler(ActorNetworkServiceAssetUser actorNetworkServiceAssetUser) {
         this.actorNetworkServiceAssetUser = actorNetworkServiceAssetUser;
     }
 
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        System.out.println("Succesfull Request AssetuserActor List  - handleEvent =" + platformEvent);
+        System.out.println("Request Crypto Address Asset User Actor - handleEvent =" + platformEvent);
 
         if (((Service) this.actorNetworkServiceAssetUser).getStatus() == ServiceStatus.STARTED) {
 
-            ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent completeRequestListRegisteredAssetUserActorNetworksNotificationEvent = (ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent) platformEvent;
+            ActorAssetUserRequestCryptoAddressNotificationEvent actorAssetUserRequestCryptoAddressNotificationEvent = (ActorAssetUserRequestCryptoAddressNotificationEvent) platformEvent;
              /*
              *  ActorNetworkServiceAssetUser make the job
              */
-            this.actorNetworkServiceAssetUser.handleCompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent(completeRequestListRegisteredAssetUserActorNetworksNotificationEvent.getActorAssetUserList());
+            this.actorNetworkServiceAssetUser.handleCompleteRequestCryptoAddressNotificationEvent(actorAssetUserRequestCryptoAddressNotificationEvent.getActorAssetUser());
         }
     }
 }
