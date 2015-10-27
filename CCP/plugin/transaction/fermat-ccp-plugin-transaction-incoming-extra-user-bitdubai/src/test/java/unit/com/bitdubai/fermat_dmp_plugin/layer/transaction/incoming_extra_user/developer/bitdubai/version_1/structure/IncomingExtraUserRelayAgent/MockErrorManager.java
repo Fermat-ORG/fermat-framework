@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRelayAgent;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -15,9 +16,11 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 
+*/
 /**
  * Created by jorgegonzalez on 2015.07.02..
- */
+ *//*
+
 public class MockErrorManager implements ErrorManager {
 
     private String reportedException;
@@ -62,3 +65,4 @@ public class MockErrorManager implements ErrorManager {
 
     }
 }
+*/

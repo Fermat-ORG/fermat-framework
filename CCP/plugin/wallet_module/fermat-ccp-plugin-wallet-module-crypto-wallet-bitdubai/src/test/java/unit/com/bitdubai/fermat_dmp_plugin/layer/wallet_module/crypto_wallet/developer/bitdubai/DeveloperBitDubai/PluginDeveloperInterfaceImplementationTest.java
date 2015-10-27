@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.DeveloperBitDubai;
 
 import com.bitdubai.fermat_api.Plugin;
@@ -26,3 +27,4 @@ public class PluginDeveloperInterfaceImplementationTest extends TestCase {
         assertNotNull(plugin);
     }
 }
+*/
