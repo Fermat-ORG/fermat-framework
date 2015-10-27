@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatParentListItemListeners;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * available in {@link ExpandableRecyclerAdapter}
      */
     protected List<Object> mItemList;
-    protected FermatListItemListeners<PI> parentItemEventListeners;
+    protected FermatParentListItemListeners<PI> parentItemEventListeners;
     protected FermatListItemListeners<CI> childItemEventListeners;
 
     private List<? extends ParentListItem> mParentItemList;
@@ -899,7 +900,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      *
      * @param eventListeners the object with the event listeners
      */
-    public void setParentItemFermatEventListeners(FermatListItemListeners<PI> eventListeners) {
+    public void setParentItemFermatEventListeners(FermatParentListItemListeners<PI> eventListeners) {
         this.parentItemEventListeners = eventListeners;
     }
 
