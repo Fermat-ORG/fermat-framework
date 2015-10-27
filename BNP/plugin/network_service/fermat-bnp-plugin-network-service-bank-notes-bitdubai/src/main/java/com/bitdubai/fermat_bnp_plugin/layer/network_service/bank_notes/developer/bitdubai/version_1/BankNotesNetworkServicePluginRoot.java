@@ -113,7 +113,7 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
     }
 
     @Override
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return null;
     }
 

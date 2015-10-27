@@ -746,7 +746,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
     }
 
     @Override
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
 

@@ -32,7 +32,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Erro
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -327,7 +326,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
                     if (wsCommunicationsCloudClientManager != null) {
 
-                        if (cryptoPaymentRequestNetworkServicePluginRoot.getPlatformComponentProfile() != null) {
+                        if (cryptoPaymentRequestNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot() != null) {
 
                             PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(
                                     identityPublicKey,
@@ -342,7 +341,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
 
                             communicationNetworkServiceConnectionManager.connectTo(
                                     applicantParticipant,
-                                    cryptoPaymentRequestNetworkServicePluginRoot.getPlatformComponentProfile(),
+                                    cryptoPaymentRequestNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot(),
                                     remoteParticipant
                             );
 

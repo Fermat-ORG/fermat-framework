@@ -18,8 +18,11 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDao;
+import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.events.AssetFactoryMiddlewareMonitorAgent;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.interfaces.DealsWithWalletManagerDesktopModule;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
@@ -126,6 +129,31 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
 
     AssetFactoryMiddlewareDao assetFactoryMiddlewareDao;
 
+    AssetFactoryMiddlewareMonitorAgent assetFactoryMiddlewareMonitorAgent;
+
+    /**
+     * This method will start the Monitor Agent that watches the asyncronic process registered in the asset issuing plugin
+     * @throws CantGetLoggedInDeviceUserException
+     * @throws CantSetObjectException
+     * @throws CantStartAgentException
+     */
+    private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
+        if(assetFactoryMiddlewareMonitorAgent == null)
+        {
+        assetFactoryMiddlewareMonitorAgent = new AssetFactoryMiddlewareMonitorAgent(eventManager,
+                pluginDatabaseSystem,
+                errorManager,
+                assetFactoryMiddlewareManager,
+                assetIssuingManager, pluginId);
+
+            assetFactoryMiddlewareMonitorAgent.start();
+        }else assetFactoryMiddlewareMonitorAgent.start();
+
+//        this.assetFactoryMiddlewareMonitorAgent.setErrorManager(errorManager);
+//        this.assetFactoryMiddlewareMonitorAgent.setLogManager(logManager);
+//        this.assetFactoryMiddlewareMonitorAgent.setPluginDatabaseSystem(pluginDatabaseSystem);
+//        this.assetFactoryMiddlewareMonitorAgent.setPluginId(pluginId);
+    }
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;

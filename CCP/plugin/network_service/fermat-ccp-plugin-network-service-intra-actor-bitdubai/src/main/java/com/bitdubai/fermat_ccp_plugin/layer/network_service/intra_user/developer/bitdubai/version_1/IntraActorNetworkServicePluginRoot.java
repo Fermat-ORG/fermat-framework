@@ -84,20 +84,15 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecordedAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.Identity;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNSInformation;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceNotification;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.JsonObjectConstants;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.MessageType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
@@ -106,9 +101,10 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Deal
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IntraUserActorConnectionCancelledEvent;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingActorRequestConnectionNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -131,7 +127,9 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
+
 public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implements IntraUserManager, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithPluginFileSystem,DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, DatabaseManagerForDevelopers {
+
 
 
     @Override
@@ -178,9 +176,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     /**
-     * Represent the platformComponentProfile
+     * Represent the platformComponentProfilePluginRoot
      */
-    private PlatformComponentProfile platformComponentProfile;
+    private PlatformComponentProfile platformComponentProfilePluginRoot;
 
     /**
      * Represent the platformComponentType
@@ -215,7 +213,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     /**
      * Represent the status of the network service
      */
-    private ServiceStatus serviceStatus;
+    //private ServiceStatus serviceStatus;
 
     /**
      * DealWithEvents Interface member variables.
@@ -363,10 +361,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     /**
      * This method initialize the communicationNetworkServiceConnectionManager.
      * IMPORTANT: Call this method only in the CommunicationRegistrationProcessNetworkServiceAgent, when execute the registration process
-     * because at this moment, is create the platformComponentProfile for this component
+     * because at this moment, is create the platformComponentProfilePluginRoot for this component
      */
     public void initializeCommunicationNetworkServiceConnectionManager(){
-        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(platformComponentProfile, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
+        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(platformComponentProfilePluginRoot, identity, wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(), dataBase, errorManager, eventManager);
     }
 
     /**
@@ -426,7 +424,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
          *
          */
         FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
-        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(actorNetworkServiceRecordedAgent));
+        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
     }
@@ -499,6 +497,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
              * Its all ok, set the new status
             */
             this.serviceStatus = ServiceStatus.STARTED;
+
 
 
        } catch (CantInitializeTemplateNetworkServiceDatabaseException exception) {
@@ -579,6 +578,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
          */
         this.serviceStatus = ServiceStatus.STOPPED;
 
+    }
+
+    public ServiceStatus getServiceStatus(){
+        return serviceStatus;
     }
 
     /**
@@ -715,38 +718,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 }
 
-
-                /**
-                 * Actors cache
-                 */
-
-
-                 /*-------------------------------------------------------------------------------------------------
-             * This is for test and example of how to use
-             * Construct the filter
-             */
-//                DiscoveryQueryParameters discoveryQueryParameters = constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_INTRA_USER, //PlatformComponentType you want to find
-//                        NetworkServiceType.UNDEFINED,     //NetworkServiceType you want to find
-//                        null,                     // alias
-//                        null,                     // identityPublicKey
-//                        null,                     // location
-//                        null,                     // distance
-//                        null,                     // name
-//                        null,                     // extraData
-//                        null,                     // offset
-//                        null,                     // max
-//                        null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-//                        null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
-//
-//
-//
-//                requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
-
-
-
-
-
-
             } catch (CantRegisterComponentException e) {
                 e.printStackTrace();
             }
@@ -794,13 +765,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         //TODO: Ver si me conviene guardar los actores en una base de datos nueva de cache
 
 
-
-
-
-//        if(!remoteNetworkServicesRegisteredList.isEmpty()){
-//            connectionArrived.set(true);
-//        }
-
         /* -----------------------------------------------------------------------
          * This is for test and example of how to use
          */
@@ -812,8 +776,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     }
     private void saveActorsInMemoryCache(List<PlatformComponentProfile> platformComponentProfileRegisteredList){
 
-//        for (PlatformComponentProfile platformComponentProfile : platformComponentProfileRegisteredList){
-//            incomingNotificationsDao.createNotification(UUID.randomUUID(),platformComponentProfile.);
+//        for (PlatformComponentProfile platformComponentProfilePluginRoot : platformComponentProfileRegisteredList){
+//            incomingNotificationsDao.createNotification(UUID.randomUUID(),platformComponentProfilePluginRoot.);
 //        }
 
     }
@@ -836,38 +800,125 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
 
 
-        //NetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
+    }
 
-        //communicationNetworkServiceLocal.sendMessage(platformComponentProfile.getIdentityPublicKey(), remoteComponentProfile.getIdentityPublicKey(), "Leon la puta que te pario");
+    public void handleNewMessages(FermatMessage fermatMessage){
+        Gson gson = new Gson();
 
-        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
+        try {
+            System.out.println("----------------------------\n" +
+                    "CONVIERTIENDO MENSAJE ENTRANTE A GSON:" + fermatMessage.toJson()
+                    + "\n-------------------------------------------------");
 
-            /* -------------------------------------------------------------------------------------------------
-             * This is for test and example of how to use
-             * Get the local representation of the remote network service
-             */
-            //CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
+            //JsonObject jsonObject =new JsonParser().parse(fermatMessage.getContent()).getAsJsonObject();
 
-            /*
-             * Get a remote network service registered from the list requested
-             */
-            //PlatformComponentProfile remoteNetworkServiceToConnect = remoteNetworkServicesRegisteredList.get(0);
+            ActorNetworkServiceRecord actorNetworkServiceRecord = gson.fromJson(fermatMessage.getContent(), ActorNetworkServiceRecord.class);
 
-            /**
-             * Create the message content
-             * RECOMMENDATION: the content have to be a json string
-             */
-//            String messageContent = "*********************************************************************************\n " +
-//                                    "* HELLO TEAM...  This message was sent from the device of ROBERTO REQUENA... :) *\n" +
-//                                    "*********************************************************************************";
-//
-//            /*
-//             * Send a message using the local representation
-//             */
-//            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),null, messageContent);
+            //IntraUserNotificationDescriptor intraUserNotificationDescriptor = IntraUserNotificationDescriptor.getByCode(jsonObject.get(JsonObjectConstants.MESSAGE_TYPE).getAsString());
+            switch (actorNetworkServiceRecord.getIntraUserNotificationDescriptor()){
+                case ASKFORACCEPTANCE:
+                    System.out.println("----------------------------\n" +
+                            "MENSAJE LLEGO EXITOSAMENTE:" + actorNetworkServiceRecord
+                            + "\n-------------------------------------------------");
+
+//                    String senderPublicKey = jsonObject.get(JsonObjectConstants.SENDER_PUBLIC_HEY).getAsString();
+//                    String destinationPublicKey = jsonObject.get(JsonObjectConstants.DESTINATION_PUBLIC_KEY).getAsString();
+//                    String destionationName = jsonObject.get(JsonObjectConstants.DESTINATION_NAME).getAsString();
+//                    String senderName = jsonObject.get(JsonObjectConstants.SENDER_NAME).getAsString();
+
+                    //byte[] profile_image = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString().getBytes();
+
+                    actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
+
+                    getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
+
+                    //NOTIFICATION LAUNCH
+
+                    launchIncomingRequestConnectionNotificationEvent(actorNetworkServiceRecord);
+
+                    respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
+
+
+                    break;
+                case ACCEPTED:
+                    //TODO: ver si me conviene guardarlo en el outogoing DAO o usar el incoming para las que llegan directamente
+                    actorNetworkServiceRecord.changeDescriptor(IntraUserNotificationDescriptor.ACCEPTED);
+                    actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
+                    getOutgoingNotificationDao().update(actorNetworkServiceRecord);
+
+                    actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_RECEIVE);
+
+                    getIncomingNotificationsDao().createNotification(actorNetworkServiceRecord);
+                    System.out.println("----------------------------\n" +
+                            "MENSAJE ACCEPTED LLEGÓ BIEN:" + actorNetworkServiceRecord
+                            + "\n-------------------------------------------------");
+
+
+                    respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
+
+                    break;
+
+
+                case RECEIVED:
+
+                    //launchIncomingRequestConnectionNotificationEvent(actorNetworkServiceRecord);
+
+                    getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.DELIVERY);
+
+                    // close connection, sender is the destination
+                    communicationNetworkServiceConnectionManager.closeConnection(actorNetworkServiceRecord.getActorSenderPublicKey());
+                    actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorSenderPublicKey());
+
+                    break;
+
+                default:
+
+                    break;
+
+            }
+
+        }  catch (Exception e){
+            //quiere decir que no estoy reciviendo metadata si no una respuesta
+            e.printStackTrace();
 
         }
 
+        System.out.println("---------------------------\n" +
+                "Llegaron mensajes!!!!\n" +
+                "-----------------------------------------");
+    }
+
+    // respond receive and done notification
+    private void respondReceiveAndDoneCommunication(ActorNetworkServiceRecord actorNetworkServiceRecord){
+        actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
+        actorNetworkServiceRecord.changeDescriptor(IntraUserNotificationDescriptor.RECEIVED);
+
+        changeActor(actorNetworkServiceRecord);
+
+
+        communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey())
+                .sendMessage(
+                        actorNetworkServiceRecord.getActorSenderPublicKey(),
+                        actorNetworkServiceRecord.getActorSenderAlias(),
+                        actorNetworkServiceRecord.toJson());
+    }
+
+    private void changeActor(ActorNetworkServiceRecord actorNetworkServiceRecord){
+        // change actor
+        String actorDestination = actorNetworkServiceRecord.getActorDestinationPublicKey();
+        actorNetworkServiceRecord.setActorDestinationPublicKey(actorNetworkServiceRecord.getActorSenderPublicKey());
+        actorNetworkServiceRecord.setActorSenderPublicKey(actorDestination);
+    }
+
+     private void launchIncomingRequestConnectionNotificationEvent(ActorNetworkServiceRecord actorNetworkServiceRecord) {
+        FermatEvent platformEvent = eventManager.getNewEvent(EventType.INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION);
+        IncomingActorRequestConnectionNotificationEvent incomingActorRequestConnectionNotificationEvent =  (IncomingActorRequestConnectionNotificationEvent) platformEvent;
+        incomingActorRequestConnectionNotificationEvent.setSource(EventSource.NETWORK_SERVICE_INTRA_ACTOR);
+        incomingActorRequestConnectionNotificationEvent.setActorId(actorNetworkServiceRecord.getActorSenderPublicKey());
+        incomingActorRequestConnectionNotificationEvent.setActorName(actorNetworkServiceRecord.getActorSenderAlias());
+        incomingActorRequestConnectionNotificationEvent.setActorType(Actors.INTRA_USER);
+        //incomingActorRequestConnectionNotificationEvent.setProfileImage(actorNetworkServiceRecord.getActorSenderProfileImage());
+        eventManager.raiseEvent(platformEvent);
     }
 
     /**
@@ -881,10 +932,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     /**
      * (non-Javadoc)
-     * @see NetworkService#getPlatformComponentProfile()
+     * @see NetworkService#getPlatformComponentProfilePluginRoot()
      */
-    public PlatformComponentProfile getPlatformComponentProfile() {
-        return platformComponentProfile;
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
+        return platformComponentProfilePluginRoot;
     }
 
     /**
@@ -908,10 +959,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     /**
      * Set the PlatformComponentProfile
      *
-     * @param platformComponentProfile
+     * @param platformComponentProfilePluginRoot
      */
-    public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile) {
-        this.platformComponentProfile = platformComponentProfile;
+    public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfilePluginRoot) {
+        this.platformComponentProfilePluginRoot = platformComponentProfilePluginRoot;
     }
 
     /**
@@ -962,7 +1013,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
          */
         try {
 
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfile, discoveryQueryParameters);
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfilePluginRoot, discoveryQueryParameters);
 
         } catch (CantRequestListException e) {
 
@@ -1055,15 +1106,15 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         try {
 //                if(remoteNetworkServicesRegisteredList!=null) {
 //                    byte[] image = null;
-//                        for (PlatformComponentProfile platformComponentProfile : remoteNetworkServicesRegisteredList) {
-//                            if (platformComponentProfile.getExtraData() != null) {
+//                        for (PlatformComponentProfile platformComponentProfilePluginRoot : remoteNetworkServicesRegisteredList) {
+//                            if (platformComponentProfilePluginRoot.getExtraData() != null) {
 //                                JsonObject jsonObject = new JsonObject();
-//                                jsonObject =new JsonParser().parse(platformComponentProfile.getExtraData()).getAsJsonObject();
+//                                jsonObject =new JsonParser().parse(platformComponentProfilePluginRoot.getExtraData()).getAsJsonObject();
 //                                image = jsonObject.get(JsonObjectConstants.PROFILE_IMAGE).getAsString().getBytes();
 //                            }
 //
 //
-//                            IntraUserInformation intraUser = new IntraUserNSInformation(platformComponentProfile.getAlias(), platformComponentProfile.getIdentityPublicKey(), image);
+//                            IntraUserInformation intraUser = new IntraUserNSInformation(platformComponentProfilePluginRoot.getAlias(), platformComponentProfilePluginRoot.getIdentityPublicKey(), image);
 //
 //                            lstIntraUser.add(intraUser);
 //                        }
@@ -1144,9 +1195,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToAddPublicKey, IntraUserNotificationDescriptor.ACCEPTED, ActorProtocolState.DONE);
 
-            actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToAddPublicKey);
+//            actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToAddPublicKey);
+//
+//            actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
 
-            actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
+            changeActor(actorNetworkServiceRecord);
 
             actorNetworkServiceRecord.changeDescriptor(IntraUserNotificationDescriptor.ACCEPTED);
 
@@ -1327,7 +1380,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         );
 
         try {
-            communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfile, remoteParticipant);
+            communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfilePluginRoot, remoteParticipant);
         } catch (CantEstablishConnectionException e) {
             e.printStackTrace();
         }

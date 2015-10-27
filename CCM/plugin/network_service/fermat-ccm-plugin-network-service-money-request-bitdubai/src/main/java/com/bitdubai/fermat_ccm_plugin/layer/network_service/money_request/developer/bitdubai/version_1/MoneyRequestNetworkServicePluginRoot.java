@@ -181,7 +181,7 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
     }
 
     @Override
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return null;
     }
 

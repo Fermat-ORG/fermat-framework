@@ -523,7 +523,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     // Ezequiel Postan August 15th 2015
     @Override
     public String sendBitcoins(String walletPublicKey, UUID FermatTrId, CryptoAddress addressTo, long satoshis) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
-        return vault.sendBitcoins(FermatTrId, addressTo, satoshis);
+        return vault.sendBitcoins(FermatTrId, addressTo, satoshis, null);
     }
 
     @Override

@@ -21,6 +21,8 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bit
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
+import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
 import org.bitcoinj.params.RegTestParams;
@@ -214,15 +216,22 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
 
 
             peers.setUserAgent(BitcoinManager.FERMAT_AGENT_NAME, BitcoinManager.FERMAT_AGENT_VERSION);
-            peers.setUseLocalhostPeerWhenPossible(true);
+            peers.setUseLocalhostPeerWhenPossible(false);
             /**
              * If we are using RegTest network, we will connect to local server
              */
             if (networkParameters == RegTestParams.get()) {
-                InetSocketAddress inetSocketAddress = new InetSocketAddress(REGTEST_SERVER_ADDRESS, REGTEST_SERVER_PORT);
-                PeerAddress peerAddress = new PeerAddress(inetSocketAddress);
-                peers.addAddress(peerAddress);
-                logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoNetwork information: Using RegTest. Connecting to " + inetSocketAddress.toString(), null, null);
+                InetSocketAddress inetSocketAddress1 = new InetSocketAddress(REGTEST_SERVER_1_ADDRESS, REGTEST_SERVER_1_PORT);
+                PeerAddress peerAddress1 = new PeerAddress(inetSocketAddress1);
+                peers.addAddress(peerAddress1);
+
+                InetSocketAddress inetSocketAddress2 = new InetSocketAddress(REGTEST_SERVER_2_ADDRESS, REGTEST_SERVER_2_PORT);
+                PeerAddress peerAddress2 = new PeerAddress(inetSocketAddress2);
+                peers.addAddress(peerAddress2);
+
+                InetSocketAddress inetSocketAddress3 = new InetSocketAddress(REGTEST_SERVER_3_ADDRESS, REGTEST_SERVER_3_PORT);
+                PeerAddress peerAddress3 = new PeerAddress(inetSocketAddress3);
+                peers.addAddress(peerAddress3);
             } else
             /**
              * If it is not RegTest, then I will get the Peers by DNSDiscovery
@@ -261,14 +270,27 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
             try {
                 peers.start();
                 peers.downloadBlockChain();
-                while (true){
+                //while (true){
                     //endless loop. Since bitcoinj upgrade, this is no longer running as a guava service.
                     // so we need to keep the thread active.
-                }
+               // }
             } catch (Exception exception) {
                 exception.printStackTrace();
                 throw new CantConnectToBitcoinNetwork("Couldn't connect to Bitcoin Network.", exception, "", "Error executing Agent.");
             }
         }
+    }
+
+    public void broadcastTransaction(Transaction transaction) {
+        TransactionBroadcast broadcast = peers.broadcastTransaction(transaction, 2);
+        broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
+            @Override
+            public void onBroadcastProgress(double progress) {
+                System.out.println("broadCast progress: " + progress);
+            }
+        });
+
+        broadcast.setMinConnections(1);
+        broadcast.broadcast();
     }
 }

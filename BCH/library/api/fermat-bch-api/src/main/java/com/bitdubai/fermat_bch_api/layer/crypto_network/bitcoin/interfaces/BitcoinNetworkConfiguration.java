@@ -9,8 +9,13 @@ import org.bitcoinj.params.TestNet3Params;
  */
 public interface BitcoinNetworkConfiguration {
     public static final NetworkParameters DEFAULT_NETWORK_PARAMETERS = RegTestParams.get();
-    public static final String BITCOIN_FULL_NODE_IP = "52.26.185.213";
-    public static final int  BITCOIN_FULL_NODE_PORT = 18444;
+    public static final String BITCOIN_FULL_NODE_1_IP = "52.26.185.213";
+    public static final int  BITCOIN_FULL_NODE_1_PORT = 18444;
+    public static final String BITCOIN_FULL_NODE_2_IP = "54.69.181.0";
+    public static final int  BITCOIN_FULL_NODE_2_PORT = 18444;
+    public static final String BITCOIN_FULL_NODE_3_IP = "52.26.124.137";
+    public static final int  BITCOIN_FULL_NODE_3_PORT = 18444;
+
     public static final String USER_AGENT_NAME = "Fermat Agent";
     public static final String USER_AGENT_VERSION ="2.1.0";
 }

@@ -1774,6 +1774,10 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeSideMenu = new SideMenu();
 
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("");
+        runtimeMenuItem.setIcon("picture");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
@@ -1788,26 +1792,21 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Request History");
+        runtimeMenuItem.setIcon("Request History");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+        runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Transactions");
         runtimeMenuItem.setIcon("transactions");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Payment request");
-        runtimeMenuItem.setIcon("Payment_request");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-
-       /* runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMenuItem.setIcon("Settings");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_SETTINGS);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);*/
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Exit");
+        runtimeMenuItem.setLabel("Logout");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -1890,6 +1889,10 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeSideMenu = new SideMenu();
 
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("");
+        runtimeMenuItem.setIcon("picture");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
@@ -1904,23 +1907,26 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Request History");
+        runtimeMenuItem.setIcon("Request History");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+        runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Transactions");
         runtimeMenuItem.setIcon("transactions");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Payment request");
-        runtimeMenuItem.setIcon("Payment_request");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Exit");
+        runtimeMenuItem.setLabel("Logout");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeActivity.setSideMenu(runtimeSideMenu);
+
 
         //fin navigation
 
@@ -1984,6 +1990,10 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeSideMenu = new SideMenu();
 
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("");
+        runtimeMenuItem.setIcon("picture");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
@@ -1998,19 +2008,21 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Request History");
+        runtimeMenuItem.setIcon("request");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+        runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Transactions");
         runtimeMenuItem.setIcon("transactions");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Payment request");
-        runtimeMenuItem.setIcon("Payment_request");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Exit");
+        runtimeMenuItem.setLabel("Logout");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -2060,10 +2072,14 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeSideMenu = new SideMenu();
 
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("");
+        runtimeMenuItem.setIcon("picture");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setIcon("Home");
+        runtimeMenuItem.setIcon("home");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -2074,21 +2090,22 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Request History");
+        runtimeMenuItem.setIcon("request");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+        runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Transactions");
         runtimeMenuItem.setIcon("transactions");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Payment request");
-        runtimeMenuItem.setIcon("Payment_request");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Exit");
+        runtimeMenuItem.setLabel("Logout");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeActivity.setSideMenu(runtimeSideMenu);

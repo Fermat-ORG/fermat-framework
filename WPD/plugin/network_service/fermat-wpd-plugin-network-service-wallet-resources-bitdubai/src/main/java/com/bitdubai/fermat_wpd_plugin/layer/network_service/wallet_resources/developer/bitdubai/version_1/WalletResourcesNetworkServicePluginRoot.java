@@ -287,7 +287,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     }
 
     @Override
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return null;
     }
 

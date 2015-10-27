@@ -68,8 +68,7 @@ public class IntraWalletUserNewNotificationsEventHandlers implements FermatEvent
             }
 
         }
-        else
-        {
+        else {
             throw new TransactionServiceNotStartedException();
         }
 

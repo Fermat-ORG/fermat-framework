@@ -16,7 +16,7 @@ public interface ActorAssetIssuerManager {
      *
      * @throws CantGetAssetIssuerActorsException
      */
-    ActorAssetIssuer getActorPublicKey() throws CantGetAssetIssuerActorsException;
+    ActorAssetIssuer getActorAssetIssuer() throws CantGetAssetIssuerActorsException;
 
     /**
      * The method <code>getAllAssetUserActorRegistered</code> get All Actors Registered in Actor Network Service

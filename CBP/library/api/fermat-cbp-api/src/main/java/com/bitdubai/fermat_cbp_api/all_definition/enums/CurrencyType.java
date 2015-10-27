@@ -8,7 +8,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterExc
 public enum CurrencyType {
     CRYPTO_MONEY("CRYP"),
     BANK_MONEY("BANK"),
-    CASH_MONEY("CASH");
+    CASH_ON_HAND_MONEY("CASHOH"),
+    CASH_DELIVERY_MONEY("CASHD");
 
     private String code;
 
@@ -24,7 +25,8 @@ public enum CurrencyType {
         switch (code) {
             case "CRYP": return CurrencyType.CRYPTO_MONEY;
             case "BANK": return CurrencyType.BANK_MONEY;
-            case "CASH": return CurrencyType.CASH_MONEY;
+            case "CASHOH": return CurrencyType.CASH_ON_HAND_MONEY;
+            case "CASHD": return CurrencyType.CASH_DELIVERY_MONEY;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");
         }
     }

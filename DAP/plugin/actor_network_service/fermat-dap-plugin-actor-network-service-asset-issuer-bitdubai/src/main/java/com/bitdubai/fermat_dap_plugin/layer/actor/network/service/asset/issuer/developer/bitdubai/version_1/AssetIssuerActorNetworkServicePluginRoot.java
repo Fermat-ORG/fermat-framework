@@ -344,7 +344,7 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
              */
             initializeListener();
 
-            initilizelistener2();
+            //initilizelistener2();
 
             /*
              * Verify if the communication cloud client is active
@@ -738,7 +738,7 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
     }
 
     @Override
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
 
@@ -800,7 +800,7 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
             this.register = Boolean.TRUE;
 
             /*
-             * If exist actor asset user pending to registration
+             * If exist actor asset Issuer pending to registration
              */
             if (actorAssetIssuerPendingToRegistration != null && !actorAssetIssuerPendingToRegistration.isEmpty()){
 

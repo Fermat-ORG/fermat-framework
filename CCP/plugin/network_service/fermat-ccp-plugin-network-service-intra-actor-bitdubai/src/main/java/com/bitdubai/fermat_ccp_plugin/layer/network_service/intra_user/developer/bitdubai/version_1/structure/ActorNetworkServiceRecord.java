@@ -94,7 +94,7 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
     }
 
     public void changeDescriptor(IntraUserNotificationDescriptor intraUserNotificationDescriptor){
-        intraUserNotificationDescriptor = intraUserNotificationDescriptor;
+        this.intraUserNotificationDescriptor = intraUserNotificationDescriptor;
     }
 
     public void changeState(ActorProtocolState actorProtocolState){

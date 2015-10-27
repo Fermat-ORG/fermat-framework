@@ -25,12 +25,40 @@ public interface ActorAssetUser {
     String getName();
 
     /**
+     * The method <code>getAge</code> gives us the Age of the represented Asset user
+     *
+     * @return the Location of the Asset user
+     */
+    String getAge();
+
+    /**
+     * The method <code>getGender</code> gives us the Gender of the represented Asset user
+     *
+     * @return the Gender of the Asset user
+     */
+    Genders getGender();
+
+    /**
+     * The method <code>getConnectionState</code> gives us the ConnectionState state of the represented Asset
+     * user
+     *
+     * @return the Connection state
+     */
+    ConnectionState getConnectionState();
+
+    /**
      * The method <code>getContactRegistrationDate</code> gives us the date when both Asset users
      * exchanged their information and accepted each other as contacts.
      *
      * @return the date
      */
-    long getContactRegistrationDate();
+    long getRegistrationDate();
+
+    long getLastConnectionDate();
+
+    Double getLocationLatitude();
+
+    Double getLocationLongitude();
 
     /**
      * The method <coda>getProfileImage</coda> gives us the profile image of the represented Asset user
@@ -40,35 +68,11 @@ public interface ActorAssetUser {
     byte[] getProfileImage();
 
     /**
-     * The method <code>getConnectionState</code> gives us the ConnectionState state of the represented Asset
-     * user
-     *
-     * @return the contact state
-     */
-    ConnectionState getConnectionState();
-
-    /**
      * The method <code>getLocation</code> gives us the Location of the represented Asset user
      *
      * @return the Location of the Asset user
      */
 //    Location getLocation();
-    Double getLocationLatitude();
-
-    Double getLocationLongitude();
-
-    /**
-     * The method <code>getGender</code> gives us the Gender of the represented Asset user
-     *
-     * @return the Gender of the Asset user
-     */
-    Genders getGender();
-    /**
-     * The method <code>getAge</code> gives us the Age of the represented Asset user
-     *
-     * @return the Location of the Asset user
-     */
-    String getAge();
 
     /**
      * returns the crypto address to which it belongs

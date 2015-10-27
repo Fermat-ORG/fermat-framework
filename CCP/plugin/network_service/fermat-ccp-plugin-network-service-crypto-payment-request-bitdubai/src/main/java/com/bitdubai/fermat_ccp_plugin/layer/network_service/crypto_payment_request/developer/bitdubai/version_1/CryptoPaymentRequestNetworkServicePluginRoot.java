@@ -99,9 +99,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractPlugin
         DealsWithErrors,
         DealsWithEvents,
         DealsWithPluginDatabaseSystem,
-        NetworkService,
-        Plugin,
-        Service {
+        NetworkService {
 
     @Override
     public List<AddonVersionReference> getNeededAddonReferences() {
@@ -798,7 +796,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractPlugin
         return extraData;
     }
 
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
 

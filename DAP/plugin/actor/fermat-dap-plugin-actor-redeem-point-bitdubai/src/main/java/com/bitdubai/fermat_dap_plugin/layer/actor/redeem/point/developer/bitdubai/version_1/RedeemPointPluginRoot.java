@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -32,7 +33,7 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitduba
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantInitializeRedeemPointActorDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.structure.RedeemPointActorAddress;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.structure.RedeemPointActorDao;
-import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.structure.RedeemPointActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -43,7 +44,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -231,7 +231,7 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
             for (int i = 0; i < 10; i++) {
 
 //                System.out.println("*******************************************************");
-//                System.out.println("PRUEBA DE VICTOR - REDEEM POINT: iniciando a crear el record: " + i);
+//                System.out.println("REDEEM POINT: iniciando a crear el record: " + i);
 //                System.out.println("*******************************************************");
                 String identityPublicKey = i + UUID.randomUUID().toString();
                 String publicKey = i + UUID.randomUUID().toString();
@@ -239,9 +239,9 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
                 DeviceLocation location = new DeviceLocation();
                 location.setLongitude(new Random().nextDouble());
                 location.setLatitude(new Random().nextDouble());
-                RedeemPointActorRecord record = new RedeemPointActorRecord("Thunder_RePo_User_" + i, publicKey);
+                RedeemPointActorRecord record = new RedeemPointActorRecord("RedeemP_" + i, publicKey);
                 record.setConnectionState(ConnectionState.CONNECTED);
-                record.setProfileImage(new byte[5]);
+                record.setProfileImage(new byte[0]);
                 record.setLocation(location);
                 RedeemPointActorAddress address = new RedeemPointActorAddress();
                 address.setCountryName("Venezuela");
@@ -261,7 +261,7 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
                     redeemPointActorDao.createNewRedeemPointRegisterInNetworkService(record);
                 } catch (CantAddPendingRedeemPointException e) {
                     System.out.println("*******************************************************");
-                    System.out.println("PRUEBA DE VICTOR - REDEEM POINT: Falló creando el record número: " + i);
+                    System.out.println("REDEEM POINT: Falló creando el record número: " + i);
                     e.printStackTrace();
                     System.out.println("*******************************************************");
                 }
@@ -270,7 +270,7 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
 
 //        } catch (CantInitializeRedeemPointActorDatabaseException e) {
 //            System.out.println("*******************************************************");
-//            System.out.println("PRUEBA DE VICTOR - REDEEM POINT: Falló iniciando la base de datos.: ");
+//            System.out.println("REDEEM POINT: Falló iniciando la base de datos.: ");
 //            e.printStackTrace();
 //            System.out.println("*******************************************************");
 //            throw e;
@@ -283,9 +283,15 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
      * @throws CantGetAssetRedeemPointActorsException
      */
     @Override
-    public ActorAssetRedeemPoint getActorPublicKey() throws CantGetAssetRedeemPointActorsException {
+    public ActorAssetRedeemPoint getActorAssetRedeemPoint() throws CantGetAssetRedeemPointActorsException {
 
-        return null;
+        ActorAssetRedeemPoint actorAssetRedeemPoint;
+        try {
+            actorAssetRedeemPoint = this.redeemPointActorDao.getActorAssetRedeemPoint();
+        } catch (Exception e) {
+            throw new CantGetAssetRedeemPointActorsException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
+        }
+        return actorAssetRedeemPoint;
     }
 
     /**
@@ -300,7 +306,7 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
         try {
             list = this.redeemPointActorDao.getAllAssetRedeemPointActorRegistered();
         } catch (CantGetRedeemPointsListException e) {
-            throw new CantGetAssetRedeemPointActorsException("CAN'T GET ASSET REDEEM POINT REGISTERED ACTOR", e, "", "");
+            throw new CantGetAssetRedeemPointActorsException("CAN'T GET REDEEM POINT ACTOR REGISTERED", e, "", "");
         }
         return list;
     }
@@ -312,8 +318,12 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
      */
     @Override
     public List<ActorAssetRedeemPoint> getAllRedeemPointActorConnected() throws CantGetAssetRedeemPointActorsException {
-        List<ActorAssetRedeemPoint> list = new LinkedList<>();
-
+        List<ActorAssetRedeemPoint> list; // Asset User Actor list.
+        try {
+            list = this.redeemPointActorDao.getAllAssetRedeemPointActorConnected();
+        } catch (CantGetRedeemPointsListException e) {
+            throw new CantGetAssetRedeemPointActorsException("CAN'T GET REDEEM POINT ACTOR CONNECTED ", e, "", "");
+        }
         return list;
     }
 

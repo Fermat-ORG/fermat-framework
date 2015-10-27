@@ -27,7 +27,7 @@ public abstract class AbstractPlugin implements Plugin, Service {
     private Map<PluginVersionReference, AbstractPlugin> plugins;
 
     private final PluginVersionReference pluginVersionReference;
-    private       ServiceStatus          serviceStatus;
+    protected        ServiceStatus          serviceStatus;
 
     /**
      * Default constructor assigning version 1.

@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_api.layer.all_definition.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
@@ -18,7 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * @version 1.0
  * @since Java JDK 1.7
  */
-public enum PlatformLayers {
+public enum PlatformLayers implements FermatEnum {
 
     /**
      * Definitions types
@@ -49,8 +50,6 @@ public enum PlatformLayers {
     BITDUBAI_PIP_MODULE_LAYER("BPIPML", Developers.BITDUBAI),
     BITDUBAI_REQUEST_LAYER("BRL", Developers.BITDUBAI),
     BITDUBAI_PIP_NETWORK_SERVICE_LAYER("BPIPNSL", Developers.BITDUBAI),
-//    BITDUBAI_DIGITAL_ASSET_TRANSACTION("BDAT", Developers.BITDUBAI),//DAP_TRANSACTION_LAYER
-//    BITDUBAI_DIGITAL_ASSET_FACTORY("BDAF", Developers.BITDUBAI),//DAP_MIDDLEWARE_LAYER
     BITDUBAI_ENGINE_LAYER("BEL",Developers.BITDUBAI),
 
     // Init CCP Layers
@@ -230,7 +229,7 @@ public enum PlatformLayers {
             // End  WPD Layers
 
             //Init CBP Layers
-            case "BCBPIL": return BITDUBAI_CBP_IDENTITY_LAYER;
+            case "BCBPIL":   return BITDUBAI_CBP_IDENTITY_LAYER;
             case "BCBPSAML": return BITDUBAI_CBP_SUB_APP_MODULE_LAYER;
             //End CBP Layers
 

@@ -412,7 +412,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     }
 
     @Override
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return null;
     }
 

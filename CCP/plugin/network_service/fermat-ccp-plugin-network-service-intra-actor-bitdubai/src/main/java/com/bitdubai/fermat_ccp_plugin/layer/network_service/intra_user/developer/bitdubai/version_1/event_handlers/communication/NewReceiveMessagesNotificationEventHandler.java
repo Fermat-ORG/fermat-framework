@@ -3,51 +3,37 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecordedAgent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.AbstractCommunicationBaseEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 
 /**
  * Created by mati on 2015.10.09..
  */
-public class NewReceiveMessagesNotificationEventHandler implements FermatEventHandler {
-
-
-    private final ActorNetworkServiceRecordedAgent actorNetworkServiceRecordedAgent;
+public class NewReceiveMessagesNotificationEventHandler extends AbstractCommunicationBaseEventHandler<NewNetworkServiceMessageReceivedNotificationEvent> {
 
     /**
      * Constructor with parameter
      *
      * @param
      */
-    public NewReceiveMessagesNotificationEventHandler(ActorNetworkServiceRecordedAgent actorNetworkServiceRecordedAgent) {
-        this.actorNetworkServiceRecordedAgent = actorNetworkServiceRecordedAgent;
+    public NewReceiveMessagesNotificationEventHandler(IntraActorNetworkServicePluginRoot intraActorNetworkServicePluginRoot) {
+        super(intraActorNetworkServicePluginRoot);
     }
 
-    /**
-     * (non-Javadoc)
-     *
-     * @see FermatEventHandler#handleEvent(FermatEvent)
-     *
-     * @param platformEvent
-     * @throws Exception
-     */
-    @Override
-    public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent.toString());
+    @Override
+    public void processEvent(NewNetworkServiceMessageReceivedNotificationEvent event) {
+
+        System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + event.toString());
 
         System.out.print("NOTIFICACION EVENTO LLEGADA MENSAJE A INTRA ACTOR NETWORK SERVICE!!!!");
 
+        NewNetworkServiceMessageReceivedNotificationEvent newNetworkServiceMessageSentNotificationEvent = (NewNetworkServiceMessageReceivedNotificationEvent) event;
 
-        if (this.actorNetworkServiceRecordedAgent.isRunning()) {
-
-            NewNetworkServiceMessageReceivedNotificationEvent newNetworkServiceMessageSentNotificationEvent = (NewNetworkServiceMessageReceivedNotificationEvent) platformEvent;
-
-            actorNetworkServiceRecordedAgent.handleNewMessages((FermatMessage)newNetworkServiceMessageSentNotificationEvent.getData());
-
-
-        }
+        ((IntraActorNetworkServicePluginRoot)networkService).handleNewMessages((FermatMessage) newNetworkServiceMessageSentNotificationEvent.getData());
     }
 
 }

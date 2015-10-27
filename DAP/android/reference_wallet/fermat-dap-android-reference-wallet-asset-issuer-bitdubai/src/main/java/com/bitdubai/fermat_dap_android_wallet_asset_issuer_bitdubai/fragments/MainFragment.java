@@ -150,6 +150,8 @@ public class MainFragment extends FermatWalletFragment
 //                            asset.getWalletPublicKey(),
 //                            asset.getActorAssetUser()
 //                    );
+                    //TODO: Solo para la prueba del Distribution
+                    manager.distributionAssets(null, null, null);
                     return true;
                 }
             };

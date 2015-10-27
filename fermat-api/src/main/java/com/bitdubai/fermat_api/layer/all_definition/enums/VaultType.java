@@ -1,12 +1,13 @@
 package com.bitdubai.fermat_api.layer.all_definition.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Enums the types of vault in Fermat.
  * Created by Leon Acosta (laion.cj91@gmail.com) on 15/09/2015.
  */
-public enum VaultType {
+public enum VaultType implements FermatEnum {
 
     ASSET_VAULT("ASVA"),
     CRYPTO_CURRENCY_VAULT("CCVA");

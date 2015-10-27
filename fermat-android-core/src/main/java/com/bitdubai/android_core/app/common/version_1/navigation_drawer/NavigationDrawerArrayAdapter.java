@@ -105,7 +105,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
             else {
                 LayoutInflater inflater = (LayoutInflater) context
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
+               // rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
 
 
                 //test mati
@@ -122,6 +122,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 */
                 ImageView imageView = null;
                 imageView = (ImageView) rowView.findViewById(R.id.icon);
+
                 if(rowView.findViewById(R.id.label) != null)
                 {
                     TextView textView = (TextView) rowView.findViewById(R.id.label);
@@ -132,35 +133,30 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
 
                 //if (ApplicationSession.getActivityId() == "DesktopActivity") {
-
                 switch (position) {
                     case 1:
-                        imageView.setImageResource(R.drawable.ic_action_store);
+                        imageView.setImageResource(R.drawable.btn_drawer_home_active);
                         break;
                     case 2:
-                        imageView.setImageResource(R.drawable.ic_action_wallet);
+                        imageView.setImageResource(R.drawable.btn_drawer_profile_normal);
                         break;
                     case 3:
-                        imageView.setImageResource(R.drawable.ic_action_factory);
-                        break;
-                    case 4:
-                        imageView.setImageResource(R.drawable.ic_action_exit);
-
-                        break;
-                    case 5:
                         imageView.setImageResource(R.drawable.ic_action_wallet);
                         break;
-
-                    case 6:
-                        imageView.setImageResource(R.drawable.ic_action_wallet_published);
+                    case 4:
+                        imageView.setImageResource(R.drawable.ic_action_factory);
                         break;
+                    case 5:
+                        imageView.setImageResource(R.drawable.btn_drawer_logout_normal);
+
+                        break;
+
                     default:
                         imageView.setImageResource(R.drawable.unknown_icon);
                 }
 
-
-
             }
+
 
             //}
         }

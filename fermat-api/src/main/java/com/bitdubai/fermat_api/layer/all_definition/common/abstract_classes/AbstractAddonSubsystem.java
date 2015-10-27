@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegist
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPluginDeveloperException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.DeveloperNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddonsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
 

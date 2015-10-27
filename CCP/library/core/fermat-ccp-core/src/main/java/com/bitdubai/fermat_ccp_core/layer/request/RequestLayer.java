@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegist
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_ccp_core.layer.request.crypto_payment.CryptoPaymentPluginSubsystem;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.CCPPlugins;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 01/10/2015.

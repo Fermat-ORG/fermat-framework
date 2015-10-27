@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetIssuerWalletTransactionRecordWrapper;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.DigitalAssetVault;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetVault;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
@@ -20,7 +20,7 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/10/15.
  */
-public class DigitalAssetDistributionVault extends DigitalAssetVault {
+public class DigitalAssetDistributionVault extends AbstractDigitalAssetVault {
 
     ErrorManager errorManager;
     //private final String LOCAL_STORAGE_PATH="digital-asset-transmission/";
@@ -42,7 +42,7 @@ public class DigitalAssetDistributionVault extends DigitalAssetVault {
         this.errorManager=errorManager;
     }
 
-    public void setDigitalAssetMetadataCredit(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterDebitException {
+    public void setDigitalAssetMetadataDebit(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterDebitException {
         AssetIssuerWallet assetIssuerWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
         AssetIssuerWalletBalance assetIssuerWalletBalance= assetIssuerWallet.getBookBalance(balanceType);
         AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper=new AssetIssuerWalletTransactionRecordWrapper(
@@ -51,6 +51,16 @@ public class DigitalAssetDistributionVault extends DigitalAssetVault {
                 "testActorFromPublicKey",
                 "testActorToPublicKey"
         );
+        System.out.println("ASSET DISTRIBUTION AssetIssuerWalletTransactionRecordWrapper:"+assetIssuerWalletTransactionRecordWrapper.getDescription());
+        System.out.println("ASSET DISTRIBUTION Balance Type:"+balanceType);
+        //I'm gonna mock a credit in Asset issuer wallet for testing, TODO: delete this lines in advanced testing
+        try {
+            assetIssuerWalletBalance.credit(assetIssuerWalletTransactionRecordWrapper, BalanceType.BOOK);
+            assetIssuerWalletBalance.credit(assetIssuerWalletTransactionRecordWrapper, BalanceType.AVAILABLE);
+        } catch (CantRegisterCreditException e) {
+            e.printStackTrace();
+        }
+        //End mock
         assetIssuerWalletBalance.debit(assetIssuerWalletTransactionRecordWrapper, balanceType);
     }
 

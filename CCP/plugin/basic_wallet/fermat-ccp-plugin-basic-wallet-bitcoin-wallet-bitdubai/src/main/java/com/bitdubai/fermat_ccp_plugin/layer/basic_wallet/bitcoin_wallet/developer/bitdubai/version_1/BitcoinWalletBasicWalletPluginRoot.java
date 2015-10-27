@@ -57,7 +57,12 @@ import java.util.UUID;
  * Created by loui on 30/04/15.
  * Modified by Leon Acosta - (laion.cj91@gmail.com) on 18/09/15.
  */
-public class BitcoinWalletBasicWalletPluginRoot extends AbstractPlugin implements BitcoinWalletManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Service, Plugin {
+public class BitcoinWalletBasicWalletPluginRoot extends AbstractPlugin implements
+        BitcoinWalletManager,
+        DatabaseManagerForDevelopers,
+        DealsWithErrors,
+        DealsWithPluginDatabaseSystem,
+        DealsWithPluginFileSystem {
 
     @Override
     public List<AddonVersionReference> getNeededAddonReferences() {
