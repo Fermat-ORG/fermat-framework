@@ -396,6 +396,12 @@ public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, 
                 System.out.println("-------------------------------------------------------------------------");
             }
             ActorAssetUser actorAssetUser = new ActorAssetUser() {
+
+                @Override
+                public String getPublicLinkedIdentity() {
+                    return "publicLinkedKeyActor";
+                }
+
                 @Override
                 public String getPublicKey() {
                     return "publicKeyActor";
@@ -442,7 +448,7 @@ public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, 
 //                }
 
                 @Override
-                public Genders getGender() {
+                public Genders getGenders() {
                     return null;
                 }
 

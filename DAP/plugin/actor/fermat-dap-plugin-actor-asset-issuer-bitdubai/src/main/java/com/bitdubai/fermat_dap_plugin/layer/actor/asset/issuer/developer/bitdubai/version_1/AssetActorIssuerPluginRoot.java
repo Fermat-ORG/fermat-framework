@@ -315,16 +315,6 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
         }
     }
 
-
-//        } catch (CantInitializeAssetIssuerActorDatabaseException e) {
-//            System.out.println("*******************************************************");
-//            System.out.println("ASSET ISSUER: Falló iniciando la base de datos.: ");
-//            e.printStackTrace();
-//            System.out.println("*******************************************************");
-//            throw e;
-//        }
-//    }
-
     /**
      * The method <code>getActorPublicKey</code> get All Information about Actor
      *
