@@ -13,5 +13,7 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager {
 
     List<ActorAssetUser> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException;
 
+    void connectToActorAssetUser(ActorAssetUser actorAssetUser);
+
 //    List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointRegistered() throws CantGetAssetRedeemPointActorsException;
 }

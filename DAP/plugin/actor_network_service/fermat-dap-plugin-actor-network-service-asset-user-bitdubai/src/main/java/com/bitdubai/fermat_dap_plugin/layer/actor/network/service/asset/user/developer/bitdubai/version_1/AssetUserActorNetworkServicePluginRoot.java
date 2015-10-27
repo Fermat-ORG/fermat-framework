@@ -668,7 +668,7 @@ public class AssetUserActorNetworkServicePluginRoot implements  AssetUserActorNe
 
                 for (PlatformComponentProfile p : platformComponentProfileRegisteredListRemote) {
 
-                    Location loca = null;
+                    Location loca = p.getLocation();
 
                     ActorAssetUser actorAssetUserNew = new AssetUserActorRecord(p.getIdentityPublicKey(), p.getName(), convertoByteArrayfromString(p.getExtraData()), loca);
 
