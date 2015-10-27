@@ -10,7 +10,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_ccm_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.IntraWalletUserActorPluginRoot;
 import com.bitdubai.fermat_ccm_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantProcessNotificationsExceptions;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 /**
  * Created by natalia on 16/10/15.

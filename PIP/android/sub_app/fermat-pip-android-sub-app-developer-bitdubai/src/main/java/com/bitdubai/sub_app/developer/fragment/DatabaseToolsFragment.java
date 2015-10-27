@@ -1,6 +1,5 @@
 package com.bitdubai.sub_app.developer.fragment;
 
-import android.app.Fragment;
 import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -21,13 +20,12 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetDataBaseToolException;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DatabaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;

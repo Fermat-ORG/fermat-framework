@@ -14,17 +14,17 @@ import java.util.UUID;
  */
 public class CryptoMoneyStockReplenishmentBusinessTransactionImpl implements BusinessTransaction, CryptoMoneyStockReplenishment{
 
-    private UUID transactionId;
-    private KeyPair keyPairBroker;
-    private CurrencyType merchandiseCurrency;
-    private float merchandiseAmount;
-    private UUID executionTransactionId;
-    private CryptoCurrencyType cryptoCurrencyType;
-    private BusinessTransactionStatus transactionStatus;
+    private final UUID transactionId;
+    private final  String brokerPublicKey;
+    private final  CurrencyType merchandiseCurrency;
+    private final  float merchandiseAmount;
+    private final  UUID executionTransactionId;
+    private final  CryptoCurrencyType cryptoCurrencyType;
+    private final  BusinessTransactionStatus transactionStatus;
 
     public CryptoMoneyStockReplenishmentBusinessTransactionImpl(
             UUID transactionId,
-            KeyPair keyPairBroker,
+            String brokerPublicKey,
             CurrencyType merchandiseCurrency,
             float merchandiseAmount,
             UUID executionTransactionId,
@@ -32,7 +32,7 @@ public class CryptoMoneyStockReplenishmentBusinessTransactionImpl implements Bus
             BusinessTransactionStatus transactionStatus
     ){
         this.transactionId = transactionId;
-        this.keyPairBroker = keyPairBroker;
+        this.brokerPublicKey = brokerPublicKey;
         this.merchandiseCurrency = merchandiseCurrency;
         this.merchandiseAmount = merchandiseAmount;
         this.executionTransactionId = executionTransactionId;
@@ -42,30 +42,24 @@ public class CryptoMoneyStockReplenishmentBusinessTransactionImpl implements Bus
 
     @Override
     public UUID getTransactionId(){ return this.transactionId; }
-    public void setIdTransaction(UUID id) { this.transactionId = id; }
 
     @Override
-    public String getPublicKeyBroker(){ return this.keyPairBroker.getPublicKey(); }
-    public  void setPublicKeyBroker(String publicKey){ this.keyPairBroker = keyPairBroker; }
+    public String getPublicKeyBroker(){ return this.brokerPublicKey; }
 
     @Override
     public CurrencyType getMerchandiseCurrency(){ return this.merchandiseCurrency; }
-    public void setMerchandiseCurrency(CurrencyType merchandise){ this.merchandiseCurrency = merchandise; }
 
     @Override
     public float getMerchandiseAmount(){ return this.merchandiseAmount; }
-    public void setMerchandiseAmount(float amount){ this.merchandiseAmount = amount; }
+
 
     @Override
     public UUID getExecutionTransactionId(){ return this.executionTransactionId; }
-    public void setExecutionTransactionId(UUID execution){ this.executionTransactionId = execution; }
 
     @Override
     public CryptoCurrencyType getCryptoCurrencyType(){ return this.cryptoCurrencyType; }
-    public void setCryptoCurrencyType(CryptoCurrencyType currency){ this.cryptoCurrencyType = currency; }
 
     @Override
     public BusinessTransactionStatus getStatus(){ return this.transactionStatus; }
-    public void setStatus(BusinessTransactionStatus status){ this.transactionStatus = status; }
 
 }
