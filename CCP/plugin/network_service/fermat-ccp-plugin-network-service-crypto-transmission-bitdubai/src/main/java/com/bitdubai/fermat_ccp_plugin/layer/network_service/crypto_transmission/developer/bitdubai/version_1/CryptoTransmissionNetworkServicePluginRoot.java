@@ -112,7 +112,16 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin implements CryptoTransmissionNetworkServiceManager, Service, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, DatabaseManagerForDevelopers {
+public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin implements
+        CryptoTransmissionNetworkServiceManager,
+        NetworkService,
+        DealsWithWsCommunicationsCloudClientManager,
+        DealsWithPluginDatabaseSystem,
+        DealsWithEvents,
+        DealsWithErrors,
+        DealsWithLogger,
+        LogManagerForDevelopers,
+        DatabaseManagerForDevelopers {
 
     @Override
     public List<AddonVersionReference> getNeededAddonReferences() {

@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.DeveloperBitDubai;
 
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.DeveloperBitDubai;
@@ -10,9 +11,11 @@ import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+*/
 /**
  * Created by natalia on 24/08/15.
- */
+ *//*
+
 public class DeveloperBitDubaiTest extends TestCase {
 
     DeveloperBitDubai developTest;
@@ -27,3 +30,4 @@ public class DeveloperBitDubaiTest extends TestCase {
         assertThat(developTest.getFirstPluginVersion()).isInstanceOf(IntraWalletUserActorPluginRoot.class);
     }
 }
+*/

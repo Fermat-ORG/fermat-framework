@@ -3,7 +3,7 @@ package com.bitdubai.fermat_ccp_core.layer.transaction.outgoing_extra_user;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.CCPPlugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.DeveloperBitDubai;
 
 /**
@@ -15,7 +15,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_extra_user.deve
 public class OutgoingExtraUserPluginSubsystem extends AbstractPluginSubsystem {
 
     public OutgoingExtraUserPluginSubsystem() {
-        super(new PluginReference(CCPPlugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION));
+        super(new PluginReference(Plugins.OUTGOING_EXTRA_USER));
     }
 
     @Override

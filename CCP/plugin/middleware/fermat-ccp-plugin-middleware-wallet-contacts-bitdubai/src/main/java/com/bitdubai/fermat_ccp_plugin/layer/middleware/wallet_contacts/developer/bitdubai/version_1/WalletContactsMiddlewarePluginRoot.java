@@ -19,9 +19,13 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactRegistryException;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsManager;
@@ -75,8 +79,6 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
                    DealsWithPluginDatabaseSystem         ,
                    DealsWithLogger                       ,
                    LogManagerForDevelopers               ,
-                   Plugin                                ,
-                   Service                               ,
                    WalletContactsManager                 {
 
     @Override
@@ -86,9 +88,12 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
 
     @Override
     public List<PluginVersionReference> getNeededPluginReferences() {
-        return new ArrayList<>();
-    }
+        List<PluginVersionReference> rList = new ArrayList<>();
 
+        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_ADDRESSES, Developers.BITDUBAI, new Version()));
+
+        return rList;
+    }
     @Override
     public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
         return new ArrayList<>();

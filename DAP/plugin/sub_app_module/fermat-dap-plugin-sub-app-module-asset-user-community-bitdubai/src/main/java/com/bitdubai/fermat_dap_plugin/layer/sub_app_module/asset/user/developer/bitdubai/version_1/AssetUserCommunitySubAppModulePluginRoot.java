@@ -13,7 +13,10 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
@@ -124,6 +127,7 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
 
     @Override
     public List<ActorAssetUser> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException {
+
         List<ActorAssetUser> actorAssetList = new ArrayList<>();
 
 //        Location location = new DeviceLocation(00.00, 00.00, 12345678910L, 00.00, LocationProvider.NETWORK);
@@ -135,11 +139,26 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
 
         try {
             actorAssetList = actorAssetUserManager.getAllAssetUserActorRegistered();
+
+            if(actorAssetList.size() == 0){
+                /**
+                 * Test para crear y registrar el asset usser en la nube.
+                 */
+                try {
+                    actorAssetUserManager.createAndRegisterActorAssetUserTest();
+                } catch (CantCreateAssetUserActorException e) {
+                    e.printStackTrace();
+                }
+            }
+
         } catch (CantAssetUserActorNotFoundException e) {
             e.printStackTrace();
         }
         return actorAssetList;
     }
 
-
+    @Override
+    public void connectToActorAssetUser(ActorAssetIssuer requester, ActorAssetUser actorAssetUser) throws CantConnectToAssetUserException{
+        //todo implement: llamar al connectoToActorAssetUser del Actor Asset User
+    }
 }
