@@ -1,0 +1,9 @@
+https://www.websequencediagrams.com
+
+title BEGUN_WALLET_INSTALLATION Event
+
+????????-> Event Manager:Raise Event.
+
+Event Manager ->WalletStorePluginRoot:Listen To BEGUN_WALLET_INSTALLATION Event.
+
+note right of WalletStorePluginRoot:

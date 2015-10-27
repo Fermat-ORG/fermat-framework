@@ -1,0 +1,9 @@
+https://www.websequencediagrams.com
+
+title WALLET_UNINSTALLED Event
+
+????????-> Event Manager:Raise Event.
+
+Event Manager ->WalletStorePluginRoot:Listen To Event.
+
+note right of WalletStorePluginRoot:
