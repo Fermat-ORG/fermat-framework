@@ -38,7 +38,9 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.Dea
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -585,7 +587,19 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         }
     }
 
-//
+    @Override
+    public void connectToActorAssetUser(ActorAssetIssuer requester, ActorAssetUser actorAssetUser) throws CantConnectToAssetUserException {
+        //todo implementar. Llamar al requestCryptoAddress del AssetUserActorNetworkServiceManager. Debemos estar escuchando a
+        //evento del sendCryptoAddress del network service que nos va a enviar la crypto address solicitada y se debe guardar en la base de datos.
+
+
+        //ademas, debemos al iniciar el plugin del actor, debemos escuchar al evento del requestCryptoAddress del network service, para cuando
+        //alguien nos pida la dirección, y llamar a los metodos de getGenesisAddress y registrarla en el address book. para luego enviar
+        // la direccion a traves del sendCryptoAddress del network service.
+    }
+
+
+    //
 //    /**
 //     * Procces the list o f notifications from Intra User Network Services
 //     * And update intra user actor contact state

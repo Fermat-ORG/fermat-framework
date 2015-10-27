@@ -13,7 +13,9 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -156,7 +158,7 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
     }
 
     @Override
-    public void connectToActorAssetUser(ActorAssetUser actorAssetUser) {
-
+    public void connectToActorAssetUser(ActorAssetIssuer requester, ActorAssetUser actorAssetUser) throws CantConnectToAssetUserException{
+        //todo implement: llamar al connectoToActorAssetUser del Actor Asset User
     }
 }
