@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer.pip_platform_service.location_subsystem;
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.CantStartSubsystemException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.PlatformServiceSubsystem;
-import com.bitdubai.fermat_pip_addon.layer.platform_service.location_subsystem.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.DeveloperBitDubaiOld;
 
 /**
  * Created by loui on 28/04/15.
@@ -33,7 +33,7 @@ public class LocationSubsystemSubsystem implements PlatformServiceSubsystem {
          */
 
         try {
-            DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
+            DeveloperBitDubaiOld developerBitDubai = new DeveloperBitDubaiOld();
             addon = developerBitDubai.getAddon();
         }
         catch (Exception e)
