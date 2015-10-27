@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
@@ -52,7 +53,6 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
     PluginDatabaseSystem pluginDatabaseSystem;
     AssetFactoryMiddlewareManager assetFactoryMiddlewareManager;
     AssetIssuingManager assetIssuingManager;
-    AssetFactoryMiddlewareDao assetFactoryMiddlewareDao;
     UUID pluginId;
     /**
      * DealsWithPluginFileSystem Interface member variables.
@@ -65,7 +65,6 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
                                               AssetFactoryMiddlewareManager assetFactoryMiddlewareManager,
                                               AssetIssuingManager assetIssuingManager,
                                               UUID pluginId,
-                                              AssetFactoryMiddlewareDao assetFactoryMiddlewareDao,
                                               PluginFileSystem pluginFileSystem) throws CantSetObjectException {
         this.eventManager= eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -73,7 +72,6 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
         setAssetFactoryMiddlewareManager(assetFactoryMiddlewareManager);
         setAssetIssuingManager(assetIssuingManager);
         this.pluginId = pluginId;
-        this.assetFactoryMiddlewareDao = assetFactoryMiddlewareDao;
         this.pluginFileSystem = pluginFileSystem;
 
     }
@@ -153,9 +151,8 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
 
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
-        public final int SLEEP_TIME = /*AssetIssuingTransactionNotificationAgent.AGENT_SLEEP_TIME*/5000;
+        public final int SLEEP_TIME = 5000;
         int iterationNumber = 0;
-        AssetFactoryMiddlewareDao assetFactoryMiddlewareDao;
         boolean threadWorking;
         @Override
         public void setErrorManager(ErrorManager errorManager) {
@@ -169,7 +166,7 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
         @Override
         public void run() {
             threadWorking = true;
-            logManager.log(AssetFactoryMiddlewarePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuing Transaction Protocol Notification Agent: running...", null, null);
+            logManager.log(AssetFactoryMiddlewarePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Factory Agent: running...", null, null);
             while(threadWorking){
                 /**
                  * Increase the iteration counter
@@ -197,42 +194,27 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
         }
 
         private void doTheMainTask(){
-            //TODO: Implementar ese metodo que tendra toda la logica que tendra el Agente
             try
             {
                 List<AssetFactory> assetFactories = getAssetFactoryAll();
 
-                int assetFactoryQuantity = 10;
-                int numberOfIssuedAssets = assetIssuingManager.getNumberOfIssuedAssets("");
-                int totalFaltante = assetFactoryQuantity - numberOfIssuedAssets;
-                if (totalFaltante == 10){
-                    logManager.log(AssetFactoryMiddlewarePluginRoot.getLogLevelByClass(this.getClass().getName()), "Faltante Assets Factory " + totalFaltante, null, null);
+                for(AssetFactory assetFactory : assetFactories){
+                    int numberOfIssuedAssets = assetIssuingManager.getNumberOfIssuedAssets(assetFactory.getPublicKey());
+                    int totalFaltante = assetFactory.getQuantity() - numberOfIssuedAssets;
+                    if (totalFaltante == 0){
+                        assetFactoryMiddlewareManager.markAssetFactoryState(State.FINAL, assetFactory.getPublicKey());
+                        logManager.log(AssetFactoryMiddlewarePluginRoot.getLogLevelByClass(this.getClass().getName()), "Faltante Assets Factory " + totalFaltante, null, null);
+                    }
                 }
             }
             catch (Exception exception){
-
+                exception.printStackTrace();
             }
-
-
         }
 
-        //TODO: Eliminarlo e implemetarlo del manager
         private List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException
         {
-            assetFactoryMiddlewareDao = new AssetFactoryMiddlewareDao(pluginDatabaseSystem, pluginId);
-
-            // I define the filter to null for all
-            DatabaseTableFilter filter = null;
-
-            List<AssetFactory> assetFactories;
-            try {
-                assetFactories = assetFactoryMiddlewareDao.getAssetFactoryList(filter);
-                return assetFactories;
-            }
-            catch (DatabaseOperationException | InvalidParameterException  e)
-            {
-                throw new CantGetAssetFactoryException("Asset Factory", e, "Method: getAssetFactoryAll", "");
-            }
+            return assetFactoryMiddlewareManager.getAssetFactoryAll();
         }
 
         public void Initialize() throws CantInitializeAssetMonitorAgentException {

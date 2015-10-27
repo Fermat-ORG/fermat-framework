@@ -145,7 +145,6 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
                 errorManager,
                 assetFactoryMiddlewareManager,
                 assetIssuingManager, pluginId,
-                assetFactoryMiddlewareDao,
                 pluginFileSystem);
 
             assetFactoryMiddlewareMonitorAgent.start();
