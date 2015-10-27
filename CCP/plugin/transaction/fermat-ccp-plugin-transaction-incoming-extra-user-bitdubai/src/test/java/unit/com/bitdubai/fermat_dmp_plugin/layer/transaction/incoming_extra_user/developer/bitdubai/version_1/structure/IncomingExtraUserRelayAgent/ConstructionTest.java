@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRelayAgent;
 
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
@@ -14,9 +15,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+*/
 /**
  * Created by jorgegonzalez on 2015.07.02..
- */
+ *//*
+
 @RunWith(MockitoJUnitRunner.class)
 public class ConstructionTest {
 
@@ -39,3 +42,4 @@ public class ConstructionTest {
         assertThat(testRelayAgent).isNotNull();
     }
 }
+*/

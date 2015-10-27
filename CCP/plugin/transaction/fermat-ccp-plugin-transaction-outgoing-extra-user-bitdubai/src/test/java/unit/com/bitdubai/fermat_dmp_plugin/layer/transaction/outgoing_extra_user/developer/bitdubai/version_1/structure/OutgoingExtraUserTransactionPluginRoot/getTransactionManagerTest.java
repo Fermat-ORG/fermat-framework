@@ -1,8 +1,11 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.structure.OutgoingExtraUserTransactionPluginRoot;
 
+*/
 /**
  * Created by natalia on 10/07/15.
- */
+ *//*
+
 
 import org.junit.Before;
 import org.mockito.Mock;
@@ -63,3 +66,4 @@ public class getTransactionManagerTest {
 
     }
 }
+*/

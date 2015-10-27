@@ -1,10 +1,9 @@
-package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
+package com.bitdubai.fermat_core;
 
-import com.bitdubai.fermat_api.PluginNotRecognizedException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetPluginIdException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPluginIdsManagerException;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -20,27 +19,35 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
- * The abstract class <code>com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginIdsManager</code> haves all the main functionality
+ * The abstract class <code>com.bitdubai.fermat_core.FermatPluginIdsManager</code> haves all the main functionality
  * to manage fermat plugins ids.
  *
  * Created by Leon Acosta (laion.cj01@gmail.com) on 20/10/2015.
  */
-public abstract class AbstractPluginIdsManager {
+public class FermatPluginIdsManager {
 
-    private final String PLUGIN_IDS_DIRECTORY_NAME = DeviceDirectory.SYSTEM.getName() + "/" + getPlatform().getCode();
+    private final String PLUGIN_IDS_DIRECTORY_NAME = DeviceDirectory.SYSTEM.getName();
 
     private final String PLUGIN_IDS_FILE_NAME = "plugin_ids";
+
 
     private final String PAIR_SEPARATOR   = ";";
     private final String PLUGIN_SEPARATOR = "|";
 
     private final PlatformFileSystem platformFileSystem;
 
-    private Map<FermatPluginsEnum, UUID> pluginIdsMap = new HashMap<>();
+    private final Map<PluginVersionReference, UUID> pluginIdsMap;
 
-    protected AbstractPluginIdsManager(final PlatformFileSystem platformFileSystem) throws CantStartPluginIdsManagerException {
+    protected FermatPluginIdsManager(final PlatformFileSystem platformFileSystem) throws CantStartPluginIdsManagerException {
 
         this.platformFileSystem = platformFileSystem;
+        this.pluginIdsMap       = new HashMap<>();
+
+        chargeOrCreateSavedIds();
+    }
+
+    private void chargeOrCreateSavedIds() throws CantStartPluginIdsManagerException {
+
         try {
             try {
                 String[] stringPluginIdPairs = getPluginIdsFile().getContent().split(Pattern.quote(PLUGIN_SEPARATOR));
@@ -55,7 +62,7 @@ public abstract class AbstractPluginIdsManager {
                         try {
 
                             pluginIdsMap.put(
-                                    getPluginByKey(pluginIdPair[0]),
+                                    PluginVersionReference.getByKey(pluginIdPair[0]),
                                     UUID.fromString(pluginIdPair[1])
                             );
                         } catch (InvalidParameterException e) {
@@ -70,37 +77,35 @@ public abstract class AbstractPluginIdsManager {
             } catch(final CantCreateFileException  |
                           CantPersistFileException e) {
 
-                throw new CantStartPluginIdsManagerException(e, "platform: "+getPlatform(), "Problem with plugins id file.");
+                throw new CantStartPluginIdsManagerException(e, "", "Problem with plugins id file.");
             }
         } catch (final FileNotFoundException fileNotFoundException) {
 
             try {
                 PlatformTextFile platformTextFile = platformFileSystem.createFile(PLUGIN_IDS_DIRECTORY_NAME, PLUGIN_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
-                for (FermatPluginsEnum plugin : getAllPlugins())
-                    pluginIdsMap.put(plugin, UUID.randomUUID());
-
                 savePluginIdsFile(platformTextFile);
 
             } catch (final CantCreateFileException  |
                            CantPersistFileException e) {
 
-                throw new CantStartPluginIdsManagerException(e, "platform: "+getPlatform(), "Problem with plugins id file.");
+                throw new CantStartPluginIdsManagerException(e, "", "Problem with plugins id file.");
             }
         }
+
     }
 
     /**
      * returns the id of the desired plugin.
      * if it doesn't exists, creates a new one and saves it in the plugins id file.
      *
-     * @param plugin descriptor of the plugin of which you want to have the id.
+     * @param plugin reference of the plugin of which you want to have the id.
      *
      * @return the id of the plugin
      *
-     * @throws PluginNotRecognizedException if something goes wrong.
+     * @throws CantGetPluginIdException if something goes wrong.
      */
-    public final UUID getPluginId(final FermatPluginsEnum plugin) throws PluginNotRecognizedException {
+    public final UUID getPluginId(final PluginVersionReference plugin) throws CantGetPluginIdException {
 
         UUID pluginId = pluginIdsMap.get(plugin);
 
@@ -110,7 +115,7 @@ public abstract class AbstractPluginIdsManager {
             return registerNewPlugin(plugin);
     }
 
-    private UUID registerNewPlugin(final FermatPluginsEnum plugin) throws PluginNotRecognizedException {
+    private UUID registerNewPlugin(final PluginVersionReference plugin) throws CantGetPluginIdException {
 
         try {
 
@@ -123,8 +128,8 @@ public abstract class AbstractPluginIdsManager {
                       CantCreateFileException  |
                       FileNotFoundException    e) {
 
-            throw new PluginNotRecognizedException(
-                    "Plugin Descriptor: " + plugin.getCode(),
+            throw new CantGetPluginIdException(
+                    plugin.toString(),
                     "There is a problem with the plugins id file."
             );
         }
@@ -145,17 +150,11 @@ public abstract class AbstractPluginIdsManager {
                                                                                    CantPersistFileException {
 
         String fileContent = "";
-        for (Map.Entry<FermatPluginsEnum, UUID> plugin : pluginIdsMap.entrySet())
-            fileContent = fileContent + plugin.getKey().getCode() + PAIR_SEPARATOR + plugin.getValue() + PLUGIN_SEPARATOR;
+        for (Map.Entry<PluginVersionReference, UUID> plugin : pluginIdsMap.entrySet())
+            fileContent = fileContent + plugin.getKey().toKey() + PAIR_SEPARATOR + plugin.getValue() + PLUGIN_SEPARATOR;
 
         platformTextFile.setContent(fileContent);
         platformTextFile.persistToMedia();
     }
-
-    protected abstract FermatPluginsEnum getPluginByKey(String key) throws InvalidParameterException;
-
-    protected abstract FermatPluginsEnum[] getAllPlugins();
-
-    protected abstract Platforms getPlatform();
 
 }
