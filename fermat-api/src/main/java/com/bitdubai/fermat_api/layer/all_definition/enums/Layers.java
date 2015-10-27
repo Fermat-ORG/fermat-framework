@@ -22,6 +22,7 @@ public enum Layers implements FermatEnum {
     IDENTITY        ("IDT"),
     MIDDLEWARE      ("MID"),
     NETWORK_SERVICE ("NTS"),
+    PLATFORM_SERVICE("PMS"),
     REQUEST         ("REQ"),
     SUB_APP_MODULE  ("SAM"),
     TRANSACTION     ("TRA"),
@@ -46,6 +47,7 @@ public enum Layers implements FermatEnum {
                 case "IDT":  return Layers.IDENTITY;
                 case "MID":  return Layers.MIDDLEWARE;
                 case "NTS":  return Layers.NETWORK_SERVICE;
+                case "PMS":  return Layers.PLATFORM_SERVICE;
                 case "REQ":  return Layers.REQUEST;
                 case "SAM":  return Layers.SUB_APP_MODULE;
                 case "TRA":  return Layers.TRANSACTION;

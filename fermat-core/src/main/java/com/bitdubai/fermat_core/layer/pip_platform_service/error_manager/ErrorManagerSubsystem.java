@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_core.layer.pip_platform_service.error_manager;
 
 import com.bitdubai.fermat_api.Addon;
+import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.DeveloperBitDubaiOld;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.CantStartSubsystemException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.PlatformServiceSubsystem;
-import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by ciencias on 05.02.15.
@@ -33,7 +33,7 @@ public class ErrorManagerSubsystem implements PlatformServiceSubsystem {
          */
 
         try {
-            DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
+            DeveloperBitDubaiOld developerBitDubai = new DeveloperBitDubaiOld();
             addon = developerBitDubai.getAddon();
         }
         catch (Exception e)

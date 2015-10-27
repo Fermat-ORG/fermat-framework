@@ -50,14 +50,14 @@ public class FermatPluginIdsManager {
 
         try {
             try {
-                String[] stringPluginIdPairs = getPluginIdsFile().getContent().split(Pattern.quote(PLUGIN_SEPARATOR));
+                final String[] stringPluginIdPairs = getPluginIdsFile().getContent().split(Pattern.quote(PLUGIN_SEPARATOR));
                 boolean changed = false;
 
                 for (final String stringPluginIdPair : stringPluginIdPairs) {
 
                     if (!stringPluginIdPair.equals("")) {
 
-                        String[] pluginIdPair = stringPluginIdPair.split(PAIR_SEPARATOR);
+                        final String[] pluginIdPair = stringPluginIdPair.split(PAIR_SEPARATOR);
 
                         try {
 
@@ -82,7 +82,7 @@ public class FermatPluginIdsManager {
         } catch (final FileNotFoundException fileNotFoundException) {
 
             try {
-                PlatformTextFile platformTextFile = platformFileSystem.createFile(PLUGIN_IDS_DIRECTORY_NAME, PLUGIN_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                final PlatformTextFile platformTextFile = platformFileSystem.createFile(PLUGIN_IDS_DIRECTORY_NAME, PLUGIN_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
                 savePluginIdsFile(platformTextFile);
 
@@ -107,7 +107,7 @@ public class FermatPluginIdsManager {
      */
     public final UUID getPluginId(final PluginVersionReference plugin) throws CantGetPluginIdException {
 
-        UUID pluginId = pluginIdsMap.get(plugin);
+        final UUID pluginId = pluginIdsMap.get(plugin);
 
         if (pluginId != null)
             return pluginId;
@@ -119,7 +119,7 @@ public class FermatPluginIdsManager {
 
         try {
 
-            UUID newId = UUID.randomUUID();
+            final UUID newId = UUID.randomUUID();
             savePluginIdsFile(getPluginIdsFile());
             pluginIdsMap.put(plugin, newId);
             return newId;
@@ -150,7 +150,7 @@ public class FermatPluginIdsManager {
                                                                                    CantPersistFileException {
 
         String fileContent = "";
-        for (Map.Entry<PluginVersionReference, UUID> plugin : pluginIdsMap.entrySet())
+        for (final Map.Entry<PluginVersionReference, UUID> plugin : pluginIdsMap.entrySet())
             fileContent = fileContent + plugin.getKey().toKey() + PAIR_SEPARATOR + plugin.getValue() + PLUGIN_SEPARATOR;
 
         platformTextFile.setContent(fileContent);

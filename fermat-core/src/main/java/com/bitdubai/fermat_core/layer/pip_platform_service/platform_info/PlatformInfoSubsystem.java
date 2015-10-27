@@ -33,7 +33,7 @@ public class PlatformInfoSubsystem implements PlatformServiceSubsystem {
          */
 
         try {
-            DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
+            DeveloperBitDubaiOld developerBitDubai = new DeveloperBitDubaiOld();
             addon = developerBitDubai.getAddon();
         }
         catch (Exception e)
