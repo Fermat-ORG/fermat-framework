@@ -121,11 +121,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
     }
 
     /**
-     * Service Interface member variables.
-     */
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
-    /**
      * DealWithEvents Interface member variables.
      */
     private ErrorManager errorManager;
