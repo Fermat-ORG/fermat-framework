@@ -250,7 +250,7 @@ public class IncomingNotificationDao implements DAO {
 
     public com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord getNotificationById(final UUID notificationId) throws CantGetIntraUserException, IntraUserNotFoundException {
 
-        if (notificationId == null)
+       // if (notificationId == null)
             //throw new CantGetRequestException("", "requestId, can not be null");
 
         try {
@@ -277,7 +277,7 @@ public class IncomingNotificationDao implements DAO {
 
             throw new CantGetIntraUserException("",exception, "Check the cause."                                                                                ,"");
         }
-        return null;
+
     }
 
 

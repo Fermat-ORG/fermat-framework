@@ -7,6 +7,7 @@ import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.W
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,7 +43,7 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
         this.actorName             = walletContactRecord.getActorAlias()                   ;
         this.profilePicture        = profilePicture != null ? profilePicture.clone() : null;
         this.compatibility         = walletContactRecord.getCompatibility()                ;
-        this.isConnection          = true;
+        this.isConnection          = false;
     }
 
 
@@ -51,12 +52,12 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
         this.contactId             =  UUID.randomUUID()                  ;
         this.walletPublicKey       =  walletPublicKey              ;
         this.actorType             = Actors.CCM_INTRA_WALLET_USER                   ;
-        this.receivedCryptoAddress = null              ;
+        this.receivedCryptoAddress = new ArrayList<CryptoAddress>();
         this.actorPublicKey        = intraUserConnection.getPublicKey()               ;
         this.actorName             = intraUserConnection.getAlias()                   ;
-        this.profilePicture        = intraUserConnection.getProfileImage() != null ? intraUserConnection.getProfileImage().clone() : null;
+        this.profilePicture        = new byte[0];
         this.compatibility         = Compatibility.NONE                ;
-        this.isConnection          = false;
+        this.isConnection          = true;
     }
 
 
