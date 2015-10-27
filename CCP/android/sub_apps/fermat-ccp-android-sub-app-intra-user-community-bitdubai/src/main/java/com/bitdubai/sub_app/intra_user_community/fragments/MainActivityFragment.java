@@ -22,8 +22,8 @@
 //import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.DetailedCatalogItem;
 //import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.Skin;
 //import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
-//import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-//import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
+//import ErrorManager;
+//import UnexpectedSubAppExceptionSeverity;
 //import com.bitdubai.sub_app.intra_user.common.DetailedCatalogItemLoader;
 //import com.bitdubai.sub_app.intra_user.common.DetailedCatalogItemLoaderListener;
 //

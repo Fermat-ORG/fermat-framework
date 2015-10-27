@@ -1,8 +1,7 @@
 package com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
+import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
@@ -11,39 +10,39 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
-
-import java.io.Serializable;
-import java.util.UUID;
+import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
+import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions.CantSetPlatformInformationException;
 
 /**
  * Created by natalia on 29/07/15.
+ * Modified by lnacosta (laion.cj91@gmail.com) on 26/10/2015.
  */
-public class PlatformInfoPlatformService implements DealsWithPlatformFileSystem,Serializable {
-    PlatformInfo platformInfo;
+public class PlatformInfoPlatformService {
 
-    /**
-     * DealsWithPlatformFileSystem interface member variables
-     */
-    PlatformFileSystem platformFileSystem;
+    private static final String PLATFORM_INFO_DIRECTORY = DeviceDirectory.SYSTEM.getName();
+    private static final String PLATFORM_INFO_FILE_NAME = "platform_info.xml";
 
-    @Override
-    public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
+    private final PlatformFileSystem platformFileSystem;
+
+    private PlatformInfoPlatformServiceFileData platformInfo;
+
+    public PlatformInfoPlatformService(final PlatformFileSystem platformFileSystem) {
+
         this.platformFileSystem = platformFileSystem;
     }
-
 
     private PlatformTextFile getPlatformInfoFile() throws CantLoadPlatformInformationException {
         PlatformTextFile xmlFile;
         try {
-            xmlFile = platformFileSystem.getFile("PlatformInfoService", "PlaftformInfo.xml", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            xmlFile = platformFileSystem.getFile(PLATFORM_INFO_DIRECTORY, PLATFORM_INFO_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             xmlFile.loadFromMedia();
 
-        } catch (FileNotFoundException e) {
+        } catch (final FileNotFoundException e) {
             // if the file doesn't exists, I'll create it.
             try {
-                xmlFile = platformFileSystem.createFile("PlatformInfoService", "PlaftformInfo.xml", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                String xml = XMLParser.parseObject(new PlatformInfo());
+                xmlFile = platformFileSystem.createFile(PLATFORM_INFO_DIRECTORY, PLATFORM_INFO_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                String xml = XMLParser.parseObject(new PlatformInfoPlatformServiceFileData());
                 xmlFile.setContent(xml);
                 xmlFile.persistToMedia();
             } catch (CantCreateFileException | CantPersistFileException e1) {
@@ -55,27 +54,36 @@ public class PlatformInfoPlatformService implements DealsWithPlatformFileSystem,
 
         return xmlFile;
     }
-    public PlatformInfo getPlatformInfo() throws CantLoadPlatformInformationException {
-        platformInfo = (PlatformInfo) XMLParser.parseXML(getPlatformInfoFile().getContent(), platformInfo);
+
+    public final PlatformInfoPlatformServiceFileData getPlatformInfo() throws CantLoadPlatformInformationException {
+
+        platformInfo = (PlatformInfoPlatformServiceFileData) XMLParser.parseXML(getPlatformInfoFile().getContent(), platformInfo);
         return platformInfo;
     }
 
     private void saveInfoInFile(String xml) throws CantLoadPlatformInformationException {
-        PlatformTextFile xmlFile = getPlatformInfoFile();
-        xmlFile.setContent(xml);
+
         try {
+
+            PlatformTextFile xmlFile = getPlatformInfoFile();
+            xmlFile.setContent(xml);
             xmlFile.persistToMedia();
+
         } catch (CantPersistFileException e) {
             e.printStackTrace();
         }
     }
 
-    public void setPlatformInfo(PlatformInfo platformInfo) throws CantLoadPlatformInformationException {
-        String xml = XMLParser.parseObject(platformInfo);
+    public void setPlatformInfo(final PlatformInfo platformInfo) throws CantSetPlatformInformationException {
+
         try {
+            String xml = XMLParser.parseObject(platformInfo);
+
             saveInfoInFile(xml);
+
         } catch (Exception e) {
-            throw new CantLoadPlatformInformationException(CantLoadPlatformInformationException.DEFAULT_MESSAGE, e, "There was an error trying persist Platform info xml file." , null);
+
+            throw new CantSetPlatformInformationException(e, "There was an error trying persist Platform info xml file." , null);
         }
 
     }

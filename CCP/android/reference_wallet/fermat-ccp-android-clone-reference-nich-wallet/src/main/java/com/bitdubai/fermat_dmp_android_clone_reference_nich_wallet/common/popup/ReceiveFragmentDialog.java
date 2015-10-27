@@ -25,8 +25,8 @@
 //import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 //import CantRequestCryptoAddressException;
 //import CryptoWallet;
-//import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-//import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+//import ErrorManager;
+//import UnexpectedUIExceptionSeverity;
 //import com.google.zxing.WriterException;
 //
 //import java.util.UUID;
