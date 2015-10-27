@@ -93,6 +93,36 @@ public class AssetReceptionDao {
         return isPendingEventsBySource(EventSource.CRYPTO_ROUTER);
     }
 
+    public boolean isAcceptedAssets() throws CantExecuteQueryException {
+        return isAssetsByReceptionStatus(ReceptionStatus.ASSET_ACCEPTED);
+    }
+
+    public boolean isRejectedByContract() throws CantExecuteQueryException {
+        return isAssetsByReceptionStatus(ReceptionStatus.REJECTED_BY_CONTRACT);
+    }
+
+    public boolean isRejectedByHash() throws CantExecuteQueryException {
+        return isAssetsByReceptionStatus(ReceptionStatus.REJECTED_BY_HASH);
+    }
+
+    private boolean isAssetsByReceptionStatus(ReceptionStatus receptionStatus) throws CantExecuteQueryException {
+        try {
+            this.database=openDatabase();
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(AssetReceptionDatabaseConstants.ASSET_RECEPTION_EVENTS_RECORDED_TABLE_NAME);
+            databaseTable.setStringFilter(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEPTION_STATUS_COLUMN_NAME, receptionStatus.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            this.database.closeDatabase();
+            return !databaseTable.getRecords().isEmpty();
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantExecuteQueryException("Error executing query in DB.", exception, "Getting assets by reception status.", "Cannot load table to memory.");
+        }catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Getting assets by reception status.", "Unexpected exception");
+        }
+    }
+
     private boolean isPendingEventsBySource(EventSource eventSource) throws CantExecuteQueryException {
         try {
             this.database=openDatabase();
@@ -124,7 +154,7 @@ public class AssetReceptionDao {
             record.setStringValue(AssetReceptionDatabaseConstants.ASSET_RECEPTION_DIGITAL_ASSET_HASH_COLUMN_NAME, digitalAssetHash);
             record.setStringValue(AssetReceptionDatabaseConstants.ASSET_RECEPTION_DIGITAL_ASSET_STORAGE_LOCAL_PATH_COLUMN_NAME, localStoragePath);
             record.setStringValue(AssetReceptionDatabaseConstants.ASSET_RECEPTION_ACTOR_ASSET_ISSUER_ID_COLUMN_NAME, senderId);
-            record.setStringValue(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEPTION_STATUS_COLUMN_NAME, DistributionStatus.CHECKING_HASH.getCode());
+            record.setStringValue(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEPTION_STATUS_COLUMN_NAME, ReceptionStatus.RECEIVING.getCode());
             record.setStringValue(AssetReceptionDatabaseConstants.ASSET_RECEPTION_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode());
             record.setStringValue(AssetReceptionDatabaseConstants.ASSET_RECEPTION_CRYPTO_STATUS_COLUMN_NAME, CryptoStatus.PENDING_SUBMIT.getCode());
             databaseTable.insertRecord(record);
@@ -139,8 +169,8 @@ public class AssetReceptionDao {
         }
     }
 
-    public void updateReceptionStatusByGenesisTransaction(DistributionStatus distributionStatus, String genesisTransaction) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
-        updateStringValueByStringField(distributionStatus.getCode(),
+    public void updateReceptionStatusByGenesisTransaction(ReceptionStatus receptionStatus, String genesisTransaction) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
+        updateStringValueByStringField(receptionStatus.getCode(),
                 AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEPTION_STATUS_COLUMN_NAME,
                 genesisTransaction,
                 AssetReceptionDatabaseConstants.ASSET_RECEPTION_GENESIS_TRANSACTION_COLUMN_NAME);

@@ -27,7 +27,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantE
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantInitializeAssetMonitorAgentException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.AssetReceptionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.exceptions.CantCheckAssetReceptionProgressException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.exceptions.CantReceiveDigitalAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.DigitalAssetReceptionVault;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.DigitalAssetReceptor;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
@@ -54,6 +56,7 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
     DigitalAssetReceptionVault digitalAssetReceptionVault;
+    DigitalAssetReceptor digitalAssetReceptor;
     AssetTransmissionNetworkServiceManager assetTransmissionManager;
     BitcoinNetworkManager bitcoinNetworkManager;
 
@@ -81,6 +84,13 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
             throw new CantSetObjectException("digitalAssetReceptionVault is null");
         }
         this.digitalAssetReceptionVault = digitalAssetReceptionVault;
+    }
+
+    public void setDigitalAssetReceptor(DigitalAssetReceptor digitalAssetReceptor)throws CantSetObjectException{
+        if(digitalAssetReceptor ==null){
+            throw new CantSetObjectException("digitalAssetReceptor is null");
+        }
+        this.digitalAssetReceptor = digitalAssetReceptor;
     }
 
     public void setAssetTransmissionManager(AssetTransmissionNetworkServiceManager assetTransmissionManager) throws CantSetObjectException {
@@ -219,19 +229,37 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
                         DigitalAssetMetadataTransactionType digitalAssetMetadataTransactionType= digitalAssetMetadataTransaction.getType();
                         System.out.println("ASSET RECEPTION Digital Asset Metadata Transaction Type: "+digitalAssetMetadataTransactionType);
                         if(digitalAssetMetadataTransactionType.getCode().equals(DigitalAssetMetadataTransactionType.META_DATA_TRANSMIT.getCode())){
-                            String userId=digitalAssetMetadataTransaction.getSenderId();
-                            System.out.println("ASSET RECEPTION Digital Asset Metadata Sender Id: "+userId);
+                            String senderId=digitalAssetMetadataTransaction.getSenderId();
+                            System.out.println("ASSET RECEPTION Digital Asset Metadata Sender Id: "+senderId);
                             DigitalAssetMetadata digitalAssetMetadataReceived=digitalAssetMetadataTransaction.getDigitalAssetMetadata();
-                            System.out.println("ASSET RECEPTION Digital Asset Metadata Received: "+digitalAssetMetadataReceived);
+                            System.out.println("ASSET RECEPTION Digital Asset Metadata Received: " + digitalAssetMetadataReceived);
+                            digitalAssetReceptor.receiveDigitalAssetMetadata(digitalAssetMetadataReceived, senderId);
                         }
 
                     }
+                }
+
+                if(assetReceptionDao.isAcceptedAssets()){
+                    System.out.println("ASSET RECEPTION there are accepted assets");
+                    //TODO: to handle
+                }
+
+                if(assetReceptionDao.isRejectedByContract()){
+                    System.out.println("ASSET RECEPTION there are rejected by contract assets");
+                    //TODO: to handle
+                }
+
+                if(assetReceptionDao.isRejectedByHash()){
+                    System.out.println("ASSET RECEPTION there are rejected by hash assets");
+                    //TODO: to handle
                 }
 
             } catch (CantExecuteDatabaseOperationException exception) {
                 throw new CantExecuteQueryException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, exception, "Exception in asset distribution monitor agent","Cannot execute database operation");
             } catch (CantDeliverPendingTransactionsException exception) {
                 throw new CantCheckAssetReceptionProgressException(exception,"Exception in asset reception monitor agent","Cannot deliver pending transactions from network layer");
+            } catch (CantReceiveDigitalAssetException e) {
+                e.printStackTrace();
             }
         }
 
