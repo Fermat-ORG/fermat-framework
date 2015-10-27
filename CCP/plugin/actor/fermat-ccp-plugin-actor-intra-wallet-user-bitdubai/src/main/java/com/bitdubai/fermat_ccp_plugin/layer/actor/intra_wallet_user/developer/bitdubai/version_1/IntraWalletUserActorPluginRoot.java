@@ -2,9 +2,6 @@ package com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.b
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
-
 
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
@@ -52,7 +49,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bi
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantGetIntraWalletUsersListException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraWalletUserActorDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantProcessNotificationsExceptions;
-import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantUpdateIntraWalletUserConnectionException;
+import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantUpdateConnectionException;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -64,8 +61,6 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -84,9 +79,15 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-//TODO: hay que arreglar esto, hay metodos sin implementar abajo de todo
-
-public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements IntraWalletUserManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithEvents, DealsWithIntraUsersNetworkService, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service, Serializable {
+public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
+        DatabaseManagerForDevelopers,
+        DealsWithErrors,
+        DealsWithEvents,
+        DealsWithPluginDatabaseSystem,
+        DealsWithPluginFileSystem,
+        DealsWithIntraUsersNetworkService,
+        IntraWalletUserManager,
+        LogManagerForDevelopers {
 
     @Override
     public List<AddonVersionReference> getNeededAddonReferences() {
@@ -209,8 +210,8 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
     @Override
     public void acceptIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToAddPublicKey) throws CantAcceptIntraWalletUserException {
         try {
-            this.intraWalletUserActorDao.updateIntraWalletUserConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, ConnectionState.CONNECTED);
-        } catch (CantUpdateIntraWalletUserConnectionException e) {
+            this.intraWalletUserActorDao.updateConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, ConnectionState.CONNECTED);
+        } catch (CantUpdateConnectionException e) {
             throw new CantAcceptIntraWalletUserException("CAN'T ACCEPT INTRA USER CONNECTION", e, "", "");
         } catch (Exception e) {
             throw new CantAcceptIntraWalletUserException("CAN'T ACCEPT INTRA USER CONNECTION", FermatException.wrapException(e), "", "");
@@ -229,8 +230,8 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
     public void denyConnection(String intraUserLoggedInPublicKey, String intraUserToRejectPublicKey) throws CantDenyConnectionException {
 
         try {
-            this.intraWalletUserActorDao.updateIntraWalletUserConnectionState(intraUserLoggedInPublicKey, intraUserToRejectPublicKey, ConnectionState.DENIED_LOCALLY);
-        } catch (CantUpdateIntraWalletUserConnectionException e) {
+            this.intraWalletUserActorDao.updateConnectionState(intraUserLoggedInPublicKey, intraUserToRejectPublicKey, ConnectionState.DENIED_LOCALLY);
+        } catch (CantUpdateConnectionException e) {
             throw new CantDenyConnectionException("CAN'T DENY INTRA USER CONNECTION", e, "", "");
         } catch (Exception e) {
             throw new CantDenyConnectionException("CAN'T DENY INTRA USER CONNECTION", FermatException.wrapException(e), "", "");
@@ -247,8 +248,8 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
     @Override
     public void disconnectIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToDisconnectPublicKey) throws CantDisconnectIntraWalletUserException {
         try {
-            this.intraWalletUserActorDao.updateIntraWalletUserConnectionState(intraUserLoggedInPublicKey, intraUserToDisconnectPublicKey, ConnectionState.DISCONNECTED_REMOTELY);
-        } catch (CantUpdateIntraWalletUserConnectionException e) {
+            this.intraWalletUserActorDao.updateConnectionState(intraUserLoggedInPublicKey, intraUserToDisconnectPublicKey, ConnectionState.DISCONNECTED_REMOTELY);
+        } catch (CantUpdateConnectionException e) {
             throw new CantDisconnectIntraWalletUserException("CAN'T CANCEL INTRA USER CONNECTION", e, "", "");
         } catch (Exception e) {
             throw new CantDisconnectIntraWalletUserException("CAN'T CANCEL INTRA USER CONNECTION", FermatException.wrapException(e), "", "");
@@ -266,8 +267,8 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
     @Override
     public void cancelIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToCancelPublicKey) throws CantCancelIntraWalletUserException {
         try {
-            this.intraWalletUserActorDao.updateIntraWalletUserConnectionState(intraUserLoggedInPublicKey, intraUserToCancelPublicKey, ConnectionState.CANCELLED);
-        } catch (CantUpdateIntraWalletUserConnectionException e) {
+            this.intraWalletUserActorDao.updateConnectionState(intraUserLoggedInPublicKey, intraUserToCancelPublicKey, ConnectionState.CANCELLED);
+        } catch (CantUpdateConnectionException e) {
             throw new CantCancelIntraWalletUserException("CAN'T CANCEL INTRA USER CONNECTION", e, "", "");
         } catch (Exception e) {
             throw new CantCancelIntraWalletUserException("CAN'T CANCEL INTRA USER CONNECTION", FermatException.wrapException(e), "", "");
@@ -284,7 +285,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
     @Override
     public List<IntraWalletUser> getAllIntraWalletUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraWalletUsersException {
         try {
-            return this.intraWalletUserActorDao.getAllIntraWalletUsers(intraUserLoggedInPublicKey, max, offset);
+            return this.intraWalletUserActorDao.getAllConnectedIntraWalletUsers(intraUserLoggedInPublicKey, max, offset);
         } catch (CantGetIntraWalletUsersListException e) {
             throw new CantGetIntraWalletUsersException("CAN'T LIST INTRA USER CONNECTIONS", e, "", "");
         } catch (Exception e) {
@@ -328,7 +329,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
     @Override
     public List<IntraWalletUser> getWaitingYourAcceptanceIntraWalletUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraWalletUsersException {
         try {
-            return this.intraWalletUserActorDao.getAllIntraWalletUsers(intraUserLoggedInPublicKey, ConnectionState.PENDING_LOCALLY_ACCEPTANCE, max, offset);
+            return this.intraWalletUserActorDao.getAllConnectedIntraWalletUsers(intraUserLoggedInPublicKey, ConnectionState.PENDING_LOCALLY_ACCEPTANCE, max, offset);
         } catch (CantGetIntraWalletUsersListException e) {
             throw new CantGetIntraWalletUsersException("CAN'T LIST INTRA USER ACCEPTED CONNECTIONS", e, "", "");
         } catch (Exception e) {
@@ -349,7 +350,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
     @Override
     public List<IntraWalletUser> getWaitingTheirAcceptanceIntraWalletUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraWalletUsersException {
         try {
-            return this.intraWalletUserActorDao.getAllIntraWalletUsers(intraUserLoggedInPublicKey, ConnectionState.PENDING_REMOTELY_ACCEPTANCE, max, offset);
+            return this.intraWalletUserActorDao.getAllConnectedIntraWalletUsers(intraUserLoggedInPublicKey, ConnectionState.PENDING_REMOTELY_ACCEPTANCE, max, offset);
         } catch (CantGetIntraWalletUsersListException e) {
             throw new CantGetIntraWalletUsersException("CAN'T LIST INTRA USER PENDING_HIS_ACCEPTANCE CONNECTIONS", e, "", "");
         } catch (Exception e) {
@@ -369,53 +370,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
 
     }
 
-    /**
-     * DealsWithEvents Interface implementation.
-     */
 
-
-    @Override
-    public void setEventManager(EventManager DealsWithEvents) {
-        this.eventManager = DealsWithEvents;
-    }
-
-    /**
-     * DealsWithErrors Interface implementation.
-     */
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-
-    /**
-     * DealsWithIntraWalletUsersNetworkService Interface implementation.
-     */
-
-    @Override
-    public void setIntraUserNetworkServiceManager(IntraUserManager intraUserManager) {
-
-        this.intraUserNetworkServiceManager = intraUserManager;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-
-    }
-
-    /**
-     * DealWithPluginFileSystem Interface implementation.
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-
-    }
 
     /**
      * Service Interface implementation.
@@ -662,18 +617,29 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
     }
 
     @Override
-    public List<com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListIntraWalletUsersException {
-        return null;
+    public final void setEventManager(final EventManager eventManager) {
+        this.eventManager = eventManager;
     }
 
     @Override
-    public com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser createNewIntraWalletUser(String alias, byte[] profileImage) throws CantCreateNewIntraWalletUserException {
-        return null;
+    public final void setErrorManager(final ErrorManager errorManager) {
+        this.errorManager = errorManager;
     }
 
     @Override
-    public boolean hasIntraUserIdentity() throws CantListIntraWalletUsersException {
-        return false;
+    public final void setIntraUserNetworkServiceManager(final IntraUserManager intraUserManager) {
+        this.intraUserNetworkServiceManager = intraUserManager;
     }
+
+    @Override
+    public final void setPluginDatabaseSystem(final PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    @Override
+    public final void setPluginFileSystem(final PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
+
 
 }
