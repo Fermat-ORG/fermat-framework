@@ -184,6 +184,8 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     @Override
     public void onBackPressed() {
         // get actual fragment on execute
+
+
         String frgBackType = null;
 
         WalletRuntimeManager walletRuntimeManager = getWalletRuntimeManager();
