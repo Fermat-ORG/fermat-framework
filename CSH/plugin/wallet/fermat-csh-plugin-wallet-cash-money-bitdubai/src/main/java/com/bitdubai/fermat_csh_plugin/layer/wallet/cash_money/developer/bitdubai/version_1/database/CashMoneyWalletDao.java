@@ -9,10 +9,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.interfaces.CashMoneyTransaction;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.interfaces.CashMoneyBalanceRecord;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddCashMoney;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddCashMoneyBalance;
+import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddCashMoneyBalanceRecordException;
+import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddCreditException;
+import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddDebitException;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetBalancesRecord;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetCashMoneyBalance;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantInitializeCashMoneyWalletDatabaseException;
@@ -134,20 +138,98 @@ public class CashMoneyWalletDao {
     }
     }
 
-    public void addDebit(CashMoneyTransaction cashMoneyTransaction, BalanceType balanceType) throws CantGetBalancesRecord {
+    /**
+     *
+     * @param cashMoneyBalanceRecord
+     * @param balanceType
+     * @throws CantAddDebitException
+     */
+    public void addDebit(CashMoneyBalanceRecord cashMoneyBalanceRecord, BalanceType balanceType) throws CantAddDebitException {
+        try {
         double availableAmount;
         double availableRunningBalance;
         double bookAmount;
         double bookRunningBalance;
         if (balanceType == BalanceType.AVAILABLE){
-            availableAmount  = cashMoneyTransaction.getAmount();
+            availableAmount  = cashMoneyBalanceRecord.getAmount();
             availableRunningBalance = getCurrentBalance(BalanceType.AVAILABLE) + (-availableAmount);
+            addCashMoneyBalanceRecord(cashMoneyBalanceRecord,balanceType,TransactionType.DEBIT,availableRunningBalance);
         }
         if (balanceType == BalanceType.BOOK){
-            bookAmount  = cashMoneyTransaction.getAmount();
+            bookAmount  = cashMoneyBalanceRecord.getAmount();
             bookRunningBalance = getCurrentBalance(BalanceType.BOOK) + (-bookAmount);
+            addCashMoneyBalanceRecord(cashMoneyBalanceRecord,balanceType,TransactionType.DEBIT,bookRunningBalance);
         }
 
+        } catch (CantAddCashMoneyBalanceRecordException e) {
+           throw new CantAddDebitException(CantAddDebitException.DEFAULT_MESSAGE,e,"Cant Add Debit Exception","Cant Add CashMoney Balance Record Exception");
+        } catch (CantGetBalancesRecord cantGetBalancesRecord) {
+            throw new CantAddDebitException(CantAddDebitException.DEFAULT_MESSAGE,cantGetBalancesRecord,"Cant Add Debit Exception","Cant Get Balances Record");
+        }
+    }
+
+    /**
+     *
+     * @param cashMoneyBalanceRecord
+     * @param balanceType
+     * @throws CantAddCreditException
+     */
+    public void addCredit(CashMoneyBalanceRecord cashMoneyBalanceRecord, BalanceType balanceType) throws CantAddCreditException {
+        try {
+            double availableAmount;
+            double availableRunningBalance;
+            double bookAmount;
+            double bookRunningBalance;
+            if (balanceType == BalanceType.AVAILABLE){
+                availableAmount  = cashMoneyBalanceRecord.getAmount();
+                availableRunningBalance = getCurrentBalance(BalanceType.AVAILABLE) + (-availableAmount);
+                addCashMoneyBalanceRecord(cashMoneyBalanceRecord,balanceType,TransactionType.CREDIT,availableRunningBalance);
+            }
+            if (balanceType == BalanceType.BOOK){
+                bookAmount  = cashMoneyBalanceRecord.getAmount();
+                bookRunningBalance = getCurrentBalance(BalanceType.BOOK) + (-bookAmount);
+                addCashMoneyBalanceRecord(cashMoneyBalanceRecord,balanceType,TransactionType.CREDIT,bookRunningBalance);
+            }
+
+        } catch (CantAddCashMoneyBalanceRecordException e) {
+            throw new CantAddCreditException(CantAddCreditException.DEFAULT_MESSAGE,e,"Cant Add Debit Exception","Cant Add CashMoney Balance Record Exception");
+        } catch (CantGetBalancesRecord cantGetBalancesRecord) {
+            throw new CantAddCreditException(CantAddCreditException.DEFAULT_MESSAGE,cantGetBalancesRecord,"Cant Add Debit Exception","Cant Get Balances Record");
+        }
+    }
+    /**
+     *
+     * @param cashMoneyBalanceRecord
+     * @param balanceType
+     * @param transactionType
+     */
+    public void addCashMoneyBalanceRecord(
+                                            CashMoneyBalanceRecord cashMoneyBalanceRecord,
+                                            BalanceType balanceType,
+                                            TransactionType transactionType,
+                                            double amount
+    ) throws CantAddCashMoneyBalanceRecordException
+    {
+        DatabaseTable table = this.database.getTable(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_TABLE_NAME);
+        DatabaseTableRecord record =  table.getEmptyRecord();
+
+        record.setUUIDValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_CASH_TRANSACTION_ID_COLUMN_NAME, cashMoneyBalanceRecord.getCashTransactionId());
+        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_PUBLIC_KEY_ACTOR_FROM, cashMoneyBalanceRecord.getPublicKeyActorFrom());
+        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_PUBLIC_KEY_ACTOR_TO, cashMoneyBalanceRecord.getPublicKeyActorTo());
+        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_STATUS, cashMoneyBalanceRecord.getStatus().getCode());
+        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_BALANCE_TYPE, balanceType.getCode());
+        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_TRANSACTION_TYPE, transactionType.getCode());
+        record.setDoubleValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_AMAUNT, amount);
+        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_CASH_CURRENCY_TYPE, cashMoneyBalanceRecord.getCashCurrencyType().getCode());
+        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_CASH_REFERENCE, cashMoneyBalanceRecord.getCashReference());
+        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_MEMO, cashMoneyBalanceRecord.getMemo());
+
+        try {
+            table.insertRecord(record);
+            database.closeDatabase();
+        } catch (CantInsertRecordException e) {
+            throw new CantAddCashMoneyBalanceRecordException(CantAddCashMoneyBalanceRecordException.DEFAULT_MESSAGE,e,"Cant Add CashMoney Balance Record Exception","Cant Insert Record Exception");
+        }
 
     }
     /**
