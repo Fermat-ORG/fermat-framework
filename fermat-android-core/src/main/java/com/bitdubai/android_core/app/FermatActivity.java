@@ -7,6 +7,7 @@ import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -19,10 +20,13 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
@@ -30,8 +34,10 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
@@ -154,6 +160,11 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      * Activity type
      */
     private ActivityType activityType;
+
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private ViewGroup navigationHeaderView;
+    private ActionBarDrawerToggle drawerToggle;
 
     public static Bitmap fastblur(Bitmap sentBitmap, int radius) {
         Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
@@ -694,10 +705,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
                 }
 
-                //if (navigationDrawerFragment == null)
-                    //navigationDrawerFragment = (navigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-                navigationDrawerFragment = NavigationDrawerFragment.newInstance(this);
+                navigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
                 /**
                  * Set up the navigationDrawer
@@ -708,12 +717,96 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
                 navigationDrawerFragment.setMenuVisibility(true);
 
-                FragmentManager     fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.navigation_drawer, navigationDrawerFragment);
-                ft.commit();
-                fm.executePendingTransactions();
-                ft.show(navigationDrawerFragment);
+                //if (navigationDrawerFragment == null)
+                    //navigationDrawerFragment = (navigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+
+//                navigationDrawerFragment = NavigationDrawerFragment.newInstance(this);
+//
+//                /**
+//                 * Set up the navigationDrawer
+//                 */
+//                navigationDrawerFragment.setUp(
+//                        R.id.navigation_drawer,
+//                        (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
+//
+//                navigationDrawerFragment.setMenuVisibility(true);
+//
+//                FragmentManager     fm = getFragmentManager();
+//                FragmentTransaction ft = fm.beginTransaction();
+//                ft.replace(R.id.navigation_drawer, navigationDrawerFragment);
+//                ft.commit();
+
+//                drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+//
+//
+//                navigationView = (NavigationView) findViewById(R.id.navigation_view);
+//                //navigationView.setNavigationItemSelectedListener(this);
+//
+//                //navigationView = (NavigationView) findViewById(R.id.navigation_view);
+//                navigationHeaderView = (ViewGroup) navigationView.inflateHeaderView(R.layout.header_nav_view);
+//                //navigationHeaderView.findViewById(R.id.icon)
+//                //        .setOnClickListener(this);
+////                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+////                    navigationHeaderView.setPadding(0, DisplayUtil.getStatusBarHeight(this), 0, 0);
+////                }
+//                    //initOptions();
+//
+//                RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
+//
+//
+//                List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> list  = new ArrayList<>();
+//
+//                list.add(new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem("mati","hola",null));
+//                list.add(new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem("mati","hola",null));
+//                list.add(new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem("mati","hola",null));
+//                list.add(new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem("mati","hola",null));
+//                list.add(new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem("mati","hola",null));
+//
+//
+//                NavigationDrawerAdapter navigationDrawerAdapter = new NavigationDrawerAdapter(
+//                        this,
+//                        list);
+//
+//                recyclerView.setAdapter(navigationDrawerAdapter);
+//
+//
+//        /* setting up drawer layout */
+//                //drawerLayout = (DrawerLayout) findViewById(R.id.drawer_activity);
+//                 drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
+//                        R.string.open, R.string.close) {
+//                    @Override
+//                    public void onDrawerOpened(View drawerView) {
+//                        super.onDrawerOpened(drawerView);
+//                        //setTitle(mTitle);
+//                        invalidateOptionsMenu();
+//                    }
+//
+//                    @Override
+//                    public void onDrawerClosed(View drawerView) {
+//                        super.onDrawerClosed(drawerView);
+//                        //setTitle(mTitle);
+//                        invalidateOptionsMenu();
+//                    }
+//
+//                    @Override
+//                    public void onDrawerSlide(View drawerView, float slideOffset) {
+//                        InputMethodManager imm =
+//                                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                        if (getCurrentFocus() != null && imm != null && imm.isActive()) {
+//                            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+//                        }
+//                        super.onDrawerSlide(drawerView, slideOffset);
+//                        float moveFactor = (navigationView.getWidth() * slideOffset);
+//                        //findViewById(R.id.content).setTranslationX(moveFactor);
+//                    }
+//                };
+//                drawerLayout.setDrawerListener(drawerToggle);
+//                drawerLayout.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        drawerToggle.syncState();
+//                    }
+//                });
 
 
                 /**
