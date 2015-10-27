@@ -1028,7 +1028,7 @@ public class CryptoWalletWalletModuleManager implements DealsWithCryptoTransmiss
                     //TODO verificar si  usa
                   //  actor = intraUserManager.getActorByPublicKey(actorPublicKey);
                    // return actor;
-//                } catch (CantGetIntraUserException | IntraUserNotFoundException e) {
+//                } catch (CantGetNotificationException | NotificationNotFoundException e) {
 //                    throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, e, null, "Cant get Intra User on DataBase");
 //                }
 
