@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces;
 
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions.CantSetPlatformInformationException;
 
 /**
  * The Interface <code>PlatformInfoManager</code>
@@ -16,6 +17,6 @@ public interface PlatformInfoManager {
 
     PlatformInfo getPlatformInfo() throws CantLoadPlatformInformationException;
 
-    void setPlatformInfo(final com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfo platformInfo) throws com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions.CantSetPlatformInformationException;
+    void setPlatformInfo(final PlatformInfo platformInfo) throws CantSetPlatformInformationException;
 
 }
