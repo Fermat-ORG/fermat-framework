@@ -9,14 +9,14 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.Ev
 /**
  * Created by Nerio on 08/10/15.
  */
-public class AssetUserActorRequestListRegisteredNetworksNotificationEventListener implements FermatEventListener {
+public class ActorAssetUserRequestListRegisteredNetworksNotificationEventListener implements FermatEventListener {
 
     FermatEventMonitor fermatEventMonitor;
     private EventType eventType;
     private FermatEventHandler fermatEventHandler;
 
 
-    public AssetUserActorRequestListRegisteredNetworksNotificationEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
+    public ActorAssetUserRequestListRegisteredNetworksNotificationEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
         this.eventType = eventType;
         this.fermatEventMonitor = fermatEventMonitor;
     }
