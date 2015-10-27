@@ -10,10 +10,21 @@ import java.io.Serializable;
  * Class used to define an object version in the platform. Can be used to calculate comparissions between different versions.
  */
 public class Version implements Serializable {
-    Integer major;
-    Integer minor;
-    Integer patch;
-    final String versionSeparator = ".";
+    private Integer major;
+    private Integer minor;
+    private Integer patch;
+    private final String versionSeparator = ".";
+
+
+    /**
+     * Default Constructor, version 1.0.0
+     */
+    public Version() {
+        this.major = 1;
+        this.minor = 0;
+        this.patch = 0;
+    }
+
 
     /**
      * Constructor

@@ -250,8 +250,10 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
             }
 
-            //Sleep for a time
-            toReceive.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+            if(!toReceive.isInterrupted()){
+                //Sleep for a time
+                toReceive.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+            }
 
         } catch (InterruptedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
@@ -327,8 +329,11 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: " + e.getMessage()));
                 }
 
-            //Sleep for a time
-            toSend.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+
+            if(!toSend.isInterrupted()){
+                //Sleep for a time
+                toSend.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+            }
 
         } catch (InterruptedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
