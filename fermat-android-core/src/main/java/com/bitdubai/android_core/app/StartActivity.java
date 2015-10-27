@@ -39,6 +39,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfoManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.exceptions.CantSetPlatformInformationException;
 
 import java.util.concurrent.Executors;
 
@@ -292,7 +293,8 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
             PlatformInfo platformInfo = platformInfoManager.getPlatformInfo();
             platformInfo.setScreenSize(getScreenSize());
             platformInfoManager.setPlatformInfo(platformInfo);
-        } catch (CantLoadPlatformInformationException e) {
+        } catch(CantLoadPlatformInformationException |
+                CantSetPlatformInformationException  e) {
             e.printStackTrace();
         }
     }

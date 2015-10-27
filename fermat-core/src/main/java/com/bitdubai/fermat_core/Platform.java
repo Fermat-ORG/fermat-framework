@@ -666,10 +666,10 @@ public class Platform implements Serializable {
             corePlatformContext.registerAddon((Addon) deviceUser, Addons.DEVICE_USER);
 
              /*
-             * Addon PlatformInfo
+             * Addon PlatformInfoPlatformServiceFileData
              * -----------------------------
              *
-             * Give the PlatformInfo Manager access to the File System so it can load and save user information from
+             * Give the PlatformInfoPlatformServiceFileData Manager access to the File System so it can load and save user information from
              * persistent media.
              */
             Service platformInfo = (Service) ((PlatformServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PLATFORM_SERVICE_LAYER)).getPlatformInfo();

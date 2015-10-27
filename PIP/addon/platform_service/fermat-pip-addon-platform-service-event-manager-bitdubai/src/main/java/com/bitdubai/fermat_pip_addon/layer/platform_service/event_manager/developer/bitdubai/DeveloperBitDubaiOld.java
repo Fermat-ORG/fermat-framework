@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer;
+package com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer.bitdubai;
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.AddonDeveloper;
