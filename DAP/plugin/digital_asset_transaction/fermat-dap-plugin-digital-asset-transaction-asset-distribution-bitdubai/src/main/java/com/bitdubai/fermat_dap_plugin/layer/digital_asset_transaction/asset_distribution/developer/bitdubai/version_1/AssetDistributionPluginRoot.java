@@ -193,7 +193,7 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
     }
 
     /**
-     * This method will start the Monitor Agent that watches the asyncronic process registered in the asset issuing plugin
+     * This method will start the Monitor Agent that watches the asyncronic process registered in the asset distribution plugin
      * @throws CantGetLoggedInDeviceUserException
      * @throws CantSetObjectException
      * @throws CantStartAgentException
@@ -293,7 +293,22 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
 
     @Override
     public List<String> getClassesFullPath() {
-        return null;
+        List<String> returnedClasses = new ArrayList<>();
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.developer_utils.AssetDistributionDeveloperDatabaseFactory");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantCheckAssetDistributionProgressException");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantDeliverDigitalAssetException");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantGetActorAssetIssuerException");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseFactory");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.events.AssetDistributionMonitorAgent");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.AssetDistributionTransactionManager");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.DigitalAssetDistributor");
+        returnedClasses.add("com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.AssetDistributionPluginRoot");
+        /**
+         * I return the values.
+         */
+        return returnedClasses;
     }
 
     @Override

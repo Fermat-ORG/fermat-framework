@@ -22,6 +22,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantP
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
@@ -91,6 +92,8 @@ public interface DigitalAssetVault {
     void setDigitalAssetLocalFilePath(String digitalAssetFileStoragePath);
 
     void setAssetIssuerWalletManager(AssetIssuerWalletManager assetIssuerWalletManager) throws CantSetObjectException;
+
+    void setAssetUserWalletManager(AssetUserWalletManager assetUserWalletManager) throws CantSetObjectException;
 
     boolean isAssetTransactionHashAvailableBalanceInAssetWallet(String genesisTransactionHash, String assetPublicKey) throws DAPException;
 

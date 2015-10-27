@@ -247,7 +247,7 @@ public class AssetDistributionMonitorAgent  implements Agent,DealsWithLogger,Dea
                 //CryptoStatus transactionCryptoStatus;
                 if(isPendingNetworkLayerEvents()){
                     System.out.println("ASSET DISTRIBUTION is network layer pending events");
-                    List<Transaction<DigitalAssetMetadataTransaction>> pendingEventsList=assetTransmissionManager.getPendingTransactions(Specialist.ASSET_USER_SPECIALIST);
+                    List<Transaction<DigitalAssetMetadataTransaction>> pendingEventsList=assetTransmissionManager.getPendingTransactions(Specialist.ASSET_ISSUER_SPECIALIST);
                     System.out.println("ASSET DISTRIBUTION is "+pendingEventsList.size()+" events");
                     for(Transaction<DigitalAssetMetadataTransaction> transaction : pendingEventsList){
                         DigitalAssetMetadataTransaction digitalAssetMetadataTransaction=transaction.getInformation();
@@ -316,6 +316,7 @@ public class AssetDistributionMonitorAgent  implements Agent,DealsWithLogger,Dea
 //                        }
 //                    }
 //                }
+                //TODO: I need to check is get the crypto events is necessary
                 if(isPendingIncomingCryptoEvents()){
                     System.out.println("ASSET DISTRIBUTION is crypto pending events");
                     List<String> eventIdList=assetDistributionDao.getPendingCryptoRouterEvents();
