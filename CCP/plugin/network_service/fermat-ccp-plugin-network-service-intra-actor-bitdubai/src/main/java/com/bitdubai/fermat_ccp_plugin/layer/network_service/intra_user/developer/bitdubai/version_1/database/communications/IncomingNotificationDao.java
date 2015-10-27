@@ -4,10 +4,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.NotificationNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.IntraUserNotificationDescriptor;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.NotificationDescriptor;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -54,10 +54,10 @@ public class IncomingNotificationDao implements DAO {
                                                         final String                          senderAlias         ,
                                                         final byte[]                          senderProfileImage  ,
                                                         final Actors                          destinationType     ,
-                                                        final IntraUserNotificationDescriptor descriptor          ,
+                                                        final NotificationDescriptor descriptor          ,
                                                         final long                            timestamp           ,
                                                         final ActorProtocolState              protocolState       ,
-                                                        final boolean                         flagReaded          ) throws CantCreateIntraUserException {
+                                                        final boolean                         flagReaded          ) throws CantCreateNotificationException {
 
         try {
 
@@ -87,10 +87,10 @@ public class IncomingNotificationDao implements DAO {
 
         } catch (CantInsertRecordException e) {
 
-            throw new CantCreateIntraUserException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
         }
     }
-    public void createNotification(ActorNetworkServiceRecord actorNetworkServiceRecord) throws CantCreateIntraUserException {
+    public void createNotification(ActorNetworkServiceRecord actorNetworkServiceRecord) throws CantCreateNotificationException {
 
         try {
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
@@ -101,7 +101,7 @@ public class IncomingNotificationDao implements DAO {
 
         } catch (CantInsertRecordException e) {
 
-            throw new CantCreateIntraUserException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
         }
     }
 
@@ -133,7 +133,7 @@ public class IncomingNotificationDao implements DAO {
     }
 
     @Override
-    public void markReadedNotification(final UUID notificationId) throws CantConfirmNotificationException {
+    public void markNotificationAsRead(final UUID notificationId) throws CantConfirmNotificationException {
 
         try {
 
@@ -262,13 +262,13 @@ public class IncomingNotificationDao implements DAO {
     }
 
     public void changeIntraUserNotificationDescriptor(final String                 senderPublicKey    ,
-                                    final IntraUserNotificationDescriptor intraUserNotificationDescriptor) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException {
+                                    final NotificationDescriptor notificationDescriptor) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException {
 
 
         if (senderPublicKey == null)
             throw new CantUpdateRecordDataBaseException("requestId null "   , null);
 
-        if (intraUserNotificationDescriptor == null)
+        if (notificationDescriptor == null)
             throw new CantUpdateRecordDataBaseException("protocolState null", null);
 
         try {
@@ -284,7 +284,7 @@ public class IncomingNotificationDao implements DAO {
             if (!records.isEmpty()) {
                 DatabaseTableRecord record = records.get(0);
 
-                record.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, intraUserNotificationDescriptor.getCode());
+                record.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, notificationDescriptor.getCode());
 
                 cryptoPaymentRequestTable.updateRecord(record);
             } else {
@@ -301,14 +301,14 @@ public class IncomingNotificationDao implements DAO {
     }
 
     public ActorNetworkServiceRecord changeIntraUserNotificationDescriptor(final String                 senderPublicKey    ,
-                                                      final IntraUserNotificationDescriptor intraUserNotificationDescriptor,
+                                                      final NotificationDescriptor notificationDescriptor,
                                                       final ActorProtocolState actorProtocolState) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException {
 
 
         if (senderPublicKey == null)
             throw new CantUpdateRecordDataBaseException("requestId null "   , null);
 
-        if (intraUserNotificationDescriptor == null)
+        if (notificationDescriptor == null)
             throw new CantUpdateRecordDataBaseException("protocolState null", null);
 
         try {
@@ -324,7 +324,7 @@ public class IncomingNotificationDao implements DAO {
             if (!records.isEmpty()) {
                 DatabaseTableRecord record = records.get(0);
 
-                record.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, intraUserNotificationDescriptor.getCode());
+                record.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, notificationDescriptor.getCode());
                 record.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, actorProtocolState.getCode());
 
                 cryptoPaymentRequestTable.updateRecord(record);
@@ -378,19 +378,19 @@ public class IncomingNotificationDao implements DAO {
     }
 
     public List<ActorNetworkServiceRecord> listRequestsByProtocolStateAndType(final ActorProtocolState protocolState,
-                                                                         final IntraUserNotificationDescriptor intraUserNotificationDescriptor) throws CantListIntraWalletUsersException {
+                                                                         final NotificationDescriptor notificationDescriptor) throws CantListIntraWalletUsersException {
 
         if (protocolState == null)
             throw new CantListIntraWalletUsersException("protocolState null",null, "The protocolState is required, can not be null","");
 
-        if (intraUserNotificationDescriptor == null)
+        if (notificationDescriptor == null)
             throw new CantListIntraWalletUsersException("type null"         ,null, "The RequestType is required, can not be null" ,"" );
 
         try {
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
             cryptoPaymentRequestTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
-            cryptoPaymentRequestTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME     , intraUserNotificationDescriptor         .getCode(), DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME     , notificationDescriptor.getCode(), DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.loadToMemory();
 
@@ -419,7 +419,7 @@ public class IncomingNotificationDao implements DAO {
         dbRecord.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME, record.getId());
         dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME       , record.getActorSenderAlias());
         dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME       , record.getActorSenderProfileImage().toString());
-        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME         , record.getIntraUserNotificationDescriptor().getCode());
+        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME         , record.getNotificationDescriptor().getCode());
         dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME      , record.getActorDestinationType().getCode());
         dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME        , record.getActorSenderType().getCode());
         dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME  , record.getActorSenderPublicKey());
@@ -450,7 +450,7 @@ public class IncomingNotificationDao implements DAO {
 
         ActorProtocolState  actorProtocolState = ActorProtocolState .getByCode(protocolState);
         Boolean readed =Boolean.valueOf(flagReaded);
-        IntraUserNotificationDescriptor intraUserNotificationDescriptor = IntraUserNotificationDescriptor.getByCode(descriptor);
+        NotificationDescriptor notificationDescriptor = NotificationDescriptor.getByCode(descriptor);
 
         Actors actorDestinationType = Actors.getByCode(destinationType);
         Actors actorSenderType    = Actors.getByCode(senderType   );
@@ -459,7 +459,7 @@ public class IncomingNotificationDao implements DAO {
                 notificationId        ,
                 senderAlias,
                 senderProfileImage.getBytes()     ,
-                intraUserNotificationDescriptor   ,
+                notificationDescriptor,
                 actorDestinationType        ,
                 actorSenderType      ,
                 senderPublicKey    ,

@@ -37,15 +37,16 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.N
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.IntraUserNotificationDescriptor;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.NotificationDescriptor;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorAcceptIntraUserException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorAskIntraUserForAcceptanceException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantAskIntraUserForAcceptanceException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorCancellingIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantConfirmNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorDenyConnectingIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorDisconnectingIntraUserException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorGetNotificationsIntraUserException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantGetNotificationsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorInIntraUserSearchException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorSearchingSuggestionsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
@@ -812,8 +813,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             ActorNetworkServiceRecord actorNetworkServiceRecord = gson.fromJson(fermatMessage.getContent(), ActorNetworkServiceRecord.class);
 
-            //IntraUserNotificationDescriptor intraUserNotificationDescriptor = IntraUserNotificationDescriptor.getByCode(jsonObject.get(JsonObjectConstants.MESSAGE_TYPE).getAsString());
-            switch (actorNetworkServiceRecord.getIntraUserNotificationDescriptor()){
+            //NotificationDescriptor intraUserNotificationDescriptor = NotificationDescriptor.getByCode(jsonObject.get(JsonObjectConstants.MESSAGE_TYPE).getAsString());
+            switch (actorNetworkServiceRecord.getNotificationDescriptor()){
                 case ASKFORACCEPTANCE:
                     System.out.println("----------------------------\n" +
                             "MENSAJE LLEGO EXITOSAMENTE:" + actorNetworkServiceRecord
@@ -840,7 +841,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     break;
                 case ACCEPTED:
                     //TODO: ver si me conviene guardarlo en el outogoing DAO o usar el incoming para las que llegan directamente
-                    actorNetworkServiceRecord.changeDescriptor(IntraUserNotificationDescriptor.ACCEPTED);
+                    actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.ACCEPTED);
                     actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
                     getOutgoingNotificationDao().update(actorNetworkServiceRecord);
 
@@ -889,7 +890,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     // respond receive and done notification
     private void respondReceiveAndDoneCommunication(ActorNetworkServiceRecord actorNetworkServiceRecord){
         actorNetworkServiceRecord.changeState(ActorProtocolState.DONE);
-        actorNetworkServiceRecord.changeDescriptor(IntraUserNotificationDescriptor.RECEIVED);
+        actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.RECEIVED);
 
         changeActor(actorNetworkServiceRecord);
 
@@ -1160,29 +1161,43 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     }
 
     @Override
-    public void askIntraUserForAcceptance(String intraUserLoggedInPublicKey,String intraUserLoggedName,Actors senderType, String intraUserToAddName, String intraUserToAddPublicKey,Actors destinationType, byte[] myProfileImage) throws ErrorAskIntraUserForAcceptanceException {
+    public void askIntraUserForAcceptance(final String intraUserSelectedPublicKey,
+                                          final String intraUserSelectedName     ,
+                                          final Actors senderType                ,
+                                          final String intraUserToAddName        ,
+                                          final String intraUserToAddPublicKey   ,
+                                          final Actors destinationType           ,
+                                          final byte[] myProfileImage            ) throws CantAskIntraUserForAcceptanceException {
 
         try {
 
-
+            UUID                   newNotificationID      = UUID.randomUUID();
+            NotificationDescriptor notificationDescriptor = NotificationDescriptor.ASKFORACCEPTANCE;
+            long                   currentTime            = System.currentTimeMillis();
+            ActorProtocolState     protocolState          = ActorProtocolState.PROCESSING_SEND;
 
             outgoingNotificationDao.createNotification(
-                    UUID.randomUUID(),
-                    intraUserLoggedInPublicKey,
-                    senderType,
-                    intraUserToAddPublicKey,
-                    intraUserLoggedName,
-                    myProfileImage,
-                    destinationType,
-                    IntraUserNotificationDescriptor.ASKFORACCEPTANCE,
-                    System.currentTimeMillis(),
-                    ActorProtocolState.PROCESSING_SEND,
-                    false);
+                    newNotificationID         ,
+                    intraUserSelectedPublicKey,
+                    senderType                ,
+                    intraUserToAddPublicKey   ,
+                    intraUserSelectedName     ,
+                    myProfileImage            ,
+                    destinationType           ,
+                    notificationDescriptor    ,
+                    currentTime               ,
+                    protocolState             ,
+                    false
+            );
 
+        } catch (final CantCreateNotificationException e) {
 
+            reportUnexpectedError(e);
+            throw new CantAskIntraUserForAcceptanceException(e, "intra actor network service", "database corrupted");
+        } catch (final Exception e) {
 
-        } catch (Exception e) {
-            throw new ErrorAskIntraUserForAcceptanceException("ERROR ASK INTRAUSER FOR ACCEPTANCE",e, "", "Generic Exception");
+            reportUnexpectedError(e);
+            throw new CantAskIntraUserForAcceptanceException(e, "intra actor network service", "Unhandled error.");
         }
 
     }
@@ -1193,7 +1208,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         try {
 
 
-            ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToAddPublicKey, IntraUserNotificationDescriptor.ACCEPTED, ActorProtocolState.DONE);
+            ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToAddPublicKey, NotificationDescriptor.ACCEPTED, ActorProtocolState.DONE);
 
 //            actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToAddPublicKey);
 //
@@ -1201,7 +1216,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
             changeActor(actorNetworkServiceRecord);
 
-            actorNetworkServiceRecord.changeDescriptor(IntraUserNotificationDescriptor.ACCEPTED);
+            actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.ACCEPTED);
 
             actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_SEND);
 
@@ -1218,13 +1233,13 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         try {
 
-            ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToRejectPublicKey, IntraUserNotificationDescriptor.DENIED, ActorProtocolState.DONE);
+            ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToRejectPublicKey, NotificationDescriptor.DENIED, ActorProtocolState.DONE);
 
             actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToRejectPublicKey);
 
             actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
 
-            actorNetworkServiceRecord.changeDescriptor(IntraUserNotificationDescriptor.DENIED);
+            actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.DENIED);
 
             actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_SEND);
 
@@ -1243,13 +1258,13 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         //TODO FALTA HACERLO
         try {
 
-            ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToDisconnectPublicKey, IntraUserNotificationDescriptor.DISCONNECTED, ActorProtocolState.DONE);
+            ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToDisconnectPublicKey, NotificationDescriptor.DISCONNECTED, ActorProtocolState.DONE);
 
             actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToDisconnectPublicKey);
 
             actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
 
-            actorNetworkServiceRecord.changeDescriptor(IntraUserNotificationDescriptor.DISCONNECTED);
+            actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.DISCONNECTED);
 
             actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_SEND);
 
@@ -1269,13 +1284,13 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         try {
 
-            ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToCancelPublicKey, IntraUserNotificationDescriptor.CANCEL, ActorProtocolState.DONE);
+            ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToCancelPublicKey, NotificationDescriptor.CANCEL, ActorProtocolState.DONE);
 
             actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToCancelPublicKey);
 
             actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
 
-            actorNetworkServiceRecord.changeDescriptor(IntraUserNotificationDescriptor.CANCEL);
+            actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.CANCEL);
 
             actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_SEND);
 
@@ -1289,7 +1304,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     }
 
     @Override
-    public List<IntraUserNotification> getPendingNotifications() throws ErrorGetNotificationsIntraUserException {
+    public List<IntraUserNotification> getPendingNotifications() throws CantGetNotificationsException {
 
         try {
 
@@ -1298,11 +1313,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         } catch (CantListIntraWalletUsersException e) {
 
             reportUnexpectedError(e);
-            throw new ErrorGetNotificationsIntraUserException(e, "intra actor network service", "database corrupted");
+            throw new CantGetNotificationsException(e, "intra actor network service", "database corrupted");
         } catch (Exception e) {
 
             reportUnexpectedError(e);
-            throw new ErrorGetNotificationsIntraUserException(e, "intra actor network service", "Unhandled error.");
+            throw new CantGetNotificationsException(e, "intra actor network service", "Unhandled error.");
         }
     }
 
@@ -1312,7 +1327,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         try {
 
-            incomingNotificationsDao.markReadedNotification(notificationID);
+            incomingNotificationsDao.markNotificationAsRead(notificationID);
 
         } catch (final CantConfirmNotificationException e) {
 
