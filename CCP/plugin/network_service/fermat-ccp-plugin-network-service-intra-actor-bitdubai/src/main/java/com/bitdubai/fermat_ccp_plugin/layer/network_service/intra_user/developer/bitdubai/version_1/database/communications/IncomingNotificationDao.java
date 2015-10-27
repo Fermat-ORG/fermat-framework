@@ -103,7 +103,7 @@ public class IncomingNotificationDao implements DAO {
         }
     }
 
-    public List<ActorNetworkServiceRecord> listNotificationsUnreaded() throws CantListIntraWalletUsersException {
+    public List<ActorNetworkServiceRecord> listUnreadNotifications() throws CantListIntraWalletUsersException {
 
         try {
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
@@ -412,7 +412,7 @@ public class IncomingNotificationDao implements DAO {
     private DatabaseTableRecord buildDatabaseRecord(final DatabaseTableRecord       dbRecord,
                                                     final ActorNetworkServiceRecord record  ) {
 
-        dbRecord.setUUIDValue  (CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME                 , record.getId());
+        dbRecord.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME, record.getId());
         dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME       , record.getActorSenderAlias());
         dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME       , record.getActorSenderProfileImage().toString());
         dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME         , record.getIntraUserNotificationDescriptor().getCode());

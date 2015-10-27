@@ -1291,7 +1291,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
         List<IntraUserNotification> lstIntraUserNotifications = new ArrayList<>();
         try {
-            lstIntraUserNotifications .addAll(incomingNotificationsDao.listNotificationsUnreaded());
+            lstIntraUserNotifications .addAll(incomingNotificationsDao.listUnreadNotifications());
         } catch (CantListIntraWalletUsersException e) {
             throw new ErrorGetNotificationsIntraUserException("ERROR GETTING NEW NOTIFICATION",e,"intra actor network service","database corrupted");
         }

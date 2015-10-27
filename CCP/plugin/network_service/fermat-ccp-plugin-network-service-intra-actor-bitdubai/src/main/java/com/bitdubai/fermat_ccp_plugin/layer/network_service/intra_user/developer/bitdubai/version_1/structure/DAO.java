@@ -45,7 +45,7 @@ public interface DAO {
                                                                               final IntraUserNotificationDescriptor intraUserNotificationDescriptor) throws CantListIntraWalletUsersException;
 
 
-    public List<ActorNetworkServiceRecord> listNotificationsUnreaded() throws CantListIntraWalletUsersException;
+    public List<ActorNetworkServiceRecord> listUnreadNotifications() throws CantListIntraWalletUsersException;
 
     public void markReadedNotification(UUID notificationId);
 

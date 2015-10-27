@@ -277,7 +277,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
     }
 
     @Override
-    public List<ActorNetworkServiceRecord> listNotificationsUnreaded() throws CantListIntraWalletUsersException {
+    public List<ActorNetworkServiceRecord> listUnreadNotifications() throws CantListIntraWalletUsersException {
         return null;
     }
 
