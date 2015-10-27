@@ -66,7 +66,7 @@ public interface ActorAssetUserManager {
    void registerActorInActorNetowrkSerice() throws CantCreateAssetUserActorException;
 
 
-  void connectToActorAssetUser(ActorAssetIssuer requester, ActorAssetUser actorAssetUser) throws CantConnectToAssetUserException;
+  void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException;
 
 
 }
