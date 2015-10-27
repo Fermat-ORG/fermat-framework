@@ -1,16 +1,18 @@
 package com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddon;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.MissingReferencesException;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.structure.PlatformInfoPlatformService;
@@ -30,73 +32,19 @@ import java.util.UUID;
 /**
  * Created by natalia on 29/07/15.
  */
-public class PlatformInfoPlatformServicePluginRoot implements Addon, DealsWithErrors, DealsWithPlatformFileSystem, LogManagerForDevelopers,PlatformInfoManager,Service,Serializable {
-    PlatformInfoPlatformService platformInfoPlatformService;
+public class PlatformInfoPlatformServicePluginRoot extends AbstractAddon implements DealsWithPlatformFileSystem, PlatformInfoManager {
 
-    /**
-     * DealsWithErrors interface variable
-     */
-    private ErrorManager errorManager;
+    private ErrorManager       errorManager      ;
+    private PlatformFileSystem platformFileSystem;
 
-    /**
-     * * DealsWithPlatformFileSystem interface member variables
-     */
-    PlatformFileSystem platformFileSystem;
+    private PlatformInfoPlatformService platformInfoPlatformService;
 
-    @Override
-    public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
-        this.platformFileSystem = platformFileSystem;
+    public PlatformInfoPlatformServicePluginRoot() {
+        super(new AddonVersionReference(new Version()));
     }
-
-    ;
-    /**
-     * Service Interface member variables.
-     */
-    private ServiceStatus serviceStatus;
-    private UUID uuid;
-
-    private Addons plugins;
-
-    // DealsWithlogManager interface member variable.
-    private LogManager logManager = null;
-    private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-
-    /**
-     * DealsWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-
 
     public void start() throws CantStartPluginException {
         this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    /**
-     * Service Interface implementation.
-     */
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
     }
 
     /**
@@ -117,7 +65,7 @@ public class PlatformInfoPlatformServicePluginRoot implements Addon, DealsWithEr
      * @throws CantLoadPlatformInformationException
      */
     @Override
-    public void setPlatformInfo(PlatformInfo platformInfo) throws CantLoadPlatformInformationException {
+    public void setPlatformInfo(final PlatformInfo platformInfo) throws CantLoadPlatformInformationException {
         if (platformInfoPlatformService == null) {
             platformInfoPlatformService = new PlatformInfoPlatformService();
             platformInfoPlatformService.setPlatformFileSystem(this.platformFileSystem);
@@ -125,36 +73,28 @@ public class PlatformInfoPlatformServicePluginRoot implements Addon, DealsWithEr
          platformInfoPlatformService.setPlatformInfo((com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.structure.PlatformInfo) platformInfo);
     }
 
-    /**
-     * LogManagerForDevelopers Interface implementation.
-     */
-
     @Override
-    public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.PlatformInfoPlatformServicePluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.structure.PlatformInfoPlatformService");
-           /**
-         * I return the values.
-         */
-        return returnedClasses;
+    public List<AddonVersionReference> getNeededAddonReferences() {
+        return null;
     }
 
     @Override
-    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-        /**
-         * I will check the current values and update the LogLevel in those which is different
-         */
-        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-            /**
-             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
-             */
-            if (PlatformInfoPlatformServicePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                PlatformInfoPlatformServicePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                PlatformInfoPlatformServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            } else {
-                PlatformInfoPlatformServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            }
-        }
+    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
+        return null;
+    }
+
+    @Override
+    public FeatureForDevelopers getFeatureForDevelopers(DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
+        return null;
+    }
+
+    @Override
+    protected void validateAndAssignReferences() throws MissingReferencesException {
+
+    }
+
+    @Override
+    public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
+
     }
 }

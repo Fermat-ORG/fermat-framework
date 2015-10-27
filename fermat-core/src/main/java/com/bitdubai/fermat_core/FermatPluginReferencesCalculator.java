@@ -16,7 +16,7 @@ import java.util.Map;
 
 /**
  * The class <code>com.bitdubai.fermat_core.FermatPluginReferencesCalculator</code>
- * is responsible for the injection of the needed references for the plugins.
+ * is responsible for the calculation of the needed references for the plugins.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/10/2015.
  */
