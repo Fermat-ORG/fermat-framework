@@ -200,7 +200,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
         }
     }
     @Override
-    public void delete() throws FileNotFoundException{
+    public void delete() throws FileNotFoundException {
         /**
          *  Evaluate privacyLevel to determine the location of directory - external or internal
          */

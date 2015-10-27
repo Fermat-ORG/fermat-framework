@@ -237,7 +237,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
 //                        Gson gson = new Gson();
 //
-//                        cpr.changeDescriptor(IntraUserNotificationDescriptor.ACCEPTED);
+//                        cpr.changeDescriptor(NotificationDescriptor.ACCEPTED);
 //                        String message = gson.toJson(cpr);
 //
 //                        // El destination soy yo porque me lo estan enviando

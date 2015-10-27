@@ -42,7 +42,7 @@ public class AndroidPlatformBinaryFile implements PlatformBinaryFile {
     private byte[] content;
 
 
-    public AndroidPlatformBinaryFile(final String contextPath, final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan){
+    public AndroidPlatformBinaryFile(final String contextPath, final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan) {
         this.contextPath = contextPath;
         this.directoryName = directoryName;
         this.fileName = fileName;
