@@ -147,10 +147,9 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
         }
 
         private void test_listByActorNetworkServiceUser() throws CantCreateAssetUserActorException {
-            List<ActorAssetUser> list;
 //                Procedimiento para Obtener lista de Actores del Actor Network Service User
             try {
-                list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
+                List<ActorAssetUser> list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
 
                 if (list.isEmpty()) {
                     System.out.println("Lista de Actores de Actor Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");

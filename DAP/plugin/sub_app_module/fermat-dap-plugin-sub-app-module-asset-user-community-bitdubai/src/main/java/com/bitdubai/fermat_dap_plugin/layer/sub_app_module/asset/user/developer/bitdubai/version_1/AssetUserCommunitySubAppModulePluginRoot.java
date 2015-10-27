@@ -132,11 +132,6 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
 
 //        Location location = new DeviceLocation(00.00, 00.00, 12345678910L, 00.00, LocationProvider.NETWORK);
 
-//        actorAssetList.add(new AssetUserActorRecord("Rodrigo Acosta",UUID.randomUUID().toString(),new byte[0],location));
-//        actorAssetList.add(new AssetUserActorRecord("Franklin Marcano",UUID.randomUUID().toString(),new byte[0],location));
-//        actorAssetList.add(new AssetUserActorRecord("Manuel Colmenares",UUID.randomUUID().toString(),new byte[0],location));
-//        actorAssetList.add(new AssetUserActorRecord("Nerio Indriago",UUID.randomUUID().toString(),new byte[0],location));
-
         try {
             actorAssetList = actorAssetUserManager.getAllAssetUserActorRegistered();
 

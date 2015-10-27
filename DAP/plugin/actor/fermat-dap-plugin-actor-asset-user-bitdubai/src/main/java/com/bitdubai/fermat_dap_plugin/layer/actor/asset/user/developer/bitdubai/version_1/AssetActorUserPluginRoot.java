@@ -30,7 +30,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
@@ -39,6 +38,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.excep
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
@@ -58,7 +58,6 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserActorDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.monitorAgent.AssetUserActorMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure.AssetUserActorDao;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -485,8 +484,8 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
      * Metodo para ser usado por el Actor Network Service para Instanciar los ActorAssetUser
      */
     @Override
-    public ActorAssetUser createActorAssetUserFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage, Location assetUserActorlocation) throws CantCreateAssetUserActorException {
-        return new AssetUserActorRecord(assetUserActorPublicKey, assetUserActorName, assetUserActorprofileImage, assetUserActorlocation);
+    public ActorAssetUser createActorAssetUserFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage, Double locationLatitude, Double locationLongitude) throws CantCreateAssetUserActorException {
+        return new AssetUserActorRecord(assetUserActorPublicKey, assetUserActorName, assetUserActorprofileImage, locationLatitude, locationLongitude);
     }
 
     private void registerActorInActorNetowrkSerice() {
@@ -499,21 +498,6 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         } catch (CantRegisterActorAssetUserException | CantGetAssetUsersListException e) {
             e.printStackTrace();
         }
-            /*
-             * Envio de Solicitud al Actor Network Service para obtener List<ActorAseetUser>
-             *     Registrados en el Actor Network Service y registrarlos en table REGISTERED
-             */
-
-//        List<ActorAssetUser> list = new LinkedList<>();
-//            assetUserActorNetworkServiceManager.requestListActorAssetUserRegistered();
-        /*
-        TODO: COMENTADO POR CAMBÏOS EN LA INTERFACE
-        try {
-
-            list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
-        } catch (CantRequestListActorAssetUserRegisteredException e) {
-            e.printStackTrace();
-        }*/
     }
 
 
@@ -521,6 +505,8 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
     public void createAndRegisterActorAssetUserTest() throws CantCreateAssetUserActorException {
 
         try {
+            ActorAssetUser actorAssetUser = this.assetUserActorDao.getActorAssetUser();
+            if (actorAssetUser == null) {
 //            for (int i = 9; i < 10; i++) {
 //                String assetUserActorIdentityToLinkPublicKey = UUID.randomUUID().toString();
                 String assetUserActorPublicKey = UUID.randomUUID().toString();
@@ -535,26 +521,22 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
                         connectionState, locationLatitude, locationLongitude,
                         genesisAddress, System.currentTimeMillis(),
                         System.currentTimeMillis(), new byte[0]);
-                /**
-                 * Register User in Table Actor Asset User, Simulating user in Local Device
-                 */
-//                if (i == 9) {
-                    this.assetUserActorDao.createNewAssetUser(record);
-                    ActorAssetUser actorAssetUser = this.assetUserActorDao.getActorAssetUser();
-                    System.out.println("*****************************************Actor Asset User***********************************************");
-                    System.out.println("Actor Asset PublicKey: " + actorAssetUser.getPublicKey());
-                    System.out.println("Actor Asset Name: " + actorAssetUser.getName());
-                    System.out.println("Actor Asset GenesisAddress in Crypto Address Book: " + actorAssetUser.getCryptoAddress().getAddress());
-                    System.out.println("********************************************************************************************************");
-//                }
 
-                registerActorInActorNetowrkSerice();
+                this.assetUserActorDao.createNewAssetUser(record);
+                actorAssetUser = this.assetUserActorDao.getActorAssetUser();
+                System.out.println("*****************************************Actor Asset User***********************************************");
+                System.out.println("Actor Asset PublicKey: " + actorAssetUser.getPublicKey());
+                System.out.println("Actor Asset Name: " + actorAssetUser.getName());
+                System.out.println("Actor Asset GenesisAddress in Crypto Address Book: " + actorAssetUser.getCryptoAddress().getAddress());
+                System.out.println("********************************************************************************************************");
+            }
+            registerActorInActorNetowrkSerice();
 //                else {
-                /**
-                 * Register User in Table Actor Asset User Registered,
-                 * Simulating other users on their devices, Registered in (Actor Network Service User)
-                 */
-                  // this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(record);
+            /**
+             * Register User in Table Actor Asset User Registered,
+             * Simulating other users on their devices, Registered in (Actor Network Service User)
+             */
+            // this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(record);
 //                }
 //                registerGenesisAddressInCryptoAddressBook(genesisAddress);
 
