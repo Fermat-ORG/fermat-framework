@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.de
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -22,6 +23,7 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.ex
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantAddNewClausesException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListClauseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetNextClauseTypeException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantUpdateClausesException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleNegotiationDaoException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.structure.CustomerBrokerSaleClause;
@@ -273,6 +275,27 @@ public class CustomerBrokerSaleNegotiationDao {
                     return addNewClause(negotiationId, clause.getType(), value, clause.getProposedBy());
                 } catch (CantAddNewClausesException e) {
                     throw new CantUpdateClausesException(CantAddNewClausesException.DEFAULT_MESSAGE, e, "", "");
+                }
+            }
+
+            public ClauseType getNextClauseType(UUID negotiationId) throws CantGetNextClauseTypeException {
+
+                try {
+                    DatabaseTable SaleClauseTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
+                    SaleClauseTable.setUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
+
+                    SaleClauseTable.setFilterOrder(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_INDEX_ORDER_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+                    SaleClauseTable.loadToMemory();
+                    List<DatabaseTableRecord> records = SaleClauseTable.getRecords();
+                    SaleClauseTable.clearAllFilters();
+
+                    return ClauseType.getByCode(records.get(0).getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_TYPE_COLUMN_NAME));
+
+                } catch (CantLoadTableToMemoryException e) {
+                    throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE, e, "", "");
+                } catch (InvalidParameterException e) {
+                    throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE, e, "", "");
                 }
             }
     
