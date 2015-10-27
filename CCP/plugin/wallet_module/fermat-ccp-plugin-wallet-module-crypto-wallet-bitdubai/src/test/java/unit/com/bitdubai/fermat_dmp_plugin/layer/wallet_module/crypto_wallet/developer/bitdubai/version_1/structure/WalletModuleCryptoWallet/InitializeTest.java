@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.WalletModuleCryptoWallet;
 
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
@@ -25,45 +26,59 @@ import static com.googlecode.catchexception.CatchException.*;
 @RunWith(MockitoJUnitRunner.class)
 public class InitializeTest extends TestCase {
 
-    /**
+    */
+/**
      * DealsWithBitcoinWallet interface Mocked
-     */
+     *//*
+
     @Mock
     BitcoinWalletManager bitcoinWalletManager;
 
-    /**
+    */
+/**
      * DealsWithCryptoVault interface Mocked
-     */
+     *//*
+
     @Mock
     CryptoVaultManager cryptoVaultManager;
 
-    /**
+    */
+/**
      * DealsWithErrors interface Mocked
-     */
+     *//*
+
     @Mock
     ErrorManager errorManager;
 
-    /**
+    */
+/**
      * DealsWithExtraUsers interface Mocked
-     */
+     *//*
+
     @Mock
     ExtraUserManager extraUserManager;
 
-    /**
+    */
+/**
      * DealsWithOutgoingExtraUser interface Mocked
-     */
+     *//*
+
     @Mock
     OutgoingExtraUserManager outgoingExtraUserManager;
 
-    /**
+    */
+/**
      * DealsWithCryptoAddressBook interface Mocked
-     */
+     *//*
+
     @Mock
     CryptoAddressBookManager cryptoAddressBookManager;
 
-    /**
+    */
+/**
      * DealsWithWalletContacts interface Mocked
-     */
+     *//*
+
     @Mock
     WalletContactsManager walletContactsManager;
 
@@ -98,3 +113,4 @@ public class InitializeTest extends TestCase {
                 .isInstanceOf(CantInitializeCryptoWalletManagerException.class);
     }
 }
+*/

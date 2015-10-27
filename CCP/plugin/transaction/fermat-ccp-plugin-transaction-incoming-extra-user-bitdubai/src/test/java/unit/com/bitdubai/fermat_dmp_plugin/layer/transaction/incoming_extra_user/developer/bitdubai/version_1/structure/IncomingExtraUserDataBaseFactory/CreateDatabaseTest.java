@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserDataBaseFactory;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -18,9 +19,11 @@ import java.util.UUID;
 import static org.mockito.Mockito.*;
 import static org.fest.assertions.api.Assertions.*;
 
+*/
 /**
  * Created by jorgegonzalez on 2015.07.08..
- */
+ *//*
+
 @RunWith(MockitoJUnitRunner.class)
 public class CreateDatabaseTest {
 
@@ -61,3 +64,4 @@ public class CreateDatabaseTest {
         assertThat(checkDatabase).isNotNull();
     }
 }
+*/
