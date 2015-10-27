@@ -11,14 +11,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
 
 //import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.functional.ErrorReport;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.functional.ErrorReport;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.*;
-import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure.ErrorManagerRegistry;
-import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure.ErrorManagerReportAgent;
 
 import java.io.Serializable;
 
@@ -28,7 +23,7 @@ import java.io.Serializable;
  * Updated by lnacosta (laion.cj91@gmail.com) on 16/10/2015.
  *      Deleted reference to Plugin Database System.
  */
-public class ErrorManagerPlatformServiceAddonRootOld implements Addon, ErrorManager, Service,Serializable {
+public class ErrorManagerPlatformServiceAddonRootOld implements Addon, com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager, Service,Serializable {
 
     /**
      * Service Interface member variables.
@@ -39,32 +34,32 @@ public class ErrorManagerPlatformServiceAddonRootOld implements Addon, ErrorMana
      * ErrorManager Interface implementation.
      */
     @Override
-    public void reportUnexpectedPlatformException(PlatformComponents exceptionSource, UnexpectedPlatformExceptionSeverity unexpectedPlatformExceptionSeverity, Exception exception) {
+    public void reportUnexpectedPlatformException(PlatformComponents exceptionSource, com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPlatformExceptionSeverity unexpectedPlatformExceptionSeverity, Exception exception) {
         processException(exceptionSource.name(), unexpectedPlatformExceptionSeverity.name(), exception);
     }
 
     @Override
-    public void reportUnexpectedPluginException(Plugins exceptionSource, UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception) {
+    public void reportUnexpectedPluginException(Plugins exceptionSource, com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception) {
         processException(exceptionSource.toString(), unexpectedPluginExceptionSeverity.toString(), exception);
     }
 
     @Override
-    public void reportUnexpectedWalletException(Wallets exceptionSource, UnexpectedWalletExceptionSeverity unexpectedWalletExceptionSeverity, Exception exception) {
+    public void reportUnexpectedWalletException(Wallets exceptionSource, com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity unexpectedWalletExceptionSeverity, Exception exception) {
         processException(exceptionSource.toString(), unexpectedWalletExceptionSeverity.toString(),exception);
     }
 
     @Override
-    public void reportUnexpectedAddonsException(Addons exceptionSource, UnexpectedAddonsExceptionSeverity unexpectedAddonsExceptionSeverity, Exception exception) {
+    public void reportUnexpectedAddonsException(Addons exceptionSource, com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedAddonsExceptionSeverity unexpectedAddonsExceptionSeverity, Exception exception) {
         processException(exceptionSource.toString(), unexpectedAddonsExceptionSeverity.toString(), exception);
     }
 
     @Override
-    public void reportUnexpectedSubAppException(SubApps exceptionSource, UnexpectedSubAppExceptionSeverity unexpectedSubAppExceptionSeverity, Exception exception) {
+    public void reportUnexpectedSubAppException(SubApps exceptionSource, com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity unexpectedSubAppExceptionSeverity, Exception exception) {
         processException(exceptionSource.toString(), unexpectedSubAppExceptionSeverity.toString(), exception);
     }
 
     @Override
-    public void reportUnexpectedUIException(UISource exceptionSource, UnexpectedUIExceptionSeverity unexpectedAddonsExceptionSeverity, Exception exception) {
+    public void reportUnexpectedUIException(UISource exceptionSource, com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity unexpectedAddonsExceptionSeverity, Exception exception) {
         processException(exceptionSource.toString(), unexpectedAddonsExceptionSeverity.toString(), exception);
     }
 

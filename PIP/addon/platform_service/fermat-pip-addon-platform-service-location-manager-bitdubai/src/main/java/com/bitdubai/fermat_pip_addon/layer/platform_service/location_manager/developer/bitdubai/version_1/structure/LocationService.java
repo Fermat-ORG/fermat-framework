@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.location_subsystem.LocationSubsystem;
+import com.bitdubai.fermat_pip_api.layer.platform_service.location_subsystem.LocationSubsystem;
 
 /**
  * Implementation of the interface that is going to be used by upper layers
