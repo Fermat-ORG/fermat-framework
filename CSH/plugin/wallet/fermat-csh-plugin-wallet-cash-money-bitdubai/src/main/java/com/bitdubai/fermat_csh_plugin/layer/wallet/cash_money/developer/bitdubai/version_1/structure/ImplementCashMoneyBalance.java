@@ -10,6 +10,8 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.interfaces.CashMo
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.database.CashMoneyWalletDao;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddCashMoneyBalance;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddCashMoneyBalanceDatabase;
+import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetCashMoneyBalance;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import java.util.Date;
 import java.util.UUID;
@@ -28,13 +30,27 @@ public class ImplementCashMoneyBalance implements CashMoneyBalance{
     private String stringTime ;
     private String stringAmount;
     private String stringBalance;
+    private BalanceType balanceType;
     UUID idTransaction;
+
+    private DeviceUserManager deviceUserManager;
 
     CashMoneyWalletDao cashMoneyWalletDao = new CashMoneyWalletDao(pluginDatabaseSystem);
     ImplementCashMoneyBalanceRecord implementCashMoneyBalanceRecord = new ImplementCashMoneyBalanceRecord();
+
+    /**
+     *
+     * @return
+     * @throws CantCalculateBalanceException
+     */
     @Override
     public double getBalance() throws CantCalculateBalanceException {
-        return 0;
+        try {
+            return amountBalance = cashMoneyWalletDao.getCashMoneyBalance(balanceType);
+        } catch (CantGetCashMoneyBalance cantGetCashMoneyBalance) {
+            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE,cantGetCashMoneyBalance,"Cant Get CashMoney Balance","Cant Calculate Balance Exception");
+        }
+
     }
 
     /**
@@ -45,16 +61,20 @@ public class ImplementCashMoneyBalance implements CashMoneyBalance{
      */
     @Override
     public void debit(CashMoneyBalanceRecord cashMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterDebitException {
-        amountDebit = cashMoneyBalanceRecord.getAmount();
-        amountDebit = implementCashMoneyBalanceRecord.getAmount() - amountDebit;
-        Date date = new Date();
-        time = date.getTime();
-        stringTime= String.valueOf(time);
-        stringAmount = String.valueOf(amountDebit);
+
+
         try {
+            amountDebit = getBalance() - cashMoneyBalanceRecord.getAmount();
+            Date date = new Date();
+            time = date.getTime();
+            stringTime= String.valueOf(time);
+            stringAmount = String.valueOf(amountDebit);
             addCashMoneyBalanceDatabase(stringAmount, "0","0",stringTime);
         } catch (CantAddCashMoneyBalanceDatabase cantAddCashMoneyBalanceDatabase) {
-            cantAddCashMoneyBalanceDatabase.printStackTrace();
+            throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE,cantAddCashMoneyBalanceDatabase,"Cant Calculate Balance Exception","Cant Add CashMoney Balance Database");
+
+        } catch (CantCalculateBalanceException e) {
+            throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE,e,"Cant Calculate Balance Exception","Cant Register Debit Exception");
         }
     }
     /**
@@ -65,19 +85,18 @@ public class ImplementCashMoneyBalance implements CashMoneyBalance{
      */
     @Override
     public void credit(CashMoneyBalanceRecord cashMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterCreditException {
-        amountCredit = cashMoneyBalanceRecord.getAmount();
-        amountCredit= implementCashMoneyBalanceRecord.getAmount() + amountCredit;
-        Date date = new Date();
-        time = date.getTime();
-        stringTime= String.valueOf(time);
-        stringAmount = String.valueOf(amountCredit);
-
-
-        try {
+       try {
+           amountCredit = getBalance() + cashMoneyBalanceRecord.getAmount();
+           Date date = new Date();
+           time = date.getTime();
+           stringTime= String.valueOf(time);
+           stringAmount = String.valueOf(amountCredit);
             addCashMoneyBalanceDatabase("0",stringAmount,"0",stringTime);
         } catch (CantAddCashMoneyBalanceDatabase cantAddCashMoneyBalanceDatabase) {
-            cantAddCashMoneyBalanceDatabase.printStackTrace();
-        }
+           throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE,cantAddCashMoneyBalanceDatabase,"Cant Register Credit Exception","Cant Add CashMoney Balance Database");
+        } catch (CantCalculateBalanceException e) {
+           throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE,e,"Cant Register Credit Exception","Cant Calculate Balance Exception");
+       }
     }
 
     /**

@@ -10,8 +10,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.interfaces.CashMoneyTransaction;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddCashMoney;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddCashMoneyBalance;
+import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetBalancesRecord;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetCashMoneyBalance;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantInitializeCashMoneyWalletDatabaseException;
 
@@ -132,21 +134,38 @@ public class CashMoneyWalletDao {
     }
     }
 
+    public void addDebit(CashMoneyTransaction cashMoneyTransaction, BalanceType balanceType) throws CantGetBalancesRecord {
+        double availableAmount;
+        double availableRunningBalance;
+        double bookAmount;
+        double bookRunningBalance;
+        if (balanceType == BalanceType.AVAILABLE){
+            availableAmount  = cashMoneyTransaction.getAmount();
+            availableRunningBalance = getCurrentBalance(BalanceType.AVAILABLE) + (-availableAmount);
+        }
+        if (balanceType == BalanceType.BOOK){
+            bookAmount  = cashMoneyTransaction.getAmount();
+            bookRunningBalance = getCurrentBalance(BalanceType.BOOK) + (-bookAmount);
+        }
+
+
+    }
     /**
      *
      * @return
      * @throws CantGetCashMoneyBalance
      */
-    public float getCashMoneyBalance(BalanceType balanceType) throws CantGetCashMoneyBalance {
-
-        long balanceAmount = 0;
+    public double getCashMoneyBalance(BalanceType balanceType) throws CantGetCashMoneyBalance {
+        double balanceAmount = 0;
         if (balanceType == BalanceType.AVAILABLE){
-            for (DatabaseTableRecord record : getBalancesRecord()){
-                balanceAmount += record.getFloatValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_AVAILABLE_BALANCE_COLUMN_NAME);
+            for (DatabaseTableRecord record : getBalancesRecordList()){
+                String stringAmununt = record.getStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_AVAILABLE_BALANCE_COLUMN_NAME);
+                balanceAmount += Double.valueOf(stringAmununt);
             }
         } else {
-            for (DatabaseTableRecord record : getBalancesRecord()){
-                balanceAmount += record.getFloatValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_BOOK_BALANCE_COLUMN_NAME);
+            for (DatabaseTableRecord record : getBalancesRecordList()){
+                String stringAmununt = record.getStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_BOOK_BALANCE_COLUMN_NAME);
+                balanceAmount += Double.valueOf(stringAmununt);
             }
         }
         return balanceAmount;
@@ -154,10 +173,38 @@ public class CashMoneyWalletDao {
 
     /**
      *
+     * @param balanceType
+     * @return
+     * @throws CantGetBalancesRecord
+     */
+    private Double getCurrentBalance(BalanceType balanceType) throws CantGetBalancesRecord {
+        if (balanceType == balanceType.AVAILABLE)
+            return Double.valueOf(getBalancesRecord().getStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_AVAILABLE_BALANCE_COLUMN_NAME));
+        else
+            return Double.valueOf(getBalancesRecord().getStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_BOOK_BALANCE_COLUMN_NAME));
+        }
+
+    /**
+     *
+     * @return
+     * @throws CantGetBalancesRecord
+     */
+         private DatabaseTableRecord getBalancesRecord() throws CantGetBalancesRecord {
+        try {
+            DatabaseTable balancesTable = database.getTable(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_TABLE_NAME);
+            balancesTable.loadToMemory();
+            return balancesTable.getRecords().get(0);
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantGetBalancesRecord(CantGetBalancesRecord.DEFAULT_MESSAGE,exception,"Cant Get Balances Record","Cant Load Table To Memory Exception");
+        }
+    }
+
+    /**
+     *
      * @return
      */
     //TODO AGREGAR EXCEPCIONES.
-    private List<DatabaseTableRecord> getBalancesRecord(){
+    private List<DatabaseTableRecord> getBalancesRecordList(){
         DatabaseTable totalBalancesTable = null;
         try {
             totalBalancesTable = this.database.getTable(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_TABLE_NAME);

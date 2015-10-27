@@ -7,7 +7,6 @@ import com.bitdubai.fermat_csh_api.all_definition.enums.CashTransactionStatus;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.interfaces.CashMoneyBalanceRecord;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.database.CashMoneyWalletDao;
-import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetCashMoneyBalance;
 
 import java.util.UUID;
 
@@ -55,20 +54,8 @@ public class ImplementCashMoneyBalanceRecord implements CashMoneyBalanceRecord {
     }
 
     @Override
-    public double getAmount() {
-        try {
-            if (cashMoneyWalletDao.getCashMoneyBalance().size() !=0 ){
-                cashMoneyWalletDao.getCashMoneyBalance();
-              //  amountBalance = Double.parseDouble(cashMoney.getGetAmount());
-            }
-            else  {
-                amountBalance=0;
-            }
-        } catch (CantGetCashMoneyBalance cantGetCashMoneyBalance) {
-            cantGetCashMoneyBalance.printStackTrace();
-        }
-
-        return amountBalance;
+    public double getAmount(){
+        return 0;
     }
 
     @Override
