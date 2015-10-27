@@ -6,13 +6,14 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetIssuerWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetVault;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import java.util.UUID;
 
@@ -52,6 +53,14 @@ public class DigitalAssetDistributionVault extends AbstractDigitalAssetVault {
         );
         System.out.println("ASSET DISTRIBUTION AssetIssuerWalletTransactionRecordWrapper:"+assetIssuerWalletTransactionRecordWrapper.getDescription());
         System.out.println("ASSET DISTRIBUTION Balance Type:"+balanceType);
+        //I'm gonna mock a credit in Asset issuer wallet for testing, TODO: delete this lines in advanced testing
+        try {
+            assetIssuerWalletBalance.credit(assetIssuerWalletTransactionRecordWrapper, BalanceType.BOOK);
+            assetIssuerWalletBalance.credit(assetIssuerWalletTransactionRecordWrapper, BalanceType.AVAILABLE);
+        } catch (CantRegisterCreditException e) {
+            e.printStackTrace();
+        }
+        //End mock
         assetIssuerWalletBalance.debit(assetIssuerWalletTransactionRecordWrapper, balanceType);
     }
 

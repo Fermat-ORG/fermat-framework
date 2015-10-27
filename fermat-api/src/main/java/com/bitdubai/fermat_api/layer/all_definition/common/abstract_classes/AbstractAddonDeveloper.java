@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterVersionException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPluginDeveloperException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartAddonDeveloperException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
@@ -71,6 +71,6 @@ public abstract class AbstractAddonDeveloper {
         return addonDeveloperReference;
     }
 
-    public abstract void start() throws CantStartPluginDeveloperException;
+    public abstract void start() throws CantStartAddonDeveloperException;
 
 }

@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.database.AssetUserActorDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.database.AssetUserActorDatabaseFactory;
@@ -67,10 +68,11 @@ public class AssetUserActorDao implements Serializable {
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
 
-    public AssetUserActorDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public AssetUserActorDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) throws CantInitializeAssetUserActorDatabaseException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+        initializeDatabase();
     }
 
     /**
@@ -83,7 +85,7 @@ public class AssetUserActorDao implements Serializable {
      *
      * @throws CantInitializeAssetUserActorDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeAssetUserActorDatabaseException {
+    private void initializeDatabase() throws CantInitializeAssetUserActorDatabaseException {
         try {
              /*
               * Open new database connection
@@ -144,11 +146,11 @@ public class AssetUserActorDao implements Serializable {
                     record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTRATION_DATE_COLUMN_NAME, actorAssetUserRecord.getRegistrationDate());
                     record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_LAST_CONNECTION_DATE_COLUMN_NAME, actorAssetUserRecord.getLastConnectionDate());
 
+                    table.insertRecord(record);
                     /**
                      * Persist profile image on a file
                      */
                     persistNewAssetUserProfileImage(actorAssetUserRecord.getPublicKey(), actorAssetUserRecord.getProfileImage());
-                    table.insertRecord(record);
                 }
             }
             database.closeDatabase();
@@ -474,7 +476,7 @@ public class AssetUserActorDao implements Serializable {
 
     public ActorAssetUser getActorAssetUser() throws CantGetAssetUsersListException {
 
-        ActorAssetUser assetUserActorRecord = new AssetUserActorRecord();
+        ActorAssetUser assetUserActorRecord = new com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord();
         DatabaseTable table;
 
         // Get Asset Users identities list.
@@ -665,13 +667,13 @@ public class AssetUserActorDao implements Serializable {
     }
 
     private ActorAssetUser addRecords(List<DatabaseTableRecord> records) throws InvalidParameterException, CantGetAssetUserActorProfileImageException {
-        AssetUserActorRecord actorAssetUser = null;
+        com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord actorAssetUser = null;
         for (DatabaseTableRecord record : records) {
 
             CryptoAddress cryptoAddress = new CryptoAddress(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME),
                     CryptoCurrency.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME)));
 
-            actorAssetUser = new AssetUserActorRecord(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_PUBLIC_KEY_COLUMN_NAME),
+            actorAssetUser = new com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_PUBLIC_KEY_COLUMN_NAME),
                     record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NAME_COLUMN_NAME),
                     record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_AGE_COLUMN_NAME),
                     Genders.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GENDER_COLUMN_NAME)),
@@ -693,7 +695,7 @@ public class AssetUserActorDao implements Serializable {
             CryptoAddress cryptoAddress = new CryptoAddress(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME),
                     CryptoCurrency.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME)));
 
-            list.add(new AssetUserActorRecord(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME),
+            list.add(new com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME),
                     record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NAME_COLUMN_NAME),
                     record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_AGE_COLUMN_NAME),
                     Genders.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_GENDER_COLUMN_NAME)),

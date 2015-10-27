@@ -1,11 +1,12 @@
 package com.bitdubai.fermat_cbp_api.all_definition.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Created by jorge on 12-10-2015.
  */
-public enum ClauseStatus {
+public enum ClauseStatus implements FermatEnum {
     DRAFT("DRA"),
     SENT_TO_BROKER("STB"),
     WAITING_FOR_BROKER("WFB"),
@@ -20,6 +21,7 @@ public enum ClauseStatus {
         this.code = code;
     }
 
+    @Override
     public String getCode() {
         return this.code;
     }
