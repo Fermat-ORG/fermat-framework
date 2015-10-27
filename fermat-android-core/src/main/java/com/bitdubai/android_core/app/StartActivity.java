@@ -240,8 +240,7 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
                 databaseSystemOs = new AndroidOsDataBaseSystem(context.getFilesDir().getPath());
                 platform.setDataBaseSystemOs(databaseSystemOs);
 
-           locationSystemOs = new AndroidOsLocationSystem();
-                   locationSystemOs.setContext(context);
+           locationSystemOs = new AndroidOsLocationSystem(context);
                     platform.setLocationSystemOs(locationSystemOs);
 
 
