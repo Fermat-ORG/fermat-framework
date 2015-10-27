@@ -201,6 +201,6 @@ First read
 [CONTRIBUTING.md](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md),
 then learn how to pull the repo and hack on Fermat.
 
-![alt text](https://raw.githubusercontent.com/bitDubai/fermat-graphic-design/23e80632772d56feaa742c6d8694b6a333a8be05/3D%20Design/Modelo%20moneda%20Fermat-Bitcoin/Renders%20finales/Bitcoin.jpg?token=ANBHS5cmj_68r_f7PwgSdWbO3MUYOg0qks5WOQ6LwA%3D%3D "Fermat Coin")
+![alt text](https://raw.githubusercontent.com/bitDubai/fermat-graphic-design/301890ab07afcf498a62aaa5725bd4a39d6f6753/3D%20Design/Modelo%20moneda%20Fermat-Bitcoin/Renders%20finales/Bitcoin.jpg?token=ANBHS6g9HaLfCDqFgBJSn10nBfkoq-bhks5WOSmzwA%3D%3D "Fermat Coin")
 
 
