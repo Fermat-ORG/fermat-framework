@@ -278,7 +278,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 
     public void distributionAssets(String assetPublicKey, String walletPublicKey, List<ActorAssetUser> actorAssetUsers)  throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException {
         try{
-            //TODO: Esta comentado solo para la prueba del Dsitribution
+            //TODO: Esta comentado solo para la prueba del Distribution
             //Buscar el Asset Balance con la data para traerse las propiedades del Digital Asset que me entrego el Issuing en su momento.
 //            List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions;
 //
