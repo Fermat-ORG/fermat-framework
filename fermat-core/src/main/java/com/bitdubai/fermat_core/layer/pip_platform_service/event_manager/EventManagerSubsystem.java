@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_core.layer.pip_platform_service.event_manager;
 
 import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.CantStartSubsystemException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.PlatformServiceSubsystem;
+import com.bitdubai.fermat_pip_api.layer.platform_service.CantStartSubsystemException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.PlatformServiceSubsystem;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer.bitdubai.DeveloperBitDubaiOld;
 
 /**

@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.location_subsystem.LocationSubsystem;
+import com.bitdubai.fermat_pip_api.layer.platform_service.location_subsystem.LocationSubsystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.*;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.*;
 
