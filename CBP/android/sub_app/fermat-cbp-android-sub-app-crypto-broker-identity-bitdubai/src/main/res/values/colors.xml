@@ -2,6 +2,8 @@
 <resources>
 
     <color name="tab_pressed_background">#6633B5E5</color>
+    <color name="activity_color">#1189a5</color>
+    <color name="status_bar_color">#0e738b</color>
     <color name="sub_app_background">#dbe6ee</color>
     <color name="circle_border">#b3d3df</color>
     <color name="create_identity_fragment_background">#eaeaea</color>

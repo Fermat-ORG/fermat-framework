@@ -1,7 +1,10 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders;
 
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.support.v4.graphics.ColorUtils;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
@@ -22,9 +25,12 @@ public class GrouperViewHolder extends ParentViewHolder {
     private static final long DEFAULT_ROTATE_DURATION_MS = 200;
     private static final boolean HONEYCOMB_AND_ABOVE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
 
+    private View itemView;
+
     public TextView mNumberTextView;
     public TextView mDataTextView;
     public ImageView mArrowExpandImageView;
+    public ColorDrawable background;
 
     /**
      * Public constructor for the CustomViewHolder.
@@ -34,6 +40,7 @@ public class GrouperViewHolder extends ParentViewHolder {
     public GrouperViewHolder(View itemView) {
         super(itemView);
 
+        this.itemView = itemView;
         mNumberTextView = (TextView) itemView.findViewById(R.id.cbw_customers_count);
         mDataTextView = (TextView) itemView.findViewById(R.id.cbw_group_description);
         mArrowExpandImageView = (ImageView) itemView.findViewById(R.id.cbw_arrow);
@@ -48,6 +55,11 @@ public class GrouperViewHolder extends ParentViewHolder {
     public void bind(int childCount, String parentText) {
         mNumberTextView.setText(String.valueOf(childCount));
         mDataTextView.setText(parentText);
+    }
+
+    public void setBackgroundColor(int colorResource) {
+        int color = itemView.getResources().getColor(colorResource);
+        itemView.setBackgroundColor(color);
     }
 
     @Override
@@ -69,7 +81,7 @@ public class GrouperViewHolder extends ParentViewHolder {
     public void onExpansionToggled(boolean wasExpanded) {
         super.onExpansionToggled(wasExpanded);
 
-        mNumberTextView.setVisibility(wasExpanded ? View.VISIBLE: View.GONE);
+        mNumberTextView.setVisibility(wasExpanded ? View.VISIBLE : View.GONE);
 
         if (!HONEYCOMB_AND_ABOVE) {
             return;

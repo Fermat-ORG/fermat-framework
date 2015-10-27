@@ -33,6 +33,7 @@
         android:background="@drawable/cbw_customer_count_background"
         android:gravity="center"
         android:textColor="@color/withe"
+        android:visibility="gone"
         android:textSize="@dimen/cbw_customer_count_text_size"
         tools:text="3"/>
 

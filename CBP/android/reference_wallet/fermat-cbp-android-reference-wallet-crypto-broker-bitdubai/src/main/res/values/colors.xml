@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="cbw_activity_color">#1189a5</color>
+    <color name="cbw_status_bar_color">#0e738b</color>
     <color name="background_tab_pressed">#6633B5E5</color>
     <color name="app_background">#ffffff</color>
     <color name="black">#000000</color>
@@ -9,5 +11,6 @@
     <color name="dark_grey">#7b7b7b</color>
     <color name="withe">#FFFFFF</color>
     <color name="waiting_for_text">#398f4a</color>
+    <color name="cbw_waiting_for_broker_grouper_background">#43c4e7</color>
 
 </resources>

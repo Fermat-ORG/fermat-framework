@@ -67,6 +67,10 @@ public class OpenNegotiationsExpandableAdapter
     @Override
     public void onBindParentViewHolder(GrouperViewHolder parentViewHolder, int position, GrouperItem parentListItem) {
         parentViewHolder.bind(parentListItem.getChildCount(), parentListItem.getParentText());
+
+        if (!parentListItem.getParentText().toLowerCase().contains("customer")) {
+            parentViewHolder.setBackgroundColor(R.color.cbw_waiting_for_broker_grouper_background);
+        }
     }
 
     /**

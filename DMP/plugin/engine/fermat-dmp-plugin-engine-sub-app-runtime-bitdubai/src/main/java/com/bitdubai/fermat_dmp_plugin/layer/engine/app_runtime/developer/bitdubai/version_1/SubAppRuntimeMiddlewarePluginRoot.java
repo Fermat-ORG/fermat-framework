@@ -1081,15 +1081,15 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeSubApp.addActivity(runtimeActivity);
             runtimeSubApp.setStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
 
+            statusBar = new StatusBar();
+            statusBar.setColor("#0e738b");
+            runtimeActivity.setStatusBar(statusBar);
+
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Crypto Broker Identity");
             runtimeTitleBar.setColor("#FFFFFF");
             runtimeTitleBar.setLabelSize(16);
             runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#0288D1");
-            runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
@@ -1104,15 +1104,15 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity.setColor("#1189a5");
             runtimeSubApp.addActivity(runtimeActivity);
 
+            statusBar = new StatusBar();
+            statusBar.setColor("#0e738b");
+            runtimeActivity.setStatusBar(statusBar);
+
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Create New Identity");
             runtimeTitleBar.setColor("#FFFFFF");
             runtimeTitleBar.setLabelSize(16);
             runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#0288D1");
-            runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
@@ -1127,15 +1127,15 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity.setColor("#1189a5");
             runtimeSubApp.addActivity(runtimeActivity);
 
+            statusBar = new StatusBar();
+            statusBar.setColor("#0e738b");
+            runtimeActivity.setStatusBar(statusBar);
+
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Edit Identity");
             runtimeTitleBar.setColor("#FFFFFF");
             runtimeTitleBar.setLabelSize(16);
             runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#0288D1");
-            runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
