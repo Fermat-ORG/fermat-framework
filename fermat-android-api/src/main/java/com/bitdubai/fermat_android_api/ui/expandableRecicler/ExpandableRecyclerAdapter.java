@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
+
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +44,8 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * available in {@link ExpandableRecyclerAdapter}
      */
     protected List<Object> mItemList;
+    protected FermatListItemListeners<PI> parentItemEventListeners;
+    protected FermatListItemListeners<CI> childItemEventListeners;
 
     private List<? extends ParentListItem> mParentItemList;
     private ExpandCollapseListener mExpandCollapseListener;
@@ -120,12 +125,11 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      *
      * @param holder   The RecyclerView.ViewHolder to bind data to
      * @param position The index in the list at which to bind
-     * @throws IllegalStateException if the item in the list is either null or
-     *                               not of type {@link ParentListItem}
+     * @throws IllegalStateException if the item in the list is either null or not of type {@link ParentListItem}
      */
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Object listItem = getListItem(position);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        final Object listItem = getListItem(position);
         if (listItem instanceof ParentWrapper) {
             PVH parentViewHolder = (PVH) holder;
 
@@ -136,11 +140,70 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             ParentWrapper parentWrapper = (ParentWrapper) listItem;
             parentViewHolder.setExpanded(parentWrapper.isExpanded());
             onBindParentViewHolder(parentViewHolder, position, (PI) parentWrapper.getParentListItem());
+            bindParentItemEventListeners(parentViewHolder, position, (PI) parentWrapper.getParentListItem());
+
         } else if (listItem == null) {
             throw new IllegalStateException("Incorrect ViewHolder found");
         } else {
             onBindChildViewHolder((CVH) holder, position, (CI) listItem);
+            bindChildItemEventListeners(holder, position, (CI) listItem);
         }
+    }
+
+    /**
+     * Bind a event listener to a child item
+     *
+     * @param holder   the view holder with the views fot this item
+     * @param position the position of the item in the list
+     * @param listItem the item itself
+     */
+    private void bindChildItemEventListeners(RecyclerView.ViewHolder holder, final int position, final CI listItem) {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (childItemEventListeners != null) {
+                    childItemEventListeners.onItemClickListener(listItem, position);
+                }
+            }
+        });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (childItemEventListeners != null) {
+                    childItemEventListeners.onLongItemClickListener(listItem, position);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    /**
+     * Bind a event listener to a parent item
+     *
+     * @param holder   the view holder with the views fot this item
+     * @param position the position of the item in the list
+     * @param listItem the item itself
+     */
+    private void bindParentItemEventListeners(RecyclerView.ViewHolder holder, final int position, final PI listItem) {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (parentItemEventListeners != null) {
+                    parentItemEventListeners.onItemClickListener(listItem, position);
+                }
+            }
+        });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (parentItemEventListeners != null) {
+                    parentItemEventListeners.onLongItemClickListener(listItem, position);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     /**
@@ -820,6 +883,24 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
             mItemList.set(listChildPosition, child);
             notifyItemChanged(listChildPosition);
         }
+    }
+
+    /**
+     * Set the event listener fot the child items
+     *
+     * @param eventListeners the object with the event listeners
+     */
+    public void setChildItemFermatEventListeners(FermatListItemListeners<CI> eventListeners) {
+        this.childItemEventListeners = eventListeners;
+    }
+
+    /**
+     * Set the event listener fot the child items
+     *
+     * @param eventListeners the object with the event listeners
+     */
+    public void setParentItemFermatEventListeners(FermatListItemListeners<PI> eventListeners) {
+        this.parentItemEventListeners = eventListeners;
     }
 
 
