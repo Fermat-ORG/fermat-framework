@@ -266,6 +266,15 @@ public class CustomerBrokerSaleNegotiationDao {
                     throw new CantUpdateClausesException(CantUpdateClausesException.DEFAULT_MESSAGE, e, "", "");
                 }
             }
+
+            public Clause modifyClause(UUID negotiationId, Clause clause, String value) throws CantUpdateClausesException {
+                try {
+                    modifyClauseStatus(negotiationId, clause, ClauseStatus.REJECTED);
+                    return addNewClause(negotiationId, clause.getType(), value, clause.getProposedBy());
+                } catch (CantAddNewClausesException e) {
+                    throw new CantUpdateClausesException(CantAddNewClausesException.DEFAULT_MESSAGE, e, "", "");
+                }
+            }
     
         /*
             Private methods
