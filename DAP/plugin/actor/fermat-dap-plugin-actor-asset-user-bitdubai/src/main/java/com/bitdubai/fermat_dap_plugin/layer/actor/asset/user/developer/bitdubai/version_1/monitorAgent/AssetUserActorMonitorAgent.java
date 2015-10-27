@@ -155,8 +155,8 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
                     System.out.println("Lista de Actores de Actor Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
                 } else {
                     System.out.println("Se Recibio Lista de: " + list.size() + " Actors desde Actor Network Service - SE PROCEDE A SU REGISTRO");
-                    assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(list);
-                    System.out.println("Se Registro en tabla ASSET_USER_REGISTER_ACTOR Lista de: " + list.size() + " Actors desde Actor Network Service");
+                    int recordInsert = assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(list);
+                    System.out.println("Se Registro en tabla ASSET_USER_REGISTER_ACTOR Lista de: " + recordInsert + " Actors desde Actor Network Service");
                 }
 
             } catch (CantRequestListActorAssetUserRegisteredException e) {

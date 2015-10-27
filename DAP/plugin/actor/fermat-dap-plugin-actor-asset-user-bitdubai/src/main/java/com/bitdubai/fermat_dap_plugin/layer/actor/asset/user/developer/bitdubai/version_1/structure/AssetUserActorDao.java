@@ -289,7 +289,8 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    public void createNewAssetUserRegisterInNetworkServiceByList(List<ActorAssetUser> actorAssetUserRecord) throws CantAddPendingAssetUserException {
+    public int createNewAssetUserRegisterInNetworkServiceByList(List<ActorAssetUser> actorAssetUserRecord) throws CantAddPendingAssetUserException {
+        int recordInsert = 0;
         try {
             /**
              * if Asset User exist on table
@@ -343,6 +344,7 @@ public class AssetUserActorDao implements Serializable {
                         record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
 
                         table.insertRecord(record);
+                        recordInsert = recordInsert + 1;
                         /**
                          * Persist profile image on a file
                          */
@@ -360,6 +362,7 @@ public class AssetUserActorDao implements Serializable {
         } finally {
             database.closeDatabase();
         }
+        return recordInsert;
     }
 
     public void updateAssetUserConnectionStateActorNetworService(String assetUserPublicKey, ConnectionState connectionState) throws CantUpdateAssetUserConnectionException {
