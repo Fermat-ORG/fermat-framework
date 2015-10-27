@@ -127,7 +127,17 @@ import java.util.regex.Pattern;
  * @version 1.0
  */
 
-public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implements IntraUserManager, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithPluginFileSystem,DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, DatabaseManagerForDevelopers {
+public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implements
+        IntraUserManager,
+        NetworkService,
+        DealsWithWsCommunicationsCloudClientManager,
+        DealsWithPluginFileSystem,
+        DealsWithPluginDatabaseSystem,
+        DealsWithEvents,
+        DealsWithErrors,
+        DealsWithLogger,
+        LogManagerForDevelopers,
+        DatabaseManagerForDevelopers {
 
 
 
@@ -660,7 +670,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             actorNetworkServiceRecordedAgent.start();
 
         } catch (CantStartAgentException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 
