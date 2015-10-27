@@ -298,6 +298,26 @@ public class CustomerBrokerSaleNegotiationDao {
                     throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE, e, "", "");
                 }
             }
+
+            public String getPaymentMethod(UUID negotiationId) throws CantGetNextClauseTypeException {
+        
+                try {
+                    DatabaseTable SaleClauseTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
+                    SaleClauseTable.setUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
+                    SaleClauseTable.setStringFilter(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_TYPE_COLUMN_NAME, ClauseType.CUSTOMER_PAYMENT_METHOD.getCode(), DatabaseFilterType.EQUAL);
+        
+                    SaleClauseTable.setFilterOrder(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_INDEX_ORDER_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+        
+                    SaleClauseTable.loadToMemory();
+                    List<DatabaseTableRecord> records = SaleClauseTable.getRecords();
+                    SaleClauseTable.clearAllFilters();
+        
+                    return records.get(0).getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_VALUE_COLUMN_NAME);
+        
+                } catch (CantLoadTableToMemoryException e) {
+                    throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE, e, "", "");
+                }
+            }
     
         /*
             Private methods
