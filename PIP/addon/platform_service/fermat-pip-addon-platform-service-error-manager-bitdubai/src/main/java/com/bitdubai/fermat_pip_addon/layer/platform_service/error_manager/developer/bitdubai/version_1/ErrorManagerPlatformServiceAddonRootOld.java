@@ -28,7 +28,7 @@ import java.io.Serializable;
  * Updated by lnacosta (laion.cj91@gmail.com) on 16/10/2015.
  *      Deleted reference to Plugin Database System.
  */
-public class ErrorManagerPlatformServiceAddonRoot implements Addon, ErrorManager, Service,Serializable {
+public class ErrorManagerPlatformServiceAddonRootOld implements Addon, ErrorManager, Service,Serializable {
 
     /**
      * Service Interface member variables.
