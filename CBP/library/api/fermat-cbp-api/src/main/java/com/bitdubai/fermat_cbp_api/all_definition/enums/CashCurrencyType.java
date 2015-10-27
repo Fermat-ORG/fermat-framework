@@ -11,10 +11,10 @@ public enum CashCurrencyType {
     EURO("EUR"),
     DOLARAUSTRALIANO("AUD"),
     DOLARCANADIENCE("CAD"),
-    FRANCOSUIZP("CHF"),
+    FRANCOSUIZO("CHF"),
     LIBRAESTERLINA("GBP"),
     YENJAPONES("JPY"),
-    BOLIVARES("BS");
+    BOLIVAR("BS");
 
     private String code;
 
@@ -29,13 +29,13 @@ public enum CashCurrencyType {
     public static CashCurrencyType getByCode(String code) throws InvalidParameterException {
         switch (code) {
             case "USD": return CashCurrencyType.DOLARUSA;
-            case "EUR": return com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType.EURO;
-            case "AUD": return com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType.DOLARAUSTRALIANO;
-            case "CAD": return com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType.DOLARCANADIENCE;
-            case "CHF": return com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType.FRANCOSUIZP;
-            case "GBP": return com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType.LIBRAESTERLINA;
-            case "JPY": return com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType.YENJAPONES;
-            case "BS": return com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType.BOLIVARES;
+            case "EUR": return CashCurrencyType.EURO;
+            case "AUD": return CashCurrencyType.DOLARAUSTRALIANO;
+            case "CAD": return CashCurrencyType.DOLARCANADIENCE;
+            case "CHF": return CashCurrencyType.FRANCOSUIZO;
+            case "GBP": return CashCurrencyType.LIBRAESTERLINA;
+            case "JPY": return CashCurrencyType.YENJAPONES;
+            case "BS": return CashCurrencyType.BOLIVAR;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the CashCurrencyType enum");
         }
     }

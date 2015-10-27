@@ -29,13 +29,13 @@ public enum BankCurrencyType {
     public static BankCurrencyType getByCode(String code) throws InvalidParameterException {
         switch (code) {
             case "USD": return BankCurrencyType.DOLARUSA;
-            case "EUR": return com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType.EURO;
-            case "AUD": return com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType.DOLARAUSTRALIANO;
-            case "CAD": return com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType.DOLARCANADIENCE;
-            case "CHF": return com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType.FRANCOSUIZP;
-            case "GBP": return com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType.LIBRAESTERLINA;
-            case "JPY": return com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType.YENJAPONES;
-            case "BS": return com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType.BOLIVARES;
+            case "EUR": return BankCurrencyType.EURO;
+            case "AUD": return BankCurrencyType.DOLARAUSTRALIANO;
+            case "CAD": return BankCurrencyType.DOLARCANADIENCE;
+            case "CHF": return BankCurrencyType.FRANCOSUIZP;
+            case "GBP": return BankCurrencyType.LIBRAESTERLINA;
+            case "JPY": return BankCurrencyType.YENJAPONES;
+            case "BS": return BankCurrencyType.BOLIVARES;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the BankCurrencyType enum");
         }
     }
