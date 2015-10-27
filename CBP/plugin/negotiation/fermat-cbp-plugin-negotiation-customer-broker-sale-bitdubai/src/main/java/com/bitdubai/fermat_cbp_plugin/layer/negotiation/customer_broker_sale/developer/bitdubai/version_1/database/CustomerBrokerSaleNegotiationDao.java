@@ -291,6 +291,26 @@ public class CustomerBrokerSaleNegotiationDao {
             Clauses
          */
 
+            private void loadRecordAsNewClause(
+                    DatabaseTableRecord databaseTableRecord,
+                    UUID   negotiationId,
+                    ClauseType type,
+                    String value,
+                    String proposedBy
+            ) {
+        
+                UUID clauseId = UUID.randomUUID();
+        
+                databaseTableRecord.setUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_CLAUSE_ID_COLUMN_NAME, clauseId);
+                databaseTableRecord.setUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_NEGOTIATION_ID_COLUMN_NAME, negotiationId);
+                databaseTableRecord.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_TYPE_COLUMN_NAME, type.getCode());
+                databaseTableRecord.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_VALUE_COLUMN_NAME, value);
+                databaseTableRecord.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_STATUS_COLUMN_NAME, ClauseStatus.DRAFT.getCode());
+                databaseTableRecord.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_PROPOSED_BY_COLUMN_NAME, proposedBy);
+                databaseTableRecord.setIntegerValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_INDEX_ORDER_COLUMN_NAME, 0);
+        
+            }
+
             private CustomerBrokerSaleClause newCustomerBrokerSaleClause(
                     UUID            clauseId,
                     ClauseType      type,
