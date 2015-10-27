@@ -36,11 +36,18 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile project(':fermat-api')
+
+    compile project(':fermat-osa-addon-android-database-system-bitdubai')
+    compile project(':fermat-osa-addon-android-file-system-bitdubai')
+    compile project(':fermat-osa-addon-android-device-location-bitdubai')
+    compile project(':fermat-osa-addon-android-logger-bitdubai')
+
     compile 'com.android.support:appcompat-v7:21.+'
     compile 'com.android.support:support-v13:21.+'
     compile 'com.android.support:support-v4:21.+'
-    compile project(':fermat-api')
+
 
     testCompile 'org.robolectric:robolectric:3.0+'
     testCompile group: 'junit', name: 'junit', version: '4.11+'
