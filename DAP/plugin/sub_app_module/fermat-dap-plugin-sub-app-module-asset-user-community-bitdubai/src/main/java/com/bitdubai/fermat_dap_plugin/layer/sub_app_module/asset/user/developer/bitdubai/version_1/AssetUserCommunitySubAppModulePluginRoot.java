@@ -14,6 +14,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.DealsWithActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
@@ -33,7 +35,7 @@ import java.util.UUID;
 /**
  * Created by Nerio on 13/10/15.
  */
-public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommunitySubAppModuleManager, DealsWithActorAssetUser, DealsWithLogger, LogManagerForDevelopers, Plugin, Service {
+public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommunitySubAppModuleManager, DealsWithActorAssetIssuer, DealsWithActorAssetUser, DealsWithLogger, LogManagerForDevelopers, Plugin, Service {
 
     UUID pluginId;
 
@@ -54,6 +56,8 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
 
     ActorAssetUserManager actorAssetUserManager;
 
+    ActorAssetIssuerManager actorAssetIssuerManager;
+
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
@@ -66,6 +70,10 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
+    @Override
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
+        this.actorAssetIssuerManager = actorAssetIssuerManager;
+    }
     @Override
     public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager)  throws CantSetObjectException {
         this.actorAssetUserManager = actorAssetUserManager;
