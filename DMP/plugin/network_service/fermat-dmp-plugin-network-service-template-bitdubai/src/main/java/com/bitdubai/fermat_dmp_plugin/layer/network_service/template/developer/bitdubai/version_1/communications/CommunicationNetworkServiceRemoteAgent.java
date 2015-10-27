@@ -50,8 +50,8 @@ import java.util.Observable;
 public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
     /*
-     * Represent the sleep time for the read or send (2000 milliseconds)
-     */
+   * Represent the sleep time for the read or send (2000 milliseconds)
+   */
     private static final long SLEEP_TIME = 2000;
 
     /**
@@ -137,6 +137,8 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
             }
         });
 
+//        ExecutorService executorService =
+
     }
 
     /**
@@ -191,14 +193,14 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-            //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.isActive() = "+communicationsVPNConnection.isActive());
+            // System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
 
             /**
              * Verified the status of the connection
              */
             if (communicationsVPNConnection.isActive()){
 
-                //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.getUnreadMessagesCount() = "+communicationsVPNConnection.getUnreadMessagesCount());
+                //   System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.getUnreadMessagesCount());
 
                 /**
                  * process all pending messages
@@ -209,6 +211,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                      * Read the next message in the queue
                      */
                     FermatMessage message = communicationsVPNConnection.readNextMessage();
+
 
                     /*
                      * Validate the message signature
@@ -294,7 +297,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                         String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
                         ((FermatMessageCommunication) message).setSignature(signature);
 
-
                             /*
                              * Send the message
                              */
@@ -303,7 +305,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                             /*
                              * Change the message and update in the data base
                              */
-
                         ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
                         outgoingMessageDao.update(message);
 
@@ -332,6 +333,5 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         }
 
     }
-
 
 }
