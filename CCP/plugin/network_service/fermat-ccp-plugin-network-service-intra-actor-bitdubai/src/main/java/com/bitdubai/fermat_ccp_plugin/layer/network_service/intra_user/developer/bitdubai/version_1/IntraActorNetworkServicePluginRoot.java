@@ -42,7 +42,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.Intra
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorAcceptIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorAskIntraUserForAcceptanceException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorCancellingIntraUserException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorConfirmNotificationsIntraUserException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantConfirmNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorDenyConnectingIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorDisconnectingIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorGetNotificationsIntraUserException;
@@ -347,7 +347,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             String possibleCause = "No all required resource are injected";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
 
 
@@ -509,7 +509,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
 
@@ -1121,7 +1121,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             /* This is for test and example of how to use
                     * Construct the filter
             */
-            DiscoveryQueryParameters discoveryQueryParameters = constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_INTRA_USER, //PlatformComponentType you want to find
+            DiscoveryQueryParameters discoveryQueryParameters = constructDiscoveryQueryParamsFactory(
+                    PlatformComponentType.ACTOR_INTRA_USER, //PlatformComponentType you want to find
                     NetworkServiceType.UNDEFINED,     //NetworkServiceType you want to find
                     null,                     // alias
                     null,                     // identityPublicKey
@@ -1132,7 +1133,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     null,                     // offset
                     null,                     // max
                     null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                    null);                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
+                    null
+            );                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
 
 
@@ -1289,24 +1291,37 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     @Override
     public List<IntraUserNotification> getPendingNotifications() throws ErrorGetNotificationsIntraUserException {
 
-        List<IntraUserNotification> lstIntraUserNotifications = new ArrayList<>();
         try {
-            lstIntraUserNotifications .addAll(incomingNotificationsDao.listUnreadNotifications());
-        } catch (CantListIntraWalletUsersException e) {
-            throw new ErrorGetNotificationsIntraUserException("ERROR GETTING NEW NOTIFICATION",e,"intra actor network service","database corrupted");
-        }
 
-        return lstIntraUserNotifications;
+            return incomingNotificationsDao.listUnreadNotifications();
+
+        } catch (CantListIntraWalletUsersException e) {
+
+            reportUnexpectedError(e);
+            throw new ErrorGetNotificationsIntraUserException(e, "intra actor network service", "database corrupted");
+        } catch (Exception e) {
+
+            reportUnexpectedError(e);
+            throw new ErrorGetNotificationsIntraUserException(e, "intra actor network service", "Unhandled error.");
+        }
     }
 
 
     @Override
-    public void confirmNotification(UUID notificationID) throws ErrorConfirmNotificationsIntraUserException {
+    public void confirmNotification(final UUID notificationID) throws CantConfirmNotificationException {
 
-        if(incomingNotificationsDao!=null)
-        incomingNotificationsDao.markReadedNotification(notificationID);
-        else{
-            throw new ErrorConfirmNotificationsIntraUserException("DAO null",null,"Error","");
+        try {
+
+            incomingNotificationsDao.markReadedNotification(notificationID);
+
+        } catch (final CantConfirmNotificationException e) {
+
+            reportUnexpectedError(e);
+            throw e;
+        } catch (final Exception e) {
+
+            reportUnexpectedError(e);
+            throw new CantConfirmNotificationException(e, "notificationID: "+notificationID, "Unhandled error.");
         }
     }
 
@@ -1383,16 +1398,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             e.printStackTrace();
         }
     }
-
-
-    /**
-     * Request list
-     */
-
-
-    /**
-     * DAO and DATABASE
-     */
 
     /**
      *
@@ -1512,6 +1517,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
+    private void reportUnexpectedError(final Exception e) {
+        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+    }
+
 
     /**
      * This method initialize the database
@@ -1531,7 +1540,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
@@ -1554,7 +1563,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }

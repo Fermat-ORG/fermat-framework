@@ -3,10 +3,10 @@ package com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantConfirmNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorAcceptIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorAskIntraUserForAcceptanceException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorCancellingIntraUserException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorConfirmNotificationsIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorDenyConnectingIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorDisconnectingIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorGetNotificationsIntraUserException;
@@ -96,12 +96,12 @@ public interface IntraUserManager {
      * @param intraUserLogedInPublicKey
      * @param intraUserInvolvedPublicKey
      */
-//    public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey) throws ErrorConfirmNotificationsIntraUserException;
+//    public void confirmNotification(String intraUserLogedInPublicKey, String intraUserInvolvedPublicKey) throws CantConfirmNotificationException;
 
     /**
      *
      */
-    public void confirmNotification(UUID notificationID) throws ErrorConfirmNotificationsIntraUserException;
+    public void confirmNotification(UUID notificationID) throws CantConfirmNotificationException;
 
 
     /**

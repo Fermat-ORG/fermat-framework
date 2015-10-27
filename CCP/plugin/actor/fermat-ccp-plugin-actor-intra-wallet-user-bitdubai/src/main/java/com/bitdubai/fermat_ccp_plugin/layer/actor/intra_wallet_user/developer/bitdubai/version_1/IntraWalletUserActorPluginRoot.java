@@ -19,8 +19,8 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetIntraUserException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.IntraUserNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetNotificationException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.NotificationNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantAcceptIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCancelIntraWalletUserException;
@@ -30,8 +30,6 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.Cant
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantCreateNewIntraWalletUserException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.DealsWithIntraUsersNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserNotification;
@@ -293,7 +291,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
         }
     }
 
-    public Actor getActorByPublicKey(String actorPublicKey) throws CantGetIntraUserException, IntraUserNotFoundException {
+    public Actor getActorByPublicKey(String actorPublicKey) throws CantGetNotificationException, NotificationNotFoundException {
 
         try {
             //TODO verificar si se usa
@@ -302,16 +300,16 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 
             //not found actor
            // if(actor == null)
-               // throw new IntraUserNotFoundException("", null, ".","Intra User not found");
+               // throw new NotificationNotFoundException("", null, ".","Intra User not found");
 
            // return new IntraUserActorRecord(actorPublicKey, "",actor.getName(),actor.getProfileImage());
 
 //            return new IntraUserActorRecord("afd0647a-87de-4c56-9bc9-be736e0c5059", "","wallat user",new byte[0]);
 
-       // } catch (com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUserException  e) {
-          //  throw new CantGetIntraUserException("", e, ".","Cant Get Intra USer from Data Base");
+       // } catch (com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantGetNotificationException  e) {
+          //  throw new CantGetNotificationException("", e, ".","Cant Get Intra USer from Data Base");
          } catch (Exception e) {
-            throw new CantGetIntraUserException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
+            throw new CantGetNotificationException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
         }
         return null;
     }

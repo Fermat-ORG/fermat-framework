@@ -5,8 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraUserException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetIntraUserException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.IntraUserNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetNotificationException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.NotificationNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.IntraUserNotificationDescriptor;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -18,6 +18,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantConfirmNotificationException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserNotification;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.DAO;
@@ -103,7 +105,7 @@ public class IncomingNotificationDao implements DAO {
         }
     }
 
-    public List<ActorNetworkServiceRecord> listUnreadNotifications() throws CantListIntraWalletUsersException {
+    public List<IntraUserNotification> listUnreadNotifications() throws CantListIntraWalletUsersException {
 
         try {
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
@@ -114,7 +116,7 @@ public class IncomingNotificationDao implements DAO {
 
             List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
-            List<ActorNetworkServiceRecord> cryptoPaymentList = new ArrayList<>();
+            List<IntraUserNotification> cryptoPaymentList = new ArrayList<>();
 
             for (DatabaseTableRecord record : records) {
                 cryptoPaymentList.add(buildActorNetworkServiceRecord(record));
@@ -131,24 +133,26 @@ public class IncomingNotificationDao implements DAO {
     }
 
     @Override
-    public void markReadedNotification(UUID notificationId) {
+    public void markReadedNotification(final UUID notificationId) throws CantConfirmNotificationException {
 
         try {
+
             ActorNetworkServiceRecord actorNetworkServiceRecord = getNotificationById(notificationId);
 
             actorNetworkServiceRecord.setFlagReadead(true);
 
             update(actorNetworkServiceRecord);
 
-        } catch (CantGetIntraUserException e) {
-            e.printStackTrace();
-        } catch (IntraUserNotFoundException e) {
-            e.printStackTrace();
+        } catch (CantGetNotificationException e) {
+
+            throw new CantConfirmNotificationException(e, "notificationId:"+notificationId, "Error trying to get the notification.");
+        } catch (NotificationNotFoundException e) {
+
+            throw new CantConfirmNotificationException(e, "notificationId:"+notificationId, "Notification not found.");
         } catch (CantUpdateRecordDataBaseException e) {
-            e.printStackTrace();
+
+            throw new CantConfirmNotificationException(e, "notificationId:"+notificationId, "Error updating database.");
         }
-
-
     }
 
     @Override
@@ -186,7 +190,7 @@ public class IncomingNotificationDao implements DAO {
         }
     }
 
-    public ActorNetworkServiceRecord getNotificationById(final UUID notificationId) throws CantGetIntraUserException, IntraUserNotFoundException {
+    public ActorNetworkServiceRecord getNotificationById(final UUID notificationId) throws CantGetNotificationException, NotificationNotFoundException {
 
         if (notificationId == null)
             //throw new CantGetRequestException("", "requestId, can not be null");
@@ -205,15 +209,15 @@ public class IncomingNotificationDao implements DAO {
             if (!records.isEmpty())
                 return buildActorNetworkServiceRecord(records.get(0));
             else
-                throw new IntraUserNotFoundException("",null, "RequestID: "+notificationId, "Can not find an crypto payment request with the given request id.");
+                throw new NotificationNotFoundException("",null, "RequestID: "+notificationId, "Can not find an crypto payment request with the given request id.");
 
 
         } catch (CantLoadTableToMemoryException exception) {
 
-            throw new CantGetIntraUserException( "",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+            throw new CantGetNotificationException( "",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
         } catch (InvalidParameterException exception) {
 
-            throw new CantGetIntraUserException("",exception, "Check the cause."                                                                                ,"");
+            throw new CantGetNotificationException("",exception, "Check the cause."                                                                                ,"");
         }
         return null;
     }

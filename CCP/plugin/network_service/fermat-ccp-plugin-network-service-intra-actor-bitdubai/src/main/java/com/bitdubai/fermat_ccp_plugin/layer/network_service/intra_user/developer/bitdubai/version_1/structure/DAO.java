@@ -3,12 +3,14 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraUserException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetIntraUserException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.IntraUserNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetNotificationException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.NotificationNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.IntraUserNotificationDescriptor;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantConfirmNotificationException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserNotification;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 
 import java.util.List;
@@ -31,7 +33,7 @@ public interface DAO {
                                            long                        timestamp   ,
                                            ActorProtocolState protocolState    ,
                                            boolean                     flagReaded      ) throws CantCreateIntraUserException;
-    public ActorNetworkServiceRecord getNotificationById(final UUID notificationId) throws CantGetIntraUserException, IntraUserNotFoundException;
+    public ActorNetworkServiceRecord getNotificationById(final UUID notificationId) throws CantGetNotificationException, NotificationNotFoundException;
 
     public void changeIntraUserNotificationDescriptor(final String                 senderPublicKey    ,
                                                       final IntraUserNotificationDescriptor intraUserNotificationDescriptor) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException;
@@ -45,9 +47,9 @@ public interface DAO {
                                                                               final IntraUserNotificationDescriptor intraUserNotificationDescriptor) throws CantListIntraWalletUsersException;
 
 
-    public List<ActorNetworkServiceRecord> listUnreadNotifications() throws CantListIntraWalletUsersException;
+    public List<IntraUserNotification> listUnreadNotifications() throws CantListIntraWalletUsersException;
 
-    public void markReadedNotification(UUID notificationId);
+    public void markReadedNotification(UUID notificationId) throws CantConfirmNotificationException;
 
 
     public void update(ActorNetworkServiceRecord entity) throws CantUpdateRecordDataBaseException;

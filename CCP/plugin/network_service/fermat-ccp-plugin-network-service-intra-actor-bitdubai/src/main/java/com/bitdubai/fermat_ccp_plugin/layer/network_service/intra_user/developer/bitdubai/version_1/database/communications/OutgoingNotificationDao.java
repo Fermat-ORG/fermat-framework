@@ -3,8 +3,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraUserException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetIntraUserException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.IntraUserNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetNotificationException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.NotificationNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.IntraUserNotificationDescriptor;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -101,7 +101,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         }
     }
 
-    public ActorNetworkServiceRecord getNotificationById(final UUID notificationId) throws CantGetIntraUserException, IntraUserNotFoundException {
+    public ActorNetworkServiceRecord getNotificationById(final UUID notificationId) throws CantGetNotificationException, NotificationNotFoundException {
 
         if (notificationId == null)
             //throw new CantGetRequestException("", "requestId, can not be null");
@@ -120,15 +120,15 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
                 if (!records.isEmpty())
                     return buildActorNetworkServiceRecord(records.get(0));
                 else
-                    throw new IntraUserNotFoundException("",null, "RequestID: "+notificationId, "Can not find an crypto payment request with the given request id.");
+                    throw new NotificationNotFoundException("",null, "RequestID: "+notificationId, "Can not find an crypto payment request with the given request id.");
 
 
             } catch (CantLoadTableToMemoryException exception) {
 
-                throw new CantGetIntraUserException( "",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+                throw new CantGetNotificationException( "",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
             } catch (InvalidParameterException exception) {
 
-                throw new CantGetIntraUserException("",exception, "Check the cause."                                                                                ,"");
+                throw new CantGetNotificationException("",exception, "Check the cause."                                                                                ,"");
             }
         return null;
     }
