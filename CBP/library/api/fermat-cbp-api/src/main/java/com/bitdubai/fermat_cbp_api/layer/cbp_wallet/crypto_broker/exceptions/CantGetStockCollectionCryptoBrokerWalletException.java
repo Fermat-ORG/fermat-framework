@@ -5,9 +5,9 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by Yordin Alayn on 26.10.2015.
  */
-public class CantGetAddCreditCryptoBrokerWalletException extends FermatException {
+public class CantGetStockCollectionCryptoBrokerWalletException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CRYPTO BROKER WALLET ADD CREDIT NOT FOUND";
+    public static final String DEFAULT_MESSAGE = "CRYPTO BROKER WALLET GET STOCK COLLECTION NOT FOUND";
 
     /**
      * This is the constructor that every inherited FermatException must implement
@@ -17,7 +17,7 @@ public class CantGetAddCreditCryptoBrokerWalletException extends FermatException
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetAddCreditCryptoBrokerWalletException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetStockCollectionCryptoBrokerWalletException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
