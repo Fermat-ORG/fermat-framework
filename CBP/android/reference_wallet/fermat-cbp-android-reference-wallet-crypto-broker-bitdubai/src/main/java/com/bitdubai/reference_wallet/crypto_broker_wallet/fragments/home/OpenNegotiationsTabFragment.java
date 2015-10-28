@@ -14,6 +14,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForCustomerException;
@@ -53,7 +54,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
     private ErrorManager errorManager;
 
     // DATA
-    private ArrayList<GrouperItem<NegotiationBasicInformation>> openNegotiations;
+    private List<GrouperItem<CustomerBrokerNegotiationInformation>> openNegotiations;
     private CryptoBrokerWallet cryptoBrokerWallet;
 
 
@@ -129,8 +130,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
     /**
      * @return the list of open negotiations grouped in negotiations waiting for the broker and those wating for the customer
      */
-    private ArrayList<GrouperItem<NegotiationBasicInformation>> getOpenNegotiations() {
-        ArrayList<GrouperItem<NegotiationBasicInformation>> data = new ArrayList<>();
+    private List<GrouperItem<CustomerBrokerNegotiationInformation>> getOpenNegotiations() {
+        ArrayList<GrouperItem<CustomerBrokerNegotiationInformation>> data = new ArrayList<>();
         String grouperText;
 
         if (moduleManager != null) {
@@ -138,13 +139,15 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
                 cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet("crypto_broker_wallet");
 
                 grouperText = getActivity().getString(R.string.waiting_for_you);
-                List<NegotiationBasicInformation> waitingForBroker = cryptoBrokerWallet.getNegotiationsWaitingForBroker(0, 10);
-                GrouperItem<NegotiationBasicInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
+                List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
+                waitingForBroker.addAll(cryptoBrokerWallet.getNegotiationsWaitingForBroker(0, 10));
+                GrouperItem<CustomerBrokerNegotiationInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
                 data.add(waitingForBrokerGrouper);
 
                 grouperText = getActivity().getString(R.string.waiting_for_the_customer);
-                List<NegotiationBasicInformation> waitingForCustomer = cryptoBrokerWallet.getNegotiationsWaitingForCustomer(0, 10);
-                GrouperItem<NegotiationBasicInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
+                List<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
+                waitingForBroker.addAll(cryptoBrokerWallet.getNegotiationsWaitingForCustomer(0, 10));
+                GrouperItem<CustomerBrokerNegotiationInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
                 data.add(waitingForCustomerGrouper);
 
             } catch (CantGetCryptoBrokerWalletException | CantGetNegotiationsWaitingForBrokerException | CantGetNegotiationsWaitingForCustomerException ex) {
@@ -167,7 +170,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
             child = new NegotiationBasicInformationImpl("neoperol", "USD", "Cash in Hand", "BsF", NegotiationStatus.WAITING_FOR_BROKER);
             waitingForBroker.add(child);
             GrouperItem<NegotiationBasicInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
-            data.add(waitingForBrokerGrouper);
+            //data.add(waitingForBrokerGrouper);
 
             grouperText = getActivity().getString(R.string.waiting_for_the_customer);
             List<NegotiationBasicInformation> waitingForCustomer = new ArrayList<>();
@@ -176,7 +179,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
             child = new NegotiationBasicInformationImpl("Customer 5", "BsF", "Cash Delivery", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
             waitingForCustomer.add(child);
             GrouperItem<NegotiationBasicInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
-            data.add(waitingForCustomerGrouper);
+            //data.add(waitingForCustomerGrouper);
         }
 
         return data;

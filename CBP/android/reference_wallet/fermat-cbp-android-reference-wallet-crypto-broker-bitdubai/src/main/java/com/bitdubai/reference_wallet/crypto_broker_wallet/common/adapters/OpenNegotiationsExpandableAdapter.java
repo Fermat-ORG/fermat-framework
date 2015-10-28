@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.NegotiationBasicInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.GrouperViewHolder;
@@ -26,7 +27,7 @@ public class OpenNegotiationsExpandableAdapter
      * @param context        the activity context where the RecyclerView is going to be displayed
      * @param parentItemList the list of parent items to be displayed in the RecyclerView
      */
-    public OpenNegotiationsExpandableAdapter(Context context, List<GrouperItem<NegotiationBasicInformation>> parentItemList) {
+    public OpenNegotiationsExpandableAdapter(Context context, List<GrouperItem<CustomerBrokerNegotiationInformation>> parentItemList) {
         super(parentItemList);
         mInflater = LayoutInflater.from(context);
     }
