@@ -81,8 +81,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWit
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.AssetUserActorCompleteRegistrationNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
@@ -1105,7 +1103,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
             FermatEvent event = eventManager.getNewEvent(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
             event.setSource(EventSource.ACTOR_ASSET_USER);
 
-            ((AssetUserActorCompleteRegistrationNotificationEvent) event).setActorAssetUser(actorAssetUserNewRegsitered);
+            //((AssetUserActorCompleteRegistrationNotificationEvent) event).setActorAssetUser(actorAssetUserNewRegsitered);
 
             eventManager.raiseEvent(event);
         }
@@ -1147,7 +1145,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                 FermatEvent event = eventManager.getNewEvent(EventType.COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION);
                 event.setSource(EventSource.ACTOR_ASSET_USER);
 
-                ((AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent) event).setActorAssetUserList(actorAssetUserRegisteredList);
+                //((AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent) event).setActorAssetUserList(actorAssetUserRegisteredList);
                 eventManager.raiseEvent(event);
             } else if (remoteNetworkServiceToConnect.getNetworkServiceType() == NetworkServiceType.ASSET_USER_ACTOR && remoteNetworkServiceToConnect.getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE) {
                 /*

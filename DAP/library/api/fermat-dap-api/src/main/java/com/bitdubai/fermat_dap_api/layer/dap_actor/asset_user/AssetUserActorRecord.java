@@ -70,6 +70,11 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     }
 
+    @Override
+    public String getPublicLinkedIdentity() {
+        return this.publiclinkedIdentity;
+    }
+
     /**
      * The method <code>getPublicKey</code> gives us the public key of the represented Asset User
      *
@@ -92,6 +97,11 @@ public class AssetUserActorRecord implements ActorAssetUser {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public String getAge() {
+        return this.age;
     }
 
     public void setName(String name) {
