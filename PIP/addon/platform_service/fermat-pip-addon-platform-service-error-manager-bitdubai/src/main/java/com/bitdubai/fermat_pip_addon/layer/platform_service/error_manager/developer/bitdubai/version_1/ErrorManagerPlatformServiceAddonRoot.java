@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFea
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -43,7 +44,7 @@ public class ErrorManagerPlatformServiceAddonRoot extends AbstractAddon implemen
      * ErrorManager Interface implementation.
      */
     @Override
-    public void reportUnexpectedPlatformException(final PlatformComponents                  exceptionSource                    ,
+    public final void reportUnexpectedPlatformException(final PlatformComponents                  exceptionSource                    ,
                                                   final UnexpectedPlatformExceptionSeverity unexpectedPlatformExceptionSeverity,
                                                   final Exception                           exception                          ) {
 
@@ -51,7 +52,7 @@ public class ErrorManagerPlatformServiceAddonRoot extends AbstractAddon implemen
     }
 
     @Override
-    public void reportUnexpectedPluginException(final Plugins                           exceptionSource                  ,
+    public final void reportUnexpectedPluginException(final Plugins                           exceptionSource                  ,
                                                 final UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity,
                                                 final Exception                         exception                        ) {
 
@@ -59,71 +60,66 @@ public class ErrorManagerPlatformServiceAddonRoot extends AbstractAddon implemen
     }
 
     @Override
-    public void reportUnexpectedWalletException(final Wallets                           exceptionSource                  ,
-                                                final UnexpectedWalletExceptionSeverity unexpectedWalletExceptionSeverity,
+    public final void reportUnexpectedPluginException(final PluginVersionReference            exceptionSource                  ,
+                                                final UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity,
                                                 final Exception                         exception                        ) {
+
+        processException(exceptionSource.toString(), unexpectedPluginExceptionSeverity.toString(), exception);
+    }
+
+    @Override
+    public final void reportUnexpectedWalletException(final Wallets                           exceptionSource                  ,
+                                                      final UnexpectedWalletExceptionSeverity unexpectedWalletExceptionSeverity,
+                                                      final Exception                         exception                        ) {
 
         processException(exceptionSource.toString(), unexpectedWalletExceptionSeverity.toString(),exception);
     }
 
     @Override
-    public void reportUnexpectedAddonsException(final Addons                            exceptionSource                  ,
-                                                final UnexpectedAddonsExceptionSeverity unexpectedAddonsExceptionSeverity,
-                                                final Exception                         exception                        ) {
+    public final void reportUnexpectedAddonsException(final Addons                            exceptionSource                  ,
+                                                      final UnexpectedAddonsExceptionSeverity unexpectedAddonsExceptionSeverity,
+                                                      final Exception                         exception                        ) {
 
         processException(exceptionSource.toString(), unexpectedAddonsExceptionSeverity.toString(), exception);
     }
 
     @Override
-    public void reportUnexpectedSubAppException(final SubApps                           exceptionSource                  ,
-                                                final UnexpectedSubAppExceptionSeverity unexpectedSubAppExceptionSeverity,
-                                                final Exception                         exception                        ) {
+    public final void reportUnexpectedAddonsException(final AddonVersionReference             exceptionSource                  ,
+                                                      final UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity,
+                                                      final Exception                         exception                        ) {
+
+        processException(exceptionSource.toString(), unexpectedPluginExceptionSeverity.toString(), exception);
+    }
+
+    @Override
+    public final void reportUnexpectedSubAppException(final SubApps                           exceptionSource                  ,
+                                                      final UnexpectedSubAppExceptionSeverity unexpectedSubAppExceptionSeverity,
+                                                      final Exception                         exception                        ) {
 
         processException(exceptionSource.toString(), unexpectedSubAppExceptionSeverity.toString(), exception);
     }
 
     @Override
-    public void reportUnexpectedUIException(final UISource                      exceptionSource                  ,
-                                            final UnexpectedUIExceptionSeverity unexpectedAddonsExceptionSeverity,
-                                            final Exception                     exception                        ) {
+    public final void reportUnexpectedUIException(final UISource                      exceptionSource                  ,
+                                                  final UnexpectedUIExceptionSeverity unexpectedAddonsExceptionSeverity,
+                                                  final Exception                     exception                        ) {
 
         processException(exceptionSource.toString(), unexpectedAddonsExceptionSeverity.toString(), exception);
     }
 
     @Override
-    public void reportUnexpectedEventException(final FermatEvent exceptionSource,
-                                               final Exception   exception      ) {
+    public final void reportUnexpectedEventException(final FermatEvent exceptionSource,
+                                                     final Exception   exception      ) {
 
         processException(exceptionSource.toString(), "Unknow", exception);
     }
 
-    private void processException(final String source, final String severity, final Exception exception){
+    private final void processException(final String source, final String severity, final Exception exception){
         printErrorReport(source, severity, FermatException.wrapException(exception));
     }
 
-    private void printErrorReport(final String source, final String severity, final FermatException exception){
+    private final void printErrorReport(final String source, final String severity, final FermatException exception){
         System.err.println(new ErrorReport(source, severity, exception).generateReport());
-    }
-
-
-    @Override
-    public List<AddonVersionReference> getNeededAddonReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public FeatureForDevelopers getFeatureForDevelopers(DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
-        return null;
-    }
-
-    @Override
-    protected void validateAndAssignReferences() {
-
     }
 
 }
