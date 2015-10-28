@@ -15,16 +15,16 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.Intr
 
 public class IntraWalletUserActor implements IntraWalletUser {
 
-    private final String       name            ;
-    private final String       publicKey       ;
-    private final byte[]       profileImage    ;
-    private final long         registrationDate;
+    private final String          name            ;
+    private final String          publicKey       ;
+    private final byte[]          profileImage    ;
+    private final long            registrationDate;
     private final ConnectionState contactState    ;
 
-    public IntraWalletUserActor(final String       name            ,
-                                final String       publicKey       ,
-                                final byte[]       profileImage    ,
-                                final long         registrationDate,
+    public IntraWalletUserActor(final String          name            ,
+                                final String          publicKey       ,
+                                final byte[]          profileImage    ,
+                                final long            registrationDate,
                                 final ConnectionState contactState    ) {
 
         this.name             = name                ;

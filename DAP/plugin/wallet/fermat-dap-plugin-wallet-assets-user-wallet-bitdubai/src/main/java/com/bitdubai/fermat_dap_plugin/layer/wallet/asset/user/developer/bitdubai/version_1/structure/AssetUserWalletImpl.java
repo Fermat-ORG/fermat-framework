@@ -26,14 +26,13 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreM
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.database.AssetUserWalletDao;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.database.AssetUserWalletDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.exceptions.CantInitializeAssetUserWalletException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.ErrorManager;
 
 /**
  * Created by franklin on 05/10/15.
@@ -50,7 +49,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
 
     //TODO: Implementar clase DAO y los metodos de la interfaz manager y otros metodos.
     private AssetUserWalletDao assetUserWalletDao;
-    private com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager;
+    private com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager errorManager;
 
     private PluginDatabaseSystem pluginDatabaseSystem;
 
@@ -58,7 +57,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
 
     private UUID pluginId;
 
-    public AssetUserWalletImpl(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public AssetUserWalletImpl(com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.errorManager = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;

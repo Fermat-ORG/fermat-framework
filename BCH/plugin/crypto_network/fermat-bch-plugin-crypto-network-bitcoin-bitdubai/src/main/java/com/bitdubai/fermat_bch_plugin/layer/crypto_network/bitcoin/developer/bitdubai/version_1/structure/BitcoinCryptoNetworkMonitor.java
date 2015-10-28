@@ -6,20 +6,15 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
 import org.bitcoinj.params.RegTestParams;
-import org.bitcoinj.store.BlockStore;
-import org.bitcoinj.store.BlockStoreException;
-import org.bitcoinj.store.MemoryBlockStore;
 
 import java.net.InetSocketAddress;
 import java.util.UUID;
@@ -149,12 +144,31 @@ class BitcoinCryptoNetworkMonitor implements Agent {
             wallet.addEventListener(events);
 
             /**
-             * I will connect to the regTest server of search for peers if we are in a different network.
+             * I will connect to the regTest server or search for peers if we are in a different network.
              */
             if (NETWORK_PARAMETERS == RegTestParams.get()){
-                InetSocketAddress inetSocketAddress = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_PORT);
-               PeerAddress peerAddress = new PeerAddress(inetSocketAddress);
-                peerGroup.addAddress(peerAddress);
+                /**
+                 * Peer 1
+                 */
+                InetSocketAddress inetSocketAddress1 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_PORT);
+               PeerAddress peerAddress1 = new PeerAddress(inetSocketAddress1);
+                peerGroup.addAddress(peerAddress1);
+
+                /**
+                 * Peer 2
+                 */
+                InetSocketAddress inetSocketAddress2 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_2_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_2_PORT);
+                PeerAddress peerAddress2 = new PeerAddress(inetSocketAddress2);
+                peerGroup.addAddress(peerAddress2);
+
+                /**
+                 * Peer 3
+                 */
+                InetSocketAddress inetSocketAddress3 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_3_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_3_PORT);
+                PeerAddress peerAddress3 = new PeerAddress(inetSocketAddress3);
+                peerGroup.addAddress(peerAddress3);
+
+
             } else
                 peerGroup.addPeerDiscovery(new DnsDiscovery(NETWORK_PARAMETERS));
 

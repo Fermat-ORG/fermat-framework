@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.utils;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 /**
  * The class <code>com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference</code>
@@ -13,25 +11,25 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 public class PluginReference {
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
-    private static final int HASH_PRIME_NUMBER_ADD = 2819;
+    private static final int HASH_PRIME_NUMBER_ADD     = 2819;
 
-    private       LayerReference    layerReference;
-    private final FermatPluginsEnum plugin        ;
+    private       LayerReference layerReference;
+    private final Plugins        plugin        ;
 
-    public PluginReference(final FermatPluginsEnum plugin) {
+    public PluginReference(final Plugins plugin) {
 
         this.plugin = plugin;
     }
 
-    public PluginReference(final LayerReference    layerReference,
-                           final FermatPluginsEnum plugin        ) {
+    public PluginReference(final LayerReference layerReference,
+                           final Plugins        plugin        ) {
 
         this.layerReference = layerReference;
         this.plugin         = plugin        ;
     }
 
 
-    public final FermatPluginsEnum getPlugin() {
+    public final Plugins getPlugin() {
         return plugin;
     }
 

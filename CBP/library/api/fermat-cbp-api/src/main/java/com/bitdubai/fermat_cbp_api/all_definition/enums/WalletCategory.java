@@ -1,11 +1,12 @@
 package com.bitdubai.fermat_cbp_api.all_definition.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Created by natalia on 16/09/15.
  */
-public enum WalletCategory {
+public enum WalletCategory  implements FermatEnum {
     BRANDED_NICHE_WALLET ("BRDNW"),
     BRANDED_REFERENCE_WALLET ("BRDRW"),
     REFERENCE_WALLET ("REFW"),
@@ -17,6 +18,7 @@ public enum WalletCategory {
         this.code = code;
     }
 
+    @Override
     public String getCode(){
         return this.code;
     }

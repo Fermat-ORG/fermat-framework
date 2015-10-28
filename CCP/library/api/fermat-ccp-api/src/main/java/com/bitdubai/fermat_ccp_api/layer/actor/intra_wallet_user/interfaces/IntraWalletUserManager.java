@@ -13,7 +13,7 @@ import java.util.List;
  * The interface <code>IntraWalletUserManager</code>
  * defines the methods to administrate the intra users,
  */
-public interface IntraWalletUserManager extends com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager {
+public interface IntraWalletUserManager {
 
     /**
      * The method <code>askIntraWalletUserForAcceptance</code> registers a new intra user in the list

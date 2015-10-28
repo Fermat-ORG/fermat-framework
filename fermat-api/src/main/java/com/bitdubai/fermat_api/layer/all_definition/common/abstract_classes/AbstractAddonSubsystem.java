@@ -1,10 +1,9 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterDeveloperException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPluginDeveloperException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartAddonDeveloperException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.DeveloperNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddonsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
 
@@ -56,7 +55,7 @@ public abstract class AbstractAddonSubsystem {
                     addonDeveloper
             );
 
-        } catch (final CantStartPluginDeveloperException e) {
+        } catch (final CantStartAddonDeveloperException e) {
 
             throw new CantRegisterDeveloperException(e, addonDeveloperReference.toString(), "Error trying to start the developer.");
         }
