@@ -18,6 +18,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesEvent;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.CryptoAddressesNetworkServicePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantChangeProtocolStateException;
@@ -31,6 +32,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloud
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
@@ -190,30 +192,33 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                 System.out.println("********* Crypto Addresses: Executor Agent -> Send Cycle -> Not available requests to process.");
 
             for(AddressExchangeRequest aer : addressExchangeRequestList) {
+
+                System.out.println("********* Crypto Addresses: Executor Agent -> Processing Send for Request: "+aer);
+
                 switch (aer.getAction()) {
 
                     case ACCEPT:
                         sendMessageToActor(
                                 buildJsonAcceptMessage(aer),
+                                aer.getIdentityPublicKeyResponding(),
+                                aer.getIdentityTypeResponding(),
                                 aer.getIdentityPublicKeyRequesting(),
                                 aer.getIdentityTypeRequesting(),
-                                aer.getIdentityPublicKeyResponding(),
-                                aer.getIdentityTypeResponding()
+                                aer.getRequestId()
                         );
 
-                        toWaitingResponse(aer.getRequestId());
                         break;
 
                     case DENY:
                         sendMessageToActor(
                                 buildJsonDenyMessage(aer),
+                                aer.getIdentityPublicKeyResponding(),
+                                aer.getIdentityTypeResponding(),
                                 aer.getIdentityPublicKeyRequesting(),
                                 aer.getIdentityTypeRequesting(),
-                                aer.getIdentityPublicKeyResponding(),
-                                aer.getIdentityTypeResponding()
+                                aer.getRequestId()
                         );
 
-                        toWaitingResponse(aer.getRequestId());
                         break;
 
                     case REQUEST:
@@ -222,17 +227,15 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                                 aer.getIdentityPublicKeyRequesting(),
                                 aer.getIdentityTypeRequesting(),
                                 aer.getIdentityPublicKeyResponding(),
-                                aer.getIdentityTypeResponding()
+                                aer.getIdentityTypeResponding(),
+                                aer.getRequestId()
                         );
 
-                        toWaitingResponse(aer.getRequestId());
                         break;
                 }
             }
 
-        } catch(CantListPendingAddressExchangeRequestsException |
-                CantChangeProtocolStateException                |
-                PendingRequestNotFoundException                 e) {
+        } catch(CantListPendingAddressExchangeRequestsException e) {
 
             reportUnexpectedError(e);
         }
@@ -309,10 +312,14 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
     }
 
     private void sendMessageToActor(final String jsonMessage      ,
+                                    final String identityPublicKey,
+                                    final Actors identityType     ,
                                     final String actorPublicKey   ,
                                     final Actors actorType        ,
-                                    final String identityPublicKey,
-                                    final Actors identityType     ) {
+                                    final UUID   requestId        ) {
+
+        System.out.println("********* Crypto Addresses: Executor Agent -> Send Message To actor.");
+
 
         try {
             if (!poolConnectionsWaitingForResponse.containsKey(actorPublicKey)) {
@@ -324,16 +331,17 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
                         if (cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot() != null) {
 
-                            PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(
-                                    identityPublicKey,
-                                    NetworkServiceType.UNDEFINED,
-                                    platformComponentTypeSelectorByActorType(identityType)
-                            );
-                            PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(
-                                    actorPublicKey,
-                                    NetworkServiceType.UNDEFINED,
-                                    platformComponentTypeSelectorByActorType(actorType)
-                            );
+
+                            PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
+                                    .constructBasicPlatformComponentProfileFactory(
+                                            identityPublicKey,
+                                            NetworkServiceType.UNDEFINED,
+                                            platformComponentTypeSelectorByActorType(identityType));
+                            PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
+                                    .constructBasicPlatformComponentProfileFactory(
+                                            actorPublicKey,
+                                            NetworkServiceType.UNDEFINED,
+                                            platformComponentTypeSelectorByActorType(actorType));
 
                             communicationNetworkServiceConnectionManager.connectTo(
                                     applicantParticipant,
@@ -342,10 +350,24 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                             );
 
                             // i put the actor in the pool of connections waiting for response-
-                            poolConnectionsWaitingForResponse.put(actorPublicKey, actorPublicKey);
+                            poolConnectionsWaitingForResponse.put(actorPublicKey, identityPublicKey);
                         }
 
                     }
+                } else {
+                    NetworkServiceLocal communicationNetworkServiceLocal = cryptoAddressesNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey);
+
+                    System.out.println("********* Crypto Addresses: Executor Agent -> Now Sending Message.");
+
+                    communicationNetworkServiceLocal.sendMessage(
+                            identityPublicKey,
+                            actorPublicKey,
+                            jsonMessage
+                    );
+
+                    toWaitingResponse(requestId);
+
+                    poolConnectionsWaitingForResponse.put(actorPublicKey, identityPublicKey);
                 }
             } else {
 
@@ -355,11 +377,15 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
                     try {
 
+                        System.out.println("********* Crypto Addresses: Executor Agent -> Now Sending Message.");
+
                         communicationNetworkServiceLocal.sendMessage(
-                                cryptoAddressesNetworkServicePluginRoot.getIdentityPublicKey(),
+                                identityPublicKey,
                                 actorPublicKey,
                                 jsonMessage
                         );
+
+                        toWaitingResponse(requestId);
 
                     } catch (Exception e) {
 
@@ -367,6 +393,8 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                     }
                 }
             }
+
+
         } catch (Exception z) {
 
             reportUnexpectedError(FermatException.wrapException(z));
