@@ -1,6 +1,65 @@
-:numbered:
 
-== What is FERMAT? 
+== Chapter 1: Fermat Master Plan
+
+As a Master Plan, Fermat has it's own vision of how a collaborative project should be carried out. The main concept is to define a large master plan far into the future, and start building it phase by phase adjusting the target when needed. It is designed in this way to absorb the efforts of thousands of contributors over the years into a unified architectural vision.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+However, although a huge step has been made by Sakamoto's invention - in fact *Bitcoin* that has already become the first widely accepted cryptocurrency and its technology has become a standard - there is still too many technical aspects in using blockchain tech that this prevents it for being mass adopted. 
+
+What's more, in the last years, there has been a lot of fin tech investment money given to a myriad of startup initiating in bitcoin, cryptocurrencies and blockchain technology, and everything has gone so far that after "bitcoin revolution" the new trending wave of investenment is focus on what has been called *"cryptocurrency 2.0"*. Nevertheless, there is still a point of view that is "out of tune" with the very nature and essence of this inventions: is not so wise to run "solo" the race to conquer the world market, because there is so much that has to be done, that is better to do it in a *_collaborative way_*, relying on the lessons of *open source software* and *global projects* with a _"systemic view"_ of the interaction between the involved parties (individual or organizations) and the whole.
+ 
+
+
+
+
+
+In this era of a digitalised world, there are so many people who earn their living generating products and services at the heart of this digital world, being interconnected in an complex pattern of giving and receiving, services, money, assets, knowledge, permanently exchanging information of all kinds, weaving relationships, building a *global community*. + 
+
+We do *_believe_* the community collectively has more talent than any of us individually. +
+We *_believe_* it is important to build on top of services and knowledge that others took time and effort to build. + 
+We *_believe_* in *collaborative environments*. + 
+We *_believe_* that growth of individums may generate growth and wealth for everybody if only we dedicate effort to build collectively rather than individually, sharing a *common vision* with a certain level of attained consensus on a "master plan for development". +
+We *_believe_* in *decentralization* . +
+
+NOTE: With the rising of Internet and the giant proliferation of computers permanently connected , what turn "the web" nowadays into "the cloud, among the huge benefits of a myriad of services running 24 hours on-line, we have also witnessed some vulnerability of systems totally dependent on a specific server ( or net of servers) when they crashed victim of hackers attack or when they were banned or controlled by goverments or central institutions not only causing data and money loses, but also spreading an awkward feeling of mistrust and being abused.
+At the contrary, a new era of *distributed systems* which run on a *decentralized peer-to-peer networks*, secured by the use of *cryptographic signatures* is being born, turning the old systems based on a "central" servers or central point of control gradually obsolete. The demand of such distributed systems is getting bigger because they are naturally safer ( ther's no central point to attack or control) and they honor the integrity of every participant and are provably fair and honest.
+
+
+In FERMAT we *_believe_* in people with passion and commitment to attain higher purposes, who are "crazy enough" and corageous to step forward and follow an *inspired vision*, to create a *critical mass* and start a *movement* that can change the world. + 
+We do *_believe_* we are collectively going to change this world and move forward to a prosperous future.
+
+We *_believe_* in a vision of humanity as a COLLABORATIVE LEARNING SPECIES which can trascend current limitations of the mainstream worldview of survival and scarcity into an unlimited and (re)evolutionary conception of humanity leading the path towards a thriving ECOSYSTEM of a *Global Integral Civilisation*.
+
+
+
+
+
+
+
+GUS--> Todo esto está bien pero es demasiado marketinero y aéreo. Abría que moverlo mas abajo, donde se pueda cambiar el tono por algo mas idealístico. Al principio creo que hay que ser neutro si uno quiere que la persona esandard siga leyendo.
+
+
 
 *FERMAT* is:
  
@@ -12,42 +71,8 @@
 * a *system of software platforms* to build services and create new products on top, reusing the collective inteligence to evolve more efficiently and with greater global coherence. +
 * a *decentralized financial network* based on _blockchain technology_. 
 
-=== The vision
-As we firmly believe that the next decade will witness crypto currencies going mainstream and governments issuing digital currency as well, we expect paper money is going to disappear within the next 5 to 10 years. Thus a strong consumer demand for *digital wallets* will inevitably emerge. In order to meet this demand thousands of diferent wallets should be available, different not only in terms of the level of abstraction they apply (some of them showing crypto currencies while others digital fiat over crypto or even digital assets) but also with respect to their appearance and how they feel to the user, as well as differencies in their functionalities.
-However, although a huge step has been made by Sakamoto's invention - in fact Bitcoin that has already become the first widely accepted cryptocurrency and its technology has become a standard - there is still too many technical aspects in using blockchain tech that this prevents it for being mass adopted. 
-What's more, in the last years, there has been a lot of fin tech investment money given to a myriad of startup initiating in bitcoin, cryptocurrencies and blockchain technology, and everything has gone so far that after "bitcoin revolution" the new trending wave of investenment is focus on what has been called "cryptocurrency 2.0". Nevertheless, there is still a point of view that is "out of tune" with the very nature and essence of this inventions: is not so wise to run "solo"the race to conquer the world market, because there is so much that has to be done, that is better to do it in a collaborative way, relying on the lessons of open source software and global projects with a "systemic view" of the interaction between the involved parties (individual or organizations) and the whole.
- 
-So, the challenge that we are nowadays facing in this industry is related to finding the answers to the following questions:
 
-* How can we isolate ordinary people from the perceived complexity? 
-* How can we use the collective intelligence of the developer community? 
-* How can we reuse the entire current infrastructure already in place? 
-* How do we integrate legacy financial institutions in a way they feel comfortable? 
-* How do we integrate merchants, retailers and brands of all sizes in a clever way?
-
-The answers to each of these questions are addressed within FERMAT.
-
-In this era of a digitalised world, there are so many people who earn their living generating products and services at the heart of this digital world, being interconnected in an complex pattern of giving and receiving, services, money, assets, knowledge, permanently exchanging information of all kinds, weaving relationships, building a *global community*. + 
-We do *believe* the community collectively has more talent than any of us individually. We *believe* it is important to build on top of services and knowledge that others took time and effort to build. + 
-We _believe_ in *collaborative environments*. + 
-We _believe_ that growth of individums may generate growth and wealth for everybody if only we dedicate effort to build collectively rather than individually, sharing a *common vision* with a certain level of attained consensus on a "master plan for development". +
-We also believe in *decentralization* . +
-
-NOTE: With the rising of Internet and the giant proliferation of computers permanently connected , what turn "the web" nowadays into "the cloud, among the huge benefits of a myriad of services running 24 hours on-line, we have also witnessed some vulnerability of systems totally dependent on a specific server ( or net of servers) when they crashed victim of hackers attack or when they were banned or controlled by goverments or central institutions not only causing data and money loses, but also spreading an awkward feeling of mistrust and being abused.
-At the contrary, a new era of *distributed systems* which run on a *decentralized peer-to-peer networks*, secured by the use of *cryptographic signatures* is being born, turning the old systems based on a "central" servers or central point of control gradually obsolete. The demand of such distributed systems is getting bigger because they are naturally safer ( ther's no central point to attack or control) and they honor the integrity of every participant and are provably fair and honest.
-
-
-In FERMAT we believe in people with passion and commitment to attain higher purposes, who are "crazy enough" and corageous to step forward and follow an *inspired vision*, to create a *critical mass* and start a *movement* that can change the world. We do believe we are collectively going to change this world and move forward to a prosperous future.
-
-We believe in a vision of humanity as a COLLABORATIVE LEARNING SPECIES which can trascend current limitations of the mainstream worldview of survival and scarcity into an unlimited and (re)evolutionary conception of humanity leading the path towards a thriving ECOSYSTEM of a *Global Integral Civilisation*.
-
-=== FERMAT's Mission: 
-
-* To get cryptocurrencies mass adopted as soon as possible, and by doing this, to empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way. 
-* To give back the souveraignity over each one's own ressources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.
-
-
-=== FERMAT Project: foundations for a *master plan*
+=== Fermat Project: foundations for a *master plan*
 
 We strive in FERMAT to lay foundational concepts, technologies and systems to support further developments in blockchain technology in such a way, that the *ecosystem* as a whole can evolve attaining a beautiful, efficient, fair and coherent result, integrating the resultating complexity into a well organized pattern, so as if this pattern had been previously premeditated. +
 The analogy having a big architect wanting to design a new city can serves us for comparison as long as we explore FERMAT'S basic components and their development inside the master plan.
@@ -106,100 +131,6 @@ TIP: Taking Bitcoin as "the" paradigmatic model of every cryptocurrency, we need
 * A public transaction ledger (the blockchain) +
 * A decentralized mathematical and deterministic currency issuance (distributed mining) +
 * A decentralized transaction verification system (transaction script) +
-
-
-=== FERMAT's Principles
-As we have explored the vision and the project, now it comes the turn to depict the initial "buildings of Fermat city" and then invite others to collaborate in building their own. So, the time has come to share our principles:
-
-:numbered!:
-
-==== #1. FERMAT should not allow censorship.
-
-* Open Source.
-* P2P architecture. 
-
-==== #2. FERMAT should not allow spying on their user base.
-
-* Point to point encrypted communications.
-* Geofenced P2P network enabling the shortest communication path between peers.
-* Multi-technology communication layer (cloud, p2p, wifi, bluetooth, nfc, mesh, etc.).
-
-==== #3. FERMAT should be secure and resistant to all kind of attacks.
-
-* No centralized point to be attacked.
-* Multiple identities and roles per user.
-* Device Private Network (DPN) concept.
-* Pocket Money concept and a Multi-Signature Vault owned by the DPN.
-* Reviews and Reputation concepts. 
-
-==== #4. FERMAT should never loose a user's funds. 
-
-* Transaction responsability transmission protocols.
-* Remote technical support by wallet and plugins developers.
-
-==== #5. FERMAT should be usefull to each segment of the world population.
-
-* Niche wallets concept.
-* Branded wallets concept.
-
-==== #6. FERMAT should be extensible and open to innovation.
-
-* Plugins architecture.
-* Multi dimensional layer architecture.
-
-==== #7. FERMAT should be open and inclusive. 
-
-* Any developer could contribute to the shared infraestructure.
-* Any developer could write code for new plugins.
-* Any developer could write code for new niche wallets.
-* Any developer could fork an existing niche wallet to further specialize it.
-* Any graphic / UX designer could provide skins to existing wallets.
-* Anyone could provide language packs to existing wallets.
-
-==== #8. Each developer should be compesated by their contribution to FERMAT.
-
-* Micro license concept.
-* Micro license structure concept.
-* FERMAT automatically enforcing license agreements.
-* Plugin ownership concept.
-* Niche wallet ownership concept.
-* Branded wallet onwnership concept.
-* Master plan design comcept, wiht no overlaping functionality but shared ownership.
-
-==== #9. FERMAT user base should be a shared asset.
-
-* Any developer should be able to profit from the growing FERMAT user base by writing Plugins this user base could consume via the developers of the wallets they are using.
-
-==== #10. FERMAT should be inclusive with crypto currency industry members. 
-
-* Any bitcoin | crypto | blockchain established startup could write their own plugins and expose their services to both FERMAT developers and the FERMAT user base.
-* Any alt-coin community could write plugins to enable their crypto currency within the FERMAT wallet ecosystem.
-
-==== #11. FERMAT should be inclusive with the current financial system.
-
-* Banks and financial institutions could write plugins to enable FERMAT wallets hold funds in banks and other financial institutions.
-
-* FERMAT allows it users to move money both through public value transport networks as crypto currency networks and also thwough private or legacy financial networks.
-
-==== #12. FERMAT should be unbanked-people friendly.
-
-* Multiple logins per device (Device user concept)
-* Crypto banking concept.
-
-==== #13. FERMAT should be OS agnostic. 
-
-* OSA layer concept (Operative System API).
-* OS dependent UI on top of FERMAT concept.
-
-==== #14. FERMAT should learn from its user base.
-
-* Integrated feedback functionality.
-* Voting over feature wish-lists concept.
-
-==== #15. FERMAT should be the finacially most efficient way to move or spend the end user's money. 
-
-* Crypto Vault for multiple wallets concept.
-* Financial AI Agents concept.
 
 
 

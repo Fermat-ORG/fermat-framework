@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.cash_money_stock_replenishment.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
@@ -30,7 +32,7 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 27.09.15.
  */
-public class CashMoneyStockReplenishmentBusinessTransactionDao{
+public class CashMoneyStockReplenishmentBusinessTransactionDatabaseDao {
 
     private Database database;
 
@@ -38,7 +40,7 @@ public class CashMoneyStockReplenishmentBusinessTransactionDao{
 
     private UUID pluginId;
 
-    public CashMoneyStockReplenishmentBusinessTransactionDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public CashMoneyStockReplenishmentBusinessTransactionDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginId = pluginId;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
@@ -154,16 +156,16 @@ public class CashMoneyStockReplenishmentBusinessTransactionDao{
     private CashMoneyStockReplenishment constructCashMoneyStockReplenishmentFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
         UUID                        transactionId           = record.getUUIDValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_TRANSACTION_ID_COLUMN_NAME);
-        String                      brokerPublicKey         = record.getStringValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_PUBLIC_KEY_BROKER_COLUMN_NAME);
+        String                      publickeyBroker         = record.getStringValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_PUBLIC_KEY_BROKER_COLUMN_NAME);
         CurrencyType                merchandiseCurrency     = CurrencyType.getByCode(record.getStringValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_CURRENCY_COLUMN_NAME));
         float                       merchandiseAmount       = record.getFloatValue(record.getStringValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_MERCHANDISE_AMOUNT_COLUMN_NAME));
         UUID                        executionTransactionId  = record.getUUIDValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_EXECUTION_TRANSACTION_ID_COLUMN_NAME);
         CashCurrencyType            cashCurrencyType        = CashCurrencyType.getByCode(record.getStringValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_CASH_CURRENCY_TYPE_COLUMN_NAME));
         BusinessTransactionStatus   status                  = BusinessTransactionStatus.getByCode(record.getStringValue(CashMoneyStockReplenishmentBusinessTransactionDatabaseConstants.CASH_MONEY_STOCK_REPLENISHMENT_STATUS_COLUMN_NAME));
-
+        KeyPair keyPairBroker                               = AsymmetricCryptography.createKeyPair(publickeyBroker);
         return new CashMoneyStockReplenishmentBusinessTransactionImpl(
                 transactionId,
-                brokerPublicKey,
+                keyPairBroker,
                 merchandiseCurrency,
                 merchandiseAmount,
                 executionTransactionId,
