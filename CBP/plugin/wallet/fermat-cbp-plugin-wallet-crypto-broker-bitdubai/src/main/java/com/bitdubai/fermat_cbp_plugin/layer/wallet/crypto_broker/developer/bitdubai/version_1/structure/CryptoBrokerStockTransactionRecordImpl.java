@@ -17,7 +17,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     private static final int HASH_PRIME_NUMBER_ADD = 7213;
 
     private UUID transactionId;
-    private String walletPublicKey;
+    private KeyPair walletKeyPair;
     private String ownerPublicKey;
     private BalanceType balanceType;
     private TransactionType transactionType;
@@ -30,8 +30,8 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
 
     public CryptoBrokerStockTransactionRecordImpl(
             UUID transactionId,
-            String walletPublicKey,
-            String keyPairBroker,
+            KeyPair walletKeyPair,
+            String ownerPublicKey,
             BalanceType balanceType,
             TransactionType transactionType,
             CurrencyType currencyType,
@@ -42,7 +42,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
             String memo
     ){
         this.transactionId = transactionId;
-        this.walletPublicKey = walletPublicKey;
+        this.walletKeyPair = walletKeyPair;
         this.ownerPublicKey = ownerPublicKey;
         this.balanceType = balanceType;
         this.transactionType = transactionType;
@@ -61,7 +61,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     public TransactionType getTransactionType() { return this.transactionType; }
 
     @Override
-    public String getWalletPublicKey() { return this.walletPublicKey; }
+    public String getWalletPublicKey() { return this.walletKeyPair.getPublicKey(); }
 
     @Override
     public String getOwnerPublicKey() { return this.ownerPublicKey; }
@@ -82,14 +82,14 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
         if(!(o instanceof CryptoBrokerStockTransactionRecord))
             return false;
         CryptoBrokerStockTransactionRecord compare = (CryptoBrokerStockTransactionRecord) o;
-        return ownerPublicKey.equals(compare.getOwnerPublicKey()) && walletPublicKey.equals(compare.getWalletPublicKey());
+        return ownerPublicKey.equals(compare.getOwnerPublicKey()) && walletKeyPair.getPublicKey().equals(compare.getWalletPublicKey());
     }
 
     @Override
     public int hashCode(){
         int c = 0;
         c += ownerPublicKey.hashCode();
-        c += walletPublicKey.hashCode();
+        c += walletKeyPair.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 }
