@@ -1,0 +1,21 @@
+== FERMAT Crypto Distribution Network : Developing regional crypto ecosystems
+
+
+=== Crypto Wholesaler 
+-> for organizations owing a certain large amount of crypto-credit to sell through a distribution chain.
+
+=== Crypto Distributor 
+-> for those who form the next level in the distribution, buying to wholesalers and re-selling to Top Up Point
+
+=== TUP (Top Up Point) 
+-> for shops/organizations/persons who transfer crypto-credit in exchange for fiat-money (receives money - gives crypto)
+
+=== COP (Cash Out Point) 
+-> for shops/organizations/persons who gives out money in exchange for a transfer of crypto (receive crypto - gives money)
+
+
+
+
+
+
+
