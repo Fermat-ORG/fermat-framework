@@ -4,5 +4,7 @@
     <color name="background_tab_pressed">#6633B5E5</color>
     <color name="app_background">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="blue">#0048ff</color>
+    <color name="withe">#FFFFFF</color>
 
 </resources>

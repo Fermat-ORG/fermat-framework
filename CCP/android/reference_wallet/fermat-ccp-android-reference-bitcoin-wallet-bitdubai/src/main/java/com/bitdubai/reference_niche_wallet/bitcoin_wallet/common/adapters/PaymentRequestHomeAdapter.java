@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.View;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ public class PaymentRequestHomeAdapter extends FermatAdapter<PaymentRequest, Pay
     CryptoWallet cryptoWallet;
     ReferenceWalletSession referenceWalletSession;
 
+    Typeface tf;
     protected PaymentRequestHomeAdapter(Context context) {
         super(context);
     }
@@ -38,6 +40,8 @@ public class PaymentRequestHomeAdapter extends FermatAdapter<PaymentRequest, Pay
         super(context, dataSet);
         this.cryptoWallet = cryptoWallet;
         this.referenceWalletSession =referenceWalletSession;
+
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
     }
 
     public void setOnClickListerAcceptButton(View.OnClickListener onClickListener){
@@ -89,7 +93,6 @@ public class PaymentRequestHomeAdapter extends FermatAdapter<PaymentRequest, Pay
         //Bitmap bm = BitmapFactory.decodeResource((context.getResources(), R.drawable.mati_profile)), options);
 
 
-
         Bitmap bitmap = MemoryUtils.decodeSampledBitmapFromResource(context.getResources(), R.drawable.mati_profile, holder.getContactIcon().getMaxWidth(), holder.getContactIcon().getMaxHeight());
         holder.getContactIcon().setImageBitmap(bitmap);
 
@@ -97,15 +100,17 @@ public class PaymentRequestHomeAdapter extends FermatAdapter<PaymentRequest, Pay
         //imageView_Item.setImageBitmap(getRoundedShape(BitmapFactory.decodeByteArray(checkBoxListItem.getIntraUserIdentity().getProfileImage(), 0, checkBoxListItem.getIntraUserIdentity().getProfileImage().length)));
 
         holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
+        holder.getTxt_amount().setTypeface(tf);
 
         holder.getTxt_contactName().setText("unknown");//data.getContact().getActorName());
+        holder.getTxt_contactName().setTypeface(tf);
 
         holder.getTxt_notes().setText(data.getReason());
-
+        holder.getTxt_notes().setTypeface(tf);
 
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
         holder.getTxt_time().setText(data.getDate());
-
+        holder.getTxt_time().setTypeface(tf);
 
         holder.getBtn_accept_request().setOnClickListener(this);
 

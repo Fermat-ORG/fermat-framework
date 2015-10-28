@@ -9,6 +9,7 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.de
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.AssetUserActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
@@ -18,10 +19,10 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pE
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -40,10 +41,16 @@ import java.util.Observer;
  * @since Java JDK 1.7
  */
 public class CommunicationNetworkServiceLocal implements Observer, NetworkServiceLocal {
+
     /**
      * Represent the profile of the remote network service
      */
     private PlatformComponentProfile remoteNetworkServiceProfile;
+
+    /**
+     * Represent the profile of the local network service
+     */
+    private NetworkServiceType networkServiceTypePluginRoot;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -72,19 +79,22 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
      * @param errorManager                  instance
      * @param outgoingMessageDao            instance
      */
-    public CommunicationNetworkServiceLocal(PlatformComponentProfile remoteNetworkServiceProfile, ErrorManager errorManager, EventManager eventManager, OutgoingMessageDao outgoingMessageDao) {
+    public CommunicationNetworkServiceLocal(PlatformComponentProfile remoteNetworkServiceProfile,
+                                            ErrorManager errorManager, EventManager eventManager,
+                                            OutgoingMessageDao outgoingMessageDao,
+                                            NetworkServiceType networkServiceTypePluginRoot) {
         this.remoteNetworkServiceProfile = remoteNetworkServiceProfile;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
         this.outgoingMessageDao = outgoingMessageDao;
+        this.networkServiceTypePluginRoot = networkServiceTypePluginRoot;
     }
 
 
     /**
      * (non-javadoc)
-     * @see NetworkServiceLocal#sendMessage(String, String, String)
      */
-    public void sendMessage(final String senderIdentityPublicKey, String pk,final String messageContent) {
+    public void sendMessage(final String senderIdentityPublicKey,final String pk, final String messageContent) {
 
         try {
 
@@ -92,7 +102,6 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
                     remoteNetworkServiceProfile.getIdentityPublicKey(),   //Receiver
                     messageContent,                //Message Content
                     FermatMessageContentType.TEXT);//Type
-
             /*
              * Configure the correct status
              */
@@ -133,9 +142,8 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
         FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
         fermatEvent.setSource(AssetUserActorNetworkServicePluginRoot.EVENT_SOURCE);
         ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingMessage);
+        ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setNetworkServiceTypeApplicant(networkServiceTypePluginRoot);
         eventManager.raiseEvent(fermatEvent);
-
-        System.out.println("CommunicationNetworkServiceLocal - fired event = NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION");
 
     }
 
@@ -156,7 +164,9 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
     }
 
     /**
-     * (non-javadoc)*/
+     * (non-javadoc)
+     * @see NetworkServiceLocal#
+     */
     public FermatMessage getLastMessageReceived() {
         return lastMessageReceived;
     }

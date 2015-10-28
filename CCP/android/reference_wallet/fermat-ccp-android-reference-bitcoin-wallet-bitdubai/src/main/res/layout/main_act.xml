@@ -13,16 +13,16 @@
         android:id="@+id/fragment_container2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#c8ecff"
+        android:background="#1173aa"
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_action_search"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_contact_search"
             android:paddingTop="10dp"
-            android:layout_marginLeft="7dp"
-            />
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp" />
 
         <EditText
             style="@style/Text_Style"
@@ -33,6 +33,9 @@
             android:layout_toLeftOf="@+id/clear_search_image_button"
             android:layout_toStartOf="@+id/clear_search_image_button"
             android:hint="@string/search_hint"
+            android:textSize="14sp"
+
+            android:textColor="#ffffff"
             android:singleLine="true"
             />
 
@@ -69,14 +72,15 @@
 
         <com.melnykov.fab.FloatingActionButton
             android:id="@+id/fab_add_person"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="35dp"
             android:layout_marginRight="35dp"
-            android:src="@drawable/ic_action_add_person"
-            fab:fab_colorNormal="#6563a4"
+
+            android:src="@drawable/ic_contact_newcontact"
+            fab:fab_colorNormal="#1173aa"
             fab:fab_colorPressed="@color/material_blue_grey_800"
             fab:fab_colorRipple="@color/ripple_material_dark"/>
     </FrameLayout>

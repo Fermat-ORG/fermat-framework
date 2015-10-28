@@ -18,7 +18,7 @@ public class AssetWalletUserSubSystem implements DAPAssetWalletSubsystem {
             DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
             plugin = developerBitDubai.getPlugin();
         }catch(Exception exception){
-            throw new CantStartSubsystemException(FermatException.wrapException(exception),"AssetWalletIssuerSubsystem","Unexpected Exception");
+            throw new CantStartSubsystemException(FermatException.wrapException(exception),"AssetWalletUserSubsystem","Unexpected Exception");
         }
     }
 

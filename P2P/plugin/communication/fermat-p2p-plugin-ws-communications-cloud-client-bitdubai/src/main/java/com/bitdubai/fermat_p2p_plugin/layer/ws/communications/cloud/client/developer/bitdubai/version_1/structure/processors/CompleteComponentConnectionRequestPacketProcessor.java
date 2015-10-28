@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent;
@@ -52,6 +53,8 @@ public class CompleteComponentConnectionRequestPacketProcessor extends FermatPac
         Gson gson = new Gson();
         JsonParser parser = new JsonParser();
         JsonObject respond = parser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
+
+        NetworkServiceType networkServiceType       = gson.fromJson(respond.get(JsonAttNamesConstants.NETWORK_SERVICE_TYPE), NetworkServiceType.class);
         PlatformComponentProfile applicantComponent = gson.fromJson(respond.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
         PlatformComponentProfile remoteComponent = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
 
@@ -64,6 +67,7 @@ public class CompleteComponentConnectionRequestPacketProcessor extends FermatPac
         /*
          * Configure the values
          */
+        ((CompleteComponentConnectionRequestNotificationEvent)event).setNetworkServiceTypeApplicant(networkServiceType);
         ((CompleteComponentConnectionRequestNotificationEvent)event).setApplicantComponent(applicantComponent);
         ((CompleteComponentConnectionRequestNotificationEvent)event).setRemoteComponent(remoteComponent);
 

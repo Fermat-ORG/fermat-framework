@@ -56,12 +56,13 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -710,7 +711,11 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             /*
              * tell to the manager to connect to this remote network service
              */
-            communicationNetworkServiceConnectionManager.connectTo(platformComponentProfile, platformComponentProfile, remoteNetworkServiceToConnect);
+            try {
+                communicationNetworkServiceConnectionManager.connectTo(platformComponentProfile, platformComponentProfile, remoteNetworkServiceToConnect);
+            } catch (CantEstablishConnectionException e) {
+                e.printStackTrace();
+            }
 
         }
 
@@ -749,7 +754,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
             /*
              * Send a message using the local representation
              */
-            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), messageContent);
+            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),null, messageContent);
 
         }
 
@@ -766,9 +771,9 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
     /**
      * (non-Javadoc)
-     * @see NetworkService#getPlatformComponentProfile()
+     * @see NetworkService#getPlatformComponentProfilePluginRoot()
      */
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
 
@@ -795,7 +800,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      *
      * @param platformComponentProfile
      */
-    public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile) {
+    public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfile) {
         this.platformComponentProfile = platformComponentProfile;
     }
 

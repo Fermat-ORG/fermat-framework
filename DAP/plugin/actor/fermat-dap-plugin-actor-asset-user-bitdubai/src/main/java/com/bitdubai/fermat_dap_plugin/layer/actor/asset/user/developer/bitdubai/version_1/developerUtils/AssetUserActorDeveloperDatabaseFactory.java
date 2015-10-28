@@ -107,50 +107,50 @@ public class AssetUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
         /**
-         * Asset User database columns.
+         * Asset User Actor database columns.
          */
         List<String> assetUserActorColumns = new ArrayList<String>();
 
-        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME);
-        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_NAME_COLUMN_NAME);
-        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOCATION_LATITUDE_COLUMN_NAME);
-        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_LOCATION_LONGITUDE_COLUMN_NAME);
-        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_GENDER_COLUMN_NAME);
-        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_AGE_COLUMN_NAME);
-        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_CRYPTO_ADDRESS_COLUMN_NAME);
-        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_CRYPTO_CURRENCY_COLUMN_NAME);
-        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME);
-        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_REGISTRATION_DATE_COLUMN_NAME);
-        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_MODIFIED_DATE_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_PUBLIC_KEY_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_NAME_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_AGE_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_GENDER_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_CONNECTION_STATE_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_LOCATION_LATITUDE_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_LOCATION_LONGITUDE_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTRATION_DATE_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_LAST_CONNECTION_DATE_COLUMN_NAME);
         /*
-         * Asset User database addition.
+         * Asset User Actor database addition.
          */
         DeveloperDatabaseTable assetUserActorTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME, assetUserActorColumns);
         tables.add(assetUserActorTable);
 
         /**
-         * Asset User Registered Table database columns.
+         * Asset User Actor Registered Table database columns.
          */
         List<String> assetUserRegisteredColumns = new ArrayList<String>();
 
-        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_PUBLIC_KEY_COLUMN_NAME);
-        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_NAME_COLUMN_NAME);
-        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_LOCATION_LATITUDE_COLUMN_NAME);
-        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_LOCATION_LONGITUDE_COLUMN_NAME);
-        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_GENDER_COLUMN_NAME);
-        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_AGE_COLUMN_NAME);
-        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_CRYPTO_ADDRESS_COLUMN_NAME);
-        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_USER_CRYPTO_CURRENCY_COLUMN_NAME);
-        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_STATE_COLUMN_NAME);
-        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_REGISTRATION_DATE_COLUMN_NAME);
-        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_MODIFIED_DATE_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NAME_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_AGE_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_GENDER_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME);
 
         /**
-         * Asset User Registered database addition.
+         * Asset User Actor Registered database addition.
          */
-        DeveloperDatabaseTable assetUserRegisteredTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_USER_TABLE_NAME, assetUserRegisteredColumns);
+        DeveloperDatabaseTable assetUserRegisteredTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_TABLE_NAME, assetUserRegisteredColumns);
         tables.add(assetUserRegisteredTable);
 
 

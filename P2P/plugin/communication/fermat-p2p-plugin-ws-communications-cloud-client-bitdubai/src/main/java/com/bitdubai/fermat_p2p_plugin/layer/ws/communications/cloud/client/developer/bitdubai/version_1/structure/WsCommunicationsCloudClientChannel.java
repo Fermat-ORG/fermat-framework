@@ -19,7 +19,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatP
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.FermatPacketProcessor;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.JsonObject;
 
 import org.java_websocket.WebSocket;
@@ -440,4 +440,13 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
         event.setMessage("Cloud client communication, registered and established connection.");
         eventManager.raiseEvent(platformEvent);
     }
+
+    /**
+     * Get the IdentityPublicKey
+     * @return String
+     */
+    public String getIdentityPublicKey(){
+        return clientIdentity.getPublicKey();
+    }
+
 }

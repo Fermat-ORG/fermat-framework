@@ -46,6 +46,7 @@
                 android:text="1.4 BTC"
                 android:textSize="18dp"
                 android:textColor="#1d1d26"
+                android:fontFamily="roboto"
                 />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -54,6 +55,7 @@
                 android:id="@+id/txt_contactName"
                 android:text="Matias Furszyfer"
                 android:textColor="#6e6e71"
+                android:fontFamily="roboto"
                 />
 
         </LinearLayout>
@@ -75,6 +77,7 @@
                 android:text="Conference ticket"
                 android:textSize="12dp"
                 android:textColor="#5b5993"
+                android:fontFamily="roboto"
                 />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -83,7 +86,8 @@
                 android:id="@+id/txt_time"
                 android:text="03 Feb 2014"
                 android:textSize="10dp"
-                android:textColor="#6e6e71"/>
+                android:textColor="#6e6e71"
+                android:fontFamily="roboto"/>
 
         </LinearLayout>
 

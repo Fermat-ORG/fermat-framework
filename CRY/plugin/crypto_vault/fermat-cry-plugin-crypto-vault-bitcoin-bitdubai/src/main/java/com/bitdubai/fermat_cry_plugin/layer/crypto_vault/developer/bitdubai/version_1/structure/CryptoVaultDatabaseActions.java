@@ -18,7 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_cry_api.layer.definition.enums.EventType;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.utils.TransactionTypeAndCryptoStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.events.IncomingCryptoOnCryptoNetworkEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
@@ -131,7 +131,7 @@ public class CryptoVaultDatabaseActions {
 
             // if i don't find records, i think is a new incoming transaction, if i find, y return the type of transaction it is.
             if (fermatTxTable.getRecords().isEmpty())
-                return CryptoTransactionType.OUTGOING;
+                return CryptoTransactionType.INCOMING;
             else
                 return CryptoTransactionType.getByCode(fermatTxTable.getRecords().get(0).getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_TYPE_COLUMN_NAME));
 

@@ -83,7 +83,7 @@ public interface IntraUserModuleManager extends ModuleManager {
      * @param profileImage            The profile image that the intra user has
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException
      */
-    public void acceptIntraUser(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
+    public void acceptIntraUser(String identityPublicKey,String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
 
 
     /**
@@ -126,7 +126,7 @@ public interface IntraUserModuleManager extends ModuleManager {
      * @return the list of intra users waiting to be accepted or rejected by the  logged in intra user
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
-    public List<IntraUserInformation> getIntraUsersWaitingYourAcceptance(int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+    public List<IntraUserInformation> getIntraUsersWaitingYourAcceptance(String identityPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
     /**
      * The method <code>getIntraUsersWaitingTheirAcceptance</code> list the intra users that haven't
@@ -136,7 +136,7 @@ public interface IntraUserModuleManager extends ModuleManager {
      * logged in intra user.
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
-    public List<IntraUserInformation> getIntraUsersWaitingTheirAcceptance(int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+    public List<IntraUserInformation> getIntraUsersWaitingTheirAcceptance(String identityPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
     /**
      *

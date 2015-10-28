@@ -1,6 +1,7 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserMonitorAgent;
 
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import ErrorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserMonitorAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRegistry;
@@ -11,9 +12,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+*/
 /**
  * Created by jorgegonzalez on 2015.07.02..
- */
+ *//*
+
 @RunWith(MockitoJUnitRunner.class)
 public class ConstructionTest {
 
@@ -34,3 +37,4 @@ public class ConstructionTest {
         assertThat(testMonitorAgent).isNotNull();
     }
 }
+*/

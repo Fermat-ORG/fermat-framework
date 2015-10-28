@@ -18,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -36,7 +38,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat.R;
-
 
 
 import java.util.List;
@@ -436,6 +437,8 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
 
+
+
     /**
      * Callbacks interface that all activities using this fragment must implement.
      */
@@ -448,4 +451,9 @@ public class NavigationDrawerFragment extends Fragment {
          */
         void onNavigationDrawerItemSelected(int position,String activityCode);
     }
+
+    public void changeNavigationDrawerAdapter(ListAdapter adapter){
+        mDrawerListView.setAdapter(adapter);
+        mDrawerListView.deferNotifyDataSetChanged();
+    };
 }

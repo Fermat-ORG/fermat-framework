@@ -37,12 +37,12 @@ public class IntraUserIdentityInformationImp implements IntraWalletUser {
     }
 
     @Override
-    public void setNewProfileImage(byte[] newProfileImage) throws CantSetNewProfileImageException {
+    public void setNewProfileImage(byte[] newProfileImage)  {
 
     }
 
     @Override
-    public String createMessageSignature(String message) throws CantSignIntraWalletUserMessageException {
+    public String createMessageSignature(String message) {
         return null;
     }
 }

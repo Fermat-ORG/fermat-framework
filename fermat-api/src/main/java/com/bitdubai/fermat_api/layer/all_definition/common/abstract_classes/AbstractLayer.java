@@ -1,13 +1,15 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
 
-import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.AddonNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.PluginNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddonsEnum;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,10 +22,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractLayer {
 
-    private Map<FermatAddonsEnum,  Addon > addons ;
-    private Map<FermatPluginsEnum, Plugin> plugins;
+    private final Map<AddonReference , AbstractAddonSubsystem > addons ;
+    private final Map<PluginReference, AbstractPluginSubsystem> plugins;
 
-    public AbstractLayer() {
+    private final LayerReference layerReference;
+
+    public AbstractLayer(final Layers layerEnum) {
+
+        this.layerReference = new LayerReference(layerEnum);
 
         this.addons  = new ConcurrentHashMap<>();
         this.plugins = new ConcurrentHashMap<>();
@@ -35,38 +41,32 @@ public abstract class AbstractLayer {
      * Throw the method <code>registerAddon</code> you can add new addons to the layer.
      * Here we'll corroborate too that the addon is not added twice.
      *
-     * @param addon              addon descriptor (element of enum).
-     * @param abstractSubsystem  subsystem of the addon.
+     * @param abstractAddonSubsystem  subsystem of the addon.
      *
-     * @throws CantStartLayerException if something goes wrong.
+     * @throws CantRegisterAddonException if something goes wrong.
      */
-    protected final void registerAddon(final FermatAddonsEnum       addon            ,
-                                       final AbstractAddonSubsystem abstractSubsystem) throws CantStartLayerException {
+    protected final void registerAddon(final AbstractAddonSubsystem abstractAddonSubsystem) throws CantRegisterAddonException {
+
+        AddonReference addonReference = abstractAddonSubsystem.getAddonReference();
+
+        addonReference.setLayerReference(this.layerReference);
 
         try {
 
-            if(addons.get(addon) != null) {
-                String context =
-                        "addon: "      + addon.toString() +
-                        " - layer: "    + addon.getLayer() +
-                        " - platform: " + addon.getPlatform();
-                throw new CantStartLayerException(context, "addon already exists in this layer.");
+            if(addons.containsKey(addonReference)) {
+                throw new CantRegisterAddonException(addonReference.toString(), "addon already exists in this layer.");
             }
 
-            abstractSubsystem.start();
+            abstractAddonSubsystem.start();
 
             addons.put(
-                    addon,
-                    abstractSubsystem.getAddon()
+                    addonReference,
+                    abstractAddonSubsystem
             );
 
         } catch (final CantStartSubsystemException e) {
 
-            String context =
-                    "addon: "      + addon.toString() +
-                    " - layer: "    + addon.getLayer() +
-                    " - platform: " + addon.getPlatform();
-            throw new CantStartLayerException(e, context, "Error trying to start the layer.");
+            throw new CantRegisterAddonException(e, addonReference.toString(), "Error trying to start the layer.");
         }
     }
 
@@ -74,65 +74,58 @@ public abstract class AbstractLayer {
      * Throw the method <code>registerPlugin</code> you can add new plugins to the layer.
      * Here we'll corroborate too that the plugin is not added twice.
      *
-     * @param plugin                   plugin descriptor (element of enum).
      * @param abstractPluginSubsystem  subsystem of the plugin).
      *
-     * @throws CantStartLayerException if something goes wrong.
+     * @throws CantRegisterPluginException if something goes wrong.
      */
-    protected final void registerPlugin(final FermatPluginsEnum       plugin                 ,
-                                        final AbstractPluginSubsystem abstractPluginSubsystem) throws CantStartLayerException {
+    protected final void registerPlugin(AbstractPluginSubsystem abstractPluginSubsystem) throws CantRegisterPluginException {
+
+        PluginReference pluginReference = abstractPluginSubsystem.getPluginReference();
+
+        pluginReference.setLayerReference(this.layerReference);
 
         try {
 
-            if(plugins.get(plugin) != null) {
-                String context =
-                        "plugin: "      + plugin.toString() +
-                        " - layer: "    + plugin.getLayer() +
-                        " - platform: " + plugin.getPlatform();
-                throw new CantStartLayerException(context, "Plugin already exists in this layer.");
+            if(plugins.containsKey(pluginReference)) {
+
+                throw new CantRegisterPluginException(pluginReference.toString(), "Plugin already exists in this layer.");
             }
 
             abstractPluginSubsystem.start();
 
             plugins.put(
-                    plugin,
-                    abstractPluginSubsystem.getPlugin()
+                    pluginReference,
+                    abstractPluginSubsystem
             );
 
         } catch (final CantStartSubsystemException e) {
 
-            String context =
-                    "plugin: "      + plugin.toString() +
-                    " - layer: "    + plugin.getLayer() +
-                    " - platform: " + plugin.getPlatform();
-            throw new CantStartLayerException(e, context, "Error trying to start the layer.");
+            throw new CantRegisterPluginException(e, pluginReference.toString(), "Error trying to start the layer.");
         }
     }
 
-    public final Addon getAddon(FermatAddonsEnum addon) throws AddonNotFoundException {
+    public final AbstractAddonSubsystem getAddon(AddonReference addonReference) throws AddonNotFoundException {
 
-        if (addons.containsKey(addon)) {
-            return addons.get(addon);
+        if (addons.containsKey(addonReference)) {
+            return addons.get(addonReference);
         } else {
-            String context =
-                    "addon: " + addon.toString() +
-                    " - layer: " + addon.getLayer() +
-                    " - platform: " + addon.getPlatform();
-            throw new AddonNotFoundException(context, "addon not found in the specified layer.");
+
+            throw new AddonNotFoundException("addon: "+addonReference, "addon not found in the specified layer.");
         }
     }
 
-    public final Plugin getPlugin(FermatPluginsEnum plugin) throws PluginNotFoundException {
+    public final AbstractPluginSubsystem getPlugin(PluginReference pluginReference) throws PluginNotFoundException {
 
-        if (plugins.containsKey(plugin)) {
-            return plugins.get(plugin);
+        if (plugins.containsKey(pluginReference)) {
+            return plugins.get(pluginReference);
         } else {
-            String context =
-                    "plugin: " + plugin.toString() +
-                    " - layer: " + plugin.getLayer() +
-                    " - platform: " + plugin.getPlatform();
-            throw new PluginNotFoundException(context, "plugin not found in the specified layer.");
+
+            throw new PluginNotFoundException("plugin: "+pluginReference, "plugin not found in the specified layer.");
         }
+    }
+
+    public final LayerReference getLayerReference() {
+        return layerReference;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -18,13 +19,26 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
+import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantCreateCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantTransactionCryptoBrokerException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerWallet;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerTransactionSummary;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerWalletDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantListCryptoBrokerWalletTransactionException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
@@ -36,15 +50,16 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 19.10.15.
  */
-public class CryptoBrokerWalletPluginRoot implements DatabaseManagerForDevelopers,
-        DealsWithPluginDatabaseSystem,
-        LogManagerForDevelopers,
-        DealsWithErrors,
-        DealsWithLogger,
-        DealsWithDeviceUser,
-        DealsWithPluginFileSystem,
-        Plugin,
-        Service{
+public class CryptoBrokerWalletPluginRoot implements CryptoBrokerWalletManager,
+                                                        DatabaseManagerForDevelopers,
+                                                        DealsWithPluginDatabaseSystem,
+                                                        LogManagerForDevelopers,
+                                                        DealsWithErrors,
+                                                        DealsWithLogger,
+                                                        DealsWithDeviceUser,
+                                                        DealsWithPluginFileSystem,
+                                                        Plugin,
+                                                        Service{
 
     /*Variables.*/
     private CryptoBrokerWalletDatabaseDao cryptoBrokerWalletDatabaseDao;
@@ -71,10 +86,49 @@ public class CryptoBrokerWalletPluginRoot implements DatabaseManagerForDeveloper
 
     public static final String CRYPTO_BROKER_PRIVATE_KEYS_CUSTOMER_FILE_NAME = "cryptoBrokerWalletPrivateKeyCustomer";
 
-    /**/
+    /*CryptoBrokerWallet Interface Implementation*/
+    public double getBookBalance() throws CantTransactionCryptoBrokerException{
+        try{
+            return cryptoBrokerWalletDatabaseDao.getCalculateBookBalance();
+        } catch (CantCalculateBalanceException e) {
+            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET BOOKED BALANCE", e, "", "");
+        } catch (Exception e) {
+            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET BOOKED BALANCE", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    public double getAvailableBalance() throws CantTransactionCryptoBrokerException{
+        try{
+            return cryptoBrokerWalletDatabaseDao.getCalculateAvailableBalance();
+        } catch (CantCalculateBalanceException e) {
+            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET AVAILABLE BALANCE", e, "", "");
+        } catch (Exception e) {
+            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET AVAILABLE BALANCE", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    public List<CryptoBrokerStockTransactionRecord> getTransactions(BalanceType balanceType, int max, int offset)throws CantTransactionCryptoBrokerException{
+        try {
+            List<CryptoBrokerStockTransactionRecord> cryptoBrokerTransactionList = new ArrayList<CryptoBrokerStockTransactionRecord>();
+            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
+            cryptoBrokerTransactionList = cryptoBrokerWalletDatabaseDao.getTransactionsList(loggedUser);
+            return cryptoBrokerTransactionList;
+        } catch (CantGetLoggedInDeviceUserException e) {
+            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET TRANSACTION", e, "Error get logged user device", "");
+        } catch (CantListCryptoBrokerWalletTransactionException e) {
+            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET TRANSACTION", e, "", "");
+        } catch (Exception e) {
+            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET TRANSACTION", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    public CryptoBrokerTransactionSummary getBrokerTransactionSummary(BalanceType balanceType) throws CantTransactionCryptoBrokerException{
+        return null;
+    }
 
 
-    /*DatabaseManagerForDevelopers Interface implementation.*/
+
+    /*DatabaseManagerForDevelopers Interface Implementation.*/
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         CryptoBrokerWalletDeveloperDatabaseFactory dbFactory = new CryptoBrokerWalletDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
@@ -99,19 +153,19 @@ public class CryptoBrokerWalletPluginRoot implements DatabaseManagerForDeveloper
         return new ArrayList<>();
     }
 
-    /*DealsWithPluginDatabaseSystem interface implementation.*/
+    /*DealsWithPluginDatabaseSystem interface Implementation.*/
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
 
     }
 
-    /*LogManagerForDevelopers Interface implementation.*/
+    /*LogManagerForDevelopers Interface Implementation.*/
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
         returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.CryptoBrokerWalletPluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletImpl");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerStockTransactionRecordImpl");
         returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseDao");
         returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseFactory");
         returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseConstants");
@@ -130,37 +184,37 @@ public class CryptoBrokerWalletPluginRoot implements DatabaseManagerForDeveloper
         }
     }
 
-    /*DealWithErrors Interface implementation.*/
+    /*DealWithErrors Interface Implementation.*/
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
     }
 
-    /*DealsWithLogger Interface implementation.*/
+    /*DealsWithLogger Interface Implementation.*/
     @Override
     public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
     }
 
-    /*DealsWithDeviceUser Interface implementation.*/
+    /*DealsWithDeviceUser Interface Implementation.*/
     @Override
     public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
         this.deviceUserManager = deviceUserManager;
     }
 
-    /*DealWithPluginFileSystem Interface implementation.*/
+    /*DealWithPluginFileSystem Interface Implementation.*/
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
     }
 
-    /*PlugIn Interface implementation.*/
+    /*PlugIn Interface Implementation.*/
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
 
-    /*Service Interface implementation.*/
+    /*Service Interface Implementation.*/
     @Override
     public void start() throws CantStartPluginException {
         this.serviceStatus = ServiceStatus.STARTED;
@@ -192,5 +246,15 @@ public class CryptoBrokerWalletPluginRoot implements DatabaseManagerForDeveloper
     @Override
     public ServiceStatus getStatus() {
         return serviceStatus;
+    }
+
+    @Override
+    public CryptoBrokerWallet createNewCryptoBrokerWallet(ActorIdentity cryptoBroker) throws CantCreateCryptoBrokerWalletException {
+        return null;
+    }
+
+    @Override
+    public CryptoBrokerWallet getCryptoBrokerWallet(ActorIdentity cryptoBroker) throws CryptoBrokerWalletNotFoundException {
+        return null;
     }
 }

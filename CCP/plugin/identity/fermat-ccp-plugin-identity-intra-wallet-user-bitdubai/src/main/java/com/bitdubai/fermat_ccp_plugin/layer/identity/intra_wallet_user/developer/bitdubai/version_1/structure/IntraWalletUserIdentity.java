@@ -64,13 +64,13 @@ public class IntraWalletUserIdentity implements DealsWithPluginFileSystem, Deals
     }
 
     @Override
-    public String createMessageSignature(String message) throws CantSignIntraWalletUserMessageException {
+    public String createMessageSignature(String message){ //throws CantSignIntraWalletUserMessageException {
         try {
             return AsymmetricCryptography.createMessageSignature(message, this.privateKey);
         } catch (Exception e) {
-            throw new CantSignIntraWalletUserMessageException("Fatal Error Signed message", e, "", "");
+           // throw new CantSignIntraWalletUserMessageException("Fatal Error Signed message", e, "", "");
         }
-
+        return null;
     }
 
     /**
@@ -84,7 +84,7 @@ public class IntraWalletUserIdentity implements DealsWithPluginFileSystem, Deals
      * @throws CantSetNewProfileImageException
      */
     @Override
-    public void setNewProfileImage(byte[] newProfileImage) throws CantSetNewProfileImageException {
+    public void setNewProfileImage(byte[] newProfileImage){// throws CantSetNewProfileImageException {
         try {
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
@@ -95,15 +95,21 @@ public class IntraWalletUserIdentity implements DealsWithPluginFileSystem, Deals
 
             file.setContent(profileImage);
 
+
             file.persistToMedia();
         } catch (CantPersistFileException e) {
-            throw new CantSetNewProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error persist file.", null);
-
+            e.printStackTrace();
         } catch (CantCreateFileException e) {
-            throw new CantSetNewProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error creating file.", null);
-        } catch (Exception e) {
-            throw new CantSetNewProfileImageException("CAN'T PERSIST PROFILE IMAGE ", FermatException.wrapException(e), "", "");
+            e.printStackTrace();
         }
+//        } catch (CantPersistFileException e) {
+//            throw new CantSetNewProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error persist file.", null);
+//
+//        } catch (CantCreateFileException e) {
+//            throw new CantSetNewProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error creating file.", null);
+//        } catch (Exception e) {
+//            throw new CantSetNewProfileImageException("CAN'T PERSIST PROFILE IMAGE ", FermatException.wrapException(e), "", "");
+//        }
         this.profileImage = newProfileImage;
     }
 

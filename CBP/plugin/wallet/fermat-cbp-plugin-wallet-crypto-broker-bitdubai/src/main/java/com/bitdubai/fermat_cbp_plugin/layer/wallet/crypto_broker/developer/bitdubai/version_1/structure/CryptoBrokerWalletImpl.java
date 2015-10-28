@@ -1,121 +1,61 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerTransactionRecord;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_cbp_api.all_definition.wallet.Stock;
+import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.wallet.WalletTransaction;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantPerformTransactionException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 
-import java.util.UUID;
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by Yordin Alayn on 19.10.15.
+ * Created by jorge on 26-10-2015.
  */
-public class CryptoBrokerWalletImpl implements CryptoBrokerTransactionRecord {
-    private static final int HASH_PRIME_NUMBER_PRODUCT = 7681;
-    private static final int HASH_PRIME_NUMBER_ADD = 3581;
+public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
 
-    private UUID transactionId;
-    private KeyPair keyPairWallet;
-    private KeyPair keyPairBroker;
-    private KeyPair keyPairCustomer;
-    private BalanceType balanceType;
-    private TransactionType transactionType;
-    private float amount;
-    private CurrencyType currencyType;
-    private float runningBookBalance;
-    private float runningAvailableBalance;
-    private long timeStamp;
-    private String memo;
+    private static final int HASH_PRIME_NUMBER_PRODUCT = 5147;
+    private static final int HASH_PRIME_NUMBER_ADD = 4789;
 
-    public CryptoBrokerWalletImpl(
-            UUID transactionId,
-            KeyPair keyPairWallet,
-            KeyPair keyPairBroker,
-            KeyPair keyPairCustomer,
-            BalanceType balanceType,
-            TransactionType transactionType,
-            CurrencyType currencyType,
-            float amount,
-            float runningBookBalance,
-            float runningAvailableBalance,
-            long timeStamp,
-            String memo
-    ){
-        this.transactionId = transactionId;
-        this.keyPairWallet = keyPairWallet;
-        this.keyPairBroker = keyPairBroker;
-        this.keyPairCustomer = keyPairCustomer;
-        this.balanceType = balanceType;
-        this.transactionType = transactionType;
-        this.amount = amount;
-        this.currencyType = currencyType;
-        this.runningBookBalance = runningBookBalance;
-        this.runningAvailableBalance = runningAvailableBalance;
-        this.timeStamp = timeStamp;
-        this.memo = memo;
+    private final KeyPair walletKeyPair;
+    private final String ownerPublicKey;
+    private final ConcurrentHashMap<FermatEnum, Stock> stockMap;
+
+    public CryptoBrokerWalletImpl(final KeyPair walletKeyPair, final String ownerPublicKey){
+        this.walletKeyPair = walletKeyPair;
+        this.ownerPublicKey = ownerPublicKey;
+        stockMap = new ConcurrentHashMap<>();
     }
 
     @Override
-    public UUID getTransactionId() { return this.transactionId; }
-    public void setTransactionId(UUID id) { this.transactionId = id; }
-
-    @Override
-    public BalanceType getBalanceType() { return this.balanceType; }
-    public void setBalanceType(BalanceType balance) { this.balanceType = balance; }
-
-    @Override
-    public TransactionType getTransactionType() { return this.transactionType; }
-    public void setBalanceType(TransactionType transaction) { this.transactionType = transaction; }
-
-    @Override
-    public CurrencyType getCurrencyType() { return this.currencyType; }
-    public void setCurrencyType(CurrencyType currency) { this.currencyType = currency; }
-
-    @Override
-    public String getPublicKeyWallet() { return this.keyPairWallet.getPublicKey(); }
-    public void setPublicKeyWallet(String publicKey) { this.keyPairWallet = keyPairWallet; }
-
-    @Override
-    public String getPublicKeyBroker() { return this.keyPairBroker.getPublicKey(); }
-    public void setPublicKeyBroker(String publicKey) { this.keyPairBroker = keyPairBroker; }
-
-    @Override
-    public String getPublicKeyCustomer() { return this.keyPairCustomer.getPublicKey(); }
-    public void setPublicKeyCustomer(String publicKey) { this.keyPairCustomer = keyPairCustomer; }
-
-    @Override
-    public float getAmount() { return this.amount; }
-    public void setAmount(float amount) { this.amount = amount; }
-
-    @Override
-    public float getRunningBookBalance() { return this.runningBookBalance; }
-    public void setRunningBookBalance(float bookBalance) { this.runningBookBalance = bookBalance; }
-
-    @Override
-    public float getRunningAvailableBalance() { return this.runningAvailableBalance; }
-    public void setRunningAvailableBalance(float availableBalance) { this.runningAvailableBalance = availableBalance; }
-
-    @Override
-    public long getTimestamp() { return this.timeStamp; }
-    public void setTimestamp(long time) { this.timeStamp = time; }
-
-    @Override
-    public String getMemo() { return this.memo; }
-    public void setMemo(String memo) { this.memo = memo; }
-
-    public boolean equals(Object o){
-        if(!(o instanceof CryptoBrokerTransactionRecord))
-            return false;
-        CryptoBrokerTransactionRecord compare = (CryptoBrokerTransactionRecord) o;
-        return keyPairBroker.getPublicKey().equals(compare.getPublicKeyBroker()) && keyPairWallet.getPublicKey().equals(compare.getPublicKeyWallet());
+    public String getWalletPublicKey() {
+        return null;
     }
 
     @Override
-    public int hashCode(){
-        int c = 0;
-        c += keyPairBroker.hashCode();
-        c += keyPairWallet.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+    public String getOwnerPublicKey() {
+        return null;
+    }
+
+    @Override
+    public void addStock(FermatEnum stockType) {
+
+    }
+
+    @Override
+    public Stock getStock(FermatEnum stockType) {
+        return null;
+    }
+
+    @Override
+    public Collection<Stock> getStocks() {
+        return null;
+    }
+
+    @Override
+    public void performTransaction(WalletTransaction transaction) {
+
     }
 }

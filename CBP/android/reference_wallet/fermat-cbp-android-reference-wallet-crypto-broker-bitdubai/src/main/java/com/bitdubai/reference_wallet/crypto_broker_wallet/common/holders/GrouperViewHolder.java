@@ -33,18 +33,24 @@ public class GrouperViewHolder extends ParentViewHolder {
     public GrouperViewHolder(View itemView) {
         super(itemView);
 
-        mNumberTextView = (TextView) itemView.findViewById(R.id.cbw_customers_count);
+        mNumberTextView = (TextView) itemView.findViewById(R.id.cbw_customer_count);
         mDataTextView = (TextView) itemView.findViewById(R.id.cbw_group_description);
-        mArrowExpandImageView = (ImageView) itemView.findViewById(R.id.cbw_arrow_imageView);
+        mArrowExpandImageView = (ImageView) itemView.findViewById(R.id.cbw_arrow);
     }
 
-    public void bind(int parentNumber, String parentText) {
-        mNumberTextView.setText(String.valueOf(parentNumber));
+    /**
+     * Set the data to the views
+     *
+     * @param childCount the number of children contained by this grouper item
+     * @param parentText the text show by this grouper item
+     */
+    public void bind(int childCount, String parentText) {
+        mNumberTextView.setText(String.valueOf(childCount));
         mDataTextView.setText(parentText);
     }
 
-    @SuppressLint("NewApi")
     @Override
+    @SuppressLint("NewApi")
     public void setExpanded(boolean expanded) {
         super.setExpanded(expanded);
         if (!HONEYCOMB_AND_ABOVE) {
@@ -61,16 +67,21 @@ public class GrouperViewHolder extends ParentViewHolder {
     @Override
     public void onExpansionToggled(boolean expanded) {
         super.onExpansionToggled(expanded);
+
+        mNumberTextView.setVisibility(expanded ? View.GONE : View.VISIBLE);
+
         if (!HONEYCOMB_AND_ABOVE) {
             return;
         }
 
-        RotateAnimation rotateAnimation = new RotateAnimation(ROTATED_POSITION,
-                INITIAL_POSITION,
+        RotateAnimation rotateAnimation = new RotateAnimation(
+                ROTATED_POSITION, INITIAL_POSITION,
                 RotateAnimation.RELATIVE_TO_SELF, PIVOT_VALUE,
                 RotateAnimation.RELATIVE_TO_SELF, PIVOT_VALUE);
+
         rotateAnimation.setDuration(DEFAULT_ROTATE_DURATION_MS);
         rotateAnimation.setFillAfter(true);
+
         mArrowExpandImageView.startAnimation(rotateAnimation);
     }
 }

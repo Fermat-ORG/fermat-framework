@@ -121,7 +121,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
+						</authors>-
 						<mantainers>
 						</mantainers>
 						<certifications>
@@ -205,7 +205,7 @@
 				</libraries>
 			</layer>
 
-			
+
 			<layer name="Niche Wallet" language="java-android"></layer>
 			<layer name="Reference Wallet" language="java-android"></layer>
 			<layer name="Sub App" language="java-android"></layer>
@@ -243,6 +243,8 @@
 			<layer name="Platform Service" language="java"></layer>
 			<layer name="empty layer 5"></layer>
 			<layer super_layer="OSA"></layer>
+
+			
 
 			<layer name="Api" language="java">
 				<libraries>
@@ -5170,7 +5172,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Whosale Crypto Sale"
+						name="Wholesaler Crypto Sale"
 						description=""
 						difficulty="0"
 						code-level="concept"
@@ -5185,7 +5187,7 @@
 						</certifications>
 					</plugin>
 					<plugin
-						name="Whosale Fiat Sale"
+						name="Wholesaler Fiat Sale"
 						description=""
 						difficulty="0"
 						code-level="concept"

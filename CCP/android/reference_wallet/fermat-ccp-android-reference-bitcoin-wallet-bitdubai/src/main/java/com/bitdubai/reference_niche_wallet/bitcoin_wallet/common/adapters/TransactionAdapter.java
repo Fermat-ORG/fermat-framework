@@ -2,6 +2,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -36,8 +37,12 @@ public class TransactionAdapter extends FermatAdapter<Item, TransactionAdapter.T
 
     private int typeOfItemToInflate=HEADER_ROW;
 
+    Typeface tf;
+
     public TransactionAdapter(Context context, ArrayList<Item> dataSet) {
         super(context, dataSet);
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
+
     }
 
     @Override
@@ -74,9 +79,14 @@ public class TransactionAdapter extends FermatAdapter<Item, TransactionAdapter.T
         }else{
             EntryItem entryItem = (EntryItem) data;
             holder.textView_contact_name.setText(entryItem.cryptoWalletTransaction.getInvolvedActor().getName());
+            holder.textView_contact_name.setTypeface(tf);
+
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
             holder.txtView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getTimestamp()));
+            holder.txtView_time.setTypeface(tf);
+
             holder.txtView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode()));
+            holder.txtView_amount.setTypeface(tf);
 
             byte[] image = entryItem.cryptoWalletTransaction.getInvolvedActor().getPhoto();
 
@@ -130,6 +140,12 @@ public class TransactionAdapter extends FermatAdapter<Item, TransactionAdapter.T
 
             //this.itemView.setOnClickListener(this);
             //txtView_amount.setOnClickListener(this);
+
+            textView_contact_name.setFont(FontType.ROBOTO_REGULAR);
+            txtView_time.setFont(FontType.ROBOTO_REGULAR);
+            txtView_amount.setFont(FontType.ROBOTO_REGULAR);
+            textView_type.setFont(FontType.ROBOTO_REGULAR);
+
         }
 
         @Override

@@ -1,26 +1,36 @@
 :numbered:
 
 == FERMAT BlockChain Superlayer
-This superlayer provides to the entire FERMAT multiplatform system the necessary functionalities to manage blockchain technology.
+This superlayer provides the entire FERMAT multiplatform system the necessary functionalities to manage *blockchain technology*.
 
 === _Crypto Networks layer_
-This layer builds the interface between FERMAT and each cryptonetwork available. + 
-There is one module for each cryptocurrency: Bitcoin, Litecoin, Ripple, Ethereum,  etc
+This layer builds the interface between FERMAT and each _cryptonetwork_ available. + 
+There is one module for each cryptocurrency: *Bitcoin*, *Litecoin*, *Ripple*, *Ethereum*,  etc +
 The main _responsibility_ for each module is to handle every outgoing/incoming request to/from the corresponding cryptonetwork.
+More specifically, the module connects to a *full node* of the corresponding cryptonetwork and explores the transactions included in the blockchain to find where a *Fermat public cryptoaddress* is mentioned. When a match is found, the module races en event broadcasted in FERMAT environment, which in turn triggers some action in another module which _responsability_ is linked to the event. The addresses to match are those listed in the _Cryptoaddress Book_ module (see _Crypto Modules layer_ ). +
+ 
 
 === _Crypto Vaults layers_
+As well as in a traditional *funds management* of a Bank, the entire money that a Banks posseses is store in one _main vault_, and the _user's account managing system_ acknowledges how much money corresponds to every one, in FERMAT, all transactions corresponding to FERMAT's users are held in a *vault module*,  corresponding to the currency associated to the transaction. Then is task of every FERMAT *wallet* to manage the amount of cryptocurrency owned by each *actor*.
 
-Bitcoin Vault ::
-Assets over Bitcoin :: 
-Bitcoin watch only vault ::
-...
+NOTE: It might be useful to recall in this section a basic concept in blockchain technology about Hierarchical Deterministics Wallets.
+These Wallets are created in a way that with a *master parent privat key* a complete set of keys might be derived from it in a hierarchical relationships of *children* keys and *grandchildren* keys and so forth..., enabling the creation of a very large number of privat keys to sign transactions and public address for wallets to send/receive value.
+
+So, each *vault module* uses its _master key_  in the way of a HD wallet, to issue derived children keys which supply the necessary keys to each platform within Fermat to perform valid cryptocurrency transactions with complete safety and minimizing the data size to be shared and transmitted along the system.
+ 
+ 
+Bitcoin Vault :: it stores the entire system's available _Bitcoin_ funds (*value storage*) 
+Assets over Bitcoin :: it stores each little amount of_Bitcoin_ used to create a *Digital Asset* ( *metada storage* of what is represented by the *asset* , this is primerly *NOT* a storage of *value* ).  (See full explanation in the section about _Digital Assets_ [dap] )
+Bitcoin Watch Only Vault :: used in the _Digital Asset Platform_ to store bitcoins that are needed to let the *redeem points* work. See full explanation in the section about _Digital Assets_ [dap] ) +
 
 === _Crypto Modules layer_
-Crypto Address Book ::
+Crypto Address Book :: +
 
 === _Crypto Router layer_
 Incoming Crypto ::
-Outgoing Crypto ::
+Outgoing Crypto :: +
+
+
 
 
 

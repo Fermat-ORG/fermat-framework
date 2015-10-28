@@ -7,5 +7,6 @@ dependencies {
     compile project(':fermat-api')
     compile project(':fermat-p2p-api')
     compile project(':fermat-pip-api')
+    compile 'com.google.code.gson:gson:2.3.1'
 
 }

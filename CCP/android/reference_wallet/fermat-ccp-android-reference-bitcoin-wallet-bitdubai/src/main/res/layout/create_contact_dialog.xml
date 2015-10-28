@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="300dp"
+    android:orientation="vertical"
     android:layout_height="wrap_content"
-    android:background="#5ca0cfc1">
+    android:layout_width="match_parent"
+    android:background="#FFFFFF"
+   >
 
 
     <LinearLayout
@@ -12,16 +14,19 @@
         android:paddingBottom="3dip"
         android:paddingLeft="7dip"
         android:paddingRight="7dip"
-        android:paddingTop="6dip">
+        android:paddingTop="6dip"
+        android:background="#FFFFFF"
+        android:divider="#e1e1e1">
+
 
         <ImageView
             android:id="@+id/take_picture_btn"
             android:layout_width="65dp"
             android:layout_height="65dp"
             android:layout_margin="7dip"
-            android:background="@drawable/rounded_button_green_selector"
+            android:background="@drawable/btn_new_contact_picture"
             android:src="@drawable/ic_camera_green"
-            android:elevation="2dip"/>
+            />
 
 
 
@@ -32,7 +37,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginBottom="3dip"
                 android:background="@drawable/shape_section"
-                android:elevation="2dp"
+
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:hint="Name"
@@ -42,22 +47,29 @@
                 android:paddingRight="7dip"
                 android:paddingTop="7dip"
                 android:singleLine="true"
-                android:textColor="#72af9c"
-                android:textColorHint="#BDBDBD"
-                android:textSize="20sp"
+                android:textColor="#666666"
+
+                android:textSize="12sp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:textStyle="normal" />
-
-
+                android:textStyle="normal"
+                android:fontFamily="roboto"/>
 
 
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#e1e1e1"
+        android:layout_alignParentBottom="true"></View>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:divider="#e1e1e1"
+        android:baselineAligned="false">
 
         <EditText
             android:id="@+id/txt_address"
@@ -66,7 +78,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="3dip"
             android:background="@drawable/shape_section"
-            android:elevation="2dp"
+
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:hint="Address"
@@ -76,9 +88,8 @@
             android:paddingRight="7dip"
             android:paddingTop="7dip"
             android:singleLine="true"
-            android:textColor="#72af9c"
-            android:textColorHint="#BDBDBD"
-            android:textSize="20sp"
+            android:textColor="#666666"
+            android:textSize="12sp"
             android:layout_weight="1"
             android:layout_marginLeft="15dp"
             android:textStyle="normal" />
@@ -99,34 +110,43 @@
             android:layout_weight="1.5"
             android:src="@drawable/ic_action_camera_grey" />
 
-    </LinearLayout>
 
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#e1e1e1"
+        android:layout_alignParentBottom="true"></View>
     <LinearLayout
         android:id="@+id/linear_create_contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingBottom="3dip"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:background="#FFFFFF">
 
         <Button
             android:id="@+id/cancel_btn"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
             android:layout_weight="1"
-            android:background="#7ba9a5"
+            android:background="#efefef"
             android:text="Cancel"
-            android:textColor="#FFFFFF" />
+            android:textColor="#666666"
+            android:textSize="14sp"
+            />
 
 
         <Button
             android:id="@+id/save_contact_btn"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#50cfc3"
+            android:layout_height="40dp"
+            android:background="#1173aa"
             android:text="Save"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"/>
     </LinearLayout>
 
 

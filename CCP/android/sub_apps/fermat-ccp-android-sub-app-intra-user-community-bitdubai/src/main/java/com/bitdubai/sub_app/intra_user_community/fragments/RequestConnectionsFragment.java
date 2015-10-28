@@ -16,11 +16,13 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.IntraUserIdentityInfoAdapter;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
@@ -66,19 +68,6 @@ public class RequestConnectionsFragment extends FermatListFragment<IntraUserInfo
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
-
-//        FloatingActionButton newIdentityButton = (FloatingActionButton) layout.findViewById(R.id.new_crypto_broker_identity_float_action_button);
-//        newIdentityButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
-//            }
-//        });
-//
-//        if (getActivity().getActionBar() != null) {
-//            getActivity().getActionBar().setDisplayShowHomeEnabled(false);
-//        }
-
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
     }
@@ -153,13 +142,14 @@ public class RequestConnectionsFragment extends FermatListFragment<IntraUserInfo
         List<IntraUserInformation> data = new ArrayList<>();
         try {
             if (moduleManager != null) {
-                data = moduleManager.getIntraUsersWaitingYourAcceptance(MAX, offset);
+                data = moduleManager.getIntraUsersWaitingYourAcceptance(moduleManager.getActiveIntraUserIdentity().getPublicKey(),MAX, offset);
                 offset = data.size();
             } else {
-                //data = moduleManager.getAllCryptoBrokersIdentities(0, 0);
             }
 
         }catch(CantGetIntraUsersListException e) {
+            e.printStackTrace();
+        } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
         return data;
@@ -168,6 +158,15 @@ public class RequestConnectionsFragment extends FermatListFragment<IntraUserInfo
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
         Toast.makeText(getActivity(),data.getName(),Toast.LENGTH_SHORT).show();
+        try {
+
+            moduleManager.acceptIntraUser(moduleManager.getActiveIntraUserIdentity().getPublicKey(),data.getName(),data.getPublicKey(),data.getProfileImage());
+            
+        } catch (CantAcceptRequestException e) {
+            e.printStackTrace();
+        } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

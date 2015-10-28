@@ -4,13 +4,10 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.interfaces.WalletManagerModule;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 //import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.interfaces.DealsWithWalletManagerDesktopModule;
 //import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 //import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.WalletManagerModule;
 
@@ -48,7 +45,7 @@ import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bi
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.MissingAssetDataException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssertFactoryMiddlewareDatabaseConstant;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDao;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -68,7 +65,7 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
     /**
      * DealsWithErrors interface member variables
      */
-    com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager;
+    ErrorManager errorManager;
 
     /**
      * DealsWithLogger interface mmeber variables
@@ -100,7 +97,7 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public AssetFactoryMiddlewareManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, AssetIssuingManager assetIssuingManager, WalletManagerManager walletManagerManager) {
+    public AssetFactoryMiddlewareManager(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, AssetIssuingManager assetIssuingManager, WalletManagerManager walletManagerManager) {
         this.errorManager = errorManager;
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -200,7 +197,7 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
 
 
     @Override
-    public void setErrorManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager errorManager) {
+    public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
     }
 
@@ -394,7 +391,9 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
 
     public boolean checkAssetDraft() throws CantLoadTableToMemoryException{
         //TODO: Descomentar el metodo getAssetFactoryMiddlewareDao, cuando sepamos que funciona el agente
-        return false;//getAssetFactoryMiddlewareDao().checkAssetDraft();
+        boolean isAssetDraft  = getAssetFactoryMiddlewareDao().checkAssetDraft();
+        isAssetDraft = true;
+        return isAssetDraft;
     }
 
     public List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException

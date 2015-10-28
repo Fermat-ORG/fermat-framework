@@ -28,9 +28,9 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.dev
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.DenyMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -124,6 +124,10 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
                 throw new CantInitializeExecutorAgentException(e, "", "Problem initializing Crypto Addresses DAO from Executor Agent.");
             }
+
+            toSend.start();
+
+            toReceive.start();
 
             this.status = AgentStatus.STARTED;
 
@@ -246,6 +250,7 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                     ProtocolState.PROCESSING_RECEIVE
             );
 
+
             for(AddressExchangeRequest cpr : addressExchangeRequestList) {
                 switch(cpr.getAction()) {
 
@@ -289,7 +294,7 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
                     if (wsCommunicationsCloudClientManager != null) {
 
-                        if (cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfile() != null) {
+                        if (cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot() != null) {
 
                             PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(
                                     identityPublicKey,
@@ -304,7 +309,7 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
                             communicationNetworkServiceConnectionManager.connectTo(
                                     applicantParticipant,
-                                    cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfile(),
+                                    cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot(),
                                     remoteParticipant
                             );
 
@@ -327,10 +332,6 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                                 actorPublicKey,
                                 jsonMessage
                         );
-
-                        poolConnectionsWaitingForResponse.remove(actorPublicKey);
-
-                        communicationNetworkServiceConnectionManager.closeConnection(actorPublicKey); // close connection once i send message ?
 
                     } catch (Exception e) {
 

@@ -1,32 +1,35 @@
 package com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai;
 
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.PluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterVersionException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPluginDeveloperException;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
+import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.IncomingExtraUserTransactionPluginRoot;
 
 /**
  * Created by loui on 16/02/15.
+ * Modified by lnacosta (laion.cj91@gmail.com) on 23/10/2015.
  */
-public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
-
-    Plugin plugin;
-
-    @Override
-    public Plugin getPlugin() {
-        return plugin;
-    }
+public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
     public DeveloperBitDubai() {
+        super(new PluginDeveloperReference(Developers.BITDUBAI));
+    }
 
-        /**
-         * I will choose from the different versions of my implementations which one to start. Now there is only one, so
-         * it is easy to choose.
-         */
+    @Override
+    public void start() throws CantStartPluginDeveloperException {
+        try {
 
-        plugin = new com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.IncomingExtraUserTransactionPluginRoot();
+            this.registerVersion(new IncomingExtraUserTransactionPluginRoot());
 
+        } catch (CantRegisterVersionException e) {
+
+            throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
+        }
     }
 
 

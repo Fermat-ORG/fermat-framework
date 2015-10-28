@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.View;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
@@ -23,7 +24,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
 
     CryptoWallet cryptoWallet;
     ReferenceWalletSession referenceWalletSession;
-
+    Typeface tf;
     protected PaymentRequestHistoryAdapter(Context context) {
         super(context);
     }
@@ -32,6 +33,8 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         super(context, dataSet);
         this.cryptoWallet = cryptoWallet;
         this.referenceWalletSession =referenceWalletSession;
+
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
     }
 
     public void setOnClickListerAcceptButton(View.OnClickListener onClickListener){
@@ -79,15 +82,20 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
 
 
         holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
+        holder.getTxt_amount().setTypeface(tf);
 
         holder.getTxt_contactName().setText("Mati");//data.getContact().getActorName());
+        holder.getTxt_contactName().setTypeface(tf);
 
         holder.getTxt_notes().setText(data.getReason());
+        holder.getTxt_notes().setTypeface(tf);
 
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
         holder.getTxt_time().setText(data.getDate());
+        holder.getTxt_time().setTypeface(tf);
 
         holder.getTxt_state().setText(data.getState());//data.getState());
+        holder.getTxt_state().setTypeface(tf);
 
     }
 }

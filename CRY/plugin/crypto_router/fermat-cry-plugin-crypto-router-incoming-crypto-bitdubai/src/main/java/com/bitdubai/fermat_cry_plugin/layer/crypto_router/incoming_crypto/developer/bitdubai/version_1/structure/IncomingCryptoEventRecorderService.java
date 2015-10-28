@@ -7,7 +7,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.events.IncomingCryptoOnCry
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.events.IncomingCryptoReversedOnBlockchainEvent;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.events.IncomingCryptoReversedOnCryptoNetworkEvent;
 import com.bitdubai.fermat_cry_api.layer.definition.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoOnBlockchainEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoOnCryptoNetworkEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedOnBlockchainEventHandler;
@@ -18,7 +18,8 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionService;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ import java.util.List;
  * * * * * * * *
  */
 
-public class IncomingCryptoEventRecorderService implements com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents, DealsWithRegistry, TransactionService {
+public class IncomingCryptoEventRecorderService implements DealsWithEvents, DealsWithRegistry, TransactionService {
 
     /**
      * DealsWithEvents Interface member variables.
@@ -65,7 +66,7 @@ public class IncomingCryptoEventRecorderService implements com.bitdubai.fermat_p
      * DealWithEvents Interface implementation.
      */
     @Override
-    public void setEventManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager eventManager) {
+    public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
     }
 

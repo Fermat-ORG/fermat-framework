@@ -3,8 +3,12 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.de
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -67,11 +71,11 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicat
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -83,15 +87,38 @@ import java.util.UUID;
  *
  * Created by Leon Acosta (laion.cj91@gmail.com) on 22/09/2015.
  */
-public class CryptoAddressesNetworkServicePluginRoot implements
+public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin implements
         CryptoAddressesManager,
         DealsWithWsCommunicationsCloudClientManager,
         DealsWithErrors,
         DealsWithEvents,
         DealsWithPluginDatabaseSystem,
-        NetworkService,
-        Plugin,
-        Service {
+        NetworkService {
+
+    @Override
+    public List<AddonVersionReference> getNeededAddonReferences() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<PluginVersionReference> getNeededPluginReferences() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    protected void validateAndAssignReferences() {
+
+    }
+
+    @Override
+    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
+        return null;
+    }
 
     /**
      * Service Interface member variables.
@@ -196,6 +223,22 @@ public class CryptoAddressesNetworkServicePluginRoot implements
          */
         validateInjectedResources();
 
+
+        // initialize crypto payment request dao
+
+        try {
+
+            cryptoAddressesNetworkServiceDao = new CryptoAddressesNetworkServiceDao(pluginDatabaseSystem, pluginId);
+
+            cryptoAddressesNetworkServiceDao.initialize();
+
+        } catch(CantInitializeCryptoAddressesNetworkServiceDatabaseException e) {
+
+            CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto addresses dao.");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            throw pluginStartException;
+        }
+
         try {
 
             /*
@@ -243,20 +286,6 @@ public class CryptoAddressesNetworkServicePluginRoot implements
             throw pluginStartException;
         }
 
-        // initialize crypto payment request dao
-
-        try {
-
-            cryptoAddressesNetworkServiceDao = new CryptoAddressesNetworkServiceDao(pluginDatabaseSystem, pluginId);
-
-            cryptoAddressesNetworkServiceDao.initialize();
-
-        } catch(CantInitializeCryptoAddressesNetworkServiceDatabaseException e) {
-
-            CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto addresses dao.");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-            throw pluginStartException;
-        }
 
     }
 
@@ -371,11 +400,6 @@ public class CryptoAddressesNetworkServicePluginRoot implements
         register = Boolean.FALSE;
 
         this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
     }
 
     /**
@@ -647,7 +671,7 @@ public class CryptoAddressesNetworkServicePluginRoot implements
         return extraData;
     }
 
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
 

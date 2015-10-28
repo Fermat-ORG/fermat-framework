@@ -1,8 +1,14 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.*;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,42 +21,94 @@ import java.util.UUID;
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */
-public abstract class AbstractPlugin {
+public abstract class AbstractPlugin implements Plugin, Service {
 
-    private Map<FermatAddonsEnum , AbstractAddon > addons ;
-    private Map<FermatPluginsEnum, AbstractPlugin> plugins;
+    private Map<AddonVersionReference , AbstractAddon > addons ;
+    private Map<PluginVersionReference, AbstractPlugin> plugins;
 
+    private final PluginVersionReference pluginVersionReference;
+    protected        ServiceStatus          serviceStatus;
+
+    /**
+     * Default constructor assigning version 1.
+     */
     public AbstractPlugin() {
 
+        this.pluginVersionReference = new PluginVersionReference(new Version("1.0.0"));
+
+        instantiatePlugin();
+    }
+
+    public AbstractPlugin(final PluginVersionReference pluginVersionReference) {
+
+        this.pluginVersionReference = pluginVersionReference;
+
+        instantiatePlugin();
+    }
+
+    private void instantiatePlugin() {
         this.addons  = new HashMap<>();
         this.plugins = new HashMap<>();
+
+        serviceStatus = ServiceStatus.CREATED;
     }
 
-    public final void addAddonReference(final FermatAddonsEnum descriptor,
-                                        final AbstractAddon    addon     ) {
+    public final void addAddonReference(final AddonVersionReference addonReference,
+                                        final AbstractAddon         addon         ) {
 
-        addons.put(descriptor, addon);
+        addons.put(addonReference, addon);
     }
 
-    public final void addPluginReference(final FermatPluginsEnum descriptor,
-                                         final AbstractPlugin    plugin    ) {
+    public final void addPluginReference(final PluginVersionReference pluginReference,
+                                         final AbstractPlugin         plugin         ) {
 
-        plugins.put(descriptor, plugin);
+        plugins.put(pluginReference, plugin);
     }
 
-    protected final AbstractAddon getAddonReference(final FermatAddonsEnum descriptor) {
+    protected final AbstractAddon getAddonReference(final AddonVersionReference addonReference) {
 
-        return addons.get(descriptor);
+        return addons.get(addonReference);
     }
 
-    protected final AbstractPlugin getPluginReference(final FermatPluginsEnum descriptor) {
+    protected final AbstractPlugin getPluginReference(final PluginVersionReference pluginReference) {
 
-        return plugins.get(descriptor);
+        return plugins.get(pluginReference);
     }
 
-    public abstract List<AddonReference> getNeededAddonReferences();
+    public final PluginVersionReference getPluginVersionReference() {
+        return pluginVersionReference;
+    }
 
-    public abstract List<PluginReference> getNeededPluginReferences();
+    @Override
+    public final ServiceStatus getStatus() {
+        return serviceStatus;
+    }
+
+    public final boolean isStarted() {
+        return serviceStatus == ServiceStatus.STARTED;
+    }
+
+    public final boolean isCreated() {
+        return serviceStatus == ServiceStatus.CREATED;
+    }
+
+    public final boolean isStopped() {
+        return serviceStatus == ServiceStatus.STOPPED;
+    }
+
+    public final boolean isPaused() {
+        return serviceStatus == ServiceStatus.PAUSED;
+    }
+
+    public abstract List<AddonVersionReference > getNeededAddonReferences();
+
+    public abstract List<PluginVersionReference> getNeededPluginReferences();
+
+    public abstract List<DevelopersUtilReference> getAvailableDeveloperUtils();
+
+    public abstract FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException;
+
+    protected abstract void validateAndAssignReferences();
 
     public abstract void setId(UUID pluginId);
 

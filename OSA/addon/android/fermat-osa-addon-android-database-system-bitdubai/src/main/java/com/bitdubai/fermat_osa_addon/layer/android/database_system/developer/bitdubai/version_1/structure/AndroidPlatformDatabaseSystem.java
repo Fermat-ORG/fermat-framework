@@ -30,9 +30,10 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
     /**
      * PlatformDatabaseSystem Interface member variables.
      */
-    private String path;
+    private final String path;
 
-    public AndroidPlatformDatabaseSystem(String path) {
+    public AndroidPlatformDatabaseSystem(final String path) {
+
         this.path = path;
     }
 

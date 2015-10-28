@@ -2,6 +2,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -52,6 +53,9 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
 
     // context object
     Context mContext;
+    //Type face font
+    Typeface tf;
+
 
     // posiscionamiento de los contactos
     private Map<Integer,CryptoWalletWalletContact> contactPositionItem;
@@ -76,6 +80,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
             }
         }
 
+        tf = Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
         contactPositionItem = new HashMap<>();
 
 
@@ -159,6 +164,10 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                         }
                         text = walletContact.getActorName();
 
+                        //contact image
+                        ImageView contact_image = (ImageView)convertView.findViewById(R.id.imageView_contact);
+                        contact_image.setImageResource(R.drawable.caroline_profile_picture);
+
                         break;
                     case TYPE_SECTION:
                         convertView = mLayoutInflater.inflate(R.layout.section_row_view, null);
@@ -167,6 +176,8 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                 }
 
                 holder.textView = (TextView) convertView.findViewById(R.id.row_title);
+                holder.textView.setTypeface(tf);
+
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -183,6 +194,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
 
                 }
             }
+
 
 
 //        final String text = mListItems.get(position);

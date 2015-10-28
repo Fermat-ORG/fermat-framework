@@ -37,5 +37,7 @@ public class AssetWalletRedeemPointDatabaseConstant {
     public static final String ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_DESCRIPTION_COLUMN_NAME = "description";
     public static final String ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME = "availableBalance";
     public static final String ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME = "bookBalance";
+    public static final String ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME = "quantityAvailableBalance";
+    public static final String ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME = "QuantityBookBalance";
 
 }

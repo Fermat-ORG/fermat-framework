@@ -34,6 +34,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantLoginIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantShowLoginIdentitiesException;
@@ -42,9 +43,9 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserI
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserSearch;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.intra_user_community.adapters.CheckBoxListItem;
 import com.bitdubai.sub_app.intra_user_community.adapters.ListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
@@ -95,7 +96,7 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
             intraUserItemList = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
             isStartList = true;
 
-            mNotificationsCount = intraUserModuleManager.getIntraUsersWaitingYourAcceptance(MAX,OFFSET).size();
+            mNotificationsCount = intraUserModuleManager.getIntraUsersWaitingYourAcceptanceCount();
 
             // TODO: display unread notifications.
             // Run a task to fetch the notifications count
@@ -153,7 +154,7 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
 
                 List<IntraUserInformation> lstIntraUserRequestWaiting = null;
                 try {
-                    lstIntraUserRequestWaiting = intraUserModuleManager.getIntraUsersWaitingYourAcceptance(MAX,OFFSET);
+                    lstIntraUserRequestWaiting = intraUserModuleManager.getIntraUsersWaitingYourAcceptance(intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),MAX,OFFSET);
 
 
                     View view = getActivity().findViewById(R.id.action_notifications);
@@ -246,7 +247,7 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
         ArrayList<IntraUserConnectionListItem> data=null;
 
         try {
-            List<IntraUserInformation> lstIntraUser = intraUserModuleManager.getIntraUsersWaitingYourAcceptance(MAX,OFFSET);
+            List<IntraUserInformation> lstIntraUser = intraUserModuleManager.getIntraUsersWaitingYourAcceptance(intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),MAX,OFFSET);
             //List<WalletStoreCatalogueItem> catalogueItems = catalogue.getWalletCatalogue(0, 0);
 
             data = new ArrayList<>();
@@ -477,8 +478,11 @@ public class ConnectionsRequestListFragment extends FermatListFragment<IntraUser
                 @Override
                 public void onClick(View view) {
                     try {
-                        intraUserModuleManager.acceptIntraUser(intraUser.getName(),intraUser.getPublicKey(),intraUser.getProfileImage());
+
+                        intraUserModuleManager.acceptIntraUser(intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),intraUser.getName(),intraUser.getPublicKey(),intraUser.getProfileImage());
                     } catch (CantAcceptRequestException e) {
+                        e.printStackTrace();
+                    } catch (CantGetActiveLoginIdentityException e) {
                         e.printStackTrace();
                     }
                 }

@@ -464,10 +464,10 @@ At the contrary, a new era of <strong>distributed systems</strong> which run on 
 <div class="ulist">
 <ul>
 <li>
-<p>To empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way.</p>
+<p>To get cryptocurrencies mass adopted as soon as possible, and by doing this, to empower every person in the world with the appropriate tools to save and move their money in a digital format in an efficient, secure an private way.</p>
 </li>
 <li>
-<p>To give back the souveraignity of each one&#8217;s ressources respecting the freedom of choice, allowing each one to choose which currency to use and how to administrate it,  regardless of the place they live or where they were born.</p>
+<p>To give back the souveraignity over each one&#8217;s own ressources, respecting the freedom of choice about which currency to use and how to administrate it, regardless of the place they live or where they were born.</p>
 </li>
 </ul>
 </div>
@@ -1425,8 +1425,14 @@ We call in FERMAT <strong>Superlayer</strong> to a group of layers whose modules
 <dt class="hdlist1">File System </dt>
 <dt class="hdlist1">Database System </dt>
 <dt class="hdlist1">Logger </dt>
+<dd>
+<p>acces to the OS activity log.</p>
+</dd>
 <dt class="hdlist1">Device Location </dt>
 <dt class="hdlist1">Device Connectivity </dt>
+<dd>
+<p>access to peripheals connecting to the device through USB Port / Bluetooh Port / etc..</p>
+</dd>
 <dt class="hdlist1">Device Power </dt>
 <dt class="hdlist1">Device Contacts </dt>
 <dt class="hdlist1">Device Hardware</dt>
@@ -1439,7 +1445,7 @@ We call in FERMAT <strong>Superlayer</strong> to a group of layers whose modules
 <div class="sect2">
 <h3 id="__em_multi_os_layer_em">4.2. <em>Multi OS layer</em></h3>
 <div class="paragraph">
-<p>In this layer there are components that run in more than one OS at the time.</p>
+<p>In this layer there are components that run in more than one OS at the time (Linux / MacOs / Windows)</p>
 </div>
 <div class="dlist">
 <dl>
@@ -1456,11 +1462,15 @@ We call in FERMAT <strong>Superlayer</strong> to a group of layers whose modules
 
 </div>
 <div class="sect2">
-<h3 id="__em_os_2_layer_em">4.4. <em>OS/2 layer</em></h3>
+<h3 id="__em_mac_os_layer_em">4.4. <em>Mac OS layer</em></h3>
 
 </div>
 <div class="sect2">
 <h3 id="__em_microsoft_windows_layer_em">4.5. <em>Microsoft Windows layer</em></h3>
+
+</div>
+<div class="sect2">
+<h3 id="__i_os">4.6. _I-OS _</h3>
 <div class="paragraph">
 <p>&#8230;</p>
 </div>
@@ -1471,30 +1481,76 @@ We call in FERMAT <strong>Superlayer</strong> to a group of layers whose modules
 <h2 id="_fermat_blockchain_superlayer">5. FERMAT BlockChain Superlayer</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This superlayer provides to the entire FERMAT multiplatform system the connection to existing cryptonetworks for transporting value. + <strong>TRANSPORT OF VALUE</strong></p>
+<p>This superlayer provides the entire FERMAT multiplatform system the necessary functionalities to manage <strong>blockchain technology</strong>.</p>
 </div>
 <div class="sect2">
 <h3 id="__em_crypto_networks_layer_em">5.1. <em>Crypto Networks layer</em></h3>
 <div class="paragraph">
-<p>There is one module for each cryptonetwork available: Bitcoin, Litecoin, Ripple, Ethereum,  etc</p>
+<p>This layer builds the interface between FERMAT and each <em>cryptonetwork</em> available.<br>
+There is one module for each cryptocurrency: <strong>Bitcoin</strong>, <strong>Litecoin</strong>, <strong>Ripple</strong>, <strong>Ethereum</strong>,  etc<br>
+The main <em>responsibility</em> for each module is to handle every outgoing/incoming request to/from the corresponding cryptonetwork.
+More specifically, the module connects to a <strong>full node</strong> of the corresponding cryptonetwork and explores the transactions included in the blockchain to find where a <strong>Fermat public cryptoaddress</strong> is mentioned. When a match is found, the module races en event broadcasted in FERMAT environment, which in turn triggers some action in another module which <em>responsability</em> is linked to the event. The addresses to match are those listed in the <em>Cryptoaddress Book</em> module (see <em>Crypto Modules layer</em> ).<br></p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="__em_crypto_vaults_layers_em">5.2. <em>Crypto Vaults layers</em></h3>
 <div class="paragraph">
-<p>Vaults: Bitcoin, Assets over Bitcoin, Bitcoin watch only, Litecoin, Ripple, Ethereum, etc</p>
+<p>As well as in a traditional <strong>funds management</strong> of a Bank, the entire money that a Banks posseses is store in one <em>main vault</em>, and the <em>user&#8217;s account managing system</em> acknowledges how much money corresponds to every one, in FERMAT, all transactions corresponding to FERMAT&#8217;s users are held in a <strong>vault module</strong>,  corresponding to the currency associated to the transaction. Then is task of every FERMAT <strong>wallet</strong> to manage the amount of cryptocurrency owned by each <strong>actor</strong>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+It might be useful to recall in this section a basic concept in blockchain technology about Hierarchical Deterministics Wallets.
+These Wallets are created in a way that with a <strong>master parent privat key</strong> a complete set of keys might be derived from it in a hierarchical relationships of <strong>children</strong> keys and <strong>grandchildren</strong> keys and so forth&#8230;, enabling the creation of a very large number of privat keys to sign transactions and public address for wallets to send/receive value.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>So, each <strong>vault module</strong> uses its <em>master key</em>  in the way of a HD wallet, to issue derived children keys which supply the necessary keys to each platform within Fermat to perform valid cryptocurrency transactions with complete safety and minimizing the data size to be shared and transmitted along the system.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Bitcoin Vault </dt>
+<dd>
+<p>it stores the entire system&#8217;s available <em>Bitcoin</em> funds (<strong>value storage</strong>)</p>
+</dd>
+<dt class="hdlist1">Assets over Bitcoin </dt>
+<dd>
+<p>it stores each little amount of_Bitcoin_ used to create a <strong>Digital Asset</strong> ( <strong>metada storage</strong> of what is represented by the <strong>asset</strong> , this is primerly <strong>NOT</strong> a storage of <strong>value</strong> ).  (See full explanation in the section about <em>Digital Assets</em> [dap] )</p>
+</dd>
+<dt class="hdlist1">Bitcoin Watch Only Vault </dt>
+<dd>
+<p>used in the <em>Digital Asset Platform</em> to store bitcoins that are needed to let the <strong>redeem points</strong> work. See full explanation in the section about <em>Digital Assets</em> [dap] )<br></p>
+</dd>
+</dl>
 </div>
 </div>
 <div class="sect2">
 <h3 id="__em_crypto_modules_layer_em">5.3. <em>Crypto Modules layer</em></h3>
-<div class="paragraph">
-<p>Crypto Address Book</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Crypto Address Book </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
 </div>
 </div>
 <div class="sect2">
 <h3 id="__em_crypto_router_layer_em">5.4. <em>Crypto Router layer</em></h3>
-<div class="paragraph">
-<p>Incoming Crypto, Outgoing Crypto</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Incoming Crypto </dt>
+<dt class="hdlist1">Outgoing Crypto </dt>
+<dd>
+<p>+</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -1503,17 +1559,34 @@ We call in FERMAT <strong>Superlayer</strong> to a group of layers whose modules
 <h2 id="_fermat_p2p_network_and_communication_superlayer">6. FERMAT P2P Network and Communication Superlayer</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This superlayer provides connectivity between devices. FERMAT P2P Network is a dumb network connecting platform network services to each other irrespective of what these services are doing. It provides the communication channels and on top of its connectivity layer network services interact with each other across different devices. Anybody can provide new network services as <strong>plug-ins</strong>.
-This ensures a rich <strong>set of abstractions for wallet applications running on top of the platform</strong>.<br>
-Fermat P2P Network is used for transporting the information associated with the transaction. <strong>TRANSPORT OF INFORMATION</strong> (METADATA)</p>
+<p>This superlayer provides connectivity between <strong>devices</strong> by stablishing a <em>communication channel</em>. between a plug-in running on a <strong>local device</strong> which requires to consume certain service from its <em>counterpart</em> (i.e. the plug-in with the same task) running on a <strong>remote device</strong>.<br>
+This superlayer takes the entire responsibility of maintaining the communication channel "alive" as long as it is required, providing this <strong>service</strong> as a whole, i.e. offering this channel to the external layers and plug-ins in a <strong>transparent</strong> way for them, regardless of the <strong>communication technology</strong> that the layer uses to build this channel <strong><em>dynamically*</em>. + The upper layers should not be aware of the technology in use (wi-fi, NFC, p2p, bluetooth, etc.) and problems related to a connection should be solved by the communication layer without disturbing the clients.+
+This ensures a safe way to offer *network services</strong> by means of plug-ins built-on top of this layer, and as FERMAT being an _ open system_ , anybody can develop plug-ins to provide new network services, this ensures a rich <strong>set of abstractions for wallet applications running on top of the platform</strong>.<br></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The <strong>identification system</strong> in FERMAT uses a pair of <strong>privat-public keys</strong> generated by asymmetric cryptography methods, to identify any component of the system, a <strong>plug-in</strong>, an <strong>intraActor</strong>, a <strong>deviceUser</strong>, a <strong>network service</strong>, a <strong>communication channel</strong>, etc&#8230;<br>
+Some <strong>identities</strong> are created only ONCE FOR ALL (when installing FERMAT), other ONCE for the entire session, and others are <em>dynamically</em> asigned as a process starts to run and survive the entire process life cycle, and the most ephimere are renewed whenever a process changes <strong>status</strong>.
+</td>
+</tr>
+</table>
 </div>
 <div class="sect2">
-<h3 id="__em_communication_layer_em">6.1. <em>Communication layer</em></h3>
+<h3 id="Fermat-P2P-CommunicationLayer">6.1. <em>Communication Layer</em></h3>
+<div class="paragraph">
+<p>This is the only layer in this superlayer, providing the communication services to the whole system, i.e. plug-ins that need <strong>communication services</strong> ask them to the <strong>layer interface</strong> and not to the plug-ins inside.<br>
+Plug-ins in this layer essentially consist on the modules needed for the implementation of the communication protocols and interfaces for the different <strong>communication technologies</strong>.</p>
+</div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Cloud Server </dt>
 <dd>
-<p><em>description &#8230;</em></p>
+<p>For certain basic communications demand, a cloud server is a reasonable good option. At initialization of FERMAT, the cloud server manager receives the initial "log in" signal of each service that is starting, by means of the <strong>cloud client</strong> module. It is esential for offering network services that the <strong>device user</strong> as well as the <strong>intraActor</strong> modules are running and <strong>logged in</strong> the cloud server, which will therefore inform their status as "<strong>online</strong>". Then, when a <em>local</em> <strong>network service</strong> needs to contact its <em>counterpart</em> it "logs in"the cloud server and requires a <strong>communication channel</strong> with the specific <strong>intraActor</strong> in a specific <strong>device</strong>.</p>
 </dd>
 <dt class="hdlist1">Cloud Client </dt>
 <dd>
@@ -1537,7 +1610,7 @@ Fermat P2P Network is used for transporting the information associated with the 
 </dd>
 <dt class="hdlist1">Mesh </dt>
 <dd>
-<p><em>description &#8230;</em></p>
+<p><em>description &#8230;</em>+</p>
 </dd>
 </dl>
 </div>

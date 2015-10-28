@@ -1,8 +1,9 @@
 package com.bitdubai.fermat_ccp_core.layer.basic_wallet;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractLayer;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartLayerException;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.CCPPlugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_ccp_core.layer.basic_wallet.bitcoin_wallet.BitcoinWalletPluginSubsystem;
 
 /**
@@ -13,13 +14,23 @@ import com.bitdubai.fermat_ccp_core.layer.basic_wallet.bitcoin_wallet.BitcoinWal
  */
 public class BasicWalletLayer extends AbstractLayer {
 
+    public BasicWalletLayer() {
+        super(Layers.BASIC_WALLET);
+    }
+
     public void start() throws CantStartLayerException {
 
-        registerPlugin(
-                CCPPlugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,
-                new BitcoinWalletPluginSubsystem()
-        );
+        try {
+            registerPlugin(new BitcoinWalletPluginSubsystem());
 
+        } catch (CantRegisterPluginException e) {
+
+            throw new CantStartLayerException(
+                    e,
+                    "",
+                    "Problem trying to register a plugin."
+            );
+        }
     }
 
 }

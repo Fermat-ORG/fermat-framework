@@ -4,45 +4,51 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * The enum <code>ConnectionState</code>
- * list the states for intra User Wllet and Aseet Issuer, User, Redeem Point can be assigned.
+ * The enum <code>com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState</code>
+ * enumerates the states of connection of a common Fermat Intra Actor.
  */
 public enum ConnectionState implements FermatEnum {
 
-    PENDING_LOCALLY_ACCEPTANCE  ("PYA"),
+    /*
+     * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
+     */
     BLOCKED                     ("BCK"),
-    DENIED_LOCALLY              ("DEN"),
     CANCELLED                   ("CAN"),
     CONNECTED                   ("CTC"),
+    DENIED_LOCALLY              ("DEN"),
     DISCONNECTED_LOCALLY        ("DSL"),
     DISCONNECTED_REMOTELY       ("DSR"),
+    PENDING_LOCALLY_ACCEPTANCE  ("PLA"),
     PENDING_REMOTELY_ACCEPTANCE ("PRA");
 
-    private String code;
+    private final String code;
 
-    ConnectionState(String code) {
+    ConnectionState(final String code) {
         this.code = code;
     }
 
-    public static ConnectionState getByCode(String code) throws InvalidParameterException {
+    public static ConnectionState getByCode(final String code) throws InvalidParameterException {
 
         switch (code) {
 
-            case "PYA": return PENDING_LOCALLY_ACCEPTANCE ;
             case "BCK": return BLOCKED                    ;
-            case "DEN": return DENIED_LOCALLY             ;
             case "CAN": return CANCELLED                  ;
             case "CTC": return CONNECTED                  ;
-            case "DIS": return DISCONNECTED_LOCALLY       ;
+            case "DEN": return DENIED_LOCALLY             ;
+            case "DSL": return DISCONNECTED_LOCALLY       ;
             case "DSR": return DISCONNECTED_REMOTELY      ;
+            case "PLA": return PENDING_LOCALLY_ACCEPTANCE ;
             case "PRA": return PENDING_REMOTELY_ACCEPTANCE;
 
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");
+            default: throw new InvalidParameterException(
+                    "Code Received: " + code,
+                    "The code received is not valid for the ContactState enum"
+            );
         }
     }
 
     @Override
-    public String getCode() {
+    public final String getCode() {
         return this.code;
     }
 

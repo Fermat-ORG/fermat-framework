@@ -63,10 +63,6 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
     }
 
 
-    /**
-     * PlatformLayer Interface implementation.
-     */
-    
     @Override
     public void start() throws CantStartLayerException {
 
@@ -146,11 +142,6 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
              */
             throw new CantStartLayerException();
         }
-
-
-
-
-
     }
 
 

@@ -12,8 +12,10 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 public class Actor implements ActorAssetUser {
 
     private String publicKey;
+    private String publicLinkedKey;
     private String name;
-    private long contactRegistrationDate;
+    private long registrationDate;
+    private long lastConnectionDate;
     private byte[] profileImage;
     private Double latitude;
     private Double longitude;
@@ -30,13 +32,19 @@ public class Actor implements ActorAssetUser {
         this.longitude = location.getLongitude();
     }
 
-    public Actor(String name, String publicKey, byte[] profileImage, long registrationDate, Genders genders, String age) {
+    public Actor(String name, String publicKey, byte[] profileImage, long registrationDate, long lastConnectionDate, Genders genders, String age) {
         this.name = name;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
-        this.contactRegistrationDate = registrationDate;
+        this.registrationDate = registrationDate;
+        this.lastConnectionDate = lastConnectionDate;
         this.gender = genders;
         this.age = age;
+    }
+
+    @Override
+    public String getPublicLinkedIdentity() {
+        return publicLinkedKey;
     }
 
     @Override
@@ -58,12 +66,21 @@ public class Actor implements ActorAssetUser {
     }
 
     @Override
-    public long getContactRegistrationDate() {
-        return contactRegistrationDate;
+    public long getRegistrationDate() {
+        return registrationDate;
     }
 
-    public void setContactRegistrationDate(long contactRegistrationDate) {
-        this.contactRegistrationDate = contactRegistrationDate;
+    @Override
+    public long getLastConnectionDate() {
+        return 0;
+    }
+
+    public void setRegistrationDate(long registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public void setLastConnectionDate(long lastConnectionDate) {
+        this.lastConnectionDate = lastConnectionDate;
     }
 
     @Override
@@ -91,7 +108,7 @@ public class Actor implements ActorAssetUser {
     }
 
     @Override
-    public Genders getGender() {
+    public Genders getGenders() {
         return gender;
     }
 

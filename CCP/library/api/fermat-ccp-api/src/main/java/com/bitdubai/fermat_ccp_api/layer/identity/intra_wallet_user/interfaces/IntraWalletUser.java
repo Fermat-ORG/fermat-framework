@@ -1,12 +1,13 @@
 package com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantSignIntraWalletUserMessageException;
 
 /**
  * The interface <code>IntraWalletUser</code>
  * defines the methods related to the extraction of the information of an intra user
  */
-public interface IntraWalletUser {
+public interface IntraWalletUser  extends ActiveIdentity{
 
     /**
      * The method <code>getAlias</code> returns the alias of the represented intra user
@@ -33,7 +34,7 @@ public interface IntraWalletUser {
      * @param newProfileImage the new profile image to set
      * @throws com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantSetNewProfileImageException
      */
-    void setNewProfileImage(byte[] newProfileImage) throws com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantSetNewProfileImageException;
+    void setNewProfileImage(byte[] newProfileImage);
 
     /**
      * This method let an intra user sign a message with his unique private key
@@ -41,5 +42,5 @@ public interface IntraWalletUser {
      * @return the signature
      * @throws CantSignIntraWalletUserMessageException
      */
-    String createMessageSignature(String message) throws CantSignIntraWalletUserMessageException;
+    String createMessageSignature(String message);
 }

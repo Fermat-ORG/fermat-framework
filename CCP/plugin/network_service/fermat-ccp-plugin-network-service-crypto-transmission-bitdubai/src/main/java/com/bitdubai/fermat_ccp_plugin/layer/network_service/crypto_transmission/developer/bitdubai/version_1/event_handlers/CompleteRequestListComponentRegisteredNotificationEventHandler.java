@@ -58,9 +58,8 @@ public class CompleteRequestListComponentRegisteredNotificationEventHandler impl
             CompleteRequestListComponentRegisteredNotificationEvent completeRequestListComponentRegisteredNotificationEvent = (CompleteRequestListComponentRegisteredNotificationEvent) platformEvent;
 
 
+            if (completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceTypeApplicant() == networkService.getPlatformComponentProfilePluginRoot().getNetworkServiceType()) {
 
-            if (completeRequestListComponentRegisteredNotificationEvent.getPlatformComponentType()  == networkService.getPlatformComponentType() &&
-                    completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceTypeApplicant() == networkService.getNetworkServiceType()){
 
                  /*
                  *  networkService make the job

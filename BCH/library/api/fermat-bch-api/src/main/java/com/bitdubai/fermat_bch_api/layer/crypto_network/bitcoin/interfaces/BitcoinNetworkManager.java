@@ -49,4 +49,12 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      */
     UTXOProvider getUTXOProvider(BlockchainNetworkType blockchainNetworkType);
 
+
+    /**
+     * Gets the specified bitcoin transaction
+     * @param transactionHash
+     * @return
+     */
+    Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash);
+
 }

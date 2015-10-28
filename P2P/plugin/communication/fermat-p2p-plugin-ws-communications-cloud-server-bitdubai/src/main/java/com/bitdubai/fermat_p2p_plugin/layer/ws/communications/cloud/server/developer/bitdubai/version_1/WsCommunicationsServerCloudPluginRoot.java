@@ -23,15 +23,14 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.devel
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentRegistrationRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.DiscoveryComponentConnectionRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.webservices.RestletCommunicationCloudServer;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.java_websocket.WebSocketImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -44,7 +43,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
 import java.util.regex.Pattern;
 
 
@@ -94,10 +92,15 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
      */
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
-    /*
+    /**
      * Hold the list of event listeners
      */
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
+
+    /**
+     * Represent the wsCommunicationCloudServer
+     */
+    private WsCommunicationCloudServer wsCommunicationCloudServer;
 
     /**
      * DealsWithPluginIdentity Interface member variables.
@@ -211,7 +214,7 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
 
                         WebSocketImpl.DEBUG = false;
                         InetSocketAddress inetSocketAddress = new InetSocketAddress(address, WsCommunicationCloudServer.DEFAULT_PORT);
-                        WsCommunicationCloudServer wsCommunicationCloudServer = new WsCommunicationCloudServer(inetSocketAddress);
+                        wsCommunicationCloudServer = new WsCommunicationCloudServer(inetSocketAddress);
                         wsCommunicationCloudServer.registerFermatPacketProcessor(new ComponentRegistrationRequestPacketProcessor());
                         wsCommunicationCloudServer.registerFermatPacketProcessor(new ComponentConnectionRequestPacketProcessor());
                         wsCommunicationCloudServer.registerFermatPacketProcessor(new DiscoveryComponentConnectionRequestPacketProcessor());
@@ -224,11 +227,20 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
                         System.out.println("Port = "     + inetSocketAddress.getPort());
                         System.out.println("Communication Service Manager on " + networkInterface.getName() + " started.");
 
+                        break;
+
                     }
 
                 }
 
             }
+
+            /*
+             * Create and start the restlet server
+             */
+            RestletCommunicationCloudServer rlCommunicationCloudServer = new RestletCommunicationCloudServer(wsCommunicationCloudServer);
+            rlCommunicationCloudServer.start();
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);

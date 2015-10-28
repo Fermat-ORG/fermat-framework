@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -50,9 +51,9 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.TransactionNewAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
@@ -86,13 +87,18 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     public static final int REQUEST_LOAD_IMAGE = 2;
     public static final int CONTEXT_MENU_CAMERA = 1;
     public static final int CONTEXT_MENU_GALLERY = 2;
-    public static final int CONTEXT_MENU_DELETE = 3;
+
     private static final int CONTEXT_MENU_NO_PHOTO = 4;
 
     private static final int UNIQUE_FRAGMENT_GROUP_ID = 16;
 
     // TODO: preguntar de donde saco el user id
     String user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059").toString();
+
+    /**
+     * TypeFace to apply in all fragment
+     */
+    Typeface tf;
 
     /**
      * MANAGERS
@@ -158,6 +164,8 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
 
         referenceWalletSession = (ReferenceWalletSession)walletSession;
 
@@ -361,7 +369,9 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
         txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
         txt_type_balance.setTextColor(Color.parseColor("#a8a5ff"));
+        txt_type_balance.setTypeface(tf);
 
+        ((TextView) balance_header.findViewById(R.id.txt_touch_to_change)).setTypeface(tf);
 
         LinearLayout linear_type_container = (LinearLayout) balance_header.findViewById(R.id.linear_type_container);
         linear_type_container.setOnClickListener(new View.OnClickListener() {
@@ -372,6 +382,8 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
                 changeBalanceType(txt_type_balance, txt_balance_amount);
             }
         });
+
+
 
         LinearLayout linear_amount_container = (LinearLayout) balance_header.findViewById(R.id.linear_amount_container);
         linear_amount_container.setOnClickListener(new View.OnClickListener() {
@@ -385,6 +397,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
         txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
         txt_balance_amount.setTextColor(Color.WHITE);
+        txt_balance_amount.setTypeface(tf);
 
 
         try {
@@ -602,6 +615,8 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
             referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
         }
+
+        //cryptoWallet.listAllIntraUserConnections(cryptoWallet.)
         return contacts;
     }
 

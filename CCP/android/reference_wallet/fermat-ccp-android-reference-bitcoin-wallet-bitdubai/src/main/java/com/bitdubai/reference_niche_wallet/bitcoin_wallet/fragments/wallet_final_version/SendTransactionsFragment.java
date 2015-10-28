@@ -58,9 +58,9 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.TransactionNewAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
@@ -333,10 +333,10 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                         im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                     }
 
-                   if(walletContact!= null)
-                        sendCrypto();
-                    else
-                        Toast.makeText(getActivity(), "Contact not found, please add it.", Toast.LENGTH_LONG).show();
+//                   if(walletContact!= null)
+//                        sendCrypto();
+//                    else
+//                        Toast.makeText(getActivity(), "Contact not found, please add it.", Toast.LENGTH_LONG).show();
 
                     //testing metadata
                          /*   cryptoWallet.sendMetadataLikeChampion(Long.parseLong("100000"),
@@ -565,7 +565,10 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                     e.printStackTrace();
                 } catch (CantFindWalletContactException e) {
                     e.printStackTrace();
-                }
+                } catch (Exception e) {
+                e.printStackTrace();
+                    Toast.makeText(getActivity(),"oooopps",Toast.LENGTH_SHORT).show();
+                 }
             }
         } else {
             Toast.makeText(getActivity(), "Invalid Address", Toast.LENGTH_LONG).show();

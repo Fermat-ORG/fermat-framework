@@ -6,10 +6,8 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
@@ -27,7 +25,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAtt
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantSendMessageException;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents.WsCommunicationsCloudClientPingAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteComponentConnectionRequestPacketProcessor;
@@ -37,13 +35,17 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.devel
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.ServerHandshakeRespondPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.vpn.WsCommunicationVPNClientManagerAgent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.java_websocket.drafts.Draft_17;
+import org.restlet.data.MediaType;
+import org.restlet.ext.json.JsonRepresentation;
+import org.restlet.representation.Representation;
+import org.restlet.resource.ClientResource;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -330,6 +332,85 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
         }
 
+    }
+
+    /**
+     * (non-javadoc)
+     * @see CommunicationsClientConnection#requestListComponentRegistered(DiscoveryQueryParameters)
+     */
+    @Override
+    public List<PlatformComponentProfile> requestListComponentRegistered(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException {
+
+        System.out.println("WsCommunicationsCloudClientConnection - new requestListComponentRegistered");
+        List<PlatformComponentProfile> resultList = new ArrayList<>();
+
+        try {
+
+            /*
+             * Validate parameter
+             */
+            if (discoveryQueryParameters == null){
+                throw new IllegalArgumentException("The discoveryQueryParameters is required, can not be null");
+            }
+
+            /*
+             * Construct a jsonObject whit the parameters
+             */
+            Gson gson = new Gson();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, wsCommunicationsCloudClientChannel.getIdentityPublicKey());
+            jsonObject.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM, discoveryQueryParameters.toJson());
+
+            /*
+             * Construct the web service client
+             */
+            ClientResource requestResource = new ClientResource(WsCommunicationsCloudClientPluginRoot.HTTP_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + WsCommunicationsCloudClientPluginRoot.WEB_SERVICE_PORT + "/fermat/cloud-server/v1/components/registered/");
+
+            /*
+             * Construct the parameters JsonRepresentation
+             */
+            Representation parameters = new JsonRepresentation(gson.toJson(jsonObject));
+            parameters.setMediaType(MediaType.APPLICATION_JSON);
+
+            /*
+             * Do the request via post and obtain the result
+             */
+            Representation respond = requestResource.post(parameters);
+
+            String respondText = respond.getText();
+            System.out.println("WsCommunicationsCloudClientConnection - Respond Text:" + respondText);
+
+            /*
+             * if respond have the result list
+             */
+            if (respondText.contains(JsonAttNamesConstants.RESULT_LIST)){
+
+                /*
+                 * Decode into a json object
+                 */
+                JsonParser parser = new JsonParser();
+                JsonObject respondJsonObject = parser.parse(respondText).getAsJsonObject();
+
+                 /*
+                 * Get the receivedList
+                 */
+                resultList = gson.fromJson(respondJsonObject.get(JsonAttNamesConstants.RESULT_LIST).getAsString(), new TypeToken<List<PlatformComponentProfileCommunication>>() {
+                }.getType());
+
+                System.out.println("WsCommunicationsCloudClientConnection - resultList.size() = " + resultList.size());
+
+            }else {
+                System.out.println("WsCommunicationsCloudClientConnection - Requested list is not available, resultList.size() = " + resultList.size());
+            }
+
+        }catch (Exception e){
+
+            CantRequestListException cantRequestListException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
+            throw cantRequestListException;
+
+        }
+
+        return resultList;
     }
 
     /**

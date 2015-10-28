@@ -16,6 +16,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.Ca
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantSendMessageException;
 
+import java.util.List;
+
 
 /**
  * The interface <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection</code> represent
@@ -86,13 +88,22 @@ public interface CommunicationsClientConnection {
 
     /**
      * Method that request to the communication cloud server the list of component registered that match
-     * whit the discovery query params
+     * whit the discovery query params, this method is asynchronous
      *
      * @param networkServiceApplicant who made the request
      * @param discoveryQueryParameters
      * @throws CantRequestListException
      */
     public void requestListComponentRegistered(PlatformComponentProfile networkServiceApplicant, DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException;
+
+    /**
+     * Method that request to the communication cloud server the list of component registered that match
+     * whit the discovery query params
+     *
+     * @param discoveryQueryParameters
+     * @throws CantRequestListException this exception means the list receive is empty or a internal error
+     */
+    public List<PlatformComponentProfile> requestListComponentRegistered(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestListException;
 
     /**
      * Method that request to the communication cloud server create a vpn connection between the applicant and

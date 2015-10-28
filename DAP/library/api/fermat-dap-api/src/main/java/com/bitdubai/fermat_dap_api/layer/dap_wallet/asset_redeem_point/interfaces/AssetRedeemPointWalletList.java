@@ -18,4 +18,10 @@ public interface AssetRedeemPointWalletList {
 
     public long getAvailableBalance();
     public void setAvailableBalance(long availableBalance);
+
+    public long getQuantityBookBalance();
+    public void setQuantityBookBalance(long quantityBookBalance);
+
+    public long getQuantityAvailableBalance();
+    public void setQuantityAvailableBalance(long quantityAvailableBalance);
 }

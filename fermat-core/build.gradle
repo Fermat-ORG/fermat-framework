@@ -29,6 +29,7 @@ dependencies {
     compile project(':fermat-bnp-plugin-network-service-bank-notes-bitdubai')
 
     // Init CCM Projects
+    compile project(':fermat-ccm-plugin-actor-intra-wallet-user-bitdubai')
     compile project(':fermat-ccm-plugin-network-service-money-transmission-bitdubai')
     compile project(':fermat-ccm-plugin-network-service-money-request-bitdubai')
 
@@ -36,7 +37,6 @@ dependencies {
 
 
     // CCP Projects (Plugins)
-    compile project(':fermat-ccp-plugin-actor-extra-user-bitdubai')
     compile project(':fermat-dmp-plugin-identity-designer-bitdubai')
     compile project(':fermat-dmp-plugin-identity-translator-bitdubai')
     compile project(':fermat-dmp-plugin-request-money-request-bitdubai')
@@ -45,20 +45,15 @@ dependencies {
     compile project(':fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai')
     compile project(':fermat-dmp-plugin-wallet-module-bank-notes-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-wallet-module-crypto-loss-protected-wallet-bitdubai')
-    compile project(':fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai')
-    //compile project(':fermat-ccp-plugin-wallet-module-discount-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-wallet-module-fiat-over-crypto-loss-protected-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-wallet-module-multi-account-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-template-bitdubai')
-    compile project(':fermat-ccp-plugin-module-intra-user-bitdubai')
     compile project(':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-bank-notes-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-money-request-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-wallet-language-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-wallet-skin-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-wallet-navigation-structure-bitdubai')
-    compile project(':fermat-ccp-plugin-basic-wallet-bitcoin-wallet-bitdubai')
-    //compile project(':fermat-ccp-plugin-basic-wallet-discount-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai')
 
 
@@ -96,7 +91,7 @@ dependencies {
     // PIP Projects
     compile project(':fermat-pip-addon-platform-service-event-manager-bitdubai')
     compile project(':fermat-pip-addon-platform-service-error-manager-bitdubai')
-    compile project(':fermat-pip-addon-platform-service-location-subsystem-bitdubai')
+    compile project(':fermat-pip-addon-platform-service-location-manager-bitdubai')
     compile project(':fermat-pip-addon-platform-service-platform-info-bitdubai')
     compile project(':fermat-pip-addon-hardware-local-device-bitdubai')
     compile project(':fermat-pip-addon-hardware-remote-device-bitdubai')

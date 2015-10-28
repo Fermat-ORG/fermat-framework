@@ -77,7 +77,6 @@ import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.d
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.DigitalAssetMetadataTransactionImpl;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.EncodeMsjContent;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.test.MockDigitalAssetMetadataForTesting;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.test.MockIdentityAssetIssuerForTest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
@@ -89,11 +88,11 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatM
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -298,7 +297,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
      *
      * @param platformComponentProfile
      */
-    public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile) {
+    public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfile) {
         this.platformComponentProfile = platformComponentProfile;
     }
 
@@ -609,7 +608,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
     }
 
     @Override
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
 
@@ -758,7 +757,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                     }
 
                     @Override
-                    public long getContactRegistrationDate() {
+                    public long getRegistrationDate() {
                         return 0;
                     }
 
@@ -768,7 +767,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                     }
 
                     @Override
-                    public ConnectionState getContactState() {
+                    public ConnectionState getConnectionState() {
                         return null;
                     }
 
@@ -783,14 +782,28 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                     }
 
                     @Override
-                    public CryptoAddress getCryptoAddress() {
+                    public Double getLocationLatitude() {
                         return null;
                     }
 
+                    @Override
+                    public Double getLocationLongitude() {
+                        return null;
+                    }
 
+                    @Override
+                    public CryptoAddress getCryptoAddress() {
+                        return null;
+                    }
                 };
 
                 ActorAssetUser actorAssetUser = new ActorAssetUser() {
+
+                    @Override
+                    public String getPublicLinkedIdentity() {
+                        return remoteToConnect.getIdentityPublicKey();
+                    }
+
                     @Override
                     public String getPublicKey() {
                         return remoteToConnect.getIdentityPublicKey();
@@ -802,7 +815,12 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                     }
 
                     @Override
-                    public long getContactRegistrationDate() {
+                    public long getRegistrationDate() {
+                        return 0;
+                    }
+
+                    @Override
+                    public long getLastConnectionDate() {
                         return 0;
                     }
 
@@ -826,9 +844,8 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                         return null;
                     }
 
-
                     @Override
-                    public Genders getGender() {
+                    public Genders getGenders() {
                         return null;
                     }
 
@@ -1065,7 +1082,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             if (communicationNetworkServiceLocal != null) {
 
                 //Send the message
-                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), msjContent);
+                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),"", msjContent);
 
             }else{
 
@@ -1154,7 +1171,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             if (communicationNetworkServiceLocal != null) {
 
                 //Send the message
-                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), msjContent);
+                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),"", msjContent);
 
             }else{
 

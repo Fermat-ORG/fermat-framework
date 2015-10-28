@@ -1,28 +1,38 @@
 package com.bitdubai.fermat_cbp_api.all_definition.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Created by jorge on 12-10-2015.
  */
-public enum ClauseType {
+public enum ClauseType implements FermatEnum {
     CUSTOMER_CURRENCY("CUSCUR"),
     BROKER_CURRENCY("BROCUR"),
+
     EXCHANGE_RATE("EXCRAT"),
+
     CUSTOMER_CURRENCY_QUANTITY("CUSCURQUA"),
     BROKER_CURRENCY_QUANTITY("CUSBROQUA"),
+
     CUSTOMER_PAYMENT_METHOD("CUSPAYMET"),
     BROKER_PAYMENT_METHOD("BROPAYMET"),
+
     CUSTOMER_CRYPTO_ADDRESS("CUSCRYADD"),
     BROKER_CRYPTO_ADDRESS("BROCRYADD"),
+
     CUSTOMER_BANK("CUSBAN"),
     BROKER_BANK("BROBAN"),
+
     CUSTOMER_BANK_ACCOUNT("CUSBANACC"),
     BROKER_BANK_ACCOUNT("BROBANACC"),
+
     PLACE_TO_MEET("PLAMEE"),
     DATE_TIME_TO_MEET("DATTIMMEE"),
+
     BROKER_PLACE_TO_DELIVER("BROPLADEL"),
     BROKER_DATE_TIME_TO_DELIVER("BRODATDEL"),
+
     CUSTOMER_PLACE_TO_DELIVER("CUSPLADEL"),
     CUSTOMER_DATE_TIME_TO_DELIVER("CUSDATDEL");
 
@@ -32,6 +42,7 @@ public enum ClauseType {
         this.code = code;
     }
 
+    @Override
     public String getCode(){
         return code;
     }

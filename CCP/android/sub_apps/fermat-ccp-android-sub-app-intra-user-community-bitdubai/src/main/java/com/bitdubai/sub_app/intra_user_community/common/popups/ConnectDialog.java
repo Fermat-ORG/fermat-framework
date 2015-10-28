@@ -16,7 +16,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartR
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 
@@ -80,7 +80,12 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
         if (i == R.id.btn_connect) {
             try {
                 //image null
+                if(intraUserInformation!=null && identity!=null)
                 ((IntraUserSubAppSession)getSession()).getIntraUserModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(),intraUserInformation.getPublicKey(),intraUserInformation.getProfileImage(),identity.getPublicKey(),identity.getAlias());
+                else {
+                    Toast.makeText(getContext(), "Oooops! recovering from system error - " , Toast.LENGTH_SHORT).show();
+                    dismiss();
+                }
             } catch (CantStartRequestException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
                 Toast.makeText(getContext(), "Oooops! recovering from system error - " + e.getMessage(), Toast.LENGTH_SHORT).show();

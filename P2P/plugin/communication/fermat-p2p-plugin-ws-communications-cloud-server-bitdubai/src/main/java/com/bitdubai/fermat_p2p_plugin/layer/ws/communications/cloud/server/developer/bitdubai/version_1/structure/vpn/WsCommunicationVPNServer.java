@@ -9,6 +9,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.deve
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketDecoder;
@@ -74,18 +75,24 @@ public class WsCommunicationVPNServer extends WebSocketServer{
     private WsCommunicationCloudServer wsCommunicationCloudServer;
 
     /**
+     * Represent the networkServiceTypeApplicant
+     */
+    private NetworkServiceType networkServiceTypeApplicant;
+
+    /**
      * Constructor with parameters
      *
      * @param address
      * @param registeredParticipants
      */
-    public WsCommunicationVPNServer(InetSocketAddress address, List<PlatformComponentProfile> registeredParticipants, WsCommunicationCloudServer wsCommunicationCloudServer) {
+    public WsCommunicationVPNServer(InetSocketAddress address, List<PlatformComponentProfile> registeredParticipants, WsCommunicationCloudServer wsCommunicationCloudServer, NetworkServiceType networkServiceTypeApplicant) {
         super(address);
         this.vpnServerIdentity               = new ECCKeyPair();
         this.registeredParticipants          = registeredParticipants;
         this.participantsConnections         = new ConcurrentHashMap<>();
         this.vpnClientIdentityByParticipants = new ConcurrentHashMap<>();
         this.wsCommunicationCloudServer      = wsCommunicationCloudServer;
+        this.networkServiceTypeApplicant     = networkServiceTypeApplicant;
 
 
         participantsConnections.clear();
@@ -172,7 +179,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
      */
     private void sendNotificationPacketConnectionComplete(PlatformComponentProfile destinationPlatformComponentProfile, PlatformComponentProfile remotePlatformComponentProfile){
 
-        System.out.println(" WsCommunicationVPNServer - sendNotificationPacketConnectionComplete = " + destinationPlatformComponentProfile.getIdentityPublicKey());
+        System.out.println(" WsCommunicationVPNServer - sendNotificationPacketConnectionComplete = " + destinationPlatformComponentProfile.getName() +" ("+destinationPlatformComponentProfile.getIdentityPublicKey()+")");
 
          /*
          * Construct the content of the msj
@@ -181,7 +188,7 @@ public class WsCommunicationVPNServer extends WebSocketServer{
         JsonObject packetContent = new JsonObject();
         packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN,  remotePlatformComponentProfile.toJson());
         packetContent.addProperty(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN,  destinationPlatformComponentProfile.toJson());
-
+        packetContent.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceTypeApplicant.toString());
 
         /*
          * Get the connection client of the destination

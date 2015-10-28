@@ -21,6 +21,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.D
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantGetIfIntraWalletUsersExistsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletCreateNewIntraUserIdentityException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantRemoveWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantRenameWalletException;
@@ -52,17 +53,17 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_wpd_plugin.layer.desktop_module.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerModuleInstalledWallet;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -132,7 +133,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
     /**
      * DealWithEvents Interface member variables.
      */
-    com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager eventManager;
+    EventManager eventManager;
 
 
     /**
@@ -194,10 +195,6 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
                 //Create new Bitcoin Wallet
 
                 try {
-
-                    ((DealsWithPluginFileSystem) bitcoinWalletManager).setPluginFileSystem(this.pluginFileSystem);
-                    ((DealsWithErrors) bitcoinWalletManager).setErrorManager(this.errorManager);
-                    ((DealsWithPluginDatabaseSystem) bitcoinWalletManager).setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
                     bitcoinWalletManager.createWallet(walletPublicKey);
 
@@ -702,7 +699,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
                  * * * *
                  */
 
-                //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadFileException);
+                //errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadFileException);
 
                 throw new CantLoadWalletsException();
             }
@@ -779,7 +776,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
      */
 
     @Override
-    public void setEventManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager eventManager) {
+    public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
     }
 
