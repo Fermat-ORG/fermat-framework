@@ -28,7 +28,7 @@ public class CryptoAddressesNetworkServiceAddressExchangeRequest implements Addr
     private final Actors                      identityTypeRequesting     ;
     private final Actors                      identityTypeResponding     ;
     private final String                      identityPublicKeyRequesting;
-    private final String identityPublicKeyResponding;
+    private final String                      identityPublicKeyResponding;
     private final CryptoCurrency              cryptoCurrency             ;
     private final CryptoAddress               cryptoAddress              ;
     private final ProtocolState               state                      ;
