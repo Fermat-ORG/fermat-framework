@@ -690,6 +690,9 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
                     } else {
 
+                        return  actorAssetUserRegisteredList;
+
+                   /*
                         StringBuffer contextBuffer = new StringBuffer();
                         contextBuffer.append("Plugin ID: " + pluginId);
                         contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
@@ -709,7 +712,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                         //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
                         throw pluginStartException;
-
+                    */
                     }
 
             }else{
