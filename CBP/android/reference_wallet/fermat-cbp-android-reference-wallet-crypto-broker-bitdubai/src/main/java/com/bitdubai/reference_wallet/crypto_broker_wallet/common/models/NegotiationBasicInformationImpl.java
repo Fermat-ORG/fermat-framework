@@ -1,7 +1,9 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.NegotiationBasicInformation;
 
+import java.util.Calendar;
 import java.util.Random;
 import java.util.UUID;
 
@@ -17,6 +19,7 @@ import java.util.UUID;
  */
 public class NegotiationBasicInformationImpl implements NegotiationBasicInformation {
     private static Random random = new Random(321515131);
+    private static Calendar instance = Calendar.getInstance();
 
     private String customerAlias;
     private byte[] imageBytes;
@@ -26,9 +29,11 @@ public class NegotiationBasicInformationImpl implements NegotiationBasicInformat
     private String typeOfPayment;
     private float exchangeRateAmount;
     private String paymentCurrency;
+    private long date;
+    private NegotiationStatus status;
 
 
-    public NegotiationBasicInformationImpl(String customerAlias, String merchandise, String typeOfPayment, String paymentCurrency) {
+    public NegotiationBasicInformationImpl(String customerAlias, String merchandise, String typeOfPayment, String paymentCurrency, NegotiationStatus status) {
         this.customerAlias = customerAlias;
         this.merchandise = merchandise;
         this.typeOfPayment = typeOfPayment;
@@ -39,6 +44,9 @@ public class NegotiationBasicInformationImpl implements NegotiationBasicInformat
 
         imageBytes = new byte[0];
         negotiationId = UUID.randomUUID();
+
+        date = instance.getTimeInMillis();
+        this.status = status;
     }
 
     @Override
@@ -73,6 +81,11 @@ public class NegotiationBasicInformationImpl implements NegotiationBasicInformat
     }
 
     @Override
+    public NegotiationStatus getStatus() {
+        return status;
+    }
+
+    @Override
     public float getExchangeRateAmount() {
         return exchangeRateAmount;
     }
@@ -80,5 +93,10 @@ public class NegotiationBasicInformationImpl implements NegotiationBasicInformat
     @Override
     public String getPaymentCurrency() {
         return paymentCurrency;
+    }
+
+    @Override
+    public long getLastUpdate() {
+        return date;
     }
 }

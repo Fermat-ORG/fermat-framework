@@ -13,16 +13,21 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
-//import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ActorAssetUserCompleteRegistrationNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ActorAssetUserRequestCryptoAddressNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ActorAssetUserSendCryptoAddressNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.BegunWalletInstallationEvent;
-//import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorAssetUserCompleteRegistrationNotificationEventListener;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.NewCryptoAddressReceiveAssetUserActorNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.NewCryptoAddressRequestAssetUserActorNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorAssetUserRequestCryptoAddressNotificationEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorAssetUserRequestListRegisteredNetworksNotificationEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorAssetUserSendCryptoAddressNotificationEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.BegunWalletInstallationEventListener;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.NewCryptoAddressReceiveAssetUserActorNotificationEventListener;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.NewCryptoAddressRequestAssetUserActorNotificationEventListener;
+
+//import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ActorAssetUserCompleteRegistrationNotificationEvent;
+//import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorAssetUserCompleteRegistrationNotificationEventListener;
 
 /**
  * The enum <code>EventType</code>
@@ -745,7 +750,7 @@ public enum EventType implements FermatEventEnum {
             return new ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent(this);
         }
     },
-//    COMPLETE_REQUEST_LIST_ASSET_ISSUER_REGISTERED_NOTIFICATION("CL_RLAIRN") {
+    //    COMPLETE_REQUEST_LIST_ASSET_ISSUER_REGISTERED_NOTIFICATION("CL_RLAIRN") {
 //        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
 //            return new ActorAssetUserRequestListRegisteredNetworksNotificationEventListener(this, fermatEventMonitor);
 //        }
@@ -773,6 +778,26 @@ public enum EventType implements FermatEventEnum {
 //        }
 //    },
     //DAP EVENT END
+    NEW_CRYPTO_ADDRESS_REQUEST_ASSET_USER("NCA_REQUEST_AU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new NewCryptoAddressRequestAssetUserActorNotificationEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new NewCryptoAddressRequestAssetUserActorNotificationEvent(this);
+        }
+    },
+
+    NEW_CRYPTO_ADDRESS_RECEIVE_ASSET_USER("NCA_RECEIVE_AU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new NewCryptoAddressReceiveAssetUserActorNotificationEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new NewCryptoAddressReceiveAssetUserActorNotificationEvent(this);
+        }
+    },
+
     ACTOR_ASSET_USER_REQUEST_CRYPTO_ADDRESS_NOTIFICATION("AAU_REQUEST_CAN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new ActorAssetUserRequestCryptoAddressNotificationEventListener(this, fermatEventMonitor);

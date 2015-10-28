@@ -23,6 +23,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.DealsWithActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.DealsWithActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DealsWithAssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_reception.interfaces.AssetReceptionManager;
@@ -55,7 +59,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/09/15.
  */
-public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWithAssetUserWallet, DealsWithAssetTransmissionNetworkServiceManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithEvents, LogManagerForDevelopers, Plugin, Service {
+public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWithActorAssetIssuer, DealsWithActorAssetUser, DealsWithAssetUserWallet, DealsWithAssetTransmissionNetworkServiceManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithEvents, LogManagerForDevelopers, Plugin, Service {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     AssetUserWalletManager assetUserWalletManager;
@@ -68,6 +72,8 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
     PluginFileSystem pluginFileSystem;
     ServiceStatus serviceStatus= ServiceStatus.CREATED;
     AssetReceptionRecorderService assetReceptionRecorderService;
+    ActorAssetUserManager actorAssetUserManager;
+    ActorAssetIssuerManager actorAssetIssuerManager;
 
     //TODO: Delete this log object
     Logger LOG = Logger.getGlobal();
@@ -248,5 +254,15 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
              */
             return DEFAULT_LOG_LEVEL;
         }
+    }
+
+    @Override
+    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
+        this.actorAssetUserManager=actorAssetUserManager;
+    }
+
+    @Override
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
+
     }
 }

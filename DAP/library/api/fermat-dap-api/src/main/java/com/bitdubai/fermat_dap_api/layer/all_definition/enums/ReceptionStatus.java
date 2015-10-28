@@ -6,8 +6,13 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 12/10/15.
  */
 public enum ReceptionStatus {
-    ASSET_ACCEPTED("ACD"),
-    REJECTED_BY_CONTRACT("RBC"),
+    ASSET_ACCEPTED("DAMA"),
+    CHECKING_CONTRACT("CCONT"),
+    CHECKING_HASH("CHASH"),
+    CONTRACT_CHECKED("CONTC"),
+    HASH_CHECKED("HASHC"),
+    RECEIVING("RXG"),
+    REJECTED_BY_CONTRACT("DAMRBC"),
     REJECTED_BY_HASH("RBH"),
     UNDEFINED_REJECTION("URJ");
 
@@ -23,6 +28,16 @@ public enum ReceptionStatus {
         switch (code){
             case "ACD":
                 return ReceptionStatus.ASSET_ACCEPTED;
+            case "CCONT":
+                return ReceptionStatus.CHECKING_CONTRACT;
+            case "CHASH":
+                return ReceptionStatus.CHECKING_HASH;
+            case "CONTC":
+                return ReceptionStatus.CONTRACT_CHECKED;
+            case "HASHC":
+                return ReceptionStatus.HASH_CHECKED;
+            case "RXG":
+                return ReceptionStatus.RECEIVING;
             case "RBC":
                 return ReceptionStatus.REJECTED_BY_CONTRACT;
             case "RBH":

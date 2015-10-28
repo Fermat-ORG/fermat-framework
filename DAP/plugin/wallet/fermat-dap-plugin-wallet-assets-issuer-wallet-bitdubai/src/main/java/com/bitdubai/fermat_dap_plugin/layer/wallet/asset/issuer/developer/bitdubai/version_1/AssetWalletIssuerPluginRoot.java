@@ -354,45 +354,45 @@ public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, 
             e.printStackTrace();
         }
         try {
-            List<AssetIssuerWalletList> assetIssuerWalletLists = assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).getAssetIssuerWalletBalancesAvailable();
-            //List<AssetIssuerWalletList> assetIssuerWalletLists = assetIssuerWallet.getBookBalance(BalanceType.BOOK).getAssetIssuerWalletBalancesAvailable();
-            System.out.println("--------LISTADO DE ASSET BALANCE---------------------------------------------");
-
-            for (AssetIssuerWalletList assetIssuerWalletList : assetIssuerWalletLists){
-                System.out.println("-------------------------------------------------------------------------");
-                System.out.println("Asset PublicKey        : "   + assetIssuerWalletList.getAssetPublicKey());
-                System.out.println("Asset Name             : "   + assetIssuerWalletList.getName());
-                System.out.println("Asset Description      : "   + assetIssuerWalletList.getDescription());
-                System.out.println("Asset Balance Available: "   + assetIssuerWalletList.getAvailableBalance());
-                System.out.println("Asset Balance Book     : "   + assetIssuerWalletList.getBookBalance());
-                System.out.println("-------------------------------------------------------------------------");
-            }
-
-            List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions = assetIssuerWallet.getTransactionsAll(BalanceType.AVAILABLE, TransactionType.CREDIT, "assetPublicKeyNew2");
-            //List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions = assetIssuerWallet.getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, 1, 1000, "assetPublicKey");
-            System.out.println("--------LISTADO DE TRANSACTIONS CREDITOS-------------------------------------");
-            for (AssetIssuerWalletTransaction assetIssuerWalletTransaction : assetIssuerWalletTransactions){
-                System.out.println("-------------------------------------------------------------------------");
-                System.out.println("Asset PublicKey        : "   + assetIssuerWalletTransaction.getAssetPublicKey());
-                System.out.println("Address From           : "   + assetIssuerWalletTransaction.getAddressFrom());
-                System.out.println("Address To             : "   + assetIssuerWalletTransaction.getAddressTo());
-                System.out.println("Amount                 : "   + assetIssuerWalletTransaction.getAmount());
-                System.out.println("Transaction Type       : "   + assetIssuerWalletTransaction.getTransactionType().getCode());
-                System.out.println("TransactionId          : "   + assetIssuerWalletTransaction.getTransactionId());
-                System.out.println("-------------------------------------------------------------------------");
-            }
-            List<AssetIssuerWalletTransaction> assetIssuerWalletTransactionsD = assetIssuerWallet.getTransactionsAll(BalanceType.AVAILABLE, TransactionType.DEBIT, "assetPublicKey");
-            System.out.println("--------LISTADO DE TRANSACTIONS DEBITOS-------------------------------------");
-            for (AssetIssuerWalletTransaction assetIssuerWalletTransaction : assetIssuerWalletTransactionsD){
-                System.out.println("-------------------------------------------------------------------------");
-                System.out.println("Asset PublicKey        : "   + assetIssuerWalletTransaction.getAssetPublicKey());
-                System.out.println("Address From           : "   + assetIssuerWalletTransaction.getAddressFrom());
-                System.out.println("Address To             : "   + assetIssuerWalletTransaction.getAddressTo());
-                System.out.println("Amount                 : "   + assetIssuerWalletTransaction.getAmount());
-                System.out.println("Transaction Type       : "   + assetIssuerWalletTransaction.getTransactionType().getCode());
-                System.out.println("TransactionId          : "   + assetIssuerWalletTransaction.getTransactionId());
-                System.out.println("-------------------------------------------------------------------------");
-            }
+//            List<AssetIssuerWalletList> assetIssuerWalletLists = assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).getAssetIssuerWalletBalancesAvailable();
+//            //List<AssetIssuerWalletList> assetIssuerWalletLists = assetIssuerWallet.getBookBalance(BalanceType.BOOK).getAssetIssuerWalletBalancesAvailable();
+//            System.out.println("--------LISTADO DE ASSET BALANCE---------------------------------------------");
+//
+//            for (AssetIssuerWalletList assetIssuerWalletList : assetIssuerWalletLists){
+//                System.out.println("-------------------------------------------------------------------------");
+//                System.out.println("Asset PublicKey        : "   + assetIssuerWalletList.getAssetPublicKey());
+//                System.out.println("Asset Name             : "   + assetIssuerWalletList.getName());
+//                System.out.println("Asset Description      : "   + assetIssuerWalletList.getDescription());
+//                System.out.println("Asset Balance Available: "   + assetIssuerWalletList.getAvailableBalance());
+//                System.out.println("Asset Balance Book     : "   + assetIssuerWalletList.getBookBalance());
+//                System.out.println("-------------------------------------------------------------------------");
+//            }
+//
+//            List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions = assetIssuerWallet.getTransactionsAll(BalanceType.AVAILABLE, TransactionType.CREDIT, "assetPublicKeyNew2");
+//            //List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions = assetIssuerWallet.getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, 1, 1000, "assetPublicKey");
+//            System.out.println("--------LISTADO DE TRANSACTIONS CREDITOS-------------------------------------");
+//            for (AssetIssuerWalletTransaction assetIssuerWalletTransaction : assetIssuerWalletTransactions){
+//                System.out.println("-------------------------------------------------------------------------");
+//                System.out.println("Asset PublicKey        : "   + assetIssuerWalletTransaction.getAssetPublicKey());
+//                System.out.println("Address From           : "   + assetIssuerWalletTransaction.getAddressFrom());
+//                System.out.println("Address To             : "   + assetIssuerWalletTransaction.getAddressTo());
+//                System.out.println("Amount                 : "   + assetIssuerWalletTransaction.getAmount());
+//                System.out.println("Transaction Type       : "   + assetIssuerWalletTransaction.getTransactionType().getCode());
+//                System.out.println("TransactionId          : "   + assetIssuerWalletTransaction.getTransactionId());
+//                System.out.println("-------------------------------------------------------------------------");
+//            }
+//            List<AssetIssuerWalletTransaction> assetIssuerWalletTransactionsD = assetIssuerWallet.getTransactionsAll(BalanceType.AVAILABLE, TransactionType.DEBIT, "assetPublicKey");
+//            System.out.println("--------LISTADO DE TRANSACTIONS DEBITOS-------------------------------------");
+//            for (AssetIssuerWalletTransaction assetIssuerWalletTransaction : assetIssuerWalletTransactionsD){
+//                System.out.println("-------------------------------------------------------------------------");
+//                System.out.println("Asset PublicKey        : "   + assetIssuerWalletTransaction.getAssetPublicKey());
+//                System.out.println("Address From           : "   + assetIssuerWalletTransaction.getAddressFrom());
+//                System.out.println("Address To             : "   + assetIssuerWalletTransaction.getAddressTo());
+//                System.out.println("Amount                 : "   + assetIssuerWalletTransaction.getAmount());
+//                System.out.println("Transaction Type       : "   + assetIssuerWalletTransaction.getTransactionType().getCode());
+//                System.out.println("TransactionId          : "   + assetIssuerWalletTransaction.getTransactionId());
+//                System.out.println("-------------------------------------------------------------------------");
+//            }
             ActorAssetUser actorAssetUser = new ActorAssetUser() {
 
                 @Override
