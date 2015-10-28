@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.de
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.CryptoAddressesNetworkServicePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.database.OutgoingMessageDao;
@@ -35,10 +36,31 @@ import java.util.Observer;
  */
 public class CommunicationNetworkServiceLocal implements Observer, NetworkServiceLocal {
 
-    private final PlatformComponentProfile remoteNetworkServiceProfile;
-    private final ErrorManager errorManager;
-    private final EventManager eventManager;
-    private final OutgoingMessageDao outgoingMessageDao;
+
+    /**
+     * Represent the profile of the remote network service
+     */
+    private PlatformComponentProfile remoteNetworkServiceProfile;
+
+    /**
+     * Represent the profile of the local network service
+     */
+    private NetworkServiceType networkServiceTypePluginRoot;
+
+    /**
+     * DealsWithErrors Interface member variables.
+     */
+    private ErrorManager errorManager;
+
+    /**
+     * DealWithEvents Interface member variables.
+     */
+    private EventManager eventManager;
+
+    /**
+     * Represent the outgoingMessageDao
+     */
+    private OutgoingMessageDao outgoingMessageDao;
 
     /**
      * Represent the lastMessageReceived
@@ -46,32 +68,35 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
     private FermatMessage lastMessageReceived;
 
     /**
-     * Constructor with parameters.
+     * Constructor with parameters
+     *
+     * @param remoteNetworkServiceProfile
+     * @param errorManager                  instance
+     * @param outgoingMessageDao            instance
      */
-    public CommunicationNetworkServiceLocal(final PlatformComponentProfile remoteNetworkServiceProfile,
-                                            final ErrorManager             errorManager               ,
-                                            final EventManager             eventManager               ,
-                                            final OutgoingMessageDao       outgoingMessageDao         ) {
-
+    public CommunicationNetworkServiceLocal(PlatformComponentProfile remoteNetworkServiceProfile,
+                                            ErrorManager errorManager, EventManager eventManager,
+                                            OutgoingMessageDao outgoingMessageDao,
+                                            NetworkServiceType networkServiceTypePluginRoot) {
         this.remoteNetworkServiceProfile = remoteNetworkServiceProfile;
-        this.errorManager                = errorManager               ;
-        this.eventManager                = eventManager               ;
-        this.outgoingMessageDao          = outgoingMessageDao         ;
+        this.errorManager = errorManager;
+        this.eventManager = eventManager;
+        this.outgoingMessageDao = outgoingMessageDao;
+        this.networkServiceTypePluginRoot = networkServiceTypePluginRoot;
     }
 
 
     /**
      * (non-javadoc)
      */
-    public void sendMessage(final String senderIdentityPublicKey,final String receiverPK ,final String messageContent) {
+    public void sendMessage(final String senderIdentityPublicKey,final String pk, final String messageContent) {
 
         try {
 
             FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(senderIdentityPublicKey,  //Sender NetworkService
-                                                                                                    remoteNetworkServiceProfile.getIdentityPublicKey(),   //Receiver
-                                                                                                    messageContent,                //Message Content
-                                                                                                    FermatMessageContentType.TEXT);//Type
-
+                    remoteNetworkServiceProfile.getIdentityPublicKey(),   //Receiver
+                    messageContent,                //Message Content
+                    FermatMessageContentType.TEXT);//Type
             /*
              * Configure the correct status
              */
@@ -112,6 +137,7 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
         FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
         fermatEvent.setSource(CryptoAddressesNetworkServicePluginRoot.EVENT_SOURCE);
         ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingMessage);
+        ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setNetworkServiceTypeApplicant(networkServiceTypePluginRoot);
         eventManager.raiseEvent(fermatEvent);
 
     }

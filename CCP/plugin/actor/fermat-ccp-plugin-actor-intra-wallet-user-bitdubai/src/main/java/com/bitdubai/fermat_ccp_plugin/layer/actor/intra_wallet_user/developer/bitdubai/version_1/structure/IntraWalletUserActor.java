@@ -3,6 +3,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.b
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUser;
 
+import java.util.Arrays;
+
 /**
  * The Class <code>IntraWalletUserActor</code>
  * is the implementation of ActorIntraUser interface to provides the methods to consult the information of an Intra Wallet User <p/>
@@ -15,16 +17,16 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.Intr
 
 public class IntraWalletUserActor implements IntraWalletUser {
 
-    private final String       name            ;
-    private final String       publicKey       ;
-    private final byte[]       profileImage    ;
-    private final long         registrationDate;
+    private final String          name            ;
+    private final String          publicKey       ;
+    private final byte[]          profileImage    ;
+    private final long            registrationDate;
     private final ConnectionState contactState    ;
 
-    public IntraWalletUserActor(final String       name            ,
-                                final String       publicKey       ,
-                                final byte[]       profileImage    ,
-                                final long         registrationDate,
+    public IntraWalletUserActor(final String          name            ,
+                                final String          publicKey       ,
+                                final byte[]          profileImage    ,
+                                final long            registrationDate,
                                 final ConnectionState contactState    ) {
 
         this.name             = name                ;
@@ -61,4 +63,13 @@ public class IntraWalletUserActor implements IntraWalletUser {
         return this.contactState;
     }
 
+    @Override
+    public String toString() {
+        return "IntraWalletUserActor{" +
+                "name='" + name + '\'' +
+                ", publicKey='" + publicKey + '\'' +
+                ", registrationDate=" + registrationDate +
+                ", contactState=" + contactState +
+                '}';
+    }
 }

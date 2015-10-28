@@ -17,7 +17,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.CantCreateNewWalletException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUser;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIdentityIntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantGetIfIntraWalletUsersExistsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletCreateNewIntraUserIdentityException;
@@ -86,7 +86,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, DealsWithEvents, DealsWithErrors, DealsWithCCPIntraWalletUser, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithWalletManager,LogManagerForDevelopers, Plugin,Service, WalletManagerModule, WalletManager {
+public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, DealsWithEvents, DealsWithErrors, DealsWithCCPIdentityIntraWalletUser, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithWalletManager,LogManagerForDevelopers, Plugin,Service, WalletManagerModule, WalletManager {
 
 
     /**
@@ -854,7 +854,7 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
 
 
     @Override
-    public void setIntraUserManager(IntraWalletUserManager intraWalletUserManager) {
+    public void setIdentityIntraUserManager(IntraWalletUserManager intraWalletUserManager) {
         this.intraWalletUserManager = intraWalletUserManager;
     }
 }

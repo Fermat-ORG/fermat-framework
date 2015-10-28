@@ -60,7 +60,7 @@ public class CompleteComponentConnectionRequestNotificationEventHandler implemen
             CompleteComponentConnectionRequestNotificationEvent completeComponentConnectionRequestNotificationEvent = (CompleteComponentConnectionRequestNotificationEvent) platformEvent;
 
 
-            if (completeComponentConnectionRequestNotificationEvent.getNetworkServiceTypeApplicant() == this.networkService.getPlatformComponentProfilePluginRoot().getNetworkServiceType()) {
+           if (completeComponentConnectionRequestNotificationEvent.getNetworkServiceTypeApplicant() == this.networkService.getPlatformComponentProfilePluginRoot().getNetworkServiceType()) {
 
                 /*
                  *  networkService make the job

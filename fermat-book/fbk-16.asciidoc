@@ -1,22 +1,24 @@
-== FERMAT Crypto Distribution Network : +
-Developing regional crypto ecosystems
+:numbered:
+
+== FERMAT Cash & FERMAT Bank Platforms 
 
 
-=== Crypto Wholesaler 
--> for organizations owing a certain large amount of crypto-credit to sell through a distribution chain.
+=== FERMAT Cash platform
 
-=== Crypto Distributor 
--> for those who form the next level in the distribution, buying to wholesalers and re-selling to Top Up Point
+==== _Wallet layer_
+Cash Money :: +
 
-=== TUP (Top Up Point) 
--> for shops/organizations/persons who transfer crypto-credit in exchange for fiat-money (receives money - gives crypto)
+==== _Cash Money Transaction layer_
+Give Cash On Hand ::
+Receive Cash On Hand ::
+Send Cash Delivery ::
+Receive Cash Delivery :: +
 
-=== COP (Cash Out Point) 
--> for shops/organizations/persons who gives out money in exchange for a transfer of crypto (receive crypto - gives money)
+=== FERMAT Bank platform
 
+==== _Wallet layer_
+Bank Money :: +
 
-
-
-
-
-
+==== _Bank Money Transaction layer_
+Make Offline Bank Transfer ::
+Receive Offline Bank Transfer :: +

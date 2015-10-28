@@ -297,7 +297,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
      *
      * @param platformComponentProfile
      */
-    public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile) {
+    public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfile) {
         this.platformComponentProfile = platformComponentProfile;
     }
 
@@ -798,6 +798,12 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                 };
 
                 ActorAssetUser actorAssetUser = new ActorAssetUser() {
+
+                    @Override
+                    public String getPublicLinkedIdentity() {
+                        return remoteToConnect.getIdentityPublicKey();
+                    }
+
                     @Override
                     public String getPublicKey() {
                         return remoteToConnect.getIdentityPublicKey();
@@ -838,9 +844,8 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                         return null;
                     }
 
-
                     @Override
-                    public Genders getGender() {
+                    public Genders getGenders() {
                         return null;
                     }
 
@@ -1077,7 +1082,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             if (communicationNetworkServiceLocal != null) {
 
                 //Send the message
-                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), msjContent);
+                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),"", msjContent);
 
             }else{
 
@@ -1166,7 +1171,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             if (communicationNetworkServiceLocal != null) {
 
                 //Send the message
-                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), msjContent);
+                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),"", msjContent);
 
             }else{
 

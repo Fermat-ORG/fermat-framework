@@ -13,6 +13,7 @@ public enum Addons implements FermatEnum {
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     DEVICE_CONNECTIVITY("DEVC"),
+    DEVICE_LOCATION ("DEVLOC"),
     DEVICE_USER("DEVU"),
     ERROR_MANAGER("ERRM"),
     EVENT_MANAGER("EVNTM"),
@@ -21,9 +22,11 @@ public enum Addons implements FermatEnum {
     LOCATION_MANAGER("LOCMG"),
     LOG_MANAGER("LOGM"),
     OS("OS"),
+    PLATFORM_DATABASE_SYSTEM("PLADS"),
     PLATFORM_FILE_SYSTEM("PLAFS"),
     PLATFORM_INFO("PLATINF"),
     PLUGIN_FILE_SYSTEM("PLUFS"),
+    PLUGIN_DATABASE_SYSTEM("PLUDS"),
     REMOTE_DEVICE("REMD"),
 
     ;
@@ -40,6 +43,7 @@ public enum Addons implements FermatEnum {
         switch (code) {
 
             case "DEVC":    return DEVICE_CONNECTIVITY;
+            case "DEVLOC":  return DEVICE_LOCATION;
             case "DEVU":    return DEVICE_USER;
             case "ERRM":    return ERROR_MANAGER;
             case "EVNTM":   return EVENT_MANAGER;
@@ -48,8 +52,10 @@ public enum Addons implements FermatEnum {
             case "LOCMG":   return LOCATION_MANAGER;
             case "LOGM":    return LOG_MANAGER;
             case "OS":      return OS;
+            case "PLADS":   return PLATFORM_DATABASE_SYSTEM;
             case "PLAFS":   return PLATFORM_FILE_SYSTEM;
             case "PLATINF": return PLATFORM_INFO;
+            case "PLUDS":   return PLUGIN_DATABASE_SYSTEM;
             case "PLUFS":   return PLUGIN_FILE_SYSTEM;
             case "REMD":    return REMOTE_DEVICE;
 

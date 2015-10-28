@@ -13,7 +13,7 @@ import com.bitdubai.fermat_pip_core.layer.platform_service.PlatformServiceLayer;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */
-public class PIPPlatform extends AbstractPlatform {
+public final class PIPPlatform extends AbstractPlatform {
 
     public PIPPlatform() {
         super(new PlatformReference(Platforms.PLUG_INS_PLATFORM));
@@ -24,7 +24,7 @@ public class PIPPlatform extends AbstractPlatform {
 
         try {
 
-            registerLayer(new PlatformServiceLayer()         );
+            registerLayer(new PlatformServiceLayer());
 
         } catch (CantRegisterLayerException e) {
 

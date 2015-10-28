@@ -42,7 +42,7 @@ public class FermatAddonReferencesCalculator {
      * @throws CantListReferencesException if something goes wrong.
      */
 
-    public final List<AddonVersionReference> listReferencesByInstantiationOrder(final AddonVersionReference addonVersionReference) throws CantListReferencesException {
+/*    public final List<AddonVersionReference> listReferencesByInstantiationOrder(final AddonVersionReference addonVersionReference) throws CantListReferencesException {
 
         final Map<AddonVersionReference, Integer> addonLevels = new HashMap<>();
 
@@ -75,13 +75,13 @@ public class FermatAddonReferencesCalculator {
         }
     }
 
-    /**
+    *//**
      * Throw the method <code>getAddonsInstantiationOrder</code> we can order the addon by instantiation level.
      *
      * @param addonLevels map that saves the addons levels at the moment, the key is the addon version reference, and the value is an integer indicating the level.
      *
      * @return a list of addon version references ordered.
-     */
+     *//*
     private List<AddonVersionReference> getAddonsInstantiationOrder(final Map<AddonVersionReference, Integer> addonLevels) {
 
         List<Map.Entry<AddonVersionReference, Integer>> list = new LinkedList<>(addonLevels.entrySet());
@@ -99,7 +99,7 @@ public class FermatAddonReferencesCalculator {
         return orderedList;
     }
 
-    /**
+    *//**
      * Throw the method <code>setLevels</code> we give to the addon reference the level that it must have.
      *
      * @param arToCalc      addon version which we are calculating.
@@ -108,7 +108,7 @@ public class FermatAddonReferencesCalculator {
      *
      * @throws VersionNotFoundException            if we can't find a the addon version of one of the references.
      * @throws CyclicalRelationshipFoundException  if we find a cyclical relationship between the references.
-     */
+     *//*
     private void setLevels(final AddonVersionReference               arToCalc   ,
                            final Integer                             lvlToAssign,
                            final Map<AddonVersionReference, Integer> addonLevels) throws VersionNotFoundException           ,
@@ -139,7 +139,7 @@ public class FermatAddonReferencesCalculator {
 
     }
 
-    /**
+    *//**
      * Throw the method <code>setLevels</code> we give to the addon reference the level that it must have.
      *
      * @param arToCalc      addon version which we are calculating.
@@ -149,7 +149,7 @@ public class FermatAddonReferencesCalculator {
      *
      * @throws VersionNotFoundException            if we can't find a the addon version of one of the references.
      * @throws CyclicalRelationshipFoundException  if we find a cyclical relationship between the references.
-     */
+     *//*
     private void setLevels(final AddonVersionReference               arToCalc    ,
                            final List<AddonVersionReference>         arList      ,
                            final Integer                             lvlToAssign ,
@@ -179,7 +179,7 @@ public class FermatAddonReferencesCalculator {
 
     }
 
-    /**
+    *//**
      * Throw the method <code>assignLvlToReferences</code> we give to the reference the lvl that they must have.
      *
      * @param arToCalc      addon version which we are calculating.
@@ -188,7 +188,7 @@ public class FermatAddonReferencesCalculator {
      *
      * @throws VersionNotFoundException            if we can't find a the addon version of one of the references.
      * @throws CyclicalRelationshipFoundException  if we find a cyclical relationship between the references.
-     */
+     *//*
 
     private void assignToReferences(final AbstractAddon                       arToCalc   ,
                                     final Integer                             lvlToAssign,
@@ -202,7 +202,7 @@ public class FermatAddonReferencesCalculator {
         }
     }
 
-    /**
+    *//**
      * Throw the method <code>assignLvlToReferences</code> we give to the reference the lvl that they must have.
      *
      * @param arToCalc      addon version which we are calculating.
@@ -212,7 +212,7 @@ public class FermatAddonReferencesCalculator {
      *
      * @throws VersionNotFoundException            if we can't find a the addon version of one of the references.
      * @throws CyclicalRelationshipFoundException  if we find a cyclical relationship between the references.
-     */
+     *//*
     private void assignToReferences(final AddonVersionReference               arToCalc   ,
                                     final List<AddonVersionReference>         arList     ,
                                     final Integer                             lvlToAssign,
@@ -226,7 +226,7 @@ public class FermatAddonReferencesCalculator {
         }
     }
 
-    /**
+    *//**
      * Throw the method <code>compareReferences</code> you can check if there is a cyclical relationship between the addon version and its references.
      *
      * @param referenceAnalyzing       reference that we're watching.
@@ -236,7 +236,7 @@ public class FermatAddonReferencesCalculator {
      * @return boolean indicating if its all ok, only false is shown. if there is a cyclical relationship found is thrown an exception.
      *
      * @throws CyclicalRelationshipFoundException if exists a cyclical redundancy.
-     */
+     *//*
     private boolean compareReferences(final AddonVersionReference       referenceAnalyzing    ,
                                       final AddonVersionReference       subReferenceAnalyzed  ,
                                       final List<AddonVersionReference> subReferenceReferences) throws CyclicalRelationshipFoundException {
@@ -250,5 +250,5 @@ public class FermatAddonReferencesCalculator {
         }
 
         return false;
-    }
+    }*/
 }
