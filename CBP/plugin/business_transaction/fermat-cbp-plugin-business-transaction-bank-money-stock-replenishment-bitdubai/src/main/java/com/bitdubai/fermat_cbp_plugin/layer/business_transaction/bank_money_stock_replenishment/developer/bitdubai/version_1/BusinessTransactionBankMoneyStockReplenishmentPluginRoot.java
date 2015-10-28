@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1;
 
+
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
@@ -14,16 +15,13 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-<<<<<<< HEAD
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BankOperationType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BusinessTransactionStatus;
@@ -40,17 +38,11 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stoc
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantListBankMoneyStockReplenishmentBusinessTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.exceptions.CantUpdateStatusBankMoneyStockReplenishmentBusinessTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.bank_money_stock_replenishment.developer.bitdubai.version_1.structure.BankMoneyStockReplenishmentBusinessTransactionImpl;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
-
-=======
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
->>>>>>> 0199ca4ad9bf94d2b852104e4e335cb2cc4b0060
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -93,7 +85,7 @@ public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     /*BankMoneyStockReplenishmentManager Interface Implementation*/
-    public List<BankMoneyStockReplenishment> getAllBankMoneyStockReplenishmentFromCurrentDeviceUser() throws CantGetBankMoneyStockReplenishmentException{
+    public List<BankMoneyStockReplenishment> getAllBankMoneyStockReplenishmentFromCurrentDeviceUser() throws CantGetBankMoneyStockReplenishmentException {
         try {
             List<BankMoneyStockReplenishment> bankMoneyStockReplenishmentList = new ArrayList<BankMoneyStockReplenishment>();
             bankMoneyStockReplenishmentList = bankMoneyStockReplenishmentBusinessTransactionDatabaseDao.getAllBankMoneyStockReplenishmentListFromCurrentDeviceUser();
@@ -112,7 +104,7 @@ public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
             ,final UUID executionTransactionId
             ,final BankCurrencyType bankCurrencyType
             ,final BankOperationType bankOperationType
-    ) throws CantCreateBankMoneyStockReplenishmentException{
+    ) throws CantCreateBankMoneyStockReplenishmentException {
         try {
             UUID transactionId = UUID.randomUUID();
             BusinessTransactionStatus transactionStatus = BusinessTransactionStatus.PENDING_PAYMENT;
@@ -136,7 +128,7 @@ public class BusinessTransactionBankMoneyStockReplenishmentPluginRoot implements
         }
     }
 
-    public void updateStatusBankMoneyStockReplenishment(final UUID transactionId, final BusinessTransactionStatus transactionStatus) throws CantUpdateStatusBankMoneyStockReplenishmentException{
+    public void updateStatusBankMoneyStockReplenishment(final UUID transactionId, final BusinessTransactionStatus transactionStatus) throws CantUpdateStatusBankMoneyStockReplenishmentException {
         try {
             bankMoneyStockReplenishmentBusinessTransactionDatabaseDao.updateStatusBankMoneyStockReplenishmentTransaction(transactionId, transactionStatus);
         } catch (CantUpdateStatusBankMoneyStockReplenishmentBusinessTransactionException e) {
