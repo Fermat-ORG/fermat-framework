@@ -15,7 +15,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
     private String name;
     private String publicKey;
-    private byte[] profileImage ;
+    private byte[] profileImage;
     private long registrationDate;
     private ConnectionState connectionState;
     private CryptoAddress cryptoAddress;
@@ -34,7 +34,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
     }
 
-    public RedeemPointActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, ConnectionState contactState){
+    public RedeemPointActorRecord(String name, String publicKey, byte[] profileImage, long registrationDate, ConnectionState contactState) {
         this.name = name;
         this.publicKey = publicKey;
         this.profileImage = profileImage.clone();
@@ -112,7 +112,6 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
 
     /**
-     *
      * {@inheritDoc}
      */
     @Override
@@ -121,7 +120,6 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     }
 
     /**
-     *
      * {@inheritDoc}
      */
     @Override
@@ -149,7 +147,6 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     }
 
     /**
-     *
      * {@inheritDoc}
      */
     @Override
@@ -158,7 +155,6 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     }
 
     /**
-     *
      * {@inheritDoc}
      */
     @Override
@@ -167,7 +163,6 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     }
 
     /**
-     *
      * {@inheritDoc}
      */
     @Override

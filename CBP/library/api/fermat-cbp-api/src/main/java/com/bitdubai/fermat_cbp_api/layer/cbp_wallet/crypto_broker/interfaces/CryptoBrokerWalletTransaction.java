@@ -11,20 +11,20 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.Can
 public interface CryptoBrokerWalletTransaction {
 
     CryptoBrokerStockTransactionRecord debit(String publickeyWalle,
-                                        String publickeyBroker,
-                                        String publicKeyCustomer,
-                                        BalanceType balanceType,
-                                        CurrencyType currencyType,
-                                        float amount,
-                                        String memo
+                                             String publickeyBroker,
+                                             String publicKeyCustomer,
+                                             BalanceType balanceType,
+                                             CurrencyType currencyType,
+                                             float amount,
+                                             String memo
     ) throws CantRegisterDebitException;
 
     CryptoBrokerStockTransactionRecord credit(String publickeyWalle,
-                                         String publickeyBroker,
-                                         String publicKeyCustomer,
-                                         BalanceType balanceType,
-                                         CurrencyType currencyType,
-                                         float amount,
-                                         String memo
+                                              String publickeyBroker,
+                                              String publicKeyCustomer,
+                                              BalanceType balanceType,
+                                              CurrencyType currencyType,
+                                              float amount,
+                                              String memo
     ) throws CantRegisterCreditException;
 }

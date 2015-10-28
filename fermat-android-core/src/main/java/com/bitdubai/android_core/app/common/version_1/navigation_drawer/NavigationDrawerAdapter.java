@@ -2,21 +2,17 @@ package com.bitdubai.android_core.app.common.version_1.navigation_drawer;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by mati on 2015.10.26..
  */
-public class NavigationDrawerAdapter extends FermatAdapter<MenuItem,MenuItemHolder> {
+public class NavigationDrawerAdapter extends FermatAdapter<MenuItem, MenuItemHolder> {
 
     public NavigationDrawerAdapter(Context context, List<MenuItem> dataSet) {
         super(context, dataSet);

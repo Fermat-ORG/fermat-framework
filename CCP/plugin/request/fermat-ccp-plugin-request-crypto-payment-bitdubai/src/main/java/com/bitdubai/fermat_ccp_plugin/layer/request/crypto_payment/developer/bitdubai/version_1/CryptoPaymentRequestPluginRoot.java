@@ -77,7 +77,7 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
         List<PluginVersionReference> rList = new ArrayList<>();
 
         rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_PAYMENT_REQUEST, Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION    , Plugins.OUTGOING_INTRA_ACTOR  , Developers.BITDUBAI, new Version()));
+        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION, Plugins.OUTGOING_INTRA_ACTOR, Developers.BITDUBAI, new Version()));
 
         return rList;
     }

@@ -5,12 +5,12 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoRegistry;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
-import static org.fest.assertions.api.Assertions.*;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 /**
  * Created by Franklin Marcano 04/08/15.
  */

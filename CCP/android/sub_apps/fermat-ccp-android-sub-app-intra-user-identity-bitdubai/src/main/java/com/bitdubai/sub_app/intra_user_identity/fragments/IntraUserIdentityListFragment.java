@@ -18,10 +18,8 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.I
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.sub_app.intra_user_identity.common.adapters.IntraUserIdentityInfoAdapter;
-
 import com.bitdubai.sub_app.intra_user_identity.common.model.IntraUserIdentityInformationImp;
 import com.bitdubai.sub_app.intra_user_identity.common.views.DividerItemDecoration;
-
 import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
 import com.melnykov.fab.FloatingActionButton;

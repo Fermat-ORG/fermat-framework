@@ -3,6 +3,7 @@ package com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.devel
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.AddonDeveloper;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.PlatformInfoPlatformServicePluginRootOld;
+
 /**
  * Created by loui on 28/04/15.
  */
@@ -11,16 +12,10 @@ public class DeveloperBitDubaiOld implements AddonDeveloper {
     Addon addon;
 
 
-
-
-
     @Override
     public Addon getAddon() {
         return addon;
     }
-
-
-
 
 
     public DeveloperBitDubaiOld() {

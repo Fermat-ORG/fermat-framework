@@ -140,28 +140,28 @@ public class ComponentRegisteredListWebService extends ServerResource {
         switch (platformComponentType){
 
             case COMMUNICATION_CLOUD_SERVER :
-                    if (!wsCommunicationCloudServer.getRegisteredCommunicationsCloudServerCache().isEmpty()){
-                        list = (List<PlatformComponentProfile>) new ArrayList<>(wsCommunicationCloudServer.getRegisteredCommunicationsCloudServerCache().values()).clone();
-                    }
+                if (!wsCommunicationCloudServer.getRegisteredCommunicationsCloudServerCache().isEmpty()) {
+                    list = (List<PlatformComponentProfile>) new ArrayList<>(wsCommunicationCloudServer.getRegisteredCommunicationsCloudServerCache().values()).clone();
+                }
                 break;
 
             case COMMUNICATION_CLOUD_CLIENT :
-                    if (!wsCommunicationCloudServer.getRegisteredCommunicationsCloudClientCache().isEmpty()){
-                        list = (List<PlatformComponentProfile>) new ArrayList<>(wsCommunicationCloudServer.getRegisteredCommunicationsCloudClientCache().values()).clone();
-                    }
+                if (!wsCommunicationCloudServer.getRegisteredCommunicationsCloudClientCache().isEmpty()) {
+                    list = (List<PlatformComponentProfile>) new ArrayList<>(wsCommunicationCloudServer.getRegisteredCommunicationsCloudClientCache().values()).clone();
+                }
                 break;
 
             case NETWORK_SERVICE :
-                    if (wsCommunicationCloudServer.getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !wsCommunicationCloudServer.getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()){
-                        list = (List<PlatformComponentProfile>) new ArrayList<>(wsCommunicationCloudServer.getRegisteredNetworkServicesCache().get(networkServiceType)).clone();
-                    }
+                if (wsCommunicationCloudServer.getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !wsCommunicationCloudServer.getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()) {
+                    list = (List<PlatformComponentProfile>) new ArrayList<>(wsCommunicationCloudServer.getRegisteredNetworkServicesCache().get(networkServiceType)).clone();
+                }
                 break;
 
             //Others
             default :
-                    if (wsCommunicationCloudServer.getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !wsCommunicationCloudServer.getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()) {
-                        list = (List<PlatformComponentProfile>) new ArrayList<>(wsCommunicationCloudServer.getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType)).clone();
-                    }
+                if (wsCommunicationCloudServer.getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !wsCommunicationCloudServer.getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()) {
+                    list = (List<PlatformComponentProfile>) new ArrayList<>(wsCommunicationCloudServer.getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType)).clone();
+                }
                 break;
         }
 
@@ -330,7 +330,7 @@ public class ComponentRegisteredListWebService extends ServerResource {
      * @param clientIdentityPublicKey
      * @return List<PlatformComponentProfile>
      */
-    private  List<PlatformComponentProfile> applyDiscoveryQueryParametersFromOtherComponent(DiscoveryQueryParameters discoveryQueryParameters, String clientIdentityPublicKey) {
+    private List<PlatformComponentProfile> applyDiscoveryQueryParametersFromOtherComponent(DiscoveryQueryParameters discoveryQueryParameters, String clientIdentityPublicKey) {
 
         System.out.println("ComponentRegisteredListWebService - applyDiscoveryQueryParametersFromOtherComponent    = ");
 

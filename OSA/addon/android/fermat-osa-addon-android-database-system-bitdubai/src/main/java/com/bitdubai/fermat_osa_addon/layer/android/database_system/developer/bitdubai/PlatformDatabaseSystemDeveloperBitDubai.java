@@ -10,9 +10,9 @@ import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bit
 /**
  * The class <code>com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer.bitdubai.DeveloperBitDubai</code>
  * Haves the logic of instantiation of all versions of Location Manager Platform Service Addon.
- *
+ * <p/>
  * Here we can choose between the different versions of the Platform Database System Addon.
- *
+ * <p/>
  * Created by lnacosta (laion.cj91@gmail.com) on 26/10/2015.
  */
 public class PlatformDatabaseSystemDeveloperBitDubai extends AbstractAddonDeveloper {

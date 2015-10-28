@@ -28,7 +28,7 @@ public abstract class AbstractPlugin implements Plugin, Service {
     private Map<PluginVersionReference, AbstractPlugin> plugins;
 
     private final PluginVersionReference pluginVersionReference;
-    protected        ServiceStatus          serviceStatus;
+    protected ServiceStatus serviceStatus;
 
     /**
      * Default constructor assigning version 1.
@@ -101,7 +101,7 @@ public abstract class AbstractPlugin implements Plugin, Service {
         return serviceStatus == ServiceStatus.PAUSED;
     }
 
-    public List<AddonVersionReference > getNeededAddonReferences() {
+    public List<AddonVersionReference> getNeededAddonReferences() {
         return new ArrayList<>();
     }
 

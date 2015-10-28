@@ -298,7 +298,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 //            }
             //assetDistributionManager.distributeAssets(hashMap, walletPublicKey);
             HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
-            for (ActorAssetUser actorAssetUser : actorAssetUsers){
+            for (ActorAssetUser actorAssetUser : actorAssetUsers) {
                 hashMap.put(null, actorAssetUser);
             }
             assetDistributionManager.distributeAssets(hashMap, null);

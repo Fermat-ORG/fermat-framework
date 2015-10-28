@@ -23,7 +23,6 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_rece
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
-
 import java.util.List;
 import java.util.UUID;
 
@@ -47,11 +46,11 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
         this.errorManager=errorManager;
     }
 
-    public void setAssetReceptionDao(AssetReceptionDao assetReceptionDao)throws CantSetObjectException{
-        if(assetReceptionDao==null){
+    public void setAssetReceptionDao(AssetReceptionDao assetReceptionDao) throws CantSetObjectException {
+        if (assetReceptionDao == null) {
             throw new CantSetObjectException("assetReceptionDao is null");
         }
-        this.assetReceptionDao=assetReceptionDao;
+        this.assetReceptionDao = assetReceptionDao;
     }
 
     public void setDigitalAssetReceptionVault(DigitalAssetReceptionVault digitalAssetReceptionVault) throws CantSetObjectException {
@@ -62,13 +61,13 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
     }
 
     public void receiveDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata, String senderId) throws CantReceiveDigitalAssetException {
-        try{
+        try {
             persistDigitalAsset(digitalAssetMetadata, senderId);
-            DigitalAsset digitalAsset=digitalAssetMetadata.getDigitalAsset();
-            String genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
-            DigitalAssetContract digitalAssetContract=digitalAsset.getContract();
+            DigitalAsset digitalAsset = digitalAssetMetadata.getDigitalAsset();
+            String genesisTransaction = digitalAssetMetadata.getGenesisTransaction();
+            DigitalAssetContract digitalAssetContract = digitalAsset.getContract();
             this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.CHECKING_CONTRACT, genesisTransaction);
-            if(!isValidContract(digitalAssetContract)){
+            if (!isValidContract(digitalAssetContract)) {
                 System.out.println("ASSET RECEPTION The contract is not valid");
                 this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.REJECTED_BY_CONTRACT, genesisTransaction);
                 return;
@@ -77,7 +76,7 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
             }
             this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.CONTRACT_CHECKED, genesisTransaction);
             this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.CHECKING_HASH, genesisTransaction);
-            if(!isDigitalAssetHashValid(digitalAssetMetadata)){
+            if (!isDigitalAssetHashValid(digitalAssetMetadata)) {
                 System.out.println("ASSET RECEPTION The DAM Hash is not valid");
                 this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.REJECTED_BY_HASH, genesisTransaction);
                 return;
@@ -120,10 +119,10 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
             this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.CHECKING_HASH, genesisTransactionFromDigitalAssetMetadata);
             String digitalAssetMetadataHash=digitalAssetMetadata.getDigitalAssetHash();
             List<CryptoTransaction> cryptoTransactionList = bitcoinNetworkManager.getGenesisTransaction(digitalAssetMetadata.getGenesisTransaction());
-            if(cryptoTransactionList==null||cryptoTransactionList.isEmpty()){
-                throw new CantGetGenesisTransactionException(CantGetGenesisTransactionException.DEFAULT_MESSAGE,null,"Getting the genesis transaction from Crypto Network","The crypto transaction received is null");
+            if (cryptoTransactionList == null || cryptoTransactionList.isEmpty()) {
+                throw new CantGetGenesisTransactionException(CantGetGenesisTransactionException.DEFAULT_MESSAGE, null, "Getting the genesis transaction from Crypto Network", "The crypto transaction received is null");
             }
-            this.cryptoTransaction=cryptoTransactionList.get(0);
+            this.cryptoTransaction = cryptoTransactionList.get(0);
             String op_ReturnFromAssetVault=cryptoTransaction.getOp_Return();
             if(!digitalAssetMetadataHash.equals(op_ReturnFromAssetVault)){
                 throw new CantReceiveDigitalAssetException("Cannot receive Digital Asset because the " +
@@ -154,12 +153,12 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
 
     @Override
     public void persistInLocalStorage(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateDigitalAssetFileException {
-        UUID receptionId=UUID.randomUUID();
+        UUID receptionId = UUID.randomUUID();
         try {
             this.assetReceptionDao.persistReceptionId(digitalAssetMetadata.getGenesisTransaction(), receptionId);
             this.digitalAssetReceptionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, receptionId.toString());
         } catch (CantPersistsTransactionUUIDException exception) {
-            throw new CantCreateDigitalAssetFileException(exception,"Persiting Receiving digital asset metadata","Cannot persists internal id in database");
+            throw new CantCreateDigitalAssetFileException(exception, "Persiting Receiving digital asset metadata", "Cannot persists internal id in database");
         }
 
     }

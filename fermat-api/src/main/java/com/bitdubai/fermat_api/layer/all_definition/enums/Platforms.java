@@ -16,9 +16,7 @@ public enum Platforms implements FermatEnum {
     BLOCKCHAINS("BCH"),
     COMMUNICATION_PLATFORM("CP"),
     OPERATIVE_SYSTEM_API("OSA"),
-    PLUG_INS_PLATFORM("PIP"),
-
-    ;
+    PLUG_INS_PLATFORM("PIP"),;
 
     private String code;
 

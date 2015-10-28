@@ -16,21 +16,21 @@ public enum NotificationDescriptor {
 
     private String code;
 
-    NotificationDescriptor(String code){
+    NotificationDescriptor(String code) {
 
-        this.code=code;
+        this.code = code;
 
     }
 
-    public String getCode(){
+    public String getCode() {
 
         return this.code;
 
     }
 
-    public static NotificationDescriptor getByCode(String code)throws InvalidParameterException{
+    public static NotificationDescriptor getByCode(String code) throws InvalidParameterException {
 
-        switch (code){
+        switch (code) {
 
             case "ASK":
                 return NotificationDescriptor.ASKFORACCEPTANCE;

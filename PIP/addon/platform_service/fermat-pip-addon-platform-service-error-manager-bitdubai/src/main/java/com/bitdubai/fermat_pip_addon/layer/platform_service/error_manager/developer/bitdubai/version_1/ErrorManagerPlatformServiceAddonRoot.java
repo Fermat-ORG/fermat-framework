@@ -2,10 +2,7 @@ package com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.devel
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddon;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
@@ -24,9 +21,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Throw this addon you can report an unexpected error in the platform.
  *
@@ -44,81 +38,81 @@ public class ErrorManagerPlatformServiceAddonRoot extends AbstractAddon implemen
      * ErrorManager Interface implementation.
      */
     @Override
-    public final void reportUnexpectedPlatformException(final PlatformComponents                  exceptionSource                    ,
-                                                  final UnexpectedPlatformExceptionSeverity unexpectedPlatformExceptionSeverity,
-                                                  final Exception                           exception                          ) {
+    public final void reportUnexpectedPlatformException(final PlatformComponents exceptionSource,
+                                                        final UnexpectedPlatformExceptionSeverity unexpectedPlatformExceptionSeverity,
+                                                        final Exception exception) {
 
         processException(exceptionSource.name(), unexpectedPlatformExceptionSeverity.name(), exception);
     }
 
     @Override
-    public final void reportUnexpectedPluginException(final Plugins                           exceptionSource                  ,
-                                                final UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity,
-                                                final Exception                         exception                        ) {
+    public final void reportUnexpectedPluginException(final Plugins exceptionSource,
+                                                      final UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity,
+                                                      final Exception exception) {
 
         processException(exceptionSource.toString(), unexpectedPluginExceptionSeverity.toString(), exception);
     }
 
     @Override
-    public final void reportUnexpectedPluginException(final PluginVersionReference            exceptionSource                  ,
-                                                final UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity,
-                                                final Exception                         exception                        ) {
+    public final void reportUnexpectedPluginException(final PluginVersionReference exceptionSource,
+                                                      final UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity,
+                                                      final Exception exception) {
 
         processException(exceptionSource.toString(), unexpectedPluginExceptionSeverity.toString(), exception);
     }
 
     @Override
-    public final void reportUnexpectedWalletException(final Wallets                           exceptionSource                  ,
+    public final void reportUnexpectedWalletException(final Wallets exceptionSource,
                                                       final UnexpectedWalletExceptionSeverity unexpectedWalletExceptionSeverity,
-                                                      final Exception                         exception                        ) {
+                                                      final Exception exception) {
 
-        processException(exceptionSource.toString(), unexpectedWalletExceptionSeverity.toString(),exception);
+        processException(exceptionSource.toString(), unexpectedWalletExceptionSeverity.toString(), exception);
     }
 
     @Override
-    public final void reportUnexpectedAddonsException(final Addons                            exceptionSource                  ,
+    public final void reportUnexpectedAddonsException(final Addons exceptionSource,
                                                       final UnexpectedAddonsExceptionSeverity unexpectedAddonsExceptionSeverity,
-                                                      final Exception                         exception                        ) {
+                                                      final Exception exception) {
 
         processException(exceptionSource.toString(), unexpectedAddonsExceptionSeverity.toString(), exception);
     }
 
     @Override
-    public final void reportUnexpectedAddonsException(final AddonVersionReference             exceptionSource                  ,
+    public final void reportUnexpectedAddonsException(final AddonVersionReference exceptionSource,
                                                       final UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity,
-                                                      final Exception                         exception                        ) {
+                                                      final Exception exception) {
 
         processException(exceptionSource.toString(), unexpectedPluginExceptionSeverity.toString(), exception);
     }
 
     @Override
-    public final void reportUnexpectedSubAppException(final SubApps                           exceptionSource                  ,
+    public final void reportUnexpectedSubAppException(final SubApps exceptionSource,
                                                       final UnexpectedSubAppExceptionSeverity unexpectedSubAppExceptionSeverity,
-                                                      final Exception                         exception                        ) {
+                                                      final Exception exception) {
 
         processException(exceptionSource.toString(), unexpectedSubAppExceptionSeverity.toString(), exception);
     }
 
     @Override
-    public final void reportUnexpectedUIException(final UISource                      exceptionSource                  ,
+    public final void reportUnexpectedUIException(final UISource exceptionSource,
                                                   final UnexpectedUIExceptionSeverity unexpectedAddonsExceptionSeverity,
-                                                  final Exception                     exception                        ) {
+                                                  final Exception exception) {
 
         processException(exceptionSource.toString(), unexpectedAddonsExceptionSeverity.toString(), exception);
     }
 
     @Override
     public final void reportUnexpectedEventException(final FermatEvent exceptionSource,
-                                                     final Exception   exception      ) {
+                                                     final Exception exception) {
 
         processException(exceptionSource.toString(), "Unknow", exception);
     }
 
-    private final void processException(final String source, final String severity, final Exception exception){
+    private final void processException(final String source, final String severity, final Exception exception) {
         printErrorReport(source, severity, FermatException.wrapException(exception));
     }
 
-    private final void printErrorReport(final String source, final String severity, final FermatException exception){
+    private final void printErrorReport(final String source, final String severity, final FermatException exception) {
         System.err.println(new ErrorReport(source, severity, exception).generateReport());
     }
 

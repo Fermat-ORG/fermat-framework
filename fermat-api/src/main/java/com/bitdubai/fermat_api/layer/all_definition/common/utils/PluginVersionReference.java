@@ -21,10 +21,10 @@ public class PluginVersionReference {
     private static final String KEY_SEPARATOR = "+";
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
-    private static final int HASH_PRIME_NUMBER_ADD     = 2819;
+    private static final int HASH_PRIME_NUMBER_ADD = 2819;
 
-    private       PluginDeveloperReference pluginDeveloperReference;
-    private final Version                  version                 ;
+    private PluginDeveloperReference pluginDeveloperReference;
+    private final Version version;
 
     public PluginVersionReference(final Version version) {
 
@@ -32,83 +32,84 @@ public class PluginVersionReference {
     }
 
     public PluginVersionReference(final PluginDeveloperReference pluginDeveloperReference,
-                                  final Version                  version                 ) {
+                                  final Version version) {
 
         this.pluginDeveloperReference = pluginDeveloperReference;
-        this.version                  = version                 ;
+        this.version = version;
     }
 
-    public PluginVersionReference(final Platforms  platform  ,
-                                  final Layers     layer     ,
-                                  final Plugins    pluginEnum,
-                                  final Developers developer ,
-                                  final Version    version   ) {
+    public PluginVersionReference(final Platforms platform,
+                                  final Layers layer,
+                                  final Plugins pluginEnum,
+                                  final Developers developer,
+                                  final Version version) {
 
-        PlatformReference platformReference = new PlatformReference(platform         );
-        LayerReference    layerReference    = new LayerReference   (platformReference, layer     );
-        PluginReference   pluginReference   = new PluginReference  (layerReference   , pluginEnum);
+        PlatformReference platformReference = new PlatformReference(platform);
+        LayerReference layerReference = new LayerReference(platformReference, layer);
+        PluginReference pluginReference = new PluginReference(layerReference, pluginEnum);
 
         this.pluginDeveloperReference = new PluginDeveloperReference(pluginReference, developer);;
-        this.version                  = version;
+        this.version = version;
     }
 
     public PluginVersionReference(final OperativeSystems operativeSystem,
-                                  final Platforms        platform       ,
-                                  final Layers           layer          ,
-                                  final Plugins          pluginEnum     ,
-                                  final Developers       developer      ,
-                                  final Version          version        ) {
+                                  final Platforms platform,
+                                  final Layers layer,
+                                  final Plugins pluginEnum,
+                                  final Developers developer,
+                                  final Version version) {
 
-        PlatformReference platformReference = new PlatformReference(operativeSystem  , platform  );
-        LayerReference    layerReference    = new LayerReference   (platformReference, layer     );
-        PluginReference   pluginReference   = new PluginReference  (layerReference   , pluginEnum);
+        PlatformReference platformReference = new PlatformReference(operativeSystem, platform);
+        LayerReference layerReference = new LayerReference(platformReference, layer);
+        PluginReference pluginReference = new PluginReference(layerReference, pluginEnum);
 
-        this.pluginDeveloperReference = new PluginDeveloperReference(pluginReference, developer);;
-        this.version                  = version;
+        this.pluginDeveloperReference = new PluginDeveloperReference(pluginReference, developer);
+        ;
+        this.version = version;
     }
 
     public static PluginVersionReference getByKey(final String key) throws InvalidParameterException {
 
         String[] keySplit = key.split(Pattern.quote(KEY_SEPARATOR));
 
-        if(keySplit.length != 6)
+        if (keySplit.length != 6)
             throw new InvalidParameterException("Key: " + key, "This key should respect the separation pattern using \"" + KEY_SEPARATOR + "\"");
 
-        final String oSystemString    = keySplit[0];
-        final String platformString   = keySplit[1];
-        final String layerString      = keySplit[2];
+        final String oSystemString = keySplit[0];
+        final String platformString = keySplit[1];
+        final String layerString = keySplit[2];
         final String pluginEnumString = keySplit[3];
-        final String developerString  = keySplit[4];
-        final String versionString    = keySplit[5];
+        final String developerString = keySplit[4];
+        final String versionString = keySplit[5];
 
         final OperativeSystems operativeSystem = OperativeSystems.getByCode(oSystemString);
-        final Platforms        platform        = Platforms       .getByCode(platformString);
-        final Layers           layer           = Layers          .getByCode(layerString);
-        final Plugins          pluginEnum      = Plugins         .getByKey(pluginEnumString);
-        final Developers       developer       = Developers      .getByCode(developerString);
-        final Version          version         = new Version(versionString);
+        final Platforms platform = Platforms.getByCode(platformString);
+        final Layers layer = Layers.getByCode(layerString);
+        final Plugins pluginEnum = Plugins.getByKey(pluginEnumString);
+        final Developers developer = Developers.getByCode(developerString);
+        final Version version = new Version(versionString);
 
         return new PluginVersionReference(operativeSystem, platform, layer, pluginEnum, developer, version);
     }
 
     public String toKey() {
 
-        PluginReference   pluginReference   = pluginDeveloperReference.getPluginReference()  ;
-        LayerReference    layerReference    = pluginReference         .getLayerReference()   ;
-        PlatformReference platformReference = layerReference          .getPlatformReference();
+        PluginReference pluginReference = pluginDeveloperReference.getPluginReference();
+        LayerReference layerReference = pluginReference.getLayerReference();
+        PlatformReference platformReference = layerReference.getPlatformReference();
 
-        OperativeSystems operativeSystem = platformReference       .getOperativeSystem();
-        Platforms        platform        = platformReference       .getPlatform()       ;
-        Layers           layer           = layerReference          .getLayer()          ;
-        Plugins          plugin          = pluginReference         .getPlugin()         ;
-        Developers       developer       = pluginDeveloperReference.getDeveloper()      ;
+        OperativeSystems operativeSystem = platformReference.getOperativeSystem();
+        Platforms platform = platformReference.getPlatform();
+        Layers layer = layerReference.getLayer();
+        Plugins plugin = pluginReference.getPlugin();
+        Developers developer = pluginDeveloperReference.getDeveloper();
 
-        return platform .getCode()       + KEY_SEPARATOR +
-               operativeSystem.getCode() + KEY_SEPARATOR +
-               layer    .getCode()       + KEY_SEPARATOR +
-               plugin   .getCode()       + KEY_SEPARATOR +
-               developer.getCode()       + KEY_SEPARATOR +
-               version  .toString();
+        return platform.getCode() + KEY_SEPARATOR +
+                operativeSystem.getCode() + KEY_SEPARATOR +
+                layer.getCode() + KEY_SEPARATOR +
+                plugin.getCode() + KEY_SEPARATOR +
+                developer.getCode() + KEY_SEPARATOR +
+                version.toString();
     }
 
     public final Version getVersion() {

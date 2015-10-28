@@ -13,7 +13,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptio
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
@@ -47,48 +46,48 @@ public class DigitalAssetDistributionVault extends AbstractDigitalAssetVault {
         this.errorManager=errorManager;
     }
 
-    public void setDigitalAssetMetadataAssetIssuerWalletTransaction(CryptoTransaction genesisTransaction, String internalId, AssetBalanceType assetBalanceType, TransactionType transactionType)throws CantDeliverDigitalAssetToAssetWalletException {
-        try{
-            DigitalAssetMetadata digitalAssetMetadataToDeliver=getDigitalAssetMetadataFromLocalStorage(internalId);
-            BalanceType balanceType=BalanceType.BOOK;
-            if(assetBalanceType.getCode().equals(AssetBalanceType.BOOK)){
-                balanceType=BalanceType.BOOK;
+    public void setDigitalAssetMetadataAssetIssuerWalletTransaction(CryptoTransaction genesisTransaction, String internalId, AssetBalanceType assetBalanceType, TransactionType transactionType) throws CantDeliverDigitalAssetToAssetWalletException {
+        try {
+            DigitalAssetMetadata digitalAssetMetadataToDeliver = getDigitalAssetMetadataFromLocalStorage(internalId);
+            BalanceType balanceType = BalanceType.BOOK;
+            if (assetBalanceType.getCode().equals(AssetBalanceType.BOOK)) {
+                balanceType = BalanceType.BOOK;
             }
-            if(assetBalanceType.getCode().equals(AssetBalanceType.AVAILABLE)){
-                balanceType=BalanceType.AVAILABLE;
+            if (assetBalanceType.getCode().equals(AssetBalanceType.AVAILABLE)) {
+                balanceType = BalanceType.AVAILABLE;
             }
-            System.out.println("ASSET Distribution - DELIVER TO WALLET TEST - "+balanceType+"\nHash: "+genesisTransaction.getTransactionHash());
+            System.out.println("ASSET Distribution - DELIVER TO WALLET TEST - " + balanceType + "\nHash: " + genesisTransaction.getTransactionHash());
             deliverDigitalAssetMetadata(digitalAssetMetadataToDeliver, genesisTransaction, balanceType, transactionType);
         } catch (CantGetDigitalAssetFromLocalStorageException exception) {
-            throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the DigitalAssetMetadata from storage");
+            throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the DigitalAssetMetadata from storage");
         } catch (CantGetTransactionsException exception) {
-            throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the Asset Transaction");
+            throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the Asset Transaction");
         } catch (CantLoadWalletException exception) {
-            throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot load the Asset Wallet");
+            throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Delivering DigitalAssetMetadata to Asset Wallet", "Cannot load the Asset Wallet");
         } catch (CantRegisterCreditException exception) {
-            throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot register credit in asset issuer wallet");
+            throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Delivering DigitalAssetMetadata to Asset Wallet", "Cannot register credit in asset issuer wallet");
         } catch (CantRegisterDebitException exception) {
-            throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot register debit in asset issuer wallet");
+            throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Delivering DigitalAssetMetadata to Asset Wallet", "Cannot register debit in asset issuer wallet");
         }
     }
 
     private void deliverDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType, TransactionType transactionType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException, CantRegisterDebitException {
-        AssetIssuerWallet assetIssuerWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
-        AssetIssuerWalletBalance assetIssuerWalletBalance= assetIssuerWallet.getBookBalance(balanceType);
-        System.out.println("ASSET Distribution Transaction to deliver: "+genesisTransaction.getTransactionHash());
-        AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper=new AssetIssuerWalletTransactionRecordWrapper(
+        AssetIssuerWallet assetIssuerWallet = this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
+        AssetIssuerWalletBalance assetIssuerWalletBalance = assetIssuerWallet.getBookBalance(balanceType);
+        System.out.println("ASSET Distribution Transaction to deliver: " + genesisTransaction.getTransactionHash());
+        AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper = new AssetIssuerWalletTransactionRecordWrapper(
                 digitalAssetMetadata,
                 genesisTransaction,
                 "testActorFromPublicKey",
                 "testActorToPublicKey"
         );
-        System.out.println("ASSET Distribution AssetIssuerWalletTransactionRecordWrapper: "+ assetIssuerWalletTransactionRecordWrapper.getDescription());
+        System.out.println("ASSET Distribution AssetIssuerWalletTransactionRecordWrapper: " + assetIssuerWalletTransactionRecordWrapper.getDescription());
         System.out.println("ASSET Distribution Balance Type: " + balanceType);
         System.out.println("ASSET Distribution Transaction Type: " + transactionType);
-        if(transactionType.getCode().equals(TransactionType.CREDIT.getCode())){
+        if (transactionType.getCode().equals(TransactionType.CREDIT.getCode())) {
             assetIssuerWalletBalance.credit(assetIssuerWalletTransactionRecordWrapper, balanceType);
         }
-        if(transactionType.getCode().equals(TransactionType.DEBIT.getCode())){
+        if (transactionType.getCode().equals(TransactionType.DEBIT.getCode())) {
             assetIssuerWalletBalance.debit(assetIssuerWalletTransactionRecordWrapper, balanceType);
         }
 

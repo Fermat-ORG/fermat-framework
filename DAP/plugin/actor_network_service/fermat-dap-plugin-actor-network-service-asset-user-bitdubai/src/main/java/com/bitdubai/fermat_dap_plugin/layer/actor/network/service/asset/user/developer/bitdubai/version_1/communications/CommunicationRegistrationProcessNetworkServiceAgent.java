@@ -61,7 +61,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     public void run() {
 
         while (active){
-            try{
+            try {
 
                 if (communicationsClientConnection.isRegister() && !assetUserActorNetworkServicePluginRoot.isRegister()){
 

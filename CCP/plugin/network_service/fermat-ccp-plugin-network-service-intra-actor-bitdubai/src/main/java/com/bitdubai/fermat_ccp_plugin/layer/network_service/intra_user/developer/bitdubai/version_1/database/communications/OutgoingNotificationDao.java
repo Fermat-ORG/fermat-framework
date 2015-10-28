@@ -2,10 +2,6 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.develope
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateNotificationException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetNotificationException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.NotificationNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.NotificationDescriptor;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -15,13 +11,16 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateNotificationException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetNotificationException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.NotificationNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.NotificationDescriptor;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserNotification;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,10 +51,10 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
                                            String                      senderAlias,
                                            byte[]                      senderProfileImage,
                                            Actors                      destinationType        ,
-                                           NotificationDescriptor descriptor      ,
+                                                                NotificationDescriptor descriptor,
                                            long                        timestamp   ,
                                            ActorProtocolState          protocolState    ,
-                                           boolean                     flagReaded      ) throws CantCreateNotificationException {
+                                                                boolean flagReaded) throws CantCreateNotificationException {
 
         try {
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
@@ -84,9 +83,10 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
         } catch (CantInsertRecordException e) {
 
-            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+            throw new CantCreateNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.", "");
         }
     }
+
     public void createNotification(ActorNetworkServiceRecord actorNetworkServiceRecord) throws CantCreateNotificationException {
 
         try {
@@ -98,7 +98,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
         } catch (CantInsertRecordException e) {
 
-            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+            throw new CantCreateNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.", "");
         }
     }
 
@@ -121,15 +121,15 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
                 if (!records.isEmpty())
                     return buildActorNetworkServiceRecord(records.get(0));
                 else
-                    throw new NotificationNotFoundException("",null, "RequestID: "+notificationId, "Can not find an crypto payment request with the given request id.");
+                    throw new NotificationNotFoundException("", null, "RequestID: " + notificationId, "Can not find an crypto payment request with the given request id.");
 
 
             } catch (CantLoadTableToMemoryException exception) {
 
-                throw new CantGetNotificationException( "",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+                throw new CantGetNotificationException("", exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
             } catch (InvalidParameterException exception) {
 
-                throw new CantGetNotificationException("",exception, "Check the cause."                                                                                ,"");
+                throw new CantGetNotificationException("", exception, "Check the cause.", "");
             }
         return null;
     }
@@ -255,7 +255,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
             cryptoPaymentRequestTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
-            cryptoPaymentRequestTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME     , notificationDescriptor.getCode(), DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, notificationDescriptor.getCode(), DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.loadToMemory();
 
@@ -293,7 +293,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         record.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME, cryptoPaymentRequestRecord.getId());
         record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME, cryptoPaymentRequestRecord.getActorSenderAlias()                              );
         record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME          , (cryptoPaymentRequestRecord.getActorSenderProfileImage() != null) ? cryptoPaymentRequestRecord.getActorSenderProfileImage() .toString() : null);
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME     , cryptoPaymentRequestRecord.getNotificationDescriptor().getCode()                                 );
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, cryptoPaymentRequestRecord.getNotificationDescriptor().getCode());
         record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME, cryptoPaymentRequestRecord.getActorDestinationType().getCode());
         record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME, cryptoPaymentRequestRecord.getActorSenderType().getCode());
         record.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME    , cryptoPaymentRequestRecord.getActorSenderPublicKey()                 );

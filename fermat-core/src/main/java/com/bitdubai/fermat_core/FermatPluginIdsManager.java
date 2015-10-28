@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 /**
  * The abstract class <code>com.bitdubai.fermat_core.FermatPluginIdsManager</code> haves all the main functionality
  * to manage fermat plugins ids.
- *
+ * <p/>
  * Created by Leon Acosta (laion.cj01@gmail.com) on 20/10/2015.
  */
 public class FermatPluginIdsManager {
@@ -31,7 +31,7 @@ public class FermatPluginIdsManager {
     private final String PLUGIN_IDS_FILE_NAME = "plugin_ids";
 
 
-    private final String PAIR_SEPARATOR   = ";";
+    private final String PAIR_SEPARATOR = ";";
     private final String PLUGIN_SEPARATOR = "|";
 
     private final PlatformFileSystem platformFileSystem;
@@ -41,7 +41,7 @@ public class FermatPluginIdsManager {
     protected FermatPluginIdsManager(final PlatformFileSystem platformFileSystem) throws CantStartPluginIdsManagerException {
 
         this.platformFileSystem = platformFileSystem;
-        this.pluginIdsMap       = new HashMap<>();
+        this.pluginIdsMap = new HashMap<>();
 
         chargeOrCreateSavedIds();
     }
@@ -74,8 +74,8 @@ public class FermatPluginIdsManager {
                 if (changed)
                     savePluginIdsFile(getPluginIdsFile());
 
-            } catch(final CantCreateFileException  |
-                          CantPersistFileException e) {
+            } catch (final CantCreateFileException |
+                    CantPersistFileException e) {
 
                 throw new CantStartPluginIdsManagerException(e, "", "Problem with plugins id file.");
             }
@@ -86,8 +86,8 @@ public class FermatPluginIdsManager {
 
                 savePluginIdsFile(platformTextFile);
 
-            } catch (final CantCreateFileException  |
-                           CantPersistFileException e) {
+            } catch (final CantCreateFileException |
+                    CantPersistFileException e) {
 
                 throw new CantStartPluginIdsManagerException(e, "", "Problem with plugins id file.");
             }
@@ -100,9 +100,7 @@ public class FermatPluginIdsManager {
      * if it doesn't exists, creates a new one and saves it in the plugins id file.
      *
      * @param plugin reference of the plugin of which you want to have the id.
-     *
      * @return the id of the plugin
-     *
      * @throws CantGetPluginIdException if something goes wrong.
      */
     public final UUID getPluginId(final PluginVersionReference plugin) throws CantGetPluginIdException {
@@ -124,9 +122,9 @@ public class FermatPluginIdsManager {
             pluginIdsMap.put(plugin, newId);
             return newId;
 
-        } catch(final CantPersistFileException |
-                      CantCreateFileException  |
-                      FileNotFoundException    e) {
+        } catch (final CantPersistFileException |
+                CantCreateFileException |
+                FileNotFoundException e) {
 
             throw new CantGetPluginIdException(
                     plugin.toString(),
@@ -136,18 +134,18 @@ public class FermatPluginIdsManager {
     }
 
     private PlatformTextFile getPluginIdsFile() throws CantCreateFileException,
-                                                       FileNotFoundException  {
+            FileNotFoundException {
 
         return platformFileSystem.getFile(
                 PLUGIN_IDS_DIRECTORY_NAME,
-                PLUGIN_IDS_FILE_NAME     ,
-                FilePrivacy.PRIVATE      ,
+                PLUGIN_IDS_FILE_NAME,
+                FilePrivacy.PRIVATE,
                 FileLifeSpan.PERMANENT
         );
     }
 
-    private void savePluginIdsFile(final PlatformTextFile platformTextFile) throws CantCreateFileException  ,
-                                                                                   CantPersistFileException {
+    private void savePluginIdsFile(final PlatformTextFile platformTextFile) throws CantCreateFileException,
+            CantPersistFileException {
 
         String fileContent = "";
         for (final Map.Entry<PluginVersionReference, UUID> plugin : pluginIdsMap.entrySet())

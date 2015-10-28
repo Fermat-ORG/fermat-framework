@@ -14,7 +14,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     private String name;
     private String description;
     private String publicKey;
-    private byte[] profileImage ;
+    private byte[] profileImage;
     private long registrationDate;
     private ConnectionState connectionState;
     private Location location;
@@ -113,7 +113,6 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
     /**
      * {@inheritDoc}
-     *
      */
     @Override
     public String getDescription() {

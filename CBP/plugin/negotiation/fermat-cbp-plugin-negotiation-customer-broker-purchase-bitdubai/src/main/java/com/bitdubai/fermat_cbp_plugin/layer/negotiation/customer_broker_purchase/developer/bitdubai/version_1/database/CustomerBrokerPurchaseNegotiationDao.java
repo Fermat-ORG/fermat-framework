@@ -212,7 +212,7 @@ public class CustomerBrokerPurchaseNegotiationDao {
             Clause methods
          */
 
-            public Collection<Clause> getClauses(UUID negotiationId) throws CantGetListClauseException{
+    public Collection<Clause> getClauses(UUID negotiationId) throws CantGetListClauseException {
 
                 try {
                     DatabaseTable PurchaseClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
@@ -305,25 +305,25 @@ public class CustomerBrokerPurchaseNegotiationDao {
                 }
             }
 
-            public String getPaymentMethod(UUID negotiationId) throws CantGetNextClauseTypeException {
+    public String getPaymentMethod(UUID negotiationId) throws CantGetNextClauseTypeException {
 
-                try {
-                    DatabaseTable PurchaseClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
-                    PurchaseClauseTable.setUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
-                    PurchaseClauseTable.setStringFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TYPE_COLUMN_NAME, ClauseType.CUSTOMER_PAYMENT_METHOD.getCode(), DatabaseFilterType.EQUAL);
+        try {
+            DatabaseTable PurchaseClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
+            PurchaseClauseTable.setUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
+            PurchaseClauseTable.setStringFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TYPE_COLUMN_NAME, ClauseType.CUSTOMER_PAYMENT_METHOD.getCode(), DatabaseFilterType.EQUAL);
 
-                    PurchaseClauseTable.setFilterOrder(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_INDEX_ORDER_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+            PurchaseClauseTable.setFilterOrder(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_INDEX_ORDER_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
-                    PurchaseClauseTable.loadToMemory();
-                    List<DatabaseTableRecord> records = PurchaseClauseTable.getRecords();
-                    PurchaseClauseTable.clearAllFilters();
+            PurchaseClauseTable.loadToMemory();
+            List<DatabaseTableRecord> records = PurchaseClauseTable.getRecords();
+            PurchaseClauseTable.clearAllFilters();
 
-                    return records.get(0).getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_VALUE_COLUMN_NAME);
+            return records.get(0).getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_VALUE_COLUMN_NAME);
 
-                } catch (CantLoadTableToMemoryException e) {
-                    throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE, e, "", "");
-                }
-            }
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE, e, "", "");
+        }
+    }
 
     /*
         Private methods

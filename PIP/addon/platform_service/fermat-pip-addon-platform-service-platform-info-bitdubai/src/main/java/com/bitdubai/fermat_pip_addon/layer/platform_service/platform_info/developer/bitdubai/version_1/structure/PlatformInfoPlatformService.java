@@ -10,7 +10,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions.CantSetPlatformInformationException;
 
@@ -83,7 +82,7 @@ public class PlatformInfoPlatformService {
 
         } catch (Exception e) {
 
-            throw new CantSetPlatformInformationException(e, "There was an error trying persist Platform info xml file." , null);
+            throw new CantSetPlatformInformationException(e, "There was an error trying persist Platform info xml file.", null);
         }
 
     }

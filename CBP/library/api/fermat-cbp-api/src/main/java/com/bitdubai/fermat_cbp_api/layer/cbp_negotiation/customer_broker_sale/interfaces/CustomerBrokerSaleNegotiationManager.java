@@ -14,11 +14,16 @@ import java.util.Collection;
 public interface CustomerBrokerSaleNegotiationManager {
 
     CustomerBrokerSaleNegotiation createNegotiation(String publicKeyCustomer, String publicKeyBroker, Collection<Clause> clauses) throws CantCreateCustomerBrokerSaleNegotiationException;
+
     void cancelNegotiation(CustomerBrokerSaleNegotiation negotiation);
+
     void closeNegotiation(CustomerBrokerSaleNegotiation negotiation);
 
     Collection<CustomerBrokerSaleNegotiation> getNegotiations() throws CantListSaleNegotianionsException;
+
     Collection<CustomerBrokerSaleNegotiation> getNegotiations(NegotiationStatus status) throws CantListSaleNegotianionsException;
+
     Collection<CustomerBrokerSaleNegotiation> getNegotiationsByCustomer(ActorIdentity customer) throws CantListSaleNegotianionsException;
+
     Collection<CustomerBrokerSaleNegotiation> getNegotiationsByBroker(ActorIdentity broker) throws CantListSaleNegotianionsException;
 }

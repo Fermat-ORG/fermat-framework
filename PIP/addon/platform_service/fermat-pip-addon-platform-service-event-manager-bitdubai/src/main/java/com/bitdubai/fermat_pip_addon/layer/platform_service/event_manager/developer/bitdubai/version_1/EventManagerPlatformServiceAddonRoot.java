@@ -3,8 +3,6 @@ package com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.devel
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantAssignReferenceException;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -19,7 +17,6 @@ import com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.develo
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -119,7 +116,7 @@ public class EventManagerPlatformServiceAddonRoot extends AbstractAddon implemen
     @Override
     public final void start() throws CantStartPluginException {
 
-        System.out.println("si me asignaron no voy a estar en null: "+errorManager);
+        System.out.println("si me asignaron no voy a estar en null: " + errorManager);
 
         this.fermatEventMonitor = new EventManagerPlatformServiceEventMonitor(this.errorManager);
 

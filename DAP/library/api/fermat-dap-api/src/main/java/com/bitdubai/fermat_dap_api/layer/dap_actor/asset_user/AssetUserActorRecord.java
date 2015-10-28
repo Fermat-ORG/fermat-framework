@@ -1,9 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -29,6 +27,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     /**
      * Constructor
+     *
      * @param assetUserActorPublicKey
      * @param assetUserActorName
      * @param assetUserActorprofileImage
@@ -36,18 +35,18 @@ public class AssetUserActorRecord implements ActorAssetUser {
      * @param locationLongitude
      */
 
-    public AssetUserActorRecord(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage, Double locationLatitude, Double locationLongitude){
+    public AssetUserActorRecord(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage, Double locationLatitude, Double locationLongitude) {
 
     }
 
     /**
-     *  Register in Actor Network Service
+     * Register in Actor Network Service
      */
     public AssetUserActorRecord(String publicKey, String name, byte[] profileImage, Location location) {
 
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = profileImage.clone();     
+        this.profileImage = profileImage.clone();
         this.genders = Genders.INDEFINITE;
 //        this.age = age;
 //        this.cryptoAddress = cryptoAddress;
@@ -59,7 +58,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
                                 ConnectionState connectionState, Double locationLatitude,
                                 Double locationLongitude, CryptoAddress cryptoAddress,
                                 Long registrationDate, Long lastConnectionDate,
-                                byte[] profileImage){
+                                byte[] profileImage) {
 
         this.publicKey = publicKey;
         this.name = name;
@@ -113,7 +112,6 @@ public class AssetUserActorRecord implements ActorAssetUser {
         this.name = name;
     }
 
-      
 
     public void setAge(String age) {
         this.age = age;
@@ -130,8 +128,8 @@ public class AssetUserActorRecord implements ActorAssetUser {
     }
 
     public void setGenders(Genders genders) {
-        if(genders != null)
-           this.genders = genders;
+        if (genders != null)
+            this.genders = genders;
         else
             this.genders = Genders.INDEFINITE;
     }
@@ -176,8 +174,8 @@ public class AssetUserActorRecord implements ActorAssetUser {
     }
 
     public void setConnectionState(ConnectionState connectionState) {
-        if(connectionState != null)
-           this.connectionState = connectionState;
+        if (connectionState != null)
+            this.connectionState = connectionState;
         else
             this.connectionState = ConnectionState.CONNECTED;
     }
@@ -221,7 +219,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
     }
 
     public void setProfileImage(byte[] profileImage) {
-        if(profileImage != null)
+        if (profileImage != null)
             this.profileImage = profileImage;
         else
             this.profileImage = profileImage.clone();
@@ -238,7 +236,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
     }
 
     public void setCryptoAddress(CryptoAddress cryptoAddress) {
-        if(cryptoAddress != null)
+        if (cryptoAddress != null)
             this.cryptoAddress = cryptoAddress;
     }
 }

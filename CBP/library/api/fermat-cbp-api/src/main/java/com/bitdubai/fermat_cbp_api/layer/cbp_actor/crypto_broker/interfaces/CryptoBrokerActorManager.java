@@ -8,5 +8,6 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.exceptions.Cant
  */
 public interface CryptoBrokerActorManager {
     CryptoBrokerActor createNewCryptoBroker(ActorIdentity identity) throws CantCreateCryptoBrokerActorException;
+
     CryptoBrokerActor getCryptoBroker(ActorIdentity identity);
 }

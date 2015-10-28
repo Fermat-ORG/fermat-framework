@@ -64,12 +64,11 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
 
-
     /**
      * MANAGERS
      */
-    private  static IntraUserModuleManager moduleManager;
-    private  static ErrorManager errorManager;
+    private static IntraUserModuleManager moduleManager;
+    private static ErrorManager errorManager;
 
     private List<IntraUserInformation> lstIntraUserInformations;
 
@@ -80,7 +79,7 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
 
     private int offset = 0;
 
-    private int mNotificationsCount=0;
+    private int mNotificationsCount = 0;
     private SearchView mSearchView;
 
     private AppListAdapter adapter;
@@ -128,7 +127,7 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY,UnexpectedUIExceptionSeverity.CRASH,ex);
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
         }
     }
 
@@ -158,14 +157,11 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
 
             onRefresh();
 
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
-
-
-
 
 
         return rootView;
@@ -230,7 +226,6 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
         mSearchView.setOnCloseListener(this);
 
 
-
         //MenuItem action_connection_request = menu.findItem(R.id.action_connection_request);
         // Get the notifications MenuItem and
         // its LayerDrawable (layer-list)
@@ -252,7 +247,7 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
             CharSequence itemTitle = item.getTitle();
 
             // Esto podria ser un enum de item menu que correspondan a otro menu
-            if(itemTitle.equals("New Identity")){
+            if (itemTitle.equals("New Identity")) {
                 changeActivity(Activities.CWP_INTRA_USER_CREATE_ACTIVITY.getCode());
 
             }
@@ -317,7 +312,7 @@ Updates the count of notifications in the ActionBar.
     @Override
     public boolean onQueryTextChange(String s) {
         //Toast.makeText(getActivity(), "Probando busqueda completa", Toast.LENGTH_SHORT).show();
-        if(s.length()==0 && isStartList){
+        if (s.length() == 0 && isStartList) {
             //((IntraUserConnectionsAdapter)adapter).setAddButtonVisible(false);
             //adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
             return true;
@@ -327,7 +322,7 @@ Updates the count of notifications in the ActionBar.
 
     @Override
     public boolean onClose() {
-        if(!mSearchView.isActivated()){
+        if (!mSearchView.isActivated()) {
             //adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
         }
 
@@ -355,19 +350,17 @@ Updates the count of notifications in the ActionBar.
     }
 
 
-
-
     private synchronized List<IntraUserInformation> getMoreData() {
         List<IntraUserInformation> dataSet = new ArrayList<>();
 
         try {
 
-            dataSet = moduleManager.getAllIntraUsers(MAX,offset);
+            dataSet = moduleManager.getAllIntraUsers(MAX, offset);
             offset = dataSet.size();
 
         } catch (CantGetIntraUsersListException e) {
             e.printStackTrace();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -378,7 +371,7 @@ Updates the count of notifications in the ActionBar.
     public void onItemClickListener(IntraUserInformation data, int position) {
         ConnectDialog connectDialog = null;
         try {
-            connectDialog = new ConnectDialog(getActivity(),(IntraUserSubAppSession)subAppsSession,subAppResourcesProviderManager,data,moduleManager.getActiveIntraUserIdentity());
+            connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) subAppsSession, subAppResourcesProviderManager, data, moduleManager.getActiveIntraUserIdentity());
             connectDialog.show();
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
@@ -409,8 +402,6 @@ Updates the count of notifications in the ActionBar.
             updateNotificationsBadge(count);
         }
     }
-
-
 
 
 }

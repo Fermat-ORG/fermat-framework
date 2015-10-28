@@ -3,14 +3,10 @@ package com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.devel
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.MissingReferencesException;
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
@@ -31,7 +27,7 @@ import java.util.List;
  */
 public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implements PlatformInfoManager {
 
-    private ErrorManager       errorManager      ;
+    private ErrorManager errorManager;
     private PlatformFileSystem platformFileSystem;
 
     private PlatformInfoPlatformService platformInfoPlatformService;
@@ -54,7 +50,7 @@ public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implemen
 
             return platformInfoPlatformService.getPlatformInfo();
 
-        } catch(final CantLoadPlatformInformationException e) {
+        } catch (final CantLoadPlatformInformationException e) {
 
             reportUnexpectedError(e);
             throw e;
@@ -79,7 +75,7 @@ public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implemen
 
             platformInfoPlatformService.setPlatformInfo(platformInfo);
 
-        } catch(final CantSetPlatformInformationException e) {
+        } catch (final CantSetPlatformInformationException e) {
 
             reportUnexpectedError(e);
             throw e;

@@ -11,9 +11,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.VersionNot
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 
@@ -30,11 +30,11 @@ public abstract class AbstractPlatform {
 
     private Map<LayerReference, AbstractLayer> layers;
 
-    private final PlatformReference        platformReference;
+    private final PlatformReference platformReference;
 
     public AbstractPlatform(final PlatformReference platformReference) {
 
-        this.layers            = new ConcurrentHashMap<>();
+        this.layers = new ConcurrentHashMap<>();
         this.platformReference = platformReference;
     }
 

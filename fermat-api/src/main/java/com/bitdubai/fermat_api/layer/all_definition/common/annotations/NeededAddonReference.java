@@ -23,11 +23,16 @@ import java.lang.annotation.Target;
 public @interface NeededAddonReference {
 
     OperativeSystems operativeSystem() default OperativeSystems.INDIFFERENT;
-    Platforms        platform();
-    Layers           layer();
-    Addons           addon();
-    Developers       developer()       default Developers.BITDUBAI;
-    String           version()         default "1.0.0";
+
+    Platforms platform();
+
+    Layers layer();
+
+    Addons addon();
+
+    Developers developer() default Developers.BITDUBAI;
+
+    String version() default "1.0.0";
 
     Class<? extends FermatManager> referenceManagerClass();
 

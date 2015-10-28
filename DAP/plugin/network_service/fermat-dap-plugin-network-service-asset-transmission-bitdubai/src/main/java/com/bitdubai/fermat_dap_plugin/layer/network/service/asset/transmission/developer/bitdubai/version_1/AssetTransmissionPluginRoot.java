@@ -1082,7 +1082,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             if (communicationNetworkServiceLocal != null) {
 
                 //Send the message
-                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),"", msjContent);
+                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), "", msjContent);
 
             }else{
 
@@ -1171,7 +1171,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             if (communicationNetworkServiceLocal != null) {
 
                 //Send the message
-                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),"", msjContent);
+                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), "", msjContent);
 
             }else{
 

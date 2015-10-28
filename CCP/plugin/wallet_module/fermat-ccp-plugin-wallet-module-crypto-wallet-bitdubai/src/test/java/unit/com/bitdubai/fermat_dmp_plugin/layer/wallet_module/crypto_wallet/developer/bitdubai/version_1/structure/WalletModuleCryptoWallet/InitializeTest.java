@@ -29,7 +29,7 @@ public class InitializeTest extends TestCase {
     */
 /**
      * DealsWithBitcoinWallet interface Mocked
-     *//*
+ *//*
 
     @Mock
     BitcoinWalletManager bitcoinWalletManager;
@@ -37,7 +37,7 @@ public class InitializeTest extends TestCase {
     */
 /**
      * DealsWithCryptoVault interface Mocked
-     *//*
+ *//*
 
     @Mock
     CryptoVaultManager cryptoVaultManager;
@@ -45,7 +45,7 @@ public class InitializeTest extends TestCase {
     */
 /**
      * DealsWithErrors interface Mocked
-     *//*
+ *//*
 
     @Mock
     ErrorManager errorManager;
@@ -53,7 +53,7 @@ public class InitializeTest extends TestCase {
     */
 /**
      * DealsWithExtraUsers interface Mocked
-     *//*
+ *//*
 
     @Mock
     ExtraUserManager extraUserManager;
@@ -61,7 +61,7 @@ public class InitializeTest extends TestCase {
     */
 /**
      * DealsWithOutgoingExtraUser interface Mocked
-     *//*
+ *//*
 
     @Mock
     OutgoingExtraUserManager outgoingExtraUserManager;
@@ -69,7 +69,7 @@ public class InitializeTest extends TestCase {
     */
 /**
      * DealsWithCryptoAddressBook interface Mocked
-     *//*
+ *//*
 
     @Mock
     CryptoAddressBookManager cryptoAddressBookManager;
@@ -77,7 +77,7 @@ public class InitializeTest extends TestCase {
     */
 /**
      * DealsWithWalletContacts interface Mocked
-     *//*
+ *//*
 
     @Mock
     WalletContactsManager walletContactsManager;

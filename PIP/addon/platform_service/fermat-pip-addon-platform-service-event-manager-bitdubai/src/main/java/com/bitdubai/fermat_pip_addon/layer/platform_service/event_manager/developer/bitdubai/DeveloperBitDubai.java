@@ -10,9 +10,9 @@ import com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.develo
 /**
  * The class <code>com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer.bitdubai.DeveloperBitDubai</code>
  * Haves the logic of instantiation of all versions of Event Manager Platform Service Addon.
- *
+ * <p/>
  * Here we can choose between the different versions of the Event Manager Addon.
- *
+ * <p/>
  * Created by lnacosta (laion.cj91@gmail.com) on 26/10/2015.
  */
 public class DeveloperBitDubai extends AbstractAddonDeveloper {

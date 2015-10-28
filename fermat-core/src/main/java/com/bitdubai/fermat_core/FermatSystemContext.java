@@ -20,9 +20,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.VersionNot
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 
@@ -39,20 +39,20 @@ public class FermatSystemContext {
 
     private final Map<PlatformReference, AbstractPlatform> platforms;
 
-    private final Object           osContext          ;
-    private final OperativeSystems operativeSystem    ;
+    private final Object osContext;
+    private final OperativeSystems operativeSystem;
 
     /**
      * Constructor without params, initializes the platforms Map with an empty concurrent hash map.
      * The platforms array contains all the references to the platforms.
      * The key is an element of the Platforms enum, and the value is the Platform in-self.
      */
-    public FermatSystemContext(final Object           osContext      ,
+    public FermatSystemContext(final Object osContext,
                                final OperativeSystems operativeSystem) {
 
-        this.osContext       = osContext;
+        this.osContext = osContext;
         this.operativeSystem = operativeSystem;
-        this.platforms       = new ConcurrentHashMap<>();
+        this.platforms = new ConcurrentHashMap<>();
     }
 
     /**

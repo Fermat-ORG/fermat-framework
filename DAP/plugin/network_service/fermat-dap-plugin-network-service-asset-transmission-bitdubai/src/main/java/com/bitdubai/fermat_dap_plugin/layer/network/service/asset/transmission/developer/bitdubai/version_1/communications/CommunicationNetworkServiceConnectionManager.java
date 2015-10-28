@@ -7,7 +7,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -64,7 +63,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
     /**
      * Holds all references to the communication network service remote agents
      */
-    private Map<String,CommunicationNetworkServiceRemoteAgent> communicationNetworkServiceRemoteAgentsCache;
+    private Map<String, CommunicationNetworkServiceRemoteAgent> communicationNetworkServiceRemoteAgentsCache;
 
     /**
      * Represent the incomingMessageDao
@@ -144,7 +143,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
     @Override
     public void closeConnection(String remoteNetworkServicePublicKey) {
         //Remove the instance and stop his threads
-        if(communicationNetworkServiceLocalsCache.containsKey(remoteNetworkServicePublicKey))
+        if (communicationNetworkServiceLocalsCache.containsKey(remoteNetworkServicePublicKey))
             communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
 
     }
@@ -186,12 +185,12 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
                  /*
                  * Instantiate the local reference
                  */
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao,platformComponentProfile.getNetworkServiceType());
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao, platformComponentProfile.getNetworkServiceType());
 
                 /*
                  * Instantiate the remote reference
                  */
-                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new  CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
+                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
 
                 /*
                  * Register the observer to the observable agent
@@ -262,7 +261,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * Get the OutgoingMessageDao
      * @return OutgoingMessageDao
      */
-    public  OutgoingMessageDao getOutgoingMessageDao() {
+    public OutgoingMessageDao getOutgoingMessageDao() {
         return outgoingMessageDao;
     }
 
@@ -270,7 +269,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * Get the IncomingMessageDao
      * @return IncomingMessageDao
      */
-    public  IncomingMessageDao getIncomingMessageDao() {
+    public IncomingMessageDao getIncomingMessageDao() {
         return incomingMessageDao;
     }
 

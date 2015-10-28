@@ -198,10 +198,10 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault{
     }
 
     public void setAssetUserWalletManager(AssetUserWalletManager assetUserWalletManager) throws CantSetObjectException {
-        if(assetUserWalletManager==null){
+        if (assetUserWalletManager == null) {
             throw new CantSetObjectException("assetUserWalletManager is null");
         }
-        this.assetUserWalletManager=assetUserWalletManager;
+        this.assetUserWalletManager = assetUserWalletManager;
     }
 
     public boolean isAssetTransactionHashAvailableBalanceInAssetWallet(String genesisTransactionHash, String assetPublicKey) throws DAPException{

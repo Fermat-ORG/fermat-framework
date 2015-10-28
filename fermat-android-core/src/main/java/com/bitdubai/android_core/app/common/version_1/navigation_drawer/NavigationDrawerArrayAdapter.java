@@ -12,8 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat.R;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_api.layer.identity.common.IdentityUserInformation;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 
 import java.util.List;
 
@@ -34,8 +34,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
             this.context = context;
             this.values = values;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw e;
         }
 

@@ -3,7 +3,6 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 
 /**
  * Created by Nerio on 10/09/15.
@@ -22,7 +21,7 @@ public interface ActorAssetUser {
      *
      * @return the public key
      */
-     String getPublicKey();
+    String getPublicKey();
 
     /**
      * The method <code>getName</code> gives us the name of the represented Asset User

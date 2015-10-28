@@ -32,17 +32,15 @@ import com.google.gson.Gson;
 public class NewReceiveMessagesAssetUserRemoteNotificationEventHandler implements FermatEventHandler {
 
 
-
     private ActorNetworkServiceAssetUser actorNetworkServiceAssetUser;
 
 
-    public NewReceiveMessagesAssetUserRemoteNotificationEventHandler(ActorNetworkServiceAssetUser actorNetworkServiceAssetUser){
+    public NewReceiveMessagesAssetUserRemoteNotificationEventHandler(ActorNetworkServiceAssetUser actorNetworkServiceAssetUser) {
 
-        this.actorNetworkServiceAssetUser=actorNetworkServiceAssetUser;
+        this.actorNetworkServiceAssetUser = actorNetworkServiceAssetUser;
 
 
     }
-
 
 
     @Override
@@ -56,37 +54,36 @@ public class NewReceiveMessagesAssetUserRemoteNotificationEventHandler implement
         /*
         * If is null then is RequestCryptoAddres from getSender else is new CryptoAddres delivered from remote assetUser
         */
-        if(fermatMessageReceive.getContent() == null || fermatMessageReceive.getContent() == "null" || fermatMessageReceive.getContent().equalsIgnoreCase("NULL")
-                || fermatMessageReceive.getContent().isEmpty()){
+        if (fermatMessageReceive.getContent() == null || fermatMessageReceive.getContent() == "null" || fermatMessageReceive.getContent().equalsIgnoreCase("NULL")
+                || fermatMessageReceive.getContent().isEmpty()) {
 
 
-
-            ActorAssetIssuer actorAssetIssuer   = new AssetIssuerActorRecord(null,fermatMessageReceive.getSender(),new byte[]{},0);
+            ActorAssetIssuer actorAssetIssuer = new AssetIssuerActorRecord(null, fermatMessageReceive.getSender(), new byte[]{}, 0);
 
 
             Location loca = null;
 
-            ActorAssetUser actorAssetUser  = new AssetUserActorRecord(fermatMessageReceive.getReceiver(), null, new byte[]{}, loca);
+            ActorAssetUser actorAssetUser = new AssetUserActorRecord(fermatMessageReceive.getReceiver(), null, new byte[]{}, loca);
 
-            this.actorNetworkServiceAssetUser.handleRequestCryptoAddresFromRemoteAssetUserEvent(actorAssetIssuer,actorAssetUser);
+            this.actorNetworkServiceAssetUser.handleRequestCryptoAddresFromRemoteAssetUserEvent(actorAssetIssuer, actorAssetUser);
 
 
-        }else{
+        } else {
 
             CryptoAddress cryptoAddressRemote;
 
             Gson gson = new Gson();
 
-            cryptoAddressRemote = gson.fromJson(fermatMessageReceive.getContent(),CryptoAddress.class);
+            cryptoAddressRemote = gson.fromJson(fermatMessageReceive.getContent(), CryptoAddress.class);
 
-            ActorAssetIssuer actorAssetIssuer   = new AssetIssuerActorRecord(null,fermatMessageReceive.getReceiver(),new byte[]{},0);
+            ActorAssetIssuer actorAssetIssuer = new AssetIssuerActorRecord(null, fermatMessageReceive.getReceiver(), new byte[]{}, 0);
 
 
             Location loca = null;
 
-            ActorAssetUser actorAssetUser  = new AssetUserActorRecord(fermatMessageReceive.getSender(), null, new byte[]{}, loca);
+            ActorAssetUser actorAssetUser = new AssetUserActorRecord(fermatMessageReceive.getSender(), null, new byte[]{}, loca);
 
-            this.actorNetworkServiceAssetUser.handleDeliveredCryptoAddresFromRemoteAssetUserEvent(actorAssetUser,actorAssetIssuer,cryptoAddressRemote);
+            this.actorNetworkServiceAssetUser.handleDeliveredCryptoAddresFromRemoteAssetUserEvent(actorAssetUser, actorAssetIssuer, cryptoAddressRemote);
 
         }
 

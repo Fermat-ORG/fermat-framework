@@ -3,9 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitd
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.Stock;
-import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.WalletTransaction;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantPerformTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 
 import java.util.Collection;
@@ -23,7 +21,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
     private final String ownerPublicKey;
     private final ConcurrentHashMap<FermatEnum, Stock> stockMap;
 
-    public CryptoBrokerWalletImpl(final KeyPair walletKeyPair, final String ownerPublicKey){
+    public CryptoBrokerWalletImpl(final KeyPair walletKeyPair, final String ownerPublicKey) {
         this.walletKeyPair = walletKeyPair;
         this.ownerPublicKey = ownerPublicKey;
         stockMap = new ConcurrentHashMap<>();

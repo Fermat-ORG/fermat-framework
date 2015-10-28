@@ -11,10 +11,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 public class PluginReference {
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
-    private static final int HASH_PRIME_NUMBER_ADD     = 2819;
+    private static final int HASH_PRIME_NUMBER_ADD = 2819;
 
-    private       LayerReference layerReference;
-    private final Plugins        plugin        ;
+    private LayerReference layerReference;
+    private final Plugins plugin;
 
     public PluginReference(final Plugins plugin) {
 
@@ -22,7 +22,7 @@ public class PluginReference {
     }
 
     public PluginReference(final LayerReference layerReference,
-                           final Plugins        plugin        ) {
+                           final Plugins plugin) {
 
         this.layerReference = layerReference;
         this.plugin         = plugin        ;

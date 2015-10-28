@@ -8,16 +8,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystem
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantAssignReferenceException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantListNeededReferencesException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.MissingReferencesException;
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
@@ -25,7 +19,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -39,25 +32,25 @@ public abstract class AbstractAddon implements Addon, Service {
     protected final ConcurrentHashMap<AddonVersionReference, Field> addonNeededReferences = new ConcurrentHashMap<>();
 
     private final AddonVersionReference addonVersionReference;
-    private final boolean               dealsWithOsContext   ;
-    private final OperativeSystems      operativeSystem      ;
-    private       Object                osContext            ;
+    private final boolean dealsWithOsContext;
+    private final OperativeSystems operativeSystem;
+    private Object osContext;
 
-    protected     ServiceStatus         serviceStatus        ;
+    protected ServiceStatus serviceStatus;
 
     public AbstractAddon(final AddonVersionReference addonVersionReference) {
 
         this.addonVersionReference = addonVersionReference;
-        this.dealsWithOsContext    = false;
-        this.operativeSystem       = OperativeSystems.INDIFFERENT;
+        this.dealsWithOsContext = false;
+        this.operativeSystem = OperativeSystems.INDIFFERENT;
     }
 
     public AbstractAddon(final AddonVersionReference addonVersionReference,
-                         final OperativeSystems      operativeSystem      ) {
+                         final OperativeSystems operativeSystem) {
 
         this.addonVersionReference = addonVersionReference;
-        this.dealsWithOsContext    = false;
-        this.operativeSystem       = operativeSystem;
+        this.dealsWithOsContext = false;
+        this.operativeSystem = operativeSystem;
     }
 
     public final AddonVersionReference getAddonVersionReference() {
@@ -123,7 +116,9 @@ public abstract class AbstractAddon implements Addon, Service {
 
     public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
         return new ArrayList<>();
-    };
+    }
+
+    ;
 
     public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
         return null;
@@ -175,9 +170,9 @@ public abstract class AbstractAddon implements Addon, Service {
                                               final AbstractAddon                  abstractAddon) throws CantAssignReferenceException{}*/
 
 
-    public final void assignAddonReference(final AddonVersionReference          avr          ,
+    public final void assignAddonReference(final AddonVersionReference avr,
                                            final Class<? extends FermatManager> referenceMger,
-                                           final AbstractAddon                  abstractAddon) throws CantAssignReferenceException {
+                                           final AbstractAddon abstractAddon) throws CantAssignReferenceException {
 
         try {
 
@@ -189,7 +184,7 @@ public abstract class AbstractAddon implements Addon, Service {
             System.err.println(e);
             throw new CantAssignReferenceException(
                     e,
-                    "Working addon: "+this.getAddonVersionReference().toString()+ " +++++ Reference to assign: "+ avr.toString(),
+                    "Working addon: " + this.getAddonVersionReference().toString() + " +++++ Reference to assign: " + avr.toString(),
                     "Error assigning references for the addon."
             );
         }

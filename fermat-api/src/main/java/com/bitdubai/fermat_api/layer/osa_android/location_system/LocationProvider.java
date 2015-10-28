@@ -16,14 +16,12 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 
 public enum LocationProvider implements FermatEnum {
 
-    GPS    ("GPS"),
-    NETWORK("NET"),
-
-    ;
+    GPS("GPS"),
+    NETWORK("NET"),;
 
     private final String code;
 
-    LocationProvider(final String code){
+    LocationProvider(final String code) {
 
         this.code = code;
     }
@@ -32,8 +30,10 @@ public enum LocationProvider implements FermatEnum {
 
         switch (code){
 
-            case "GPS": return GPS;
-            case "NET": return NETWORK;
+            case "GPS":
+                return GPS;
+            case "NET":
+                return NETWORK;
 
             default:
                 throw new InvalidParameterException(
@@ -44,7 +44,7 @@ public enum LocationProvider implements FermatEnum {
     }
 
     @Override
-    public String getCode(){
+    public String getCode() {
         return this.code;
     }
 

@@ -1,27 +1,16 @@
 package com.bitdubai.fermat_osa_addon.layer.android.device_location.developer.bitdubai.version_1;
 
+import android.content.Context;
+
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystems;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.LocationSystemOs;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
-import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_osa_addon.layer.android.device_location.developer.bitdubai.version_1.structure.DeviceLocationManager;
-
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
-import android.content.Context;
-
-import org.w3c.dom.events.EventListener;
 
 /**
  * This addon handles a layer of Device Location representation.
@@ -32,7 +21,7 @@ import org.w3c.dom.events.EventListener;
  */
 public class DeviceLocationAndroidAddonRoot extends AbstractAddon implements LocationSystemOs {
 
-    private Context         context              ;
+    private Context context;
     private LocationManager locationSystemManager;
 
     public DeviceLocationAndroidAddonRoot() {
@@ -52,7 +41,7 @@ public class DeviceLocationAndroidAddonRoot extends AbstractAddon implements Loc
 
         } else {
             throw new CantStartPluginException(
-                    "osContext: "+this.getOsContext(),
+                    "osContext: " + this.getOsContext(),
                     "Context is not instance of Android Context or is null."
             );
         }

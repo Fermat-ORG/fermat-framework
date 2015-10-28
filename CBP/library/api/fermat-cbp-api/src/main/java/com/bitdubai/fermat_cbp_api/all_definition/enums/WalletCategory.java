@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 /**
  * Created by natalia on 16/09/15.
  */
-public enum WalletCategory  implements FermatEnum {
+public enum WalletCategory implements FermatEnum {
     BRANDED_NICHE_WALLET ("BRDNW"),
     BRANDED_REFERENCE_WALLET ("BRDRW"),
     REFERENCE_WALLET ("REFW"),

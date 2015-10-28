@@ -43,7 +43,7 @@ public class ShowAvailableLoginIdentitiesTest extends TestCase {
     */
 /**
      * DealsWithErrors interface Mocked
-     *//*
+ *//*
 
     @Mock
     private ErrorManager mockErrorManager;
@@ -51,7 +51,7 @@ public class ShowAvailableLoginIdentitiesTest extends TestCase {
     */
 /**
      * UsesFileSystem Interface member variables.
-     *//*
+ *//*
 
     @Mock
     private PluginFileSystem mockPluginFileSystem;
@@ -60,7 +60,7 @@ public class ShowAvailableLoginIdentitiesTest extends TestCase {
     */
 /**
      * DealWithIntraUserIdentityManager Interface member variables.
-     *//*
+ *//*
 
     @Mock
     private IntraUserIdentityManager mockIntraUserIdentityManager;

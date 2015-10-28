@@ -5,7 +5,10 @@ package com.bitdubai.fermat_cbp_api.all_definition.wallet;
  */
 public interface Stock {
     float getBookedBalance();
+
     float getAvailableBalance();
+
     void addDebit(final StockTransaction transaction);
+
     void addCrebit(final StockTransaction transaction);
 }

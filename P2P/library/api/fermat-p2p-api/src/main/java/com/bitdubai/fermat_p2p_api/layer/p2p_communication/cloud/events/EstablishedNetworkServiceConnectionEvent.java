@@ -7,9 +7,9 @@
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.events.EstablishedNetworkServiceConnectionEvent</code> represent the event

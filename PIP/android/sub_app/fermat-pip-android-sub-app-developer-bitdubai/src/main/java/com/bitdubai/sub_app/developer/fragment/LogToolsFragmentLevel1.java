@@ -2,8 +2,6 @@ package com.bitdubai.sub_app.developer.fragment;
 
 import android.app.Activity;
 import android.app.Dialog;
-
-
 import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -25,9 +23,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;

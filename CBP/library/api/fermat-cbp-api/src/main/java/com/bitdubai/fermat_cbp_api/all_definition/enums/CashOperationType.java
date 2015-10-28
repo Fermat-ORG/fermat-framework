@@ -6,8 +6,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterExc
 /**
  * Created by Yordin Alayn on 24.09.15.
  */
- 
-public enum CashOperationType  implements FermatEnum {
+
+public enum CashOperationType implements FermatEnum {
     ON_HAND("ONH"),
     DELIVERY("DEL");
 

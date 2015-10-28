@@ -27,7 +27,7 @@ import java.util.UUID;
  * This addon handles a layer of database representation.
  * Encapsulates all the necessary functions to manage the database , its tables and records.
  * For interfaces PluginDatabase the modules need to authenticate with their plugin ids
- *
+ * <p/>
  * Created by lnacosta (laion.cj91@gmail.com) on 26/10/2015.
  */
 
@@ -50,16 +50,16 @@ public class PluginDatabaseSystemAndroidAddonRoot extends AbstractAddon implemen
             this.serviceStatus = ServiceStatus.STARTED;
         } else {
             throw new CantStartPluginException(
-                    "osContext: "+this.getOsContext(),
+                    "osContext: " + this.getOsContext(),
                     "Context is not instance of Android Context or is null."
             );
         }
     }
 
     @Override
-    public final Database openDatabase(final UUID   ownerId     ,
-                                       final String databaseName) throws CantOpenDatabaseException ,
-                                                                         DatabaseNotFoundException {
+    public final Database openDatabase(final UUID ownerId,
+                                       final String databaseName) throws CantOpenDatabaseException,
+            DatabaseNotFoundException {
 
         try {
             AndroidDatabase database;
@@ -67,18 +67,18 @@ public class PluginDatabaseSystemAndroidAddonRoot extends AbstractAddon implemen
             database = new AndroidDatabase(context.getFilesDir().getPath(), ownerId, hasDBName);
             database.openDatabase();
             return database;
-        } catch (final CantHashDatabaseNameException e){
+        } catch (final CantHashDatabaseNameException e) {
 
             throw new CantOpenDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
             throw new CantOpenDatabaseException(e, null, "Unhandled Exception.");
         }
     }
 
     @Override
-    public final Database createDatabase (final UUID   ownerId     ,
-                                          final String databaseName) throws CantCreateDatabaseException {
+    public final Database createDatabase(final UUID ownerId,
+                                         final String databaseName) throws CantCreateDatabaseException {
 
         try {
             AndroidDatabase database;
@@ -86,11 +86,10 @@ public class PluginDatabaseSystemAndroidAddonRoot extends AbstractAddon implemen
             database = new AndroidDatabase(context.getFilesDir().getPath(), ownerId, hasDBName);
             database.createDatabase(hasDBName);
             return database;
-        }
-        catch (final CantHashDatabaseNameException e){
+        } catch (final CantHashDatabaseNameException e) {
 
             throw new CantCreateDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
-        } catch (Exception e){
+        } catch (Exception e) {
 
             throw new CantCreateDatabaseException(e, null, "Unhandled Exception.");
         }
@@ -98,9 +97,9 @@ public class PluginDatabaseSystemAndroidAddonRoot extends AbstractAddon implemen
     }
 
     @Override
-    public final void deleteDatabase(final UUID   ownerId     ,
-                                     final String databaseName) throws CantOpenDatabaseException ,
-                                                                       DatabaseNotFoundException {
+    public final void deleteDatabase(final UUID ownerId,
+                                     final String databaseName) throws CantOpenDatabaseException,
+            DatabaseNotFoundException {
 
         try {
             String hasDBName = hashDataBaseName(databaseName);
@@ -108,10 +107,10 @@ public class PluginDatabaseSystemAndroidAddonRoot extends AbstractAddon implemen
             database = new AndroidDatabase(context.getFilesDir().getPath(), ownerId, hasDBName);
             database.deleteDatabase();
 
-        } catch (final CantHashDatabaseNameException e){
+        } catch (final CantHashDatabaseNameException e) {
 
             throw new CantOpenDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
-        } catch (final Exception e){
+        } catch (final Exception e) {
 
             throw new CantOpenDatabaseException(e, null, "Unhandled Exception.");
         }
@@ -128,14 +127,14 @@ public class PluginDatabaseSystemAndroidAddonRoot extends AbstractAddon implemen
 
             String encryptedString = new String(encoded, "UTF-8");
 
-            return encryptedString.replace("/","");
+            return encryptedString.replace("/", "");
 
-        } catch(final UnsupportedEncodingException e){
+        } catch (final UnsupportedEncodingException e) {
 
-            throw new CantHashDatabaseNameException(e, "databaseName: "+ databaseName, "Unsupported encoding exception.");
-        } catch(final NoSuchAlgorithmException e){
+            throw new CantHashDatabaseNameException(e, "databaseName: " + databaseName, "Unsupported encoding exception.");
+        } catch (final NoSuchAlgorithmException e) {
 
-            throw new CantHashDatabaseNameException(e, "databaseName: "+ databaseName, "No such algorithm.");
+            throw new CantHashDatabaseNameException(e, "databaseName: " + databaseName, "No such algorithm.");
         }
     }
 }

@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 /**
  * Created by natalia on 16/09/15.
  */
-public enum WalletType  implements FermatEnum {
+public enum WalletType implements FermatEnum {
     NICHE("NICHE"),
     REFERENCE("REFER"), ;
 

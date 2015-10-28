@@ -15,10 +15,8 @@ public enum OperativeSystems implements FermatEnum {
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
 
-    ANDROID     ("AND"),
-    INDIFFERENT ("IND"),
-
-    ;
+    ANDROID("AND"),
+    INDIFFERENT("IND"),;
 
     private String code;
 
@@ -31,7 +29,8 @@ public enum OperativeSystems implements FermatEnum {
 
         switch (code) {
 
-            case "AND": return ANDROID;
+            case "AND":
+                return ANDROID;
 
             default:
                 throw new InvalidParameterException(

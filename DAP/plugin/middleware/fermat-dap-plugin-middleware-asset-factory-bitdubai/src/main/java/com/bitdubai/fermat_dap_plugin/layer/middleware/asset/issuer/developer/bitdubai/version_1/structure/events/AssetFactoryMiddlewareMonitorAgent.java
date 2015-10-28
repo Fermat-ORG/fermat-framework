@@ -183,26 +183,23 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
         }
 
         private void doTheMainTask(){
-            try
-            {
+            try {
                 List<AssetFactory> assetFactories = getAssetFactoryAll();
 
-                for(AssetFactory assetFactory : assetFactories){
+                for (AssetFactory assetFactory : assetFactories) {
                     int numberOfIssuedAssets = assetIssuingManager.getNumberOfIssuedAssets(assetFactory.getPublicKey());
                     int totalFaltante = assetFactory.getQuantity() - numberOfIssuedAssets;
-                    if (totalFaltante == 0){
+                    if (totalFaltante == 0) {
                         assetFactoryMiddlewareManager.markAssetFactoryState(State.FINAL, assetFactory.getPublicKey());
                         logManager.log(AssetFactoryMiddlewarePluginRoot.getLogLevelByClass(this.getClass().getName()), "Faltante Assets Factory " + totalFaltante, null, null);
                     }
                 }
-            }
-            catch (Exception exception){
+            } catch (Exception exception) {
                 exception.printStackTrace();
             }
         }
 
-        private List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException
-        {
+        private List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException {
             return assetFactoryMiddlewareManager.getAssetFactoryAll();
         }
 

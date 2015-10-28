@@ -6,7 +6,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterExc
 /**
  * Created by natalia on 17/09/15.
  */
-public enum CustomerType  implements FermatEnum {
+public enum CustomerType implements FermatEnum {
     SPORADIC("SPO"),
     FREQUENT ("FRQ");
 

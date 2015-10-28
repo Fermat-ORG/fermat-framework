@@ -6,9 +6,7 @@
  */
 package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionPluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
@@ -63,16 +61,16 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     public void run() {
 
         while (active){
-            try{
+            try {
 
                 if (communicationsClientConnection.isRegister() && !assetTransmissionPluginRoot.isRegister()){
 
                     /*
                      * Construct my profile and register me
                      */
-                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(assetTransmissionPluginRoot.getIdentityPublicKey(),
-                            (assetTransmissionPluginRoot.getAlias().toLowerCase()+"_"+assetTransmissionPluginRoot.getId().toString()),
-                            (assetTransmissionPluginRoot.getName()+" ("+assetTransmissionPluginRoot.getId()+")"),
+                    PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(assetTransmissionPluginRoot.getIdentityPublicKey(),
+                            (assetTransmissionPluginRoot.getAlias().toLowerCase() + "_" + assetTransmissionPluginRoot.getId().toString()),
+                            (assetTransmissionPluginRoot.getName() + " (" + assetTransmissionPluginRoot.getId() + ")"),
                             assetTransmissionPluginRoot.getNetworkServiceType(),
                             assetTransmissionPluginRoot.getPlatformComponentType(),
                             assetTransmissionPluginRoot.getExtraData());
@@ -97,7 +95,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                      */
                     active = Boolean.FALSE;
 
-                }else if (!assetTransmissionPluginRoot.isRegister()){
+                } else if (!assetTransmissionPluginRoot.isRegister()) {
 
                     try {
                         sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
@@ -106,7 +104,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                         active = Boolean.FALSE;
                     }
 
-                }else if (!assetTransmissionPluginRoot.isRegister()){
+                } else if (!assetTransmissionPluginRoot.isRegister()) {
                     active = Boolean.FALSE;
                 }
 

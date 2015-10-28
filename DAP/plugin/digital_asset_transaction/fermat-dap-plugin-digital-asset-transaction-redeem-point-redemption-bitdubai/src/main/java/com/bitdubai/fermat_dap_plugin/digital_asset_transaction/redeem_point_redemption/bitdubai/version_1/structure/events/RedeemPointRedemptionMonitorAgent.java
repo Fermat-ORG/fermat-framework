@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_re
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -233,6 +234,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
                                 dao.persistMetadata(assetMetadataTransaction);
 
                                 //UPDATE EVENT STATUS
+                                Plugins
                                 dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
 
                                 //EVERYTHING WENT OK.

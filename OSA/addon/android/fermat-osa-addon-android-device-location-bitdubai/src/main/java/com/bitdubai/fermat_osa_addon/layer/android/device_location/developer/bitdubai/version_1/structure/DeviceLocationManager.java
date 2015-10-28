@@ -5,8 +5,6 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.Looper;
 
-
-
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
@@ -15,10 +13,10 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.Cant
 
 /**
  * Created by Natalia on 21/05/2015.
- *
+ * <p/>
  * This addon handles a layer of Device Location representation.
  * Encapsulates all the necessary functions to retrieve the geolocation of the device.
- *
+ * <p/>
  * * * *
  */
 
@@ -45,7 +43,7 @@ public class DeviceLocationManager implements LocationManager, LocationListener 
      */
 
     /**
-     *<p>This method gets the actual device location data.
+     * <p>This method gets the actual device location data.
      *
      * @return Location interface object
      * @throws CantGetDeviceLocationException
@@ -56,64 +54,56 @@ public class DeviceLocationManager implements LocationManager, LocationListener 
         try {
             locationManager = (android.location.LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
-               // getting GPS status
+            // getting GPS status
             if (locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
-                locationManager.requestLocationUpdates(android.location.LocationManager.GPS_PROVIDER,MIN_TIME_BW_UPDATES,MIN_DISTANCE_CHANGE_FOR_UPDATES, this,Looper.getMainLooper());
+                locationManager.requestLocationUpdates(android.location.LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this, Looper.getMainLooper());
                 //"GPS Enabled"
-                if (locationManager != null)
-                {
+                if (locationManager != null) {
                     deviceLocation = locationManager.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER);
                     if (deviceLocation != null) {
 
-                        location = new DeviceLocation(deviceLocation.getLatitude(),deviceLocation.getLongitude(),deviceLocation.getTime(),deviceLocation.getAltitude(),LocationProvider.GPS);
+                        location = new DeviceLocation(deviceLocation.getLatitude(), deviceLocation.getLongitude(), deviceLocation.getTime(), deviceLocation.getAltitude(), LocationProvider.GPS);
 
-                    }
-                    else{
+                    } else {
                         /**
                          * I not get location device return an exception
                          */
-                        throw  new CantGetDeviceLocationException("Not get GPS Enabled");
+                        throw new CantGetDeviceLocationException("Not get GPS Enabled");
                     }
-                }
-                else{
+                } else {
                     /**
                      * I not get location device return an exception
                      */
-                    throw  new CantGetDeviceLocationException("LocationManager is null");
+                    throw new CantGetDeviceLocationException("LocationManager is null");
                 }
-            }
-            else {
+            } else {
 
                 // GPS not enabled, get status from Network Provider
                 if (locationManager.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER)) {
-                    locationManager.requestLocationUpdates( android.location.LocationManager.NETWORK_PROVIDER,  MIN_TIME_BW_UPDATES,  MIN_DISTANCE_CHANGE_FOR_UPDATES, this, Looper.getMainLooper());
+                    locationManager.requestLocationUpdates(android.location.LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this, Looper.getMainLooper());
                     // "Network"
                     if (locationManager != null) {
                         deviceLocation = locationManager.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER);
                         if (deviceLocation != null) {
 
-                            location = new DeviceLocation(deviceLocation.getLatitude(),deviceLocation.getLongitude(),deviceLocation.getTime(),deviceLocation.getAltitude(), LocationProvider.NETWORK);
+                            location = new DeviceLocation(deviceLocation.getLatitude(), deviceLocation.getLongitude(), deviceLocation.getTime(), deviceLocation.getAltitude(), LocationProvider.NETWORK);
 
-                        }
-                        else{
+                        } else {
                             /**
                              * I not get location device return an exception
                              */
-                            throw  new CantGetDeviceLocationException("Not get Network Enabled");
+                            throw new CantGetDeviceLocationException("Not get Network Enabled");
                         }
-                    }else
-                    {
+                    } else {
                         /**
                          * I not get location device return an exception
                          */
-                        throw  new CantGetDeviceLocationException("LocationManager is null");
+                        throw new CantGetDeviceLocationException("LocationManager is null");
                     }
                 }
 
 
             }
-
-
 
 
         } catch (Exception e) {
@@ -121,7 +111,7 @@ public class DeviceLocationManager implements LocationManager, LocationListener 
             /**
              * unexpected error
              */
-            throw  new CantGetDeviceLocationException(CantGetDeviceLocationException.DEFAULT_MESSAGE,e,"","unexpected error");
+            throw new CantGetDeviceLocationException(CantGetDeviceLocationException.DEFAULT_MESSAGE, e, "", "unexpected error");
         }
 
         return location;
@@ -132,7 +122,7 @@ public class DeviceLocationManager implements LocationManager, LocationListener 
      */
 
     @Override
-    public void onLocationChanged( android.location.Location location) {
+    public void onLocationChanged(android.location.Location location) {
 
         if (location != null) {
 

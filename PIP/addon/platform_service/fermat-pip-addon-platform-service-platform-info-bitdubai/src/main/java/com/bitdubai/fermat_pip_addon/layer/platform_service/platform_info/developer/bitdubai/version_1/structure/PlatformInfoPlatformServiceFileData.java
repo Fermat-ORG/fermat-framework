@@ -2,7 +2,6 @@ package com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
 
 /**
  * Created by rodrigo on 8/5/15.
@@ -10,21 +9,21 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfac
  */
 public class PlatformInfoPlatformServiceFileData implements PlatformInfo {
 
-    private final String     jdk       ;
-    private       ScreenSize screenSize;
-    private final Version    version   ;
+    private final String jdk;
+    private ScreenSize screenSize;
+    private final Version version;
 
     public PlatformInfoPlatformServiceFileData() {
 
-        this.jdk        = "1.7"        ;
-        this.version    = new Version();
+        this.jdk = "1.7";
+        this.version = new Version();
     }
 
     public PlatformInfoPlatformServiceFileData(final ScreenSize screenSize) {
 
-        this.jdk        = "1.7"        ;
-        this.screenSize = screenSize   ;
-        this.version    = new Version();
+        this.jdk = "1.7";
+        this.screenSize = screenSize;
+        this.version = new Version();
     }
 
     @Override

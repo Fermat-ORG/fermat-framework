@@ -31,7 +31,7 @@ public final class FermatSystem {
 
     private final FermatSystemContext fermatSystemContext;
 
-    public FermatSystem(final Object           osContext      ,
+    public FermatSystem(final Object osContext,
                         final OperativeSystems operativeSystem) {
 
         this.fermatSystemContext = new FermatSystemContext(osContext, operativeSystem);
@@ -50,7 +50,7 @@ public final class FermatSystem {
             fermatSystemContext.registerPlatform(new PIPPlatform());
 
             final List<PluginVersionReference> referenceList = new FermatPluginReferencesCalculator(fermatSystemContext).listReferencesByInstantiationOrder(
-                new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.WALLET_MODULE, Plugins.CRYPTO_WALLET, Developers.BITDUBAI, new Version())
+                    new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.WALLET_MODULE, Plugins.CRYPTO_WALLET, Developers.BITDUBAI, new Version())
             );
 
             System.out.println("\n\nMostrando orden de instanciación de plugins calculada automáticamente a partir del Crypto Wallet Module: \n");
@@ -93,7 +93,7 @@ public final class FermatSystem {
      * @throws ModuleManagerNotFoundException  if we can't find the requested module manager.
      */
     public final ModuleManager getModuleManager(final PluginVersionReference pluginVersionReference) throws CantGetModuleManagerException  ,
-                                                                                                            ModuleManagerNotFoundException {
+            ModuleManagerNotFoundException {
 
         try {
 

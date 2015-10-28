@@ -42,7 +42,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
             float runningAvailableBalance,
             long timeStamp,
             String memo
-    ){
+    ) {
         this.transactionId = transactionId;
         this.keyPairWallet = keyPairWallet;
         this.keyPairBroker = keyPairBroker;
@@ -57,13 +57,25 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
         this.memo = memo;
     }
 
-    public UUID getTransactionId() { return this.transactionId; }
-    public void setTransactionId(UUID id) { this.transactionId = id; }
+    public UUID getTransactionId() {
+        return this.transactionId;
+    }
 
-    public BalanceType getBalanceType() { return this.balanceType; }
-    public void setBalanceType(BalanceType balance) { this.balanceType = balance; }
+    public void setTransactionId(UUID id) {
+        this.transactionId = id;
+    }
 
-    public TransactionType getTransactionType() { return this.transactionType; }
+    public BalanceType getBalanceType() {
+        return this.balanceType;
+    }
+
+    public void setBalanceType(BalanceType balance) {
+        this.balanceType = balance;
+    }
+
+    public TransactionType getTransactionType() {
+        return this.transactionType;
+    }
 
     @Override
     public String getWalletPublicKey() {
@@ -75,50 +87,97 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
         return null;
     }
 
-    public void setBalanceType(TransactionType transaction) { this.transactionType = transaction; }
+    public void setBalanceType(TransactionType transaction) {
+        this.transactionType = transaction;
+    }
 
-    public CurrencyType getCurrencyType() { return this.currencyType; }
-    public void setCurrencyType(CurrencyType currency) { this.currencyType = currency; }
+    public CurrencyType getCurrencyType() {
+        return this.currencyType;
+    }
 
-    public String getPublicKeyWallet() { return this.keyPairWallet.getPublicKey(); }
-    public void setPublicKeyWallet(String publicKey) { this.keyPairWallet = keyPairWallet; }
+    public void setCurrencyType(CurrencyType currency) {
+        this.currencyType = currency;
+    }
 
-    public String getPublicKeyBroker() { return this.keyPairBroker.getPublicKey(); }
-    public void setPublicKeyBroker(String publicKey) { this.keyPairBroker = keyPairBroker; }
+    public String getPublicKeyWallet() {
+        return this.keyPairWallet.getPublicKey();
+    }
 
-    public String getPublicKeyCustomer() { return this.keyPairCustomer.getPublicKey(); }
-    public void setPublicKeyCustomer(String publicKey) { this.keyPairCustomer = keyPairCustomer; }
+    public void setPublicKeyWallet(String publicKey) {
+        this.keyPairWallet = keyPairWallet;
+    }
 
-    public float getAmount() { return this.amount; }
-    public void setAmount(float amount) { this.amount = amount; }
+    public String getPublicKeyBroker() {
+        return this.keyPairBroker.getPublicKey();
+    }
 
-    public float getRunningBookBalance() { return this.runningBookBalance; }
-    public void setRunningBookBalance(float bookBalance) { this.runningBookBalance = bookBalance; }
+    public void setPublicKeyBroker(String publicKey) {
+        this.keyPairBroker = keyPairBroker;
+    }
+
+    public String getPublicKeyCustomer() {
+        return this.keyPairCustomer.getPublicKey();
+    }
+
+    public void setPublicKeyCustomer(String publicKey) {
+        this.keyPairCustomer = keyPairCustomer;
+    }
+
+    public float getAmount() {
+        return this.amount;
+    }
+
+    public void setAmount(float amount) {
+        this.amount = amount;
+    }
+
+    public float getRunningBookBalance() {
+        return this.runningBookBalance;
+    }
+
+    public void setRunningBookBalance(float bookBalance) {
+        this.runningBookBalance = bookBalance;
+    }
 
 
-    public float getRunningAvailableBalance() { return this.runningAvailableBalance; }
-    public void setRunningAvailableBalance(float availableBalance) { this.runningAvailableBalance = availableBalance; }
+    public float getRunningAvailableBalance() {
+        return this.runningAvailableBalance;
+    }
+
+    public void setRunningAvailableBalance(float availableBalance) {
+        this.runningAvailableBalance = availableBalance;
+    }
 
 
-    public long getTimestamp() { return this.timeStamp; }
-    public void setTimestamp(long time) { this.timeStamp = time; }
+    public long getTimestamp() {
+        return this.timeStamp;
+    }
+
+    public void setTimestamp(long time) {
+        this.timeStamp = time;
+    }
 
 
-    public String getMemo() { return this.memo; }
-    public void setMemo(String memo) { this.memo = memo; }
+    public String getMemo() {
+        return this.memo;
+    }
 
-    public boolean equals(Object o){
-        if(!(o instanceof CryptoBrokerStockTransactionRecord))
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
+
+    public boolean equals(Object o) {
+        if (!(o instanceof CryptoBrokerStockTransactionRecord))
             return false;
         CryptoBrokerStockTransactionRecord compare = (CryptoBrokerStockTransactionRecord) o;
         return keyPairBroker.getPublicKey().equals(compare.getOwnerPublicKey()) && keyPairWallet.getPublicKey().equals(compare.getWalletPublicKey());
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         int c = 0;
         c += keyPairBroker.hashCode();
         c += keyPairWallet.hashCode();
-        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+        return HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 }
