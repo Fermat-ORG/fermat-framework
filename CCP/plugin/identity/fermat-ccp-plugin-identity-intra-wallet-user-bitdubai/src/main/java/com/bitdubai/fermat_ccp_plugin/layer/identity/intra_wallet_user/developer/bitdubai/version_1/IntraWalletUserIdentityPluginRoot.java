@@ -8,10 +8,8 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -21,9 +19,13 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.DealsWithIntraUsersNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
@@ -60,11 +62,11 @@ import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.inter
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
@@ -93,7 +95,7 @@ import java.util.UUID;
 
 public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
         implements DatabaseManagerForDevelopers,
-                   DealsWithCryptoAddressesNetworkService,
+                   DealsWithCryptoAddressesNetworkService,//
                    DealsWithCryptoVault,
                    DealsWithCryptoAddressBook,
                    DealsWithDeviceUser,
@@ -102,7 +104,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
                    DealsWithPluginDatabaseSystem,
                    DealsWithPluginFileSystem,
                    DealsWithWalletManager,
-                   DealsWithIntraUsersNetworkService,
+                   DealsWithIntraUsersNetworkService,//
                    IntraWalletUserManager,
                    LogManagerForDevelopers,
                    Service,
@@ -115,7 +117,12 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
 
     @Override
     public List<PluginVersionReference> getNeededPluginReferences() {
-        return new ArrayList<>();
+        List<PluginVersionReference> rList = new ArrayList<>();
+
+        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_ADDRESSES , Developers.BITDUBAI, new Version()));
+        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.INTRA_WALLET_USER, Developers.BITDUBAI, new Version()));
+
+        return rList;
     }
 
     @Override

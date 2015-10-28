@@ -3,16 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.de
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -75,11 +66,11 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicat
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -97,39 +88,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
         DealsWithErrors,
         DealsWithEvents,
         DealsWithPluginDatabaseSystem,
-        NetworkService,
-        Plugin,
-        Service {
+        NetworkService {
 
-    @Override
-    public List<AddonVersionReference> getNeededAddonReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<PluginVersionReference> getNeededPluginReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    protected void validateAndAssignReferences() {
-
-    }
-
-    @Override
-    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
-        return null;
-    }
-
-    /**
-     * Service Interface member variables.
-     */
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     /**
      * DealWithEvents Interface member variables.
@@ -241,7 +201,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
         } catch(CantInitializeCryptoAddressesNetworkServiceDatabaseException e) {
 
             CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto addresses dao.");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
 
@@ -288,7 +248,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
 
@@ -317,7 +277,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeNetworkServiceDatabaseException(cantOpenDatabaseException);
 
         } catch (DatabaseNotFoundException e) {
@@ -330,7 +290,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
 
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
 
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateDatabaseException);
+                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantInitializeNetworkServiceDatabaseException(cantCreateDatabaseException);
 
             }
@@ -365,7 +325,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
             String possibleCause = "No all required resource are injected";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            
             throw pluginStartException;
 
         }
@@ -447,11 +408,11 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
 
         } catch (CantCreateRequestException e){
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSendAddressExchangeRequestException(e, null, "Error trying to create the request.");
         } catch (Exception e){
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSendAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
         }
     }
@@ -473,11 +434,11 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
 
         } catch (CantAcceptAddressExchangeRequestException | PendingRequestNotFoundException e){
             // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (Exception e){
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantAcceptAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
         }
     }
@@ -499,11 +460,11 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
 
         } catch (CantListPendingAddressExchangeRequestsException e){
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (Exception e){
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListPendingAddressExchangeRequestsException(FermatException.wrapException(e), null, "Unhandled Exception.");
         }
     }
@@ -521,11 +482,11 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
             throw e;
         } catch (CantGetPendingAddressExchangeRequestException e){
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (Exception e){
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetPendingAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
         }
     }
@@ -550,11 +511,11 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
 
         } catch (CantConfirmAddressExchangeRequestException | PendingRequestNotFoundException e){
             // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (Exception e){
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantConfirmAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
         }
     }
@@ -581,11 +542,11 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
         } catch(PendingRequestNotFoundException |
                 CantDenyAddressExchangeRequestException e){
             // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (Exception e){
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantDenyAddressExchangeRequestException(FermatException.wrapException(e), null, "Unhandled Exception.");
         }
     }
@@ -787,7 +748,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
             } catch(CantStartAgentException e) {
 
                 CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto addresses dao.");
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             }
 
         }
@@ -978,7 +939,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
     }
 
     private void reportUnexpectedException(Exception e) {
-        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
     }
 
     @Override

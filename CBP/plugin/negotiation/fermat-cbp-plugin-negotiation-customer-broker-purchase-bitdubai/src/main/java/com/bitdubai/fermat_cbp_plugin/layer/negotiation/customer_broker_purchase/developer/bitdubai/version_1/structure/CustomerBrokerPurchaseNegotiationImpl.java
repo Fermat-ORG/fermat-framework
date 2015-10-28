@@ -2,11 +2,13 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchas
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantAddNewClausesException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListPurchaseClauseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetNextClauseTypeException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantUpdateClausesException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerPurchaseNegotiationDao;
@@ -75,7 +77,7 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     }
 
     @Override
-    public Collection<Clause> getClauses() throws CantGetListPurchaseClauseException {
+    public Collection<Clause> getClauses() throws CantGetListClauseException {
         return this.customerBrokerPurchaseNegotiationDao.getClauses(this.negotiationId);
     }
 
@@ -101,6 +103,54 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
 
     @Override
     public ClauseType getNextClauseType() throws CantGetNextClauseTypeException {
-        return this.customerBrokerPurchaseNegotiationDao.getNextClauseType(this.negotiationId);
+
+        try {
+            ClauseType type = this.customerBrokerPurchaseNegotiationDao.getNextClauseType(this.negotiationId);
+
+            switch (type) {
+                case CUSTOMER_CURRENCY:
+                    return ClauseType.EXCHANGE_RATE;
+
+                case EXCHANGE_RATE:
+                    return ClauseType.CUSTOMER_CURRENCY_QUANTITY;
+
+                case CUSTOMER_CURRENCY_QUANTITY:
+                    return ClauseType.CUSTOMER_PAYMENT_METHOD;
+
+                case CUSTOMER_PAYMENT_METHOD:
+                    CurrencyType paymentMethod = CurrencyType.getByCode(this.customerBrokerPurchaseNegotiationDao.getPaymentMethod(this.negotiationId));
+
+                    switch (paymentMethod) {
+                        case CRYPTO_MONEY:
+                            return ClauseType.BROKER_CRYPTO_ADDRESS;
+
+                        case BANK_MONEY:
+                            return ClauseType.BROKER_BANK;
+
+                        case CASH_ON_HAND_MONEY:
+                            return ClauseType.PLACE_TO_MEET;
+
+                        case CASH_DELIVERY_MONEY:
+                            return ClauseType.CUSTOMER_PLACE_TO_DELIVER;
+
+                        default:
+                            throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
+                    }
+
+                case CUSTOMER_BANK:
+                    return ClauseType.CUSTOMER_BANK_ACCOUNT;
+
+                case PLACE_TO_MEET:
+                    return ClauseType.DATE_TIME_TO_MEET;
+
+                case CUSTOMER_PLACE_TO_DELIVER:
+                    return ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER;
+
+                default:
+                    throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
+            }
+        } catch (InvalidParameterException e) {
+            throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
+        }
     }
 }

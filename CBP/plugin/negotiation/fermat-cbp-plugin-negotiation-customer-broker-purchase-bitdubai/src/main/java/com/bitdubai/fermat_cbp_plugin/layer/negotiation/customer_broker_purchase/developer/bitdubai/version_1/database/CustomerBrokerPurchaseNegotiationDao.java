@@ -23,7 +23,7 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchas
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantAddNewClausesException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListPurchaseClauseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetNextClauseTypeException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantUpdateClausesException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseNegotiationDaoException;
@@ -97,7 +97,7 @@ public class CustomerBrokerPurchaseNegotiationDao {
 
                 PurchaseNegotiationTable.insertRecord(recordToInsert);
 
-                return newCustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDateTime, NegotiationStatus.OPEN);
+                return newCustomerBrokerPurchaseNegotiation(negotiationId, publicKeyCustomer, publicKeyBroker, startDateTime, NegotiationStatus.WAITING_FOR_BROKER);
 
             } catch (CantInsertRecordException e) {
                 throw new CantCreateCustomerBrokerPurchaseNegotiationException(CantCreateCustomerBrokerPurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
@@ -212,7 +212,7 @@ public class CustomerBrokerPurchaseNegotiationDao {
             Clause methods
          */
 
-            public Collection<Clause> getClauses(UUID negotiationId) throws CantGetListPurchaseClauseException{
+            public Collection<Clause> getClauses(UUID negotiationId) throws CantGetListClauseException{
 
                 try {
                     DatabaseTable PurchaseClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
@@ -231,9 +231,9 @@ public class CustomerBrokerPurchaseNegotiationDao {
                     return resultados;
 
                 } catch (CantLoadTableToMemoryException e) {
-                    throw new CantGetListPurchaseClauseException(CantGetListPurchaseClauseException.DEFAULT_MESSAGE, e, "", "");
+                    throw new CantGetListClauseException(CantGetListClauseException.DEFAULT_MESSAGE, e, "", "");
                 } catch (InvalidParameterException e) {
-                    throw new CantGetListPurchaseClauseException(CantGetListPurchaseClauseException.DEFAULT_MESSAGE, e, "", "");
+                    throw new CantGetListClauseException(CantGetListClauseException.DEFAULT_MESSAGE, e, "", "");
                 }
             }
 
@@ -296,13 +296,31 @@ public class CustomerBrokerPurchaseNegotiationDao {
                     List<DatabaseTableRecord> records = PurchaseClauseTable.getRecords();
                     PurchaseClauseTable.clearAllFilters();
 
-                    ClauseType type = ClauseType.getByCode(records.get(0).getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TYPE_COLUMN_NAME));
-
-                    return nextClauseTypeByType(type);
+                    return ClauseType.getByCode(records.get(0).getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TYPE_COLUMN_NAME));
 
                 } catch (CantLoadTableToMemoryException e) {
                     throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE, e, "", "");
                 } catch (InvalidParameterException e) {
+                    throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE, e, "", "");
+                }
+            }
+
+            public String getPaymentMethod(UUID negotiationId) throws CantGetNextClauseTypeException {
+
+                try {
+                    DatabaseTable PurchaseClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
+                    PurchaseClauseTable.setUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
+                    PurchaseClauseTable.setStringFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_TYPE_COLUMN_NAME, ClauseType.CUSTOMER_PAYMENT_METHOD.getCode(), DatabaseFilterType.EQUAL);
+
+                    PurchaseClauseTable.setFilterOrder(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_INDEX_ORDER_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+                    PurchaseClauseTable.loadToMemory();
+                    List<DatabaseTableRecord> records = PurchaseClauseTable.getRecords();
+                    PurchaseClauseTable.clearAllFilters();
+
+                    return records.get(0).getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_VALUE_COLUMN_NAME);
+
+                } catch (CantLoadTableToMemoryException e) {
                     throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE, e, "", "");
                 }
             }
@@ -326,7 +344,7 @@ public class CustomerBrokerPurchaseNegotiationDao {
                 databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKeyCustomer);
                 databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKeyBroker);
                 databaseTableRecord.setLongValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME, startDataTime);
-                databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, NegotiationStatus.OPEN.getCode());
+                databaseTableRecord.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, NegotiationStatus.WAITING_FOR_BROKER.getCode());
             }
 
             private CustomerBrokerPurchaseNegotiation newCustomerBrokerPurchaseNegotiation(
@@ -397,20 +415,4 @@ public class CustomerBrokerPurchaseNegotiationDao {
                 return newCustomerBrokerPurchaseClause(clauseId, type, value, status, proposedBy, (short) indexOrder);
             }
 
-            private ClauseType nextClauseTypeByType(ClauseType type){
-
-                if( type == ClauseType.CUSTOMER_CURRENCY){
-                    return ClauseType.EXCHANGE_RATE;
-                }
-
-                if( type == ClauseType.EXCHANGE_RATE){
-                    return ClauseType.CUSTOMER_CURRENCY_QUANTITY;
-                }
-
-                if( type == ClauseType.CUSTOMER_CURRENCY_QUANTITY){
-                    return ClauseType.CUSTOMER_PAYMENT_METHOD;
-                }
-
-                return null;
-            }
 }

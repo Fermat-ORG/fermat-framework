@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
@@ -18,17 +17,14 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.IntraUserNotificationDescriptor;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingActorRequestConnectionNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -241,7 +237,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
 //                        Gson gson = new Gson();
 //
-//                        cpr.changeDescriptor(IntraUserNotificationDescriptor.ACCEPTED);
+//                        cpr.changeDescriptor(NotificationDescriptor.ACCEPTED);
 //                        String message = gson.toJson(cpr);
 //
 //                        // El destination soy yo porque me lo estan enviando
@@ -335,6 +331,24 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         }
 
                     }
+                }else{
+                    NetworkServiceLocal communicationNetworkServiceLocal = actorNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey());
+
+                    System.out.println("----------------------------\n" +
+                            "ENVIANDO MENSAJE:" + actorNetworkServiceRecord
+                            + "\n-------------------------------------------------");
+
+                    Gson gson = new Gson();
+
+                    communicationNetworkServiceLocal.sendMessage(
+                            actorNetworkServiceRecord.getActorSenderPublicKey(),
+                            actorNetworkServiceRecord.getActorDestinationPublicKey(),
+                            gson.toJson(actorNetworkServiceRecord)
+                    );
+
+                    actorNetworkServicePluginRoot.getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.SENT);
+
+                    poolConnectionsWaitingForResponse.put(actorNetworkServiceRecord.getActorDestinationPublicKey(), actorNetworkServiceRecord);
                 }
             } else {
 

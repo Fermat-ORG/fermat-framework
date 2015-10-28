@@ -1,11 +1,12 @@
 package com.bitdubai.fermat_cbp_api.all_definition.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Created by angel on 18/9/15.
  */
-public enum RequestStatus {
+public enum RequestStatus implements FermatEnum {
     ACCEPTED("ACC"),
     POSTPONED("POS"),
     IN_PROCESS ("INP");
@@ -16,6 +17,7 @@ public enum RequestStatus {
         this.code = code;
     }
 
+    @Override
     public String getCode() {
         return this.code;
     }

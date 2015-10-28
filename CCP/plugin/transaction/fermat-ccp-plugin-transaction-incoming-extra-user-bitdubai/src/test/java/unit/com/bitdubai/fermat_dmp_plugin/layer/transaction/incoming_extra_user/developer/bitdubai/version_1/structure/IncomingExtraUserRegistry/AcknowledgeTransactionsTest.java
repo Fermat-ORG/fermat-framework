@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRegistry;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
@@ -32,9 +33,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+*/
 /**
  * Created by jorgegonzalez on 2015.07.02..
- */
+ *//*
+
 @RunWith(MockitoJUnitRunner.class)
 public class AcknowledgeTransactionsTest {
 
@@ -122,3 +125,4 @@ public class AcknowledgeTransactionsTest {
         assertThat(caughtException()).isInstanceOf(CantAcknowledgeTransactionException.class);
     }
 }
+*/

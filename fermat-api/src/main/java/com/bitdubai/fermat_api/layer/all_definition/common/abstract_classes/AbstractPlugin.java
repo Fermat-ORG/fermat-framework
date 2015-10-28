@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionRe
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ public abstract class AbstractPlugin implements Plugin, Service {
     private Map<PluginVersionReference, AbstractPlugin> plugins;
 
     private final PluginVersionReference pluginVersionReference;
-    private       ServiceStatus          serviceStatus;
+    protected        ServiceStatus          serviceStatus;
 
     /**
      * Default constructor assigning version 1.
@@ -100,15 +101,25 @@ public abstract class AbstractPlugin implements Plugin, Service {
         return serviceStatus == ServiceStatus.PAUSED;
     }
 
-    public abstract List<AddonVersionReference > getNeededAddonReferences();
+    public List<AddonVersionReference > getNeededAddonReferences() {
+        return new ArrayList<>();
+    }
 
-    public abstract List<PluginVersionReference> getNeededPluginReferences();
+    public List<PluginVersionReference> getNeededPluginReferences() {
+        return new ArrayList<>();
+    }
 
-    public abstract List<DevelopersUtilReference> getAvailableDeveloperUtils();
+    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
+        return new ArrayList<>();
+    }
 
-    public abstract FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException;
+    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
+        return null;
+    }
 
-    protected abstract void validateAndAssignReferences();
+    protected void validateAndAssignReferences() {
+
+    }
 
     public abstract void setId(UUID pluginId);
 

@@ -114,11 +114,13 @@ public class AssetReceptionDeveloperDatabaseFactory implements DealsWithPluginDa
 
         assetReceptionColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_GENESIS_TRANSACTION_COLUMN_NAME);
         assetReceptionColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_DIGITAL_ASSET_HASH_COLUMN_NAME);
-        assetReceptionColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_ACTOR_ASSET_USER_PUBLIC_KEY_COLUMN_NAME);
+        assetReceptionColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_ACTOR_ASSET_ISSUER_ID_COLUMN_NAME);
         assetReceptionColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_DIGITAL_ASSET_STORAGE_LOCAL_PATH_COLUMN_NAME);
         assetReceptionColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEPTION_STATUS_COLUMN_NAME);
         assetReceptionColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_CRYPTO_STATUS_COLUMN_NAME);
         assetReceptionColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_PROTOCOL_STATUS_COLUMN_NAME);
+        assetReceptionColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_ACTOR_ASSET_ISSUER_BITCOIN_ADDRESS_COLUMN_NAME);
+        assetReceptionColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEPTION_ID_COLUMN_NAME);
         /**
          * Table Asset Reception addition.
          */

@@ -14,17 +14,17 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.RequestedListNotReadyRecevivedException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.AssetActorUserPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantAddPendingAssetUserException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure.AssetUserActorDao;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure.AssetUserActorRecord;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
 import java.util.Random;
@@ -64,7 +64,7 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
     @Override
     public void start() throws CantStartAgentException {
 
-        monitorAgent = new MonitorAgent();
+        monitorAgent = new MonitorAgent(this.errorManager, this.pluginDatabaseSystem);
         this.agentThread = new Thread(monitorAgent);
         this.agentThread.start();
     }
@@ -99,20 +99,15 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
         this.pluginId = pluginId;
     }
 
-    private class MonitorAgent implements DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable {
+    private class MonitorAgent implements Runnable {
 
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
         public final int SLEEP_TIME = 60000;/*  / 1000 = TIME in SECONDS = 60 seconds */
         boolean threadWorking;
 
-        @Override
-        public void setErrorManager(ErrorManager errorManager) {
+        public MonitorAgent(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem) {
             this.errorManager = errorManager;
-        }
-
-        @Override
-        public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
             this.pluginDatabaseSystem = pluginDatabaseSystem;
         }
 
@@ -135,7 +130,7 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
 
                     doTheMainTask();
                 } catch (Exception e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                   errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
             }
         }
@@ -144,30 +139,30 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
             try {
 //                test_RegisterActorNetworkService();
 
-                test_listByActorNetworkServiceUser();
+                listByActorNetworkServiceUser();
 
             } catch (CantCreateAssetUserActorException e) {
                 throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
             }
         }
 
-        private void test_listByActorNetworkServiceUser() throws CantCreateAssetUserActorException {
-            List<ActorAssetUser> list;
+        private void listByActorNetworkServiceUser() throws CantCreateAssetUserActorException {
 //                Procedimiento para Obtener lista de Actores del Actor Network Service User
             try {
-                list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
+                List<ActorAssetUser> list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
 
                 if (list.isEmpty()) {
                     System.out.println("Lista de Actores de Actor Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
                 } else {
                     System.out.println("Se Recibio Lista de: " + list.size() + " Actors desde Actor Network Service - SE PROCEDE A SU REGISTRO");
-                    assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(list);
-                    System.out.println("Se Registro en tabla ASSET_USER_REGISTER_ACTOR Lista de: " + list.size() + " Actors desde Actor Network Service");
+                    int recordInsert = assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(list);
+                    System.out.println("Se Registro en tabla ASSET_USER_REGISTER_ACTOR Lista de: " + recordInsert + " Actors desde Actor Network Service");
                 }
-            } catch (RequestedListNotReadyRecevivedException e) {
-                e.printStackTrace();
+
+            } catch (CantRequestListActorAssetUserRegisteredException e) {
+                //throw new CantCreateAssetUserActorException("CAN'T ADD TEST NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
             } catch (CantAddPendingAssetUserException e) {
-                throw new CantCreateAssetUserActorException("CAN'T ADD TEST NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
+                e.printStackTrace();
             }
         }
 
