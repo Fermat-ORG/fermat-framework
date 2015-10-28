@@ -8,6 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionRef
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+
+
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -17,18 +19,17 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.DealsWithExtraUsers;
-import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUsers;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUser;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.DealsWithCryptoTransmissionNetworkService;
+
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.DealsWithCryptoPayment;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_extra_user.DealsWithOutgoingExtraUser;
@@ -40,11 +41,13 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.DealsWithExtraUsers;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,7 +66,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
         DealsWithCryptoAddressesNetworkService,//
         DealsWithCryptoPayment,//
         DealsWithCryptoTransmissionNetworkService,//
-        DealsWithCCPIntraWalletUser,//
+        DealsWithCCPIntraWalletUsers,//
         DealsWithCryptoVault,
         DealsWithErrors,
         DealsWithExtraUsers,//
@@ -72,6 +75,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
         DealsWithOutgoingIntraActor,//
         DealsWithWalletContacts,//
         LogManagerForDevelopers {
+
 
     @Override
     public List<AddonVersionReference> getNeededAddonReferences() {
@@ -82,15 +86,15 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
     public List<PluginVersionReference> getNeededPluginReferences() {
         List<PluginVersionReference> rList = new ArrayList<>();
 
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.ACTOR, Plugins.EXTRA_WALLET_USER, Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.BASIC_WALLET, Plugins.BITCOIN_WALLET, Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.IDENTITY, Plugins.INTRA_WALLET_USER, Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.MIDDLEWARE, Plugins.WALLET_CONTACTS, Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_ADDRESSES, Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_TRANSMISSION, Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.REQUEST, Plugins.CRYPTO_PAYMENT_REQUEST, Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION, Plugins.OUTGOING_EXTRA_USER, Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION, Plugins.OUTGOING_INTRA_ACTOR, Developers.BITDUBAI, new Version()));
+        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.ACTOR          , Plugins.EXTRA_WALLET_USER     , Developers.BITDUBAI, new Version()));
+        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.BASIC_WALLET   , Plugins.BITCOIN_WALLET        , Developers.BITDUBAI, new Version()));
+        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.IDENTITY       , Plugins.INTRA_WALLET_USER     , Developers.BITDUBAI, new Version()));
+        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.MIDDLEWARE     , Plugins.WALLET_CONTACTS       , Developers.BITDUBAI, new Version()));
+        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_ADDRESSES      , Developers.BITDUBAI, new Version()));
+        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_TRANSMISSION   , Developers.BITDUBAI, new Version()));
+        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.REQUEST        , Plugins.CRYPTO_PAYMENT_REQUEST, Developers.BITDUBAI, new Version()));
+        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION    , Plugins.OUTGOING_EXTRA_USER   , Developers.BITDUBAI, new Version()));
+        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION    , Plugins.OUTGOING_INTRA_ACTOR  , Developers.BITDUBAI, new Version()));
 
         return rList;
     }
@@ -225,7 +229,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
             walletModuleCryptoWallet.setOutgoingExtraUserManager(outgoingExtraUserManager);
             walletModuleCryptoWallet.setCryptoAddressBookManager(cryptoAddressBookManager);
             walletModuleCryptoWallet.setWalletContactsManager(walletContactsManager);
-            walletModuleCryptoWallet.setIntraUserManager(intraWalletUserManager);
+            walletModuleCryptoWallet.setIntraWalletUserManager(intraWalletUserManager);
             walletModuleCryptoWallet.setCryptoTransmissionNetworkService(cryptoTransmissionNetworkServiceManager);
 //            walletModuleCryptoWallet.setActorIntraUserManager(this.intraUserManager);
             walletModuleCryptoWallet.setCryptoPaymentManager(this.cryptoPaymentManager);
@@ -338,12 +342,6 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
     public void setId(UUID pluginId) {
     }
 
-
-    @Override
-    public void setIntraUserManager(IntraWalletUserManager intraWalletUserManager) {
-        this.intraWalletUserManager = intraWalletUserManager;
-    }
-
     @Override
     public void setCryptoTransmissionNetworkService(CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager) {
         this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
@@ -362,6 +360,11 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
     @Override
     public void setCryptoAddressesManager(CryptoAddressesManager cryptoAddressesNetworkServiceManager) {
         this.cryptoAddressesNSManager = cryptoAddressesNetworkServiceManager;
+    }
+
+    @Override
+    public void setIntraWalletUserManager(com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager intraWalletUserManager) {
+        this.intraWalletUserManager = intraWalletUserManager;
     }
 
 //    @Override

@@ -517,4 +517,22 @@ public class AssetDistributionDao {
         }
     }
 
+    public boolean isGenesisTransactionRegistered(String genesisTransaction) throws CantExecuteQueryException {
+        try {
+            this.database=openDatabase();
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
+            databaseTable.setStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            this.database.closeDatabase();
+            return !databaseTable.getRecords().isEmpty();
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantExecuteQueryException("Error executing query in DB.", exception, "Checking if genesis transaction exists in database.", "Cannot load table to memory.");
+        }catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Checking if genesis transaction exits in database.", "Unexpected exception");
+        }
+    }
+
 }

@@ -135,7 +135,7 @@ public abstract class AbstractAddon implements Addon, Service {
             for (final Field f : cl.getDeclaredFields()) {
 
                 for (final Annotation a : f.getDeclaredAnnotations()) {
-                    if (a.annotationType() == NeededAddonReference.class) {
+                    if (a instanceof NeededAddonReference) {
                         NeededAddonReference addonReference = (NeededAddonReference) a;
 
                         AddonVersionReference avr = new AddonVersionReference(
@@ -164,11 +164,6 @@ public abstract class AbstractAddon implements Addon, Service {
             );
         }
     }
-/*
-    public void assignAddonReference(final AddonVersionReference          avr          ,
-                                              final Class<? extends FermatManager> referenceMger,
-                                              final AbstractAddon                  abstractAddon) throws CantAssignReferenceException{}*/
-
 
     public final void assignAddonReference(final AddonVersionReference avr,
                                            final Class<? extends FermatManager> referenceMger,
@@ -181,7 +176,7 @@ public abstract class AbstractAddon implements Addon, Service {
             field.set(this, referenceMger.cast(abstractAddon));
 
         } catch (IllegalAccessException e) {
-            System.err.println(e);
+
             throw new CantAssignReferenceException(
                     e,
                     "Working addon: " + this.getAddonVersionReference().toString() + " +++++ Reference to assign: " + avr.toString(),

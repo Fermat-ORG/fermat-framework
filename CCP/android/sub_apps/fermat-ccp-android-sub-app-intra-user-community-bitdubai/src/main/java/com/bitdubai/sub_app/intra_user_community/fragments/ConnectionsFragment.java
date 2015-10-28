@@ -19,10 +19,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -41,6 +43,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
+import com.bitdubai.sub_app.intra_user_community.common.Utils.FernatAnimationUtils;
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
@@ -64,11 +67,12 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
 
+
     /**
      * MANAGERS
      */
-    private static IntraUserModuleManager moduleManager;
-    private static ErrorManager errorManager;
+    private  static IntraUserModuleManager moduleManager;
+    private  static ErrorManager errorManager;
 
     private List<IntraUserInformation> lstIntraUserInformations;
 
@@ -79,7 +83,7 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
 
     private int offset = 0;
 
-    private int mNotificationsCount = 0;
+    private int mNotificationsCount=0;
     private SearchView mSearchView;
 
     private AppListAdapter adapter;
@@ -95,9 +99,13 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
     //private ActorAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
 
+    private LinearLayout empty;
+
     // flags
     private boolean isRefreshing = false;
     private View rootView;
+
+    private ProgressDialog dialog;
 
 
     /**
@@ -127,9 +135,18 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY,UnexpectedUIExceptionSeverity.CRASH,ex);
         }
     }
+
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+
+    }
+
 
     /**
      * Fragment Class implementation.
@@ -155,13 +172,31 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
 
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
 
+            empty = (LinearLayout) rootView.findViewById(R.id.empty);
+
+            //onRefresh();
+
+            if (dialog != null)
+                dialog.dismiss();
+            dialog = null;
+            dialog = new ProgressDialog(getActivity());
+            dialog.setTitle("Loading connections");
+            dialog.setMessage("Please wait...");
+            dialog.show();
+            FernatAnimationUtils.showView(false, empty);
+            FernatAnimationUtils.showEmpty(isAttached, empty, lstIntraUserInformations);
+
             onRefresh();
 
-        } catch (Exception ex) {
+
+        } catch(Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
+
+
+
 
 
         return rootView;
@@ -183,6 +218,7 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
                 @Override
                 public void onPostExecute(Object... result) {
                     isRefreshing = false;
+                    dialog.dismiss();
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (result != null &&
@@ -197,6 +233,7 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
                 @Override
                 public void onErrorOccurred(Exception ex) {
                     isRefreshing = false;
+                    dialog.dismiss();
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (getActivity() != null)
@@ -226,6 +263,7 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
         mSearchView.setOnCloseListener(this);
 
 
+
         //MenuItem action_connection_request = menu.findItem(R.id.action_connection_request);
         // Get the notifications MenuItem and
         // its LayerDrawable (layer-list)
@@ -247,7 +285,7 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
             CharSequence itemTitle = item.getTitle();
 
             // Esto podria ser un enum de item menu que correspondan a otro menu
-            if (itemTitle.equals("New Identity")) {
+            if(itemTitle.equals("New Identity")){
                 changeActivity(Activities.CWP_INTRA_USER_CREATE_ACTIVITY.getCode());
 
             }
@@ -312,7 +350,7 @@ Updates the count of notifications in the ActionBar.
     @Override
     public boolean onQueryTextChange(String s) {
         //Toast.makeText(getActivity(), "Probando busqueda completa", Toast.LENGTH_SHORT).show();
-        if (s.length() == 0 && isStartList) {
+        if(s.length()==0 && isStartList){
             //((IntraUserConnectionsAdapter)adapter).setAddButtonVisible(false);
             //adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
             return true;
@@ -322,7 +360,7 @@ Updates the count of notifications in the ActionBar.
 
     @Override
     public boolean onClose() {
-        if (!mSearchView.isActivated()) {
+        if(!mSearchView.isActivated()){
             //adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
         }
 
@@ -350,17 +388,19 @@ Updates the count of notifications in the ActionBar.
     }
 
 
+
+
     private synchronized List<IntraUserInformation> getMoreData() {
         List<IntraUserInformation> dataSet = new ArrayList<>();
 
         try {
 
-            dataSet = moduleManager.getAllIntraUsers(MAX, offset);
+            dataSet = moduleManager.getAllIntraUsers(moduleManager.getActiveIntraUserIdentity().getPublicKey(),MAX,offset);
             offset = dataSet.size();
 
         } catch (CantGetIntraUsersListException e) {
             e.printStackTrace();
-        } catch (Exception e) {
+        } catch (Exception e){
             e.printStackTrace();
         }
 
@@ -371,7 +411,7 @@ Updates the count of notifications in the ActionBar.
     public void onItemClickListener(IntraUserInformation data, int position) {
         ConnectDialog connectDialog = null;
         try {
-            connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) subAppsSession, subAppResourcesProviderManager, data, moduleManager.getActiveIntraUserIdentity());
+            connectDialog = new ConnectDialog(getActivity(),(IntraUserSubAppSession)subAppsSession,subAppResourcesProviderManager,data,moduleManager.getActiveIntraUserIdentity());
             connectDialog.show();
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
@@ -402,6 +442,8 @@ Updates the count of notifications in the ActionBar.
             updateNotificationsBadge(count);
         }
     }
+
+
 
 
 }

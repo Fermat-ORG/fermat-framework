@@ -156,10 +156,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      */
     private ActivityType activityType;
 
-    private DrawerLayout drawerLayout;
-    private NavigationView navigationView;
-    private ViewGroup navigationHeaderView;
-    private ActionBarDrawerToggle drawerToggle;
 
     public static Bitmap fastblur(Bitmap sentBitmap, int radius) {
         Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
@@ -701,16 +697,20 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 }
 
 
+
                 navigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
                 /**
                  * Set up the navigationDrawer
                  */
-                navigationDrawerFragment.setUp(
-                        R.id.navigation_drawer,
-                        (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
 
-                navigationDrawerFragment.setMenuVisibility(true);
+                if(navigationDrawerFragment != null) {
+                    navigationDrawerFragment.setUp(
+                            R.id.navigation_drawer,
+                            (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
+
+                    navigationDrawerFragment.setMenuVisibility(true);
+                }
 
                 //if (navigationDrawerFragment == null)
                 //navigationDrawerFragment = (navigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -1021,6 +1021,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             viewpager.removeAllViewsInLayout();
             viewpager.clearOnPageChangeListeners();
             viewpager.setVisibility(View.GONE);
+
             viewpager = null;
             ViewPager pager = (ViewPager) super.findViewById(R.id.pager);
             pager.removeAllViews();
@@ -1042,6 +1043,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             // hide actionBar
             getActionBar().hide();
+            getActionBar().setListNavigationCallbacks(null, null);
 
             if (navigationDrawerFragment != null) {
 
@@ -1053,8 +1055,10 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 //getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.only_fragment_container)).commit();
                 navigationDrawerFragment.onDetach();
                 navigationDrawerFragment = null;
-                getFragmentManager().beginTransaction().
+               FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().
                         remove(getFragmentManager().findFragmentById(R.id.navigation_drawer)).commit();
+                fragmentManager.executePendingTransactions();
             }
 
             this.getNotificationManager().deleteObserver(this);
@@ -1067,9 +1071,15 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             this.screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
 
-            //currentViewId = -1;
+            currentViewId = -1;
+
+
 
             System.gc();
+            closeContextMenu();
+            closeOptionsMenu();
+
+            onRestart();
 
         } catch (Exception e) {
 
@@ -1174,38 +1184,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
                 }
             }
-            //Activity activity =  desktopObject.getLastActivity();
-
-            /*for (FermatFragments key : activity.getFragments().keySet()) {
-                Fragment fragment = activity.getFragments().get(key);
-
-                switch (fragment.getType()) {
-                    case CWP_SHELL_LOGIN:
-                        break;
-                    case CWP_WALLET_MANAGER_MAIN:
-                        //DeveloperSubAppSession subAppSession = new DeveloperSubAppSession();
-                        //Excepcion que no puede ser casteado  a WalletManagerManager
-                        //WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0,getWalletManagerManager());
-                        WalletManager manager = getWalletManager();
-                        WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
-                        fragments.add(walletDesktopFragment);
-                        //fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
-                        break;
-                    case CWP_WALLET_MANAGER_SHOP:
-                        break;
-                    case CWP_SUB_APP_DEVELOPER:
-                        fragments.add(android.support.v4.app.Fragment.instantiate(this, com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment.class.getName()));
-                        break;
-
-                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
-                        fragments.add(android.support.v4.app.Fragment.instantiate(this, ReceiveFragment.class.getName()));
-                        break;
-
-                }
-            }*/
-
-//            fragments.add(0, fragments.get(1));
-//            fragments.remove(2);
 
             /**
              * this pagerAdapter is the screenPagerAdapter with no tabs

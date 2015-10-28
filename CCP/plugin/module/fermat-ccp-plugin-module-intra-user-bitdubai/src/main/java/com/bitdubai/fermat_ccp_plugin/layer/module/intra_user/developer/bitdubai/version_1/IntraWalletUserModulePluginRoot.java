@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilR
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -37,7 +38,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.Intr
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUser;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIdentityIntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
@@ -63,6 +64,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
@@ -84,7 +86,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements   DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithCCPIntraWalletUser,DealsWithCCPIntraWalletUsers, DealsWithPluginFileSystem, LogManagerForDevelopers, IntraUserModuleManager, Plugin, Service  {
+public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithCCPIdentityIntraWalletUser,DealsWithCCPIntraWalletUsers, DealsWithPluginFileSystem, LogManagerForDevelopers, IntraUserModuleManager, Plugin, Service  {
 
     @Override
     public List<AddonVersionReference> getNeededAddonReferences() {
@@ -138,7 +140,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements  
     IntraUserManager intraUserNertwokServiceManager;
 
     /**
-     * DealsWithCCPIntraWalletUser interface member variable
+     * DealsWithCCPIdentityIntraWalletUser interface member variable
      */
 
     com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager intraWalletUserIdentityManager;
@@ -546,25 +548,22 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements  
      * @throws CantGetIntraUsersListException
      */
     @Override
-    public List<IntraUserInformation> getAllIntraUsers(int max,int offset) throws CantGetIntraUsersListException {
-        try
-        {
+    public List<IntraUserInformation> getAllIntraUsers(String identityPublicKey,int max,int offset) throws CantGetIntraUsersListException {
+        try{
             List<IntraUserInformation> intraUserList= new ArrayList<IntraUserInformation>();
 
 
-            List<IntraWalletUser> actorsList = this.intraWalletUserManager.getAllIntraWalletUsers(this.intraUserLoggedPublicKey, max, offset);
+            List<IntraWalletUser> actorsList = this.intraWalletUserManager.getAllIntraWalletUsers(identityPublicKey, max, offset);
 
             for (IntraWalletUser intraUserActor : actorsList) {
                 intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage()));
             }
             return intraUserList;
         }
-        catch(CantGetIntraWalletUsersException e)
-        {
+        catch(CantGetIntraWalletUsersException e) {
             throw new CantGetIntraUsersListException("CAN'T GET ALL INTRA USERS FROM LOGGED USER",e,"","");
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             throw new CantGetIntraUsersListException("CAN'T GET ALL INTRA USERS FROM LOGGED USER",FermatException.wrapException(e),"","unknown exception");
         }
     }
@@ -683,10 +682,10 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements  
     }
 
     /**
-     * DealsWithCCPIntraWalletUser Interface implementation.
+     * DealsWithCCPIdentityIntraWalletUser Interface implementation.
      */
     @Override
-    public void setIntraUserManager(com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager intraWalletUserManager) {
+    public void setIdentityIntraUserManager(com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager intraWalletUserManager) {
         this.intraWalletUserIdentityManager = intraWalletUserManager;
     }
 
@@ -753,7 +752,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements  
 
         }catch (Exception exception){
             FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: "+ IntraWalletUserModulePluginRoot.newLoggingLevel ,"Check the cause");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_FACTORY_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.INTRA_WALLET_USER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
 
     }

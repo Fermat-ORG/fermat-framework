@@ -31,8 +31,21 @@ public class DeviceLocationAndroidAddonRoot extends AbstractAddon implements Loc
         );
     }
 
+    public DeviceLocationAndroidAddonRoot(Context context) {
+        super(
+                new AddonVersionReference(new Version()),
+                OperativeSystems.ANDROID
+        );
+
+        this.context = context;
+    }
+
     @Override
     public void start() throws CantStartPluginException {
+
+        /*
+
+        TODO generate an annotation to assign OS CONTEXT.
 
         if (this.getOsContext() != null && this.getOsContext() instanceof Context) {
 
@@ -44,7 +57,7 @@ public class DeviceLocationAndroidAddonRoot extends AbstractAddon implements Loc
                     "osContext: " + this.getOsContext(),
                     "Context is not instance of Android Context or is null."
             );
-        }
+        }*/
 
         locationSystemManager = new DeviceLocationManager(context);
 

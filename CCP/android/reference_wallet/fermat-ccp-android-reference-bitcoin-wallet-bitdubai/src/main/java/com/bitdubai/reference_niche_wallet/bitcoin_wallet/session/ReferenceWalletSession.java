@@ -1,13 +1,14 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.session;
 
 
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 
 import java.util.HashMap;
@@ -52,6 +53,12 @@ public class ReferenceWalletSession implements com.bitdubai.fermat_android_api.l
     private WalletResourcesProviderManager walletResourcesProviderManager;
 
     /**
+     * Intra User Module
+     */
+    private IntraUserModuleManager intraUserModuleManager;
+
+
+    /**
      *  Wallet Settings
      */
     private WalletSettings walletSettings;
@@ -75,13 +82,15 @@ public class ReferenceWalletSession implements com.bitdubai.fermat_android_api.l
 
 
 
-    public ReferenceWalletSession(InstalledWallet installedWallet, CryptoWalletManager cryptoWalletManager,WalletSettings walletSettings,WalletResourcesProviderManager walletResourcesProviderManager, ErrorManager errorManager){//,EventManager eventManager){
+    public ReferenceWalletSession(InstalledWallet installedWallet, CryptoWalletManager cryptoWalletManager,WalletSettings walletSettings,WalletResourcesProviderManager walletResourcesProviderManager, ErrorManager errorManager, IntraUserModuleManager intraUserModuleManager){//,EventManager eventManager){
         this.wallet=installedWallet;
         data= new HashMap<String,Object>();
         this.cryptoWalletManager=cryptoWalletManager;
         this.walletResourcesProviderManager=walletResourcesProviderManager;
         this.walletSettings=walletSettings;
         this.errorManager=errorManager;
+        this.intraUserModuleManager = intraUserModuleManager;
+
     }
 
 
@@ -166,6 +175,10 @@ public class ReferenceWalletSession implements com.bitdubai.fermat_android_api.l
 
     public CryptoWalletWalletContact getLastContactSelected() {
         return lastContactSelected;
+    }
+
+    public IntraUserModuleManager getIntraUserModuleManager() {
+        return intraUserModuleManager;
     }
 
 

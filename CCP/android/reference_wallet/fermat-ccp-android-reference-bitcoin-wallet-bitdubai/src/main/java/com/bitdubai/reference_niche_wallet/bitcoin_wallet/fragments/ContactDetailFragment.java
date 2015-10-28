@@ -119,7 +119,7 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
 
         CryptoWalletWalletContact cryptoWalletWalletContact = referenceWalletSession.getLastContactSelected();
 
-        walletContact = new WalletContact(cryptoWalletWalletContact.getContactId(),cryptoWalletWalletContact.getActorPublicKey(),cryptoWalletWalletContact.getActorName(),cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress());
+        walletContact = new WalletContact(cryptoWalletWalletContact.getContactId(),cryptoWalletWalletContact.getActorPublicKey(),cryptoWalletWalletContact.getActorName(),cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress(),cryptoWalletWalletContact.isConnection());
 
         typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
         cryptoWalletManager = referenceWalletSession.getCryptoWalletManager();
@@ -260,7 +260,10 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
         try {
             List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
             for (CryptoWalletWalletContact wcr : walletContactRecords) {
-                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), wcr.getReceivedCryptoAddress().get(0).getAddress()));
+                String contactAddress = "";
+                if(wcr.getReceivedCryptoAddress().size() > 0)
+                    contactAddress = wcr.getReceivedCryptoAddress().get(0).getAddress();
+                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress,wcr.isConnection()));
             }
         } catch (CantGetAllWalletContactsException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

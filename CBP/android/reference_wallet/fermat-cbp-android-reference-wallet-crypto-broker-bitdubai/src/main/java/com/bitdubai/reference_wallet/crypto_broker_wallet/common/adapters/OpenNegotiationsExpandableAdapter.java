@@ -26,7 +26,7 @@ public class OpenNegotiationsExpandableAdapter
      * @param context        the activity context where the RecyclerView is going to be displayed
      * @param parentItemList the list of parent items to be displayed in the RecyclerView
      */
-    public OpenNegotiationsExpandableAdapter(Context context, List<GrouperItem> parentItemList) {
+    public OpenNegotiationsExpandableAdapter(Context context, List<GrouperItem<NegotiationBasicInformation>> parentItemList) {
         super(parentItemList);
         mInflater = LayoutInflater.from(context);
     }
@@ -40,7 +40,7 @@ public class OpenNegotiationsExpandableAdapter
      */
     @Override
     public GrouperViewHolder onCreateParentViewHolder(ViewGroup parent) {
-        View view = mInflater.inflate(R.layout.cbp_grouper_list_item, parent, false);
+        View view = mInflater.inflate(R.layout.cbw_grouper_list_item, parent, false);
         return new GrouperViewHolder(view);
     }
 
@@ -53,7 +53,7 @@ public class OpenNegotiationsExpandableAdapter
      */
     @Override
     public NegotiationViewHolder onCreateChildViewHolder(ViewGroup parent) {
-        View view = mInflater.inflate(R.layout.cbp_negotiation_list_item, parent, false);
+        View view = mInflater.inflate(R.layout.cbw_negotiation_list_item, parent, false);
         return new NegotiationViewHolder(view);
     }
 
@@ -67,6 +67,10 @@ public class OpenNegotiationsExpandableAdapter
     @Override
     public void onBindParentViewHolder(GrouperViewHolder parentViewHolder, int position, GrouperItem parentListItem) {
         parentViewHolder.bind(parentListItem.getChildCount(), parentListItem.getParentText());
+
+        if (!parentListItem.getParentText().toLowerCase().contains("customer")) {
+            parentViewHolder.setBackgroundColor(R.color.cbw_waiting_for_broker_grouper_background);
+        }
     }
 
     /**

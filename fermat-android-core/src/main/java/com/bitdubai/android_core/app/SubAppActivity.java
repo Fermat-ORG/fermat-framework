@@ -70,7 +70,8 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
             //reportUnexpectedUICoreException
             //hacer un enum con areas genericas
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            //TODO error manager null
+          //  getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
 

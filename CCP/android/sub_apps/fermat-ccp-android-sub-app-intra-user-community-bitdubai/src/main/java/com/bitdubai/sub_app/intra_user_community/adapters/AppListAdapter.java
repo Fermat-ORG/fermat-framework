@@ -51,7 +51,7 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, IntraUse
                 Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length, options);
                 holder.thumbnail.setImageBitmap(bitmap);
             } else {
-
+                    //holder.thumbnail.setImageResource(R.drawable.piper_profile_picture);
                     switch (position) {
                         case 0:
                             holder.thumbnail.setImageResource(R.drawable.piper_profile_picture);

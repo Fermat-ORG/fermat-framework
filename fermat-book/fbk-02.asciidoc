@@ -48,11 +48,12 @@ Can be freely adopted, implemented and extended.
 === What is FERMAT made of ?
 
 .Types of components
-* *libraries*: structural components of the core of the system (downlevel) (FERMAT-CORE - FERMAT-API) 
-* *androids*: applications that run on Android System and present the graphic user interface.
-* *plug-ins*: components which encapsulates a very specific sets of functions, cosums services from other components and offer a public interface to the services they provide to other components.
-* *add-ons*: these are low level plug-ins that provides the sensitive functionalities, and therefore are developed by trusted developers, while plug-ins are open to the general development community to be developed.
+* *libraries*: structural components of the core of the system (low level layers) (FERMAT-CORE - FERMAT-API) 
+* *desktops*: applications that run on an specific Operating System and present the graphic user interface.
+* *plug-ins*: components which encapsulates a very specific sets of functions, consum services from other components and offer a public interface for the services they provide to other components.
+* *add-ons*: these are plug-ins in the low level layers that provide the most sensitive functionalities to the system, and therefore are developed by trusted developers, while plug-ins are open to the general development community to be developed. +
 
+[[architecture]]
 === FERMAT's architecture 
 
 :numbered!:
@@ -72,13 +73,14 @@ Inside each Plugin, you might find a specialized structure and in many cases a d
 At a system level, FERMAT uses speciallized crawlers to collect or sometimes inject information into nodes in order to recreate a system level conciousness prepeared to resist attacks or other relevant issues.
 
 ==== p2p architecture
-FERMAT is a decentralized system, so it needs to stablish a connection between every actor and every device using it, and this is done by creating a P2P-NETWORK between them, based on the services provided by FERMAT-P2P Platform and its components.
+FERMAT is a decentralized system, so it needs to stablish a connection between every actor and every device using it, and this is done by creating a P2P-NETWORK between them, based on the services provided by _FERMAT P2P Network and Communication Superlayer_. +
+There are certain *Layers* that provide services at a system-wide scale (see <<superlayers>>), but other layers are constraint within one *platform* (see <<platformDescription>>) and the layer's modules interact to render the platform the set of specific functionalities it was built for.
 
 ==== multi OS architecture
 FERMAT is *code-base portable*, meaning that the components are written in code that runs in different operating systems. 
 So, through FERMAT-OSA (FERMAT OPERATING SYSTEM API) , the components that are specific to a given Operating System connect to the rest of FERMAT that is OS independent.
 
-
+[[multilayer]]
 ==== multilayer architecture
 FERMAT needs to be adaptable, to provide highly component reutilisation, and to offer a scalability that match the complexity of the service that is running on it. Therefore the components are set in *layers* stacking one over the other. Each layer groups components that provide a similar functionality, eg. communications layer is designed to provide a way to connect one device to another building a "communications channel" using different available tecnologies ( cloud servers, wifi, NFT, etc), and in performing this task, it let other components from other layers do their specific task consumming services of this communication layer in a transparent way, without any concern on how the communication is actually being stablished. +
 There are certain *Layers* that provide services at a system-wide scale (see *superlayers*), but other layers are defined within one *platform* and its modules offer and consume services to allow the platform offer its set of specific functionalities.
@@ -88,14 +90,13 @@ There are certain *Layers* that provide services at a system-wide scale (see *su
 *Plug-ins* have an outstanding feature: as long as theier INTERFACE (i.e. the shape of the interconnection) is known and public, the plug-in can interact with others, consuming and offering services, INDEPENDENTLY of its inner structure and how it is built. As long as they conserve this INTERFACE, they can safely evolve to more efficient functioning WITHOUT altering a single service that has been built upon it ! 
 Inside FERMAT, each plug-in is given certain specific responsability within the whole, it lives in a certain layer, and it is allowed to consume services of components on _lower layers_ and to provide services to components of _upper layers_. Plug-ins participate in high level processes and they are programmed in a way to live in an uncontrolled environment (end user devices) and to co-exist with untrusted third party plug-ins as well. 
 
-NOTE: FERMAT'S core concept of providing REUSABLE COMPONENTS is based on this plug-in/add-on architecture.
+NOTE: FERMAT'S core concept of providing REUSABLE COMPONENTS is based on this *plug-in/add-on architecture*.
 
 Through its plug-ins, FERMAT is able to connect and reuse most of the infrastructure deployed by the industry.
 
 
 ==== platform architecture
-A *platform* consists of a group of components living in different *layers* interconnected to offer a specific set of services for a discovered niche. For example, if we address to cryptocurrency users, we will need a _crytocurrency wallet_ for each cryptocurrency available running on FERMAT Crypto Currency Platform. This wallet would operate on the selected cryptonetwork by means of a connection to it provided by the Block Chain Platform, and will interact with the user by means of an app living in the ANDROID APPLICATION layer. 
-
+A *platform* consists of a group of components living in different *layers* interconnected to offer a specific set of services for a discovered niche. For example, if we address to cryptocurrency users, we will need a _crytocurrency wallet_ for each cryptocurrency available running on FERMAT Crypto Currency Platform. This wallet would operate on the selected cryptonetwork by means of a connection to it provided by the Block Chain Platform, and will interact with the user by means of an *desktop* living in the OS specific layers. 
 
 
 .General overview on FERMAT'S platforms and superlayers.
@@ -111,6 +112,8 @@ A *platform* consists of a group of components living in different *layers* inte
 . *FERMAT Shop Platform*
 . *FERMAT Digital Assets Platform*
 . *FERMAT Marketing Platform*
+. *FERMAT Cash Money Platform*
+. *FERMAT Bank Money Platform*
 . *FERMAT Crypto Brokers Platform*
 . *FERMAT Crypto Distribution Network*
 . *FERMAT Distributed Private Network*
@@ -119,13 +122,13 @@ A *platform* consists of a group of components living in different *layers* inte
 :numbered:
 
 === FERMAT'S actors
-Cryptocurrencies live in a public and distributed ledger, the *blockchain* , in a decentralized p2p network (spread in every network node). + 
+Cryptocurrencies live in a public and distributed ledger, the *blockchain*, in a decentralized p2p network (spread in every network node). + 
 They are held and stored by their owners in specific applications called *wallets* living in a certain device which has access to the corresponding cryptonetwork. +
 *Wallets* store the owner's _privat key_ and the corresponding _public key_ to unlock the cryptocurrency amount of a given *transaction*. + 
 For a *transaction* to take place, a *crypto address* is needed to identify both the sender of the value as well as the receiver. + 
 *Crypto addresses* are generated by the wallet derived from the _privat/public key_ pair of the wallet's owner. +
-Although *wallets* are similar in relationship to their basic functionalities, the _natural segmentation of the world population_ requires to be taken into account when designing them. +
-FERMAT defines different system *actors* to identify the specific needs and level of abstraction required to each actor, and consequently being able to design FERMAT's products with the appropiated _segmentation_.
+Although *wallets* are similar in relationship to their basic functionalities, the _natural segmentation of the world population_ and the specific demand of every segment requires to be taken into account when designing *wallets*. +
+FERMAT defines different system *actors* to identify the specific needs and level of abstraction required to each actor, and consequently being able to design FERMAT's products with the appropiated orientation.
  
 
 :numbered!:
@@ -138,10 +141,10 @@ FERMAT takes very _seriously_ into account the _actor's profile_ to develop attr
 ==== levels of abstraction
 On the other hand, while certain actors need basic operations, other's use of blockchain technology may demand higher levels of abstraction.
 For instance, low abstraction is needed for user that only need to see their value in *cryptocurrency*. Others may want to have their wallets showing them their content in *fiat money*. Others might need some functionalities that prevent them for *losing value* depending on the exchange rate they purchased the currency and when they want to spend it, and some of them would like even to see the profitable exchange rate as a *discount* obtained in the purchase of goods.. There are also many who will only serve themselves of the cryptonetwork not to transport value, but to issue *digital assets* instead, assets that are made public through the blockchain ledger... + 
-All this different _*abstraction levels*_ are possible within FERMAT, and FERMAT multi-platform system is specifically designed to match this increasing demand in the industry, and at the same time, the use of FERMAT'S products foster the creation real-world environments, connecting in a very efficient, secure, and scalable way, the actors offering services with those consuming them.
+All this different _*abstraction levels*_ are possible within FERMAT, and FERMAT multi-platform system is specifically designed to match this increasing demand in the industry, and at the same time, the use of FERMAT'S products foster the creation of real-world environments, connecting in a very efficient, secure, and scalable way, the actors offering services with those consuming them.
 
 
-==== FERMAT's products and their actors
+==== Overview of FERMAT's products and their actors
 
 FERMAT WALLET FACTORY ::   -> for marketers to re-brand any of the already existing segment specific wallets in a few steps (without the need to deal with the source code of the base wallet selected!)
 FERMAT WALLET PUBLISHER ::  -> for wallet designers/marketing agency to offer their rebranded Wallet to the world !
