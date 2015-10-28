@@ -40,9 +40,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
     }
 
     @Override
-    public void addStock(FermatEnum stockType) {
-
-    }
+    public void addStock(FermatEnum stockType) { }
 
     @Override
     public Stock getStock(FermatEnum stockType) {
@@ -55,7 +53,5 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
     }
 
     @Override
-    public void performTransaction(WalletTransaction transaction) {
-
-    }
+    public void performTransaction(WalletTransaction transaction) { }
 }
