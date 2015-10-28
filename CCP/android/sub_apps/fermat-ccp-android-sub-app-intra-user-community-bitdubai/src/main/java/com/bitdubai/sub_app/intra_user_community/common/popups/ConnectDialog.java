@@ -61,7 +61,11 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
         btn_cancel.setOnClickListener(this);
 
 
+        txt_person_to_connect.setText("Want connect with "+ intraUserInformation.getName());
+
     }
+
+
 
     @Override
     protected int setLayoutId() {
@@ -84,8 +88,8 @@ public class ConnectDialog extends FermatDialog<SubAppsSession,SubAppResourcesPr
                 ((IntraUserSubAppSession)getSession()).getIntraUserModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(),intraUserInformation.getPublicKey(),intraUserInformation.getProfileImage(),identity.getPublicKey(),identity.getAlias());
                 else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - " , Toast.LENGTH_SHORT).show();
-                    dismiss();
                 }
+                dismiss();
             } catch (CantStartRequestException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,e);
                 Toast.makeText(getContext(), "Oooops! recovering from system error - " + e.getMessage(), Toast.LENGTH_SHORT).show();

@@ -293,10 +293,10 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 
 
     @Override
-    public  List<IntraWalletUser> getConnectedIntraWalletUsers(String intraUserLoggedInPublicKey) throws CantGetIntraWalletUsersException{
-        try
-        {
-            return this.intraWalletUserActorDao.getAllConnectedIntraWalletUsers(intraUserLoggedInPublicKey,100,0);
+    public List<IntraWalletUser> getConnectedIntraWalletUsers(String intraUserLoggedInPublicKey) throws CantGetIntraWalletUsersException {
+        try {
+            return this.intraWalletUserActorDao.getAllConnectedIntraWalletUsers(intraUserLoggedInPublicKey,ConnectionState.CONNECTED,100,0);
+
         }
         catch (CantGetIntraWalletUsersListException e) {
             throw new CantGetIntraWalletUsersException("CAN'T LIST INTRA USER CONNECTIONS", e, "", "");
@@ -305,6 +305,31 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
             throw new CantGetIntraWalletUsersException("CAN'T LIST INTRA USER CONNECTIONS", FermatException.wrapException(e), "", "");
         }
     }
+
+    public Actor getActorByPublicKey(String actorPublicKey) throws CantGetNotificationException, NotificationNotFoundException {
+
+        try {
+            //TODO verificar si se usa
+
+//            ActorIntraUser actor = intraUserActorDao.getIntraUser(actorPublicKey);
+
+            //not found actor
+           // if(actor == null)
+               // throw new NotificationNotFoundException("", null, ".","Intra User not found");
+
+           // return new IntraUserActorRecord(actorPublicKey, "",actor.getName(),actor.getProfileImage());
+
+//            return new IntraUserActorRecord("afd0647a-87de-4c56-9bc9-be736e0c5059", "","wallat user",new byte[0]);
+
+       // } catch (com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantGetNotificationException  e) {
+          //  throw new CantGetNotificationException("", e, ".","Cant Get Intra USer from Data Base");
+         } catch (Exception e) {
+            throw new CantGetNotificationException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
+        }
+        return null;
+    }
+
+
     /**
      * That method get the list of all intra users
      * that sent a connection request and are waiting for the acceptance of the logged in one.
@@ -585,7 +610,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
                  * I confirm the application in the Network Service
                  */
                 //TODO: VER PORQUE TIRA ERROR
-                intraUserNetworkServiceManager.confirmNotification(notification.getId());
+                //intraUserNetworkServiceManager.confirmNotification(notification.getId());
             }
 
 

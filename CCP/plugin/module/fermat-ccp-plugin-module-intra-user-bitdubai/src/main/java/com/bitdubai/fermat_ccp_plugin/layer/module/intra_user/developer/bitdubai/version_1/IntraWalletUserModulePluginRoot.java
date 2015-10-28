@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilR
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -65,6 +66,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitdubai
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 
@@ -87,7 +89,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements   DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithCCPIdentityIntraWalletUser,DealsWithCCPIntraWalletUsers, DealsWithPluginFileSystem, LogManagerForDevelopers, IntraUserModuleManager, Plugin, Service  {
+public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithCCPIdentityIntraWalletUser,DealsWithCCPIntraWalletUsers, DealsWithPluginFileSystem, LogManagerForDevelopers, IntraUserModuleManager, Plugin, Service  {
 
     @Override
     public List<AddonVersionReference> getNeededAddonReferences() {
@@ -753,7 +755,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements  
 
         }catch (Exception exception){
             FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: "+ IntraWalletUserModulePluginRoot.newLoggingLevel ,"Check the cause");
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRA_USER_FACTORY_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            this.errorManager.reportUnexpectedPluginException(Plugins.INTRA_WALLET_USER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
 
     }
