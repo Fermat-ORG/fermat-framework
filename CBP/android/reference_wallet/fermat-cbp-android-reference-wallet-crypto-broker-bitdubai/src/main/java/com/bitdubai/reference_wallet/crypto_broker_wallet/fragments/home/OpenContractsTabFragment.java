@@ -64,8 +64,8 @@ public class OpenContractsTabFragment extends FermatWalletFragment implements Fe
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      */
-    public static OpenNegotiationsTabFragment newInstance() {
-        return new OpenNegotiationsTabFragment();
+    public static OpenContractsTabFragment newInstance() {
+        return new OpenContractsTabFragment();
     }
 
     @Override
