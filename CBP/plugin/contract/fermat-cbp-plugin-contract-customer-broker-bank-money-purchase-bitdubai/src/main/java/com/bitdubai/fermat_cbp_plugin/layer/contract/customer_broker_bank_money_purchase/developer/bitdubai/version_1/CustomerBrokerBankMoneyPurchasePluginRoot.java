@@ -5,9 +5,19 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantCreateCustomerBrokerBankMoneyPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantDeleteCustomerBrokerBankMoneyPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantupdateCustomerBrokerBankMoneyPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.interfaces.CustomerBrokerBankMoneyPurchase;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.interfaces.CustomerBrokerBankMoneyPurchaseManager;
+import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_bank_money_purchase.developer.bitdubai.version_1.database.CustomerBrokerBankMoneyPurchaseContractDao;
+import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_bank_money_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerBankMoneyPurchaseContractDaoException;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -23,8 +33,12 @@ import java.util.UUID;
 
  */
 
-public class CustomerBrokerBankMoneyPurchasePluginRoot implements  DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class CustomerBrokerBankMoneyPurchasePluginRoot implements CustomerBrokerBankMoneyPurchaseManager, DealsWithPluginDatabaseSystem, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
 
+    private PluginDatabaseSystem pluginDatabaseSystem;
+    private UUID pluginId;
+    private CustomerBrokerBankMoneyPurchaseContractDao customerBrokerBankMoneyPurchaseContractDao;
+    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
@@ -48,12 +62,19 @@ public class CustomerBrokerBankMoneyPurchasePluginRoot implements  DealsWithErro
 
     @Override
     public void setId(UUID pluginId) {
-
+        this.pluginId = pluginId;
     }
 
     @Override
     public void start() throws CantStartPluginException {
-
+        this.serviceStatus = ServiceStatus.STARTED;
+        try {
+            this.customerBrokerBankMoneyPurchaseContractDao = new CustomerBrokerBankMoneyPurchaseContractDao(pluginDatabaseSystem);
+            this.customerBrokerBankMoneyPurchaseContractDao.initialize(pluginId);
+        } catch (CantInitializeCustomerBrokerBankMoneyPurchaseContractDaoException cantInitializeCustomerBrokerBankMoneyPurchaseContractDaoException) {
+            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DESIGNER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeExtraUserRegistryException);
+            // throw new CantStartPluginException(cantInitializeExtraUserRegistryException, Plugins.BITDUBAI_ACTOR_DEVELOPER);
+        }
     }
 
     @Override
@@ -74,5 +95,40 @@ public class CustomerBrokerBankMoneyPurchasePluginRoot implements  DealsWithErro
     @Override
     public ServiceStatus getStatus() {
         return null;
+    }
+
+    @Override
+    public List<CustomerBrokerBankMoneyPurchase> getAllCustomerBrokerBankMoneyPurchaseFromCurrentDeviceUser() {
+        return null;
+    }
+
+    @Override
+    public List<CustomerBrokerBankMoneyPurchase> getCustomerBrokerBankMoneyPurchaseForContractId(UUID ContractId) {
+        return null;
+    }
+
+    @Override
+    public CustomerBrokerBankMoneyPurchase createCustomerBrokerBankMoneyPurchase(String publicKeyCustomer, String publicKeyBroker, Float merchandiseAmount, String merchandiseCurrency, Float referencePrice, String referenceCurrency, Float paymentAmount, String paymentCurrency, long paymentExpirationDate, long merchandiseDeliveryExpirationDate) throws CantCreateCustomerBrokerBankMoneyPurchaseException {
+        return null;
+    }
+
+    @Override
+    public void updateCustomerBrokerBankMoneyPurchase(UUID ContractId) throws CantupdateCustomerBrokerBankMoneyPurchaseException {
+
+    }
+
+    @Override
+    public void deleteCustomerBrokerBankMoneyPurchase(UUID contractID) throws CantDeleteCustomerBrokerBankMoneyPurchaseException {
+
+    }
+
+    @Override
+    public DatabaseTableRecord getCustomerBrokerBankMoneySaleContractTable() {
+        return null;
+    }
+
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 }
