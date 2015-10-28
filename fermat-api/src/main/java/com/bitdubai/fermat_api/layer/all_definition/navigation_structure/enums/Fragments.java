@@ -165,8 +165,7 @@ public enum Fragments implements FermatFragments {
 
     // CCP Community
     CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT("CCPSAIUCF"),
-
-    ;
+    CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS_FRAGMENT("CCPSAIUCCF");
 
 
     private String code;

@@ -78,8 +78,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWit
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.AssetUserActorCompleteRegistrationNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
@@ -414,7 +412,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
             String possibleCause = "No all required resource are injected";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
 
@@ -525,7 +523,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
             String possibleCause = "The Asset User Actor Network Service Database triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
             throw pluginStartException;
         }
@@ -647,7 +645,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
             CantRegisterActorAssetUserException pluginStartException = new CantRegisterActorAssetUserException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
     }
@@ -661,64 +659,58 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
                 if(actorAssetUserRegisteredList != null && !actorAssetUserRegisteredList.isEmpty()){ actorAssetUserRegisteredList.clear(); }
 
-                List<PlatformComponentProfile> platformComponentProfileRegisteredListRemote = new ArrayList<PlatformComponentProfile>();
+                    DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                            constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_USER, //applicant = who made the request
+                                    NetworkServiceType.UNDEFINED,
+                                    null,                     // alias
+                                    null,                     // identityPublicKey
+                                    null,                     // location
+                                    null,                     // distance
+                                    null,                     // name
+                                    null,                     // extraData
+                                    null,                     // offset
+                                    null,                     // max
+                                    null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                    null);
 
 
-                DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
-                        constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_USER, //applicant = who made the request
-                                NetworkServiceType.UNDEFINED,
-                                null,                     // alias
-                                null,                     // identityPublicKey
-                                null,                     // location
-                                null,                     // distance
-                                null,                     // name
-                                null,                     // extraData
-                                null,                     // offset
-                                null,                     // max
-                                null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                null);
+                    List<PlatformComponentProfile> platformComponentProfileRegisteredListRemote = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParametersAssetUser);
 
 
-                platformComponentProfileRegisteredListRemote = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParametersAssetUser);
+                    if (platformComponentProfileRegisteredListRemote != null && !platformComponentProfileRegisteredListRemote.isEmpty()) {
 
 
-                if (platformComponentProfileRegisteredListRemote != null && !platformComponentProfileRegisteredListRemote.isEmpty()) {
+                        for (PlatformComponentProfile p : platformComponentProfileRegisteredListRemote) {
 
+                            ActorAssetUser actorAssetUserNew = new AssetUserActorRecord(p.getIdentityPublicKey(), p.getName(), convertoByteArrayfromString(p.getExtraData()), p.getLocation());
 
-                    for (PlatformComponentProfile p : platformComponentProfileRegisteredListRemote) {
+                            actorAssetUserRegisteredList.add(actorAssetUserNew);
 
-                        Location loca = null;
+                        }
 
-                        ActorAssetUser actorAssetUserNew = new AssetUserActorRecord(p.getIdentityPublicKey(), p.getName(), convertoByteArrayfromString(p.getExtraData()), loca);
+                    } else {
 
-                        actorAssetUserRegisteredList.add(actorAssetUserNew);
+                        StringBuffer contextBuffer = new StringBuffer();
+                        contextBuffer.append("Plugin ID: " + pluginId);
+                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+                        contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+                        contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+                        contextBuffer.append("errorManager: " + errorManager);
+                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+                        contextBuffer.append("eventManager: " + eventManager);
+
+                        String context = contextBuffer.toString();
+                        String possibleCause = "Cant Request List Actor Asset User Registered";
+
+                        CantRequestListActorAssetUserRegisteredException pluginStartException = new CantRequestListActorAssetUserRegisteredException(CantRequestListActorAssetUserRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
+
+                        //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+
+                        throw pluginStartException;
 
                     }
-
-                } else {
-
-                    StringBuffer contextBuffer = new StringBuffer();
-                    contextBuffer.append("Plugin ID: " + pluginId);
-                    contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                    contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-                    contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                    contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-                    contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                    contextBuffer.append("errorManager: " + errorManager);
-                    contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                    contextBuffer.append("eventManager: " + eventManager);
-
-                    String context = contextBuffer.toString();
-                    String possibleCause = "Cant Request List Actor Asset User Registered";
-
-                    CantRequestListActorAssetUserRegisteredException pluginStartException = new CantRequestListActorAssetUserRegisteredException(CantRequestListActorAssetUserRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
-
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
-                    throw pluginStartException;
-
-                }
-
 
             }else{
 
@@ -738,7 +730,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
                 CantRequestListActorAssetUserRegisteredException pluginStartException = new CantRequestListActorAssetUserRegisteredException(CantRequestListActorAssetUserRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+               // errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
                 throw pluginStartException;
 
@@ -763,7 +755,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
             CantRequestListActorAssetUserRegisteredException pluginStartException = new CantRequestListActorAssetUserRegisteredException(CantRequestListActorAssetUserRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
             throw pluginStartException;
         }
@@ -876,7 +868,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
                 CantRequestCryptoAddressException pluginStartException = new CantRequestCryptoAddressException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+                //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
                 throw pluginStartException;
             }
@@ -962,7 +954,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
                 CantSendCryptoAddressException pluginStartException = new CantSendCryptoAddressException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+                //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
                 throw pluginStartException;
 
@@ -987,7 +979,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
             CantSendCryptoAddressException pluginStartException = new CantSendCryptoAddressException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
             throw pluginStartException;
         }
@@ -1133,7 +1125,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
             FermatEvent event = eventManager.getNewEvent(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
             event.setSource(EventSource.ACTOR_ASSET_USER);
 
-            ((AssetUserActorCompleteRegistrationNotificationEvent) event).setActorAssetUser(actorAssetUserNewRegsitered);
+            //((AssetUserActorCompleteRegistrationNotificationEvent) event).setActorAssetUser(actorAssetUserNewRegsitered);
 
             eventManager.raiseEvent(event);
         }
@@ -1175,7 +1167,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                 FermatEvent event = eventManager.getNewEvent(EventType.COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION);
                 event.setSource(EventSource.ACTOR_ASSET_USER);
 
-                ((AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent) event).setActorAssetUserList(actorAssetUserRegisteredList);
+                //((AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent) event).setActorAssetUserList(actorAssetUserRegisteredList);
                 eventManager.raiseEvent(event);
             } else if (remoteNetworkServiceToConnect.getNetworkServiceType() == NetworkServiceType.ASSET_USER_ACTOR && remoteNetworkServiceToConnect.getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE) {
                 /*
@@ -1222,7 +1214,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
@@ -1245,7 +1237,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }

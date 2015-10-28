@@ -112,7 +112,7 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Template", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, this.pluginId.toString()));
         return databases;
     }
 

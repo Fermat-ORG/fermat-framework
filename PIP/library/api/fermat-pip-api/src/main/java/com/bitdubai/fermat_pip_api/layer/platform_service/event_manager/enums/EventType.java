@@ -8,15 +8,21 @@ package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.NewCryptoAddressReceiveAssetUserActorNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.NewCryptoAddressRequestAssetUserActorNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.NewCryptoAddressReceiveAssetUserActorNotificationEventListener;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.NewCryptoAddressRequestAssetUserActorNotificationEventListener;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ActorAssetUserCompleteRegistrationNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ActorAssetUserRequestCryptoAddressNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ActorAssetUserSendCryptoAddressNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.BegunWalletInstallationEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorAssetUserCompleteRegistrationNotificationEventListener;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorAssetUserRequestCryptoAddressNotificationEventListener;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorAssetUserRequestListRegisteredNetworksNotificationEventListener;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorAssetUserSendCryptoAddressNotificationEventListener;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.BegunWalletInstallationEventListener;
 
 /**
  * The enum <code>EventType</code>
@@ -33,11 +39,11 @@ public enum EventType implements FermatEventEnum {
 
     BEGUN_WALLET_INSTALLATION("BWI") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.BegunWalletInstallationEventListener(this, fermatEventMonitor);
+            return new BegunWalletInstallationEventListener(this, fermatEventMonitor);
         }
 
         public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.BegunWalletInstallationEvent(this);
+            return new BegunWalletInstallationEvent(this);
         }
     },
 
@@ -731,34 +737,59 @@ public enum EventType implements FermatEventEnum {
 
     COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION("CL_RLAURN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.AssetUserActorRequestListRegisteredNetworksNotificationEventListener(this, fermatEventMonitor);
+            return new ActorAssetUserRequestListRegisteredNetworksNotificationEventListener(this, fermatEventMonitor);
         }
+
         public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent(this);
+            return new ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent(this);
         }
     },
     COMPLETE_REQUEST_LIST_ASSET_ISSUER_REGISTERED_NOTIFICATION("CL_RLAIRN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.AssetUserActorRequestListRegisteredNetworksNotificationEventListener(this, fermatEventMonitor);
+            return new ActorAssetUserRequestListRegisteredNetworksNotificationEventListener(this, fermatEventMonitor);
         }
+
         public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent(this);
+            return new ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent(this);
         }
     },
     COMPLETE_REQUEST_LIST_ASSET_REDEEM_POINT_REGISTERED_NOTIFICATION("CL_RLARRN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.AssetUserActorRequestListRegisteredNetworksNotificationEventListener(this, fermatEventMonitor);
+            return new ActorAssetUserRequestListRegisteredNetworksNotificationEventListener(this, fermatEventMonitor);
         }
+
         public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent(this);
+            return new ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent(this);
         }
     },
+
     COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION("CL_CAURN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.AssetUserActorCompleteRegistrationNotificationEventListener(this, fermatEventMonitor);
+            return new ActorAssetUserCompleteRegistrationNotificationEventListener(this, fermatEventMonitor);
         }
+
         public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.AssetUserActorCompleteRegistrationNotificationEvent(this);
+            return new ActorAssetUserCompleteRegistrationNotificationEvent(this);
+        }
+    },
+
+    ACTOR_ASSET_USER_REQUEST_CRYPTO_ADDRESS_NOTIFICATION("AAU_REQUEST_CAN") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new ActorAssetUserRequestCryptoAddressNotificationEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new ActorAssetUserRequestCryptoAddressNotificationEvent(this);
+        }
+    },
+
+    ACTOR_ASSET_USER_SEND_CRYPTO_ADDRESS_NOTIFICATION("AAU_SEND_CAN") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new ActorAssetUserSendCryptoAddressNotificationEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new ActorAssetUserSendCryptoAddressNotificationEvent(this);
         }
     },
 
@@ -766,6 +797,7 @@ public enum EventType implements FermatEventEnum {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
             return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ReceivedNewDigitalAssetMetadataNotificationEventListener(this, eventMonitor);
         }
+
         public FermatEvent getNewEvent() {
             return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ReceivedNewDigitalAssetMetadataNotificationEvent(this);
         }
@@ -775,6 +807,7 @@ public enum EventType implements FermatEventEnum {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
             return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ReceivedNewTransactionStatusNotificationEventListener(this, eventMonitor);
         }
+
         public FermatEvent getNewEvent() {
             return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ReceivedNewTransactionStatusNotificationEvent(this);
         }
@@ -791,31 +824,7 @@ public enum EventType implements FermatEventEnum {
             return null;
         }
     },
-    NEW_CRYPTO_ADDRESS_REQUEST_ASSET_USER("NCARAU"){
-
-        @Override
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new NewCryptoAddressRequestAssetUserActorNotificationEventListener(this, fermatEventMonitor);
-        }
-
-        @Override
-        public FermatEvent getNewEvent() {
-            return new NewCryptoAddressRequestAssetUserActorNotificationEvent(this);
-        }
-    },
-    NEW_CRYPTO_ADDRESS_RECEIVE_ASSET_USER("RNCARAU"){
-
-        @Override
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new NewCryptoAddressReceiveAssetUserActorNotificationEventListener(this, fermatEventMonitor);
-        }
-
-        @Override
-        public FermatEvent getNewEvent() {
-            return new NewCryptoAddressReceiveAssetUserActorNotificationEvent(this);
-        }
-    },
-    ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS("ANSNN"){
+    ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS("ANSNN") {
         @Override
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorNetworkServicePendingsNotificationEventListener(this, fermatEventMonitor);
@@ -825,7 +834,7 @@ public enum EventType implements FermatEventEnum {
         public FermatEvent getNewEvent() {
             return new ActorNetworkServicePendingsNotificationEvent(this);
         }
-    }, INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION("IIARCN"){
+    }, INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION("IIARCN") {
         @Override
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingActorRequestConnectionNotificationEventListener(this, fermatEventMonitor);

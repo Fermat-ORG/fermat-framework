@@ -1,43 +1,71 @@
-== FERMAT Crypto Currency Platform
-This platform provides all the interconnectivity necessary to interact with existent cryptonetworks (Bitcoin, Litecoin, etc) and also to develop plug-ins for new cryptocurrencies invented in the future. + 
-It contains the specific modules needed to run a Crypto Currency Wallet on FERMAT, whose functions depend on consuming the services provided by other modules in lower layers.
-For a *niche wallet* to run, we need to count on modules offering:
+:numbered: 
+== FERMAT Wallet Production & Distribution 
 
-* 1 user identification 
-* 2 device identification
-* 3 cryptonetwork services to allow connection to existing cryptocurrencies networks ( *value transport* )
-* 4 cyptoaddress management (addressbook)
-* 5 network services ( to allow processing of events occurring outside the running device ) ( *information transport* )
-* 6 world services ( to allow access to information provided from services living in the web like exchange rates,...)
-* 7 transaction layer ( to allow the broadcasting of transaction created in a wallet)
+In the cryptocurrency environment, value is held in specific applications/programs called *WALLET*.
+The main and basic functions of a Wallet is to send and receive money as a result of a transaction between two wallet' s owners.
+Regarding one of FERMAT'S target,i.e. allowing a great segmentation and abstraction levels and at the same time offering the user a pleasant, safe and easy-to-use expierence, the first job is to offer a number of *reference Wallets* for each *niche* discovered, wallets that can be adopted to inmediate use and also which can be taken as a "template" to build other more customized and complex wallets reusing the most of the components available in the platform at the time of the new development.
 
+For the first distribution of FERMAT, we have chosen Android as operative system, and a couple of reference wallets and services.
 
-=== Bitcoin Wallet
-This wallet is one of FERMAT's basic building block to allow interaction with the
-most popular cryptonetwork: Bitcoin. + 
-FERMAT's Bitcoin's Niche *Reference Wallet*  is a _basic wallet_ in terms of its functionalities, even simpler as other popular BTC wallets on the market. This is so  to maximize its ulterior reutilisation. + 
-This wallet provides the minimum necessary functionalities to perform a succesful transaction of Bitcoins: (+)
+These reference wallets allow the basic functiones of any wallet:
 
-* to make a payment in BTC ( send value to a BTC Wallet owner)
-* to receive payments in BTC
-* to show the transactions 
-* to show the balance of the wallet
-* to show a basic contacts list ( username and cryptoaddress related to each contact)
+* Transactions Log: (transactions in both status: Book balance & Available balance)
+* Contacts: manager of contact's info and their cryptoaddresses
+* Send: send money to a given crytoaddress
+* Receive: creates a valid cryptoaddress to let others send cryptocurrency to the wallet's owner.
+* Balance: yout count status!
 
-The wallet prompts the user to provide a *password* ( or *passphrase* ) on first run. Then it generates a pair of privat key/public Key for him, and derived from it, a valid _bitcoin address_ and the QR-Code image associated with it.
-When the user decides to send a payment, he enteres the amount and chooses the destination among the addresses stored in the contact's list, the wallet software creates a transaction with the valid format of a bitcoin transaction, it signes the transaction with the wallet's user unique digital signature (derived from his privat/public key), and sends it to the bitcoin network to be propagated among the active nodes.,s and when it is confirmed by others, it becomes part of the blockchain. When the transaction is confirmed by a mining node, it is written inside a transaction block of a new bitcoin blockchain's block. +
-At this stage, the BTC amoun was really "spent" i.e. transfered from the wallet's user to the destination user.  
-The Bi-Wa will then be able to show its up-dated balance, and also the succesful transaction in the wallet's transaction's log.
+ 
+.Reference Wallets included in version 1.0
+* *BitWa (Basic Bitcoin Wallet)*
+* *BLP (Bitcoin Loss Protected wallet)*
+* *DiWa (Discount Wallet)*
+
+=== FERMAT Wallet Manager
+
+The Wallet Manager application lets install available wallets in the user's device, collecting from the distributed network, the necessary components: wallet's _navigation structure_ and wallet's _resources_. 
 
 
-NOTE: the simplicity of this wallet is maximized. Bi-Wa does NOT handles payment or money request and and it is _wether_ interconnected with other wallets _not_ showing anything else but plain BTC currency. (no FIAT money abstraction!)
 
-=== Bitcoin Loss Protected Wallet 
-BLP is the second *Reference Wallet* developed by FERMAT, and its main goal is to protect the user from losing money when attemping to spend 
-Bitcoin at a change curse lower that the price when that Bitcoin amount was purchased (entered the wallet). +
-The new functionalities added are:
+TIP: Beforing exploring the fascinating environment of Wallet Factory, we need to introduce two distincts 
+groups of the components of a certain wallet: + 
+* components oriented towards the user (what he sees and how he manages the wallet), called *front-end* modules. + 
+* components that perform each function of the wallet at operational level, called *back-end* modules.
 
-* to store the *exchange rate* when a BTC amount is received in the wallet
-* to check the *exchange rate* when the user attemps to spend an amount of BTC and to freeze the funds if they are below the *purchase price* 
+ 
+=== FERMAT Wallet Factory
+
+Once we have at least one *Niche Reference Wallet* (e.g.*Bitcoin Reference Wallet*), we can realize that in the *front-end* there are two disctint tasks taking place: on one hand, there exist a *navigation structure* (available menus, tabs, buttons, etc) that provides the means by which the user operates the wallet, an on the other hand, there exists a set of *resources* (multimedia files, images, etc) used for the visualization of each element of the wallet.
+At the *back-end* , where the really action is occuring, we have a lot of modules acting to provide the necessary functions, like: +
+
+* sending and receiving the cryptocurrency
+* keeping track of the balance of the wallet
+* managing the contacts ( register, identification, etc)
+
+If someone having the required programmer's skills wants to build a Wallet, he would necessary have to build every and each one of the modules needed for the wallet to run begin to write the code from zero. However, if you remember that FERMAT is an open system allowing third part developers and actors in general to form part, developers of new wallet can use any of the available *reference niche wallet* to reutilize the COMPLETE back-end ( all the programming code stuff!), and concentrate his endeavour only to the *front-end*making his job a lot easier and allowing all his creativity to be channeled in a better and more attractive result for the end user. ( not only for a nice look but also for improved and more efficient functionalities!).
+
+==== Inside the Wallet Factory
+
+The first step to create a wallet is to join FERMAT an get an identification as DEVELOPER. 
+Then, the new registered *developer* installs the WaFa-module (Wallet Factory) and logs-in. + 
+After entering, he choses a *reference niche wallet* to import, gives his walletś project a new name and saves it as a new WFP-file (WALLET FACTORY PROJECT FILE). +
+Once he has his *own project* he will re-define the *navigation structure* (functionalities of the wallet) and then he will assign which *wallet ressources* he will choose to give his wallet an unique appearance. +
+The last step is to runthe project and test how it works until he is satisfied with the result. + 
+To give birth the new wallet into the world, he will have to *publish* it using FERMAT WALLET PUBLISHER.
+
+
+=== FERMAT Wallet Publisher
+
+The main task of the Wallet Publisher module is to make the new wallet designed and held into a WFP-file to be *published* in the Wallet Store and therefore become available to the rest of the FERMAT community to use it. +
+This module also has the responsability of notifying the release of new updates for each version or upgrades to new versions of existing wallets.
+ 
+=== FERMAT Wallet Store
+
+The Wallet Store module is inside FERMAT a DAPP (Distributed Application), i.e. and undetermined amount of nodes collaborate bewteen them to provide the functionality of the app inside the whole system. + 
+The Wallet Store functions in a similar way of known app-stores, and it serves to show the user the wallet that may be attractive to him. Itis a *distributed catalog* of wallets. +
+When one new wallet is chosen, the Wallet Store notifies the Wallet Manager app to make it available to the user. +
+Internally, the Wallet Store  keeps the identity of the wallet, of its developer, and of the ressources used by it.
+
+
 
 

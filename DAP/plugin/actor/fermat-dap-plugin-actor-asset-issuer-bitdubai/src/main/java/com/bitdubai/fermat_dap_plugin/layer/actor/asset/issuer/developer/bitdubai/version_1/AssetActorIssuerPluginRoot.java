@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -173,7 +174,6 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Deal
         } catch (CantInitializeAssetIssuerActorDatabaseException e) {
             throw new CantStartPluginException();
         }
-        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override

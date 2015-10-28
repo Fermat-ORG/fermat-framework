@@ -29,7 +29,7 @@ public class IntraUserModuleSearch implements IntraUserSearch {
     IntraUserManager intraUserNSManager;
 
     /**
-     * DealsWithCCPIntraWalletUser interface member variable
+     * DealsWithCCPIdentityIntraWalletUser interface member variable
      */
 
     IntraWalletUserManager intraWalletUserManager;
