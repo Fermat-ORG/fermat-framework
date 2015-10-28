@@ -2037,6 +2037,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
+        runtimeActivity.setActivityType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS.getCode());
         runtimeActivity.setColor("#12aca1");
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
 
