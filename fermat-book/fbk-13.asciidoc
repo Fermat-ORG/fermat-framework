@@ -1,21 +1,41 @@
-== Blockchain beyond currency: DIGITAL ASSETS 
+== FERMAT Crypto Commodity Money
 
-=== FERMAT Digital Asset Platform  
+This platform ....
 
-==== What is a Digital Asset ?
 
-=== Asset Issuer Wallet
--> for company or brand that issues a Digital Assets to offer to their customers*
-
-=== Asset User Wallet 
--> for *the customer who accepts/obtain some Digital Assets according to his interests*
-
-=== Redeem Point Wallet
--> for the *place/shop/person that exchanges the Asset for a certain service or product (redeems it)*
-
+=== _Network Service layer_
+Each time that a certain system function must perform any operation *outside* the device where FERMAT is running, a _network service_ is required to follow the execution in other devices until is completed. +
+Network services' modules need to have a * communication channel* stablished and maintained between the parties involved, what is done by the *P2P networks and communication superlayer* ( see the explanation at the previous section <<communicationLayer>> )+
+Each *network service module* running on a _local device_ stablish communication EXCLUSIVELY to its _counterpart_ running in the _remote device_. +
  
+Money Request ::
+Money Transmission :: +
 
 
+=== _Wallet layer_
+Crypto Commodity Wallet :: 
+Discount Walet :: +
 
+
+=== _Composite Wallet layer_
+Multiaccount Wallet :: +
+
+
+=== _Crypto Money Transaction layer_
+Incoming Device User ::
+Incoming Extra Actor ::
+Incoming Intra Actor ::
+Intra Wallet ::
+Outgoing Device User ::
+Outgoing Extra Actor ::
+Outgoing Intra Actor ::
+Inter Account :: + 
+
+
+=== _Request layer_
+Money Request :: +
+
+=== _Reference Wallet layer_
+Discount Wallet :: +
 
 

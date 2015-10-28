@@ -1,26 +1,56 @@
-== FERMAT Cryto Broker Platform
-In this platform the actors involved are the *cryptobroker* and his customers (*cryptocustomers*). A *cryptobroker* is a person or small organization whose business logic is to buy and sell cryptocurrency for fiat money in his local market, obtaining his profits from the difference in the buy/sell price. We distinguish also two common level of * cryptobrokers*, those acting as *cryptobrokers wholesalers* adn those who deal with final users/customers.   
-
-=== FERMAT Cryptobroker Wallet
-This Wallet is designed with the theoretical assumption that the broker always has available stock of cryptocurrency and fiat money and that his activity is to be constantly selling this two kind of products obtaining profit. The functionalities offered should help him to run the business in a simple way, taking the responsability of the basic management of the broker's fund (in cryptocurrency and fiat money, in cash and in bank accounts), the management of the contact list of his customers, and a balance of the profits generated. +
-Key functionalities are:
-
-* *Funds replenishment*:
-** Crypto Currency 
-** Cash Money (Fiat money in cash)
-** Bank Money (Fiat money in a bank account)
-* *Incoming/Outgoing money*: 
-** Cash on Hand 
-** Delivered Cash
-** Money Bank Deposit 
-* *Special functions* for _associated crypto brokers network_ (*agreement* between colleagues to be able to manage joint operations when needed) :
-** keep track of *Broker-to-Broker contract*
+== FERMAT Shoping Platform: + 
 
 
 
-=== FERMAT Cryptobroker Customer Wallet
+=== _Network Service layer_
+Each time that a certain system function must perform any operation *outside* the device where FERMAT is running, a _network service_ is required to follow the execution in other devices until is completed. +
+Network services' modules need to have a * communication channel* stablished and maintained between the parties involved, what is done by the *P2P networks and communication superlayer* ( see the explanation at the previous section <<communicationLayer>> )+
+Each *network service module* running on a _local device_ stablish communication EXCLUSIVELY to its _counterpart_ running in the _remote device_. +
+ 
+Purchase Transmission :: +
+
+=== _Actor Network Service layer_
+Shop :: 
+Brand ::
+Retailer :: +
+
+=== _Identity layer_
+Shop :: 
+Brand ::
+Retailer :: +
+
+=== _Wallet layer_
+Shop Wallet :: 
+Brand Wallet ::
+Retailer Wallet :: +
+
+=== _Crypto Money Transaction_
+Purchase ::
+Sale :: +
+
+=== _Actor layer_
+Shop :: 
+Brand ::
+Retailer :: +
+
+=== _Subapp Module layer_
+Shop :: 
+Brand ::
+Retailer :: +
+
+=== _Wallet Module layer_
+Shop Wallet :: 
+Brand Wallet ::
+Retailer Wallet :: +
 
 
+=== _Subapp layer_
+Shop :: 
+Brand ::
+Retailer :: +
 
-
+=== _Reference Wallet layer_
+Shop Wallet :: 
+Brand Wallet ::
+Retailer Wallet :: +
 
