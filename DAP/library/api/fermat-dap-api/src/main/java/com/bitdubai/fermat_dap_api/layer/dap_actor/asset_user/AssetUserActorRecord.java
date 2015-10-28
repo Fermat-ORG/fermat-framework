@@ -29,9 +29,14 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     /**
      * Constructor
+     * @param assetUserActorPublicKey
+     * @param assetUserActorName
+     * @param assetUserActorprofileImage
+     * @param locationLatitude
+     * @param locationLongitude
      */
 
-    public AssetUserActorRecord(){
+    public AssetUserActorRecord(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage, Double locationLatitude, Double locationLongitude){
 
     }
 
