@@ -549,25 +549,22 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements  
      * @throws CantGetIntraUsersListException
      */
     @Override
-    public List<IntraUserInformation> getAllIntraUsers(int max,int offset) throws CantGetIntraUsersListException {
-        try
-        {
+    public List<IntraUserInformation> getAllIntraUsers(String identityPublicKey,int max,int offset) throws CantGetIntraUsersListException {
+        try{
             List<IntraUserInformation> intraUserList= new ArrayList<IntraUserInformation>();
 
 
-            List<IntraWalletUser> actorsList = this.intraWalletUserManager.getAllIntraWalletUsers(this.intraUserLoggedPublicKey, max, offset);
+            List<IntraWalletUser> actorsList = this.intraWalletUserManager.getAllIntraWalletUsers(identityPublicKey, max, offset);
 
             for (IntraWalletUser intraUserActor : actorsList) {
                 intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage()));
             }
             return intraUserList;
         }
-        catch(CantGetIntraWalletUsersException e)
-        {
+        catch(CantGetIntraWalletUsersException e) {
             throw new CantGetIntraUsersListException("CAN'T GET ALL INTRA USERS FROM LOGGED USER",e,"","");
         }
-        catch(Exception e)
-        {
+        catch(Exception e) {
             throw new CantGetIntraUsersListException("CAN'T GET ALL INTRA USERS FROM LOGGED USER",FermatException.wrapException(e),"","unknown exception");
         }
     }

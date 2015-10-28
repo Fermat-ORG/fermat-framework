@@ -186,6 +186,8 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
             FernatAnimationUtils.showView(false, empty);
             FernatAnimationUtils.showEmpty(isAttached, empty, lstIntraUserInformations);
 
+            onRefresh();
+
 
         } catch(Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -216,6 +218,7 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
                 @Override
                 public void onPostExecute(Object... result) {
                     isRefreshing = false;
+                    dialog.dismiss();
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (result != null &&
@@ -230,6 +233,7 @@ public class ConnectionsFragment extends FermatFragment implements SearchView.On
                 @Override
                 public void onErrorOccurred(Exception ex) {
                     isRefreshing = false;
+                    dialog.dismiss();
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (getActivity() != null)
@@ -391,7 +395,7 @@ Updates the count of notifications in the ActionBar.
 
         try {
 
-            dataSet = moduleManager.getAllIntraUsers(MAX,offset);
+            dataSet = moduleManager.getAllIntraUsers(moduleManager.getActiveIntraUserIdentity().getPublicKey(),MAX,offset);
             offset = dataSet.size();
 
         } catch (CantGetIntraUsersListException e) {
