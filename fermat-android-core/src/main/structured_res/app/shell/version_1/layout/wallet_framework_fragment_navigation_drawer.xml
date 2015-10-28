@@ -7,4 +7,4 @@
     android:divider="@android:color/transparent"
     android:dividerHeight="0dp"
     android:background="#FFFFFF"
-    tools:osContext="com.bitdubai.fermat.util.NavigationDrawerFragment" />
+     />

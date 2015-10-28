@@ -20,7 +20,7 @@ public class FermatAddonReferencesInjector {
 
         this.fermatSystemContext = fermatSystemContext;
     }
-
+/*
     public final void injectReferences(final AddonVersionReference       avrToBeInjected   ,
                                        final List<AddonVersionReference> referencesToInject) throws CantInjectReferencesException {
 
@@ -41,5 +41,5 @@ public class FermatAddonReferencesInjector {
 
         }
     }
-
+*/
 }

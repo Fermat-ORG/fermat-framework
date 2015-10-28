@@ -10,7 +10,11 @@ import com.bitdubai.fermat_api.*;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystems;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
@@ -81,6 +85,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.in
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.DealsWithAssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DealsWithAssetTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_pip_core.PIPPlatform;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.DealsWithWalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettingsManager;
@@ -229,6 +234,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -377,13 +383,38 @@ public class Platform implements Serializable {
      */
     public void start() throws CantStartPlatformException, CantReportCriticalStartingProblemException {
 
-        try {
-            new FermatSystem().start();
+       /* try {
+            new FermatSystem(osContext, OperativeSystems.ANDROID).start();
         } catch (FermatException e) {
             System.out.println(e.getPossibleReason());
             System.out.println(e.getFormattedContext());
             System.out.println(e.getFormattedTrace());
         } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Aparantemente hubo un error....");
+        }*/
+
+        try {
+
+            AbstractPlatform abstractPlatform = new PIPPlatform();
+            abstractPlatform.start();
+
+            AbstractAddon eventManager = abstractPlatform.getAddonVersion(new AddonVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.EVENT_MANAGER, Developers.BITDUBAI, new Version()));
+
+            ConcurrentHashMap<AddonVersionReference, Class<? extends FermatManager>> neededAddons = eventManager.getNeededAddons();
+
+            for (ConcurrentHashMap.Entry<AddonVersionReference, Class<? extends FermatManager>> avr : neededAddons.entrySet()) {
+                eventManager.assignAddonReference(avr.getKey(), avr.getValue(), abstractPlatform.getAddonVersion(avr.getKey()));
+            }
+
+            eventManager.start();
+
+        } catch (FermatException e) {
+            System.out.println(e.getPossibleReason());
+            System.out.println(e.getFormattedContext());
+            System.out.println(e.getFormattedTrace());
+        } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Aparantemente hubo un error....");
         }
 

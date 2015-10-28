@@ -1,7 +1,7 @@
 package com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1;
 
 import android.content.Context;
-import com.bitdubai.fermat_osa_addon.layer.android.location_system.developer.bitdubai.version_1.DeviceLocationOsAddonRoot;
+import com.bitdubai.fermat_osa_addon.layer.android.device_location.developer.bitdubai.version_1.DeviceLocationAndroidAddonRoot;
 import com.bitdubai.fermat_api.layer.osa_android.LocationSystemOs;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 
@@ -24,9 +24,11 @@ public class AndroidOsLocationSystem implements LocationSystemOs {
      * Constructor
      */
 
-    public AndroidOsLocationSystem() {
+    public AndroidOsLocationSystem(Context context) {
 
-        locationSystemOs =  new DeviceLocationOsAddonRoot();
+        this.context = context;
+
+        locationSystemOs =  new DeviceLocationAndroidAddonRoot();
         this.locationManager = locationSystemOs.getLocationSystem();
 
 
@@ -36,19 +38,9 @@ public class AndroidOsLocationSystem implements LocationSystemOs {
      */
 
     @Override
-    public LocationManager getLocationSystem()
-    {
+    public LocationManager getLocationSystem() {
         return this.locationManager;
     }
 
-    @Override
-    public void setContext(Object context) {
-
-        this.context = (Context) context;
-       this.locationManager.setContext(this.context);
-
-
-
-    }
 }
 

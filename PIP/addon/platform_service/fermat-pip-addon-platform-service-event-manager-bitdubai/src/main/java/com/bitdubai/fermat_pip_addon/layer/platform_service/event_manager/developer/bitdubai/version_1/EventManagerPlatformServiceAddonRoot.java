@@ -2,15 +2,14 @@ package com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.devel
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddon;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.MissingReferencesException;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.common.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantAssignReferenceException;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -20,6 +19,7 @@ import com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.develo
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +32,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class EventManagerPlatformServiceAddonRoot extends AbstractAddon implements EventManager {
 
-    private ErrorManager       errorManager      ;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER, referenceManagerClass = ErrorManager.class)
+    private ErrorManager errorManager;
+
     private FermatEventMonitor fermatEventMonitor;
 
     /**
@@ -117,59 +119,11 @@ public class EventManagerPlatformServiceAddonRoot extends AbstractAddon implemen
     @Override
     public final void start() throws CantStartPluginException {
 
-        try {
+        System.out.println("si me asignaron no voy a estar en null: "+errorManager);
 
-            validateAndAssignReferences();
+        this.fermatEventMonitor = new EventManagerPlatformServiceEventMonitor(this.errorManager);
 
-            this.fermatEventMonitor = new EventManagerPlatformServiceEventMonitor(this.errorManager);
-
-        } catch (final MissingReferencesException e) {
-
-            throw new CantStartPluginException(
-                    "",
-                    "There was an error trying to assign references to Fermat EventManager."
-            );
-
-        } catch (final Exception e) {
-
-            throw new CantStartPluginException(
-                    "",
-                    "Unhandled Error starting Fermat Event Manager."
-            );
-        }
-    }
-
-    @Override
-    public List<AddonVersionReference> getNeededAddonReferences() {
-
-        final List<AddonVersionReference> addonsNeeded = new ArrayList<>();
-
-        addonsNeeded.add(new AddonVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER, Developers.BITDUBAI, new Version()));
-
-        return addonsNeeded;
-    }
-
-    @Override
-    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
-        return null;
-    }
-
-    @Override
-    protected void validateAndAssignReferences() throws MissingReferencesException {
-
-        this.errorManager = (ErrorManager) this.getAddonReference(new AddonVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER, Developers.BITDUBAI, new Version()));
-
-        if (errorManager == null) {
-            throw new MissingReferencesException(
-                "errorManager: "+ errorManager,
-                "There is missing references for Event Manager Addon."
-            );
-        }
+        this.serviceStatus = ServiceStatus.STARTED;
 
     }
 
