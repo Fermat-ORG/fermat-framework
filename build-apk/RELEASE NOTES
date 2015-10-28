@@ -1,7 +1,7 @@
 
 Funcionalidades de la aplicación hasta el momento:
 
-#### Wallet
+#### Bitcoin wallet
 
 * Agregar contacto, El mismo puede ser Extra o Intra user.
 * Enviar btc a extra user.
