@@ -771,7 +771,7 @@ public class Platform implements Serializable {
             boolean CCP = true;
             boolean CRY = true;
             boolean CSH = true;
-            boolean DAP = true;/*Informar Motivo para Desactivar a Team Thunder POR FAVOR - GRACIAS*/
+            boolean DAP = false;/*Informar Motivo para Desactivar a Team Thunder POR FAVOR - GRACIAS*/
             boolean DMP = true;//DOBLEMENTE TEMPORAL
             boolean MKT = true;
             boolean OSA = true;
