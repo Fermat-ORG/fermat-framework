@@ -24,7 +24,7 @@ Funcionalidades de la aplicación hasta el momento:
 
 ### Intra user Community
 
-# Busqueda de conexiones, Se estan buscando todos los usuarios disponibles en la red fermat para conectar.
+* Busqueda de conexiones, Se estan buscando todos los usuarios disponibles en la red fermat para conectar.
 * Permite establecer conexión con los demas usuarios.
 * Envia solicitudes de conexión.
 * Se aceptan solicitudes de conexión.
