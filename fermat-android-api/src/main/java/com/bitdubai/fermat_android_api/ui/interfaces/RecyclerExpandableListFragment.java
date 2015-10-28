@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home;
+package com.bitdubai.fermat_android_api.ui.interfaces;
 
 import android.support.v7.widget.RecyclerView;
 

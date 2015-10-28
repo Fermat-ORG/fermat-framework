@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home;
+package com.bitdubai.fermat_android_api.ui.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,13 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
-import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentListItem;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_android_api.ui.interfaces.RecyclerListFragment;
+import com.bitdubai.fermat_android_api.ui.interfaces.RecyclerExpandableListFragment;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 
 import java.util.List;
@@ -26,7 +25,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by nelson on 28/10/15.
  */
-public abstract class FermatExpandableListFragment<M extends ParentListItem> extends FermatFragment
+public abstract class FermatWalletExpandableListFragment<M extends ParentListItem> extends FermatWalletFragment
         implements RecyclerExpandableListFragment, SwipeRefreshLayout.OnRefreshListener, FermatWorkerCallBack {
 
     /**
@@ -140,9 +139,7 @@ public abstract class FermatExpandableListFragment<M extends ParentListItem> ext
      *
      * @param refreshType Fermat Refresh Enum Type
      */
-    public List<M> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        return null;
-    }
+    public abstract List<M> getMoreDataAsync(FermatRefreshTypes refreshType, int pos);
 
     @Override
     public void onRefresh() {
