@@ -2,17 +2,12 @@ package com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.b
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
-
 
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -20,13 +15,12 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetIntraUserException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.IntraUserNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetNotificationException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.NotificationNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantAcceptIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCancelIntraWalletUserException;
@@ -36,8 +30,6 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.Cant
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantCreateNewIntraWalletUserException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.DealsWithIntraUsersNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserNotification;
@@ -55,21 +47,18 @@ import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bi
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantGetIntraWalletUsersListException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraWalletUserActorDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantProcessNotificationsExceptions;
-import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantUpdateIntraWalletUserConnectionException;
+import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantUpdateConnectionException;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,9 +77,15 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-//TODO: hay que arreglar esto, hay metodos sin implementar abajo de todo
-
-public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements IntraWalletUserManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithEvents, DealsWithIntraUsersNetworkService, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin, Service, Serializable {
+public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
+        DatabaseManagerForDevelopers,
+        DealsWithErrors,
+        DealsWithEvents,
+        DealsWithPluginDatabaseSystem,
+        DealsWithPluginFileSystem,
+        DealsWithIntraUsersNetworkService,
+        IntraWalletUserManager,
+        LogManagerForDevelopers {
 
     @Override
     public List<AddonVersionReference> getNeededAddonReferences() {
@@ -213,8 +208,8 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
     @Override
     public void acceptIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToAddPublicKey) throws CantAcceptIntraWalletUserException {
         try {
-            this.intraWalletUserActorDao.updateIntraWalletUserConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, ConnectionState.CONNECTED);
-        } catch (CantUpdateIntraWalletUserConnectionException e) {
+            this.intraWalletUserActorDao.updateConnectionState(intraUserLoggedInPublicKey, intraUserToAddPublicKey, ConnectionState.CONNECTED);
+        } catch (CantUpdateConnectionException e) {
             throw new CantAcceptIntraWalletUserException("CAN'T ACCEPT INTRA USER CONNECTION", e, "", "");
         } catch (Exception e) {
             throw new CantAcceptIntraWalletUserException("CAN'T ACCEPT INTRA USER CONNECTION", FermatException.wrapException(e), "", "");
@@ -233,8 +228,8 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
     public void denyConnection(String intraUserLoggedInPublicKey, String intraUserToRejectPublicKey) throws CantDenyConnectionException {
 
         try {
-            this.intraWalletUserActorDao.updateIntraWalletUserConnectionState(intraUserLoggedInPublicKey, intraUserToRejectPublicKey, ConnectionState.DENIED_LOCALLY);
-        } catch (CantUpdateIntraWalletUserConnectionException e) {
+            this.intraWalletUserActorDao.updateConnectionState(intraUserLoggedInPublicKey, intraUserToRejectPublicKey, ConnectionState.DENIED_LOCALLY);
+        } catch (CantUpdateConnectionException e) {
             throw new CantDenyConnectionException("CAN'T DENY INTRA USER CONNECTION", e, "", "");
         } catch (Exception e) {
             throw new CantDenyConnectionException("CAN'T DENY INTRA USER CONNECTION", FermatException.wrapException(e), "", "");
@@ -251,8 +246,8 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
     @Override
     public void disconnectIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToDisconnectPublicKey) throws CantDisconnectIntraWalletUserException {
         try {
-            this.intraWalletUserActorDao.updateIntraWalletUserConnectionState(intraUserLoggedInPublicKey, intraUserToDisconnectPublicKey, ConnectionState.DISCONNECTED_REMOTELY);
-        } catch (CantUpdateIntraWalletUserConnectionException e) {
+            this.intraWalletUserActorDao.updateConnectionState(intraUserLoggedInPublicKey, intraUserToDisconnectPublicKey, ConnectionState.DISCONNECTED_REMOTELY);
+        } catch (CantUpdateConnectionException e) {
             throw new CantDisconnectIntraWalletUserException("CAN'T CANCEL INTRA USER CONNECTION", e, "", "");
         } catch (Exception e) {
             throw new CantDisconnectIntraWalletUserException("CAN'T CANCEL INTRA USER CONNECTION", FermatException.wrapException(e), "", "");
@@ -270,8 +265,8 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
     @Override
     public void cancelIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToCancelPublicKey) throws CantCancelIntraWalletUserException {
         try {
-            this.intraWalletUserActorDao.updateIntraWalletUserConnectionState(intraUserLoggedInPublicKey, intraUserToCancelPublicKey, ConnectionState.CANCELLED);
-        } catch (CantUpdateIntraWalletUserConnectionException e) {
+            this.intraWalletUserActorDao.updateConnectionState(intraUserLoggedInPublicKey, intraUserToCancelPublicKey, ConnectionState.CANCELLED);
+        } catch (CantUpdateConnectionException e) {
             throw new CantCancelIntraWalletUserException("CAN'T CANCEL INTRA USER CONNECTION", e, "", "");
         } catch (Exception e) {
             throw new CantCancelIntraWalletUserException("CAN'T CANCEL INTRA USER CONNECTION", FermatException.wrapException(e), "", "");
@@ -288,7 +283,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
     @Override
     public List<IntraWalletUser> getAllIntraWalletUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraWalletUsersException {
         try {
-            return this.intraWalletUserActorDao.getAllIntraWalletUsers(intraUserLoggedInPublicKey, max, offset);
+            return this.intraWalletUserActorDao.getAllConnectedIntraWalletUsers(intraUserLoggedInPublicKey, max, offset);
         } catch (CantGetIntraWalletUsersListException e) {
             throw new CantGetIntraWalletUsersException("CAN'T LIST INTRA USER CONNECTIONS", e, "", "");
         } catch (Exception e) {
@@ -296,7 +291,22 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
         }
     }
 
-    public Actor getActorByPublicKey(String actorPublicKey) throws CantGetIntraUserException, IntraUserNotFoundException {
+
+    @Override
+    public List<IntraWalletUser> getConnectedIntraWalletUsers(String intraUserLoggedInPublicKey) throws CantGetIntraWalletUsersException {
+        try {
+            return this.intraWalletUserActorDao.getAllConnectedIntraWalletUsers(intraUserLoggedInPublicKey,ConnectionState.CONNECTED,100,0);
+
+        }
+        catch (CantGetIntraWalletUsersListException e) {
+            throw new CantGetIntraWalletUsersException("CAN'T LIST INTRA USER CONNECTIONS", e, "", "");
+        }
+        catch (Exception e) {
+            throw new CantGetIntraWalletUsersException("CAN'T LIST INTRA USER CONNECTIONS", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    public Actor getActorByPublicKey(String actorPublicKey) throws CantGetNotificationException, NotificationNotFoundException {
 
         try {
             //TODO verificar si se usa
@@ -305,16 +315,16 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
 
             //not found actor
            // if(actor == null)
-               // throw new IntraUserNotFoundException("", null, ".","Intra User not found");
+               // throw new NotificationNotFoundException("", null, ".","Intra User not found");
 
            // return new IntraUserActorRecord(actorPublicKey, "",actor.getName(),actor.getProfileImage());
 
 //            return new IntraUserActorRecord("afd0647a-87de-4c56-9bc9-be736e0c5059", "","wallat user",new byte[0]);
 
-       // } catch (com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantGetIntraUserException  e) {
-          //  throw new CantGetIntraUserException("", e, ".","Cant Get Intra USer from Data Base");
+       // } catch (com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantGetNotificationException  e) {
+          //  throw new CantGetNotificationException("", e, ".","Cant Get Intra USer from Data Base");
          } catch (Exception e) {
-            throw new CantGetIntraUserException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
+            throw new CantGetNotificationException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
         }
         return null;
     }
@@ -332,7 +342,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
     @Override
     public List<IntraWalletUser> getWaitingYourAcceptanceIntraWalletUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraWalletUsersException {
         try {
-            return this.intraWalletUserActorDao.getAllIntraWalletUsers(intraUserLoggedInPublicKey, ConnectionState.PENDING_LOCALLY_ACCEPTANCE, max, offset);
+            return this.intraWalletUserActorDao.getAllConnectedIntraWalletUsers(intraUserLoggedInPublicKey, ConnectionState.PENDING_LOCALLY_ACCEPTANCE, max, offset);
         } catch (CantGetIntraWalletUsersListException e) {
             throw new CantGetIntraWalletUsersException("CAN'T LIST INTRA USER ACCEPTED CONNECTIONS", e, "", "");
         } catch (Exception e) {
@@ -353,7 +363,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
     @Override
     public List<IntraWalletUser> getWaitingTheirAcceptanceIntraWalletUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraWalletUsersException {
         try {
-            return this.intraWalletUserActorDao.getAllIntraWalletUsers(intraUserLoggedInPublicKey, ConnectionState.PENDING_REMOTELY_ACCEPTANCE, max, offset);
+            return this.intraWalletUserActorDao.getAllConnectedIntraWalletUsers(intraUserLoggedInPublicKey, ConnectionState.PENDING_REMOTELY_ACCEPTANCE, max, offset);
         } catch (CantGetIntraWalletUsersListException e) {
             throw new CantGetIntraWalletUsersException("CAN'T LIST INTRA USER PENDING_HIS_ACCEPTANCE CONNECTIONS", e, "", "");
         } catch (Exception e) {
@@ -373,53 +383,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
 
     }
 
-    /**
-     * DealsWithEvents Interface implementation.
-     */
 
-
-    @Override
-    public void setEventManager(EventManager DealsWithEvents) {
-        this.eventManager = DealsWithEvents;
-    }
-
-    /**
-     * DealsWithErrors Interface implementation.
-     */
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-
-    /**
-     * DealsWithIntraWalletUsersNetworkService Interface implementation.
-     */
-
-    @Override
-    public void setIntraUserNetworkServiceManager(IntraUserManager intraUserManager) {
-
-        this.intraUserNetworkServiceManager = intraUserManager;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-
-    }
-
-    /**
-     * DealWithPluginFileSystem Interface implementation.
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-
-    }
 
     /**
      * Service Interface implementation.
@@ -578,7 +542,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
 
         } catch (Exception exception) {
             FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: " + IntraWalletUserActorPluginRoot.newLoggingLevel, "Check the cause");
-            this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
 
     }
@@ -646,7 +610,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
                  * I confirm the application in the Network Service
                  */
                 //TODO: VER PORQUE TIRA ERROR
-                //intraUserNetworkServiceManager.confirmNotification(notification.getId());
+                intraUserNetworkServiceManager.confirmNotification(notification.getId());
             }
 
 
@@ -666,18 +630,29 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements In
     }
 
     @Override
-    public List<com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListIntraWalletUsersException {
-        return null;
+    public final void setEventManager(final EventManager eventManager) {
+        this.eventManager = eventManager;
     }
 
     @Override
-    public com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser createNewIntraWalletUser(String alias, byte[] profileImage) throws CantCreateNewIntraWalletUserException {
-        return null;
+    public final void setErrorManager(final ErrorManager errorManager) {
+        this.errorManager = errorManager;
     }
 
     @Override
-    public boolean hasIntraUserIdentity() throws CantListIntraWalletUsersException {
-        return false;
+    public final void setIntraUserNetworkServiceManager(final IntraUserManager intraUserManager) {
+        this.intraUserNetworkServiceManager = intraUserManager;
     }
+
+    @Override
+    public final void setPluginDatabaseSystem(final PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    @Override
+    public final void setPluginFileSystem(final PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
+
 
 }

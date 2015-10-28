@@ -1,19 +1,20 @@
 package com.bitdubai.fermat_cbp_api.all_definition.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Created by Yordin Alayn on 24.09.15.
  */
  
-public enum BankCurrencyType {
-    DOLARUSA("USD"),
+public enum BankCurrencyType implements FermatEnum {
+    DOLAR_USA("USD"),
     EURO("EUR"),
-    DOLARAUSTRALIANO("AUD"),
-    DOLARCANADIENCE("CAD"),
-    FRANCOSUIZP("CHF"),
-    LIBRAESTERLINA("GBP"),
-    YENJAPONES("JPY"),
+    DOLAR_AUSTRALIANO("AUD"),
+    DOLAR_CANADIENCE("CAD"),
+    FRANCO_SUIZO("CHF"),
+    LIBRA_ESTERLINA("GBP"),
+    YEN_JAPONES("JPY"),
     BOLIVARES("BS");
 
     private String code;
@@ -22,20 +23,22 @@ public enum BankCurrencyType {
         this.code = code;
     }
 
+    @Override
     public String getCode() {
         return this.code;
     }
 
     public static BankCurrencyType getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "USD": return BankCurrencyType.DOLARUSA;
-            case "EUR": return com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType.EURO;
-            case "AUD": return com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType.DOLARAUSTRALIANO;
-            case "CAD": return com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType.DOLARCANADIENCE;
-            case "CHF": return com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType.FRANCOSUIZP;
-            case "GBP": return com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType.LIBRAESTERLINA;
-            case "JPY": return com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType.YENJAPONES;
-            case "BS": return com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType.BOLIVARES;
+            case "USD": return DOLAR_USA;
+            case "EUR": return EURO;
+            case "AUD": return DOLAR_AUSTRALIANO;
+            case "CAD": return DOLAR_CANADIENCE;
+            case "CHF": return FRANCO_SUIZO;
+            case "GBP": return LIBRA_ESTERLINA;
+            case "JPY": return YEN_JAPONES;
+            case "BS": return BOLIVARES;
+
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the BankCurrencyType enum");
         }
     }

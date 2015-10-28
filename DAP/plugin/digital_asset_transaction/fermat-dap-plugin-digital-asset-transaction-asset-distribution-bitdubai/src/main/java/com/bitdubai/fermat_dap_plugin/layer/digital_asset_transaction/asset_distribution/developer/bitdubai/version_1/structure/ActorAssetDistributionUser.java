@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -19,6 +20,10 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
     private long lastConnectionDate;
     private ConnectionState connectionState;
 
+    @Override
+    public String getPublicLinkedIdentity() {
+        return new ECCKeyPair().getPublicKey();
+    }
     @Override
     public String getPublicKey() {
         return this.publicKey;
@@ -100,7 +105,7 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
      * @return the Gender of the Asset user
      */
     @Override
-    public Genders getGender() {
+    public Genders getGenders() {
         return null;
     }
 

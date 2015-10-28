@@ -38,11 +38,11 @@ import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitduba
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeApp;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.app_runtime.developer.bitdubai.version_1.structure.RuntimeSubApp;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1173,15 +1173,15 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeSubApp.addActivity(runtimeActivity);
             runtimeSubApp.setStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
 
+            statusBar = new StatusBar();
+            statusBar.setColor("#0e738b");
+            runtimeActivity.setStatusBar(statusBar);
+
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Crypto Broker Identity");
             runtimeTitleBar.setColor("#FFFFFF");
             runtimeTitleBar.setLabelSize(16);
             runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#0288D1");
-            runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_MAIN_FRAGMENT.getKey());
@@ -1196,15 +1196,15 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity.setColor("#1189a5");
             runtimeSubApp.addActivity(runtimeActivity);
 
+            statusBar = new StatusBar();
+            statusBar.setColor("#0e738b");
+            runtimeActivity.setStatusBar(statusBar);
+
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Create New Identity");
             runtimeTitleBar.setColor("#FFFFFF");
             runtimeTitleBar.setLabelSize(16);
             runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#0288D1");
-            runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
@@ -1219,15 +1219,15 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity.setColor("#1189a5");
             runtimeSubApp.addActivity(runtimeActivity);
 
+            statusBar = new StatusBar();
+            statusBar.setColor("#0e738b");
+            runtimeActivity.setStatusBar(statusBar);
+
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Edit Identity");
             runtimeTitleBar.setColor("#FFFFFF");
             runtimeTitleBar.setLabelSize(16);
             runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            statusBar = new StatusBar();
-            statusBar.setColor("#0288D1");
-            runtimeActivity.setStatusBar(statusBar);
 
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());

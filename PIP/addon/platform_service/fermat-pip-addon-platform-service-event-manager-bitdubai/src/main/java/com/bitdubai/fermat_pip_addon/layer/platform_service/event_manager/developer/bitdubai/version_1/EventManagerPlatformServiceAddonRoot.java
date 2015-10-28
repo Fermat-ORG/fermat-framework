@@ -1,43 +1,49 @@
 package com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddon;
+import com.bitdubai.fermat_api.layer.all_definition.common.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEventMonitor;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer.bitdubai.version_1.structure.EventManagerPlatformServiceEventMonitor;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by ciencias on 23.01.15.
- * Updated by Leon Acosta (laion.cj91@gmail.com) on 22-08-2015.
+ * This addon is the responsible to manage all the events in fermat platform.
+ *
+ * Created by by Leon Acosta (laion.cj91@gmail.com) on 22-08-2015.
  */
-public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager, DealsWithEventMonitor, Service,Serializable {
+public class EventManagerPlatformServiceAddonRoot extends AbstractAddon implements EventManager {
 
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER, referenceManagerClass = ErrorManager.class)
+    private ErrorManager errorManager;
 
-    /**
-     * DealsWithEventMonitor member variables
-     */
     private FermatEventMonitor fermatEventMonitor;
 
     /**
      * EventManager Interface member variables.
      */
-    private Map<String, List<FermatEventListener>> listenersMap = new HashMap<>();
+    private final Map<String, List<FermatEventListener>> listenersMap;
+
+    public EventManagerPlatformServiceAddonRoot() {
+        super(new AddonVersionReference(new Version()));
+
+        listenersMap = new ConcurrentHashMap<>();
+    }
 
     /**
      * EventManager Interface implementation.
@@ -107,40 +113,15 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
         return builder.toString();
     }
 
-    /**
-     * Service Interface implementation.
-     */
     @Override
-    public void start() {
+    public final void start() throws CantStartPluginException {
+
+        System.out.println("si me asignaron no voy a estar en null: "+errorManager);
+
+        this.fermatEventMonitor = new EventManagerPlatformServiceEventMonitor(this.errorManager);
+
         this.serviceStatus = ServiceStatus.STARTED;
+
     }
 
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }
-
-
-    /**
-     * DealsWithEventMonitor interface implementation.
-     */
-    @Override
-    public void setFermatEventMonitor(FermatEventMonitor fermatEventMonitor) {
-        this.fermatEventMonitor = fermatEventMonitor;
-    }
 }

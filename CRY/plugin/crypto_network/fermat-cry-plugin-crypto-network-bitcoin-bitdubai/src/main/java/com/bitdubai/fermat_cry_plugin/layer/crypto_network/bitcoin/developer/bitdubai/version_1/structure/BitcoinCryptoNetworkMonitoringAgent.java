@@ -9,10 +9,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
@@ -216,15 +215,18 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
 
 
             peers.setUserAgent(BitcoinManager.FERMAT_AGENT_NAME, BitcoinManager.FERMAT_AGENT_VERSION);
-            peers.setUseLocalhostPeerWhenPossible(true);
+            peers.setUseLocalhostPeerWhenPossible(false);
             /**
              * If we are using RegTest network, we will connect to local server
              */
             if (networkParameters == RegTestParams.get()) {
-                InetSocketAddress inetSocketAddress = new InetSocketAddress(REGTEST_SERVER_ADDRESS, REGTEST_SERVER_PORT);
-                PeerAddress peerAddress = new PeerAddress(inetSocketAddress);
-                peers.addAddress(peerAddress);
-                logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoNetwork information: Using RegTest. Connecting to " + inetSocketAddress.toString(), null, null);
+                InetSocketAddress inetSocketAddress1 = new InetSocketAddress(REGTEST_SERVER_1_ADDRESS, REGTEST_SERVER_1_PORT);
+                PeerAddress peerAddress1 = new PeerAddress(inetSocketAddress1);
+                peers.addAddress(peerAddress1);
+
+                InetSocketAddress inetSocketAddress2 = new InetSocketAddress(REGTEST_SERVER_2_ADDRESS, REGTEST_SERVER_2_PORT);
+                PeerAddress peerAddress2 = new PeerAddress(inetSocketAddress2);
+                peers.addAddress(peerAddress2);
             } else
             /**
              * If it is not RegTest, then I will get the Peers by DNSDiscovery
@@ -275,7 +277,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
     }
 
     public void broadcastTransaction(Transaction transaction) {
-        TransactionBroadcast broadcast = peers.broadcastTransaction(transaction);
+        TransactionBroadcast broadcast = peers.broadcastTransaction(transaction, 2);
         broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
             @Override
             public void onBroadcastProgress(double progress) {

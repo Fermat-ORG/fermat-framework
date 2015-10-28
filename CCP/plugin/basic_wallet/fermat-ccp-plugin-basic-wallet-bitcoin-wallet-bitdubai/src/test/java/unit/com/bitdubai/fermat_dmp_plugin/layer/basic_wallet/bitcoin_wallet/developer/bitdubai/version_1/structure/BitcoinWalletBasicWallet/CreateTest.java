@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletBasicWallet;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -8,7 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import ErrorManager;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletBasicWallet;
 
 import org.junit.Before;
@@ -23,9 +24,11 @@ import java.util.UUID;
 import unit.com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.mocks.MockErrorManager;
 import unit.com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.mocks.MockWalletIdsFile;
 
+*/
 /**
  * Created by jorgegonzalez on 2015.07.10..
- */
+ *//*
+
 @RunWith(MockitoJUnitRunner.class)
 public class CreateTest {
 
@@ -73,3 +76,4 @@ public class CreateTest {
     }
 
 }
+*/
