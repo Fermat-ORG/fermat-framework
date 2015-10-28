@@ -88,7 +88,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_open_negotiations, container, false);
+        View layout = inflater.inflate(R.layout.fragment_open_negotiations_tab, container, false);
         initViews(layout);
         return layout;
     }
