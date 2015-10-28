@@ -94,12 +94,12 @@ public class LogicTest {
             return Platforms.CRYPTO_CURRENCY_PLATFORM;
         }
 
-        @Override
+//        @Override
         public Layers getLayer() {
             return this.layer;
         }
 
-        @Override
+//        @Override
         public Developers getDeveloper() {
             return this.developer;
         }
@@ -117,7 +117,8 @@ public class LogicTest {
     private Map<PluginReference, List<PluginReference>> pluginReferenceListMap = new HashMap<>();
 
     private PluginReference buildPR(FermatPluginsEnum e){
-        return new PluginReference(e, new Version("1.0.0"));
+//        return new PluginReference(e, new Version("1.0.0"));
+        return null;
     }
 
     private List<PluginReference> buildRL(PluginReference...refs) {

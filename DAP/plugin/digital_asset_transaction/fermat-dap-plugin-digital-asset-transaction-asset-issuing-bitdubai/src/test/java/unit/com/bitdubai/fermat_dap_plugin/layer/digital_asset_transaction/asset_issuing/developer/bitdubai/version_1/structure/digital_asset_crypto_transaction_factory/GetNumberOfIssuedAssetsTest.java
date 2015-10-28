@@ -1,15 +1,15 @@
-package unit.com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.asset_issuing_transaction_manager;
+package unit.com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.digital_asset_crypto_transaction_factory;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.AssetIssuingTransactionManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.DigitalAssetCryptoTransactionFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -26,14 +26,15 @@ import java.util.UUID;
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by frank on 26/10/15.
+ * Created by frank on 27/10/15.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class GetNumberOfIssuedAssetsTest {
-    AssetIssuingTransactionManager assetIssuingTransactionManager;
+    DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory;
     UUID pluginId;
 
     @Mock
@@ -49,9 +50,6 @@ public class GetNumberOfIssuedAssetsTest {
     PluginFileSystem pluginFileSystem;
 
     @Mock
-    ErrorManager errorManager;
-
-    @Mock
     AssetVaultManager assetVaultManager;
 
     @Mock
@@ -60,27 +58,20 @@ public class GetNumberOfIssuedAssetsTest {
     @Mock
     OutgoingIntraActorManager outgoingIntraActorManager;
 
-    DigitalAssetCryptoTransactionFactory digitalAssetCryptoTransactionFactory;
+    @Mock
+    ErrorManager errorManager;
 
     @Mock
     AssetIssuingTransactionDao assetIssuingTransactionDao;
 
-    String assetPublicKey = "assetPublicKey";
+    @Mock
+    Database database;
+
+    String assetPublicKey;
 
     @Before
     public void setUp() throws Exception {
         pluginId = UUID.randomUUID();
-        assetIssuingTransactionManager = new AssetIssuingTransactionManager(pluginId,
-                cryptoVaultManager,
-                bitcoinWalletManager,
-                pluginDatabaseSystem,
-                pluginFileSystem,
-                errorManager,
-                assetVaultManager,
-                cryptoAddressBookManager,
-                outgoingIntraActorManager);
-        assetIssuingTransactionManager.setPluginId(pluginId);
-
         digitalAssetCryptoTransactionFactory = new DigitalAssetCryptoTransactionFactory(this.pluginId,
                 this.cryptoVaultManager,
                 this.bitcoinWalletManager,
@@ -91,32 +82,30 @@ public class GetNumberOfIssuedAssetsTest {
                 this.outgoingIntraActorManager);
         digitalAssetCryptoTransactionFactory.setErrorManager(errorManager);
         digitalAssetCryptoTransactionFactory.setAssetIssuingTransactionDao(assetIssuingTransactionDao);
-        MemberModifier.field(AssetIssuingTransactionManager.class, "digitalAssetCryptoTransactionFactory").set(assetIssuingTransactionManager, digitalAssetCryptoTransactionFactory);
 
-        setUpMockitoRules();
-    }
+        MemberModifier.field(AssetIssuingTransactionDao.class, "database").set(assetIssuingTransactionDao, database);
 
-    private void setUpMockitoRules() throws Exception {
-
+        assetPublicKey = "assetPublicKey";
     }
 
     @Test
     public void test_OK() throws Exception {
         when(assetIssuingTransactionDao.getNumberOfIssuedAssets(assetPublicKey)).thenReturn(5);
 
-        int issuedAssets = assetIssuingTransactionManager.getNumberOfIssuedAssets(assetPublicKey);
+        int issuedAssets = digitalAssetCryptoTransactionFactory.getNumberOfIssuedAssets(assetPublicKey);
         assertThat(issuedAssets).isEqualTo(5);
     }
 
     @Test
-    public void test_Throws_CantExecuteDatabaseOperationException() throws Exception {
-        when(assetIssuingTransactionDao.getNumberOfIssuedAssets(assetPublicKey)).thenThrow(new CantCheckAssetIssuingProgressException("error"));
+    public void test_Throws_CantCheckAssetIssuingProgressException() throws Exception {
+        when(assetIssuingTransactionDao.getNumberOfIssuedAssets(assetPublicKey)).thenCallRealMethod();
+        doThrow(new CantOpenDatabaseException("error")).when(database).openDatabase();
 
-        catchException(assetIssuingTransactionManager).getNumberOfIssuedAssets(assetPublicKey);
+        catchException(digitalAssetCryptoTransactionFactory).getNumberOfIssuedAssets(assetPublicKey);
         Exception thrown = caughtException();
         assertThat(thrown)
                 .isNotNull()
-                .isInstanceOf(CantExecuteDatabaseOperationException.class);
-        assertThat(thrown.getCause()).isInstanceOf(CantCheckAssetIssuingProgressException.class);
+                .isInstanceOf(CantCheckAssetIssuingProgressException.class);
+        assertThat(thrown.getCause()).isInstanceOf(CantOpenDatabaseException.class);
     }
 }
