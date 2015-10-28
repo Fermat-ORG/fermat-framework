@@ -77,6 +77,8 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                                         final UUID pluginId,
                                         final WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager) {
 
+        System.out.println("********* Crypto Addresses: Executor Agent -> Instantiation started. ");
+
         this.cryptoAddressesNetworkServicePluginRoot = cryptoAddressesNetworkServicePluginRoot;
         this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
         this.errorManager                                 = errorManager                                ;
@@ -107,11 +109,18 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                     receiveCycle();
             }
         });
+
+        System.out.println("********* Crypto Addresses: Executor Agent -> Instantiation finished. ");
     }
 
     public void start() throws CantStartAgentException {
 
+
+
         try {
+
+            System.out.println("********* Crypto Addresses: Executor Agent -> Agent Starting. ");
+
             try {
 
                 this.cryptoAddressesNetworkServiceDao = new CryptoAddressesNetworkServiceDao(
@@ -131,6 +140,8 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
             this.status = AgentStatus.STARTED;
 
+            System.out.println("********* Crypto Addresses: Executor Agent -> Agent Started OK. ");
+
         } catch (Exception exception) {
 
             throw new CantStartAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
@@ -143,11 +154,15 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
         try {
 
+            System.out.println("********* Crypto Addresses: Executor Agent -> Send Cycle running. ");
+
             if(cryptoAddressesNetworkServicePluginRoot.isRegister()) {
 
                 // function to process and send the rigth message to the counterparts.
                 processSend();
             }
+
+            System.out.println("********* Crypto Addresses: Executor Agent -> Send Cycle process finished, go to sleep. ");
 
             //Sleep for a time
             toSend.sleep(SEND_SLEEP_TIME);
@@ -168,6 +183,11 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
             List<AddressExchangeRequest> addressExchangeRequestList = cryptoAddressesNetworkServiceDao.listPendingRequestsByProtocolState(
                     ProtocolState.PROCESSING_SEND
             );
+
+            if (!addressExchangeRequestList.isEmpty())
+                System.out.println("********* Crypto Addresses: Executor Agent -> Send Cycle -> Processing "+addressExchangeRequestList.size()+ " requests.");
+            else
+                System.out.println("********* Crypto Addresses: Executor Agent -> Send Cycle -> Not available requests to process.");
 
             for(AddressExchangeRequest aer : addressExchangeRequestList) {
                 switch (aer.getAction()) {
@@ -222,12 +242,16 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
         try {
 
+            System.out.println("********* Crypto Addresses: Executor Agent -> Receive Cycle running. ");
+
             if(cryptoAddressesNetworkServicePluginRoot.isRegister()) {
 
 
                 // function to process and send the rigth message to the counterparts.
                 processReceive();
             }
+
+            System.out.println("********* Crypto Addresses: Executor Agent -> Receive Cycle process finished, go to sleep. ");
 
             //Sleep for a time
             toReceive.sleep(RECEIVE_SLEEP_TIME);
@@ -250,6 +274,10 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                     ProtocolState.PROCESSING_RECEIVE
             );
 
+            if (!addressExchangeRequestList.isEmpty())
+                System.out.println("********* Crypto Addresses: Executor Agent -> Receive Cycle -> Processing "+addressExchangeRequestList.size()+ " requests.");
+            else
+                System.out.println("********* Crypto Addresses: Executor Agent -> Receive Cycle -> Not available requests to process.");
 
             for(AddressExchangeRequest cpr : addressExchangeRequestList) {
                 switch(cpr.getAction()) {

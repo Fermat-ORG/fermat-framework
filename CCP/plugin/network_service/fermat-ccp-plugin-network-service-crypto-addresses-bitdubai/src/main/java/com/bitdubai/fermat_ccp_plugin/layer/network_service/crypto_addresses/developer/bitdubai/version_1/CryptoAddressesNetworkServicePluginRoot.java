@@ -184,6 +184,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
     @Override
     public void start() throws CantStartPluginException {
 
+        System.out.println("********* Crypto Addresses: Starting. ");
+
         /*
          * Validate required resources
          */
@@ -252,6 +254,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
             throw pluginStartException;
         }
 
+        System.out.println("********* Crypto Addresses: Successful start. ");
 
     }
 
@@ -386,6 +389,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
 
         try {
 
+            System.out.println("********* Crypto Addresses: Creating Address Exchange Request. ");
+
             UUID newId = UUID.randomUUID();
 
             ProtocolState state  = ProtocolState.PROCESSING_SEND;
@@ -405,6 +410,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
                     action,
                     blockchainNetworkType
             );
+
+            System.out.println("********* Crypto Addresses: Successful Address Exchange Request creation. ");
 
         } catch (CantCreateRequestException e){
 
@@ -712,7 +719,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
      */
     public void handleCompleteComponentRegistrationNotificationEvent(final PlatformComponentProfile platformComponentProfileRegistered) {
 
-        System.out.println(" CryptoAddressesNetworkServicePluginRoot - Starting method handleCompleteComponentRegistrationNotificationEvent");
+        System.out.println("********* Crypto Addresses: Handling Registration Notification Event. ");
 
         /*
          * If the component registered have my profile and my identity public key
@@ -725,9 +732,11 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
              * Mark as register
              */
             this.register = Boolean.TRUE;
-            System.out.println(" Crypto Addresses Network Service is now registered.");
+            System.out.println("********* Crypto Addresses: Network Service is now registered. ");
 
             try {
+
+                System.out.println("********* Crypto Addresses: Initializing and starting Executor Agent. ");
 
                 cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
                         communicationNetworkServiceConnectionManager,
@@ -741,9 +750,11 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
 
                 cryptoAddressesExecutorAgent.start();
 
-                addCryptoAddressesListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION, new NewReceiveMessagesNotificationEventHandler(this));
+                System.out.println("********* Crypto Addresses: Successful initialize and start of Executor Agent. ");
 
-                System.out.println(" CryptoAddresses Executor Agent is now running and listening New Receive Messages Notification Events.");
+                addCryptoAddressesListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION, new NewReceiveMessagesNotificationEventHandler(this));
+
+                System.out.println("********* Crypto Addresses: Now listening NEW_NETWORK_SERVICE_MESSAGE_RECEIVED_NOTIFICATION. ");
 
             } catch(CantStartAgentException e) {
 
@@ -804,7 +815,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
 
     }
 
-    public void handleNewMessages(FermatMessage fermatMessage) throws CantHandleNewMessagesException {
+    public void handleNewMessages(final FermatMessage fermatMessage) throws CantHandleNewMessagesException {
 
         try {
 
