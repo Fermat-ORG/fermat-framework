@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#9fffa5"
+    android:layout_height="30dp"
+    android:background="#dfdfdf"
     android:paddingBottom="@dimen/cbw_grouper_container_padding_vertical"
     android:paddingTop="@dimen/cbw_grouper_container_padding_vertical">
 
@@ -12,17 +12,19 @@
         android:id="@+id/cbw_group_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:textColor="@color/black"
-        android:textSize="@dimen/cbw_first_line_text_size"
-        tools:text="Waiting for the customer"/>
+        android:textSize="@dimen/cbw_subtitle_text"
+        tools:text="@string/waiting_for_you"/>
 
     <TextView
-        android:id="@+id/cbw_customer_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/cbw_customers_count"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -31,8 +33,9 @@
         android:background="@drawable/cbw_customer_count_background"
         android:gravity="center"
         android:textColor="@color/withe"
+        android:visibility="gone"
         android:textSize="@dimen/cbw_customer_count_text_size"
-        tools:text="2"/>
+        tools:text="3"/>
 
     <ImageView
         android:id="@+id/cbw_arrow"

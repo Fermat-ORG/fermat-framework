@@ -1,6 +1,10 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.customer_broke_bank_sale.interfaces;
 
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.BankCurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.BankOperationType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.BusinessTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.customer_broke_bank_sale.exceptions.CantCreateCustomerBrokerBankSaleException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.customer_broke_bank_sale.exceptions.CantGetCustomerBrokerBankSaleException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_business_transaction.customer_broke_bank_sale.exceptions.CantUpdateStatusCustomerBrokerBankSaleException;
@@ -18,18 +22,18 @@ public interface CustomerBrokerBankSaleManager {
     List<CustomerBrokerBankSale> getAllCustomerBrokerBankSaleFromCurrentDeviceUser() throws CantGetCustomerBrokerBankSaleException;
 
     CustomerBrokerBankSale createCustomerBrokerBankSale(
-             final String contractId
-            ,final String publicKeyCustomer
-            ,final String paymentTransactionId
-            ,final String paymentCurrency
+             final UUID contractId
             ,final String publicKeyBroker
-            ,final String merchandiseCurrency
+            ,final String publicKeyCustomer
+            ,final UUID paymentTransactionId
+            ,final CurrencyType paymentCurrency
+            ,final CurrencyType merchandiseCurrency
             ,final float merchandiseAmount
-            ,final String executionTransactionId
-            ,final String bankCurrencyType
-            ,final String bankOperationType
+            ,final UUID executionTransactionId
+            ,final BankCurrencyType bankCurrencyType
+            ,final BankOperationType bankOperationType
     ) throws CantCreateCustomerBrokerBankSaleException;
 
-    void updateStatusCustomerBrokerBankSale(final UUID transactionId) throws CantUpdateStatusCustomerBrokerBankSaleException;
+    void updateStatusCustomerBrokerBankSale(final UUID transactionId,final BusinessTransactionStatus transactionStatus) throws CantUpdateStatusCustomerBrokerBankSaleException;
 
 }

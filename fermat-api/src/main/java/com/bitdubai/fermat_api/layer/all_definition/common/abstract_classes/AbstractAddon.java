@@ -133,7 +133,7 @@ public abstract class AbstractAddon implements Addon, Service {
             for (final Field f : cl.getDeclaredFields()) {
 
                 for (final Annotation a : f.getDeclaredAnnotations()) {
-                    if (a.annotationType() == NeededAddonReference.class) {
+                    if (a instanceof NeededAddonReference) {
                         NeededAddonReference addonReference = (NeededAddonReference) a;
 
                         AddonVersionReference avr = new AddonVersionReference(
