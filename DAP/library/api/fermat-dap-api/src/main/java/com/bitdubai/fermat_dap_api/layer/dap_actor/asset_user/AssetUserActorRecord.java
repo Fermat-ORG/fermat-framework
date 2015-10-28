@@ -13,7 +13,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
  */
 public class AssetUserActorRecord implements ActorAssetUser {
 
-    private String publicLinkedIdentity;
+    private String publiclinkedIdentity;
     private String publicKey;
     private String name;
     private String age;
@@ -36,19 +36,13 @@ public class AssetUserActorRecord implements ActorAssetUser {
     }
 
     /**
-    *  Register in Actor Network Service
-    */
-    public AssetUserActorRecord(String publicKey, String name, byte[] profileImage, Double locationA, Double locationL) {
+     *  Register in Actor Network Service
+     */
+    public AssetUserActorRecord(String publicKey, String name, byte[] profileImage, Location location) {
 
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = profileImage.clone();
-
-        if (locationA != null)
-            this.locationLatitude = locationA;
-        if(locationL != null)
-            this.locationLongitude = locationL;
-
+        this.profileImage = profileImage.clone();     
         this.genders = Genders.INDEFINITE;
 //        this.age = age;
 //        this.cryptoAddress = cryptoAddress;
@@ -74,19 +68,6 @@ public class AssetUserActorRecord implements ActorAssetUser {
         this.lastConnectionDate = lastConnectionDate;
         this.profileImage = profileImage.clone();
 
-    }
-
-    /**
-     * The method <code>getPubliclinkedIdentity</code> gives us the public Linked Identity of the represented Asset User
-     *
-     * @return the Public Linked Identity
-     */
-    public String getPublicLinkedIdentity() {
-        return publicLinkedIdentity;
-    }
-
-    public void setPublicLinkedIdentity(String publicLinkedIdentity) {
-        this.publicLinkedIdentity = publicLinkedIdentity;
     }
 
     /**
@@ -117,15 +98,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
         this.name = name;
     }
 
-    /**
-     * The method <code>getAge</code> gives us the Age of the represented Asset user
-     *
-     * @return the Age of the Asset user
-     */
-    @Override
-    public String getAge() {
-        return this.age;
-    }
+      
 
     public void setAge(String age) {
         this.age = age;

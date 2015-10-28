@@ -6,12 +6,12 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.DiscoveryQueryParametersCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
@@ -28,9 +28,6 @@ import com.google.gson.reflect.TypeToken;
 import org.java_websocket.WebSocket;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -193,20 +190,28 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         switch (platformComponentType){
 
             case COMMUNICATION_CLOUD_SERVER :
-                list = (List<PlatformComponentProfile>) new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values()).clone();
+                    if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().isEmpty()) {
+                        list = (List<PlatformComponentProfile>) new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values()).clone();
+                    }
                 break;
 
             case COMMUNICATION_CLOUD_CLIENT :
-                list = (List<PlatformComponentProfile>) new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values()).clone();
+                    if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().isEmpty()) {
+                        list = (List<PlatformComponentProfile>) new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values()).clone();
+                    }
                 break;
 
             case NETWORK_SERVICE :
-                list = (List<PlatformComponentProfile>) new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType)).clone();
+                    if (getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()) {
+                        list = (List<PlatformComponentProfile>) new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType)).clone();
+                    }
                 break;
 
             //Others
             default :
-                list = (List<PlatformComponentProfile>) new ArrayList<>(getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType)).clone();
+                    if (getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()) {
+                        list = (List<PlatformComponentProfile>) new ArrayList<>(getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType)).clone();
+                    }
                 break;
 
         }
@@ -437,7 +442,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         /*
          * Prepare the list
          */
-        List<PlatformComponentProfile> temporalList = null;
+        List<PlatformComponentProfile> temporalList = new ArrayList<>();
         List<PlatformComponentProfile>  finalFilteredList = new ArrayList<>();
 
          /*
@@ -446,20 +451,28 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         switch (platformComponentType){
 
             case COMMUNICATION_CLOUD_SERVER :
-                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values());
+                    if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().isEmpty()){
+                        temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values());
+                    }
                 break;
 
             case COMMUNICATION_CLOUD_CLIENT :
-                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
+                    if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().isEmpty()){
+                        temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
+                    }
                 break;
 
             case NETWORK_SERVICE :
-                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
+                    if(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()){
+                        temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
+                    }
                 break;
 
             //Others
             default :
-                temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
+                    if (getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()){
+                        temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
+                    }
                 break;
 
         }
@@ -494,7 +507,7 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         /*
          * Prepare the list
          */
-        List<PlatformComponentProfile> temporalList = null;
+        List<PlatformComponentProfile> temporalList =  new ArrayList<>();
         List<PlatformComponentProfile>  finalFilteredList = new ArrayList<>();
 
          /*
@@ -503,22 +516,29 @@ public class RequestListComponentRegisterPacketProcessor extends FermatPacketPro
         switch (platformComponentType){
 
             case COMMUNICATION_CLOUD_SERVER :
-                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values());
+                    if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().isEmpty()) {
+                        temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values());
+                    }
                 break;
 
             case COMMUNICATION_CLOUD_CLIENT :
-                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
+                    if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().isEmpty()){
+                        temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
+                    }
                 break;
 
             case NETWORK_SERVICE :
-                temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
+                    if(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()) {
+                        temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
+                    }
                 break;
 
             //Others
             default :
-                temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
+                   if (getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()) {
+                       temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
+                   }
                 break;
-
         }
 
         /*
