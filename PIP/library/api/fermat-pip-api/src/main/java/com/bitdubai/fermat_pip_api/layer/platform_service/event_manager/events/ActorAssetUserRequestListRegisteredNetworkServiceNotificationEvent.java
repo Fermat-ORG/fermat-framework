@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by Nerio on 08/10/15.
  */
-public class AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent extends AbstractFermatEvent {
+public class ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent extends AbstractFermatEvent {
 
     private List<ActorAssetUser> actorAssetUserList;
 
@@ -20,7 +20,7 @@ public class AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent 
         this.actorAssetUserList = actorAssetUserList;
     }
 
-    public AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent(EventType eventType) {
+    public ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent(EventType eventType) {
         super(eventType);
     }
 }

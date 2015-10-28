@@ -117,7 +117,7 @@ public interface IntraUserModuleManager extends ModuleManager {
      * @return the list of intra users connected to the logged in intra user
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
-    public List<IntraUserInformation> getAllIntraUsers(int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+    public List<IntraUserInformation> getAllIntraUsers(String identityPublicKey,int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
     /**
      * The method <code>getIntraUsersWaitingYourAcceptance</code> returns the list of intra users waiting to be accepted

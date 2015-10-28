@@ -137,15 +137,11 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
                 pluginDatabaseSystem,
                 errorManager,
                 assetFactoryMiddlewareManager,
-                assetIssuingManager, pluginId);
+                assetIssuingManager, pluginId,
+                pluginFileSystem);
 
             assetFactoryMiddlewareMonitorAgent.start();
         }else assetFactoryMiddlewareMonitorAgent.start();
-
-//        this.assetFactoryMiddlewareMonitorAgent.setErrorManager(errorManager);
-//        this.assetFactoryMiddlewareMonitorAgent.setLogManager(logManager);
-//        this.assetFactoryMiddlewareMonitorAgent.setPluginDatabaseSystem(pluginDatabaseSystem);
-//        this.assetFactoryMiddlewareMonitorAgent.setPluginId(pluginId);
     }
     @Override
     public void setId(UUID pluginId) {
@@ -235,7 +231,7 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
 
             database.closeDatabase();
         }
-        catch (CantOpenDatabaseException | DatabaseNotFoundException | CantLoadTableToMemoryException e)
+        catch (CantOpenDatabaseException | DatabaseNotFoundException | CantGetLoggedInDeviceUserException | CantSetObjectException | CantStartAgentException | CantLoadTableToMemoryException e)
         {
             try
             {
@@ -319,10 +315,10 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
         }
     }
 
-    public void checkAssetDraft() throws CantLoadTableToMemoryException {
-        boolean isCheckAssetDraft = assetFactoryMiddlewareManager.checkAssetDraft();
+    public void checkAssetDraft() throws CantLoadTableToMemoryException, CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
+        //TODO: Revisar el metodo assetFactoryMiddlewareManager.checkAssetDraft()
+        boolean isCheckAssetDraft = true;//assetFactoryMiddlewareManager.checkAssetDraft();
         if (isCheckAssetDraft){
-            //TODO: Implementar
             //startMonitorAgent();
         }
     }
