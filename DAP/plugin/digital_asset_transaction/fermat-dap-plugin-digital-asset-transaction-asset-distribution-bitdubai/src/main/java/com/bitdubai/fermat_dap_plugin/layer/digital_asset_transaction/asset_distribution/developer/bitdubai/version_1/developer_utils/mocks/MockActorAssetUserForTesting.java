@@ -11,6 +11,12 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 24/10/15.
  */
 public class MockActorAssetUserForTesting implements ActorAssetUser {
+
+    @Override
+    public String getPublicLinkedIdentity() {
+        return new ECCKeyPair().getPublicKey();
+    }
+
     @Override
     public String getPublicKey() {
         return new ECCKeyPair().getPublicKey();
@@ -27,7 +33,7 @@ public class MockActorAssetUserForTesting implements ActorAssetUser {
     }
 
     @Override
-    public Genders getGender() {
+    public Genders getGenders() {
         return Genders.MALE;
     }
 

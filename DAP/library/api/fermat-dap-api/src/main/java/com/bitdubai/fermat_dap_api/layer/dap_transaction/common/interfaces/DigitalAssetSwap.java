@@ -38,6 +38,8 @@ public interface DigitalAssetSwap {
 
     void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser actorAssetUser) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException;
 
+    void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, String senderId) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException;
+
     boolean isAvailableBalanceInAssetVault(long genesisAmount, String genesisTransaction);
 
     boolean isValidContract(DigitalAssetContract digitalAssetContract);

@@ -16,14 +16,14 @@ public interface ContractInformation {
     /**
      * @return the contract status (NEGOTIATION_BROKER, NEGOTIATION_CUSTOMER, WAITING_PAY, WAITING_MERCHANDISE, MERCHANDISE_GIVEN, COMPLETED, CANCEL)
      */
-    String getConstractStatus();
+    String getStatus();
 
     /**
      * set the contract status (NEGOTIATION_BROKER, NEGOTIATION_CUSTOMER, WAITING_PAY, WAITING_MERCHANDISE, MERCHANDISE_GIVEN, COMPLETED, CANCEL)
      *
      * @param statusKey contract status key
      */
-    void setConstractStatus(String statusKey);
+    void setStatus(String statusKey);
 
     /**
      * @return the payment date

@@ -12,6 +12,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 public class Actor implements ActorAssetUser {
 
     private String publicKey;
+    private String publicLinkedKey;
     private String name;
     private long registrationDate;
     private long lastConnectionDate;
@@ -39,6 +40,11 @@ public class Actor implements ActorAssetUser {
         this.lastConnectionDate = lastConnectionDate;
         this.gender = genders;
         this.age = age;
+    }
+
+    @Override
+    public String getPublicLinkedIdentity() {
+        return publicLinkedKey;
     }
 
     @Override
@@ -102,7 +108,7 @@ public class Actor implements ActorAssetUser {
     }
 
     @Override
-    public Genders getGender() {
+    public Genders getGenders() {
         return gender;
     }
 
