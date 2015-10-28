@@ -16,8 +16,6 @@ public class AndroidOsLocationSystem implements LocationSystemOs {
 
     LocationManager locationManager;
 
-    LocationSystemOs locationSystemOs;
-
     Context context;
 
     /**
@@ -27,9 +25,15 @@ public class AndroidOsLocationSystem implements LocationSystemOs {
     public AndroidOsLocationSystem(Context context) {
 
         this.context = context;
+        try {
+            DeviceLocationAndroidAddonRoot locationSystemOs = new DeviceLocationAndroidAddonRoot(context);
+            locationSystemOs.start();
+            this.locationManager = locationSystemOs.getLocationSystem();
+        } catch (Exception e) {
 
-        locationSystemOs =  new DeviceLocationAndroidAddonRoot();
-        this.locationManager = locationSystemOs.getLocationSystem();
+            System.out.println("aca hubo un error");
+            e.printStackTrace();
+        }
 
 
     }

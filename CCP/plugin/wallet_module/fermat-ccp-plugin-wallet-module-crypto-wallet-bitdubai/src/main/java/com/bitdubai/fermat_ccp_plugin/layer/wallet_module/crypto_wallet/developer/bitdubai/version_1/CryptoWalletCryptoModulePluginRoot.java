@@ -76,6 +76,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
         DealsWithWalletContacts,//
         LogManagerForDevelopers {
 
+
     @Override
     public List<AddonVersionReference> getNeededAddonReferences() {
         return new ArrayList<>();

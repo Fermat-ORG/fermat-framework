@@ -137,27 +137,7 @@ public class OpenContractsTabFragment extends FermatWalletFragment implements Fe
         String grouperText;
 
         if (moduleManager != null) {
-            try {
-                cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet("crypto_broker_wallet");
-
-                grouperText = getActivity().getString(R.string.waiting_for_you);
-                List<ContractBasicInformation> waitingForBroker = cryptoBrokerWallet.getContractsWaitingForBroker(0, 10);
-                GrouperItem<ContractBasicInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
-                data.add(waitingForBrokerGrouper);
-
-                grouperText = getActivity().getString(R.string.waiting_for_the_customer);
-                List<ContractBasicInformation> waitingForCustomer = cryptoBrokerWallet.getContractsWaitingForCustomer(0, 10);
-                GrouperItem<ContractBasicInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
-                data.add(waitingForCustomerGrouper);
-
-            } catch (CantGetCryptoBrokerWalletException | CantGetContractsWaitingForBrokerException | CantGetContractsWaitingForCustomerException ex) {
-                CommonLogger.exception(TAG, ex.getMessage(), ex);
-                if (errorManager != null) {
-                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-                }
-            }
-
+            // TODO hay que pensar esto
         } else {
             ContractBasicInformation child;
 

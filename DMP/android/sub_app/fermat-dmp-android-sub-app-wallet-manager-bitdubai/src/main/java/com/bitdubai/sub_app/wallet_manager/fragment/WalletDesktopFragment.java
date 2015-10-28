@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantGetIfIntraWalletUsersExistsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantGetUserWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
@@ -289,37 +290,28 @@ public class WalletDesktopFragment extends Fragment implements Thread.UncaughtEx
                 switch (installedWallet.getWalletIcon()) {
 
                     case "reference_wallet_icon":
-                        holder.imageView.setImageResource(R.drawable.fermat);
+                        holder.imageView.setImageResource(R.drawable.bitcoin_wallet);
                         holder.imageView.setTag("WalletBitcoinActivity|4");
                         linearLayout.setTag("WalletBitcoinActivity|4");
 
-                        linearLayout.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                               // try {
-                                    // check if intra user identity exists
-                                    //if (walletManager.hasIntraUserIdentity()) {
-                                        //set the next fragment and params
-                                        ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
-                                   // }
-                                   // else
-                                   // {
-
-                                   // }
-                               // } catch (Exception e) {
-                                   // Toast.makeText(getActivity(),"oooopps have an error ",Toast.LENGTH_SHORT).show();
-                               // }
-
-
-                            }
-                        });
 
                         holder.imageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
 
-                                //set the next fragment and params
-                                ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                                try {
+
+
+                                    if (walletManager.hasIntraUserIdentity())
+                                        ((FermatScreenSwapper) getActivity()).selectWallet(installedWallet);
+                                    else {
+                                        Toast.makeText(getActivity(),"Es necesario crear una identidad",Toast.LENGTH_SHORT).show();
+                                    }
+
+
+                                } catch (CantGetIfIntraWalletUsersExistsException e) {
+                                    e.printStackTrace();
+                                }
 
                             }
                         });

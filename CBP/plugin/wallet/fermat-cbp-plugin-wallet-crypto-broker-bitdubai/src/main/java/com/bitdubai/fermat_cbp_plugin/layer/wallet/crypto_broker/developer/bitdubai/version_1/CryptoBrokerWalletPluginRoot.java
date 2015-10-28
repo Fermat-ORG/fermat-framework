@@ -50,7 +50,7 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 19.10.15.
  */
-public class CryptoBrokerWalletPluginRoot implements CryptoBrokerWalletManager,
+public class CryptoBrokerWalletPluginRoot implements    CryptoBrokerWalletManager,
                                                         DatabaseManagerForDevelopers,
                                                         DealsWithPluginDatabaseSystem,
                                                         LogManagerForDevelopers,
@@ -86,47 +86,16 @@ public class CryptoBrokerWalletPluginRoot implements CryptoBrokerWalletManager,
 
     public static final String CRYPTO_BROKER_PRIVATE_KEYS_CUSTOMER_FILE_NAME = "cryptoBrokerWalletPrivateKeyCustomer";
 
-    /*CryptoBrokerWallet Interface Implementation*/
-    public double getBookBalance() throws CantTransactionCryptoBrokerException{
-        try{
-            return cryptoBrokerWalletDatabaseDao.getCalculateBookBalance();
-        } catch (CantCalculateBalanceException e) {
-            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET BOOKED BALANCE", e, "", "");
-        } catch (Exception e) {
-            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET BOOKED BALANCE", FermatException.wrapException(e), "", "");
-        }
-    }
-
-    public double getAvailableBalance() throws CantTransactionCryptoBrokerException{
-        try{
-            return cryptoBrokerWalletDatabaseDao.getCalculateAvailableBalance();
-        } catch (CantCalculateBalanceException e) {
-            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET AVAILABLE BALANCE", e, "", "");
-        } catch (Exception e) {
-            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET AVAILABLE BALANCE", FermatException.wrapException(e), "", "");
-        }
-    }
-
-    public List<CryptoBrokerStockTransactionRecord> getTransactions(BalanceType balanceType, int max, int offset)throws CantTransactionCryptoBrokerException{
-        try {
-            List<CryptoBrokerStockTransactionRecord> cryptoBrokerTransactionList = new ArrayList<CryptoBrokerStockTransactionRecord>();
-            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            cryptoBrokerTransactionList = cryptoBrokerWalletDatabaseDao.getTransactionsList(loggedUser);
-            return cryptoBrokerTransactionList;
-        } catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET TRANSACTION", e, "Error get logged user device", "");
-        } catch (CantListCryptoBrokerWalletTransactionException e) {
-            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET TRANSACTION", e, "", "");
-        } catch (Exception e) {
-            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET TRANSACTION", FermatException.wrapException(e), "", "");
-        }
-    }
-
-    public CryptoBrokerTransactionSummary getBrokerTransactionSummary(BalanceType balanceType) throws CantTransactionCryptoBrokerException{
+    /*CryptoBrokerMAnager Interface Implementation*/
+    @Override
+    public CryptoBrokerWallet createNewCryptoBrokerWallet(String cryptoBroker) throws CantCreateCryptoBrokerWalletException {
         return null;
     }
 
-
+    @Override
+    public CryptoBrokerWallet getCryptoBrokerWallet(String cryptoBroker) throws CryptoBrokerWalletNotFoundException {
+        return null;
+    }
 
     /*DatabaseManagerForDevelopers Interface Implementation.*/
     @Override
@@ -244,17 +213,5 @@ public class CryptoBrokerWalletPluginRoot implements CryptoBrokerWalletManager,
     }
 
     @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }
-
-    @Override
-    public CryptoBrokerWallet createNewCryptoBrokerWallet(ActorIdentity cryptoBroker) throws CantCreateCryptoBrokerWalletException {
-        return null;
-    }
-
-    @Override
-    public CryptoBrokerWallet getCryptoBrokerWallet(ActorIdentity cryptoBroker) throws CryptoBrokerWalletNotFoundException {
-        return null;
-    }
+    public ServiceStatus getStatus() { return serviceStatus; }
 }
