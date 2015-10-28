@@ -20,6 +20,11 @@ dependencies {
     compile project(':fermat-ccp-core')
     // End  CCP Projects (Plugins)
 
+    // Init PIP Projects (Plugins)
+    compile project(':fermat-pip-api')
+    compile project(':fermat-pip-core')
+    // End  PIP Projects (Plugins)
+
 
     //BCH projects
     compile project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
