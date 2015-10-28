@@ -798,6 +798,12 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                 };
 
                 ActorAssetUser actorAssetUser = new ActorAssetUser() {
+
+                    @Override
+                    public String getPublicLinkedIdentity() {
+                        return remoteToConnect.getIdentityPublicKey();
+                    }
+
                     @Override
                     public String getPublicKey() {
                         return remoteToConnect.getIdentityPublicKey();
@@ -838,9 +844,8 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                         return null;
                     }
 
-
                     @Override
-                    public Genders getGender() {
+                    public Genders getGenders() {
                         return null;
                     }
 

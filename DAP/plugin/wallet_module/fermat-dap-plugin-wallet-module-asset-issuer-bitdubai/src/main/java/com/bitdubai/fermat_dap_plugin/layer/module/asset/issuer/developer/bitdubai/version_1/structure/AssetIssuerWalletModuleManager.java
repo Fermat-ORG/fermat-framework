@@ -58,7 +58,7 @@ public class AssetIssuerWalletModuleManager {
         try {
             //assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey).distributionAssets(assetPublicKey, walletPublicKey, actorAssetUsers);
             //TODO: Solo para prueba de Distribution
-            assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest").distributionAssets(assetPublicKey, walletPublicKey, actorAssetUsers);
+            assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest").distributionAssets(assetPublicKey, walletPublicKey, getAllAssetUserActorConnected());
         }catch (Exception exception){
             throw new CantLoadWalletException("Error distribution Assets", exception, "Method: distributionAssets", "Class: AssetIssuerWalletModuleManager");
         }
