@@ -6,15 +6,15 @@ In the last 20 years virtually everything went digital: pictures, music, videos,
 
 The reason is that digital information can be cloned, and if digital cash could be cloned it would render it useless. When bitcoin was invented it brought with it the solution to the last barrier preventing money to be digital: the solution to the double spend problem.
 
-So now we firmly believe that the next decade will witness governments issuing digital currency based on blockchain technology. We expect paper money is going to disappear within the next 5 to 10 years. Thus a strong consumer demand for digital wallets will inevitably emerge.
+We firmly believe that the next decade will witness governments issuing digital currency based on blockchain technology. We expect paper money is going to disappear within the next 5 to 10 years. Thus a strong consumer demand for digital wallets will inevitably emerge.
 
 In order to meet this demand thousands of wallets, different in terms of not only the level of abstraction they apply (some of them showing govermet issued digital money others crypto currencies, and others digital fiat over crypto or even digital assets) but also with respect to their look and feel and their functionalities, should be available. Such a wide variety of wallets is indispensable owing to the diversity characterizing the world's population.
 
-Fermat is a master plan to avoid getting to that future through waiting for independent entrepreneurs to build each of these wallets one at the time, repeating every time all the math, accounting, cryptography and algorithms that are common to all these wallets. The Fermat system is a master platform that handles all that and by doing  the heavy lifting enables any developer in the world to easily create niche wallets on top of its shared infraestructure.
+Fermat is a master plan to avoid getting to that future through waiting for independent entrepreneurs to build each of these wallets one at the time, repeating every time all the math, accounting, cryptography and algorithms that are common to all these wallets. The Fermat system is a master platform that handles all that and by doing  the heavy lifting enables any developer in the world to easily create niche wallets on top of its shared infraestructure. Our concept of wallet is broad and includes any financial application that handles digital money.
 
 We believe the open source community collectively has more talent than any of us individually. We believe it is important to build on top of services that others took time and effort to build. We believe in decentralization.
 
-We believe in people with passion who are crazy enough to think they can change the world. We do believe we are going to change this world with a lot of hard work and not stopping until we reach our goal.
+We believe in people with passion who are crazy enough to think they can change the world. We do believe we are going to change the world with a lot of hard work and not stopping until we reach our goal.
 
 ## The Challenge
 
@@ -26,6 +26,8 @@ While designing Fermat we tried to find the answer to the following questions:
 * How do we integrate legacy financial institutions in a way they feel comfortable?
 * How do we integrate merchants, retailers and brands of all sizes in a clever way?
 * How can we allow people to create digital wallets without programming anything at all?
+* How can we keep people's digital money at their hands without needing to trust third parties? 
+* How can we create a fair systems with the developers who contributed to it?
 
 The answers to each of these questions are addressed within Fermat.
 
