@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.utils;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystems;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -51,23 +52,43 @@ public class PluginVersionReference {
         this.version                  = version;
     }
 
+    public PluginVersionReference(final OperativeSystems operativeSystem,
+                                  final Platforms        platform       ,
+                                  final Layers           layer          ,
+                                  final Plugins          pluginEnum     ,
+                                  final Developers       developer      ,
+                                  final Version          version        ) {
+
+        PlatformReference platformReference = new PlatformReference(operativeSystem  , platform  );
+        LayerReference    layerReference    = new LayerReference   (platformReference, layer     );
+        PluginReference   pluginReference   = new PluginReference  (layerReference   , pluginEnum);
+
+        this.pluginDeveloperReference = new PluginDeveloperReference(pluginReference, developer);;
+        this.version                  = version;
+    }
+
     public static PluginVersionReference getByKey(final String key) throws InvalidParameterException {
 
         String[] keySplit = key.split(Pattern.quote(KEY_SEPARATOR));
 
-        final String platformString   = keySplit[0];
-        final String layerString      = keySplit[0];
-        final String pluginEnumString = keySplit[0];
-        final String developerString  = keySplit[0];
-        final String versionString    = keySplit[0];
+        if(keySplit.length != 6)
+            throw new InvalidParameterException("Key: " + key, "This key should respect the separation pattern using \"" + KEY_SEPARATOR + "\"");
 
-        final Platforms  platform   = Platforms .getByCode(platformString);
-        final Layers     layer      = Layers    .getByCode(layerString);
-        final Plugins    pluginEnum = Plugins   .getByKey(pluginEnumString);
-        final Developers developer  = Developers.getByCode(developerString);
-        final Version    version    = new Version(versionString);
+        final String oSystemString    = keySplit[0];
+        final String platformString   = keySplit[1];
+        final String layerString      = keySplit[2];
+        final String pluginEnumString = keySplit[3];
+        final String developerString  = keySplit[4];
+        final String versionString    = keySplit[5];
 
-        return new PluginVersionReference(platform, layer, pluginEnum, developer, version);
+        final OperativeSystems operativeSystem = OperativeSystems.getByCode(oSystemString);
+        final Platforms        platform        = Platforms       .getByCode(platformString);
+        final Layers           layer           = Layers          .getByCode(layerString);
+        final Plugins          pluginEnum      = Plugins         .getByKey(pluginEnumString);
+        final Developers       developer       = Developers      .getByCode(developerString);
+        final Version          version         = new Version(versionString);
+
+        return new PluginVersionReference(operativeSystem, platform, layer, pluginEnum, developer, version);
     }
 
     public String toKey() {
@@ -76,15 +97,17 @@ public class PluginVersionReference {
         LayerReference    layerReference    = pluginReference         .getLayerReference()   ;
         PlatformReference platformReference = layerReference          .getPlatformReference();
 
-        Platforms  platform  = platformReference       .getPlatform() ;
-        Layers     layer     = layerReference          .getLayer()    ;
-        Plugins    plugin    = pluginReference         .getPlugin()   ;
-        Developers developer = pluginDeveloperReference.getDeveloper();
+        OperativeSystems operativeSystem = platformReference       .getOperativeSystem();
+        Platforms        platform        = platformReference       .getPlatform()       ;
+        Layers           layer           = layerReference          .getLayer()          ;
+        Plugins          plugin          = pluginReference         .getPlugin()         ;
+        Developers       developer       = pluginDeveloperReference.getDeveloper()      ;
 
-        return platform .getCode() + KEY_SEPARATOR +
-               layer    .getCode() + KEY_SEPARATOR +
-               plugin   .getCode() + KEY_SEPARATOR +
-               developer.getCode() + KEY_SEPARATOR +
+        return platform .getCode()       + KEY_SEPARATOR +
+               operativeSystem.getCode() + KEY_SEPARATOR +
+               layer    .getCode()       + KEY_SEPARATOR +
+               plugin   .getCode()       + KEY_SEPARATOR +
+               developer.getCode()       + KEY_SEPARATOR +
                version  .toString();
     }
 

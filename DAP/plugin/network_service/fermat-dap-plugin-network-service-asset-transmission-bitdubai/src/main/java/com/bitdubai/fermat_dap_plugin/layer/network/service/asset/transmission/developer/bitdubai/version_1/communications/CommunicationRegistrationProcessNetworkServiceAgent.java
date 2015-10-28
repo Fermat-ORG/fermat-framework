@@ -24,8 +24,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread {
 
     /*
-     * Represent the sleep time for the read or send (5000 milliseconds)
-     */
+  * Represent the sleep time for the read or send (5000 milliseconds)
+  */
     private static final long SLEEP_TIME = 5000;
     private static final long MAX_SLEEP_TIME = 20000;
 
@@ -63,57 +63,56 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     public void run() {
 
         while (active){
-
-            try {
+            try{
 
                 if (communicationsClientConnection.isRegister() && !assetTransmissionPluginRoot.isRegister()){
 
-                        /*
-                         * Construct my profile and register me
-                         */
-                        PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(assetTransmissionPluginRoot.getIdentityPublicKey(),
-                                (assetTransmissionPluginRoot.getAlias().toLowerCase()+"_"+assetTransmissionPluginRoot.getId().toString()),
-                                (assetTransmissionPluginRoot.getName()+" ("+assetTransmissionPluginRoot.getId()+")"),
-                                assetTransmissionPluginRoot.getNetworkServiceType(),
-                                assetTransmissionPluginRoot.getPlatformComponentType(),
-                                assetTransmissionPluginRoot.getExtraData());
+                    /*
+                     * Construct my profile and register me
+                     */
+                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(assetTransmissionPluginRoot.getIdentityPublicKey(),
+                            (assetTransmissionPluginRoot.getAlias().toLowerCase()+"_"+assetTransmissionPluginRoot.getId().toString()),
+                            (assetTransmissionPluginRoot.getName()+" ("+assetTransmissionPluginRoot.getId()+")"),
+                            assetTransmissionPluginRoot.getNetworkServiceType(),
+                            assetTransmissionPluginRoot.getPlatformComponentType(),
+                            assetTransmissionPluginRoot.getExtraData());
 
-                        /*
-                         * Register me
-                         */
-                        communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+                    /*
+                     * Register me
+                     */
+                    communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
 
-                        /*
-                         * Configure my new profile
-                         */
-                        assetTransmissionPluginRoot.setPlatformComponentProfile(platformComponentProfile);
+                    /*
+                     * Configure my new profile
+                     */
+                    assetTransmissionPluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
 
-                        /*
-                         * Initialize the connection manager
-                         */
-                        assetTransmissionPluginRoot.initializeCommunicationNetworkServiceConnectionManager();
+                    /*
+                     * Initialize the connection manager
+                     */
+                    assetTransmissionPluginRoot.initializeCommunicationNetworkServiceConnectionManager();
 
-                        /*
-                         * Stop the agent
-                         */
-                        active = Boolean.FALSE;
+                    /*
+                     * Stop the agent
+                     */
+                    active = Boolean.FALSE;
 
-                    }else if (!assetTransmissionPluginRoot.isRegister()){
+                }else if (!assetTransmissionPluginRoot.isRegister()){
 
-                        try {
-                            sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                            active = Boolean.FALSE;
-                        }
-
-                    }else if (!assetTransmissionPluginRoot.isRegister()){
+                    try {
+                        sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
+                    } catch (InterruptedException e) {
+                        //e.printStackTrace();
                         active = Boolean.FALSE;
                     }
 
+                }else if (!assetTransmissionPluginRoot.isRegister()){
+                    active = Boolean.FALSE;
+                }
+
             }catch (Exception e){
                 try {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                     sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
                 } catch (InterruptedException e1) {
                     e1.printStackTrace();
