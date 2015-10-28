@@ -296,7 +296,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
     public  List<IntraWalletUser> getConnectedIntraWalletUsers(String intraUserLoggedInPublicKey) throws CantGetIntraWalletUsersException{
         try
         {
-            return this.intraWalletUserActorDao.getAllIntraWalletUsers(intraUserLoggedInPublicKey,ConnectionState.CONNECTED,100,0);
+            return this.intraWalletUserActorDao.getAllConnectedIntraWalletUsers(intraUserLoggedInPublicKey,100,0);
         }
         catch (CantGetIntraWalletUsersListException e) {
             throw new CantGetIntraWalletUsersException("CAN'T LIST INTRA USER CONNECTIONS", e, "", "");
