@@ -44,7 +44,7 @@ public interface ActorAssetUserManager {
    * @throws CantGetAssetUserActorsException
    * @throws CantAssetUserActorNotFoundException
    */
-  List<ActorAssetUser> getAllAssetUserActorRegistered() throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
+  List<ActorAssetUser> getAllAssetUserActorInTableRegistered() throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
 
    /**
      * The method <code>getAllAssetUserActorConnected</code> receives All Actors with have CryptoAddress in BD
@@ -61,10 +61,12 @@ public interface ActorAssetUserManager {
   ActorAssetUser createActorAssetUserFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage, Double locationLatitude, Double locationLongitude) throws CantCreateAssetUserActorException;
 
 
-  void createAndRegisterActorAssetUserTest() throws CantCreateAssetUserActorException;
+//  void createAndRegisterActorAssetUserTest() throws CantCreateAssetUserActorException;
+
+   void registerActorInActorNetowrkSerice() throws CantCreateAssetUserActorException;
 
 
-  void connectToActorAssetUser(ActorAssetIssuer requester, ActorAssetUser actorAssetUser) throws CantConnectToAssetUserException;
+  void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException;
 
 
 }

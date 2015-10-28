@@ -11,6 +11,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.ActorNetworkServiceAssetUser;
@@ -51,10 +53,6 @@ public class NewReceiveMessagesAssetUserRemoteNotificationEventHandler implement
         NewNetworkServiceMessageReceivedNotificationEvent newNetworkServiceMessageReceivedNotificationEvent = (NewNetworkServiceMessageReceivedNotificationEvent) platformEvent;
         FermatMessage fermatMessageReceive = (FermatMessage) newNetworkServiceMessageReceivedNotificationEvent.getData();
 
-        Double locaA, locaL;
-
-            locaA = Double.valueOf(0);
-            locaL = Double.valueOf(0);
         /*
         * If is null then is RequestCryptoAddres from getSender else is new CryptoAddres delivered from remote assetUser
         */
@@ -62,11 +60,15 @@ public class NewReceiveMessagesAssetUserRemoteNotificationEventHandler implement
                 || fermatMessageReceive.getContent().isEmpty()){
 
 
+
+            ActorAssetIssuer actorAssetIssuer   = new AssetIssuerActorRecord(null,fermatMessageReceive.getSender(),new byte[]{},0);
+
+
             Location loca = null;
 
-            ActorAssetUser actorAssetUserNew = new AssetUserActorRecord(fermatMessageReceive.getSender(), null, new byte[0], locaA, locaL);
+            ActorAssetUser actorAssetUser  = new AssetUserActorRecord(fermatMessageReceive.getReceiver(), null, new byte[]{}, loca);
 
-            this.actorNetworkServiceAssetUser.handleRequestCryptoAddresFromRemoteAssetUserEvent(actorAssetUserNew);
+            this.actorNetworkServiceAssetUser.handleRequestCryptoAddresFromRemoteAssetUserEvent(actorAssetIssuer,actorAssetUser);
 
 
         }else{
@@ -75,13 +77,16 @@ public class NewReceiveMessagesAssetUserRemoteNotificationEventHandler implement
 
             Gson gson = new Gson();
 
-            cryptoAddressRemote = gson.fromJson(fermatMessageReceive.getContent(), CryptoAddress.class);
+            cryptoAddressRemote = gson.fromJson(fermatMessageReceive.getContent(),CryptoAddress.class);
+
+            ActorAssetIssuer actorAssetIssuer   = new AssetIssuerActorRecord(null,fermatMessageReceive.getReceiver(),new byte[]{},0);
+
 
             Location loca = null;
 
-            ActorAssetUser  actorAssetUserNew = new AssetUserActorRecord(fermatMessageReceive.getSender(),null,new byte[0], locaA, locaL);
+            ActorAssetUser actorAssetUser  = new AssetUserActorRecord(fermatMessageReceive.getSender(), null, new byte[]{}, loca);
 
-            this.actorNetworkServiceAssetUser.handleDeliveredCryptoAddresFromRemoteAssetUserEvent(actorAssetUserNew,cryptoAddressRemote);
+            this.actorNetworkServiceAssetUser.handleDeliveredCryptoAddresFromRemoteAssetUserEvent(actorAssetUser,actorAssetIssuer,cryptoAddressRemote);
 
         }
 

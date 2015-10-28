@@ -139,14 +139,14 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
             try {
 //                test_RegisterActorNetworkService();
 
-                test_listByActorNetworkServiceUser();
+                listByActorNetworkServiceUser();
 
             } catch (CantCreateAssetUserActorException e) {
                 throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
             }
         }
 
-        private void test_listByActorNetworkServiceUser() throws CantCreateAssetUserActorException {
+        private void listByActorNetworkServiceUser() throws CantCreateAssetUserActorException {
 //                Procedimiento para Obtener lista de Actores del Actor Network Service User
             try {
                 List<ActorAssetUser> list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
@@ -160,7 +160,7 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
                 }
 
             } catch (CantRequestListActorAssetUserRegisteredException e) {
-                throw new CantCreateAssetUserActorException("CAN'T ADD TEST NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
+                //throw new CantCreateAssetUserActorException("CAN'T ADD TEST NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
             } catch (CantAddPendingAssetUserException e) {
                 e.printStackTrace();
             }

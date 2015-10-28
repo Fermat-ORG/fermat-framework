@@ -872,11 +872,6 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeMenuItem.setLabel("Settings");
             runtimeMainMenu.addMenuItem(runtimeMenuItem);
 
-            runtimeMenuItem = new MenuItem();
-            runtimeMenuItem.setLabel("New Identity");
-            runtimeMainMenu.addMenuItem(runtimeMenuItem);
-
-
             runtimeActivity.setMainMenu(runtimeMainMenu);
 
             runtimeFragment = new Fragment();
@@ -884,23 +879,39 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_ALL_FRAGMENT.getKey());
 
+
+            runtimeSideMenu = new SideMenu();
+
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("");
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Connections");
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("World");
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Pending request");
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Exit");
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeActivity.setSideMenu(runtimeSideMenu);
+
             subAppIntraUser.addActivity(runtimeActivity);
             subAppIntraUser.setStartActivity(Activities.CWP_INTRA_USER_ACTIVITY);
 
-            //Activity 2
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CWP_INTRA_USER_CREATE_ACTIVITY);
-            subAppIntraUser.addActivity(runtimeActivity);
-            runtimeActivity.setColor("#FF0B46F0");
-            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-            statusBar.setColor("#FF0B46F0");
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("New identity");
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CWP_WALLET_STORE_FREE_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_FREE_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_FREE_FRAGMENT.getKey());
+
 
             //Activity 3
             runtimeActivity = new Activity();
@@ -919,6 +930,58 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.CWP_WALLET_STORE_PAID_FRAGMENT.getKey(), runtimeFragment);
+
+            // Activity: Connections
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS.getCode());
+            runtimeActivity.setBackActivity(Activities.CWP_INTRA_USER_ACTIVITY);
+            runtimeActivity.setColor("#FF0B46F0");
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Connections");
+            runtimeTitleBar.setColor("#FFFFFF");
+            runtimeTitleBar.setLabelSize(16);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#FF0B46F0");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS_FRAGMENT.getKey());
+
+            runtimeSideMenu = new SideMenu();
+
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("");
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Connections");
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("World");
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Pending request");
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Exit");
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeActivity.setSideMenu(runtimeSideMenu);
+
+            subAppIntraUser.addActivity(runtimeActivity);
 
             // Activity: List of irequest
             runtimeActivity = new Activity();
@@ -941,6 +1004,35 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_FRAGMENT.getKey());
+
+            runtimeSideMenu = new SideMenu();
+
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("");
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Connections");
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("World");
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Pending request");
+            runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS);
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeMenuItem = new MenuItem();
+            runtimeMenuItem.setLabel("Exit");
+            runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+            runtimeActivity.setSideMenu(runtimeSideMenu);
+
             subAppIntraUser.addActivity(runtimeActivity);
 
             /**
@@ -1231,6 +1323,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
             runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode());
+            runtimeActivity.setBackActivity(null);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
             runtimeSubApp.setStartActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);

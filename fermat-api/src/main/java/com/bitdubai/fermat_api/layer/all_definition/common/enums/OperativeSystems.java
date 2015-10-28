@@ -15,7 +15,8 @@ public enum OperativeSystems implements FermatEnum {
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
 
-    ANDROID ("AND"),
+    ANDROID     ("AND"),
+    INDIFFERENT ("IND"),
 
     ;
 
