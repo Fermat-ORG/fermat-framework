@@ -8,16 +8,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystem
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantAssignReferenceException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantListNeededReferencesException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.MissingReferencesException;
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddonManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
@@ -25,7 +19,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -129,11 +122,11 @@ public abstract class AbstractAddon implements Addon, Service {
         return null;
     }
 
-    public final ConcurrentHashMap<AddonVersionReference, Class<? extends FermatManager>> getNeededAddons() throws CantListNeededReferencesException {
+    public final ConcurrentHashMap<AddonVersionReference, Class<? extends FermatAddonManager>> getNeededAddons() throws CantListNeededReferencesException {
 
         try {
 
-            final ConcurrentHashMap<AddonVersionReference, Class<? extends FermatManager>> neededAddons = new ConcurrentHashMap<>();
+            final ConcurrentHashMap<AddonVersionReference, Class<? extends FermatAddonManager>> neededAddons = new ConcurrentHashMap<>();
 
             final Class<? extends AbstractAddon> cl = this.getClass();
 
@@ -171,7 +164,7 @@ public abstract class AbstractAddon implements Addon, Service {
     }
 
     public final void assignAddonReference(final AddonVersionReference          avr          ,
-                                           final Class<? extends FermatManager> referenceMger,
+                                           final Class<? extends FermatAddonManager> referenceMger,
                                            final AbstractAddon                  abstractAddon) throws CantAssignReferenceException {
 
         try {

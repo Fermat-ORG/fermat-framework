@@ -12,8 +12,7 @@ import com.bitdubai.fermat_api.layer.PlatformLayer;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlatform;
-import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystems;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddonManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
@@ -234,7 +233,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -401,9 +399,9 @@ public class Platform implements Serializable {
 
             AbstractAddon eventManager = abstractPlatform.getAddonVersion(new AddonVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.EVENT_MANAGER, Developers.BITDUBAI, new Version()));
 
-            ConcurrentHashMap<AddonVersionReference, Class<? extends FermatManager>> neededAddons = eventManager.getNeededAddons();
+            ConcurrentHashMap<AddonVersionReference, Class<? extends com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddonManager>> neededAddons = eventManager.getNeededAddons();
 
-            for (ConcurrentHashMap.Entry<AddonVersionReference, Class<? extends FermatManager>> avr : neededAddons.entrySet()) {
+            for (ConcurrentHashMap.Entry<AddonVersionReference, Class<? extends FermatAddonManager>> avr : neededAddons.entrySet()) {
                 eventManager.assignAddonReference(avr.getKey(), avr.getValue(), abstractPlatform.getAddonVersion(avr.getKey()));
             }
 
