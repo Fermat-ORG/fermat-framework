@@ -54,7 +54,7 @@ public class ContractViewHolder extends ChildViewHolder {
         exchangeRateAmount = (FermatTextView) itemView.findViewById(R.id.cbw_exchange_rate_amount);
         paymentCurrency = (FermatTextView) itemView.findViewById(R.id.cbw_payment_currency);
         lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.cbw_update_date);
-        status = (FermatTextView) itemView.findViewById(R.id.cbw_negotiation_status);
+        status = (FermatTextView) itemView.findViewById(R.id.cbw_contract_status);
     }
 
     public void bind(ContractBasicInformation itemInfo) {

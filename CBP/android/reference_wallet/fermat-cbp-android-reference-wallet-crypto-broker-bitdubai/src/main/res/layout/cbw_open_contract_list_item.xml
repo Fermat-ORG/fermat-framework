@@ -97,10 +97,57 @@
             android:textSize="@dimen/cbw_title_text_size"
             tools:text="USD"/>
 
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_text"
+            android:layout_marginRight="@dimen/margin_text"
+            android:paddingTop="4dp"
+            android:singleLine="true"
+            android:text="@string/at"
+            android:textColor="@color/black"
+            android:textSize="14sp"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbw_exchange_rate_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_text"
+            android:layout_marginRight="@dimen/margin_text"
+            android:paddingTop="4dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/cbw_title_text_size"
+            tools:text="0.232"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbw_payment_currency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_text"
+            android:layout_marginRight="@dimen/margin_text"
+            android:paddingTop="4dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/cbw_title_text_size"
+            tools:text="BTC"/>
+
     </LinearLayout>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/cbw_negotiation_status"
+        android:id="@+id/cbw_update_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/cbw_contract_status"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/negotiation_date_text"
+        android:textSize="@dimen/cbw_regular_text_size"
+        tools:text="03 Feb 2015"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/cbw_contract_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -110,16 +157,6 @@
         android:paddingTop="4dp"
         android:textColor="@color/waiting_for_text"
         android:textSize="@dimen/cbw_regular_text_size"
-        tools:text="Esperando por comprador"/>
+        tools:text="Waiting for Customer"/>
 
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/cbw_update_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/cbw_negotiation_status"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:textColor="@color/negotiation_date_text"
-        android:textSize="@dimen/cbw_regular_text_size"
-        tools:text="03 Feb 2015"/>
 </RelativeLayout>
