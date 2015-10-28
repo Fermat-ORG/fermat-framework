@@ -14,7 +14,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exce
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantGetActorAssetIssuerException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -119,9 +119,9 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
             this.digitalAssetDistributor.setWalletPublicKey(walletPublicKey);
             this.digitalAssetDistributor.distributeAssets(digitalAssetsToDistribute);
         } catch (CantSetObjectException exception) {
-            throw new CantDistributeDigitalAssetsException(exception, "Setting wallet public key in asset distribution process", "The wallet public key is null");
+            throw new CantDistributeDigitalAssetsException(exception, "Distributing Assets", "The wallet public key is null");
         } catch(Exception exception){
-            throw new CantDistributeDigitalAssetsException(exception, "Setting wallet public key in asset distribution process", "Unexpected exception");
+            throw new CantDistributeDigitalAssetsException(exception, "Distributing Assets", "Unexpected exception");
         }
 
     }

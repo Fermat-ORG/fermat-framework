@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces;
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+
 import java.util.UUID;
 
 /**
@@ -8,14 +10,9 @@ import java.util.UUID;
 public interface ContractBasicInformation {
 
     /**
-     * @return the image of the crypto customer has a byte array
+     * @return the amount of merchandise the customer want to buy
      */
-    byte[] getCryptoCustomerImage();
-
-    /**
-     * @return the crypto customer name (or alias)
-     */
-    String getCryptoCustomerAlias();
+    float getAmount();
 
     /**
      * @return the contract ID
@@ -23,9 +20,24 @@ public interface ContractBasicInformation {
     UUID getContractId();
 
     /**
-     * @return the amount of merchandise the customer want to buy
+     * @return the crypto customer name (or alias)
      */
-    float getAmount();
+    String getCryptoCustomerAlias();
+
+    /**
+     * @return the image of the crypto customer has a byte array
+     */
+    byte[] getCryptoCustomerImage();
+
+    /**
+     * @return the exchange rate amount for the merchandise
+     */
+    float getExchangeRateAmount();
+
+    /**
+     * @return the date of the negotiation's last update in long format
+     */
+    long getLastUpdate();
 
     /**
      * @return the merchandise to buy
@@ -33,12 +45,17 @@ public interface ContractBasicInformation {
     String getMerchandise();
 
     /**
+     * @return the payment currency
+     */
+    String getPaymentCurrency();
+
+    /**
+     * @return the contract status
+     */
+    ContractStatus getStatus();
+
+    /**
      * @return the type of payment in a human readable way
      */
     String getTypeOfPayment();
-
-    /**
-     * @return the exchange rate the merchandise is going to be sell
-     */
-    String getExchangeRate();
 }

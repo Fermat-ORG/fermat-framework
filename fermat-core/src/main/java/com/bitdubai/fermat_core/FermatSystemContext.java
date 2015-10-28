@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.Abst
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginSubsystem;
+import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystems;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.AddonNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPlatformException;
@@ -38,14 +39,20 @@ public class FermatSystemContext {
 
     private final Map<PlatformReference, AbstractPlatform> platforms;
 
+    private final Object           osContext          ;
+    private final OperativeSystems operativeSystem    ;
+
     /**
      * Constructor without params, initializes the platforms Map with an empty concurrent hash map.
      * The platforms array contains all the references to the platforms.
      * The key is an element of the Platforms enum, and the value is the Platform in-self.
      */
-    public FermatSystemContext() {
+    public FermatSystemContext(final Object           osContext      ,
+                               final OperativeSystems operativeSystem) {
 
-        platforms = new ConcurrentHashMap<>();
+        this.osContext       = osContext;
+        this.operativeSystem = operativeSystem;
+        this.platforms       = new ConcurrentHashMap<>();
     }
 
     /**
@@ -232,6 +239,14 @@ public class FermatSystemContext {
         } else {
             throw new PlatformNotFoundException("platform: " + platformReference.toString(), "platform not found in the system context.");
         }
+    }
+
+    public final Object getOsContext() {
+        return osContext;
+    }
+
+    public final OperativeSystems getOperativeSystem() {
+        return operativeSystem;
     }
 
 }

@@ -14,6 +14,7 @@ public enum Layers implements FermatEnum {
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     ACTOR           ("ACT"),
+    ANDROID         ("AND"),
     BASIC_WALLET    ("BSW"),
     COMMUNICATION   ("COM"),
     DEFINITION      ("DEF"),
@@ -22,6 +23,7 @@ public enum Layers implements FermatEnum {
     IDENTITY        ("IDT"),
     MIDDLEWARE      ("MID"),
     NETWORK_SERVICE ("NTS"),
+    PLATFORM_SERVICE("PMS"),
     REQUEST         ("REQ"),
     SUB_APP_MODULE  ("SAM"),
     TRANSACTION     ("TRA"),
@@ -36,24 +38,31 @@ public enum Layers implements FermatEnum {
     }
 
     public static Layers getByCode(String code) throws InvalidParameterException {
+
             switch (code) {
-                case "ACT":  return Layers.ACTOR;
-                case "BSW":  return Layers.BASIC_WALLET;
-                case "COM":  return Layers.COMMUNICATION;
-                case "DEF":  return Layers.DEFINITION;
-                case "ENG":  return Layers.ENGINE;
-                case "HAR":  return Layers.HARDWARE;
-                case "IDT":  return Layers.IDENTITY;
-                case "MID":  return Layers.MIDDLEWARE;
-                case "NTS":  return Layers.NETWORK_SERVICE;
-                case "REQ":  return Layers.REQUEST;
-                case "SAM":  return Layers.SUB_APP_MODULE;
-                case "TRA":  return Layers.TRANSACTION;
-                case "WAM":  return Layers.WALLET_MODULE;
-                case "WRL":  return Layers.WORLD;
+
+                case "ACT":  return ACTOR;
+                case "AND":  return ANDROID;
+                case "BSW":  return BASIC_WALLET;
+                case "COM":  return COMMUNICATION;
+                case "DEF":  return DEFINITION;
+                case "ENG":  return ENGINE;
+                case "HAR":  return HARDWARE;
+                case "IDT":  return IDENTITY;
+                case "MID":  return MIDDLEWARE;
+                case "NTS":  return NETWORK_SERVICE;
+                case "PMS":  return PLATFORM_SERVICE;
+                case "REQ":  return REQUEST;
+                case "SAM":  return SUB_APP_MODULE;
+                case "TRA":  return TRANSACTION;
+                case "WAM":  return WALLET_MODULE;
+                case "WRL":  return WORLD;
+
                 default:
-                throw new InvalidParameterException("Code Received: " + code,
-                        "The received code is not valid for the Layers enum");
+                throw new InvalidParameterException(
+                        "Code Received: " + code,
+                        "The received code is not valid for the Layers enum"
+                );
         }
     }
 
@@ -61,4 +70,5 @@ public enum Layers implements FermatEnum {
     public String getCode() {
         return this.code;
     }
+
 }

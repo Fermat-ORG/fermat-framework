@@ -45,9 +45,9 @@
 //import CryptoWallet;
 //import CryptoWalletManager;
 //import CryptoWalletWalletContact;
-//import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-//import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
-//import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+//import ErrorManager;
+//import UnexpectedUIExceptionSeverity;
+//import UnexpectedWalletExceptionSeverity;
 //import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 //import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 //import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;

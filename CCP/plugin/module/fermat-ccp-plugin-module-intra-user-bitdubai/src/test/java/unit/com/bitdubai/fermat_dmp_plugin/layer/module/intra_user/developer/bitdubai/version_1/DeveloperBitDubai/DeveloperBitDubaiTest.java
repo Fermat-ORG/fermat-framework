@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.DeveloperBitDubai;
 
 import org.junit.Before;
@@ -8,10 +9,12 @@ import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+*/
 /**
  * Created by natalia on 28/08/15.
  * a
- */
+ *//*
+
 public class DeveloperBitDubaiTest {
 
     DeveloperBitDubai developTest;
@@ -26,3 +29,4 @@ public class DeveloperBitDubaiTest {
         assertThat(developTest.getPlugin()).isInstanceOf(IntraWalletUserModulePluginRoot.class);
     }
 }
+*/
