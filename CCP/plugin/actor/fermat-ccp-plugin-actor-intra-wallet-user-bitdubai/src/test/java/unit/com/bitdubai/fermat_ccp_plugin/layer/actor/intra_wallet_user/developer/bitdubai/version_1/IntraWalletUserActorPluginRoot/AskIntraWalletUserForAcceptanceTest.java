@@ -4,10 +4,10 @@
 //import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.database.IntraWalletUserActorDatabaseConstants;
 //import EventType;
 //<<<<<<< HEAD
-//import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraUserException;
+//import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateNotificationException;
 //import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 //=======
-//import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateIntraUserException;
+//import com.bitdubai.fermat_api.layer.dmp_actor.intra_user.exceptions.CantCreateNotificationException;
 //import com.bitdubai.fermat_ccp_api.layer.network_service.intra_user.interfaces.IntraUserManager;
 //>>>>>>> 193a4ce563d3916b505332563ad81fe262f074f2
 //import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -163,7 +163,7 @@
 //
 //        assertThat(caughtException())
 //                .isNotNull()
-//                .isInstanceOf(CantCreateIntraUserException.class);
+//                .isInstanceOf(CantCreateNotificationException.class);
 //
 //    }
 //}
