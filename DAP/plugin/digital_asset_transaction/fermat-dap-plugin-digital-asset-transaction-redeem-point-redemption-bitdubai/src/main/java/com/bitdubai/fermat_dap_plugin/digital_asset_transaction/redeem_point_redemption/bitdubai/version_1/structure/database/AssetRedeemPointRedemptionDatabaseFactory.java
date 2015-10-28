@@ -8,6 +8,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
 
 import java.util.UUID;
@@ -30,14 +32,14 @@ public class AssetRedeemPointRedemptionDatabaseFactory implements DealsWithPlugi
     }
 
     //PUBLIC METHODS
-    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    public Database createDatabase(UUID ownerId) throws CantCreateDatabaseException {
         Database database;
 
         /**
          * I will create the database where I am going to store the information of this wallet.
          */
         try {
-            database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
+            database = this.pluginDatabaseSystem.createDatabase(ownerId, AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_DATABASE);
         } catch (CantCreateDatabaseException cantCreateDatabaseException) {
             /**
              * I can not handle this situation.
@@ -78,11 +80,6 @@ public class AssetRedeemPointRedemptionDatabaseFactory implements DealsWithPlugi
             metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
             metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_SENDER_KEY_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
             metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_RECEIVER_KEY_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-            metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_GENESIS_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-            metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_GENESIS_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 20, Boolean.FALSE);
-            metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_NAME_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
-            metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
-            metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_ISSUING_KEY_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
             metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
 
 
@@ -99,6 +96,17 @@ public class AssetRedeemPointRedemptionDatabaseFactory implements DealsWithPlugi
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "UUID : " + ownerId, "Invalid Owner. Cannot create the table...");
         }
         return database;
+    }
+
+    public boolean isDatabaseCreated(UUID ownerId) {
+        try {
+            this.pluginDatabaseSystem.openDatabase(ownerId, AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_DATABASE);
+        } catch (CantOpenDatabaseException e) {
+            return false;
+        } catch (DatabaseNotFoundException e) {
+            return false;
+        }
+        return true;
     }
 
     //GETTER AND SETTERS

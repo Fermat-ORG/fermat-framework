@@ -27,7 +27,7 @@ public class AssetRedeemPointRedemptionDatabaseConstants {
     public static final String ASSET_RPR_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN = ASSET_RPR_EVENTS_RECORDED_ID_COLUMN_NAME;
 
     /**
-     * Asset Redemption database table definition.
+     * Asset RedemptionAgent database table definition.
      */
     public static final String ASSET_RPR_METADATA_TABLE_NAME = "rpr_metadata";
 
@@ -36,11 +36,6 @@ public class AssetRedeemPointRedemptionDatabaseConstants {
     public static final String ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME = "rpr_transaction_cryptostatus";
     public static final String ASSET_RPR_METADATA_SENDER_KEY_COLUMN_NAME = "rpr_sender_publickey";
     public static final String ASSET_RPR_METADATA_RECEIVER_KEY_COLUMN_NAME = "rpr_receiver_publickey";
-    public static final String ASSET_RPR_METADATA_DA_GENESIS_TRANSACTION_COLUMN_NAME = "rpr_da_genesis_transaction";
-    public static final String ASSET_RPR_METADATA_DA_GENESIS_AMOUNT_COLUMN_NAME = "rpr_da_genesis amount";
-    public static final String ASSET_RPR_METADATA_DA_NAME_COLUMN_NAME = "rpr_da_name";
-    public static final String ASSET_RPR_METADATA_DA_DESCRIPTION_COLUMN_NAME = "rpr_da_description";
-    public static final String ASSET_RPR_METADATA_DA_ISSUING_KEY_COLUMN_NAME = "rpr_da_issuing_publickey";
     public static final String ASSET_RPR_METADATA_TIMESTAMP_COLUMN_NAME = "rpr_timestamp";
 
     public static final String ASSET_RPR_METADATA_TABLE_FIRST_KEY_COLUMN = ASSET_RPR_METADATA_TRANSACTION_ID_COLUMN_NAME;

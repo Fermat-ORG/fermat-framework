@@ -106,11 +106,6 @@ public class AssetRedeemPointRedemptionDeveloperDatabaseFactory implements Deals
         metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME);
         metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_SENDER_KEY_COLUMN_NAME);
         metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_RECEIVER_KEY_COLUMN_NAME);
-        metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_GENESIS_TRANSACTION_COLUMN_NAME);
-        metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_GENESIS_AMOUNT_COLUMN_NAME);
-        metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_NAME_COLUMN_NAME);
-        metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_DESCRIPTION_COLUMN_NAME);
-        metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_ISSUING_KEY_COLUMN_NAME);
         metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TIMESTAMP_COLUMN_NAME);
 
         DeveloperDatabaseTable metadataTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME, metadataColumns);

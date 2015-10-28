@@ -22,7 +22,7 @@
 -->
 <FindBugsFilter>
 
-<!-- Don't check android -->
+    <!-- Don't check android -->
     <Match>
         <Package name="com.bitdubai.fermat_osa_addon.*" />
     </Match>

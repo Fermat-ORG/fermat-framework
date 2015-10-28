@@ -2,9 +2,12 @@
 package com.bitdubai.fermat_dap_api.layer.all_definition.util;
 
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.ObjectNotSetException;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -128,6 +131,18 @@ public final class Validate {
             throw new CantSetObjectException(message);
         }
         return objectToSet;
+    }
+
+    public static <T> T verifyGetter(T objectToGet, String message) throws ObjectNotSetException {
+        if (isObjectNull(objectToGet)) {
+            throw new ObjectNotSetException(message);
+        } else return objectToGet;
+    }
+
+    public static List verifyGetter(List objectToGet) {
+        if (isObjectNull(objectToGet)) {
+            return Collections.EMPTY_LIST;
+        } else return objectToGet;
     }
 
     private static Date today() {
