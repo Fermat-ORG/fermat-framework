@@ -16,6 +16,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistsTransactionUUIDException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetSwap;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.exceptions.CantReceiveDigitalAssetException;
@@ -153,8 +154,14 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
 
     @Override
     public void persistInLocalStorage(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateDigitalAssetFileException {
-        //TODO: I need to asing an internal UUID and persist it in database, for now this id is null
-        this.digitalAssetReceptionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata,null);
+        UUID receptionId=UUID.randomUUID();
+        try {
+            this.assetReceptionDao.persistReceptionId(digitalAssetMetadata.getGenesisTransaction(), receptionId);
+            this.digitalAssetReceptionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, receptionId.toString());
+        } catch (CantPersistsTransactionUUIDException exception) {
+            throw new CantCreateDigitalAssetFileException(exception,"Persiting Receiving digital asset metadata","Cannot persists internal id in database");
+        }
+
     }
 
     @Override

@@ -18,13 +18,24 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.ReceptionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendTransactionNewStatusNotificationException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DigitalAssetMetadataTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingTransactionNotificationAgent;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantInitializeAssetMonitorAgentException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.AssetReceptionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.exceptions.CantCheckAssetReceptionProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.exceptions.CantReceiveDigitalAssetException;
@@ -59,6 +70,8 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
     DigitalAssetReceptor digitalAssetReceptor;
     AssetTransmissionNetworkServiceManager assetTransmissionManager;
     BitcoinNetworkManager bitcoinNetworkManager;
+    ActorAssetUserManager actorAssetUserManager;
+    ActorAssetIssuerManager actorAssetIssuerManager;
 
     public AssetReceptionMonitorAgent(EventManager eventManager,
                                          PluginDatabaseSystem pluginDatabaseSystem,
@@ -98,6 +111,20 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
             throw new CantSetObjectException("assetTransmissionManager is null");
         }
         this.assetTransmissionManager = assetTransmissionManager;
+    }
+
+    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
+        if(assetTransmissionManager ==null){
+            throw new CantSetObjectException("actorAssetUserManager is null");
+        }
+        this.actorAssetUserManager = actorAssetUserManager;
+    }
+
+    public void setActorAssetUserManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
+        if(actorAssetIssuerManager ==null){
+            throw new CantSetObjectException("actorAssetIssuerManager is null");
+        }
+        this.actorAssetIssuerManager = actorAssetIssuerManager;
     }
 
     @Override
@@ -238,10 +265,26 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
 
                     }
                 }
-
+                ActorAssetIssuer actorAssetIssuer;
+                List<String> genesisTransactionList;
+                String senderId;
+                ActorAssetUser actorAssetUser=actorAssetUserManager.getActorAssetUser();
                 if(assetReceptionDao.isAcceptedAssets()){
                     System.out.println("ASSET RECEPTION there are accepted assets");
-                    //TODO: to handle
+                    genesisTransactionList=assetReceptionDao.getGenesisTransactionByReceptionStatus(ReceptionStatus.ASSET_ACCEPTED);
+                    for(String genesisTransaction : genesisTransactionList){
+                        System.out.println("ASSET RECEPTION Genesis transaction accepted "+genesisTransaction);
+                        senderId=assetReceptionDao.getSenderIdByGenesisTransaction(genesisTransaction);
+                        System.out.println("ASSET RECEPTION sender id  "+senderId);
+                        actorAssetIssuer=getActorAssetIssuer(senderId);
+                        assetTransmissionManager.sendTransactionNewStatusNotification(
+                                actorAssetUser,
+                                actorAssetIssuer,
+                                genesisTransaction,
+                                DistributionStatus.ASSET_ACCEPTED);
+                    }
+
+
                 }
 
                 if(assetReceptionDao.isRejectedByContract()){
@@ -260,7 +303,28 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
                 throw new CantCheckAssetReceptionProgressException(exception,"Exception in asset reception monitor agent","Cannot deliver pending transactions from network layer");
             } catch (CantReceiveDigitalAssetException e) {
                 e.printStackTrace();
+            } catch (CantAssetUserActorNotFoundException e) {
+                e.printStackTrace();
+            } catch (CantSendTransactionNewStatusNotificationException e) {
+                e.printStackTrace();
+            } catch (CantGetAssetUserActorsException e) {
+                e.printStackTrace();
+            } catch (UnexpectedResultReturnedFromDatabaseException e) {
+                e.printStackTrace();
+            } catch (CantGetAssetIssuerActorsException e) {
+                e.printStackTrace();
             }
+        }
+
+        private ActorAssetIssuer getActorAssetIssuer(String senderId) throws CantGetAssetIssuerActorsException {
+            List<ActorAssetIssuer> actorAssetIssuerList=actorAssetIssuerManager.getAllAssetIssuerActorRegistered();
+            for(ActorAssetIssuer actorAssetIssuer : actorAssetIssuerList){
+                if(actorAssetIssuer.getPublicKey().equals(senderId)){
+                    return actorAssetIssuer;
+                }
+            }
+            throw new CantGetAssetIssuerActorsException(CantGetAssetIssuerActorsException.DEFAULT_MESSAGE,null,
+                    "Getting the ActorAssetUser","Cannot find sender id\n"+senderId+"\nfrom AssetIssuerActors registered");
         }
 
     }
