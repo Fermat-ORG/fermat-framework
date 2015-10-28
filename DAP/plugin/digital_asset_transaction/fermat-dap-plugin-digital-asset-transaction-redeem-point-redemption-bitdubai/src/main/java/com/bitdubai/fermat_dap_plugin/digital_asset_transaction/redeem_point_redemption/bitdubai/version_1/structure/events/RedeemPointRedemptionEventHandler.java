@@ -8,32 +8,31 @@ import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStarte
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.ReceivedNewDigitalAssetMetadataNotificationEvent;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 23/10/15.
  */
-public class ReceivedNewDigitalAssetMetadataNotificationEventHandler implements FermatEventHandler {
+public class RedeemPointRedemptionEventHandler implements FermatEventHandler {
 
     //VARIABLE DECLARATION
     private RedeemPointRedemptionRecorderService recorderService;
 
     //CONSTRUCTORS
 
-    public ReceivedNewDigitalAssetMetadataNotificationEventHandler(RedeemPointRedemptionRecorderService recorderService) throws CantSetObjectException {
+    public RedeemPointRedemptionEventHandler(RedeemPointRedemptionRecorderService recorderService) throws CantSetObjectException {
         this.recorderService = Validate.verifySetter(recorderService, "recorderService is null");
     }
 
     //PUBLIC METHODS
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if (!(fermatEvent instanceof ReceivedNewDigitalAssetMetadataNotificationEvent)) {
-            throw new CantSaveEventException(null, "Handling the ReceivedNewDigitalAssetMetadataNotificationEvent", "Illegal Argument, this method takes an ReceivedNewDigitalAssetMetadataNotificationEvent and was passed an : " + fermatEvent == null ? "null" : fermatEvent.getClass().getName());
-        }
+        if (fermatEvent == null)
+            throw new CantSaveEventException(null, "Handling the ReceivedNewDigitalAssetMetadataNotificationEvent", "Illegal Argument, this method takes an ReceivedNewDigitalAssetMetadataNotificationEvent and was passed an null");
+
         if (recorderService.getStatus() != ServiceStatus.STARTED) {
             throw new TransactionServiceNotStartedException();
         }
-        recorderService.receivedNewDigitalAssetMetadataNotificationEvent((ReceivedNewDigitalAssetMetadataNotificationEvent) fermatEvent);
+        recorderService.receiveNewEvent(fermatEvent);
     }
 
     //PRIVATE METHODS

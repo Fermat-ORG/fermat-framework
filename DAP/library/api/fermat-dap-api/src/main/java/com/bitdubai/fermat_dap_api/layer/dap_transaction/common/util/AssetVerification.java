@@ -16,7 +16,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -103,7 +102,6 @@ public final class AssetVerification {
         //For now, we going to check, only, the expiration date
         ContractProperty contractProperty = digitalAssetContract.getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE);
         Timestamp expirationDate = (Timestamp) contractProperty.getValue();
-        Date date = new Date();
-        return expirationDate.after(new Timestamp(date.getTime()));
+        return expirationDate.after(new Timestamp(System.currentTimeMillis()));
     }
 }
