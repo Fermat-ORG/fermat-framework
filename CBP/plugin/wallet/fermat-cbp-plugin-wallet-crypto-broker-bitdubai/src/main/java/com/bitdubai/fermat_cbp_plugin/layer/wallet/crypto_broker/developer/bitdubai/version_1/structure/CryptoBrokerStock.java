@@ -1,8 +1,16 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.Stock;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockTransaction;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantGetAddCreditCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantGetAddDebitCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantGetAvailableBalanceCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantGetBookedBalanceCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantAddDebitException;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantAddCreditException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseDao;
 
 import java.util.UUID;
@@ -21,25 +29,51 @@ public class CryptoBrokerStock implements Stock {
     }
 
     @Override
-    public float getBookedBalance() {
+    public float getBookedBalance() throws CantGetBookedBalanceCryptoBrokerWalletException{
         //esto se tiene que responder con una consulta al DAO para obtener el booked balance
-        return 0;
+        try{
+            return databaseDao.getCalculateBookBalance();
+        } catch (CantCalculateBalanceException e) {
+            throw new CantGetBookedBalanceCryptoBrokerWalletException("CAN'T GET CRYPTO BROKER WALLET BOOKED BALANCE", e, "", "");
+        } catch (Exception e) {
+            throw new CantGetBookedBalanceCryptoBrokerWalletException("CAN'T GET CRYPTO BROKER WALLET BOOKED BALANCE", FermatException.wrapException(e), "", "");
+        }
     }
 
     @Override
-    public float getAvailableBalance() {
+    public float getAvailableBalance() throws CantGetAvailableBalanceCryptoBrokerWalletException{
         //esto se tiene que responder con una consulta al DAO para obtener el available balance
-        return 0;
+        try{
+            return databaseDao.getCalculateBookBalance();
+        } catch (CantCalculateBalanceException e) {
+            throw new CantGetAvailableBalanceCryptoBrokerWalletException("CAN'T GET CRYPTO BROKER WALLET BOOKED BALANCE", e, "", "");
+        } catch (Exception e) {
+            throw new CantGetAvailableBalanceCryptoBrokerWalletException("CAN'T GET CRYPTO BROKER WALLET BOOKED BALANCE", FermatException.wrapException(e), "", "");
+        }
     }
 
     @Override
-    public void addDebit(StockTransaction transaction) {
+    public void addDebit(StockTransaction transaction) throws CantGetAddDebitCryptoBrokerWalletException{
         //aqui se crea un record a partir de la stock transaction y se le envia al DAO
+        try{
+            databaseDao.addDebit(transaction);
+        } catch (CantAddDebitException e) {
+            throw new CantGetAddDebitCryptoBrokerWalletException("CAN'T ADD CRYPTO BROKER WALLET TRANSACTION DEBIT", e, "", "");
+        } catch (Exception e) {
+            throw new CantGetAddDebitCryptoBrokerWalletException("CAN'T ADD CRYPTO BROKER WALLET TRANSACTION DEBIT", FermatException.wrapException(e), "", "");
+        }
     }
 
     @Override
-    public void addCrebit(StockTransaction transaction) {
-    //aqui se crea un record a partir de la stock transaction y se le envia al DAO
+    public void addCredit(StockTransaction transaction) throws CantGetAddCreditCryptoBrokerWalletException{
+        //aqui se crea un record a partir de la stock transaction y se le envia al DAO
+        try{
+            databaseDao.addCredit(transaction);
+        } catch (CantAddCreditException e) {
+            throw new CantGetAddCreditCryptoBrokerWalletException("CAN'T ADD CRYPTO BROKER WALLET TRANSACTION DEBIT", e, "", "");
+        } catch (Exception e) {
+            throw new CantGetAddCreditCryptoBrokerWalletException("CAN'T ADD CRYPTO BROKER WALLET TRANSACTION DEBIT", FermatException.wrapException(e), "", "");
+        }
     }
 
     /*

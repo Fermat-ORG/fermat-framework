@@ -11,5 +11,5 @@ public interface Stock {
     float getBookedBalance() throws CantGetBookedBalanceCryptoBrokerWalletException;
     float getAvailableBalance() throws CantGetAvailableBalanceCryptoBrokerWalletException;
     void addDebit(final StockTransaction transaction) throws CantGetAddDebitCryptoBrokerWalletException;
-    void addCrebit(final StockTransaction transaction) throws CantGetAddCreditCryptoBrokerWalletException;
+    void addCredit(final StockTransaction transaction) throws CantGetAddCreditCryptoBrokerWalletException;
 }

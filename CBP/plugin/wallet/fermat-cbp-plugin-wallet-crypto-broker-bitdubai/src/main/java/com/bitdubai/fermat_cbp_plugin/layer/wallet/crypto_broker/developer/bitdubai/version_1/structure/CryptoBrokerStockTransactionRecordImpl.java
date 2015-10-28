@@ -58,54 +58,36 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     }
 
     public UUID getTransactionId() { return this.transactionId; }
-    public void setTransactionId(UUID id) { this.transactionId = id; }
 
     public BalanceType getBalanceType() { return this.balanceType; }
-    public void setBalanceType(BalanceType balance) { this.balanceType = balance; }
 
     public TransactionType getTransactionType() { return this.transactionType; }
 
     @Override
-    public String getWalletPublicKey() {
-        return null;
-    }
+    public String getWalletPublicKey() { return null; }
 
     @Override
-    public String getOwnerPublicKey() {
-        return null;
-    }
+    public String getOwnerPublicKey() { return null; }
 
     public void setBalanceType(TransactionType transaction) { this.transactionType = transaction; }
 
     public CurrencyType getCurrencyType() { return this.currencyType; }
-    public void setCurrencyType(CurrencyType currency) { this.currencyType = currency; }
 
     public String getPublicKeyWallet() { return this.keyPairWallet.getPublicKey(); }
-    public void setPublicKeyWallet(String publicKey) { this.keyPairWallet = keyPairWallet; }
 
     public String getPublicKeyBroker() { return this.keyPairBroker.getPublicKey(); }
-    public void setPublicKeyBroker(String publicKey) { this.keyPairBroker = keyPairBroker; }
 
     public String getPublicKeyCustomer() { return this.keyPairCustomer.getPublicKey(); }
-    public void setPublicKeyCustomer(String publicKey) { this.keyPairCustomer = keyPairCustomer; }
 
     public float getAmount() { return this.amount; }
-    public void setAmount(float amount) { this.amount = amount; }
 
     public float getRunningBookBalance() { return this.runningBookBalance; }
-    public void setRunningBookBalance(float bookBalance) { this.runningBookBalance = bookBalance; }
-
 
     public float getRunningAvailableBalance() { return this.runningAvailableBalance; }
-    public void setRunningAvailableBalance(float availableBalance) { this.runningAvailableBalance = availableBalance; }
-
 
     public long getTimestamp() { return this.timeStamp; }
-    public void setTimestamp(long time) { this.timeStamp = time; }
-
 
     public String getMemo() { return this.memo; }
-    public void setMemo(String memo) { this.memo = memo; }
 
     public boolean equals(Object o){
         if(!(o instanceof CryptoBrokerStockTransactionRecord))
