@@ -192,7 +192,7 @@ public class IncomingNotificationDao implements DAO {
 
     public ActorNetworkServiceRecord getNotificationById(final UUID notificationId) throws CantGetNotificationException, NotificationNotFoundException {
 
-        if (notificationId == null)
+       // if (notificationId == null)
             //throw new CantGetRequestException("", "requestId, can not be null");
 
         try {
@@ -219,7 +219,7 @@ public class IncomingNotificationDao implements DAO {
 
             throw new CantGetNotificationException("",exception, "Check the cause."                                                                                ,"");
         }
-        return null;
+
     }
 
 

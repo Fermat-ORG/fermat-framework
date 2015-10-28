@@ -15,14 +15,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUsers;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIdentityIntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
@@ -59,22 +59,7 @@ import java.util.regex.Pattern;
 /**
  * Created by loui on 27/05/15.a
  */
-public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implements
-        CryptoWalletManager,
-        DealsWithBitcoinWallet,//
-        DealsWithCryptoAddressBook,
-        DealsWithCryptoAddressesNetworkService,//
-        DealsWithCryptoPayment,//
-        DealsWithCryptoTransmissionNetworkService,//
-        DealsWithCCPIntraWalletUser,//
-        DealsWithCryptoVault,
-        DealsWithErrors,
-        DealsWithExtraUsers,//
-        DealsWithLogger,
-        DealsWithOutgoingExtraUser,//
-        DealsWithOutgoingIntraActor,//
-        DealsWithWalletContacts,//
-        LogManagerForDevelopers {
+public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implements DealsWithCCPIntraWalletUsers,DealsWithCryptoTransmissionNetworkService,DealsWithCryptoAddressesNetworkService,CryptoWalletManager,DealsWithCCPIdentityIntraWalletUser, DealsWithBitcoinWallet, DealsWithCryptoVault, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithExtraUsers,DealsWithOutgoingExtraUser, DealsWithOutgoingIntraActor,DealsWithWalletContacts, DealsWithCryptoAddressBook,DealsWithCryptoPayment, Plugin, Service {
 
     @Override
     public List<AddonVersionReference> getNeededAddonReferences() {
@@ -157,10 +142,10 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
     private OutgoingIntraActorManager outgoingIntraActorManager;
 
     /**
-     * DealsWithIntraUsersActor Interface member variables.
+     * DealsWithCCPIntraWalletUsers Interface member variables.
      */
+    private com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager intraUserManager;
 
-//    private ActorIntraUserManager intraUserManager;
 
 
     /**
@@ -169,10 +154,10 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
     private CryptoAddressesManager cryptoAddressesNSManager;
 
     /**
-     * DealsWithCCPIntraWalletUser Interface member variables.
+     * DealsWithCCPIdentityIntraWalletUser Interface member variables.
      */
 
-    private IntraWalletUserManager intraWalletUserManager;
+    private IntraWalletUserManager identityIntraWalletUserManager;
 
     /**
      * DealsWithOutgoingExtraUser Interface member variables.
@@ -228,12 +213,13 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
             walletModuleCryptoWallet.setOutgoingExtraUserManager(outgoingExtraUserManager);
             walletModuleCryptoWallet.setCryptoAddressBookManager(cryptoAddressBookManager);
             walletModuleCryptoWallet.setWalletContactsManager(walletContactsManager);
-            walletModuleCryptoWallet.setIntraUserManager(intraWalletUserManager);
+            walletModuleCryptoWallet.setIdentityIntraUserManager(identityIntraWalletUserManager);
             walletModuleCryptoWallet.setCryptoTransmissionNetworkService(cryptoTransmissionNetworkServiceManager);
 //            walletModuleCryptoWallet.setActorIntraUserManager(this.intraUserManager);
             walletModuleCryptoWallet.setCryptoPaymentManager(this.cryptoPaymentManager);
             walletModuleCryptoWallet.setOutgoingIntraActorManager(this.outgoingIntraActorManager);
             walletModuleCryptoWallet.setCryptoAddressesManager(this.cryptoAddressesNSManager);
+            walletModuleCryptoWallet.setIntraWalletUserManager(this.intraUserManager);
             walletModuleCryptoWallet.initialize();
 
             logManager.log(CryptoWalletCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation finished successfully.", null, null);
@@ -342,10 +328,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
     }
 
 
-    @Override
-    public void setIntraUserManager(IntraWalletUserManager intraWalletUserManager) {
-        this.intraWalletUserManager = intraWalletUserManager;
-    }
+
 
     @Override
     public void setCryptoTransmissionNetworkService(CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager) {
@@ -367,8 +350,16 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
         this.cryptoAddressesNSManager = cryptoAddressesNetworkServiceManager;
     }
 
-//    @Override
-//    public void setActorIntraUserManager(ActorIntraUserManager actorIntraUserManager) {
-//        this.intraUserManager = actorIntraUserManager;
-//    }
+    @Override
+    public void setIdentityIntraUserManager(IntraWalletUserManager intraWalletUserManager) {
+        this.identityIntraWalletUserManager = intraWalletUserManager;
+    }
+
+
+    @Override
+    public void setIntraWalletUserManager(com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager intraWalletUserManager) {
+        this.intraUserManager = intraWalletUserManager;
+    }
+
+
 }
