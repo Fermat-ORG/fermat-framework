@@ -97,6 +97,26 @@ public class AssetRedeemPointRedemptionDeveloperDatabaseFactory implements Deals
         DeveloperDatabaseTable eventsRecorderTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TABLE_NAME, eventsRecorderColumns);
         tables.add(eventsRecorderTable);
 
+        /**
+         * Metadata table.
+         */
+        List<String> metadataColumns = new ArrayList<String>();
+        metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_ID_COLUMN_NAME);
+        metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_STATUS_COLUMN_NAME);
+        metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME);
+        metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_SENDER_KEY_COLUMN_NAME);
+        metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_RECEIVER_KEY_COLUMN_NAME);
+        metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_GENESIS_TRANSACTION_COLUMN_NAME);
+        metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_GENESIS_AMOUNT_COLUMN_NAME);
+        metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_NAME_COLUMN_NAME);
+        metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_DESCRIPTION_COLUMN_NAME);
+        metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_ISSUING_KEY_COLUMN_NAME);
+        metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TIMESTAMP_COLUMN_NAME);
+
+        DeveloperDatabaseTable metadataTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME, metadataColumns);
+        tables.add(eventsRecorderTable);
+
+
         return tables;
     }
 
@@ -155,7 +175,7 @@ public class AssetRedeemPointRedemptionDeveloperDatabaseFactory implements Deals
         return returnedRecords;
     }
 
-//PRIVATE METHODS
+    //PRIVATE METHODS
 
     //GETTER AND SETTERS
     @Override
@@ -168,5 +188,5 @@ public class AssetRedeemPointRedemptionDeveloperDatabaseFactory implements Deals
         this.pluginId = pluginId;
     }
 
-//INNER CLASSES
+    //INNER CLASSES
 }

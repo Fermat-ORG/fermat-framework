@@ -49,29 +49,52 @@ public class AssetRedeemPointRedemptionDatabaseFactory implements DealsWithPlugi
          * Next, I will add the needed tables.
          */
         try {
-            DatabaseTableFactory table;
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
             /**
              * Create Asset Reception table.
              */
-            table = databaseFactory.newTableFactory(ownerId, AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TABLE_NAME);
             DatabaseTableFactory eventsRecorderTable = databaseFactory.newTableFactory(ownerId, AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TABLE_NAME);
 
             eventsRecorderTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            eventsRecorderTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_EVENT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            eventsRecorderTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_SOURCE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-            eventsRecorderTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            eventsRecorderTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_EVENT_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
+            eventsRecorderTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_SOURCE_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
+            eventsRecorderTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
             eventsRecorderTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
 
             eventsRecorderTable.addIndex(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
-                databaseFactory.createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, eventsRecorderTable);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
+
+            DatabaseTableFactory metadataTable = databaseFactory.newTableFactory(ownerId, AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME);
+
+            metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_FIRST_KEY_COLUMN, DatabaseDataType.STRING, 36, Boolean.TRUE);
+            metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
+            metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
+            metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_SENDER_KEY_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_RECEIVER_KEY_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_GENESIS_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_GENESIS_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 20, Boolean.FALSE);
+            metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_NAME_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
+            metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_ISSUING_KEY_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
+            metadataTable.addColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+
+
+            metadataTable.addIndex(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, metadataTable);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
         } catch (InvalidOwnerIdException e) {
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "UUID : " + ownerId, "Invalid Owner. Cannot create the table...");
         }

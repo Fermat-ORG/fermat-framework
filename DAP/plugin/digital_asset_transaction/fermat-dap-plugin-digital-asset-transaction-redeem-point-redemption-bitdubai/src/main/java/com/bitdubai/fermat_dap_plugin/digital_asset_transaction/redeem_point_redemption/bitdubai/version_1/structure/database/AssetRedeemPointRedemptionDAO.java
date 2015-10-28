@@ -1,17 +1,36 @@
 package com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DigitalAssetMetadataTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
+import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantLoadAssetRedemptionEventListException;
+import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException;
+import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantPersistTransactionMetadataException;
+import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.RecordsNotFoundException;
+import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 
 import java.io.Closeable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -29,7 +48,14 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
 
     //PUBLIC METHODS
 
-    public void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException {
+    /*
+    * Event Recorded Table's Actions.
+    *
+    */
+    public void saveNewEvent(FermatEvent event) throws CantSaveEventException {
+        String eventType = event.getEventType().getCode();
+        String eventSource = event.getSource().getCode();
+
         String context = "Event Type : " + eventType + " - Event Source: " + eventSource;
         try {
             DatabaseTable databaseTable = this.database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TABLE_NAME);
@@ -41,12 +67,113 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
             eventRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
             eventRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
             eventRecord.setLongValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, System.currentTimeMillis());
+
             databaseTable.insertRecord(eventRecord);
         } catch (CantInsertRecordException exception) {
             throw new CantSaveEventException(exception, context, "Cannot insert a record in Asset Reception database");
         } catch (Exception exception) {
             throw new CantSaveEventException(FermatException.wrapException(exception), context, "Unexpected exception");
         }
+    }
+
+    public List<String> getPendingActorAssetUserEvents() throws CantLoadAssetRedemptionEventListException {
+        return getPendingEventsBySource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
+    }
+
+    public EventType getEventTypeById(String id) throws CantLoadAssetRedemptionEventListException, InvalidParameterException, RecordsNotFoundException {
+        return EventType.getByCode(getStringFieldByEventId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
+    }
+
+    public EventSource getEventSourceById(String id) throws CantLoadAssetRedemptionEventListException, InvalidParameterException, RecordsNotFoundException {
+        return EventSource.getByCode(getStringFieldByEventId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_SOURCE_COLUMN_NAME, id));
+    }
+
+    public EventStatus getEventStatusById(String id) throws CantLoadAssetRedemptionEventListException, InvalidParameterException, RecordsNotFoundException {
+        return EventStatus.getByCode(getStringFieldByEventId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_STATUS_COLUMN_NAME, id));
+    }
+
+    public void updateEventStatus(EventStatus status, String eventId) throws CantLoadAssetRedemptionEventListException, RecordsNotFoundException {
+        updateStringFieldByEventId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_STATUS_COLUMN_NAME, status.getCode(), eventId);
+    }
+
+    public boolean isPendingActorAssetUserEvents() throws CantLoadAssetRedemptionEventListException {
+        return isPendingEventsBySource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
+    }
+
+    /*
+    * Metadata Table's Actions.
+    *
+    */
+    public void persistMetadata(DigitalAssetMetadataTransaction metadataTransaction) throws CantPersistTransactionMetadataException {
+        String context = null;
+        try {
+            context = "Transaction Genesis Address: " + metadataTransaction.getGenesisTransaction()
+                    + "Distribution Status: " + metadataTransaction.getDistributionStatus().getCode()
+                    + "Sender Public Key: " + metadataTransaction.getSenderId()
+                    + "Receiver Public Key: " + metadataTransaction.getReceiverId()
+                    + "DA Genesis Transaction: " + metadataTransaction.getDigitalAssetMetadata().getGenesisTransaction()
+                    + "DA Genesis Amount: " + metadataTransaction.getDigitalAssetMetadata().getDigitalAsset().getGenesisAmount()
+                    + "DA Name: " + metadataTransaction.getDigitalAssetMetadata().getDigitalAsset().getName()
+                    + "DA Description: " + metadataTransaction.getDigitalAssetMetadata().getDigitalAsset().getDescription()
+                    + "DA Issuing Public Key: " + metadataTransaction.getDigitalAssetMetadata().getDigitalAsset().getIdentityAssetIssuer().getPublicKey()
+                    + "DA Timestamp: " + metadataTransaction.getTimestamp();
+
+            DatabaseTable databaseTable = this.database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TABLE_NAME);
+            DatabaseTableRecord metadataRecord = databaseTable.getEmptyRecord();
+
+            metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_ID_COLUMN_NAME, metadataTransaction.getGenesisTransaction());
+            metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_STATUS_COLUMN_NAME, metadataTransaction.getDistributionStatus().getCode());
+            metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_STATUS_COLUMN_NAME, metadataTransaction.getDistributionStatus().getCode());
+            metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_SENDER_KEY_COLUMN_NAME, metadataTransaction.getSenderId());
+            metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_RECEIVER_KEY_COLUMN_NAME, metadataTransaction.getReceiverId());
+            metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_GENESIS_TRANSACTION_COLUMN_NAME, metadataTransaction.getDigitalAssetMetadata().getGenesisTransaction());
+            metadataRecord.setLongValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_GENESIS_AMOUNT_COLUMN_NAME, metadataTransaction.getDigitalAssetMetadata().getDigitalAsset().getGenesisAmount());
+            metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_NAME_COLUMN_NAME, metadataTransaction.getDigitalAssetMetadata().getDigitalAsset().getName());
+            metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_DESCRIPTION_COLUMN_NAME, metadataTransaction.getDigitalAssetMetadata().getDigitalAsset().getDescription());
+            metadataRecord.setStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_DA_ISSUING_KEY_COLUMN_NAME, metadataTransaction.getDigitalAssetMetadata().getDigitalAsset().getIdentityAssetIssuer().getPublicKey());
+            metadataRecord.setLongValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TIMESTAMP_COLUMN_NAME, metadataTransaction.getTimestamp());
+
+            databaseTable.insertRecord(metadataRecord);
+        } catch (CantInsertRecordException e) {
+            throw new CantPersistTransactionMetadataException(context, e);
+        } catch (Exception e) {
+            if (context == null) {
+                throw new CantPersistTransactionMetadataException(context, FermatException.wrapException(e), "There was an error retrieving the values from the metadataTransaction.");
+            }
+            throw new CantPersistTransactionMetadataException(context, FermatException.wrapException(e));
+        }
+    }
+
+    public void updateTransactionStatusById(DistributionStatus status, String transactionId) throws RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException {
+        updateStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_STATUS_COLUMN_NAME, status.getCode(), transactionId);
+    }
+
+    public void updateTransactionCryptoStatusById(CryptoStatus status, String transactionId) throws RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException {
+        updateStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME, status.getCode(), transactionId);
+    }
+
+    public boolean isPendingSubmitTransactions() throws CantLoadAssetRedemptionMetadataListException {
+        return isPendingTransactionByCryptoStatus(CryptoStatus.PENDING_SUBMIT);
+    }
+
+    public boolean isOnCryptoNetworkTransactions() throws CantLoadAssetRedemptionMetadataListException {
+        return isPendingTransactionByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
+    }
+
+    public boolean isOnBlockChainTransactions() throws CantLoadAssetRedemptionMetadataListException {
+        return isPendingTransactionByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
+    }
+
+    public List<String> getPendingSubmitGenesisTransactions() throws CantLoadAssetRedemptionMetadataListException {
+        return getGenesisTransactionByCryptoStatus(CryptoStatus.PENDING_SUBMIT);
+    }
+
+    public List<String> getOnCryptoNetworkGenesisTransactions() throws CantLoadAssetRedemptionMetadataListException {
+        return getGenesisTransactionByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
+    }
+
+    public List<String> getOnBlockChainGenesisTransactions() throws CantLoadAssetRedemptionMetadataListException {
+        return getGenesisTransactionByCryptoStatus(CryptoStatus.REVERSED_ON_BLOCKCHAIN);
     }
 
     /**
@@ -89,18 +216,138 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
     public void close() throws Exception {
         database.closeDatabase();
     }
-//PRIVATE METHODS
 
+    //PRIVATE METHODS
+    private boolean isPendingEventsBySource(EventSource eventSource) throws CantLoadAssetRedemptionEventListException {
+        return !getPendingEventsBySource(eventSource).isEmpty();
+    }
+
+    private void updateStringFieldByTransactionId(String columnName, String value, String transactionId) throws CantLoadAssetRedemptionMetadataListException, RecordsNotFoundException {
+        String context = "Column Name: " + columnName + " - Value: " + value + " - Id: " + transactionId;
+        try {
+            DatabaseTable metadataTable;
+            metadataTable = database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME);
+            metadataTable.setStringFilter(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+            metadataTable.loadToMemory();
+            if (metadataTable.getRecords().isEmpty()) {
+                throw new RecordsNotFoundException(null, context, "");
+            }
+            for (DatabaseTableRecord record : metadataTable.getRecords()) {
+                record.setStringValue(columnName, value);
+            }
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantLoadAssetRedemptionMetadataListException(exception, context, "Cannot load table to memory.");
+        } catch (Exception exception) {
+            throw new CantLoadAssetRedemptionMetadataListException(FermatException.wrapException(exception), context, "Unexpected exception");
+        }
+    }
+
+    private void updateStringFieldByEventId(String columnName, String value, String id) throws CantLoadAssetRedemptionEventListException, RecordsNotFoundException {
+        String context = "Column Name: " + columnName + " - Id: " + id;
+        try {
+            DatabaseTable eventRecordedTable;
+            eventRecordedTable = database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TABLE_NAME);
+            eventRecordedTable.setStringFilter(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            eventRecordedTable.loadToMemory();
+            if (eventRecordedTable.getRecords().isEmpty()) {
+                throw new RecordsNotFoundException(null, context, "");
+            }
+            for (DatabaseTableRecord record : eventRecordedTable.getRecords()) {
+                record.setStringValue(columnName, value);
+            }
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantLoadAssetRedemptionEventListException(exception, context, "Cannot load table to memory.");
+        } catch (Exception exception) {
+            throw new CantLoadAssetRedemptionEventListException(FermatException.wrapException(exception), context, "Unexpected exception");
+        }
+    }
+
+    private String getStringFieldByEventId(String columnName, String id) throws CantLoadAssetRedemptionEventListException, RecordsNotFoundException {
+        try {
+            String context = "Column Name: " + columnName + " - Id: " + id;
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TABLE_NAME);
+            databaseTable.setStringFilter(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+
+            for (DatabaseTableRecord record : databaseTable.getRecords()) {
+                return record.getStringValue(columnName);
+            }
+            throw new RecordsNotFoundException(null, context, "");
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantLoadAssetRedemptionEventListException(exception, "Getting pending events.", "Cannot load table to memory.");
+        } catch (Exception exception) {
+            throw new CantLoadAssetRedemptionEventListException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
+        }
+    }
+
+    private List<String> getPendingEventsBySource(EventSource eventSource) throws CantLoadAssetRedemptionEventListException {
+        try {
+            DatabaseTable eventsRecordedTable;
+            eventsRecordedTable = database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TABLE_NAME);
+
+            DatabaseTableFilter statusFilter = eventsRecordedTable.getEmptyTableFilter();
+            statusFilter.setColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_STATUS_COLUMN_NAME);
+            statusFilter.setValue(EventStatus.PENDING.toString());
+            statusFilter.setType(DatabaseFilterType.EQUAL);
+
+            DatabaseTableFilter sourceFilter = eventsRecordedTable.getEmptyTableFilter();
+            sourceFilter.setColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_SOURCE_COLUMN_NAME);
+            sourceFilter.setValue(eventSource.getCode());
+            sourceFilter.setType(DatabaseFilterType.EQUAL);
+
+            List<DatabaseTableFilter> filters = new ArrayList<>();
+            filters.add(statusFilter);
+            filters.add(sourceFilter);
+
+            eventsRecordedTable.setFilterGroup(
+                    eventsRecordedTable.getNewFilterGroup(filters,
+                            new ArrayList<DatabaseTableFilterGroup>(),
+                            DatabaseFilterOperator.AND));
+
+            eventsRecordedTable.setFilterOrder(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+
+            eventsRecordedTable.loadToMemory();
+            List<String> eventIdList = new ArrayList<>();
+            for (DatabaseTableRecord record : eventsRecordedTable.getRecords()) {
+                eventIdList.add(record.getStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_ID_COLUMN_NAME));
+            }
+            return eventIdList;
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantLoadAssetRedemptionEventListException(exception, "Getting pending events.", "Cannot load table to memory.");
+        } catch (Exception exception) {
+            throw new CantLoadAssetRedemptionEventListException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
+        }
+    }
+
+    private boolean isPendingTransactionByCryptoStatus(CryptoStatus status) throws CantLoadAssetRedemptionMetadataListException {
+        return getGenesisTransactionByCryptoStatus(status).isEmpty();
+    }
+
+    private List<String> getGenesisTransactionByCryptoStatus(CryptoStatus status) throws CantLoadAssetRedemptionMetadataListException {
+        try {
+            DatabaseTable metadataTable;
+            metadataTable = database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME);
+            metadataTable.setStringFilter(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME, status.getCode(), DatabaseFilterType.EQUAL);
+            metadataTable.setFilterOrder(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+
+            metadataTable.loadToMemory();
+            List<String> genesisTransactionList = new ArrayList<>();
+            for (DatabaseTableRecord record : metadataTable.getRecords()) {
+                genesisTransactionList.add(record.getStringValue(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_ID_COLUMN_NAME));
+            }
+            return genesisTransactionList;
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantLoadAssetRedemptionMetadataListException(exception, "Getting pending events.", "Cannot load table to memory.");
+        } catch (Exception exception) {
+            throw new CantLoadAssetRedemptionMetadataListException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
+        }
+    }
     //GETTER AND SETTERS
 
     public Database getDatabase() {
         return database;
     }
 
-    public void setDatabase(Database database) {
-        this.database = database;
-    }
-
-
-//INNER CLASSES
+    //INNER CLASSES
 }
