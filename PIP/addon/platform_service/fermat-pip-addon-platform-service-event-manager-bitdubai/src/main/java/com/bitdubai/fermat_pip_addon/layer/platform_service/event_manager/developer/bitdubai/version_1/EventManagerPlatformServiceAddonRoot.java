@@ -29,13 +29,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class EventManagerPlatformServiceAddonRoot extends AbstractAddon implements EventManager {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER, referenceManagerClass = ErrorManager.class)
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
     private FermatEventMonitor fermatEventMonitor;
-    
+
     @Override
     public final void start() throws CantStartPluginException {
+
+        System.out.println("if i'm not null i will show you something: "+errorManager);
 
         this.fermatEventMonitor = new EventManagerPlatformServiceEventMonitor(this.errorManager);
 
