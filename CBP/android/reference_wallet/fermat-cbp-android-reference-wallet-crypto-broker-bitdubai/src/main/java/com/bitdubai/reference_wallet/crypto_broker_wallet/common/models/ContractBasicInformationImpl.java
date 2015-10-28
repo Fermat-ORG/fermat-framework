@@ -1,7 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.NegotiationBasicInformation;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.ContractBasicInformation;
 
 import java.util.Calendar;
 import java.util.Random;
@@ -17,7 +17,7 @@ import java.util.UUID;
  * @version 1.0
  * @since 5/27/2015
  */
-public class NegotiationBasicInformationImpl implements NegotiationBasicInformation {
+public class ContractBasicInformationImpl implements ContractBasicInformation {
     private static Random random = new Random(321515131);
     private static Calendar instance = Calendar.getInstance();
 
@@ -30,10 +30,10 @@ public class NegotiationBasicInformationImpl implements NegotiationBasicInformat
     private float exchangeRateAmount;
     private String paymentCurrency;
     private long date;
-    private NegotiationStatus status;
+    private ContractStatus status;
 
 
-    public NegotiationBasicInformationImpl(String customerAlias, String merchandise, String typeOfPayment, String paymentCurrency, NegotiationStatus status) {
+    public ContractBasicInformationImpl(String customerAlias, String merchandise, String typeOfPayment, String paymentCurrency, ContractStatus status) {
         this.customerAlias = customerAlias;
         this.merchandise = merchandise;
         this.typeOfPayment = typeOfPayment;
@@ -61,7 +61,7 @@ public class NegotiationBasicInformationImpl implements NegotiationBasicInformat
     }
 
     @Override
-    public UUID getNegotiationId() {
+    public UUID getContractId() {
         return negotiationId;
     }
 
@@ -81,7 +81,7 @@ public class NegotiationBasicInformationImpl implements NegotiationBasicInformat
     }
 
     @Override
-    public NegotiationStatus getStatus() {
+    public ContractStatus getStatus() {
         return status;
     }
 
