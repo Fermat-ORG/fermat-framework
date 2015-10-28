@@ -13,6 +13,7 @@ public enum Addons implements FermatEnum {
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     DEVICE_CONNECTIVITY("DEVC"),
+    DEVICE_LOCATION ("DEVLOC"),
     DEVICE_USER("DEVU"),
     ERROR_MANAGER("ERRM"),
     EVENT_MANAGER("EVNTM"),
@@ -42,6 +43,7 @@ public enum Addons implements FermatEnum {
         switch (code) {
 
             case "DEVC":    return DEVICE_CONNECTIVITY;
+            case "DEVLOC":  return DEVICE_LOCATION;
             case "DEVU":    return DEVICE_USER;
             case "ERRM":    return ERROR_MANAGER;
             case "EVNTM":   return EVENT_MANAGER;

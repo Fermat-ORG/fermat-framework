@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
@@ -271,7 +272,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 
     public void distributionAssets(String assetPublicKey, String walletPublicKey, List<ActorAssetUser> actorAssetUsers)  throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException {
         try{
-            //TODO: Esta comentado solo para la prueba del Dsitribution
+            //TODO: Esta comentado solo para la prueba del Distribution
             //Buscar el Asset Balance con la data para traerse las propiedades del Digital Asset que me entrego el Issuing en su momento.
 //            List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions;
 //
@@ -296,7 +297,11 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 //                i++;
 //            }
             //assetDistributionManager.distributeAssets(hashMap, walletPublicKey);
-            assetDistributionManager.distributeAssets(null, null);
+            HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
+            for (ActorAssetUser actorAssetUser : actorAssetUsers){
+                hashMap.put(null, actorAssetUser);
+            }
+            assetDistributionManager.distributeAssets(hashMap, null);
 
         }//catch(CantDistributeDigitalAssetsException | CantGetTransactionsException | CantCreateFileException | FileNotFoundException  cantDistributeDigitalAssetsException){
         catch(CantDistributeDigitalAssetsException cantDistributeDigitalAssetsException){

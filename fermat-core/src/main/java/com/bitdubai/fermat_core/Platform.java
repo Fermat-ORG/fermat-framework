@@ -10,7 +10,11 @@ import com.bitdubai.fermat_api.*;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystems;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
@@ -81,6 +85,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.in
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.DealsWithAssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DealsWithAssetTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_pip_core.PIPPlatform;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.WalletFactoryProjectManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.DealsWithWalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettingsManager;
@@ -128,7 +133,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIntraWalletUser;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIdentityIntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.DealsWithWalletFactory;
@@ -229,6 +234,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -377,13 +383,38 @@ public class Platform implements Serializable {
      */
     public void start() throws CantStartPlatformException, CantReportCriticalStartingProblemException {
 
-        try {
-            new FermatSystem().start();
+       /* try {
+            new FermatSystem(osContext, OperativeSystems.ANDROID).start();
         } catch (FermatException e) {
             System.out.println(e.getPossibleReason());
             System.out.println(e.getFormattedContext());
             System.out.println(e.getFormattedTrace());
         } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Aparantemente hubo un error....");
+        }*/
+
+        try {
+
+            AbstractPlatform abstractPlatform = new PIPPlatform();
+            abstractPlatform.start();
+
+            AbstractAddon eventManager = abstractPlatform.getAddonVersion(new AddonVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.EVENT_MANAGER, Developers.BITDUBAI, new Version()));
+
+            ConcurrentHashMap<AddonVersionReference, Class<? extends FermatManager>> neededAddons = eventManager.getNeededAddons();
+
+            for (ConcurrentHashMap.Entry<AddonVersionReference, Class<? extends FermatManager>> avr : neededAddons.entrySet()) {
+                eventManager.assignAddonReference(avr.getKey(), avr.getValue(), abstractPlatform.getAddonVersion(avr.getKey()));
+            }
+
+            eventManager.start();
+
+        } catch (FermatException e) {
+            System.out.println(e.getPossibleReason());
+            System.out.println(e.getFormattedContext());
+            System.out.println(e.getFormattedTrace());
+        } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Aparantemente hubo un error....");
         }
 
@@ -740,7 +771,7 @@ public class Platform implements Serializable {
             boolean CCP = true;
             boolean CRY = true;
             boolean CSH = true;
-            boolean DAP = true;/*Informar Motivo para Desactivar a Team Thunder POR FAVOR - GRACIAS*/
+            boolean DAP = false; /* se desactiva debido a la gran cantidad de excepciones observadas en el start-up de la app, se avisó a través del gruṕo de skype fermat extended team, DE NADA*/
             boolean DMP = true;//DOBLEMENTE TEMPORAL
             boolean MKT = true;
             boolean OSA = true;
@@ -862,9 +893,6 @@ public class Platform implements Serializable {
 
 
 
-
-
-
             if (CCP) {
 
                 try {
@@ -894,8 +922,8 @@ public class Platform implements Serializable {
                     injectLayerReferences(cryptoTransmissionNetworkService);
                     injectPluginReferencesAndStart(cryptoTransmissionNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_CRYPTO_TRANSMISSION_NETWORK_SERVICE);
 
-//                    Plugin cryptoAddressesNetworkService = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, CCPPlugins.BITDUBAI_CRYPTO_ADDRESSES_NETWORK_SERVICE));
-//                    injectPluginReferencesAndStart(cryptoAddressesNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE);
+                   Plugin cryptoAddressesNetworkService = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, Plugins.CRYPTO_ADDRESSES));
+                   injectPluginReferencesAndStart(cryptoAddressesNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE);
 
                     layerReference = new LayerReference(platformReference, Layers.MIDDLEWARE);
 
@@ -1680,8 +1708,8 @@ public class Platform implements Serializable {
                 ((DealsWithIdentityDesigner) plugin).setDesignerIdentityManager((DesignerIdentityManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_DESIGNER_IDENTITY));
             }
 
-            if (plugin instanceof DealsWithCCPIntraWalletUser) {
-                ((DealsWithCCPIntraWalletUser) plugin).setIntraUserManager((com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY));
+            if (plugin instanceof DealsWithCCPIdentityIntraWalletUser) {
+                ((DealsWithCCPIdentityIntraWalletUser) plugin).setIdentityIntraUserManager((com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY));
             }
 
             if (plugin instanceof DealsWithDeveloperIdentity) {

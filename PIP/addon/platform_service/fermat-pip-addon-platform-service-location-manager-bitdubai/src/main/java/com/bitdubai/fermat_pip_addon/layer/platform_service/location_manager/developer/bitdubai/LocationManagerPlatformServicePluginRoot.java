@@ -48,8 +48,6 @@ public class LocationManagerPlatformServicePluginRoot extends AbstractAddon {
 
         try {
 
-            validateAndAssignReferences();
-
             locationServiceMonitorAgent = new LocationServiceMonitorAgent(errorManager, locationManager, platformDatabaseSystem);
 
             locationServiceMonitorAgent.start();
@@ -60,12 +58,6 @@ public class LocationManagerPlatformServicePluginRoot extends AbstractAddon {
 
             throw new CantStartPluginException(ex, "", "Error trying to start Location Manager.");
 
-        } catch (final MissingReferencesException e) {
-
-            throw new CantStartPluginException(
-                    "",
-                    "There's missing references for plugin location manager platform service pip."
-            );
         }
 
         this.serviceStatus = ServiceStatus.STARTED;
@@ -83,7 +75,7 @@ public class LocationManagerPlatformServicePluginRoot extends AbstractAddon {
         locationServiceMonitorAgent.stop();
         serviceStatus = ServiceStatus.STOPPED;
     }
-
+/*
     @Override
     public List<AddonVersionReference> getNeededAddonReferences() {
 
@@ -92,7 +84,7 @@ public class LocationManagerPlatformServicePluginRoot extends AbstractAddon {
         addonsNeeded.add(new AddonVersionReference(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER, Developers.BITDUBAI, new Version()));
 
         return addonsNeeded;
-    }
+    }*/
 
     @Override
     public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
@@ -103,7 +95,7 @@ public class LocationManagerPlatformServicePluginRoot extends AbstractAddon {
     public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
         return null;
     }
-
+/*
     @Override
     protected void validateAndAssignReferences() throws MissingReferencesException {
 
@@ -116,5 +108,5 @@ public class LocationManagerPlatformServicePluginRoot extends AbstractAddon {
             );
         }
 
-    }
+    }*/
 }
