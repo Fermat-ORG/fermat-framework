@@ -37,6 +37,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdu
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantListCryptoBrokerWalletTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantAddCreditException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantAddDebitException;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerStockTransactionRecordImpl;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 
 import java.util.ArrayList;
@@ -290,7 +291,6 @@ public class CryptoBrokerWalletDatabaseDao {
             float runningBookBalance,
             float runningAvailableBalance
     ) {
-
         databaseTableRecord.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TOTAL_BALANCES_PUBLIC_KEY_WALLET_COLUMN_NAM, transaction.getWalletPublicKey());
         databaseTableRecord.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TOTAL_BALANCES_DESCRIPTION_COLUMN_NAME, description);
         databaseTableRecord.setFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TOTAL_BALANCES_BOOK_BALANCE_COLUMN_NAME, runningBookBalance);
@@ -299,8 +299,8 @@ public class CryptoBrokerWalletDatabaseDao {
 
     private StockTransaction getStockTransactionFromRecord(final DatabaseTableRecord record)throws InvalidParameterException{
         UUID  transactionId                 = record.getUUIDValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TRANSACTION_ID_COLUMN_NAME);
-        String publickeyWalle               = record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_WALLET_COLUMN_NAME);
-        String publickeyBroker              = record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_BROKER_COLUMN_NAME);
+        String walletPublicKey              = record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_WALLET_COLUMN_NAME);
+        String ownerPublicKey               = record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_BROKER_COLUMN_NAME);
         BalanceType  balanceType            = BalanceType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_BALANCE_TYPE_COLUMN_NAME));
         TransactionType  transactionType    = TransactionType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TRANSACTION_ID_COLUMN_NAME));
         CurrencyType currencyType           = CurrencyType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_CURRENCY_TYPE_COLUMN_NAME));
@@ -309,69 +309,20 @@ public class CryptoBrokerWalletDatabaseDao {
         float   runningAvailableBalance     = record.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
         long    timeStamp                   = record.getLongValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TIMESTAMP_COLUMN_NAME);
         String  memo                        = record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_MEMO_COLUMN_NAME);
-        return null;
-    }
+        KeyPair walletKeyPair = AsymmetricCryptography.createKeyPair(walletPublicKey);
 
-    private String getCryptoBrokerPrivateKeyWallet(String publicKey) throws CantGetCryptoBrokerWalletPrivateKeyException {
-        String privateKey = "";
-        try {
-            PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
-                DeviceDirectory.LOCAL_USERS.getName(),
-                CryptoBrokerWalletPluginRoot.CRYPTO_BROKER_PRIVATE_KEYS_WALLET_FILE_NAME + "_" + publicKey,
-                FilePrivacy.PRIVATE,
-                FileLifeSpan.PERMANENT
-            );
-            file.loadFromMedia();
-            privateKey = file.getContent();
-        } catch (CantLoadFileException e) {
-            throw new CantGetCryptoBrokerWalletPrivateKeyException("CAN'T GET PRIVATE KEY WALLER", e, "Error loaded file.", null);
-        } catch (CantCreateFileException e) {
-            throw new CantGetCryptoBrokerWalletPrivateKeyException("CAN'T GET PRIVATE KEY WALLER", e, "Error getting developer wallet private keys file.", null);
-        } catch (Exception e) {
-            throw  new CantGetCryptoBrokerWalletPrivateKeyException("CAN'T GET PRIVATE KEY WALLER",FermatException.wrapException(e),"", "");
-        }
-        return privateKey;
-    }
-
-    private String getCryptoBrokerPrivateKeyBroker(String publicKey) throws CantGetCryptoBrokerWalletPrivateKeyException {
-        String privateKey = "";
-        try {
-            PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
-                DeviceDirectory.LOCAL_USERS.getName(),
-                CryptoBrokerWalletPluginRoot.CRYPTO_BROKER_PRIVATE_KEYS_BROKER_FILE_NAME + "_" + publicKey,
-                FilePrivacy.PRIVATE,
-                FileLifeSpan.PERMANENT
-            );
-            file.loadFromMedia();
-            privateKey = file.getContent();
-        } catch (CantLoadFileException e) {
-            throw new CantGetCryptoBrokerWalletPrivateKeyException("CAN'T GET PRIVATE KEY BROKER", e, "Error loaded file.", null);
-        } catch (CantCreateFileException e) {
-            throw new CantGetCryptoBrokerWalletPrivateKeyException("CAN'T GET PRIVATE KEY BROKER", e, "Error getting developer broker private keys file.", null);
-        } catch (Exception e) {
-            throw  new CantGetCryptoBrokerWalletPrivateKeyException("CAN'T GET PRIVATE KEY BROKER",FermatException.wrapException(e),"", "");
-        }
-        return privateKey;
-    }
-
-    private String getCryptoBrokerPrivateKeyCustomer(String publicKey) throws CantGetCryptoBrokerWalletPrivateKeyException {
-        String privateKey = "";
-        try {
-            PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
-                DeviceDirectory.LOCAL_USERS.getName(),
-                CryptoBrokerWalletPluginRoot.CRYPTO_BROKER_PRIVATE_KEYS_CUSTOMER_FILE_NAME + "_" + publicKey,
-                FilePrivacy.PRIVATE,
-                FileLifeSpan.PERMANENT
-            );
-            file.loadFromMedia();
-            privateKey = file.getContent();
-        } catch (CantLoadFileException e) {
-            throw new CantGetCryptoBrokerWalletPrivateKeyException("CAN'T GET PRIVATE KEY CUSTOMER", e, "Error loaded file.", null);
-        } catch (CantCreateFileException e) {
-            throw new CantGetCryptoBrokerWalletPrivateKeyException("CAN'T GET PRIVATE KEY CUSTOMER", e, "Error getting developer customer private keys file.", null);
-        } catch (Exception e) {
-            throw  new CantGetCryptoBrokerWalletPrivateKeyException("CAN'T GET PRIVATE KEY CUSTOMER",FermatException.wrapException(e),"", "");
-        }
-        return privateKey;
+        return new CryptoBrokerStockTransactionRecordImpl(
+                transactionId,
+                walletKeyPair,
+                ownerPublicKey,
+                balanceType,
+                transactionType,
+                currencyType,
+                amount,
+                runningBookBalance,
+                runningAvailableBalance,
+                timeStamp,
+                memo
+        );
     }
 }
