@@ -1,5 +1,7 @@
 package test.com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoMonitorAgent;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -30,6 +32,16 @@ public class MockErrorManager implements ErrorManager {
     }
 
     @Override
+    public void reportUnexpectedPluginException(PluginVersionReference exceptionSource, UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception) {
+        this.reportedException = exception.toString();
+    }
+
+    @Override
+    public void reportUnexpectedAddonsException(AddonVersionReference exceptionSource, UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception) {
+        this.reportedException = exception.toString();
+    }
+
+    @Override
     public void reportUnexpectedPluginException(Plugins exceptionSource, UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception) {
         this.reportedException = exception.toString();
     }
@@ -46,16 +58,16 @@ public class MockErrorManager implements ErrorManager {
 
     @Override
     public void reportUnexpectedSubAppException(SubApps exceptionSource, UnexpectedSubAppExceptionSeverity unexpectedAddonsExceptionSeverity, Exception exception) {
-
+        this.reportedException = exception.toString();
     }
 
     @Override
     public void reportUnexpectedUIException(UISource exceptionSource, UnexpectedUIExceptionSeverity unexpectedAddonsExceptionSeverity, Exception exception) {
-
+        this.reportedException = exception.toString();
     }
 
     @Override
     public void reportUnexpectedEventException(FermatEvent exceptionSource, Exception exception) {
-
+        this.reportedException = exception.toString();
     }
 }

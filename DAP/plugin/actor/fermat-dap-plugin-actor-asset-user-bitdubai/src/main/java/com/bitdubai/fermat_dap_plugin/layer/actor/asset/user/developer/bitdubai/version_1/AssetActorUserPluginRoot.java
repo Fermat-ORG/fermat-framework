@@ -48,8 +48,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGet
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorNetworkServiceAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestCryptoAddressException;
+
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.DealsWithAssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantGetGenesisAddressException;
@@ -352,13 +353,12 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
      * @throws CantRegisterCryptoAddressBookRecordException
      */
     public void registerGenesisAddressInCryptoAddressBook(CryptoAddress genesisAddress) throws CantRegisterCryptoAddressBookRecordException {
-        //TODO: solicitar la publickey del Issuer, la publicKey de la User
         try {
             this.cryptoAddressBookManager.registerCryptoAddress(genesisAddress,
-                    this.assetUserActorDao.getActorAssetUser().getPublicKey(),//"testDeliveredByActorPublicKey",
+                    this.assetUserActorDao.getActorAssetUser().getPublicKey(),
                     Actors.DAP_ASSET_USER,
-                    "testDeliveredToActorIssuerPublicKey",
-                    Actors.DAP_ASSET_ISSUER,
+                    this.assetUserActorDao.getActorAssetUser().getPublicKey(),
+                    Actors.DAP_ASSET_USER,
                     Platforms.DIGITAL_ASSET_PLATFORM,
                     VaultType.ASSET_VAULT,
                     CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
@@ -393,7 +393,6 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 
     @Override
     public void handleRequestCryptoAddresFromRemoteAssetUserEvent(ActorAssetUser actorAssetUser) {
-
         //TODO BUSCAR INFORMACION DE DONDE SACAR EL ISSUER
         try {
             CryptoAddress genesisAddress = getGenesisAddress();
@@ -413,6 +412,8 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 
     public void handleDeliveredCryptoAddresFromRemoteAssetUserEvent(ActorAssetUser actorAssetUser, CryptoAddress cryptoAddress) {
         try {
+            //Evento de Hendry va a tener AssetUser y cryptoAddress
+            //todo actualizar tabla de usuarios registrados con nueva crypto address.
             this.assetUserActorDao.createNewAssetUser(actorAssetUser);
         } catch (CantAddPendingAssetUserException e) {
             e.printStackTrace();
@@ -558,6 +559,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
             /*
              * Envio del ActorAssetUser para registar en el Actor Network Service
              */
+            ActorAssetUser actorAssetUser = this.assetUserActorDao.getActorAssetUser();
             assetUserActorNetworkServiceManager.registerActorAssetUser(this.assetUserActorDao.getActorAssetUser());
         } catch (CantRegisterActorAssetUserException | CantGetAssetUsersListException e) {
             e.printStackTrace();
@@ -566,10 +568,14 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 
 
     @Override
-    public void connectToActorAssetUser(ActorAssetIssuer requester, ActorAssetUser actorAssetUser) throws CantConnectToAssetUserException {
+    public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException {
         try {
-            assetUserActorNetworkServiceManager.requestCryptoAddress(requester, actorAssetUser);
-        } catch (CantSendMessageException e) {
+            for (ActorAssetUser actorAssetUser : actorAssetUsers){
+                //todo Actualizar Estado en base de datos para este actorAssetUser ConnectionState = PENDING_REMOTELY_ACCEPTANCE
+                assetUserActorNetworkServiceManager.requestCryptoAddress(requester, actorAssetUser);
+            }
+
+        } catch (CantRequestCryptoAddressException e) {
             e.printStackTrace();
         }
 

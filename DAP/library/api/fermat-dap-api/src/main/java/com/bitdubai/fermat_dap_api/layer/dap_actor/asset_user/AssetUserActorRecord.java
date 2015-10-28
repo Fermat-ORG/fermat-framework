@@ -19,6 +19,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
     private String age;
     private Genders genders;
     private ConnectionState connectionState;
+    private Location location;
     private Double locationLatitude;
     private Double locationLongitude;
     private long registrationDate;
@@ -30,13 +31,38 @@ public class AssetUserActorRecord implements ActorAssetUser {
     /**
      * Constructor
      */
-
     public AssetUserActorRecord(){
 
     }
 
+    public AssetUserActorRecord(String publicKey, String name, byte[] profileImage, Location location) {
+
+        this.name = name;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage.clone();
+
+        if (location != null) {
+            this.locationLatitude = location.getLatitude();
+            this.locationLongitude = location.getLongitude();
+        }else{
+            this.locationLatitude = Double.valueOf(0);
+            this.locationLongitude = Double.valueOf(0);
+        }
+
+        this.genders = Genders.INDEFINITE;
+//        this.age = age;
+//        this.cryptoAddress = cryptoAddress;
+        this.connectionState = ConnectionState.CONNECTED;
+
+    }
+
     /**
-    *  Register in Actor Network Service
+    *  Constructor Register in Actor Network Service
+    * @param publicKey
+    * @param name
+    * @param profileImage
+    * @param locationA
+    * @param locationL
     */
     public AssetUserActorRecord(String publicKey, String name, byte[] profileImage, Double locationA, Double locationL) {
 
@@ -192,6 +218,24 @@ public class AssetUserActorRecord implements ActorAssetUser {
            this.connectionState = connectionState;
         else
             this.connectionState = ConnectionState.CONNECTED;
+    }
+
+    /**
+     * The method <code>getLocation</code> gives us the Location of the represented Asset user
+     *
+     * @return the Location of the Asset user
+     */
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        if(location != null) {
+            this.location = location;
+        }else{
+            this.locationLatitude = Double.valueOf(0);
+            this.locationLongitude = Double.valueOf(0);
+        }
     }
 
     /**

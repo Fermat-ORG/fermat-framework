@@ -3,8 +3,9 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.i
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantSendMessageException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantSendCryptoAddressException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
 import java.util.List;
@@ -27,9 +28,9 @@ public interface AssetUserActorNetworkServiceManager {
      *
      * @param actorAssetIssuerSender
      * @param actorAssetUserDestination
-     * @throws CantSendMessageException
+     * @throws CantRequestCryptoAddressException
      */
-    public void requestCryptoAddress(ActorAssetIssuer actorAssetIssuerSender, ActorAssetUser actorAssetUserDestination)  throws CantSendMessageException;
+    public void requestCryptoAddress(ActorAssetIssuer actorAssetIssuerSender, ActorAssetUser actorAssetUserDestination)  throws CantRequestCryptoAddressException;
 
     /**
      * Send a Crypto Address to the ActorAssetIssuer
@@ -37,9 +38,9 @@ public interface AssetUserActorNetworkServiceManager {
      * @param actorAssetUserSender
      * @param actorAssetIssuerDestination
      * @param cryptoAddress
-     * @throws CantSendMessageException
+     * @throws CantSendCryptoAddressException
      */
-    public void sendCryptoAddress(ActorAssetUser actorAssetUserSender, ActorAssetIssuer actorAssetIssuerDestination, CryptoAddress cryptoAddress)  throws CantSendMessageException;
+    public void sendCryptoAddress(ActorAssetUser actorAssetUserSender, ActorAssetIssuer actorAssetIssuerDestination, CryptoAddress cryptoAddress)  throws CantSendCryptoAddressException;
 
     /**
      * Get the list of the ActorAssetUser registered

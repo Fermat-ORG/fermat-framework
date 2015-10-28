@@ -146,9 +146,9 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
         try {
 //            actorAssetUserManager.createAndRegisterActorAssetUserTest();
             actorAssetUserManager.registerActorInActorNetowrkSerice();
-            actorAssetList = actorAssetUserManager.getAllAssetUserActorInTableRegistered();
-        } catch (CantAssetUserActorNotFoundException e) {
-            e.printStackTrace();
+//            actorAssetList = actorAssetUserManager.getAllAssetUserActorInTableRegistered();
+//        } catch (CantAssetUserActorNotFoundException e) {
+//            e.printStackTrace();
         } catch (CantCreateAssetUserActorException e) {
             e.printStackTrace();
         }
@@ -157,7 +157,7 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
 
     //TODO verificar por posible modificacion de la firma del metodo
     @Override
-    public void connectToActorAssetUser(ActorAssetIssuer requester, ActorAssetUser actorAssetUser) throws CantConnectToAssetUserException{
+    public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException{
         //todo SE DEBE CONOCER QUIEN ES EL ISSUER SOLICITANTE Y QUIEN EL USER SOLICITADO
 
         ActorAssetIssuer actorAssetIssuer;
@@ -166,9 +166,9 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
         //TODO Para TEST se usara la lista generada para seleccionar aleatoriamente el User Register
         try {
             actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
-            actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetList.get(new Random().nextInt(actorAssetList.size())));
+            actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetUsers);
         } catch (CantGetAssetIssuerActorsException e) {
-            e.printStackTrace();
+            throw new CantConnectToAssetUserException(CantConnectToAssetUserException.DEFAULT_MESSAGE, e, "There was an error connecting to users.", null);
         }
     }
 }

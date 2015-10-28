@@ -98,6 +98,11 @@ public class Actor implements ActorAssetUser {
     }
 
     @Override
+    public Location getLocation() {
+        return null;
+    }
+
+    @Override
     public Double getLocationLatitude() {
         return latitude;
     }

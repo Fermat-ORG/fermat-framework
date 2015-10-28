@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.utils;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystems;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -39,6 +40,21 @@ public class AddonVersionReference {
                                  final Version    version  ){
 
         PlatformReference platformReference = new PlatformReference(platform);
+        LayerReference layerReference = new LayerReference(platformReference, layer);
+        AddonReference addonReference = new AddonReference(layerReference, addonEnum);
+
+        this.addonDeveloperReference = new AddonDeveloperReference(addonReference, developer);
+        this.version                 = version;
+    }
+
+    public AddonVersionReference(final OperativeSystems operativeSystem,
+                                 final Platforms        platform       ,
+                                 final Layers           layer          ,
+                                 final Addons           addonEnum      ,
+                                 final Developers       developer      ,
+                                 final Version          version        ){
+
+        PlatformReference platformReference = new PlatformReference(operativeSystem, platform);
         LayerReference layerReference = new LayerReference(platformReference, layer);
         AddonReference addonReference = new AddonReference(layerReference, addonEnum);
 

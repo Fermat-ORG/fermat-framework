@@ -502,7 +502,7 @@ public class AssetUserActorDao implements Serializable {
 
     public ActorAssetUser getActorAssetUser() throws CantGetAssetUsersListException {
 
-        ActorAssetUser assetUserActorRecord = new com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord();
+        ActorAssetUser assetUserActorRecord = null;
         DatabaseTable table;
 
         // Get Asset Users identities list.

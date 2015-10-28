@@ -37,6 +37,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.DealsWithActorAssetIssuer;
@@ -226,7 +227,7 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
         super();
         this.listenersAdded = new ArrayList<>();
         this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
-        this.networkServiceType = NetworkServiceType.ASSET_USER_ACTOR;
+        this.networkServiceType = NetworkServiceType.ASSET_ISSUER_ACTOR;
         this.name = "Actor Network Service Asset Issuer";
         this.alias = "ActorNetworkServiceAssetIssuer";
         this.extraData = null;
@@ -612,11 +613,6 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
              */
             if(this.isRegister()){
 
-                System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
-
-                System.out.println("Registrar Datos "+ actorAssetIssuerToRegister.getName());
-
-                System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
 
                 /*
                  * Construct the profile
@@ -788,7 +784,7 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
          * If the component registered have my profile and my identity public key
          */
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.ASSET_USER_ACTOR &&
+                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.ASSET_ISSUER_ACTOR &&
                 platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
             /*
@@ -817,30 +813,23 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
                 }
 
             }
-//
-//            /* test register one actor */
-//
-//            ReturnAssetUserActorNetworkService returnactor =new AssetUserANS();
-//
-//            Location loca = null;
-//
-//
-//            ActorAssetUser actorAssetUserNewRegsitered = null;
-//            try {
-//                actorAssetUserNewRegsitered = returnactor.creatActorAssetUser("123456789","Pedrito",new byte[]{10,3}, loca);
-//            } catch (CantCreateAssetUserActorException e) {
-//                e.printStackTrace();
-//            }
-//
-//
-//            try {
-//                registerActorAssetUser(actorAssetUserNewRegsitered);
-//
-//            } catch (CantRegisterActorAssetUserException e) {
-//                e.printStackTrace();
-//            }
-//
-//           /* test register one actor */
+
+            /* test register one actor */
+
+
+
+            ActorAssetIssuer  actorAssetIssuerNewRegsitered = new AssetIssuerActorRecord("Pedrito","18009",new byte[]{9},0);
+
+
+            try {
+                registerActorAssetIssuer(actorAssetIssuerNewRegsitered);
+            } catch (CantRegisterActorAssetIssuerException e) {
+                e.printStackTrace();
+            }
+
+
+
+           /* test register one actor */
 
 
         }
@@ -851,9 +840,9 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.ACTOR_ASSET_ISSUER &&
                 platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.UNDEFINED){
 
+            System.out.println("///////////////////////////////////////////////////////////////");
 
-
-            System.out.println(" Actor  Asset User Registered "+platformComponentProfileRegistered.getIdentityPublicKey()+"\n Alias "+platformComponentProfileRegistered.getAlias());
+            System.out.println(" Actor Asset Issuer Registered "+platformComponentProfileRegistered.getIdentityPublicKey()+"\n Alias "+platformComponentProfileRegistered.getAlias());
 
 //            ReturnAssetUserActorNetworkService returnactor = new AssetUserANS();
 //
@@ -907,7 +896,7 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
             //communicationNetworkServiceConnectionManager.connectTo(remoteNetworkServiceToConnect);
 
 
-            if(remoteNetworkServiceToConnect.getNetworkServiceType()== NetworkServiceType.UNDEFINED &&  remoteNetworkServiceToConnect.getPlatformComponentType()== PlatformComponentType.ACTOR_ASSET_USER ){
+            if(remoteNetworkServiceToConnect.getNetworkServiceType()== NetworkServiceType.UNDEFINED &&  remoteNetworkServiceToConnect.getPlatformComponentType()== PlatformComponentType.ACTOR_ASSET_ISSUER ){
 
 
 

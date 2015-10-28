@@ -297,7 +297,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
      *
      * @param platformComponentProfile
      */
-    public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile) {
+    public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfile) {
         this.platformComponentProfile = platformComponentProfile;
     }
 
@@ -835,6 +835,11 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                     }
 
                     @Override
+                    public Location getLocation() {
+                        return null;
+                    }
+
+                    @Override
                     public Double getLocationLatitude() {
                         return null;
                     }
@@ -1082,7 +1087,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             if (communicationNetworkServiceLocal != null) {
 
                 //Send the message
-                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), msjContent);
+                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),"", msjContent);
 
             }else{
 
@@ -1171,7 +1176,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             if (communicationNetworkServiceLocal != null) {
 
                 //Send the message
-                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), msjContent);
+                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),"", msjContent);
 
             }else{
 
