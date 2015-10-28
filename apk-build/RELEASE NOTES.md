@@ -22,7 +22,7 @@ Funcionalidades de la aplicación hasta el momento:
 * Vista de identidades creadas.
 * Registra identidades en la red fermat para que los usuarios de la misma puedan establecer conexión.
 
-### Intra user Community
+#### Intra user Community
 
 * Busqueda de conexiones, Se estan buscando todos los usuarios disponibles en la red fermat para conectar.
 * Permite establecer conexión con los demas usuarios.
