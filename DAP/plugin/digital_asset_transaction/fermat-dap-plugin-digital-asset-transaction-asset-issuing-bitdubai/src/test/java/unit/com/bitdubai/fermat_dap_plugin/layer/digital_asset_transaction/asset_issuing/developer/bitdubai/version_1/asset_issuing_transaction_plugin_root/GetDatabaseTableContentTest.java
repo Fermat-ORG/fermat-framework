@@ -1,4 +1,4 @@
-package unit.com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.asset_issuing_transaction_plugin_root;
+package unit.com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.asset_issuing_transaction_plugin_root;
 
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
  * Created by frank on 23/10/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GetDatabaseTableContent {
+public class GetDatabaseTableContentTest {
     AssetIssuingTransactionPluginRoot assetIssuingPluginRoot;
     UUID pluginId;
 

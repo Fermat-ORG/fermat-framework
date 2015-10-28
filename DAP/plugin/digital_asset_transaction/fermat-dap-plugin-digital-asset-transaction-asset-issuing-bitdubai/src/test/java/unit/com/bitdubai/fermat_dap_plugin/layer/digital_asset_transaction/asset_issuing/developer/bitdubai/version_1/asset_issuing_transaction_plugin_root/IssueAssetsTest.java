@@ -1,9 +1,7 @@
-package unit.com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.asset_issuing_transaction_plugin_root;
+package unit.com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.asset_issuing_transaction_plugin_root;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -18,14 +16,14 @@ import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interf
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.AssetIssuingTransactionDeveloperDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCheckAssetIssuingProgressException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.AssetIssuingTransactionManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.events.AssetIssuingTransactionMonitorAgent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
@@ -35,8 +33,10 @@ import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceU
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
@@ -45,13 +45,16 @@ import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Created by frank on 23/10/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GetNumberOfIssuedAssetsTest {
+public class IssueAssetsTest {
+    @InjectMocks
     AssetIssuingTransactionPluginRoot assetIssuingPluginRoot;
+
     UUID pluginId;
 
     @Mock
@@ -119,32 +122,26 @@ public class GetNumberOfIssuedAssetsTest {
     DatabaseTableRecord mockDatabaseTableRecord = Mockito.mock(DatabaseTableRecord.class);
     Database mockDatabase = Mockito.mock(Database.class);
 
+    AssetIssuingTransactionMonitorAgent assetIssuingTransactionMonitorAgent;
+
     @Mock
     DigitalAsset digitalAsset;
 
-    BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.REG_TEST;
+    @Mock
+    AssetIssuingTransactionManager assetIssuingTransactionManager;
 
     @Before
     public void setUp() throws Exception {
-        assetIssuingPluginRoot = new AssetIssuingTransactionPluginRoot();
+        assetIssuingTransactionMonitorAgent = new AssetIssuingTransactionMonitorAgent(eventManager,
+                pluginDatabaseSystem,
+                errorManager,
+                pluginId,
+                "publicKey",
+                assetVaultManager,
+                outgoingIntraActorManager);
 
         pluginId = UUID.randomUUID();
-
-        assetIssuingPluginRoot = new AssetIssuingTransactionPluginRoot();
         assetIssuingPluginRoot.setId(pluginId);
-        assetIssuingPluginRoot.setErrorManager(errorManager);
-        assetIssuingPluginRoot.setLogManager(logManager);
-        assetIssuingPluginRoot.setEventManager(eventManager);
-        assetIssuingPluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
-        assetIssuingPluginRoot.setPluginFileSystem(pluginFileSystem);
-        assetIssuingPluginRoot.setAssetIssuerManager(assetIssuerWalletManager);
-        assetIssuingPluginRoot.setCryptoVaultManager(cryptoVaultManager);
-        assetIssuingPluginRoot.setBitcoinWalletManager(bitcoinWalletManager);
-        assetIssuingPluginRoot.setAssetVaultManager(assetVaultManager);
-        assetIssuingPluginRoot.setCryptoAddressBookManager(cryptoAddressBookManager);
-        assetIssuingPluginRoot.setOutgoingIntraActorManager(outgoingIntraActorManager);
-        assetIssuingPluginRoot.setDeviceUserManager(deviceUserManager);
-        assetIssuingPluginRoot.setBitcoinNetworkManager(bitcoinNetworkManager);
 
         setUpMockitoRules();
     }
@@ -167,22 +164,31 @@ public class GetNumberOfIssuedAssetsTest {
     }
 
     @Test
-    public void testStart_OK() throws Exception {
-        //TODO cannot run issueAssets method
+    public void test_OK() throws Exception {
+        //TODO test method with a thread
 //        assetIssuingPluginRoot.start();
-//        assetIssuingPluginRoot.issueAssets(digitalAsset, 1, "walletPublicKey", blockchainNetworkType);
-//        int n = assetIssuingPluginRoot.getNumberOfIssuedAssets("assetPublicKey");
-//        assertThat(n).isGreaterThan(0);
+//        assetIssuingPluginRoot.issueAssets(digitalAsset, 1, "publicKey", BlockchainNetworkType.REG_TEST);
     }
 
     @Test
-    public void test_Throws_CantExecuteDatabaseOperationException() throws Exception {
-        assetIssuingPluginRoot.start();
-        catchException(assetIssuingPluginRoot).getNumberOfIssuedAssets(null);
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNotNull()
-                .isInstanceOf(CantExecuteDatabaseOperationException.class);
-        assertThat(thrown.getCause()).isInstanceOf(CantCheckAssetIssuingProgressException.class);
+    public void test_Throws_CantStartAgentException() throws Exception {
+        //TODO test method
+//        catchException(assetIssuingPluginRoot).issueAssets(digitalAsset, 1, "publicKey", null);
+//        Exception thrown = caughtException();
+//        assertThat(thrown)
+//                .isNotNull()
+//                .isInstanceOf(CantIssueDigitalAssetsException.class);
+//        assertThat(thrown.getCause()).isInstanceOf(CantStartAgentException.class);
+    }
+
+    @Test
+    public void test_Throws_Exception() throws Exception {
+        //TODO test method
+//        catchException(assetIssuingPluginRoot).issueAssets(digitalAsset, 1, "publicKey", null);
+//        Exception thrown = caughtException();
+//        assertThat(thrown)
+//                .isNotNull()
+//                .isInstanceOf(CantIssueDigitalAssetsException.class);
+//        assertThat(thrown.getCause()).isInstanceOf(CantStartAgentException.class);
     }
 }

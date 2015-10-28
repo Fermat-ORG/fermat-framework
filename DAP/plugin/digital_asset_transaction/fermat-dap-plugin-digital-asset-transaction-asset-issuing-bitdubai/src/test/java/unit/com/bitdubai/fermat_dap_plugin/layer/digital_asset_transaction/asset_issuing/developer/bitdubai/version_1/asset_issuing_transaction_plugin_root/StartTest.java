@@ -1,5 +1,6 @@
-package unit.com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.asset_issuing_transaction_plugin_root;
+package unit.com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.asset_issuing_transaction_plugin_root;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -7,6 +8,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
@@ -15,11 +18,14 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.AssetIssuingTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.events.AssetIssuingRecorderService;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.events.AssetIssuingTransactionMonitorAgent;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
@@ -30,24 +36,24 @@ import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceU
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.UUID;
-
-import static org.fest.assertions.api.Assertions.assertThat;
+import static com.googlecode.catchexception.CatchException.catchException;
+import static com.googlecode.catchexception.CatchException.caughtException;
+import static org.fest.assertions.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+import java.util.UUID;
+
 /**
- * Created by frank on 23/10/15.
+ * Created by frank on 22/10/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class StopTest {
-    @InjectMocks
-    AssetIssuingTransactionPluginRoot assetIssuingPluginRoot;
+public class StartTest {
 
+    AssetIssuingTransactionPluginRoot assetIssuingPluginRoot;
     UUID pluginId;
 
     @Mock
@@ -115,13 +121,27 @@ public class StopTest {
     DatabaseTableRecord mockDatabaseTableRecord = Mockito.mock(DatabaseTableRecord.class);
     Database mockDatabase = Mockito.mock(Database.class);
 
-    @Mock
-    AssetIssuingTransactionMonitorAgent assetIssuingTransactionMonitorAgent;
-
     @Before
     public void setUp() throws Exception {
+        assetIssuingPluginRoot = new AssetIssuingTransactionPluginRoot();
+
         pluginId = UUID.randomUUID();
+
+        assetIssuingPluginRoot = new AssetIssuingTransactionPluginRoot();
         assetIssuingPluginRoot.setId(pluginId);
+        assetIssuingPluginRoot.setErrorManager(errorManager);
+        assetIssuingPluginRoot.setLogManager(logManager);
+        assetIssuingPluginRoot.setEventManager(eventManager);
+        assetIssuingPluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
+        assetIssuingPluginRoot.setPluginFileSystem(pluginFileSystem);
+        assetIssuingPluginRoot.setAssetIssuerManager(assetIssuerWalletManager);
+        assetIssuingPluginRoot.setCryptoVaultManager(cryptoVaultManager);
+        assetIssuingPluginRoot.setBitcoinWalletManager(bitcoinWalletManager);
+        assetIssuingPluginRoot.setAssetVaultManager(assetVaultManager);
+        assetIssuingPluginRoot.setCryptoAddressBookManager(cryptoAddressBookManager);
+        assetIssuingPluginRoot.setOutgoingIntraActorManager(outgoingIntraActorManager);
+        assetIssuingPluginRoot.setDeviceUserManager(deviceUserManager);
+        assetIssuingPluginRoot.setBitcoinNetworkManager(bitcoinNetworkManager);
 
         setUpMockitoRules();
     }
@@ -141,14 +161,67 @@ public class StopTest {
         when(eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER)).thenReturn(fermatEventListener3);
         when(eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER)).thenReturn(fermatEventListener4);
         when(eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION)).thenReturn(fermatEventListener5);
+    }
+
+    @Test
+    public void testStart_OK() throws Exception {
+        assetIssuingPluginRoot.start();
+        ServiceStatus serviceStatus = assetIssuingPluginRoot.getStatus();
+        assertThat(serviceStatus).isEqualTo(ServiceStatus.STARTED);
+    }
+
+    @Test
+    public void test_Throws_DatabaseNotFoundException() throws Exception {
+        //TODO fix error
+        /*when(pluginDatabaseSystem.openDatabase(this.pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE)).thenThrow(new DatabaseNotFoundException("error"));
+        when(assetIssuingTransactionDatabaseFactory.createDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE)).thenReturn(mockDatabase);
+        catchException(assetIssuingPluginRoot).start();
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(DatabaseNotFoundException.class);*/
+    }
+
+    public void test_Throws_CantOpenDatabaseException() throws Exception {
 
     }
 
     @Test
-    public void test_OK() throws Exception {
-        assetIssuingPluginRoot.start();
-        assetIssuingPluginRoot.stop();
-        ServiceStatus serviceStatus = assetIssuingPluginRoot.getStatus();
-        assertThat(serviceStatus).isEqualTo(ServiceStatus.STOPPED);
+    public void test_Throws_CantCreateDatabaseException() throws Exception {
+        /*when(pluginDatabaseSystem.openDatabase(this.pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE)).thenThrow(new DatabaseNotFoundException("error"));
+        when(assetIssuingTransactionDatabaseFactory.createDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE)).thenThrow(new CantCreateDatabaseException("error"));
+        assertThat(caughtException())
+                .isNotNull()
+                .isInstanceOf(CantStartPluginException.class);*/
+    }
+
+    @Test
+    public void test_Throws_CantSetObjectException() throws Exception {
+        assetIssuingPluginRoot.setAssetIssuerManager(null);
+
+        catchException(assetIssuingPluginRoot).start();
+        Exception thrown = caughtException();
+        assertThat(thrown)
+                .isNotNull()
+                .isInstanceOf(CantStartPluginException.class);
+        assertThat(thrown.getCause()).isInstanceOf(CantSetObjectException.class);
+        assertThat(assetIssuingPluginRoot.getStatus()).isEqualTo(ServiceStatus.STOPPED);
+    }
+
+    @Test
+    public void test_Throws_CantExecuteDatabaseOperationException() throws Exception {
+        /*when(pluginDatabaseSystem.openDatabase(this.pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE)).thenThrow(new CantExecuteDatabaseOperationException(null, null, null));
+
+        catchException(assetIssuingPluginRoot).start();
+        Exception thrown = caughtException();
+        assertThat(thrown)
+                .isNotNull()
+                .isInstanceOf(CantStartPluginException.class);
+        assertThat(thrown.getCause()).isInstanceOf(CantExecuteDatabaseOperationException.class);
+        assertThat(assetIssuingPluginRoot.getStatus()).isEqualTo(ServiceStatus.STOPPED);*/
+    }
+
+    @Test
+    public void test_Throws_Exception() throws Exception {
+
     }
 }
