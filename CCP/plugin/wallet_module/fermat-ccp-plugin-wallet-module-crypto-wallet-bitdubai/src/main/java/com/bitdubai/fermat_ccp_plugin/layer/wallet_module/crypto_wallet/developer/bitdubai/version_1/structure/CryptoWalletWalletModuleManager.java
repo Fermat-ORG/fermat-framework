@@ -251,17 +251,25 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
     public List<CryptoWalletWalletContact> listAllActorContactsAndConnections(String walletPublicKey,String intraUserPublicKey) throws CantGetAllWalletContactsException {
         try {
             List<CryptoWalletWalletContact> finalRecordList = new ArrayList<>();
+            List<WalletContactRecord> walletContactRecordList = new ArrayList<>();
+            walletContactRecordList.clear();
             finalRecordList.clear();
 
             //get wallet contacts
             WalletContactsSearch walletContactsSearch = walletContactsRegistry.searchWalletContact(walletPublicKey);
-            for(WalletContactRecord r : walletContactsSearch.getResult()){
+
+            walletContactRecordList = walletContactsSearch.getResult();
+
+            for(WalletContactRecord r : walletContactRecordList){
                 byte[] image = null;
                 switch (r.getActorType()) {
                     case EXTRA_USER:
                         Actor actor = extraUserManager.getActorByPublicKey(r.getActorPublicKey());
                         if (actor != null)
                             image = actor.getPhoto();
+                        break;
+                    case INTRA_USER:
+                        image = new  byte[0];
                         break;
                     default:
                         throw new CantGetAllWalletContactsException("UNEXPECTED ACTOR TYPE",null,"","incomplete switch");
@@ -274,10 +282,13 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
 
                 List<IntraWalletUser> intraUserList = intraUserManager.getConnectedIntraWalletUsers(intraUserPublicKey);
 
-                for(IntraWalletUser intraUser : intraUserList) {
-                    finalRecordList.add(new CryptoWalletWalletModuleWalletContact(enrichIntraUser(intraUser, walletPublicKey), walletPublicKey));
-                    System.out.println(intraUser);
-                }
+                for(IntraWalletUser intraUser : intraUserList)
+                    for(WalletContactRecord contactRecord : walletContactRecordList){
+
+                        if (!intraUser.getPublicKey().equals(contactRecord.getActorPublicKey()))
+                            finalRecordList.add(new CryptoWalletWalletModuleWalletContact(enrichIntraUser(intraUser, walletPublicKey), walletPublicKey));
+
+                    }
             return  finalRecordList;
 
         } catch (CantGetAllWalletContactsException e) {
