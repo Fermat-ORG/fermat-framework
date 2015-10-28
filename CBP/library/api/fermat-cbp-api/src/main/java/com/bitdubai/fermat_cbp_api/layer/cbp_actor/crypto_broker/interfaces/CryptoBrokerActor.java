@@ -8,6 +8,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.CustomerBrokerNego
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.exceptions.CantCreateSaleException;
 
 import java.util.Collection;
+import java.util.UUID;
 
 /**
  * Created by jorge on 26-10-2015.
@@ -17,6 +18,7 @@ public interface CryptoBrokerActor extends Actor {
     Collection<ActorIdentity> getConnectedCustomers();
 
     CustomerBrokerNegotiation createSale(ActorIdentity cryptoCustomer, Iterable<Clause> clauses) throws CantCreateSaleException;
+    CustomerBrokerNegotiation getSale(UUID negotiationId);
     Collection<CustomerBrokerNegotiation> getSales();
     Collection<CustomerBrokerNegotiation> getSales(NegotiationStatus status);
 }
