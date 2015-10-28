@@ -28,7 +28,7 @@ public class OpenContractsExpandableAdapter
      * @param context        the activity context where the RecyclerView is going to be displayed
      * @param parentItemList the list of parent items to be displayed in the RecyclerView
      */
-    public OpenContractsExpandableAdapter(Context context, List<GrouperItem> parentItemList) {
+    public OpenContractsExpandableAdapter(Context context, List<GrouperItem<ContractBasicInformation>> parentItemList) {
         super(parentItemList);
         mInflater = LayoutInflater.from(context);
     }

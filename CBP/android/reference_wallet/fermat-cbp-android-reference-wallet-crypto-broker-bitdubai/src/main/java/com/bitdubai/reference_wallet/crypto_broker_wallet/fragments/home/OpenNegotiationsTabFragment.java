@@ -17,8 +17,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForCustomerException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWallet;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.NegotiationBasicInformation;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
@@ -53,7 +53,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
     private ErrorManager errorManager;
 
     // DATA
-    private ArrayList<GrouperItem> openNegotiations;
+    private ArrayList<GrouperItem<NegotiationBasicInformation>> openNegotiations;
     private CryptoBrokerWallet cryptoBrokerWallet;
 
 
@@ -129,8 +129,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
     /**
      * @return the list of open negotiations grouped in negotiations waiting for the broker and those wating for the customer
      */
-    private ArrayList<GrouperItem> getOpenNegotiations() {
-        ArrayList<GrouperItem> data = new ArrayList<>();
+    private ArrayList<GrouperItem<NegotiationBasicInformation>> getOpenNegotiations() {
+        ArrayList<GrouperItem<NegotiationBasicInformation>> data = new ArrayList<>();
         String grouperText;
 
         if (moduleManager != null) {
@@ -193,13 +193,10 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
 
     @Override
     public void onItemClickListener(NegotiationBasicInformation data, int position) {
-        String text = "[CLICK] customerAlias = " + data.getCryptoCustomerAlias() + " - pos = " + position;
-        Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+        //TODO abrir actividad de detalle de negocacion abierta
     }
 
     @Override
     public void onLongItemClickListener(NegotiationBasicInformation data, int position) {
-        String text = "[LONG_CLICK] customerAlias = " + data.getCryptoCustomerAlias() + " - pos = " + position;
-        Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
     }
 }
