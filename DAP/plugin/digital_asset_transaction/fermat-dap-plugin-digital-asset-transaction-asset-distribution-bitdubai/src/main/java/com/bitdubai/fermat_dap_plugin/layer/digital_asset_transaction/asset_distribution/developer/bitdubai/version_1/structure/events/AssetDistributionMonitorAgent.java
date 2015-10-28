@@ -255,7 +255,11 @@ public class AssetDistributionMonitorAgent  implements Agent,DealsWithLogger,Dea
                             String userId=digitalAssetMetadataTransaction.getSenderId();
                             System.out.println("ASSET DISTRIBUTION User Id: "+userId);
                             String genesisTransaction=digitalAssetMetadataTransaction.getGenesisTransaction();
-                            System.out.println("ASSET DISTRIBUTION Genesis Transaction: "+genesisTransaction);
+                            System.out.println("ASSET DISTRIBUTION Genesis Transaction: " + genesisTransaction);
+                            if(assetDistributionDao.isGenesisTransactionRegistered(genesisTransaction)){
+                                System.out.println("ASSET RECEPTION This genesisTransaction is already registered in database: "+genesisTransaction);
+                                continue;
+                            }
                             String registeredUserActorId=assetDistributionDao.getActorUserCryptoAddressByGenesisTransaction(genesisTransaction);
                             System.out.println("ASSET DISTRIBUTION User Actor Is: "+registeredUserActorId);
                             if(!registeredUserActorId.equals(userId)){
@@ -274,9 +278,9 @@ public class AssetDistributionMonitorAgent  implements Agent,DealsWithLogger,Dea
                         //For now, I set the cryptoAddress for Bitcoins
                         CryptoAddress cryptoAddressTo=new CryptoAddress(actorUserCryptoAddress, CryptoCurrency.BITCOIN);
                         System.out.println("ASSET DISTRIBUTION cryptoAddressTo: "+cryptoAddressTo);
+                        updateDistributionStatus(DistributionStatus.SENDING_CRYPTO, assetAcceptedGenesisTransaction);
                         sendCryptoAmountToRemoteActor(assetAcceptedGenesisTransaction, cryptoAddressTo);
                         assetDistributionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(assetAcceptedGenesisTransaction, CryptoStatus.PENDING_SUBMIT);
-                        updateDistributionStatus(DistributionStatus.SENDING_CRYPTO, assetAcceptedGenesisTransaction);
                     }
                     List<String> assetRejectedByContractGenesisTransactionList=assetDistributionDao.getGenesisTransactionByAssetRejectedByContractStatus();
                     for(String assetRejectedGenesisTransaction : assetRejectedByContractGenesisTransactionList){

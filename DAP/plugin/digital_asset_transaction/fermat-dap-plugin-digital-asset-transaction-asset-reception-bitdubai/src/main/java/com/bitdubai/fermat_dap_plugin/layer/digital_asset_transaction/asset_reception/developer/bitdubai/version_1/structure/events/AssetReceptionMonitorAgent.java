@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
@@ -249,7 +250,7 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
                 if(assetReceptionDao.isPendingNetworkLayerEvents()){
                     System.out.println("ASSET RECEPTION is network layer pending events");
                     List<Transaction<DigitalAssetMetadataTransaction>> pendingEventsList=assetTransmissionManager.getPendingTransactions(Specialist.ASSET_ISSUER_SPECIALIST);
-                    System.out.println("ASSET RECEPTION is "+pendingEventsList.size()+" events");
+                    System.out.println("ASSET RECEPTION is " + pendingEventsList.size() + " events");
                     for(Transaction<DigitalAssetMetadataTransaction> transaction : pendingEventsList){
                         DigitalAssetMetadataTransaction digitalAssetMetadataTransaction=transaction.getInformation();
                         System.out.println("ASSET RECEPTION Digital Asset Metadata Transaction: "+digitalAssetMetadataTransaction);
@@ -259,11 +260,17 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
                             String senderId=digitalAssetMetadataTransaction.getSenderId();
                             System.out.println("ASSET RECEPTION Digital Asset Metadata Sender Id: "+senderId);
                             DigitalAssetMetadata digitalAssetMetadataReceived=digitalAssetMetadataTransaction.getDigitalAssetMetadata();
+                            String genesisTransaction=digitalAssetMetadataReceived.getGenesisTransaction();
+                            if(assetReceptionDao.isGenesisTransactionRegistered(genesisTransaction)){
+                                System.out.println("ASSET RECEPTION This genesisTransaction is already registered in database: "+genesisTransaction);
+                                continue;
+                            }
                             System.out.println("ASSET RECEPTION Digital Asset Metadata Received: " + digitalAssetMetadataReceived);
                             digitalAssetReceptor.receiveDigitalAssetMetadata(digitalAssetMetadataReceived, senderId);
                         }
-
+                        assetTransmissionManager.confirmReception(transaction.getTransactionID());
                     }
+                    assetReceptionDao.updateEventStatus(assetReceptionDao.getPendingNetworkLayerEvents().get(0));
                 }
                 ActorAssetIssuer actorAssetIssuer;
                 List<String> genesisTransactionList;
@@ -283,8 +290,6 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
                                 genesisTransaction,
                                 DistributionStatus.ASSET_ACCEPTED);
                     }
-
-
                 }
 
                 if(assetReceptionDao.isRejectedByContract()){
@@ -301,18 +306,20 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
                 throw new CantExecuteQueryException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, exception, "Exception in asset distribution monitor agent","Cannot execute database operation");
             } catch (CantDeliverPendingTransactionsException exception) {
                 throw new CantCheckAssetReceptionProgressException(exception,"Exception in asset reception monitor agent","Cannot deliver pending transactions from network layer");
-            } catch (CantReceiveDigitalAssetException e) {
-                e.printStackTrace();
-            } catch (CantAssetUserActorNotFoundException e) {
-                e.printStackTrace();
-            } catch (CantSendTransactionNewStatusNotificationException e) {
-                e.printStackTrace();
-            } catch (CantGetAssetUserActorsException e) {
-                e.printStackTrace();
-            } catch (UnexpectedResultReturnedFromDatabaseException e) {
-                e.printStackTrace();
-            } catch (CantGetAssetIssuerActorsException e) {
-                e.printStackTrace();
+            } catch (CantReceiveDigitalAssetException exception) {
+                throw new CantCheckAssetReceptionProgressException(exception,"Exception in asset reception monitor agent","Cannot receive digital asset");
+            } catch (CantAssetUserActorNotFoundException exception) {
+                throw new CantCheckAssetReceptionProgressException(exception,"Exception in asset reception monitor agent","Cannot find Asset user actor");
+            } catch (CantSendTransactionNewStatusNotificationException exception) {
+                throw new CantCheckAssetReceptionProgressException(exception,"Exception in asset reception monitor agent","Cannot send new status to asset issuer");
+            } catch (CantGetAssetUserActorsException exception) {
+                throw new CantCheckAssetReceptionProgressException(exception,"Exception in asset reception monitor agent","Cannot get asset actor user");
+            } catch (UnexpectedResultReturnedFromDatabaseException exception) {
+                throw new CantCheckAssetReceptionProgressException(exception,"Exception in asset reception monitor agent","Unexpected results in database query");
+            } catch (CantGetAssetIssuerActorsException exception) {
+                throw new CantCheckAssetReceptionProgressException(exception,"Exception in asset reception monitor agent","Cannot get asset actor issuer");
+            } catch (CantConfirmTransactionException exception) {
+                throw new CantCheckAssetReceptionProgressException(exception,"Exception in asset reception monitor agent","Cannot confirm network layer transaction");
             }
         }
 
