@@ -1,9 +1,11 @@
-package com.bitdubai.fermat_osa_addon.layer.android.location_system.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_osa_addon.layer.android.device_location.developer.bitdubai.version_1.structure;
 
 import android.content.Context;
 import android.location.LocationListener;
 import android.os.Bundle;
 import android.os.Looper;
+
+
 
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
@@ -13,63 +15,34 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.Cant
 
 /**
  * Created by Natalia on 21/05/2015.
- */
-
-/**
+ *
  * This addon handles a layer of Device Location representation.
  * Encapsulates all the necessary functions to retrieve the geolocation of the device.
  *
  * * * *
  */
 
-public class DeviceLocationManager implements LocationManager,LocationListener{
+public class DeviceLocationManager implements LocationManager, LocationListener {
+
+    private final Context context;
+
+    public DeviceLocationManager(final Context context) {
+        this.context = context;
+    }
 
     /**
-     * LocationManager Interface member variables.
-     */
-    private Context context;
-    private double lat;
-    private double lng;
-
-    public double getLat() {
-		return lat;
-	}
-
-	public void setLat(double lat) {
-		this.lat = lat;
-	}
-
-	public double getLng() {
-		return lng;
-	}
-
-	public void setLng(double lng) {
-		this.lng = lng;
-	}
-
-	/**
      * LocationListener Interface member variables.
      */
     android.location.LocationManager locationManager;
     android.location.Location deviceLocation;
 
-    private long MIN_TIME_BW_UPDATES = 1;
-    private float MIN_DISTANCE_CHANGE_FOR_UPDATES = 0;
-    final static long MIN_TIME_INTERVAL = 60 * 1000L;
+    private static final long MIN_TIME_BW_UPDATES = 1;
+    private static final float MIN_DISTANCE_CHANGE_FOR_UPDATES = 0;
+    private static final long MIN_TIME_INTERVAL = 60 * 1000L;
 
     /**
      * LocationManager Interface implementation.
      */
-
-    /**
-     *<p>This method sets the android context object for this class
-     *
-     * @param context Android context object
-     */
-    @Override
-    public void setContext (Object context){
-        this.context = (Context)context;
-    }
 
     /**
      *<p>This method gets the actual device location data.
