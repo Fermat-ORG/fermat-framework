@@ -21,6 +21,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_bank_money_
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -33,8 +34,10 @@ import java.util.UUID;
 
  */
 
-public class CustomerBrokerBankMoneyPurchasePluginRoot implements CustomerBrokerBankMoneyPurchaseManager, DealsWithPluginDatabaseSystem, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class CustomerBrokerBankMoneyPurchasePluginRoot implements CustomerBrokerBankMoneyPurchaseManager, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Service, Plugin {
 
+    private ErrorManager errorManager;
+    private LogManager logManager;
     private PluginDatabaseSystem pluginDatabaseSystem;
     private UUID pluginId;
     private CustomerBrokerBankMoneyPurchaseContractDao customerBrokerBankMoneyPurchaseContractDao;
@@ -42,17 +45,23 @@ public class CustomerBrokerBankMoneyPurchasePluginRoot implements CustomerBroker
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-
+        this.errorManager = errorManager;
     }
 
     @Override
     public void setLogManager(LogManager logManager) {
-
+        this.logManager = logManager;
     }
 
     @Override
     public List<String> getClassesFullPath() {
-        return null;
+        List<String> returnedClasses = new ArrayList<String>();
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.CustomerBrokerBankMoneyPurchasePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.structure.CustomerBrokerBankMoneyPurchaseContract");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerBankMoneyPurchaseContractDao");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerBankMoneyPurchaseContractDatabaseFactory");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerBankMoneyPurchaseContractDatabaseConstants");
+        return returnedClasses;
     }
 
     @Override
@@ -79,22 +88,22 @@ public class CustomerBrokerBankMoneyPurchasePluginRoot implements CustomerBroker
 
     @Override
     public void pause() {
-
+        this.serviceStatus = ServiceStatus.PAUSED;
     }
 
     @Override
     public void resume() {
-
+        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
     public void stop() {
-
+        this.serviceStatus = ServiceStatus.STOPPED;
     }
 
     @Override
     public ServiceStatus getStatus() {
-        return null;
+        return serviceStatus;
     }
 
     @Override
