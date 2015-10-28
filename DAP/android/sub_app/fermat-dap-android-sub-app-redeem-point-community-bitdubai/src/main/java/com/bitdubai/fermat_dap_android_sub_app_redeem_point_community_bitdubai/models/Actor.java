@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
@@ -88,14 +87,26 @@ public class Actor implements ActorAssetRedeemPoint {
         return this.address;
     }
 
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
     @Override
     public String getContactInformation() {
         return this.contactInformation;
     }
 
+    public void setContactInformation(String contactInformation) {
+        this.contactInformation = contactInformation;
+    }
+
     @Override
     public String getHoursOfOperation() {
         return this.hoursOfOperation;
+    }
+
+    public void setHoursOfOperation(String hoursOfOperation) {
+        this.hoursOfOperation = hoursOfOperation;
     }
 
     @Override
@@ -127,18 +138,6 @@ public class Actor implements ActorAssetRedeemPoint {
 
     public void setState(ConnectionState state) {
         this.state = state;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public void setContactInformation(String contactInformation) {
-        this.contactInformation = contactInformation;
-    }
-
-    public void setHoursOfOperation(String hoursOfOperation) {
-        this.hoursOfOperation = hoursOfOperation;
     }
 
 }
