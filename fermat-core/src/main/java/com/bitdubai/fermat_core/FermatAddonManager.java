@@ -19,15 +19,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionRef
 public class FermatAddonManager {
 
     private final FermatSystemContext systemContext  ;
-    private final Object              osContext      ;
-    private final OperativeSystems    operativeSystem;
 
-    public FermatAddonManager(final Object              osContext      ,
-                              final OperativeSystems    operativeSystem,
-                              final FermatSystemContext systemContext  ) {
+    public FermatAddonManager(final FermatSystemContext systemContext  ) {
 
-        this.osContext       = osContext      ;
-        this.operativeSystem = operativeSystem;
         this.systemContext   = systemContext  ;
     }
 
@@ -48,7 +42,7 @@ public class FermatAddonManager {
         try {
 
             if(abstractAddon.isDealsWithOsContext())
-                abstractAddon.setOsContext(osContext);
+                abstractAddon.setOsContext(systemContext.getOsContext());
 
             abstractAddon.start();
         } catch (com.bitdubai.fermat_api.CantStartPluginException e) {

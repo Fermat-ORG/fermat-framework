@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_core;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystems;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetModuleManagerException;
@@ -7,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegist
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.ModuleManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -15,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_ccp_core.CCPPlatform;
+import com.bitdubai.fermat_pip_core.PIPPlatform;
 
 import java.util.List;
 
@@ -24,18 +27,14 @@ import java.util.List;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/10/2015.
  */
-public class FermatSystem {
+public final class FermatSystem {
 
     private final FermatSystemContext fermatSystemContext;
-    private final Object              osContext          ;
-    private final OperativeSystems    operativeSystem    ;
 
     public FermatSystem(final Object           osContext      ,
                         final OperativeSystems operativeSystem) {
 
-        this.osContext           = osContext;
-        this.operativeSystem     = operativeSystem;
-        this.fermatSystemContext = new FermatSystemContext();
+        this.fermatSystemContext = new FermatSystemContext(osContext, operativeSystem);
     }
 
     /**
@@ -48,6 +47,7 @@ public class FermatSystem {
         try {
 
             fermatSystemContext.registerPlatform(new CCPPlatform());
+            fermatSystemContext.registerPlatform(new PIPPlatform());
 
             final List<PluginVersionReference> referenceList = new FermatPluginReferencesCalculator(fermatSystemContext).listReferencesByInstantiationOrder(
                 new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.WALLET_MODULE, Plugins.CRYPTO_WALLET, Developers.BITDUBAI, new Version())
@@ -66,6 +66,18 @@ public class FermatSystem {
 
             throw new CantStartSystemException(e, "", "Unhandled Exception.");
         }
+
+    }
+
+    public final void registerOsaPlatform(final AbstractPlatform abstractPlatform) throws CantRegisterPlatformException {
+
+        final PlatformReference pr = abstractPlatform.getPlatformReference();
+
+        if (pr.getPlatform().equals(Platforms.OPERATIVE_SYSTEM_API) &&
+                !pr.getOperativeSystem().equals(OperativeSystems.INDIFFERENT))
+            fermatSystemContext.registerPlatform(abstractPlatform);
+        else
+            throw new CantRegisterPlatformException(abstractPlatform.getPlatformReference().toString(), "Is not an OSA specific Platform");
 
     }
 

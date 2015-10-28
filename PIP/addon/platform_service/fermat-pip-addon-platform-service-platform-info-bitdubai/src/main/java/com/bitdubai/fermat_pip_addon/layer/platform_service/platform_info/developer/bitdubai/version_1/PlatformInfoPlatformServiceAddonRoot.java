@@ -97,7 +97,7 @@ public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implemen
     private void reportUnexpectedError(Exception e) {
         errorManager.reportUnexpectedAddonsException(Addons.PLATFORM_INFO, UnexpectedAddonsExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS, e);
     }
-
+/*
     @Override
     public List<AddonVersionReference> getNeededAddonReferences() {
 
@@ -107,7 +107,7 @@ public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implemen
         addonsNeeded.add(new AddonVersionReference(Platforms.PLUG_INS_PLATFORM   , Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER       , Developers.BITDUBAI, new Version()));
 
         return addonsNeeded;
-    }
+    }*/
 
     @Override
     public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
@@ -118,7 +118,7 @@ public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implemen
     public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
         return null;
     }
-
+/*
     @Override
     protected void validateAndAssignReferences() throws MissingReferencesException {
 
@@ -147,5 +147,5 @@ public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implemen
             );
         }
 
-    }
+    }*/
 }

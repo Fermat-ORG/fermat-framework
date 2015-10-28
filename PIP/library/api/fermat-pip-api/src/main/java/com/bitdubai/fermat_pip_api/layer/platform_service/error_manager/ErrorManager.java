@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_pip_api.layer.platform_service.error_manager;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -14,7 +15,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 /**
  * Created by ciencias on 05.02.15.
  */
-public interface ErrorManager {
+public interface ErrorManager extends FermatManager {
 
     void reportUnexpectedPlatformException(PlatformComponents exceptionSource, UnexpectedPlatformExceptionSeverity unexpectedPlatformExceptionSeverity, Exception exception);
 
