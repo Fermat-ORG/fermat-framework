@@ -13,6 +13,10 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.Acto
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.NewCryptoAddressReceiveAssetUserActorNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.NewCryptoAddressRequestAssetUserActorNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.NewCryptoAddressReceiveAssetUserActorNotificationEventListener;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.NewCryptoAddressRequestAssetUserActorNotificationEventListener;
 
 /**
  * The enum <code>EventType</code>
@@ -785,6 +789,30 @@ public enum EventType implements FermatEventEnum {
         @Override
         public FermatEvent getNewEvent() {
             return null;
+        }
+    },
+    NEW_CRYPTO_ADDRESS_REQUEST_ASSET_USER("NCARAU"){
+
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new NewCryptoAddressRequestAssetUserActorNotificationEventListener(this, fermatEventMonitor);
+        }
+
+        @Override
+        public FermatEvent getNewEvent() {
+            return new NewCryptoAddressRequestAssetUserActorNotificationEvent(this);
+        }
+    },
+    NEW_CRYPTO_ADDRESS_RECEIVE_ASSET_USER("RNCARAU"){
+
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new NewCryptoAddressReceiveAssetUserActorNotificationEventListener(this, fermatEventMonitor);
+        }
+
+        @Override
+        public FermatEvent getNewEvent() {
+            return new NewCryptoAddressReceiveAssetUserActorNotificationEvent(this);
         }
     },
     ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS("ANSNN"){
