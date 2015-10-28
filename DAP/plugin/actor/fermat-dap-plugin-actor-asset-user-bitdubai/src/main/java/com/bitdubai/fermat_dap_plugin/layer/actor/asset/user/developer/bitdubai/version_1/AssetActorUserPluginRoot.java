@@ -37,6 +37,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.Dea
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
+//import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
@@ -45,17 +47,14 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCre
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorNetworkServiceAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantSendMessageException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorNetworkServiceAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.DealsWithAssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantGetGenesisAddressException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.developerUtils.AssetUserActorDeveloperDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.ActorAssetUserRequestCryptoAddressNotificationEventHandler;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.ActorAssetUserSendCryptoAddressNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.AssetUserActorCompleteRegistrationNotificationEventHandler;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.AssetUserActorRequestListRegisteredNetworksNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantAddPendingAssetUserException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUsersListException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserActorDatabaseException;
@@ -67,7 +66,6 @@ import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceU
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -290,6 +288,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         /**
          * Listener Accepted connection event
          */
+//        fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
         fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
         fermatEventListener.setEventHandler(new AssetUserActorCompleteRegistrationNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
@@ -300,38 +299,38 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 //        eventManager.addListener(fermatEventListener);
 //        listenersAdded.add(fermatEventListener);
 
-        fermatEventListener = eventManager.getNewListener(EventType.ACTOR_ASSET_USER_REQUEST_CRYPTO_ADDRESS_NOTIFICATION);
-        fermatEventListener.setEventHandler(new ActorAssetUserRequestCryptoAddressNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
-        fermatEventListener = eventManager.getNewListener(EventType.ACTOR_ASSET_USER_SEND_CRYPTO_ADDRESS_NOTIFICATION);
-        fermatEventListener.setEventHandler(new ActorAssetUserSendCryptoAddressNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
+//        fermatEventListener = eventManager.getNewListener(EventType.ACTOR_ASSET_USER_REQUEST_CRYPTO_ADDRESS_NOTIFICATION);
+//        fermatEventListener.setEventHandler(new ActorAssetUserRequestCryptoAddressNotificationEventHandler(this));
+//        eventManager.addListener(fermatEventListener);
+//        listenersAdded.add(fermatEventListener);
+//
+//        fermatEventListener = eventManager.getNewListener(EventType.ACTOR_ASSET_USER_SEND_CRYPTO_ADDRESS_NOTIFICATION);
+//        fermatEventListener.setEventHandler(new ActorAssetUserSendCryptoAddressNotificationEventHandler(this));
+//        eventManager.addListener(fermatEventListener);
+//        listenersAdded.add(fermatEventListener);
 
     }
 
     private void testRaiseEvent() {
         FermatEvent eventToRaise;
 
-        System.out.println("Start event TEST Actor Asset User");
-        eventToRaise = eventManager.getNewEvent(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
-        eventToRaise.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
-        eventManager.raiseEvent(eventToRaise);
-        System.out.println("End event TEST Actor Asset User");
+//        System.out.println("Start event TEST Actor Asset User");
+//        eventToRaise = eventManager.getNewEvent(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
+//        eventToRaise.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
+//        eventManager.raiseEvent(eventToRaise);
+//        System.out.println("End event TEST Actor Asset User");
 
-        System.out.println("Start event TEST Actor Asset User");
-        eventToRaise = eventManager.getNewEvent(EventType.ACTOR_ASSET_USER_REQUEST_CRYPTO_ADDRESS_NOTIFICATION);
-        eventToRaise.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
-        eventManager.raiseEvent(eventToRaise);
-        System.out.println("End event TEST Actor Asset User");
-
-        System.out.println("Start event TEST Actor Asset User");
-        eventToRaise = eventManager.getNewEvent(EventType.ACTOR_ASSET_USER_SEND_CRYPTO_ADDRESS_NOTIFICATION);
-        eventToRaise.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
-        eventManager.raiseEvent(eventToRaise);
-        System.out.println("End event TEST Actor Asset User");
+//        System.out.println("Start event TEST Actor Asset User");
+//        eventToRaise = eventManager.getNewEvent(EventType.ACTOR_ASSET_USER_REQUEST_CRYPTO_ADDRESS_NOTIFICATION);
+//        eventToRaise.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
+//        eventManager.raiseEvent(eventToRaise);
+//        System.out.println("End event TEST Actor Asset User");
+//
+//        System.out.println("Start event TEST Actor Asset User");
+//        eventToRaise = eventManager.getNewEvent(EventType.ACTOR_ASSET_USER_SEND_CRYPTO_ADDRESS_NOTIFICATION);
+//        eventToRaise.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
+//        eventManager.raiseEvent(eventToRaise);
+//        System.out.println("End event TEST Actor Asset User");
     }
 
     public CryptoAddress getGenesisAddress() throws CantGetGenesisAddressException {
@@ -379,18 +378,21 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 
     @Override
     public void handleCompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent(List<ActorAssetUser> actorAssetUserList) {
-        System.out.println("Satisfactoriamente llego la lista remota de asset user actor");
+        System.out.println("==========================================================");
+        System.out.println("Actor Asset User - Lista recibida");
+        System.out.println("==========================================================");
+
     }
 
     @Override
     public void handleCompleteClientAssetUserActorRegistrationNotificationEvent(ActorAssetUser actorAssetUser) {
         System.out.println("==========================================================");
-        System.out.println("Satisfactoriamente se Registro " + actorAssetUser.getName());
+        System.out.println("Actor Asset User se Registro " + actorAssetUser.getName());
         System.out.println("==========================================================");
     }
 
     @Override
-    public void handleCompleteRequestCryptoAddressNotificationEvent(ActorAssetUser actorAssetUser) {
+    public void handleRequestCryptoAddresFromRemoteAssetUserEvent(ActorAssetUser actorAssetUser) {
 
         //TODO BUSCAR INFORMACION DE DONDE SACAR EL ISSUER
         try {
@@ -398,7 +400,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
             registerGenesisAddressInCryptoAddressBook(genesisAddress);
 //            this.assetUserActorNetworkServiceManager.sendCryptoAddress(actorAssetUser,,genesisAddress);
             System.out.println("==========================================================");
-            System.out.println("Se envio la Crypto Address " + actorAssetUser.getName());
+            System.out.println("Actor Asset User envio la Crypto Address " + actorAssetUser.getName());
             System.out.println("==========================================================");
         } catch (CantGetGenesisAddressException e) {
             e.printStackTrace();
@@ -409,7 +411,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 
     }
 
-    public void handleCompleteSendCryptoAddressNotificationEvent(ActorAssetUser actorAssetUser) {
+    public void handleDeliveredCryptoAddresFromRemoteAssetUserEvent(ActorAssetUser actorAssetUser, CryptoAddress cryptoAddress) {
         try {
             this.assetUserActorDao.createNewAssetUser(actorAssetUser);
         } catch (CantAddPendingAssetUserException e) {

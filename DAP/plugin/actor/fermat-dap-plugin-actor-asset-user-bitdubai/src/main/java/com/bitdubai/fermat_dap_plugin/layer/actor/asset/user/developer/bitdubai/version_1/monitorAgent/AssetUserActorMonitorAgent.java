@@ -160,7 +160,7 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
                 }
 
             } catch (CantRequestListActorAssetUserRegisteredException e) {
-                throw new CantCreateAssetUserActorException("CAN'T ADD TEST NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
+                throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
             } catch (CantAddPendingAssetUserException e) {
                 e.printStackTrace();
             }

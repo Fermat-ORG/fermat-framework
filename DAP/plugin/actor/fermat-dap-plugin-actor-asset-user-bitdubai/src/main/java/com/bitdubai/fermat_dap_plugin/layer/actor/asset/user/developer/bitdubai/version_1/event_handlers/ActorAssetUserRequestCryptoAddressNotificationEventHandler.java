@@ -30,7 +30,7 @@ public class ActorAssetUserRequestCryptoAddressNotificationEventHandler implemen
              /*
              *  ActorNetworkServiceAssetUser make the job
              */
-            this.actorNetworkServiceAssetUser.handleCompleteRequestCryptoAddressNotificationEvent(actorAssetUserRequestCryptoAddressNotificationEvent.getActorAssetUser());
+//            this.actorNetworkServiceAssetUser.handleCompleteRequestCryptoAddressNotificationEvent(actorAssetUserRequestCryptoAddressNotificationEvent.getActorAssetUser());
         }
     }
 }

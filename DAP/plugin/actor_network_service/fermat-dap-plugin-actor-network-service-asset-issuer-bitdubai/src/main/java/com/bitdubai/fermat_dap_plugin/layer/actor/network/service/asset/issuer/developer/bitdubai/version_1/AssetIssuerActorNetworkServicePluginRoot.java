@@ -407,15 +407,15 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
     private void initilizelistener2() {
         try {
 
-            FermatEventListener event = eventManager.getNewListener(EventType.COMPLETE_REQUEST_LIST_ASSET_ISSUER_REGISTERED_NOTIFICATION);
-            //event.setEventHandler(new CompleteClientAssetUserActorRegistrationNotificationEventHandler(this));
-            eventManager.addListener(event);
-            listenersAdded.add(event);
-
-            event = eventManager.getNewListener(EventType.COMPLETE_REQUEST_LIST_ASSET_ISSUER_REGISTERED_NOTIFICATION);
-            //event.setEventHandler(new CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventHandler(this));
-            eventManager.addListener(event);
-            listenersAdded.add(event);
+//            FermatEventListener event = eventManager.getNewListener(EventType.COMPLETE_REQUEST_LIST_ASSET_ISSUER_REGISTERED_NOTIFICATION);
+//            //event.setEventHandler(new CompleteClientAssetUserActorRegistrationNotificationEventHandler(this));
+//            eventManager.addListener(event);
+//            listenersAdded.add(event);
+//
+//            event = eventManager.getNewListener(EventType.COMPLETE_REQUEST_LIST_ASSET_ISSUER_REGISTERED_NOTIFICATION);
+//            //event.setEventHandler(new CompleteRequestListRegisteredAssetUserActorNetworksNotificationEventHandler(this));
+//            eventManager.addListener(event);
+//            listenersAdded.add(event);
 
         } catch (Exception e) {
 

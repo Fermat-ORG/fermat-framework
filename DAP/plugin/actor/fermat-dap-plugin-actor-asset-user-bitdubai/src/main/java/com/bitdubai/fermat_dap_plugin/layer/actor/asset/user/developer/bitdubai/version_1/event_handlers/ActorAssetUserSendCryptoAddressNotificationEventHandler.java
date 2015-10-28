@@ -30,7 +30,7 @@ public class ActorAssetUserSendCryptoAddressNotificationEventHandler implements 
              /*
              *  ActorNetworkServiceAssetUser make the job
              */
-            this.actorNetworkServiceAssetUser.handleCompleteSendCryptoAddressNotificationEvent(actorAssetUserSendCryptoAddressNotificationEvent.getActorAssetUser());
+//            this.actorNetworkServiceAssetUser.handleDeliveredCryptoAddresFromRemoteAssetUserEvent(actorAssetUserSendCryptoAddressNotificationEvent.getActorAssetUser());
         }
     }
 }
