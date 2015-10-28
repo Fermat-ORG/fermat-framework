@@ -56,7 +56,7 @@ public interface NegotiationBasicInformation {
     String getTypeOfPayment();
 
     /**
-     * @return the negotiation's status:
+     * @return the negotiation's status
      */
     NegotiationStatus getStatus();
 }

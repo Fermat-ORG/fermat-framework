@@ -17,5 +17,7 @@
     <color name="waiting_for_customer_list_item_background">#ffffff</color>
     <color name="negotiation_closed_list_item_background">#c6c6c6</color>
     <color name="negotiation_cancelled_list_item_background">#ff8b8b</color>
+    <color name="contract_closed_list_item_background">#c6c6c6</color>
+    <color name="contract_cancelled_list_item_background">#ff8b8b</color>
 
 </resources>
