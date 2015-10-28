@@ -211,13 +211,7 @@ public abstract class AbstractAddon implements Addon, Service {
                 );
             }
 
-            final Class<?> refManager = field.getDeclaringClass();
-
-            System.out.println("im declared class: "+refManager);
-            System.out.println("im assigning class: "+abstractAddon.getClass());
-
-            System.out.println("im declared class: "+refManager.getName());
-            System.out.println("im assigning class: "+abstractAddon.getClass().getName());
+            final Class<?> refManager = field.getType();
 
             if(refManager.isAssignableFrom(abstractAddon.getClass())) {
                 field.setAccessible(true);

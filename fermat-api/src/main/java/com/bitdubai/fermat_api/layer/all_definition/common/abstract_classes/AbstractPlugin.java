@@ -204,7 +204,7 @@ public abstract class AbstractPlugin implements Plugin, Service {
                 );
             }
 
-            final Class<?> refManager = field.getDeclaringClass();
+            final Class<?> refManager = field.getType();
 
             if(refManager.isAssignableFrom(abstractAddon.getClass())) {
                 field.setAccessible(true);
@@ -241,7 +241,7 @@ public abstract class AbstractPlugin implements Plugin, Service {
                         "The plugin doesn't need the given reference."
                 );
             }
-            final Class<?> refManager = field.getDeclaringClass();
+            final Class<?> refManager = field.getType();
 
             if(refManager.isAssignableFrom(abstractPlugin.getClass())) {
                 field.setAccessible(true);
@@ -249,7 +249,7 @@ public abstract class AbstractPlugin implements Plugin, Service {
             } else {
                 throw new IncompatibleReferenceException(
                         "classExpected: "+refManager.getName() + " --- classReceived: " + abstractPlugin.getClass().getName(),
-                        ""
+                        "Field is not assignable by the given reference (bad definition, different type expected). Check the expected plugin and the defined type."
                 );
             }
 
