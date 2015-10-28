@@ -11,4 +11,8 @@ public interface ActorNetworkServiceAssetUser {
 
     void handleCompleteClientAssetUserActorRegistrationNotificationEvent(ActorAssetUser actorAssetUser);
 
+    void handleCompleteRequestCryptoAddressNotificationEvent(ActorAssetUser actorAssetUser);
+
+    void handleCompleteSendCryptoAddressNotificationEvent(ActorAssetUser actorAssetUser);
+
 }

@@ -46,11 +46,16 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGet
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorNetworkServiceAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
+
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.DealsWithAssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantGetGenesisAddressException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.developerUtils.AssetUserActorDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.ActorAssetUserRequestCryptoAddressNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.ActorAssetUserSendCryptoAddressNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.AssetUserActorCompleteRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.AssetUserActorRequestListRegisteredNetworksNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantAddPendingAssetUserException;
@@ -240,24 +245,6 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
             this.assetUserActorDao = new AssetUserActorDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
 
 //            this.assetUserActorDao.initializeDatabase();
-            /**
-             * I will initialize the handling of com.bitdubai.platform events.
-             */
-            FermatEventListener fermatEventListener;
-            FermatEventHandler fermatEventHandler;
-
-            /**
-             * Listener Accepted connection event
-             */
-            fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
-            fermatEventListener.setEventHandler(new AssetUserActorCompleteRegistrationNotificationEventHandler(this));
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
-
-            fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION);
-            fermatEventListener.setEventHandler(new AssetUserActorRequestListRegisteredNetworksNotificationEventHandler(this));
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
 
 //            fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
 //            fermatEventHandler = new AssetUserActorConnectionAcceptedEventHandlers();
@@ -273,6 +260,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
             blockchainNetworkType = BlockchainNetworkType.REG_TEST;
 
             //test();
+            createAndRegisterActorAssetUserTest();
 
             /**
              * Agent for Search Actor Asset User REGISTERED in Actor Network Service User
@@ -286,6 +274,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 //            registerGenesisAddressInCryptoAddressBook(genesisAddress);
 
 //            testRaiseEvent();
+            initializeListener();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -293,12 +282,58 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         }
     }
 
+    private void initializeListener() {
+        /**
+         * I will initialize the handling of com.bitdubai.platform events.
+         */
+        FermatEventListener fermatEventListener;
+        FermatEventHandler fermatEventHandler;
+
+        /**
+         * Listener Accepted connection event
+         */
+        fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
+        fermatEventListener.setEventHandler(new AssetUserActorCompleteRegistrationNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+//        fermatEventListener = eventManager.getNewListener(EventType.COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION);
+//        fermatEventListener.setEventHandler(new AssetUserActorRequestListRegisteredNetworksNotificationEventHandler(this));
+//        eventManager.addListener(fermatEventListener);
+//        listenersAdded.add(fermatEventListener);
+
+        fermatEventListener = eventManager.getNewListener(EventType.ACTOR_ASSET_USER_REQUEST_CRYPTO_ADDRESS_NOTIFICATION);
+        fermatEventListener.setEventHandler(new ActorAssetUserRequestCryptoAddressNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        fermatEventListener = eventManager.getNewListener(EventType.ACTOR_ASSET_USER_SEND_CRYPTO_ADDRESS_NOTIFICATION);
+        fermatEventListener.setEventHandler(new ActorAssetUserSendCryptoAddressNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+    }
+
     private void testRaiseEvent() {
-        System.out.println("Start event test");
-        FermatEvent eventToRaise = eventManager.getNewEvent(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
+        FermatEvent eventToRaise;
+
+        System.out.println("Start event TEST Actor Asset User");
+        eventToRaise = eventManager.getNewEvent(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
         eventToRaise.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
         eventManager.raiseEvent(eventToRaise);
-        System.out.println("End event test");
+        System.out.println("End event TEST Actor Asset User");
+
+        System.out.println("Start event TEST Actor Asset User");
+        eventToRaise = eventManager.getNewEvent(EventType.ACTOR_ASSET_USER_REQUEST_CRYPTO_ADDRESS_NOTIFICATION);
+        eventToRaise.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
+        eventManager.raiseEvent(eventToRaise);
+        System.out.println("End event TEST Actor Asset User");
+
+        System.out.println("Start event TEST Actor Asset User");
+        eventToRaise = eventManager.getNewEvent(EventType.ACTOR_ASSET_USER_SEND_CRYPTO_ADDRESS_NOTIFICATION);
+        eventToRaise.setSource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
+        eventManager.raiseEvent(eventToRaise);
+        System.out.println("End event TEST Actor Asset User");
     }
 
     public CryptoAddress getGenesisAddress() throws CantGetGenesisAddressException {
@@ -320,13 +355,12 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
      * @throws CantRegisterCryptoAddressBookRecordException
      */
     public void registerGenesisAddressInCryptoAddressBook(CryptoAddress genesisAddress) throws CantRegisterCryptoAddressBookRecordException {
-        //TODO: solicitar la publickey del Issuer, la publicKey de la wallet
         try {
             this.cryptoAddressBookManager.registerCryptoAddress(genesisAddress,
-                    this.assetUserActorDao.getActorAssetUser().getPublicKey(),//"testDeliveredByActorPublicKey",
+                    this.assetUserActorDao.getActorAssetUser().getPublicKey(),
                     Actors.DAP_ASSET_USER,
-                    "testDeliveredToActorIssuerPublicKey",
-                    Actors.DAP_ASSET_ISSUER,
+                    this.assetUserActorDao.getActorAssetUser().getPublicKey(),
+                    Actors.DAP_ASSET_USER,
                     Platforms.DIGITAL_ASSET_PLATFORM,
                     VaultType.ASSET_VAULT,
                     CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
@@ -354,6 +388,36 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         System.out.println("==========================================================");
         System.out.println("Satisfactoriamente se Registro " + actorAssetUser.getName());
         System.out.println("==========================================================");
+    }
+
+    @Override
+    public void handleCompleteRequestCryptoAddressNotificationEvent(ActorAssetUser actorAssetUser) {
+        //evento de Hendry va  tener el AssetIssuer
+        //TODO BUSCAR INFORMACION DE DONDE SACAR EL ISSUER
+        try {
+            CryptoAddress genesisAddress = getGenesisAddress();
+            registerGenesisAddressInCryptoAddressBook(genesisAddress);
+//            this.assetUserActorNetworkServiceManager.sendCryptoAddress(actorAssetUser,,genesisAddress);
+            System.out.println("==========================================================");
+            System.out.println("Se envio la Crypto Address " + actorAssetUser.getName());
+            System.out.println("==========================================================");
+        } catch (CantGetGenesisAddressException e) {
+            e.printStackTrace();
+        } catch (CantRegisterCryptoAddressBookRecordException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public void handleCompleteSendCryptoAddressNotificationEvent(ActorAssetUser actorAssetUser) {
+        try {
+            //Evento de Hendry va a tener AssetUser y cryptoAddress
+            //todo actualizar tabla de usuarios registrados con nueva crypto address.
+            this.assetUserActorDao.createNewAssetUser(actorAssetUser);
+        } catch (CantAddPendingAssetUserException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -451,7 +515,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
     }
 
     @Override
-    public List<ActorAssetUser> getAllAssetUserActorRegistered() throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
+    public List<ActorAssetUser> getAllAssetUserActorInTableRegistered() throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
         List<ActorAssetUser> list; // Asset User Actor list.
         try {
             list = this.assetUserActorDao.getAllAssetUserActorRegistered();
@@ -488,7 +552,8 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         return new AssetUserActorRecord(assetUserActorPublicKey, assetUserActorName, assetUserActorprofileImage, locationLatitude, locationLongitude);
     }
 
-    private void registerActorInActorNetowrkSerice() {
+    @Override
+    public void registerActorInActorNetowrkSerice() {
 
         try {//TODO Escuchar EVENTO para confirmar que se Registro Actor Correctamente en el A.N.S
             /*
@@ -502,6 +567,22 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 
 
     @Override
+    public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException {
+        try {
+            for (ActorAssetUser actorAssetUser : actorAssetUsers){
+                //todo Actualizar Estado en base de datos para este actorAssetUser ConnectionState = PENDING_REMOTELY_ACCEPTANCE
+                assetUserActorNetworkServiceManager.requestCryptoAddress(requester, actorAssetUser);
+            }
+
+        } catch (CantRequestCryptoAddressException e) {
+            e.printStackTrace();
+        }
+
+        //ademas, debemos al iniciar el plugin del actor, debemos escuchar al evento del requestCryptoAddress del network service, para cuando
+        //alguien nos pida la dirección, y llamar a los metodos de getGenesisAddress y registrarla en el address book. para luego enviar
+        // la direccion a traves del sendCryptoAddress del network service.
+    }
+
     public void createAndRegisterActorAssetUserTest() throws CantCreateAssetUserActorException {
 
         try {
@@ -530,7 +611,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
                 System.out.println("Actor Asset GenesisAddress in Crypto Address Book: " + actorAssetUser.getCryptoAddress().getAddress());
                 System.out.println("********************************************************************************************************");
             }
-            registerActorInActorNetowrkSerice();
+//            registerActorInActorNetowrkSerice();
 //                else {
             /**
              * Register User in Table Actor Asset User Registered,
@@ -567,17 +648,6 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         } else {
             this.assetUserActorMonitorAgent.start();
         }
-    }
-
-    @Override
-    public void connectToActorAssetUser(ActorAssetIssuer requester, ActorAssetUser actorAssetUser) throws CantConnectToAssetUserException {
-        //todo implementar. Llamar al requestCryptoAddress del AssetUserActorNetworkServiceManager. Debemos estar escuchando a
-        //evento del sendCryptoAddress del network service que nos va a enviar la crypto address solicitada y se debe guardar en la base de datos.
-
-
-        //ademas, debemos al iniciar el plugin del actor, debemos escuchar al evento del requestCryptoAddress del network service, para cuando
-        //alguien nos pida la dirección, y llamar a los metodos de getGenesisAddress y registrarla en el address book. para luego enviar
-        // la direccion a traves del sendCryptoAddress del network service.
     }
 
 
