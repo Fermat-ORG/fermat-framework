@@ -82,6 +82,15 @@ public interface IntraWalletUserManager {
     List<IntraWalletUser> getAllIntraWalletUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraWalletUsersException;
 
     /**
+     * The method <code>getAcceptedIntraWalletUsers</code> shows the list of all intra users that are accepted for the logged in one.
+     *
+     * @param intraUserLoggedInPublicKey
+     * @return
+     * @throws CantGetIntraWalletUsersException
+     */
+    List<IntraWalletUser> getConnectedIntraWalletUsers(String intraUserLoggedInPublicKey) throws CantGetIntraWalletUsersException;
+
+    /**
      * The method <code>getWaitingYourAcceptanceIntraWalletUsers</code> shows the list of all intra users
      * that sent a connection request and are waiting for the acceptance of the logged in one.
      *

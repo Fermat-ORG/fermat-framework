@@ -28,7 +28,7 @@ import java.util.UUID;
 /**
  * This addon handles a layer of file representation.
  * Encapsulates all the necessary functions to manage files.
- * For interfaces PluginFile the modules need to authenticate with their plugin ids
+ * For interfaces PluginFile the modules need to authenticate with their plugin ids (ownerId).
  *
  * Created by lnacosta (laion.cj91@gmail.com) on 27/10/2015.
  */
@@ -51,7 +51,7 @@ public class PluginFileSystemAndroidAddonRoot extends AbstractAddon implements P
     public final void start() throws CantStartPluginException {
 
         if (this.getOsContext() != null && this.getOsContext() instanceof Context) {
-            context = (Context) this.getOsContext();
+            this.context = (Context) this.getOsContext();
             this.serviceStatus = ServiceStatus.STARTED;
         } else {
             throw new CantStartPluginException(
@@ -59,6 +59,12 @@ public class PluginFileSystemAndroidAddonRoot extends AbstractAddon implements P
                     "Context is not instance of Android Context or is null."
             );
         }
+    }
+
+    @Override
+    public final void stop() {
+        this.context = null;
+        this.serviceStatus = ServiceStatus.STOPPED;
     }
 
     @Override

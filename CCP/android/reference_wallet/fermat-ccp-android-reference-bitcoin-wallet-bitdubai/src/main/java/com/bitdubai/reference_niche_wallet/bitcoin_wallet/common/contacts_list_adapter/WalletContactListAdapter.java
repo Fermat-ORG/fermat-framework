@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,9 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
             if (tt1 != null) {
                 tt1.setText(p.name);
                 tt1.setTypeface(tf, Typeface.BOLD);
+
+                if(p.isConnection)
+                    tt1.setTextColor(Color.RED);
             }
         }
 

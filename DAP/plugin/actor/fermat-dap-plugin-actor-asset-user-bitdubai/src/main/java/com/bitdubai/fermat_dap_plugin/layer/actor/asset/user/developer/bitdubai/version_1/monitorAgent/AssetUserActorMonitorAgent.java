@@ -139,29 +139,28 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
             try {
 //                test_RegisterActorNetworkService();
 
-                test_listByActorNetworkServiceUser();
+                listByActorNetworkServiceUser();
 
             } catch (CantCreateAssetUserActorException e) {
                 throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
             }
         }
 
-        private void test_listByActorNetworkServiceUser() throws CantCreateAssetUserActorException {
-            List<ActorAssetUser> list;
+        private void listByActorNetworkServiceUser() throws CantCreateAssetUserActorException {
 //                Procedimiento para Obtener lista de Actores del Actor Network Service User
             try {
-                list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
+                List<ActorAssetUser> list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
 
                 if (list.isEmpty()) {
                     System.out.println("Lista de Actores de Actor Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
                 } else {
                     System.out.println("Se Recibio Lista de: " + list.size() + " Actors desde Actor Network Service - SE PROCEDE A SU REGISTRO");
-                    assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(list);
-                    System.out.println("Se Registro en tabla ASSET_USER_REGISTER_ACTOR Lista de: " + list.size() + " Actors desde Actor Network Service");
+                    int recordInsert = assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(list);
+                    System.out.println("Se Registro en tabla ASSET_USER_REGISTER_ACTOR Lista de: " + recordInsert + " Actors desde Actor Network Service");
                 }
 
             } catch (CantRequestListActorAssetUserRegisteredException e) {
-                throw new CantCreateAssetUserActorException("CAN'T ADD TEST NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
+                //throw new CantCreateAssetUserActorException("CAN'T ADD TEST NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
             } catch (CantAddPendingAssetUserException e) {
                 e.printStackTrace();
             }

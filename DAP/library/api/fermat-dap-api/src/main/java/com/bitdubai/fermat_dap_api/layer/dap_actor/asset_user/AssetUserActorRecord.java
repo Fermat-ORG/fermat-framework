@@ -29,23 +29,25 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     /**
      * Constructor
+     * @param assetUserActorPublicKey
+     * @param assetUserActorName
+     * @param assetUserActorprofileImage
+     * @param locationLatitude
+     * @param locationLongitude
      */
 
-    public AssetUserActorRecord(){
+    public AssetUserActorRecord(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage, Double locationLatitude, Double locationLongitude){
 
     }
 
-   /**
-    *  Register in Actor Network Service
-    */
-    public AssetUserActorRecord(String name, String publicKey, byte[] profileImage, Location location) {
-
+    /**
+     *  Register in Actor Network Service
+     */
+    public AssetUserActorRecord(String publicKey, String name, byte[] profileImage, Location location) {
 
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = profileImage.clone();
-        this.locationLatitude = location.getLatitude();
-        this.locationLongitude = location.getLongitude();
+        this.profileImage = profileImage.clone();     
         this.genders = Genders.INDEFINITE;
 //        this.age = age;
 //        this.cryptoAddress = cryptoAddress;
@@ -73,6 +75,11 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
     }
 
+    @Override
+    public String getPublicLinkedIdentity() {
+        return this.publiclinkedIdentity;
+    }
+
     /**
      * The method <code>getPublicKey</code> gives us the public key of the represented Asset User
      *
@@ -81,6 +88,10 @@ public class AssetUserActorRecord implements ActorAssetUser {
     @Override
     public String getPublicKey() {
         return this.publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 
     /**
@@ -93,8 +104,40 @@ public class AssetUserActorRecord implements ActorAssetUser {
         return this.name;
     }
 
+    @Override
+    public String getAge() {
+        return this.age;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+      
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
     /**
-     * The method <code>getContactRegistrationDate</code> gives us the date when both Asset Users
+     * The method <code>getGenders</code> gives us the Gender of the represented Asset user
+     *
+     * @return the Gender of the Asset user
+     */
+    @Override
+    public Genders getGenders() {
+        return genders;
+    }
+
+    public void setGenders(Genders genders) {
+        if(genders != null)
+           this.genders = genders;
+        else
+            this.genders = Genders.INDEFINITE;
+    }
+
+    /**
+     * The method <code>getRegistrationDate</code> gives us the date when both Asset Users
      * exchanged their information and accepted each other as contacts.
      *
      * @return the date
@@ -104,9 +147,67 @@ public class AssetUserActorRecord implements ActorAssetUser {
         return this.registrationDate;
     }
 
+    public void setRegistrationDate(long registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    /**
+     * The method <code>getLastConnectionDate</code> gives us the Las Connection Date of the represented Asset User
+     *
+     * @return the Connection Date
+     */
     @Override
     public long getLastConnectionDate() {
         return this.lastConnectionDate;
+    }
+
+    public void setLastConnectionDate(long lastConnectionDate) {
+        this.lastConnectionDate = lastConnectionDate;
+    }
+
+    /**
+     * The method <code>getConnectionState</code> gives us the connection state of the represented Asset User
+     *
+     * @return the Connection state
+     */
+    @Override
+    public ConnectionState getConnectionState() {
+        return this.connectionState;
+    }
+
+    public void setConnectionState(ConnectionState connectionState) {
+        if(connectionState != null)
+           this.connectionState = connectionState;
+        else
+            this.connectionState = ConnectionState.CONNECTED;
+    }
+
+    /**
+     * The method <code>getLocationLatitude</code> gives us the Location of the represented Asset user
+     *
+     * @return the Location Latitude of the Asset user
+     */
+    @Override
+    public Double getLocationLatitude() {
+        return this.locationLatitude;
+    }
+
+    public void setLocationLatitude(Double locationLatitude) {
+        this.locationLatitude = locationLatitude;
+    }
+
+    /**
+     * The method <code>getLocationLongitude</code> gives us the Location of the represented Asset user
+     *
+     * @return the Location Longitude of the Asset user
+     */
+    @Override
+    public Double getLocationLongitude() {
+        return this.locationLongitude;
+    }
+
+    public void setLocationLongitude(Double locationLongitude) {
+        this.locationLongitude = locationLongitude;
     }
 
     /**
@@ -119,59 +220,11 @@ public class AssetUserActorRecord implements ActorAssetUser {
         return this.profileImage.clone();
     }
 
-    /**
-     * The method <code>getContactState</code> gives us the contact state of the represented Asset User
-     *
-     * @return the contact state
-     */
-    @Override
-    public ConnectionState getConnectionState() {
-        return this.connectionState;
-    }
-
-    /**
-     * The method <code>getLocation</code> gives us the Location of the represented Asset user
-     *
-     * @return the Location of the Asset user
-     */
-    @Override
-    public Double getLocationLatitude() {
-        return this.locationLatitude;
-    }
-
-    @Override
-    public Double getLocationLongitude() {
-        return this.locationLongitude;
-    }
-
-    /**
-     * The method <code>getLocation</code> gives us the Location of the represented Asset user
-     *
-     * @return the Location of the Asset user
-     */
-//    @Override
-//    public Location getLocation() {
-//        return this.location;
-//    }
-
-    /**
-     * The method <code>getGender</code> gives us the Gender of the represented Asset user
-     *
-     * @return the Gender of the Asset user
-     */
-    @Override
-    public Genders getGender() {
-        return this.genders;
-    }
-
-    /**
-     * The method <code>getAge</code> gives us the Age of the represented Asset user
-     *
-     * @return the Location of the Asset user
-     */
-    @Override
-    public String getAge() {
-        return this.age;
+    public void setProfileImage(byte[] profileImage) {
+        if(profileImage != null)
+            this.profileImage = profileImage;
+        else
+            this.profileImage = profileImage.clone();
     }
 
     /**
@@ -182,5 +235,10 @@ public class AssetUserActorRecord implements ActorAssetUser {
     @Override
     public CryptoAddress getCryptoAddress() {
         return this.cryptoAddress;
+    }
+
+    public void setCryptoAddress(CryptoAddress cryptoAddress) {
+        if(cryptoAddress != null)
+            this.cryptoAddress = cryptoAddress;
     }
 }

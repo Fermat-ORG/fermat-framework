@@ -227,10 +227,6 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
                 InetSocketAddress inetSocketAddress2 = new InetSocketAddress(REGTEST_SERVER_2_ADDRESS, REGTEST_SERVER_2_PORT);
                 PeerAddress peerAddress2 = new PeerAddress(inetSocketAddress2);
                 peers.addAddress(peerAddress2);
-
-                InetSocketAddress inetSocketAddress3 = new InetSocketAddress(REGTEST_SERVER_3_ADDRESS, REGTEST_SERVER_3_PORT);
-                PeerAddress peerAddress3 = new PeerAddress(inetSocketAddress3);
-                peers.addAddress(peerAddress3);
             } else
             /**
              * If it is not RegTest, then I will get the Peers by DNSDiscovery
