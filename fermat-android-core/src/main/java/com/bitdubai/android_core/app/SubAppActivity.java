@@ -15,6 +15,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppSessionManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.*;
@@ -33,6 +34,9 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.bitdubai.fermat.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by Matias Furszyfer
@@ -50,6 +54,8 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
 
 
+
+
     /**
      *  Called when the activity is first created
      * @param savedInstanceState
@@ -58,6 +64,9 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        activePlatforms = getIntent().getParcelableArrayListExtra(StartActivity.ACTIVE_PLATFORMS);
+
 
         setActivityType(ActivityType.ACTIVITY_TYPE_SUB_APP);
 
@@ -398,21 +407,12 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
             loadBasicUI(activity);
 
-            /**
-             * Paint the screenPager
-             */
             if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
                 initialisePaging();
             }
-            /**
-             * Paint tabs
-             */
             if (activity.getTabStrip() != null) {
                 setPagerTabs(getSubAppRuntimeMiddleware().getLastSubApp(), activity.getTabStrip(), subAppSession);
             }
-            /**
-             * Paint single screen
-             */
             if (activity.getFragments().size() == 1) {
                 setOneFragmentInScreen();
             }
@@ -473,24 +473,11 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     subAppSession = getSubAppSessionManager().getSubAppsSession(installedSubApp.getSubAppType());
                 } else {
                     ManagerFactory managerFactory = new ManagerFactory(((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext());
-                    //com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager toolManager = getToolManager();
-                    //WalletStoreModuleManager walletStoreModuleManager = getWalletStoreModuleManager();
-                    //WalletPublisherModuleManager walletPublisherModuleManager = getWalletPublisherManager();
                     subAppSession = getSubAppSessionManager().openSubAppSession(
                             installedSubApp.getSubAppType(),
                             getErrorManager(),
                             managerFactory.getModuleManagerFactory(installedSubApp.getSubAppType())
                     );
-
-//                            getWalletFactoryManager(),
-//                            toolManager,
-//                            walletStoreModuleManager,
-//                            walletPublisherModuleManager,
-//                            getIntraUserModuleManager(),
-//                            getAssetFactoryModuleManager(),
-//                            getCryptoBrokerIdentityModuleManager(),
-//                            getCryptoCustomerIdentityModuleManager(),
-//                            getIntraWalletUserManager());
                 }
             }
 

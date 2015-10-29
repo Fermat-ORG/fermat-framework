@@ -58,6 +58,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     private InstalledWallet lastWallet;
 
 
+
     /**
      * Called when the activity is first created
      *
@@ -502,6 +503,9 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
      */
     @Override
     public void onNavigationDrawerItemSelected(int position, String activityCode) {
+        if(activityCode.equals("develop_mode")){
+            developMode = true;
+        }
         changeActivity(activityCode);
     }
 }
