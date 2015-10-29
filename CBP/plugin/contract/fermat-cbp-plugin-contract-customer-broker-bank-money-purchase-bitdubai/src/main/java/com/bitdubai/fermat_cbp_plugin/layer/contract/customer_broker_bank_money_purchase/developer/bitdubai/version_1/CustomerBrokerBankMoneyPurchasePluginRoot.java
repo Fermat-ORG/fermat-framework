@@ -153,7 +153,7 @@ public class CustomerBrokerBankMoneyPurchasePluginRoot implements CustomerBroker
 
     @Override
     public void deleteCustomerBrokerBankMoneyPurchase(UUID contractID) throws CantDeleteCustomerBrokerBankMoneyPurchaseException {
-
+        this.customerBrokerBankMoneyPurchaseContractDao.deleteCustomerBrokerBankMoneyPurchase(contractID);
     }
 
     @Override
