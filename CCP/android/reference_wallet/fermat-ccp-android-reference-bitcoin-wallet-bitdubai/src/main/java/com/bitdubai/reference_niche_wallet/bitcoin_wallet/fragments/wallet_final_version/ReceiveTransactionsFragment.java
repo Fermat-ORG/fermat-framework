@@ -264,8 +264,8 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
                     {
                         try
                         {
-                            if(!walletContact.isConnection)
-                                cryptoWallet.convertConnectionToContact(walletContact.name,
+
+                        cryptoWallet.convertConnectionToContact(walletContact.name,
                                                                         Actors.INTRA_USER,
                                                                         walletContact.actorPublicKey,
                                                                         new byte[0],

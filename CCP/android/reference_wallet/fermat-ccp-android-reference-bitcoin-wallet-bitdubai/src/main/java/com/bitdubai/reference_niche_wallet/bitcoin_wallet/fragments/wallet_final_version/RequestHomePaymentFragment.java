@@ -194,7 +194,7 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
                     //add connection like a wallet contact
                     try
                     {
-                        if(!walletContact.isConnection)
+                        if(walletContact.isConnection)
                             cryptoWallet.convertConnectionToContact(walletContact.name,
                                     Actors.INTRA_USER,
                                     walletContact.actorPublicKey,

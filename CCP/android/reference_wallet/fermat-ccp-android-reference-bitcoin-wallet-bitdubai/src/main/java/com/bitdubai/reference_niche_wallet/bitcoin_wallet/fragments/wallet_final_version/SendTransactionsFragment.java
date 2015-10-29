@@ -256,7 +256,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                     //add connection like a wallet contact
                     try
                     {
-                        if(!walletContact.isConnection)
+                        if(walletContact.isConnection)
                             cryptoWallet.convertConnectionToContact(walletContact.name,
                                     Actors.INTRA_USER,
                                     walletContact.actorPublicKey,
