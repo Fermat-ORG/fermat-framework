@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantDeleteRecordDataBaseException extends FermatException {
 
-    private static final String DEFAULT_MESSAGE = "CAN'T DELETE RECORD IN DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T DELETE RECORD IN DATABASE EXCEPTION";
 
     public CantDeleteRecordDataBaseException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);

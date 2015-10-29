@@ -318,8 +318,8 @@ public class AssetFactoryMiddlewarePluginRoot implements DealsWithWalletManager,
     public void checkAssetDraft() throws CantLoadTableToMemoryException, CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
         //TODO: Revisar el metodo assetFactoryMiddlewareManager.checkAssetDraft()
         boolean isCheckAssetDraft = true;//assetFactoryMiddlewareManager.checkAssetDraft();
-        if (isCheckAssetDraft){
-            //startMonitorAgent();
+        if (isCheckAssetDraft){                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+            startMonitorAgent();
         }
     }
 

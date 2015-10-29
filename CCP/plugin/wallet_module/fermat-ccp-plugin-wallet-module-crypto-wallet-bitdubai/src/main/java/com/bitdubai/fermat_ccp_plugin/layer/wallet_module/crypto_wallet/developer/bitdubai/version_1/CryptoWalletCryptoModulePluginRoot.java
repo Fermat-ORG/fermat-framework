@@ -2,19 +2,9 @@ package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.develop
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 
-
-import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -53,7 +43,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -76,48 +65,9 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
         DealsWithWalletContacts,//
         LogManagerForDevelopers {
 
-
-    @Override
-    public List<AddonVersionReference> getNeededAddonReferences() {
-        return new ArrayList<>();
+    public CryptoWalletCryptoModulePluginRoot() {
+        super(new PluginVersionReference(new Version()));
     }
-
-    @Override
-    public List<PluginVersionReference> getNeededPluginReferences() {
-        List<PluginVersionReference> rList = new ArrayList<>();
-
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.ACTOR          , Plugins.EXTRA_WALLET_USER     , Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.BASIC_WALLET   , Plugins.BITCOIN_WALLET        , Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.IDENTITY       , Plugins.INTRA_WALLET_USER     , Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.MIDDLEWARE     , Plugins.WALLET_CONTACTS       , Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_ADDRESSES      , Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_TRANSMISSION   , Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.REQUEST        , Plugins.CRYPTO_PAYMENT_REQUEST, Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION    , Plugins.OUTGOING_EXTRA_USER   , Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION    , Plugins.OUTGOING_INTRA_ACTOR  , Developers.BITDUBAI, new Version()));
-
-        return rList;
-    }
-
-    @Override
-    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    protected void validateAndAssignReferences() {
-
-    }
-
-    @Override
-    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
-        return null;
-    }
-
-    /**
-     * Service Interface member variables.
-     */
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     /**
      * DealsWithBitcoinWallet Interface member variables.
@@ -190,29 +140,6 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
      */
     private WalletContactsManager walletContactsManager;
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
-
-    /**
-     * Service Interface implementation.
-     */
-    @Override
-    public void start() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
 
     @Override
     public CryptoWallet getCryptoWallet() throws CantGetCryptoWalletException {
@@ -339,10 +266,6 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
     }
 
     @Override
-    public void setId(UUID pluginId) {
-    }
-
-    @Override
     public void setCryptoTransmissionNetworkService(CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager) {
         this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
     }
@@ -367,8 +290,4 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
         this.intraWalletUserManager = intraWalletUserManager;
     }
 
-//    @Override
-//    public void setActorIntraUserManager(ActorIntraUserManager actorIntraUserManager) {
-//        this.intraUserManager = actorIntraUserManager;
-//    }
 }

@@ -1,3 +1,9 @@
+/*
+ * @#TemplateNetworkServiceLocal.java - 2015
+ * Copyright bitDubai.com., All rights reserved.
+ * You may not modify, use, reproduce or distribute this software.
+ * BITDUBAI/CONFIDENTIAL
+ */
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -22,20 +28,19 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceLocal</code> represent
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal</code> represent
  * the remote network services locally
  * <p/>
  * This class extend of the <code>java.util.Observer</code> class,  its used on the software design pattern called: The observer pattern,
  * for more info see @link https://en.wikipedia.org/wiki/Observer_pattern
  * <p/>
  * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 15/10/2015.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 21/07/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
 public class CommunicationNetworkServiceLocal implements Observer, NetworkServiceLocal {
-
 
     /**
      * Represent the profile of the remote network service
@@ -94,9 +99,9 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
         try {
 
             FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(senderIdentityPublicKey,  //Sender NetworkService
-                    remoteNetworkServiceProfile.getIdentityPublicKey(),   //Receiver
-                    messageContent,                //Message Content
-                    FermatMessageContentType.TEXT);//Type
+                                                                                                    remoteNetworkServiceProfile.getIdentityPublicKey(),   //Receiver
+                                                                                                    messageContent,                //Message Content
+                                                                                                    FermatMessageContentType.TEXT);//Type
             /*
              * Configure the correct status
              */
