@@ -158,7 +158,7 @@ public class CustomerBrokerBankMoneyPurchasePluginRoot implements CustomerBroker
 
     @Override
     public DatabaseTableRecord getCustomerBrokerBankMoneySaleContractTable() {
-        return null;
+        return this.customerBrokerBankMoneyPurchaseContractDao.getCustomerBrokerBankMoneyPurchaseContractTable();
     }
 
     @Override
