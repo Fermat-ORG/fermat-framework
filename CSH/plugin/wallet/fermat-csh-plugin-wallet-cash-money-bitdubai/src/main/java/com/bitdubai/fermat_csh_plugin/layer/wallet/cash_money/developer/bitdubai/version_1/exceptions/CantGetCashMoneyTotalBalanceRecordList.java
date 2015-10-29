@@ -3,9 +3,9 @@ package com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitduba
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by francisco on 14/10/15.
+ * Created by francisco on 28/10/15.
  */
-public class CantDebitRecord extends FermatException {
+public class CantGetCashMoneyTotalBalanceRecordList extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantDebitRecord extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantDebitRecord(String message, Exception cause, String context, String possibleReason) {
+    public CantGetCashMoneyTotalBalanceRecordList(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
