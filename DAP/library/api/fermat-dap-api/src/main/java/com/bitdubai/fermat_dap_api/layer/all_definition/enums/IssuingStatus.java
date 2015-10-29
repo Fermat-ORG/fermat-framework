@@ -6,7 +6,9 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 28/10/15.
  */
 public enum IssuingStatus {
-    ISSUED("ISED");
+    ISSUED("ISED"),
+    ISSUING("ISSG"),
+    UNEXPECTED_INTERRUPTION("UINT");
 
     private String code;
 
@@ -20,6 +22,10 @@ public enum IssuingStatus {
         switch (code) {
             case "ISED":
                 return IssuingStatus.ISSUED;
+            case "ISSG":
+                return IssuingStatus.ISSUING;
+            case "UINT":
+                return IssuingStatus.UNEXPECTED_INTERRUPTION;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the IssuingStatus enum.");
         }
