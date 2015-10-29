@@ -30,14 +30,15 @@ public enum CashCurrencyType implements FermatEnum {
 
     public static CashCurrencyType getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "USD": return CashCurrencyType.DOLAR_USA;
-            case "EUR": return com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType.EURO;
-            case "AUD": return com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType.DOLAR_AUSTRALIANO;
-            case "CAD": return com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType.DOLAR_CANADIENCE;
-            case "CHF": return com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType.FRANCO_SUIZO;
-            case "GBP": return com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType.LIBRA_ESTERLINA;
-            case "JPY": return com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType.YEN_JAPONES;
-            case "BS": return com.bitdubai.fermat_cbp_api.all_definition.enums.CashCurrencyType.BOLIVARES;
+
+            case "USD": return DOLAR_USA;
+            case "EUR": return EURO;
+            case "AUD": return DOLAR_AUSTRALIANO;
+            case "CAD": return DOLAR_CANADIENCE;
+            case "CHF": return FRANCO_SUIZO;
+            case "GBP": return LIBRA_ESTERLINA;
+            case "JPY": return YEN_JAPONES;
+            case "BS": return BOLIVARES;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the CashCurrencyType enum");
         }
     }
