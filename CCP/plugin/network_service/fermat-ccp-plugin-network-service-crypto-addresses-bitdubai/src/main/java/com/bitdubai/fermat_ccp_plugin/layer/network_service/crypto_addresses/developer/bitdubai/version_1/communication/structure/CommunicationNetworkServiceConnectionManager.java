@@ -3,7 +3,6 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.de
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.database.IncomingMessageDao;
@@ -18,16 +17,16 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager</code>
  * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 15/10/2015.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 31/05/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
 public class CommunicationNetworkServiceConnectionManager implements NetworkServiceConnectionManager {
-
 
     /**
      * Represent the communicationsClientConnection
@@ -126,7 +125,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
             /*
              * ask to the communicationLayerManager to connect to other network service
              */
-        communicationsClientConnection.requestDiscoveryVpnConnection(applicantParticipant, applicantNetworkService, remoteParticipant);
+            communicationsClientConnection.requestDiscoveryVpnConnection(applicantParticipant, applicantNetworkService, remoteParticipant);
 
     }
 
@@ -141,7 +140,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
     public void closeConnection(String remoteNetworkServicePublicKey) {
         //Remove the instance and stop his threads
         if(communicationNetworkServiceLocalsCache.containsKey(remoteNetworkServicePublicKey))
-            communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
+        communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
 
     }
 
