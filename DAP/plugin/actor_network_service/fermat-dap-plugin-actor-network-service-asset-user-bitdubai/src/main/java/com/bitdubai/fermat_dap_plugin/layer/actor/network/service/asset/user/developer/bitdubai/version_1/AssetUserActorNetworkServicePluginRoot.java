@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -37,15 +36,15 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.NewReceiveMessagesNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.util.JsonAssetUserANSAttNamesConstants;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantSendCryptoAddressException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.ActorNetworkServiceAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.agents.AssetUserActorNetworkServiceAgent;
@@ -59,8 +58,6 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.dev
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers_asset_user.CompleteAssetUserRegistrationNotificationEventHandler;
-import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers_asset_user.NewReceiveMessagesAssetUserRemoteNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
@@ -84,6 +81,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.Ev
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -449,6 +448,15 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
+
+         /*
+         * Listen and handle New Message Receive Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this,eventManager));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
     }
 
 
@@ -682,6 +690,9 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
                     } else {
 
+                        return  actorAssetUserRegisteredList;
+
+                   /*
                         StringBuffer contextBuffer = new StringBuffer();
                         contextBuffer.append("Plugin ID: " + pluginId);
                         contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
@@ -701,7 +712,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                         //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
                         throw pluginStartException;
-
+                    */
                     }
 
             }else{
@@ -766,10 +777,18 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
                     CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetUserDestination.getPublicKey());
 
+                Gson gson = new Gson();
+                JsonObject packetContent = new JsonObject();
+                packetContent.addProperty(JsonAssetUserANSAttNamesConstants.ISSUER, gson.toJson(actorAssetIssuerSender));
+                packetContent.addProperty(JsonAssetUserANSAttNamesConstants.USER,gson.toJson(actorAssetUserDestination));
+
+
+                String messageContentIntoJson = gson.toJson(packetContent);
+
                     if (communicationNetworkServiceLocal != null) {
 
                         //Send the message
-                        communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), null, null);
+                        communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), null, messageContentIntoJson);
 
                     } else {
 
@@ -778,7 +797,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                      */
                         FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetIssuerSender.getPublicKey(),//Sender
                                 actorAssetUserDestination.getPublicKey(), //Receiver
-                                null,                //Message Content
+                                messageContentIntoJson,                //Message Content
                                 FermatMessageContentType.TEXT);//Type
 
                     /*
@@ -869,11 +888,17 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                 CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetIssuerDestination.getPublicKey());
 
                 Gson gson = new Gson();
+                JsonObject packetContent = new JsonObject();
+                packetContent.addProperty(JsonAssetUserANSAttNamesConstants.ISSUER, gson.toJson(actorAssetIssuerDestination));
+                packetContent.addProperty(JsonAssetUserANSAttNamesConstants.USER,gson.toJson(actorAssetUserSender));
+                packetContent.addProperty(JsonAssetUserANSAttNamesConstants.CRYPTOADDRES,gson.toJson(cryptoAddress));
+
+                String messageContentIntoJson = gson.toJson(packetContent);
 
                 if (communicationNetworkServiceLocal != null) {
 
                     //Send the message
-                    communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), null, gson.toJson(cryptoAddress));
+                    communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), null, messageContentIntoJson);
 
                 } else {
 
@@ -882,7 +907,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                      */
                     FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetUserSender.getPublicKey(),//Sender
                             actorAssetIssuerDestination.getPublicKey(), //Receiver
-                            gson.toJson(cryptoAddress),                //Message Content
+                            messageContentIntoJson,                //Message Content
                             FermatMessageContentType.TEXT);//Type
 
                     /*
