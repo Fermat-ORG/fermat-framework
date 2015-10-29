@@ -26,8 +26,11 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listener
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.NewCryptoAddressReceiveAssetUserActorNotificationEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.NewCryptoAddressRequestAssetUserActorNotificationEventListener;
 
+//import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorAssetUserCompleteRegistrationNotificationEventListener;
+
 //import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ActorAssetUserCompleteRegistrationNotificationEvent;
 //import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorAssetUserCompleteRegistrationNotificationEventListener;
+
 
 /**
  * The enum <code>EventType</code>
@@ -777,26 +780,26 @@ public enum EventType implements FermatEventEnum {
 //            return new ActorAssetUserCompleteRegistrationNotificationEvent(this);
 //        }
 //    },
+//    NEW_CRYPTO_ADDRESS_REQUEST_ASSET_USER("NCA_REQUEST_AU") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new NewCryptoAddressRequestAssetUserActorNotificationEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new NewCryptoAddressRequestAssetUserActorNotificationEvent(this);
+//        }
+//    },
+//
+//    NEW_CRYPTO_ADDRESS_RECEIVE_ASSET_USER("NCA_RECEIVE_AU") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new NewCryptoAddressReceiveAssetUserActorNotificationEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new NewCryptoAddressReceiveAssetUserActorNotificationEvent(this);
+//        }
+//    },
     //DAP EVENT END
-    NEW_CRYPTO_ADDRESS_REQUEST_ASSET_USER("NCA_REQUEST_AU") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new NewCryptoAddressRequestAssetUserActorNotificationEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new NewCryptoAddressRequestAssetUserActorNotificationEvent(this);
-        }
-    },
-
-    NEW_CRYPTO_ADDRESS_RECEIVE_ASSET_USER("NCA_RECEIVE_AU") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new NewCryptoAddressReceiveAssetUserActorNotificationEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new NewCryptoAddressReceiveAssetUserActorNotificationEvent(this);
-        }
-    },
 
     ACTOR_ASSET_USER_REQUEST_CRYPTO_ADDRESS_NOTIFICATION("AAU_REQUEST_CAN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
@@ -870,6 +873,28 @@ public enum EventType implements FermatEventEnum {
             return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingActorRequestConnectionNotificationEvent(this);
         }
 
+    },
+    NEW_CRYPTO_ADDRESS_REQUEST_ASSET_USER("NCA_REQUEST_AU") {
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new NewCryptoAddressRequestAssetUserActorNotificationEventListener(this, fermatEventMonitor);
+        }
+
+        @Override
+        public FermatEvent getNewEvent() {
+            return new NewCryptoAddressRequestAssetUserActorNotificationEvent(this);
+        }
+    },
+    NEW_CRYPTO_ADDRESS_RECEIVE_ASSET_USER("NCA_RECEIVE_AU") {
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new NewCryptoAddressReceiveAssetUserActorNotificationEventListener(this, fermatEventMonitor);
+        }
+
+        @Override
+        public FermatEvent getNewEvent() {
+            return new NewCryptoAddressReceiveAssetUserActorNotificationEvent(this);
+        }
     };
 
 

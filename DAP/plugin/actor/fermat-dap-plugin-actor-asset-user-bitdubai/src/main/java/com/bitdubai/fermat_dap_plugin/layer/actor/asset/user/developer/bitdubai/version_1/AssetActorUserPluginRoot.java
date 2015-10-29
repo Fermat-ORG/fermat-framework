@@ -406,6 +406,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
     @Override
     public void handleRequestCryptoAddresFromRemoteAssetUserEvent(ActorAssetIssuer actorAssetIssuer, ActorAssetUser actorAssetUser) {
         try {
+            System.out.println("=============Actor Asset Inicia  Peticion Crypto=========");
             CryptoAddress genesisAddress = getGenesisAddress();
             registerGenesisAddressInCryptoAddressBook(genesisAddress);
             this.assetUserActorNetworkServiceManager.sendCryptoAddress(actorAssetUser, actorAssetIssuer, genesisAddress);
@@ -424,6 +425,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 
     public void handleDeliveredCryptoAddresFromRemoteAssetUserEvent(ActorAssetUser actorAssetUser, CryptoAddress cryptoAddress) {
         try {
+            System.out.println("=============Actor Asset Inicia  Recepcion Crypto=========");
             //todo actualizar tabla de usuarios registrados con nueva crypto address.
             this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(actorAssetUser);
             System.out.println("=============Actor Asset User Recibida Crypto================");

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -20,6 +21,7 @@ public class NewCryptoAddressRequestAssetUserActorNotificationEventListener impl
      * @param eventType
      * @param fermatEventMonitor
      */
+
     public NewCryptoAddressRequestAssetUserActorNotificationEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
         this.eventType = eventType;
         this.fermatEventMonitor = fermatEventMonitor;
@@ -38,11 +40,11 @@ public class NewCryptoAddressRequestAssetUserActorNotificationEventListener impl
     /**
      * Throw the method <code>setEventHandler</code> you can set a handler for the listener.
      *
-     * @param eventHandler handler for the event listener.
+     * @param fermatEventHandler handler for the event listener.
      */
     @Override
-    public void setEventHandler(FermatEventHandler eventHandler) {
-        this.fermatEventHandler = eventHandler;
+    public void setEventHandler(FermatEventHandler fermatEventHandler) {
+        this.fermatEventHandler = fermatEventHandler;
     }
 
     /**
@@ -50,6 +52,11 @@ public class NewCryptoAddressRequestAssetUserActorNotificationEventListener impl
      *
      * @return an instance of FermatEventHandler.
      */
+//    @Override
+//    public FermatEventEnum getEventType() {
+//        return eventType;
+//    }
+
     @Override
     public FermatEventHandler getEventHandler() {
         return this.fermatEventHandler;
@@ -60,6 +67,7 @@ public class NewCryptoAddressRequestAssetUserActorNotificationEventListener impl
      *
      * @param fermatEvent an instance of fermat event to be listened.
      */
+
     @Override
     public void raiseEvent(FermatEvent fermatEvent) {
         try {
