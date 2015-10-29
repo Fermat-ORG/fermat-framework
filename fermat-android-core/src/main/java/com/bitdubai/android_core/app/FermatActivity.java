@@ -998,6 +998,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         try {
 
             if(developMode){
+                activePlatforms = new ArrayList();
+                activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
                 activePlatforms.add(Platforms.DIGITAL_ASSET_PLATFORM);
                 activePlatforms.add(Platforms.CRYPTO_BROKER_PLATFORM);
             }
@@ -1055,10 +1057,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             pager.setAdapter(this.screenPagerAdapter);
 
             if (pager.getBackground() == null) {
-                //Drawable d = Drawable.createFromStream(getAssets().open("drawables/fondo.jpg"), null);
-                //Bitmap bitmap = fastblur(BitmapFactory.decodeStream(getAssets().open("drawables/fondo.jpg")), 5);
-                //Drawable drawable = new BitmapDrawable(bitmap);
-                //pager.setBackground(drawable);
+                Drawable d = Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null);
+                pager.setBackground(d);
             }
 
 
