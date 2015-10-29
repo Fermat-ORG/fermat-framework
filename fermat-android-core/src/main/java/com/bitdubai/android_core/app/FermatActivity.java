@@ -134,6 +134,7 @@ import static java.lang.System.gc;
 public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications, PaintActivtyFeactures, Observer,FermatNotificationListener {
 
     private static final String TAG = "fermat-core";
+    public static final String DEVELOP_MODE = "develop_mode";
     private MainMenu mainMenu;
 
     /**
