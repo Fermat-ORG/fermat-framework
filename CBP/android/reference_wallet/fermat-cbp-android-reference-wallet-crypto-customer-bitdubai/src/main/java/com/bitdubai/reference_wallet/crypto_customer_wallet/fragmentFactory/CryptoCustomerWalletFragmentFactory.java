@@ -9,8 +9,12 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Wallet
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.MainFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.CloseContractDetailsFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.CloseNegotiationDetailsFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.OpenContractDetailsFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.OpenNegotiationDetailsFragment;
 
-import static com.bitdubai.reference_wallet.crypto_customer_wallet.fragmentFactory.CryptoCustomerWalletFragmentsEnumType.MAIN_FRAGMENT;
+import static com.bitdubai.reference_wallet.crypto_customer_wallet.fragmentFactory.CryptoCustomerWalletFragmentsEnumType.*;
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
@@ -19,11 +23,18 @@ public class CryptoCustomerWalletFragmentFactory implements WalletFragmentFactor
 
     @Override
     public Fragment getFragment(String code, WalletSession walletSession, WalletSettings WalletSettings, WalletResourcesProviderManager walletResourcesProviderManager) throws FragmentNotFoundException {
-
         CryptoCustomerWalletFragmentsEnumType fragment = CryptoCustomerWalletFragmentsEnumType.getValue(code);
-        if (fragment == MAIN_FRAGMENT) {
+        
+        if (fragment == MAIN_FRAGMENT) 
             return MainFragment.newInstance();
-        }
+        if (fragment == CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS)
+            return OpenNegotiationDetailsFragment.newInstance();
+        if (fragment == CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS)
+            return CloseNegotiationDetailsFragment.newInstance();
+        if (fragment == CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACT_DETAILS)
+            return OpenContractDetailsFragment.newInstance();
+        if (fragment == CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS)
+            return CloseContractDetailsFragment.newInstance();
 
         throw createFragmentNotFoundException(fragment);
     }
