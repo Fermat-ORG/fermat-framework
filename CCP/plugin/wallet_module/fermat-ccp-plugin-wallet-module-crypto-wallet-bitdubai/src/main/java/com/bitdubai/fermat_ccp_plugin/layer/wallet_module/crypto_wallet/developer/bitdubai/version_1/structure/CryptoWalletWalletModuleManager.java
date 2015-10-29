@@ -11,6 +11,9 @@ import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateE
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantSetPhotoException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.ExtraUserNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetIntraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.IntraUserNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionSummary;
@@ -221,11 +224,15 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
     @Override
     public List<CryptoWalletWalletContact> listWalletContacts(String walletPublicKey) throws CantGetAllWalletContactsException {
         try {
+
+            Actor actor;
             List<CryptoWalletWalletContact> finalRecordList = new ArrayList<>();
             finalRecordList.clear();
             WalletContactsSearch walletContactsSearch = walletContactsRegistry.searchWalletContact(walletPublicKey);
             for(WalletContactRecord r : walletContactsSearch.getResult()){
-                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey());
+
+                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(),r.getWalletPublicKey());
+
                 finalRecordList.add(new CryptoWalletWalletModuleWalletContact(r, image));
             }
             return  finalRecordList;
@@ -244,9 +251,10 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
             //get wallet contacts
             WalletContactsSearch walletContactsSearch = walletContactsRegistry.searchWalletContact(walletPublicKey);
 
+
             for(WalletContactRecord r : walletContactsSearch.getResult()){
                 System.out.println("wallet contact: "+r);
-                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey());
+                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(),r.getWalletPublicKey());
                 contactMap.put(r.getActorPublicKey(), new CryptoWalletWalletModuleWalletContact(r, image));
             }
 
@@ -254,11 +262,12 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
             List<IntraWalletUser> intraUserList = intraUserManager.getConnectedIntraWalletUsers(intraUserPublicKey);
 
             for(IntraWalletUser intraUser : intraUserList) {
-                System.out.println("intra user: "+intraUser);
+                System.out.println("intra user: " + intraUser);
                 if (!contactMap.containsKey(intraUser.getPublicKey()))
                     contactMap.put(intraUser.getPublicKey(), new CryptoWalletWalletModuleWalletContact(enrichIntraUser(intraUser, walletPublicKey), walletPublicKey));
             }
             return new ArrayList<>(contactMap.values());
+
 
         } catch (CantGetAllWalletContactsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -270,16 +279,24 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
     }
 
     private byte[] getImageByActorType(final Actors actorType     ,
-                                       final String actorPublicKey) throws CantGetAllWalletContactsException,
+                                       final String actorPublicKey, final String walletPublicKey) throws CantGetAllWalletContactsException,
                                                                            ExtraUserNotFoundException       ,
                                                                            CantGetExtraUserException        {
-
+        Actor actor;
         switch (actorType) {
             case EXTRA_USER:
-                Actor actor = extraUserManager.getActorByPublicKey(actorPublicKey);
+                 actor = extraUserManager.getActorByPublicKey(actorPublicKey);
                return actor.getPhoto();
             case INTRA_USER:
-                return new  byte[0];
+                try {
+                    actor = intraUserManager.getActorByPublicKey(walletPublicKey,actorPublicKey);
+                    return actor.getPhoto();
+
+                }
+                catch(CantGetIntraUserException| IntraUserNotFoundException e){
+                    throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, e);
+                }
+
             default:
                 throw new CantGetAllWalletContactsException("UNEXPECTED ACTOR TYPE",null,"","incomplete switch");
         }
@@ -291,17 +308,21 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
                                                                        Integer max,
                                                                        Integer offset) throws CantGetAllWalletContactsException {
         try {
+            Actor actor;
             List<CryptoWalletWalletContact> finalRecordList = new ArrayList<>();
             finalRecordList.clear();
             WalletContactsSearch walletContactsSearch = walletContactsRegistry.searchWalletContact(walletPublicKey);
             for(WalletContactRecord r : walletContactsSearch.getResult(max, offset)){
-                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey());
+
+                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(),r.getWalletPublicKey());
+
                 finalRecordList.add(new CryptoWalletWalletModuleWalletContact(r, image));
             }
             return  finalRecordList;
         } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException e) {
             throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, e);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
@@ -382,12 +403,12 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
                 throw new ContactNameAlreadyExistsException(ContactNameAlreadyExistsException.DEFAULT_MESSAGE, null, null, null);
 
             } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
-                //String actorPublicKey = createActor(actorAlias, actorConnectedType, actorPhoto); Solo contempla Extra User y en este caso tengo Intra User
+                String actorPublicKey = createActor(walletPublicKey,actorConnectedPublicKey,actorAlias, actorConnectedType, actorPhoto);
 
                 List<CryptoAddress> cryptoAddresses = new ArrayList<>();
                 cryptoAddresses.add(actorCryptoAddress);
                 WalletContactRecord walletContactRecord = walletContactsRegistry.createWalletContact(
-                        identityWalletPublicKey,
+                        actorPublicKey,
                         actorAlias,
                         "",
                         "",
@@ -426,7 +447,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
                 throw new ContactNameAlreadyExistsException(ContactNameAlreadyExistsException.DEFAULT_MESSAGE, null, null, null);
 
             } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
-                String actorPublicKey = createActor(actorAlias, actorType, photo);
+                String actorPublicKey = createActor("","",actorAlias, actorType, photo);
                 List<CryptoAddress> cryptoAddresses = new ArrayList<>();
                 cryptoAddresses.add(receivedCryptoAddress);
                 WalletContactRecord walletContactRecord = walletContactsRegistry.createWalletContact(
@@ -503,6 +524,9 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
                 case EXTRA_USER:
                     this.extraUserManager.setPhoto(actorPublicKey, photo);
                     break;
+                case INTRA_USER:
+                    this.intraUserManager.setPhoto(actorPublicKey, photo);
+                    break;
                 default:
                     throw new CantUpdateWalletContactException("Actor not expected", null, "The actor type is:" + actor.getCode(), "Incomplete switch");
             }
@@ -511,13 +535,22 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
         } catch (CantSetPhotoException e) {
             throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, null, "The actor type is:" + actor.getCode(), " error trying to get the actor photo");
         }
+        catch (com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantSetPhotoException e) {
+            throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, null, "The actor type is:" + actor.getCode(), " error trying to get the actor photo");
+        }
+        catch (com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.IntraUserNotFoundException e) {
+            throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, null, "The actor type is:" + actor.getCode(), " i cannot find the actor");
+        }
     }
 
     @Override
     public CryptoWalletWalletContact findWalletContactById(UUID contactId) throws CantFindWalletContactException, WalletContactNotFoundException {
         try {
             WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByContactId(contactId);
-            byte[] image = getImageByActorType(walletContactRecord.getActorType(), walletContactRecord.getActorPublicKey());
+
+
+         byte[] image = getImageByActorType(walletContactRecord.getActorType(), walletContactRecord.getActorPublicKey(),walletContactRecord.getWalletPublicKey());
+
 
             return new CryptoWalletWalletModuleWalletContact(walletContactRecord, image);
         } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactException e) {
@@ -963,13 +996,20 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
     }
 
 
-    private String createActor(String actorName, Actors actorType, byte[] photo) throws CantCreateOrRegisterActorException {
+    private String createActor(String walletPublicKey, String actorPublicKey,String actorName, Actors actorType, byte[] photo) throws CantCreateOrRegisterActorException {
         switch (actorType){
             case EXTRA_USER:
                 try {
                     Actor actor = extraUserManager.createActor(actorName, photo);
                     return actor.getActorPublicKey();
                 } catch (CantCreateExtraUserException e) {
+                    throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");
+                }
+            case INTRA_USER:
+                try {
+                    Actor actor = intraUserManager.createActor(walletPublicKey,actorPublicKey,actorName, photo);
+                    return actor.getActorPublicKey();
+                } catch (CantCreateIntraUserException e) {
                     throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");
                 }
 
@@ -1009,7 +1049,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
             switch (bitcoinWalletTransaction.getTransactionType()) {
                 case CREDIT:
                     try {
-                        involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType());
+                        involvedActor = getActorByActorPublicKeyAndType(walletPublicKey,bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType());
                         WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(),walletPublicKey);
                         if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
@@ -1022,7 +1062,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
                     break;
                 case DEBIT:
                     try {
-                        involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType());
+                        involvedActor = getActorByActorPublicKeyAndType(walletPublicKey,bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType());
                         WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
                         if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
@@ -1040,7 +1080,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
         }
     }
 
-    private Actor getActorByActorPublicKeyAndType(String actorPublicKey, Actors actorType) throws CantGetActorException {
+    private Actor getActorByActorPublicKeyAndType(String walletPublicKey,String actorPublicKey, Actors actorType) throws CantGetActorException {
         Actor actor;
         switch (actorType) {
             case EXTRA_USER:
@@ -1051,13 +1091,13 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
                     throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, e, null, "Cant get Extra User on DataBase");
                 }
             case INTRA_USER:
-                //try {
-                    //TODO verificar si  usa
-                  //  actor = intraUserManager.getActorByPublicKey(actorPublicKey);
-                   // return actor;
-//                } catch (CantGetNotificationException | NotificationNotFoundException e) {
-//                    throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, e, null, "Cant get Intra User on DataBase");
-//                }
+                try {
+
+                    actor = intraUserManager.getActorByPublicKey(walletPublicKey,actorPublicKey);
+                    return actor;
+               } catch (CantGetIntraUserException| IntraUserNotFoundException e) {
+                   throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, e, null, "Cant get Intra User on DataBase");
+               }
 
             default:
                 throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, null, null, null);
