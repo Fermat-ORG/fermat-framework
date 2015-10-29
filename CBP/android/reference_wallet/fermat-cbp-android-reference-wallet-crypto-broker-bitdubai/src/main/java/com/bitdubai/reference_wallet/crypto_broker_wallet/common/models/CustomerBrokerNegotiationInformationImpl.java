@@ -26,6 +26,7 @@ public class CustomerBrokerNegotiationInformationImpl implements CustomerBrokerN
     private static final Calendar calendar = Calendar.getInstance();
 
     private ActorIdentityImpl customerIdentity;
+    private ActorIdentityImpl brokerIdentity;
     private Map<ClauseType, String> summary;
     private Collection<ClauseInformation> clauses;
     private NegotiationStatus status;
@@ -34,6 +35,7 @@ public class CustomerBrokerNegotiationInformationImpl implements CustomerBrokerN
     public CustomerBrokerNegotiationInformationImpl(String customerAlias, String merchandise, String paymentMethod, String paymentCurrency, NegotiationStatus status) {
 
         this.customerIdentity = new ActorIdentityImpl(customerAlias, new byte[0]);
+        this.brokerIdentity = new ActorIdentityImpl("BrokerAlias", new byte[0]);
 
         String currencyQty = decimalFormat.format(random.nextFloat() * 100);
         String exchangeRate = decimalFormat.format(random.nextFloat());
