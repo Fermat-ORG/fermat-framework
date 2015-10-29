@@ -253,10 +253,11 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
             // get intra user connections
             List<IntraWalletUser> intraUserList = intraUserManager.getConnectedIntraWalletUsers(intraUserPublicKey);
 
-            for(IntraWalletUser intraUser : intraUserList)
-               if (!contactMap.containsKey(intraUser.getPublicKey()))
-                contactMap.put(intraUser.getPublicKey(), new CryptoWalletWalletModuleWalletContact(enrichIntraUser(intraUser, walletPublicKey), walletPublicKey));
-
+            for(IntraWalletUser intraUser : intraUserList) {
+                System.out.println("intra user: "+intraUser);
+                if (!contactMap.containsKey(intraUser.getPublicKey()))
+                    contactMap.put(intraUser.getPublicKey(), new CryptoWalletWalletModuleWalletContact(enrichIntraUser(intraUser, walletPublicKey), walletPublicKey));
+            }
             return new ArrayList<>(contactMap.values());
 
         } catch (CantGetAllWalletContactsException e) {
