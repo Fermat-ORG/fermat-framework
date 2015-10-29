@@ -41,6 +41,16 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.FermatCryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionStates;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantAcceptCryptoRequestException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantGetTransactionStateException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantSetToCreditedInWalletException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantSetToSeenByCryptoVaultException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -52,15 +62,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionStates;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantAcceptCryptoRequestException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantGetTransactionStateException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantSetToCreditedInWalletException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantSetToSeenByCryptoVaultException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.crypto_transmission_database.CryptoTransmissionNetworkServiceDatabaseConstants;
@@ -121,25 +122,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {
 
-    @Override
-    public List<AddonVersionReference> getNeededAddonReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<PluginVersionReference> getNeededPluginReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    protected void validateAndAssignReferences() {
-
-    }
 
     @Override
     public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
@@ -290,7 +272,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      * Constructor
      */
     public CryptoTransmissionNetworkServicePluginRoot() {
-        super();
+        super(new PluginVersionReference(new Version()));
         this.listenersAdded = new ArrayList<>();
         this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
         this.networkServiceType    = NetworkServiceType.CRYPTO_TRANSMISSION;

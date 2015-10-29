@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorNetworkServiceAssetUser;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.NewCryptoAddressRequestAssetUserActorNotificationEvent;
 
 /**
  * Created by Nerio on 28/10/15.
@@ -24,14 +25,16 @@ public class NewCryptoAddressRequestAssetUserActorNotificationEventHandler imple
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
         if (((Service) this.actorNetworkServiceAssetUser).getStatus() == ServiceStatus.STARTED) {
-//
-//            NewCryptoAddressRequestAssetUserActorNotificationEvent newCryptoAddressRequestAssetUserActorNotificationEvent = (NewCryptoAddressRequestAssetUserActorNotificationEvent) platformEvent;
-//
-//            ActorAssetIssuer actorAssetIssuerSender = (ActorAssetIssuer) newCryptoAddressRequestAssetUserActorNotificationEvent.getActorAssetIssuerSender();
-//
-//            ActorAssetUser actorAssetUserDestination = (ActorAssetUser) newCryptoAddressRequestAssetUserActorNotificationEvent.getActorAssetUserDestination();
-//
-//            this.actorNetworkServiceAssetUser.handleRequestCryptoAddresFromRemoteAssetUserEvent(actorAssetIssuerSender,actorAssetUserDestination);
+
+            System.out.println("Actor Asset User Request Crypto Address - handleEvent =" + fermatEvent);
+
+            NewCryptoAddressRequestAssetUserActorNotificationEvent newCryptoAddressRequestAssetUserActorNotificationEvent = (NewCryptoAddressRequestAssetUserActorNotificationEvent) fermatEvent;
+
+            ActorAssetIssuer actorAssetIssuerSender = (ActorAssetIssuer) newCryptoAddressRequestAssetUserActorNotificationEvent.getActorAssetIssuerSender();
+
+            ActorAssetUser actorAssetUserDestination = (ActorAssetUser) newCryptoAddressRequestAssetUserActorNotificationEvent.getActorAssetUserDestination();
+
+            this.actorNetworkServiceAssetUser.handleRequestCryptoAddresFromRemoteAssetUserEvent(actorAssetIssuerSender,actorAssetUserDestination);
         }
     }
 }

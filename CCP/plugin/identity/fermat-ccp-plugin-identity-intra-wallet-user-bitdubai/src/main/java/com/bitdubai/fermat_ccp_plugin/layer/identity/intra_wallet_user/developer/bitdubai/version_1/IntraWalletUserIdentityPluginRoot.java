@@ -26,48 +26,51 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.DealsWithIntraUsersNetworkService;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
+
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.DealsWithWalletManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingAddressExchangeRequestsException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+
+
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.DealsWithIntraUsersNetworkService;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDao;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDeveloperDatabaseFactory;
-import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.event_handlers.CryptoAddressRequestedEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressRequestEventException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingAddressExchangeRequestsException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.event_handlers.CryptoAddressRequestedEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraWalletUserIdentityDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantListIntraWalletUserIdentitiesException;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity;
+import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentityCryptoAddressGenerationService;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentityVaultAdministrator;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.DealsWithWalletManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,7 +95,7 @@ import java.util.UUID;
 
 public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
         implements DatabaseManagerForDevelopers,
-        DealsWithCryptoAddressesNetworkService,//
+                   DealsWithCryptoAddressesNetworkService,//
                    DealsWithCryptoVault,
                    DealsWithCryptoAddressBook,
                    DealsWithDeviceUser,
@@ -101,40 +104,12 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
                    DealsWithPluginDatabaseSystem,
                    DealsWithPluginFileSystem,
                    DealsWithWalletManager,
-        DealsWithIntraUsersNetworkService,//
+                   DealsWithIntraUsersNetworkService,//
                    IntraWalletUserManager,
-                   LogManagerForDevelopers,
-                   Service,
-                   Plugin {
+                   LogManagerForDevelopers {
 
-    @Override
-    public List<AddonVersionReference> getNeededAddonReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<PluginVersionReference> getNeededPluginReferences() {
-        List<PluginVersionReference> rList = new ArrayList<>();
-
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_ADDRESSES, Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.INTRA_WALLET_USER, Developers.BITDUBAI, new Version()));
-
-        return rList;
-    }
-
-    @Override
-    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    protected void validateAndAssignReferences() {
-
-    }
-
-    @Override
-    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
-        return null;
+    public IntraWalletUserIdentityPluginRoot() {
+        super(new PluginVersionReference(new Version()));
     }
 
     private IntraWalletUserIdentityDao intraWalletUserIdentityDao;

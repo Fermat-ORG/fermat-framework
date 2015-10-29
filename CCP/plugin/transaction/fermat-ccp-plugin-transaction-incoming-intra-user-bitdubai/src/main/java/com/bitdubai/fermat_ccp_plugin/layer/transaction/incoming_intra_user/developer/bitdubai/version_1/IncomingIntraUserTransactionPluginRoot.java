@@ -18,14 +18,19 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.DealsWithCryptoTransmissionNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.transaction.incoming_intra_user.IncomingIntraUserManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.DealsWithIncomingCrypto;
+import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.database.IncomingIntraUserTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIncomingIntraUserCryptoRegistryException;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.CantStartIncomingIntraUserEventRecorderServiceException;
@@ -36,10 +41,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_intra_user.deve
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.structure.IncomingIntraUserMetadataMonitorAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.structure.IncomingIntraUserRegistry;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.structure.IncomingIntraUserRelayAgent;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
-import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.DealsWithIncomingCrypto;
-import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -75,34 +76,13 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
                    DealsWithCryptoAddressBook,
                    IncomingIntraUserManager {
 
-    @Override
-    public List<AddonVersionReference> getNeededAddonReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<PluginVersionReference> getNeededPluginReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    protected void validateAndAssignReferences() {
-
-    }
-
-    @Override
-    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
-        return null;
+    public IncomingIntraUserTransactionPluginRoot() {
+        super(new PluginVersionReference(new Version()));
     }
 
     /*
-         * DealsWithBitcoinWallet Interface member variables
-         */
+             * DealsWithBitcoinWallet Interface member variables
+             */
     private BitcoinWalletManager bitcoinWalletManager;
 
     /*

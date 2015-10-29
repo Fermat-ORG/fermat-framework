@@ -24,6 +24,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -97,32 +98,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractPlugin
         DealsWithPluginDatabaseSystem,
         NetworkService {
 
-    @Override
-    public List<AddonVersionReference> getNeededAddonReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<PluginVersionReference> getNeededPluginReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    protected void validateAndAssignReferences() {
-
-    }
-
-    @Override
-    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
-        return null;
-    }
-
-    /**
+       /**
      * DealsWithErrors Interface member variables.
      */
     private ErrorManager errorManager;
@@ -211,7 +187,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractPlugin
      * Constructor
      */
     public CryptoPaymentRequestNetworkServicePluginRoot() {
-        super();
+        super(new PluginVersionReference(new Version()));
         this.listenersAdded = new ArrayList<>();
         this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
         this.networkServiceType    = NetworkServiceType.CRYPTO_PAYMENT_REQUEST;

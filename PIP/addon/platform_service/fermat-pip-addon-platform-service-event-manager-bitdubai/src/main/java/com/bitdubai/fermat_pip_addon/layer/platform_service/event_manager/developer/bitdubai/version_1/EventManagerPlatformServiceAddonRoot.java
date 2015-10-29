@@ -29,15 +29,26 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class EventManagerPlatformServiceAddonRoot extends AbstractAddon implements EventManager {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER, referenceManagerClass = ErrorManager.class)
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
     private FermatEventMonitor fermatEventMonitor;
 
+    @Override
+    public final void start() throws CantStartPluginException {
+
+        System.out.println("if i'm not null i will show you something: "+errorManager);
+
+        this.fermatEventMonitor = new EventManagerPlatformServiceEventMonitor(this.errorManager);
+
+        this.serviceStatus = ServiceStatus.STARTED;
+
+    }
+
     /**
      * EventManager Interface member variables.
      */
-    private final Map<String, List<FermatEventListener>> listenersMap;
+    private final ConcurrentHashMap<String, List<FermatEventListener>> listenersMap;
 
     public EventManagerPlatformServiceAddonRoot() {
         super(new AddonVersionReference(new Version()));
@@ -49,12 +60,12 @@ public class EventManagerPlatformServiceAddonRoot extends AbstractAddon implemen
      * EventManager Interface implementation.
      */
     @Override
-    public FermatEventListener getNewListener(FermatEventEnum eventType) {
+    public FermatEventListener getNewListener(final FermatEventEnum eventType) {
         return eventType.getNewListener(fermatEventMonitor);
     }
 
     @Override
-    public FermatEvent getNewEvent(FermatEventEnum eventType) {
+    public FermatEvent getNewEvent(final FermatEventEnum eventType) {
         return eventType.getNewEvent();
     }
 
@@ -103,7 +114,8 @@ public class EventManagerPlatformServiceAddonRoot extends AbstractAddon implemen
     }
 
     private String buildMapKey(final FermatEventEnum fermatEnum) {
-        StringBuilder builder = new StringBuilder();
+
+        final StringBuilder builder = new StringBuilder();
 
         if (fermatEnum.getPlatform() != null)
             builder.append(fermatEnum.getPlatform().getCode());
@@ -111,17 +123,6 @@ public class EventManagerPlatformServiceAddonRoot extends AbstractAddon implemen
         builder.append(fermatEnum.getCode());
 
         return builder.toString();
-    }
-
-    @Override
-    public final void start() throws CantStartPluginException {
-
-        System.out.println("si me asignaron no voy a estar en null: " + errorManager);
-
-        this.fermatEventMonitor = new EventManagerPlatformServiceEventMonitor(this.errorManager);
-
-        this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
 }
