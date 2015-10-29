@@ -23,9 +23,9 @@ import org.java_websocket.framing.FramedataImpl1;
 public class WsCommunicationsCloudClientPingAgent extends Thread {
 
     /*
-     * Represent the sleep time for send new ping (30000 milliseconds)
+     * Represent the sleep time for send new ping (120000 milliseconds)
      */
-    private static final long SLEEP_TIME = 30000;
+    private static final long SLEEP_TIME = 120000;
 
     /**
      * Represent the wsCommunicationsCloudClientChannel

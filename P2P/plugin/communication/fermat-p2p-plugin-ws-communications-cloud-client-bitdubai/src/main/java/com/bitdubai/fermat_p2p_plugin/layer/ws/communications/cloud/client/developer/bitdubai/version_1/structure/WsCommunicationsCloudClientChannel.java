@@ -142,10 +142,10 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
      */
     @Override
     public void onWebsocketPong(WebSocket conn, Framedata f) {
-        System.out.println(" WsCommunicationVPNClient - Pong message receiveRemote from node (" + conn.getRemoteSocketAddress() + ") connection is alive");
-        this.isPongMessagePending = Boolean.FALSE;
-        //System.out.println(" WsCommunicationsCloudClientChannel - conn = " + conn);
-        //System.out.println(" WsCommunicationsCloudClientChannel - f = "+f);
+        if (f.getOpcode() == Framedata.Opcode.PONG){
+            System.out.println(" WsCommunicationVPNClient - Pong message receiveRemote from node ("+conn.getLocalSocketAddress()+") connection is alive");
+            this.isPongMessagePending = Boolean.FALSE;
+        }
     }
 
     /**

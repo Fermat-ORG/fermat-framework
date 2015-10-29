@@ -76,6 +76,11 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
     private boolean isActive;
 
     /**
+     * Represent is the PongMessagePending
+     */
+    private boolean isPongMessagePending;
+
+    /**
      * Constructor with parameters
      * @param serverURI
      */
@@ -86,6 +91,7 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
         this.remoteParticipantNetworkService = remoteParticipantNetworkService;
         this.vpnServerIdentity = vpnServerIdentity;
         this.pendingIncomingMessages = new ArrayList<>();
+        this.isPongMessagePending = Boolean.FALSE;
     }
 
 
@@ -99,6 +105,7 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
         FramedataImpl1 frame = new FramedataImpl1(Framedata.Opcode.PING);
         frame.setFin(true);
         getConnection().sendFrame(frame);
+        this.isPongMessagePending = Boolean.TRUE;
     }
 
     /**
@@ -110,9 +117,12 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
      */
     @Override
     public void onWebsocketPong(WebSocket conn, Framedata f) {
-        System.out.println(" WsCommunicationVPNClient - Pong message receiveRemote from node ("+conn.getRemoteSocketAddress()+") connection is alive");
-        //System.out.println(" WsCommunicationsCloudClientChannel - conn = " + conn);
-        //System.out.println(" WsCommunicationsCloudClientChannel - f = "+f);
+
+        if (f.getOpcode() == Framedata.Opcode.PONG){
+            System.out.println(" WsCommunicationVPNClient - Pong message receiveRemote from node ("+conn.getRemoteSocketAddress()+") connection is alive");
+            this.isPongMessagePending = Boolean.FALSE;
+        }
+
     }
 
     /**
@@ -249,10 +259,10 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
          * Construct a fermat packet whit the message to transmit
          */
         FermatPacket fermatPacketRequest = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(vpnServerIdentity,                  //Destination
-                                                                                                                    vpnClientIdentity.getPublicKey(),   //Sender
-                                                                                                                    fermatMessage.toJson(),             //Message Content
-                                                                                                                    FermatPacketType.MESSAGE_TRANSMIT,  //Packet type
-                                                                                                                    vpnClientIdentity.getPrivateKey()); //Sender private key
+                vpnClientIdentity.getPublicKey(),   //Sender
+                fermatMessage.toJson(),             //Message Content
+                FermatPacketType.MESSAGE_TRANSMIT,  //Packet type
+                vpnClientIdentity.getPrivateKey()); //Sender private key
         /*
          * Send the encode packet to the server
          */
@@ -366,5 +376,13 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
      */
     public PlatformComponentProfile getRemoteParticipantNetworkService() {
         return remoteParticipantNetworkService;
+    }
+
+    /**
+     * Is Pong Message Pending
+     * @return boolean
+     */
+    public boolean isPongMessagePending() {
+        return isPongMessagePending;
     }
 }

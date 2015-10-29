@@ -150,6 +150,13 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
 
                             try {
 
+                                /*
+                                 * If a pong message respond pending
+                                 */
+                                if (wsCommunicationVPNServer.isPongMessagePending()){
+                                    throw new RuntimeException("Connection maybe not active");
+                                }
+
                                 wsCommunicationVPNServer.sendPingMessage();
 
                             }catch (Exception e){
