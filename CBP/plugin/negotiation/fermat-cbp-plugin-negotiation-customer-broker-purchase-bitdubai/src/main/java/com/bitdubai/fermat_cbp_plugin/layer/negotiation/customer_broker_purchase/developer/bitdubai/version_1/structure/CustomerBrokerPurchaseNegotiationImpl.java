@@ -6,10 +6,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantAddNewClausesException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListPurchaseClauseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetNextClauseTypeException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantUpdateClausesException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerPurchaseNegotiationDao;
@@ -78,7 +77,7 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     }
 
     @Override
-    public Collection<Clause> getClauses() throws CantGetListPurchaseClauseException {
+    public Collection<Clause> getClauses() throws CantGetListClauseException {
         return this.customerBrokerPurchaseNegotiationDao.getClauses(this.negotiationId);
     }
 

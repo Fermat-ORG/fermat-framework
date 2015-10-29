@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.utils;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddonsEnum;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
+import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystems;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -16,7 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 public class AddonVersionReference {
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
-    private static final int HASH_PRIME_NUMBER_ADD = 2819;
+    private static final int HASH_PRIME_NUMBER_ADD     = 2819;
 
     private       AddonDeveloperReference addonDeveloperReference;
     private final Version                 version                ;
@@ -33,13 +33,28 @@ public class AddonVersionReference {
         this.version                 = version                ;
     }
 
-    public AddonVersionReference(final Platforms platform,
-                                 final Layers layer,
-                                 final FermatAddonsEnum addonEnum,
+    public AddonVersionReference(final Platforms  platform ,
+                                 final Layers     layer    ,
+                                 final Addons     addonEnum,
                                  final Developers developer,
-                                 final Version version){
+                                 final Version    version  ){
 
         PlatformReference platformReference = new PlatformReference(platform);
+        LayerReference layerReference = new LayerReference(platformReference, layer);
+        AddonReference addonReference = new AddonReference(layerReference, addonEnum);
+
+        this.addonDeveloperReference = new AddonDeveloperReference(addonReference, developer);
+        this.version                 = version;
+    }
+
+    public AddonVersionReference(final OperativeSystems operativeSystem,
+                                 final Platforms        platform       ,
+                                 final Layers           layer          ,
+                                 final Addons           addonEnum      ,
+                                 final Developers       developer      ,
+                                 final Version          version        ){
+
+        PlatformReference platformReference = new PlatformReference(operativeSystem, platform);
         LayerReference layerReference = new LayerReference(platformReference, layer);
         AddonReference addonReference = new AddonReference(layerReference, addonEnum);
 

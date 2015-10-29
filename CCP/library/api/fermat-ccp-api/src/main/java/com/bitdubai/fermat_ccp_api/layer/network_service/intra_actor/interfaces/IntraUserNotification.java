@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.IntraUserNotificationDescriptor;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.NotificationDescriptor;
 
 import java.util.UUID;
 
@@ -41,7 +41,7 @@ public interface IntraUserNotification {
      *
      * @return the descriptor of the notification
      */
-    IntraUserNotificationDescriptor getNotificationDescriptor();
+    NotificationDescriptor getNotificationDescriptor();
 
     long getSentDate();
 

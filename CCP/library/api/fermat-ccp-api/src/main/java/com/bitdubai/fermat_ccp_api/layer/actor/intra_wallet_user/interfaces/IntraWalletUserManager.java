@@ -13,7 +13,7 @@ import java.util.List;
  * The interface <code>IntraWalletUserManager</code>
  * defines the methods to administrate the intra users,
  */
-public interface IntraWalletUserManager extends com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager {
+public interface IntraWalletUserManager {
 
     /**
      * The method <code>askIntraWalletUserForAcceptance</code> registers a new intra user in the list
@@ -80,6 +80,15 @@ public interface IntraWalletUserManager extends com.bitdubai.fermat_ccp_api.laye
      * @throws CantGetIntraWalletUsersException
      */
     List<IntraWalletUser> getAllIntraWalletUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraWalletUsersException;
+
+    /**
+     * The method <code>getAcceptedIntraWalletUsers</code> shows the list of all intra users that are accepted for the logged in one.
+     *
+     * @param intraUserLoggedInPublicKey
+     * @return
+     * @throws CantGetIntraWalletUsersException
+     */
+    List<IntraWalletUser> getConnectedIntraWalletUsers(String intraUserLoggedInPublicKey) throws CantGetIntraWalletUsersException;
 
     /**
      * The method <code>getWaitingYourAcceptanceIntraWalletUsers</code> shows the list of all intra users

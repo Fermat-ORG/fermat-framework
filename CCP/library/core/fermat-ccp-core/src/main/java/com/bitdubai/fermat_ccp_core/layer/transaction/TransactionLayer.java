@@ -8,7 +8,6 @@ import com.bitdubai.fermat_ccp_core.layer.transaction.incoming_extra_user.Incomi
 import com.bitdubai.fermat_ccp_core.layer.transaction.incoming_intra_user.IncomingIntraUserPluginSubsystem;
 import com.bitdubai.fermat_ccp_core.layer.transaction.outgoing_extra_user.OutgoingExtraUserPluginSubsystem;
 import com.bitdubai.fermat_ccp_core.layer.transaction.outgoing_intra_actor.OutgoingIntraActorPluginSubsystem;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.CCPPlugins;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 25/09/2015.

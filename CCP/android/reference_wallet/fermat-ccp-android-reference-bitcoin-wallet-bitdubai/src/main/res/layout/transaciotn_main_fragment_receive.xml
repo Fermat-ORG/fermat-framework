@@ -161,7 +161,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="You don t have\nsend"
+            android:text="You don t have\n any received transactions"
             android:textColor="#000"
             android:textSize="20sp" />
 

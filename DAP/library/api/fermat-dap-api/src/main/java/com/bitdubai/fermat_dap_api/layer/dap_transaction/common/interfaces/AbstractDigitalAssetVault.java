@@ -19,6 +19,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantG
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
@@ -33,6 +34,7 @@ import java.util.UUID;
 public abstract class AbstractDigitalAssetVault implements DigitalAssetVault{
 
     //public String LOCAL_STORAGE_PATH="digital-asset-metadata/";
+    public AssetUserWalletManager assetUserWalletManager;
     public final String digitalAssetFileName="digital-asset.xml";
     public final String digitalAssetMetadataFileName="digital-asset-metadata.xml";
     public String LOCAL_STORAGE_PATH="digital-asset-swap/";
@@ -193,6 +195,13 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault{
             throw new CantSetObjectException("assetIssuerWalletManager is null");
         }
         this.assetIssuerWalletManager=assetIssuerWalletManager;
+    }
+
+    public void setAssetUserWalletManager(AssetUserWalletManager assetUserWalletManager) throws CantSetObjectException {
+        if(assetUserWalletManager==null){
+            throw new CantSetObjectException("assetUserWalletManager is null");
+        }
+        this.assetUserWalletManager=assetUserWalletManager;
     }
 
     public boolean isAssetTransactionHashAvailableBalanceInAssetWallet(String genesisTransactionHash, String assetPublicKey) throws DAPException{

@@ -12,7 +12,7 @@ To achieve this a first layer of _reference wallets_ are developed to address di
 A second layer of _niche wallets_ combine reference wallets functionalities and add their own touch. + 
 This enables a third layer of *_branded wallets_* that can be generated just by changing the look and feel and navigation structure of niche wallets.   
 
-The goal is the allow any company big or small, brand or institution to have their own digital wallet with *any* subset of the whole functionality built for the entire users community.
+The goal is the allow any company big or small, brand or institution to have their own digital wallet with *any* subset of the whole functionality built for the entire user community.
 
 === Fermat Community
 

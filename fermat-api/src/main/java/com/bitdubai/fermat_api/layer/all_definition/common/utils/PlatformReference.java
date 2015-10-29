@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.utils;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystems;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 
 /**
@@ -11,17 +12,30 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 public class PlatformReference {
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
-    private static final int HASH_PRIME_NUMBER_ADD = 2819;
+    private static final int HASH_PRIME_NUMBER_ADD     = 2819;
 
-    private final Platforms platform;
+    private final OperativeSystems operativeSystem;
+    private final Platforms        platform       ;
 
     public PlatformReference(final Platforms platform) {
 
-        this.platform = platform;
+        this.operativeSystem = OperativeSystems.INDIFFERENT;
+        this.platform        = platform;
     }
 
-    public Platforms getPlatform() {
+    public PlatformReference(final OperativeSystems operativeSystem,
+                             final Platforms        platform       ) {
+
+        this.operativeSystem = operativeSystem;
+        this.platform        = platform       ;
+    }
+
+    public final Platforms getPlatform() {
         return platform;
+    }
+
+    public final OperativeSystems getOperativeSystem() {
+        return operativeSystem;
     }
 
     @Override
@@ -31,12 +45,14 @@ public class PlatformReference {
 
         PlatformReference that = (PlatformReference) o;
 
-        return platform.equals(that.platform);
+        return platform.equals(that.getPlatform()) &&
+                operativeSystem.equals(that.getOperativeSystem());
     }
 
     @Override
     public final int hashCode() {
         int c = 0;
+        c += operativeSystem.hashCode();
         c += platform.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
@@ -44,7 +60,8 @@ public class PlatformReference {
     @Override
     public String toString() {
         return "PlatformReference{" +
-                "platform=" + platform +
+                "operativeSystem=" + operativeSystem +
+                ", platform=" + platform +
                 '}';
     }
 
