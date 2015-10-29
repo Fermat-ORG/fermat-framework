@@ -122,10 +122,10 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
 
                     switch (paymentMethod) {
                         case CRYPTO_MONEY:
-                            return ClauseType.BROKER_CRYPTO_ADDRESS;
+                            return ClauseType.CUSTOMER_CRYPTO_ADDRESS;
 
                         case BANK_MONEY:
-                            return ClauseType.BROKER_BANK;
+                            return ClauseType.CUSTOMER_BANK;
 
                         case CASH_ON_HAND_MONEY:
                             return ClauseType.PLACE_TO_MEET;

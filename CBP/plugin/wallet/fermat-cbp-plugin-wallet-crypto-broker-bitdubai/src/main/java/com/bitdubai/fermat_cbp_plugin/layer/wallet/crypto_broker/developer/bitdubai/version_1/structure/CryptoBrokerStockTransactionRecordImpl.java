@@ -17,9 +17,8 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     private static final int HASH_PRIME_NUMBER_ADD = 7213;
 
     private UUID transactionId;
-    private KeyPair keyPairWallet;
-    private KeyPair keyPairBroker;
-    private KeyPair keyPairCustomer;
+    private KeyPair walletKeyPair;
+    private String ownerPublicKey;
     private BalanceType balanceType;
     private TransactionType transactionType;
     private float amount;
@@ -31,9 +30,8 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
 
     public CryptoBrokerStockTransactionRecordImpl(
             UUID transactionId,
-            KeyPair keyPairWallet,
-            KeyPair keyPairBroker,
-            KeyPair keyPairCustomer,
+            KeyPair walletKeyPair,
+            String ownerPublicKey,
             BalanceType balanceType,
             TransactionType transactionType,
             CurrencyType currencyType,
@@ -44,9 +42,8 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
             String memo
     ){
         this.transactionId = transactionId;
-        this.keyPairWallet = keyPairWallet;
-        this.keyPairBroker = keyPairBroker;
-        this.keyPairCustomer = keyPairCustomer;
+        this.walletKeyPair = walletKeyPair;
+        this.ownerPublicKey = ownerPublicKey;
         this.balanceType = balanceType;
         this.transactionType = transactionType;
         this.amount = amount;
@@ -64,20 +61,12 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     public TransactionType getTransactionType() { return this.transactionType; }
 
     @Override
-    public String getWalletPublicKey() { return null; }
+    public String getWalletPublicKey() { return this.walletKeyPair.getPublicKey(); }
 
     @Override
-    public String getOwnerPublicKey() { return null; }
-
-    public void setBalanceType(TransactionType transaction) { this.transactionType = transaction; }
+    public String getOwnerPublicKey() { return this.ownerPublicKey; }
 
     public CurrencyType getCurrencyType() { return this.currencyType; }
-
-    public String getPublicKeyWallet() { return this.keyPairWallet.getPublicKey(); }
-
-    public String getPublicKeyBroker() { return this.keyPairBroker.getPublicKey(); }
-
-    public String getPublicKeyCustomer() { return this.keyPairCustomer.getPublicKey(); }
 
     public float getAmount() { return this.amount; }
 
@@ -93,14 +82,14 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
         if(!(o instanceof CryptoBrokerStockTransactionRecord))
             return false;
         CryptoBrokerStockTransactionRecord compare = (CryptoBrokerStockTransactionRecord) o;
-        return keyPairBroker.getPublicKey().equals(compare.getOwnerPublicKey()) && keyPairWallet.getPublicKey().equals(compare.getWalletPublicKey());
+        return ownerPublicKey.equals(compare.getOwnerPublicKey()) && walletKeyPair.getPublicKey().equals(compare.getWalletPublicKey());
     }
 
     @Override
     public int hashCode(){
         int c = 0;
-        c += keyPairBroker.hashCode();
-        c += keyPairWallet.hashCode();
+        c += ownerPublicKey.hashCode();
+        c += walletKeyPair.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 }
