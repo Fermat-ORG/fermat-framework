@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -78,6 +79,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWit
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ActorAssetUserCompleteRegistrationNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
@@ -500,6 +502,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
 
 
+
             /*
              * Verify if the communication cloud client is active
              */
@@ -793,7 +796,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                     if (communicationNetworkServiceLocal != null) {
 
                         //Send the message
-                        communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), null, messageContentIntoJson);
+                        communicationNetworkServiceLocal.sendMessage(actorAssetIssuerSender.getPublicKey(), actorAssetUserDestination.getPublicKey(), messageContentIntoJson);
 
                     } else {
 
@@ -903,7 +906,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                 if (communicationNetworkServiceLocal != null) {
 
                     //Send the message
-                    communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), null, messageContentIntoJson);
+                    communicationNetworkServiceLocal.sendMessage(actorAssetUserSender.getPublicKey(), actorAssetIssuerDestination.getPublicKey(), messageContentIntoJson);
 
                 } else {
 
@@ -1097,6 +1100,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
 
 
+
         }
 
         /*
@@ -1132,9 +1136,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
             FermatEvent event = eventManager.getNewEvent(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
             event.setSource(EventSource.ACTOR_ASSET_USER);
-
-            //((AssetUserActorCompleteRegistrationNotificationEvent) event).setActorAssetUser(actorAssetUserNewRegsitered);
-
+            ((ActorAssetUserCompleteRegistrationNotificationEvent) event).setActorAssetUser(actorAssetUserNewRegsitered);
             eventManager.raiseEvent(event);
         }
     }
@@ -1364,6 +1366,8 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
         }
 
     }
+
+
 
 }
 

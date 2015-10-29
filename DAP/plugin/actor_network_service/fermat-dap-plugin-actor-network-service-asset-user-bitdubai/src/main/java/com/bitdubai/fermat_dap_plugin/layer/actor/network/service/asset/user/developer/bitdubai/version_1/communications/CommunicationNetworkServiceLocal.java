@@ -81,25 +81,23 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
      */
     public CommunicationNetworkServiceLocal(PlatformComponentProfile remoteNetworkServiceProfile,
                                             ErrorManager errorManager, EventManager eventManager,
-                                            OutgoingMessageDao outgoingMessageDao,
-                                            NetworkServiceType networkServiceTypePluginRoot) {
+                                            OutgoingMessageDao outgoingMessageDao) {
         this.remoteNetworkServiceProfile = remoteNetworkServiceProfile;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
         this.outgoingMessageDao = outgoingMessageDao;
-        this.networkServiceTypePluginRoot = networkServiceTypePluginRoot;
     }
 
 
     /**
      * (non-javadoc)
      */
-    public void sendMessage(final String senderIdentityPublicKey,final String pk, final String messageContent) {
+    public void sendMessage(final String senderIdentityPublicKey,final String receiverPublicKey, final String messageContent) {
 
         try {
 
             FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(senderIdentityPublicKey,  //Sender NetworkService
-                    remoteNetworkServiceProfile.getIdentityPublicKey(),   //Receiver
+                    receiverPublicKey,   //Receiver
                     messageContent,                //Message Content
                     FermatMessageContentType.TEXT);//Type
             /*
