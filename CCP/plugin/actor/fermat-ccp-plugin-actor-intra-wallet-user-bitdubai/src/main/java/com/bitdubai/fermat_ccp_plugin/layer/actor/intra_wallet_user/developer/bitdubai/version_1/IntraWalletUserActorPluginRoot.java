@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.NotificationNotFoundException;
@@ -87,29 +88,8 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
         IntraWalletUserManager,
         LogManagerForDevelopers {
 
-    @Override
-    public List<AddonVersionReference> getNeededAddonReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<PluginVersionReference> getNeededPluginReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    protected void validateAndAssignReferences() {
-
-    }
-
-    @Override
-    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
-        return null;
+    public IntraWalletUserActorPluginRoot() {
+        super(new PluginVersionReference(new Version()));
     }
 
     private IntraWalletUserActorDao intraWalletUserActorDao;
