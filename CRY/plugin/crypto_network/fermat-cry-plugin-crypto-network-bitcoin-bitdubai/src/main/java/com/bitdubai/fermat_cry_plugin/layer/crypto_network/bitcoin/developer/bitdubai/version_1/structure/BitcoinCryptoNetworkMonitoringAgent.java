@@ -28,6 +28,7 @@ import org.bitcoinj.params.RegTestParams;
 
 import java.net.InetSocketAddress;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by rodrigo on 08/06/15.
@@ -276,16 +277,26 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
         }
     }
 
-    public void broadcastTransaction(Transaction transaction) {
-        TransactionBroadcast broadcast = peers.broadcastTransaction(transaction, 2);
+    public void broadcastTransaction(Transaction transaction) throws ExecutionException, InterruptedException {
+        if (!peers.isRunning())
+            peers.start();
+
+        peers.downloadBlockChain();
+
+        while (peers.numConnectedPeers() == 0){
+            peers.stop();
+            peers.addPeerDiscovery(new DnsDiscovery(networkParameters));
+            peers.start();
+            peers.downloadBlockChain();
+        }
+
+        TransactionBroadcast broadcast = peers.broadcastTransaction(transaction);
         broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
             @Override
             public void onBroadcastProgress(double progress) {
                 System.out.println("broadCast progress: " + progress);
             }
         });
-
-        broadcast.setMinConnections(1);
-        broadcast.broadcast();
+        broadcast.future().get();
     }
 }
