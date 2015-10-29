@@ -20,7 +20,7 @@ import java.util.Random;
 /**
  * Created by nelson on 28/10/15.
  */
-public class CustomerBrokerNegotiationInformationImpl implements CustomerBrokerNegotiationInformation {
+public class NegotiationInformationTestData implements CustomerBrokerNegotiationInformation {
     private static final Random random = new Random(321515131);
     private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
     private static final Calendar calendar = Calendar.getInstance();
@@ -32,7 +32,7 @@ public class CustomerBrokerNegotiationInformationImpl implements CustomerBrokerN
     private NegotiationStatus status;
     private long date;
 
-    public CustomerBrokerNegotiationInformationImpl(String customerAlias, String merchandise, String paymentMethod, String paymentCurrency, NegotiationStatus status) {
+    public NegotiationInformationTestData(String customerAlias, String merchandise, String paymentMethod, String paymentCurrency, NegotiationStatus status) {
 
         this.customerIdentity = new ActorIdentityImpl(customerAlias, new byte[0]);
         this.brokerIdentity = new ActorIdentityImpl("BrokerAlias", new byte[0]);

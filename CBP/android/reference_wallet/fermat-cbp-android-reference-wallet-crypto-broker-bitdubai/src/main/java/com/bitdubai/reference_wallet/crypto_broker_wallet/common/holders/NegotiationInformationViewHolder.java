@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * Created by nelson on 28/10/15.
  */
-public class CustomerBrokerNegotiationInformationViewHolder extends ChildViewHolder {
+public class NegotiationInformationViewHolder extends ChildViewHolder {
     public ImageView customerImage;
     public FermatTextView customerName;
     public FermatTextView merchandiseAmount;
@@ -39,7 +39,7 @@ public class CustomerBrokerNegotiationInformationViewHolder extends ChildViewHol
      *
      * @param itemView the child ViewHolder's view
      */
-    public CustomerBrokerNegotiationInformationViewHolder(View itemView) {
+    public NegotiationInformationViewHolder(View itemView) {
         super(itemView);
 
         this.itemView = itemView;
