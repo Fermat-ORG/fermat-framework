@@ -80,12 +80,13 @@ public class TransactionConfidenceCalculator {
                      *
                      * for a found bug we've in count two more blocks to corroborate if the transaction is in the correct state
                      */
-                    if (height >= TARGET_DEPTH)
-                        if (height < 3 && getPreviousCryptoStatus(transaction.getHashAsString()) == CryptoStatus.ON_CRYPTO_NETWORK)
+                    if (height >= TARGET_DEPTH){
+                        if (getPreviousCryptoStatus(transaction.getHashAsString()) == CryptoStatus.ON_CRYPTO_NETWORK)
                             return CryptoStatus.ON_BLOCKCHAIN;
                         else
                             return CryptoStatus.IRREVERSIBLE;
-                    break;
+                    } else
+                        return CryptoStatus.ON_BLOCKCHAIN;
                 case DEAD:
                     /**
                      * If DEAD, then it means the transaction won’t confirm unless there is another re-org, because some other transaction is spending one of its inputs.
