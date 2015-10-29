@@ -18,7 +18,7 @@ What is needed on top of all existing protocols is a layer that faces the end us
 
 A plug-ins architecture allows any developer to add their own re-usable plugins. A micro-use-licensing scheme enforced by the system itself guarantees plugins, wallets, and apps developers a revenue stream. OS dependent GUI components are built on top of the multi-layered plug-ins structure to face the end user as niche-wallet applications or financial applications in general. Apps and wallets with similar functionality are wrapped into platforms, each one introducing new actors and plugins, to the ever increasing functionality of the whole system.
 
-A built-in wallet-factory allows developers to reuse the higest level componets and create niche-wallets or niche-financial-apps by combining existing functionality and adding their own code to the combo. A built-in wallet-editor allows non-developers to reuse any of these niche-wallets to build new branded-wallets just by changing their look and feel. A built-in p2p-wallet-store allows end users to choose which wallets of financial apps to install from the ever growing catalog.
+A built-in wallet-factory allows developers to reuse the higest level componets and create niche-wallets or niche-financial-apps by combining existing functionality and adding their own code to the combo. A built-in wallet-editor allows non-developers to reuse any of these niche-wallets to build new branded-wallets just by changing their look and feel. A built-in p2p-wallet-store allows end users to choose which wallets or financial apps to install from the ever growing catalog.
 
 
 
