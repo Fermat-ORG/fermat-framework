@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.interfaces;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantCreateCustomerBrokerBankMoneyPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantDeleteCustomerBrokerBankMoneyPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantupdateCustomerBrokerBankMoneyPurchaseException;
@@ -16,7 +18,7 @@ import java.util.UUID;
  */
 public interface CustomerBrokerBankMoneyPurchaseManager {
 
-    List<CustomerBrokerBankMoneyPurchase> getAllCustomerBrokerBankMoneyPurchaseFromCurrentDeviceUser();
+    List<CustomerBrokerBankMoneyPurchase> getAllCustomerBrokerBankMoneyPurchaseFromCurrentDeviceUser() throws CantLoadTableToMemoryException, InvalidParameterException;
 
     List<CustomerBrokerBankMoneyPurchase> getCustomerBrokerBankMoneyPurchaseForContractId(final UUID ContractId);
 
