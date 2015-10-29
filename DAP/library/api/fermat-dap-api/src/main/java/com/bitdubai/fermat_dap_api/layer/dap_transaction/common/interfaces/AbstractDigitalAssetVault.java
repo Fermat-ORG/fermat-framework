@@ -15,6 +15,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetIssuerWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
@@ -53,6 +54,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault{
     public String digitalAssetFileStoragePath;
     public AssetIssuerWalletManager assetIssuerWalletManager;
     public String walletPublicKey;
+    public ActorAssetIssuerManager actorAssetIssuerManager;
     BitcoinNetworkManager bitcoinNetworkManager;
 
     /**
@@ -77,6 +79,14 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault{
             throw new CantSetObjectException("pluginFileSystem is null");
         }
         this.pluginFileSystem=pluginFileSystem;
+    }
+
+
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException{
+        if(actorAssetIssuerManager==null){
+            throw new CantSetObjectException("actorAssetIssuerManager is null");
+        }
+        this.actorAssetIssuerManager=actorAssetIssuerManager;
     }
 
     /**

@@ -139,6 +139,8 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
             }
             this.digitalAssetDistributionVault =new DigitalAssetDistributionVault(this.pluginId, this.pluginFileSystem, this.errorManager);
             this.digitalAssetDistributionVault.setAssetIssuerWalletManager(this.assetIssuerWalletManager);
+            this.digitalAssetDistributionVault.setErrorManager(this.errorManager);
+            this.digitalAssetDistributionVault.setActorAssetIssuerManager(this.actorAssetIssuerManager);
             AssetDistributionDao assetDistributionDao=new AssetDistributionDao(pluginDatabaseSystem, pluginId);
             this.assetDistributionTransactionManager=new AssetDistributionTransactionManager(
                     this.assetVaultManager,
