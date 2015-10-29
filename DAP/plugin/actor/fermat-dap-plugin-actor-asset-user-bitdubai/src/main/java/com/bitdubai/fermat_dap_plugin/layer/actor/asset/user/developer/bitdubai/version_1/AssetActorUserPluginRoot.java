@@ -259,7 +259,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 
             this.serviceStatus = ServiceStatus.STARTED;
 
-            blockchainNetworkType = BlockchainNetworkType.REG_TEST;
+            blockchainNetworkType = BlockchainNetworkType.DEFAULT;
 
             //test();
             createAndRegisterActorAssetUserTest();
