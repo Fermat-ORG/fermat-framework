@@ -11,6 +11,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantCreateCustomerBrokerBankMoneyPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantDeleteCustomerBrokerBankMoneyPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantupdateCustomerBrokerBankMoneyPurchaseException;
@@ -117,8 +119,30 @@ public class CustomerBrokerBankMoneyPurchasePluginRoot implements CustomerBroker
     }
 
     @Override
-    public CustomerBrokerBankMoneyPurchase createCustomerBrokerBankMoneyPurchase(String publicKeyCustomer, String publicKeyBroker, Float merchandiseAmount, String merchandiseCurrency, Float referencePrice, String referenceCurrency, Float paymentAmount, String paymentCurrency, long paymentExpirationDate, long merchandiseDeliveryExpirationDate) throws CantCreateCustomerBrokerBankMoneyPurchaseException {
-        return null;
+    public CustomerBrokerBankMoneyPurchase createCustomerBrokerBankMoneyPurchase(
+            String publicKeyCustomer,
+            String publicKeyBroker,
+            Float merchandiseAmount,
+            CurrencyType merchandiseCurrency,
+            Float referencePrice,
+            ReferenceCurrency referenceCurrency,
+            Float paymentAmount,
+            CurrencyType paymentCurrency,
+            long paymentExpirationDate,
+            long merchandiseDeliveryExpirationDate) throws CantCreateCustomerBrokerBankMoneyPurchaseException {
+
+        return this.customerBrokerBankMoneyPurchaseContractDao.createCustomerBrokerBankMoneyPurchase(
+                publicKeyCustomer,
+                publicKeyBroker,
+                merchandiseAmount,
+                merchandiseCurrency,
+                referencePrice,
+                referenceCurrency,
+                paymentAmount,
+                paymentCurrency,
+                paymentExpirationDate,
+                merchandiseDeliveryExpirationDate
+        );
     }
 
     @Override
