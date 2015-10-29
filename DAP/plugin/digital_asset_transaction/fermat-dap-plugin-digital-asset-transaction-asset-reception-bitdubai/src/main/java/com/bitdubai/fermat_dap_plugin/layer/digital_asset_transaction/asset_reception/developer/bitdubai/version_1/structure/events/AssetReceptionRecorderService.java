@@ -3,11 +3,14 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_rec
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.AssetReceptionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDao;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetOnBlockchainWaitingTransferenceAssetUserEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent;
@@ -32,6 +35,7 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
     //Asset Issuing database registry
     AssetReceptionDao assetReceptionDao;
+    AssetReceptionPluginRoot assetReceptionPluginRoot;
     /**
      * TransactionService Interface member variables.
      */
@@ -53,9 +57,18 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
         this.assetReceptionDao=assetReceptionDao;
     }
 
+    public void setAssetReceptionPluginRoot(AssetReceptionPluginRoot assetReceptionPluginRoot)throws CantSetObjectException{
+        if(assetReceptionPluginRoot==null){
+            throw new CantSetObjectException("The assetReceptionPluginRoot is null");
+        }
+        this.assetReceptionPluginRoot=assetReceptionPluginRoot;
+
+    }
+
     public void receivedNewDigitalAssetMetadataNotificationEvent(ReceivedNewDigitalAssetMetadataNotificationEvent event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("ASSET RECEPTION EVENT TEST, I GOT AN EVENT:\n"+event);
+        startMonitorAgent();
         this.assetReceptionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
         //LOG.info("ASSET RECEPTION CHECK THE DATABASE");
     }
@@ -63,6 +76,7 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
     public void incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent(IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
+        startMonitorAgent();
         this.assetReceptionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
         //LOG.info("CHECK THE DATABASE");
     }
@@ -70,6 +84,7 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
     public void incomingAssetOnBlockchainWaitingTransferenceAssetUserEvent(IncomingAssetOnBlockchainWaitingTransferenceAssetUserEvent event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
+        startMonitorAgent();
         this.assetReceptionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
         //LOG.info("CHECK THE DATABASE");
     }
@@ -86,6 +101,18 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         this.assetReceptionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
         //LOG.info("CHECK THE DATABASE");
+    }
+
+    private void startMonitorAgent() throws CantSaveEventException {
+        try {
+            this.assetReceptionPluginRoot.startMonitorAgent();
+        } catch (CantGetLoggedInDeviceUserException exception) {
+            throw new CantSaveEventException(exception, "Starting AssetReceptionMonitorAgent","Cannot get Logged in device user");
+        } catch (CantSetObjectException exception) {
+            throw new CantSaveEventException(exception, "Starting AssetReceptionMonitorAgent","Cannot set an object in AssetReceptionMonitorAgent");
+        } catch (CantStartAgentException exception) {
+            throw new CantSaveEventException(exception, "Starting AssetReceptionMonitorAgent","Cannot start AssetReceptionMonitorAgent");
+        }
     }
 
     @Override
