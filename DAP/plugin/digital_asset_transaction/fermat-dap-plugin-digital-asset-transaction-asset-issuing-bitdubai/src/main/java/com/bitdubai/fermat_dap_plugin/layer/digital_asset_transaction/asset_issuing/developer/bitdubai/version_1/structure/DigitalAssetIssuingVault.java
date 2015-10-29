@@ -79,14 +79,14 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
 
     private void deliverDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException, CantGetAssetIssuerActorsException {
         /////////////////////////////////////////////
-        // TODO: Coloque esto porque es la wallet qye tengo hardcore para la wallet y para hacer las pruebas
+        // TODO: Coloque esto porque es la wallet que tengo hardcore para la wallet y para hacer las pruebas
         this.walletPublicKey = "walletPublicKeyTest";
         /////////////////////////////////////////////
         System.out.println("ASSET ISSUING Before delivering - Wallet public key is:"+this.walletPublicKey);
         AssetIssuerWallet assetIssuerWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
         AssetIssuerWalletBalance assetIssuerWalletBalance= assetIssuerWallet.getBookBalance(balanceType);
         String actorToPublicKey=this.actorAssetIssuerManager.getActorAssetIssuer().getPublicKey();
-        System.out.println("ASSET DISTRIBUTION Actor Issuer public key:"+actorToPublicKey);
+        System.out.println("ASSET ISSUING Actor Issuer public key:"+actorToPublicKey);
         System.out.println("ASSET ISSUING Transaction to deliver: "+genesisTransaction.getTransactionHash());
         AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper=new AssetIssuerWalletTransactionRecordWrapper(
                 digitalAssetMetadata,
