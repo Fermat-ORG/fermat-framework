@@ -125,48 +125,23 @@ public class OpenContractsTabFragment2 extends FermatWalletExpandableListFragmen
         ArrayList<GrouperItem> data = new ArrayList<>();
         String grouperText;
 
-        if (moduleManager != null) {
-            try {
-                cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet("crypto_broker_wallet");
+        ContractBasicInformation child;
 
-                grouperText = getActivity().getString(R.string.waiting_for_you);
-                List<ContractBasicInformation> waitingForBroker = cryptoBrokerWallet.getContractsWaitingForBroker(0, 10);
-                GrouperItem<ContractBasicInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
-                data.add(waitingForBrokerGrouper);
+        grouperText = getActivity().getString(R.string.waiting_for_you);
+        List<ContractBasicInformation> waitingForBroker = new ArrayList<>();
+        child = new ContractBasicInformationImpl("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.PAUSED);
+        waitingForBroker.add(child);
+        GrouperItem<ContractBasicInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
+        data.add(waitingForBrokerGrouper);
 
-                grouperText = getActivity().getString(R.string.waiting_for_the_customer);
-                List<ContractBasicInformation> waitingForCustomer = cryptoBrokerWallet.getContractsWaitingForCustomer(0, 10);
-                GrouperItem<ContractBasicInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
-                data.add(waitingForCustomerGrouper);
-
-            } catch (CantGetCryptoBrokerWalletException | CantGetContractsWaitingForBrokerException | CantGetContractsWaitingForCustomerException ex) {
-                CommonLogger.exception(TAG, ex.getMessage(), ex);
-
-                if (errorManager != null) {
-                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-                }
-            }
-
-        } else {
-            ContractBasicInformation child;
-
-            grouperText = getActivity().getString(R.string.waiting_for_you);
-            List<ContractBasicInformation> waitingForBroker = new ArrayList<>();
-            child = new ContractBasicInformationImpl("adrianasupernova", "USD", "Crypto Transfer", "BTC", ContractStatus.PAUSED);
-            waitingForBroker.add(child);
-            GrouperItem<ContractBasicInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
-            data.add(waitingForBrokerGrouper);
-
-            grouperText = getActivity().getString(R.string.waiting_for_the_customer);
-            List<ContractBasicInformation> waitingForCustomer = new ArrayList<>();
-            child = new ContractBasicInformationImpl("yalayn", "BTC", "Bank Transfer", "USD", ContractStatus.PENDING_PAYMENT);
-            waitingForCustomer.add(child);
-            child = new ContractBasicInformationImpl("vzlangel", "BsF", "Cash Delivery", "BsF", ContractStatus.PENDING_PAYMENT);
-            waitingForCustomer.add(child);
-            GrouperItem<ContractBasicInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
-            data.add(waitingForCustomerGrouper);
-        }
+        grouperText = getActivity().getString(R.string.waiting_for_the_customer);
+        List<ContractBasicInformation> waitingForCustomer = new ArrayList<>();
+        child = new ContractBasicInformationImpl("yalayn", "BTC", "Bank Transfer", "USD", ContractStatus.PENDING_PAYMENT);
+        waitingForCustomer.add(child);
+        child = new ContractBasicInformationImpl("vzlangel", "BsF", "Cash Delivery", "BsF", ContractStatus.PENDING_PAYMENT);
+        waitingForCustomer.add(child);
+        GrouperItem<ContractBasicInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
+        data.add(waitingForCustomerGrouper);
 
         return data;
     }

@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
@@ -20,14 +19,12 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.excepti
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.NegotiationBasicInformation;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.CustomerBrokerNegotiationInformationImpl;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItem;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationBasicInformationImpl;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 
@@ -42,7 +39,7 @@ import java.util.List;
  * @version 1.0
  * @since 20/10/2015
  */
-public class OpenNegotiationsTabFragment extends FermatWalletFragment implements FermatListItemListeners<NegotiationBasicInformation> {
+public class OpenNegotiationsTabFragment extends FermatWalletFragment implements FermatListItemListeners<CustomerBrokerNegotiationInformation> {
 
     private static final String TAG = "OpenNegotiationsTabFragment";
 
@@ -74,17 +71,14 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
         try {
             moduleManager = ((CryptoBrokerWalletSession) walletSession).getModuleManager();
             errorManager = walletSession.getErrorManager();
-
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
-
-            if (errorManager != null) {
-                errorManager.reportUnexpectedWalletException(
-                        Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT,
-                        ex);
-            }
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
+
+        openNegotiations = getOpenNegotiations();
     }
 
 
@@ -117,8 +111,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
      */
     private ExpandableRecyclerAdapter getAdapter() {
         ExpandableRecyclerAdapter adapter = null;
-
-        openNegotiations = getOpenNegotiations();
 
         if (openNegotiations != null) {
             adapter = new OpenNegotiationsExpandableAdapter(getActivity(), openNegotiations);
@@ -174,13 +166,13 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
             data.add(waitingForBrokerGrouper);
 
             grouperText = getActivity().getString(R.string.waiting_for_the_customer);
-            List<CustomerBrokerNegotiationInformationImpl> waitingForCustomer = new ArrayList<>();
+            List<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
             child = new CustomerBrokerNegotiationInformationImpl("Nelson Orlando", "USD", "Bank Transfer", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
             waitingForCustomer.add(child);
             child = new CustomerBrokerNegotiationInformationImpl("Customer 5", "BsF", "Cash Delivery", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
             waitingForCustomer.add(child);
-            GrouperItem<CustomerBrokerNegotiationInformationImpl> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
-            //data.add(waitingForCustomerGrouper);
+            GrouperItem<CustomerBrokerNegotiationInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
+            data.add(waitingForCustomerGrouper);
         }
 
         return data;
@@ -196,11 +188,11 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
     }
 
     @Override
-    public void onItemClickListener(NegotiationBasicInformation data, int position) {
+    public void onItemClickListener(CustomerBrokerNegotiationInformation data, int position) {
         //TODO abrir actividad de detalle de negocacion abierta
     }
 
     @Override
-    public void onLongItemClickListener(NegotiationBasicInformation data, int position) {
+    public void onLongItemClickListener(CustomerBrokerNegotiationInformation data, int position) {
     }
 }
