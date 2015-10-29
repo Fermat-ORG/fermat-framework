@@ -12,8 +12,10 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.ActorNetworkServiceAssetUser;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ActorAssetUserCompleteRegistrationNotificationEvent;
+
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetUserCompleteRegistrationNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorNetworkServiceAssetUser;
+//import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ActorAssetUserCompleteRegistrationNotificationEvent;
 
 /**
  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers_asset_user.CompleteAssetUserRegistrationNotificationEventHandler</code>
@@ -27,15 +29,15 @@ public class CompleteAssetUserRegistrationNotificationEventHandler implements Fe
 
     private ActorNetworkServiceAssetUser actorNetworkServiceAssetUser;
 
-    public CompleteAssetUserRegistrationNotificationEventHandler(ActorNetworkServiceAssetUser actorNetworkServiceAssetUser) {
+    public CompleteAssetUserRegistrationNotificationEventHandler(ActorNetworkServiceAssetUser actorNetworkServiceAssetUser){
 
-        this.actorNetworkServiceAssetUser = actorNetworkServiceAssetUser;
+        this.actorNetworkServiceAssetUser=actorNetworkServiceAssetUser;
     }
 
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        System.out.println("Succesfull register AssetuserActor - handleEvent =" + platformEvent);
+        System.out.println("Succesfull register Actor Asset User - handleEvent ="+platformEvent );
 
         if (((Service) this.actorNetworkServiceAssetUser).getStatus() == ServiceStatus.STARTED) {
 

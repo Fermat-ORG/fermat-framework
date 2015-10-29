@@ -57,6 +57,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
@@ -373,6 +374,11 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     @Override
     public int getNumberOfIssuedAssets(String assetPublicKey) throws CantExecuteDatabaseOperationException {
         return this.assetIssuingTransactionManager.getNumberOfIssuedAssets(assetPublicKey);
+    }
+
+    @Override
+    public IssuingStatus getIssuingStatus(String assetPublicKey) throws CantExecuteDatabaseOperationException {
+        return this.assetIssuingTransactionManager.getIssuingStatus(assetPublicKey);
     }
 
     /*@Override

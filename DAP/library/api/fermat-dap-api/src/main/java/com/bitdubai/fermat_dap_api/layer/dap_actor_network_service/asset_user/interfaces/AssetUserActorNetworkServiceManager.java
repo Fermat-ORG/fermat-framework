@@ -28,7 +28,7 @@ public interface AssetUserActorNetworkServiceManager {
      *
      * @param actorAssetIssuerSender
      * @param actorAssetUserDestination
-     * @throws CantSendMessageException
+     * @throws CantRequestCryptoAddressException
      */
     public void requestCryptoAddress(ActorAssetIssuer actorAssetIssuerSender, ActorAssetUser actorAssetUserDestination) throws CantRequestCryptoAddressException;
 
@@ -38,7 +38,7 @@ public interface AssetUserActorNetworkServiceManager {
      * @param actorAssetUserSender
      * @param actorAssetIssuerDestination
      * @param cryptoAddress
-     * @throws CantSendMessageException
+     * @throws CantSendCryptoAddressException
      */
     public void sendCryptoAddress(ActorAssetUser actorAssetUserSender, ActorAssetIssuer actorAssetIssuerDestination, CryptoAddress cryptoAddress) throws CantSendCryptoAddressException;
 

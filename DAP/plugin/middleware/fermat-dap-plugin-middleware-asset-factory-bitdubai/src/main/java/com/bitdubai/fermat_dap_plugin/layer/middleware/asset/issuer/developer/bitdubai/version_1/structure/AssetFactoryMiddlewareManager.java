@@ -276,18 +276,18 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
         try {
             assetFactories = getAssetFactories(filter);
             AssetFactory assetFactory = assetFactories.get(0);
-            ContractProperty redeemable;
-            ContractProperty expirationDate;
-            redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
-            ContractProperty redeemable1 = assetFactory.getContractProperties().set(0, redeemable);
-            expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
-            ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
-            if (redeemable1.getValue() != null)
-                assetFactory.setIsRedeemable(Boolean.valueOf(redeemable1.getValue().toString()));
-            else  assetFactory.setIsRedeemable(assetFactory.getIsRedeemable());
-            if (expirationDate1.getValue() != null)
-                assetFactory.setExpirationDate(Timestamp.valueOf(expirationDate1.getValue().toString()));
-            else assetFactory.setExpirationDate(assetFactory.getExpirationDate());
+//            ContractProperty redeemable;
+//            ContractProperty expirationDate;
+//            redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
+//            ContractProperty redeemable1 = assetFactory.getContractProperties().set(0, redeemable);
+//            expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
+//            ContractProperty expirationDate1 = assetFactory.getContractProperties().set(1, expirationDate);
+//            if (redeemable1.getValue() != null)
+//                assetFactory.setIsRedeemable(Boolean.valueOf(redeemable1.getValue().toString()));
+//            else  assetFactory.setIsRedeemable(assetFactory.getIsRedeemable());
+//            if (expirationDate1.getValue() != null)
+//                assetFactory.setExpirationDate(Timestamp.valueOf(expirationDate1.getValue().toString()));
+//            else assetFactory.setExpirationDate(assetFactory.getExpirationDate());
 
             return assetFactory;
         }
@@ -472,11 +472,9 @@ public class AssetFactoryMiddlewareManager implements  DealsWithErrors, DealsWit
             }
 
         }catch (CantIssueDigitalAssetsException e){
-            e.printStackTrace();
-            throw new CantSaveAssetFactoryException(e, "Exception General", "Method: issueAssets");
+            throw new CantSaveAssetFactoryException(e, "Exception CantIssueDigitalAssetsException", "Method: issueAssets");
         }
         catch (Exception e){
-            e.printStackTrace();
             throw new CantSaveAssetFactoryException(e, "Exception General", "Method: publishAsset");
         }
     }

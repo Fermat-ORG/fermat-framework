@@ -37,10 +37,10 @@ public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
     public AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
     public CryptoTransaction cryptoTransaction;
 
-    public AbstractDigitalAssetSwap(AssetVaultManager assetVaultManager,
+    public AbstractDigitalAssetSwap(/*AssetVaultManager assetVaultManager,*/
                                     UUID pluginId,
                                     PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
-        this.assetVaultManager=assetVaultManager;
+        //this.assetVaultManager=assetVaultManager;
         this.pluginFileSystem=pluginFileSystem;
         this.pluginId=pluginId;
     }
@@ -51,6 +51,10 @@ public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
 
     public void setBitcoinCryptoNetworkManager(BitcoinNetworkManager bitcoinNetworkManager){
         this.bitcoinNetworkManager=bitcoinNetworkManager;
+    }
+
+    public void setAssetVaultManager(AssetVaultManager assetVaultManager){
+        this.assetVaultManager=assetVaultManager;
     }
 
     public abstract void checkDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata) throws DAPException;

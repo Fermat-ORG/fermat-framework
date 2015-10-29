@@ -11,7 +11,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorReco
  */
 public class Actor extends AssetUserActorRecord {
 
-
     public boolean selected;
 
     public Actor(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage, Double locationLatitude, Double locationLongitude) {
