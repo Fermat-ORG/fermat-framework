@@ -15,6 +15,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.Ope
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.OpenNegotiationDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.StartNegotiationActivityFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contracts_history.ContractsHistoryActivityFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.home.MarketRateStatisticsFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.settings.SettingsActivityFragment;
 
 import static com.bitdubai.reference_wallet.crypto_customer_wallet.fragmentFactory.CryptoCustomerWalletFragmentsEnumType.*;
@@ -28,6 +29,9 @@ public class CryptoCustomerWalletFragmentFactory implements WalletFragmentFactor
     public Fragment getFragment(String code, WalletSession walletSession, WalletSettings WalletSettings, WalletResourcesProviderManager walletResourcesProviderManager) throws FragmentNotFoundException {
         CryptoCustomerWalletFragmentsEnumType fragment = CryptoCustomerWalletFragmentsEnumType.getValue(code);
 
+
+        if (fragment == CBP_CRYPTO_CUSTOMER_WALLET_MARKET_RATE_STATISTICS)
+            return MarketRateStatisticsFragment.newInstance();
         if (fragment == CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY)
             return ContractsHistoryActivityFragment.newInstance();
         if (fragment == CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST)
