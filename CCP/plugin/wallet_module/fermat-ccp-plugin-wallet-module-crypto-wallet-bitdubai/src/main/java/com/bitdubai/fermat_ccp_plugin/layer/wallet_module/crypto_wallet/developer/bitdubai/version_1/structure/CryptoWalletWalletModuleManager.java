@@ -223,20 +223,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
             finalRecordList.clear();
             WalletContactsSearch walletContactsSearch = walletContactsRegistry.searchWalletContact(walletPublicKey);
             for(WalletContactRecord r : walletContactsSearch.getResult()){
-                byte[] image = null;
-                switch (r.getActorType()) {
-                    case EXTRA_USER:
-                        Actor actor = extraUserManager.getActorByPublicKey(r.getActorPublicKey());
-                        if (actor != null)
-                            image = actor.getPhoto();
-                        break;
-                    case INTRA_USER:
-                        //TODO ver de donde saco la Image
-                        image = new byte[0];
-                        break;
-                    default:
-                        throw new CantGetAllWalletContactsException("UNEXPECTED ACTOR TYPE",null,"","incomplete switch");
-                }
+                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey());
                 finalRecordList.add(new CryptoWalletWalletModuleWalletContact(r, image));
             }
             return  finalRecordList;
@@ -261,19 +248,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
             walletContactRecordList = walletContactsSearch.getResult();
 
             for(WalletContactRecord r : walletContactRecordList){
-                byte[] image = null;
-                switch (r.getActorType()) {
-                    case EXTRA_USER:
-                        Actor actor = extraUserManager.getActorByPublicKey(r.getActorPublicKey());
-                        if (actor != null)
-                            image = actor.getPhoto();
-                        break;
-                    case INTRA_USER:
-                        image = new  byte[0];
-                        break;
-                    default:
-                        throw new CantGetAllWalletContactsException("UNEXPECTED ACTOR TYPE",null,"","incomplete switch");
-                }
+                System.out.println("wallet contact: "+r);
+                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey());
                 finalRecordList.add(new CryptoWalletWalletModuleWalletContact(r, image));
             }
 
@@ -300,6 +276,25 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
         }
     }
 
+    private byte[] getImageByActorType(final Actors actorType     ,
+                                       final String actorPublicKey) throws CantGetAllWalletContactsException,
+                                                                           ExtraUserNotFoundException       ,
+                                                                           CantGetExtraUserException        {
+
+        switch (actorType) {
+            case EXTRA_USER:
+                Actor actor = extraUserManager.getActorByPublicKey(actorPublicKey);
+                if (actor != null)
+                    return actor.getPhoto();
+                else
+                    throw new CantGetAllWalletContactsException("ACTOR NOT FOUND",null,"","asnjsdgksdf actor not found");
+            case INTRA_USER:
+                return new  byte[0];
+            default:
+                throw new CantGetAllWalletContactsException("UNEXPECTED ACTOR TYPE",null,"","incomplete switch");
+        }
+    }
+
 
     @Override
     public List<CryptoWalletWalletContact> listWalletContactsScrolling(String  walletPublicKey,
@@ -310,20 +305,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
             finalRecordList.clear();
             WalletContactsSearch walletContactsSearch = walletContactsRegistry.searchWalletContact(walletPublicKey);
             for(WalletContactRecord r : walletContactsSearch.getResult(max, offset)){
-                byte[] image = null;
-                switch (r.getActorType()) {
-                    case EXTRA_USER:
-                        Actor actor = extraUserManager.getActorByPublicKey(r.getActorPublicKey());
-                        if (actor != null)
-                            image = actor.getPhoto();
-                        break;
-                    case INTRA_USER:
-                        //TODO ver de donde saco la Image
-                        image = new byte[0];
-                        break;
-                    default:
-                        throw new CantGetAllWalletContactsException("UNEXPECTED ACTOR TYPE",null,"","incomplete switch");
-                }
+                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey());
                 finalRecordList.add(new CryptoWalletWalletModuleWalletContact(r, image));
             }
             return  finalRecordList;
@@ -545,16 +527,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
     public CryptoWalletWalletContact findWalletContactById(UUID contactId) throws CantFindWalletContactException, WalletContactNotFoundException {
         try {
             WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByContactId(contactId);
-            byte[] image = null;
-            switch (walletContactRecord.getActorType()) {
-                case EXTRA_USER:
-                    Actor actor = extraUserManager.getActorByPublicKey(walletContactRecord.getActorPublicKey());
-                    if (actor != null)
-                        image = actor.getPhoto();
-                    break;
-                default:
-                    throw new CantGetAllWalletContactsException("UNEXPECTED ACTOR TYPE",null,"","incomplete switch");
-            }
+            byte[] image = getImageByActorType(walletContactRecord.getActorType(), walletContactRecord.getActorPublicKey());
+
             return new CryptoWalletWalletModuleWalletContact(walletContactRecord, image);
         } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactException e) {
             throw new CantFindWalletContactException(CantFindWalletContactException.DEFAULT_MESSAGE, e);
