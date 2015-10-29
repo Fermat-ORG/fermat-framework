@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.interfaces;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantCreateCustomerBrokerBankMoneyPurchaseException;
@@ -31,7 +32,7 @@ public interface CustomerBrokerBankMoneyPurchaseManager {
             long paymentExpirationDate,
             long merchandiseDeliveryExpirationDate) throws CantCreateCustomerBrokerBankMoneyPurchaseException;
 
-    void updateCustomerBrokerBankMoneyPurchase(final UUID ContractId) throws CantupdateCustomerBrokerBankMoneyPurchaseException;
+    public void updateCustomerBrokerBankMoneyPurchase(UUID contractId, ContractStatus status) throws CantupdateCustomerBrokerBankMoneyPurchaseException;
 
     void deleteCustomerBrokerBankMoneyPurchase(UUID contractID) throws CantDeleteCustomerBrokerBankMoneyPurchaseException;
 
