@@ -1,4 +1,4 @@
-![alt text](https://raw.githubusercontent.com/bitDubai/fermat-graphic-design/master/3D%20Design/3DLogotypes/FermatLogotype3D/Fermat_Logo_3D_Readme_header.jpg?token=ANBHS_iMFk9GjzYe_4GykDGSLl0uxqrPks5WOYOcwA%3D%3D "Fermat Logo")
+![alt text](https://raw.githubusercontent.com/bitDubai/fermat-graphic-design/9db010a1ce784585b06da23b3b0516ecabd97be1/3D%20Design/3DLogotypes/FermatLogotype3D/Fermat_Logo_3D_Readme_header.jpg?token=AJCkx9qJKN1KH8bRCDlIcgcRkzrStYYxks5WOq92wA%3D%3D "Fermat Logo")
 
 # Welcome to Fermat!
 
