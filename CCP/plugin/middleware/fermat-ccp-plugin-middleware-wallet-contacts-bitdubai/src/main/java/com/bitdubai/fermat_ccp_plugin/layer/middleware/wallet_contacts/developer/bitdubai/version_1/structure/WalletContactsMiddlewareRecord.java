@@ -116,4 +116,19 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
     public Compatibility getCompatibility() {
         return compatibility;
     }
+
+    @Override
+    public String toString() {
+        return "WalletContactsMiddlewareRecord{" +
+                "actorAlias='" + actorAlias + '\'' +
+                ", actorFirstName='" + actorFirstName + '\'' +
+                ", actorLastName='" + actorLastName + '\'' +
+                ", actorPublicKey='" + actorPublicKey + '\'' +
+                ", actorType=" + actorType +
+                ", compatibility=" + compatibility +
+                ", cryptoAddresses=" + cryptoAddresses +
+                ", contactId=" + contactId +
+                ", walletPublicKey='" + walletPublicKey + '\'' +
+                '}';
+    }
 }
