@@ -106,7 +106,9 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -237,35 +239,25 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
     @Override
     public List<CryptoWalletWalletContact> listAllActorContactsAndConnections(String walletPublicKey,String intraUserPublicKey) throws CantGetAllWalletContactsException {
         try {
-            List<CryptoWalletWalletContact> finalRecordList = new ArrayList<>();
-            List<WalletContactRecord> walletContactRecordList = new ArrayList<>();
-            walletContactRecordList.clear();
-            finalRecordList.clear();
+            Map<String, CryptoWalletWalletContact> contactMap = new HashMap<>();
 
             //get wallet contacts
             WalletContactsSearch walletContactsSearch = walletContactsRegistry.searchWalletContact(walletPublicKey);
 
-            walletContactRecordList = walletContactsSearch.getResult();
-
-            for(WalletContactRecord r : walletContactRecordList){
+            for(WalletContactRecord r : walletContactsSearch.getResult()){
                 System.out.println("wallet contact: "+r);
                 byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey());
-                finalRecordList.add(new CryptoWalletWalletModuleWalletContact(r, image));
+                contactMap.put(r.getActorPublicKey(), new CryptoWalletWalletModuleWalletContact(r, image));
             }
 
-            //get intra user connections
-            //TODO: verificar que la conexion no sea ya un contacto
+            // get intra user connections
+            List<IntraWalletUser> intraUserList = intraUserManager.getConnectedIntraWalletUsers(intraUserPublicKey);
 
-                List<IntraWalletUser> intraUserList = intraUserManager.getConnectedIntraWalletUsers(intraUserPublicKey);
+            for(IntraWalletUser intraUser : intraUserList)
+               if (!contactMap.containsKey(intraUser.getPublicKey()))
+                contactMap.put(intraUser.getPublicKey(), new CryptoWalletWalletModuleWalletContact(enrichIntraUser(intraUser, walletPublicKey), walletPublicKey));
 
-                for(IntraWalletUser intraUser : intraUserList)
-                    for(WalletContactRecord contactRecord : walletContactRecordList){
-
-                        if (!intraUser.getPublicKey().equals(contactRecord.getActorPublicKey()))
-                            finalRecordList.add(new CryptoWalletWalletModuleWalletContact(enrichIntraUser(intraUser, walletPublicKey), walletPublicKey));
-
-                    }
-            return  finalRecordList;
+            return new ArrayList<>(contactMap.values());
 
         } catch (CantGetAllWalletContactsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -284,10 +276,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
         switch (actorType) {
             case EXTRA_USER:
                 Actor actor = extraUserManager.getActorByPublicKey(actorPublicKey);
-                if (actor != null)
-                    return actor.getPhoto();
-                else
-                    throw new CantGetAllWalletContactsException("ACTOR NOT FOUND",null,"","asnjsdgksdf actor not found");
+               return actor.getPhoto();
             case INTRA_USER:
                 return new  byte[0];
             default:
