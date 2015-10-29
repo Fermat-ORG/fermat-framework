@@ -278,11 +278,20 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
     }
 
     public void broadcastTransaction(Transaction transaction) throws ExecutionException, InterruptedException {
+        /**
+         * I make sure the service is running.
+         */
         if (!peers.isRunning())
             peers.start();
 
+        /**
+         * I will make sure I have all blocks
+         */
         peers.downloadBlockChain();
 
+        /**
+         * If I don't have any peers connected, I will continue trying to connect before broadcasting.
+         */
         while (peers.numConnectedPeers() == 0){
             peers.stop();
             peers.addPeerDiscovery(new DnsDiscovery(networkParameters));
