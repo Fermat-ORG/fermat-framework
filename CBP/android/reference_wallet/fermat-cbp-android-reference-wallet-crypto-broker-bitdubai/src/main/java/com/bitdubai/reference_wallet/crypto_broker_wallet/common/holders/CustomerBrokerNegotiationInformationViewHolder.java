@@ -58,6 +58,13 @@ public class CustomerBrokerNegotiationInformationViewHolder extends ChildViewHol
 
     public void bind(CustomerBrokerNegotiationInformation itemInfo) {
 
+        CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastUpdate());
+        lastUpdateDate.setText(date);
+
+        ActorIdentity customer = itemInfo.getCustomer();
+        customerImage.setImageDrawable(getImgDrawable(customer.getProfileImage()));
+        customerName.setText(customer.getAlias());
+
         NegotiationStatus negotiationStatus = itemInfo.getStatus();
         itemView.setBackgroundColor(getStatusBackgroundColor(negotiationStatus));
         status.setText(getStatusStringRes(negotiationStatus));
@@ -68,13 +75,6 @@ public class CustomerBrokerNegotiationInformationViewHolder extends ChildViewHol
         merchandise.setText(negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY));
         paymentMethod.setText(negotiationSummary.get(ClauseType.BROKER_PAYMENT_METHOD));
         paymentCurrency.setText(negotiationSummary.get(ClauseType.BROKER_CURRENCY));
-
-        CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastUpdate());
-        lastUpdateDate.setText(date);
-
-        ActorIdentity customer = itemInfo.getCustomer();
-        customerImage.setImageDrawable(getImgDrawable(customer.getProfileImage()));
-        customerName.setText(customer.getAlias());
     }
 
     private int getStatusBackgroundColor(NegotiationStatus status) {

@@ -25,6 +25,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.CustomerBrokerNegotiationInformationImpl;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationBasicInformationImpl;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
@@ -159,26 +160,26 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
             }
 
         } else {
-            NegotiationBasicInformationImpl child;
+            CustomerBrokerNegotiationInformationImpl child;
 
             grouperText = getActivity().getString(R.string.waiting_for_you);
-            List<NegotiationBasicInformation> waitingForBroker = new ArrayList<>();
-            child = new NegotiationBasicInformationImpl("nelsonalfo", "USD", "Crypto Transfer", "BTC", NegotiationStatus.WAITING_FOR_BROKER);
+            List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
+            child = new CustomerBrokerNegotiationInformationImpl("nelsonalfo", "USD", "Crypto Transfer", "BTC", NegotiationStatus.WAITING_FOR_BROKER);
             waitingForBroker.add(child);
-            child = new NegotiationBasicInformationImpl("jorgeegonzalez", "BTC", "Cash in Hand", "USD", NegotiationStatus.WAITING_FOR_BROKER);
+            child = new CustomerBrokerNegotiationInformationImpl("jorgeegonzalez", "BTC", "Cash in Hand", "USD", NegotiationStatus.WAITING_FOR_BROKER);
             waitingForBroker.add(child);
-            child = new NegotiationBasicInformationImpl("neoperol", "USD", "Cash in Hand", "BsF", NegotiationStatus.WAITING_FOR_BROKER);
+            child = new CustomerBrokerNegotiationInformationImpl("neoperol", "USD", "Cash in Hand", "BsF", NegotiationStatus.WAITING_FOR_BROKER);
             waitingForBroker.add(child);
-            GrouperItem<NegotiationBasicInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
-            //data.add(waitingForBrokerGrouper);
+            GrouperItem<CustomerBrokerNegotiationInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
+            data.add(waitingForBrokerGrouper);
 
             grouperText = getActivity().getString(R.string.waiting_for_the_customer);
-            List<NegotiationBasicInformation> waitingForCustomer = new ArrayList<>();
-            child = new NegotiationBasicInformationImpl("Nelson Orlando", "USD", "Bank Transfer", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
+            List<CustomerBrokerNegotiationInformationImpl> waitingForCustomer = new ArrayList<>();
+            child = new CustomerBrokerNegotiationInformationImpl("Nelson Orlando", "USD", "Bank Transfer", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
             waitingForCustomer.add(child);
-            child = new NegotiationBasicInformationImpl("Customer 5", "BsF", "Cash Delivery", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
+            child = new CustomerBrokerNegotiationInformationImpl("Customer 5", "BsF", "Cash Delivery", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
             waitingForCustomer.add(child);
-            GrouperItem<NegotiationBasicInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
+            GrouperItem<CustomerBrokerNegotiationInformationImpl> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
             //data.add(waitingForCustomerGrouper);
         }
 

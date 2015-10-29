@@ -7,17 +7,16 @@ import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.NegotiationBasicInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.CustomerBrokerNegotiationInformationViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.GrouperViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.NegotiationViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItem;
 
 import java.util.List;
 
 
 public class OpenNegotiationsExpandableAdapter
-        extends ExpandableRecyclerAdapter<GrouperViewHolder, NegotiationViewHolder, GrouperItem, NegotiationBasicInformation> {
+        extends ExpandableRecyclerAdapter<GrouperViewHolder, CustomerBrokerNegotiationInformationViewHolder, GrouperItem, CustomerBrokerNegotiationInformation> {
 
     private LayoutInflater mInflater;
 
@@ -53,9 +52,9 @@ public class OpenNegotiationsExpandableAdapter
      * @return the user's custom parent ViewHolder that must extend ParentViewHolder
      */
     @Override
-    public NegotiationViewHolder onCreateChildViewHolder(ViewGroup parent) {
+    public CustomerBrokerNegotiationInformationViewHolder onCreateChildViewHolder(ViewGroup parent) {
         View view = mInflater.inflate(R.layout.cbw_negotiation_list_item, parent, false);
-        return new NegotiationViewHolder(view);
+        return new CustomerBrokerNegotiationInformationViewHolder(view);
     }
 
     /**
@@ -82,7 +81,7 @@ public class OpenNegotiationsExpandableAdapter
      * @param position        the position in the RecyclerView of the item
      */
     @Override
-    public void onBindChildViewHolder(NegotiationViewHolder childViewHolder, int position, NegotiationBasicInformation childListItem) {
+    public void onBindChildViewHolder(CustomerBrokerNegotiationInformationViewHolder childViewHolder, int position, CustomerBrokerNegotiationInformation childListItem) {
         childViewHolder.bind(childListItem);
     }
 }
