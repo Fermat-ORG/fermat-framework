@@ -632,13 +632,15 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 
     @Override
     public void registerActorInActorNetowrkSerice() {
-
-        try {//TODO Escuchar EVENTO para confirmar que se Registro Actor Correctamente en el A.N.S
-            /*
+        try {
+            /**
              * Envio del ActorAssetUser para registar en el Actor Network Service
              */
             ActorAssetUser actorAssetUser = this.assetUserActorDao.getActorAssetUser();
-            assetUserActorNetworkServiceManager.registerActorAssetUser(this.assetUserActorDao.getActorAssetUser());
+            if(actorAssetUser.getConnectionState() != ConnectionState.CONNECTED)
+                assetUserActorNetworkServiceManager.registerActorAssetUser(this.assetUserActorDao.getActorAssetUser());
+            else
+                System.out.println("Actor Asset User REGISTRADO");
         } catch (CantRegisterActorAssetUserException | CantGetAssetUsersListException e) {
             e.printStackTrace();
         }
@@ -650,7 +652,13 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         try {
             for (ActorAssetUser actorAssetUser : actorAssetUsers){
                 //todo Actualizar Estado en base de datos para este actorAssetUser ConnectionState = PENDING_REMOTELY_ACCEPTANCE
-                cryptoAddressesNetworkServiceManager.sendAddressExchangeRequest(null, CryptoCurrency.BITCOIN, Actors.DAP_ASSET_ISSUER, Actors.DAP_ASSET_USER, requester.getPublicKey(), actorAssetUser.getPublicKey(), BlockchainNetworkType.DEFAULT);
+                cryptoAddressesNetworkServiceManager.sendAddressExchangeRequest(null,
+                                                                                CryptoCurrency.BITCOIN,
+                                                                                Actors.DAP_ASSET_ISSUER,
+                                                                                Actors.DAP_ASSET_USER,
+                                                                                requester.getPublicKey(),
+                                                                                actorAssetUser.getPublicKey(),
+                                                                                BlockchainNetworkType.DEFAULT);
 //                assetUserActorNetworkServiceManager.requestCryptoAddress(requester, actorAssetUser);
             }
         } catch (CantSendAddressExchangeRequestException e) {
