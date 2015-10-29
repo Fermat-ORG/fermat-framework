@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by angel on 17/9/15.
  */
-public interface WalletConfiguration {
+public interface CryptoBrokerWalletSettings {
 
     String getReferenceCurrency();
 

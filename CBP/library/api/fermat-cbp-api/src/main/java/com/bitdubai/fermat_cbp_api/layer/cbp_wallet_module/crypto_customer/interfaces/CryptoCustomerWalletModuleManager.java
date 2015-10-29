@@ -9,5 +9,5 @@ public interface CryptoCustomerWalletModuleManager {
      * @param walletPublicKey the public key of the wallet
      * @return an interface the contain the methods to manipulate the selected wallet
      */
-    Wallet getCryptoCustomerWallet(String walletPublicKey);
+    CryptoCustomerWallet getCryptoCustomerWallet(String walletPublicKey);
 }

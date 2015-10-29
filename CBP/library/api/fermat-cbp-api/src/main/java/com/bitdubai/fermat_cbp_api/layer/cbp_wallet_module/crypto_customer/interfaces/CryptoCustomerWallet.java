@@ -1,15 +1,13 @@
-package com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces;
+package com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.interfaces;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetContractsWaitingForBrokerException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetContractsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForCustomerException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CouldNotStartNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetCryptoBrokerListException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerIdentityListException;
 
 import java.util.Collection;
@@ -19,7 +17,7 @@ import java.util.UUID;
 /**
  * Created by nelson on 22/09/15.
  */
-public interface CryptoBrokerWallet {
+public interface CryptoCustomerWallet {
 
     /**
      * Add a new clause to the negotiation
@@ -40,7 +38,7 @@ public interface CryptoBrokerWallet {
     CustomerBrokerNegotiationInformation changeClause(CustomerBrokerNegotiationInformation negotiation, ClauseInformation clause);
 
     /**
-     * Return as much as "max" results from the list of Negotiation's Basic Info in this wallet waiting for my response,
+     * Return as much as "max" results from the list of Negotiation's Basic Info in this wallet waiting for the broker response,
      * starting from the "offset" result
      *
      * @param max    the max quantity of results
@@ -50,7 +48,7 @@ public interface CryptoBrokerWallet {
     Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForBroker(int max, int offset) throws CantGetNegotiationsWaitingForBrokerException;
 
     /**
-     * Return as much as "max" results from the list of Negotiation's Basic Info in this wallet waiting for the Customer's response,
+     * Return as much as "max" results from the list of Negotiation's Basic Info in this wallet waiting for my response,
      * starting from the "offset" result
      *
      * @param max    the max quantity of results
@@ -60,46 +58,46 @@ public interface CryptoBrokerWallet {
     Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForCustomer(int max, int offset) throws CantGetNegotiationsWaitingForCustomerException;
 
     /**
-     * Confirm the given negotiation to create a contract based on this negotiation
+     * Confirm the given negotiation to create a contract
      *
-     * @param negotiation the negotiation ID
+     * @param negotiation the negotiation information
      */
     CustomerBrokerNegotiationInformation confirmNegotiation(CustomerBrokerNegotiationInformation negotiation);
 
     /**
-     * Cancel a current negotiation
+     * Cancel a negotiation
      *
      * @param negotiation the negotiation ID
      * @param reason      the reason to cancel
      */
     CustomerBrokerNegotiationInformation cancelNegotiation(CustomerBrokerNegotiationInformation negotiation, String reason);
 
+    /**
+     * return the list of brokers connected with the crypto customer
+     *
+     * @param customerId the crypto customer id
+     * @return the list of crypto brokers
+     */
+    List<CryptoBrokerIdentity> getListOfConnectedBrokers(UUID customerId) throws CantGetCryptoBrokerListException;
 
     /**
-     * Get information about the current stock
+     * Start a new negotiation with a crypto broker
      *
-     * @param stockCurrency the stock currency
-     * @return information about the current stock
+     * @param customerId the crypto customer ID
+     * @param brokerId   the crypto broker ID
+     * @param clauses    the initial and mandatory clauses to start a negotiation
      */
-    StockInformation getCurrentStock(String stockCurrency);
-
-    /**
-     * Get stock staticstics data about the given stock currency
-     *
-     * @param stockCurrency the stock currency
-     * @return stock statistics data
-     */
-    StockStatistics getStockStatistics(String stockCurrency);
+    void startNegotiation(UUID customerId, UUID brokerId, Collection<ClauseInformation> clauses) throws CouldNotStartNegotiationException;
 
     /**
      * associate an Identity to this wallet
      *
-     * @param brokerId the Crypto Broker ID who is going to be associated with this wallet
+     * @param customerId the Crypto Customer ID who is going to be associated with this wallet
      */
-    void associateIdentity(UUID brokerId);
+    void associateIdentity(UUID customerId);
 
     /**
      * @return list of identities associated with this wallet
      */
-    List<CryptoBrokerIdentity> getListOfIdentities() throws CantGetCryptoCustomerIdentityListException;
+    List<CryptoCustomerIdentity> getListOfIdentities() throws CantGetCryptoCustomerIdentityListException;
 }
