@@ -1,16 +1,15 @@
-package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners;
+package com.bitdubai.fermat_dap_api.layer.all_definition.listeners;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 
 /**
- * Created by Nerio on 28/10/15.
+ * Created by Nerio on 27/10/15.
  */
-public class NewCryptoAddressReceiveAssetUserActorNotificationEventListener implements FermatEventListener {
+public class ActorAssetUserCompleteRegistrationNotificationEventListener implements FermatEventListener {
 
     FermatEventMonitor fermatEventMonitor;
     private EventType eventType;
@@ -21,8 +20,7 @@ public class NewCryptoAddressReceiveAssetUserActorNotificationEventListener impl
      * @param eventType
      * @param fermatEventMonitor
      */
-
-    public NewCryptoAddressReceiveAssetUserActorNotificationEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
+    public ActorAssetUserCompleteRegistrationNotificationEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
         this.eventType = eventType;
         this.fermatEventMonitor = fermatEventMonitor;
     }
@@ -40,11 +38,11 @@ public class NewCryptoAddressReceiveAssetUserActorNotificationEventListener impl
     /**
      * Throw the method <code>setEventHandler</code> you can set a handler for the listener.
      *
-     * @param fermatEventHandler handler for the event listener.
+     * @param eventHandler handler for the event listener.
      */
     @Override
-    public void setEventHandler(FermatEventHandler fermatEventHandler) {
-        this.fermatEventHandler = fermatEventHandler;
+    public void setEventHandler(FermatEventHandler eventHandler) {
+        this.fermatEventHandler = eventHandler;
     }
 
     /**
@@ -52,11 +50,6 @@ public class NewCryptoAddressReceiveAssetUserActorNotificationEventListener impl
      *
      * @return an instance of FermatEventHandler.
      */
-//    @Override
-//    public FermatEventEnum getEventType() {
-//        return eventType;
-//    }
-
     @Override
     public FermatEventHandler getEventHandler() {
         return this.fermatEventHandler;
@@ -67,7 +60,6 @@ public class NewCryptoAddressReceiveAssetUserActorNotificationEventListener impl
      *
      * @param fermatEvent an instance of fermat event to be listened.
      */
-
     @Override
     public void raiseEvent(FermatEvent fermatEvent) {
         try {

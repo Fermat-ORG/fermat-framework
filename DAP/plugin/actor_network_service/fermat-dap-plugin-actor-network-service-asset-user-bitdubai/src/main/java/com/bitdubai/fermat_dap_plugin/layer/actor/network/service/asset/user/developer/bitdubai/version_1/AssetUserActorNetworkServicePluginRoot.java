@@ -22,8 +22,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
-
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -36,17 +36,22 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetUserCompleteRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.util.JsonAssetUserANSAttNamesConstants;
+
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantSendCryptoAddressException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.agents.AssetUserActorNetworkServiceAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
@@ -77,10 +82,10 @@ import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
+
 import com.google.gson.JsonObject;
 
 import java.io.Serializable;
@@ -689,53 +694,49 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                         }
 
                     } else {
-
-                        return  actorAssetUserRegisteredList;
-
-                   /*
-                        StringBuffer contextBuffer = new StringBuffer();
-                        contextBuffer.append("Plugin ID: " + pluginId);
-                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                        contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                        contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                        contextBuffer.append("errorManager: " + errorManager);
-                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                        contextBuffer.append("eventManager: " + eventManager);
-
-                        String context = contextBuffer.toString();
-                        String possibleCause = "Cant Request List Actor Asset User Registered";
-
-                        CantRequestListActorAssetUserRegisteredException pluginStartException = new CantRequestListActorAssetUserRegisteredException(CantRequestListActorAssetUserRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
-
-                        //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
-                        throw pluginStartException;
-                    */
+                        return actorAssetUserRegisteredList;
+//                        StringBuffer contextBuffer = new StringBuffer();
+//                        contextBuffer.append("Plugin ID: " + pluginId);
+//                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                        contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+//                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                        contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+//                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                        contextBuffer.append("errorManager: " + errorManager);
+//                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                        contextBuffer.append("eventManager: " + eventManager);
+//
+//                        String context = contextBuffer.toString();
+//                        String possibleCause = "Cant Request List Actor Asset User Registered";
+//
+//                        CantRequestListActorAssetUserRegisteredException pluginStartException = new CantRequestListActorAssetUserRegisteredException(CantRequestListActorAssetUserRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
+//
+//                        //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+//
+//                        throw pluginStartException;
                     }
 
             }else{
-
-                StringBuffer contextBuffer = new StringBuffer();
-                contextBuffer.append("Plugin ID: " + pluginId);
-                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                contextBuffer.append("errorManager: " + errorManager);
-                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                contextBuffer.append("eventManager: " + eventManager);
-
-                String context = contextBuffer.toString();
-                String possibleCause = "Asset User Actor Network Service Not Registered";
-
-                CantRequestListActorAssetUserRegisteredException pluginStartException = new CantRequestListActorAssetUserRegisteredException(CantRequestListActorAssetUserRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
-
-               // errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
-                throw pluginStartException;
+                return actorAssetUserRegisteredList;
+//                StringBuffer contextBuffer = new StringBuffer();
+//                contextBuffer.append("Plugin ID: " + pluginId);
+//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                contextBuffer.append("errorManager: " + errorManager);
+//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                contextBuffer.append("eventManager: " + eventManager);
+//
+//                String context = contextBuffer.toString();
+//                String possibleCause = "Asset User Actor Network Service Not Registered";
+//
+//                CantRequestListActorAssetUserRegisteredException pluginStartException = new CantRequestListActorAssetUserRegisteredException(CantRequestListActorAssetUserRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
+//
+//               // errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+//
+//                throw pluginStartException;
 
 
             }
@@ -1090,8 +1091,6 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
             }
 
 
-
-
         }
 
         /*
@@ -1128,7 +1127,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
             FermatEvent event = eventManager.getNewEvent(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
             event.setSource(EventSource.ACTOR_ASSET_USER);
 
-            //((AssetUserActorCompleteRegistrationNotificationEvent) event).setActorAssetUser(actorAssetUserNewRegsitered);
+            ((ActorAssetUserCompleteRegistrationNotificationEvent) event).setActorAssetUser(actorAssetUserNewRegsitered);
 
             eventManager.raiseEvent(event);
         }
