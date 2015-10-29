@@ -591,11 +591,10 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
     @Override
     public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException {
         try {
-            //for (ActorAssetUser actorAssetUser : actorAssetUsers){
-            //    //todo Actualizar Estado en base de datos para este actorAssetUser ConnectionState = PENDING_REMOTELY_ACCEPTANCE
-            //    assetUserActorNetworkServiceManager.requestCryptoAddress(requester, actorAssetUser);
-            //}
-            assetUserActorNetworkServiceManager.requestCryptoAddress(requester, actorAssetUsers.get(1));
+            for (ActorAssetUser actorAssetUser : actorAssetUsers){
+                //todo Actualizar Estado en base de datos para este actorAssetUser ConnectionState = PENDING_REMOTELY_ACCEPTANCE
+                assetUserActorNetworkServiceManager.requestCryptoAddress(requester, actorAssetUser);
+            }
         } catch (CantRequestCryptoAddressException e) {
             e.printStackTrace();
         }
