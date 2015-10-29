@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
@@ -28,6 +29,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraUserException;
@@ -109,6 +113,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 
 
 
+
     public static final String INTRA_USERS_PRIVATE_KEYS_DIRECTORY_NAME = "intraUserIdentityPrivateKeys";
 
     @Override
@@ -134,6 +139,10 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
     @Override
     public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
         return null;
+
+    public IntraWalletUserActorPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+
     }
 
     private IntraWalletUserActorDao intraWalletUserActorDao;

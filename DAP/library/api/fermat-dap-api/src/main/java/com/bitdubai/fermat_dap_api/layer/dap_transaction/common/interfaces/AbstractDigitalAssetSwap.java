@@ -32,7 +32,7 @@ import java.util.UUID;
 public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
 
     AssetVaultManager assetVaultManager;
-    BitcoinNetworkManager bitcoinNetworkManager;
+    public BitcoinNetworkManager bitcoinNetworkManager;
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
     public AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
@@ -57,6 +57,11 @@ public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
     public abstract void checkDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata) throws DAPException;
 
     public boolean isDigitalAssetHashValid(DigitalAssetMetadata digitalAssetMetadata) throws CantGetGenesisTransactionException, DAPException {
+        /*List<CryptoTransaction> cryptoTransactionList = bitcoinNetworkManager.getGenesisTransaction(digitalAssetMetadata.getGenesisTransaction());
+        if(cryptoTransactionList==null||cryptoTransactionList.isEmpty()){
+            throw new CantGetGenesisTransactionException(CantGetGenesisTransactionException.DEFAULT_MESSAGE,null,"Getting the genesis transaction from Crypto Network","The crypto transaction received is null");
+        }
+        this.cryptoTransaction=cryptoTransactionList.get(0);*/
         //I will hardcode this check for testing
         System.out.println("ASSET DISTRIBUTION OR RECEPTION Check contract is hardcoded");
         //return true;
@@ -90,6 +95,8 @@ public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
     }
 
     public abstract void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser actorAssetUser) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException;
+
+    public abstract void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, String senderId) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException;
 
     public boolean isAvailableBalanceInAssetVault(long genesisAmount, String genesisTransaction){
         //I will hardcode this control for testing

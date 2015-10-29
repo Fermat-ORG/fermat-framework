@@ -106,38 +106,10 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
                    DealsWithWalletManager,
                    DealsWithIntraUsersNetworkService,//
                    IntraWalletUserManager,
-                   LogManagerForDevelopers,
-                   Service,
-                   Plugin {
+                   LogManagerForDevelopers {
 
-    @Override
-    public List<AddonVersionReference> getNeededAddonReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<PluginVersionReference> getNeededPluginReferences() {
-        List<PluginVersionReference> rList = new ArrayList<>();
-
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_ADDRESSES , Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.INTRA_WALLET_USER, Developers.BITDUBAI, new Version()));
-
-        return rList;
-    }
-
-    @Override
-    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    protected void validateAndAssignReferences() {
-
-    }
-
-    @Override
-    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
-        return null;
+    public IntraWalletUserIdentityPluginRoot() {
+        super(new PluginVersionReference(new Version()));
     }
 
     private IntraWalletUserIdentityDao intraWalletUserIdentityDao;

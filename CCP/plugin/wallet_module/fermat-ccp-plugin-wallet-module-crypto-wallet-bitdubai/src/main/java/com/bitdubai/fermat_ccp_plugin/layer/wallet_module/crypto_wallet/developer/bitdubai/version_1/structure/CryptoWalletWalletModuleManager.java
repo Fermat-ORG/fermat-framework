@@ -289,12 +289,13 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
                             finalRecordList.add(new CryptoWalletWalletModuleWalletContact(enrichIntraUser(intraUser, walletPublicKey), walletPublicKey));
 
                     }
-
             return  finalRecordList;
 
         } catch (CantGetAllWalletContactsException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, e);
         }  catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
