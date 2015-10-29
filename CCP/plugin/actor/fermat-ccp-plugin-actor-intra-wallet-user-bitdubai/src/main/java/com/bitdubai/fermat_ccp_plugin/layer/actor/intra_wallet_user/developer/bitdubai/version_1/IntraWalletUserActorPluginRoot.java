@@ -28,7 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+
 
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
@@ -109,42 +109,8 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
         DealsWithPluginFileSystem,
         DealsWithIntraUsersNetworkService,
         IntraWalletUserManager,
-        LogManagerForDevelopers {
-
-
-
-
-    public static final String INTRA_USERS_PRIVATE_KEYS_DIRECTORY_NAME = "intraUserIdentityPrivateKeys";
-
-    @Override
-    public List<AddonVersionReference> getNeededAddonReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<PluginVersionReference> getNeededPluginReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    protected void validateAndAssignReferences() {
-
-    }
-
-    @Override
-    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
-        return null;
-
-    public IntraWalletUserActorPluginRoot() {
-        super(new PluginVersionReference(new Version()));
-
-    }
-
+        LogManagerForDevelopers
+{
     private IntraWalletUserActorDao intraWalletUserActorDao;
 
     /**
@@ -198,6 +164,25 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
      */
     //ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
+    public static final String INTRA_USERS_PRIVATE_KEYS_DIRECTORY_NAME = "intraUserIdentityPrivateKeys";
+
+    /**
+     * AbstractPlugin interface implementation.
+     */
+
+    public IntraWalletUserActorPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+
+    }
+
+    @Override
+    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
+        return null;
+    }
+
+
+
+
 
     /**
      * ActorIntraWalletUserManager interface implementation.
@@ -219,7 +204,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
     @Override
     public void askIntraWalletUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraWalletUserException {
         try {
-            this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
+            this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
         } catch (CantAddPendingIntraWalletUserException e) {
             throw new CantCreateIntraWalletUserException("CAN'T ADD NEW INTRA USER CONNECTION", e, "", "");
         } catch (Exception e) {
@@ -424,7 +409,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
             throw new CantCreateIntraUserException(CantCreateIntraUserException.DEFAULT_MESSAGE, FermatException.wrapException(e), "There is a problem I can't identify.", null);
         }
 
-           return new IntraUserActorRecord(publicKey, privateKey, actorName);
+        return new IntraUserActorRecord(publicKey, privateKey, actorName);
 
     }
 
@@ -439,7 +424,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 
             Actor actor = this.intraWalletUserActorDao.getIntraUserActorByPublicKey(walletPublicKey,actorPublicKey);
 
-               //not found actor
+            //not found actor
             if(actor == null)
                 throw new IntraUserNotFoundException("", null, ".","Intra User not found");
 
@@ -450,8 +435,8 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
             throw new CantGetIntraUserException("CAN'T GET INTRA USER ACTOR", FermatException.wrapException(e), "", "unknown error");
         }
         catch(CantLoadPrivateKeyException e){
-             throw new CantGetIntraUserException("CAN'T GET INTRA USER ACTOR", FermatException.wrapException(e), "", "unknown error");
-      }
+            throw new CantGetIntraUserException("CAN'T GET INTRA USER ACTOR", FermatException.wrapException(e), "", "unknown error");
+        }
         catch(Exception e)
         {
             throw new CantGetIntraUserException("CAN'T GET INTRA USER ACTOR", e, "", "");
@@ -688,10 +673,10 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
         try {
 
             System.out.println("PROCESSING NOTIFICATIONS IN INTRA USER WALLET ");
-            List<IntraUserNotification> intraUserNotificationes = intraUserNetworkServiceManager.getPendingNotifications();
+            List<IntraUserNotification> intraUserNotifications = intraUserNetworkServiceManager.getPendingNotifications();
 
 
-            for (IntraUserNotification notification : intraUserNotificationes) {
+            for (IntraUserNotification notification : intraUserNotifications) {
 
                 String intraUserSendingPublicKey = notification.getActorSenderPublicKey();
 
@@ -701,7 +686,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
                     //ASKFORACCEPTANCE occurs when other user request you a connection
                     case ASKFORACCEPTANCE:
 
-                        //this.askIntraWalletUserForAcceptance(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserSendingPublicKey, notification.getActorSenderProfileImage());
+                        //this.askIntraWalletUserForAccepombretance(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserSendingPublicKey, notification.getActorSenderProfileImage());
                         this.receivingIntraWalletUserRequestConnection(intraUserToConnectPublicKey, notification.getActorSenderAlias(), intraUserSendingPublicKey, notification.getActorSenderProfileImage());
                         break;
                     case CANCEL:
@@ -780,4 +765,17 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
     }
 
 
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
