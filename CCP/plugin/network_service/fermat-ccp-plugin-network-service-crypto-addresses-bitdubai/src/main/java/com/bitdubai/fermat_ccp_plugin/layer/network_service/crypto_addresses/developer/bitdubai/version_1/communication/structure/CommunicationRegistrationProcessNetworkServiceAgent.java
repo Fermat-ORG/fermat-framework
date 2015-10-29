@@ -1,14 +1,21 @@
+/*
+ * @#RegistrationProcessNetworkServiceAgent.java - 2015
+ * Copyright bitDubai.com., All rights reserved.
+ * You may not modify, use, reproduce or distribute this software.
+ * BITDUBAI/CONFIDENTIAL
+ */
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.CryptoAddressesNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.CommunicationRegistrationProcessNetworkServiceAgent</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent</code>
  * <p/>
- * Created by Leon Acosta - (laion.cj911@gmail.com) on 15/10/2015.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 22/09/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -24,7 +31,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     /**
      * Represent the templateNetworkServicePluginRoot
      */
-    private CryptoAddressesNetworkServicePluginRoot networkServicePluginRoot;
+    private CryptoAddressesNetworkServicePluginRoot templateNetworkServicePluginRoot;
 
     /**
      * Represent the communicationsClientConnection
@@ -38,11 +45,11 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
     /**
      * Constructor with parameters
-     * @param networkServicePluginRoot
+     * @param templateNetworkServicePluginRoot
      * @param communicationsClientConnection
      */
-    public CommunicationRegistrationProcessNetworkServiceAgent(CryptoAddressesNetworkServicePluginRoot networkServicePluginRoot, CommunicationsClientConnection communicationsClientConnection) {
-        this.networkServicePluginRoot = networkServicePluginRoot;
+    public CommunicationRegistrationProcessNetworkServiceAgent(CryptoAddressesNetworkServicePluginRoot templateNetworkServicePluginRoot, CommunicationsClientConnection communicationsClientConnection) {
+        this.templateNetworkServicePluginRoot = templateNetworkServicePluginRoot;
         this.communicationsClientConnection = communicationsClientConnection;
         this.active = Boolean.FALSE;
     }
@@ -57,17 +64,17 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
         while (active){
             try{
 
-                if (communicationsClientConnection.isRegister() && !networkServicePluginRoot.isRegister()){
+                if (communicationsClientConnection.isRegister() && !templateNetworkServicePluginRoot.isRegister()){
 
                     /*
                      * Construct my profile and register me
                      */
-                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(networkServicePluginRoot.getIdentityPublicKey(),
-                            (networkServicePluginRoot.getAlias().toLowerCase()+"_"+networkServicePluginRoot.getId().toString()),
-                            (networkServicePluginRoot.getName()+" ("+networkServicePluginRoot.getId()+")"),
-                            networkServicePluginRoot.getNetworkServiceType(),
-                            networkServicePluginRoot.getPlatformComponentType(),
-                            networkServicePluginRoot.getExtraData());
+                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(templateNetworkServicePluginRoot.getIdentityPublicKey(),
+                                                                                                                                                (templateNetworkServicePluginRoot.getAlias().toLowerCase()+"_"+templateNetworkServicePluginRoot.getId().toString()),
+                                                                                                                                                (templateNetworkServicePluginRoot.getName()+" ("+templateNetworkServicePluginRoot.getId()+")"),
+                                                                                                                                                 templateNetworkServicePluginRoot.getNetworkServiceType(),
+                                                                                                                                                 templateNetworkServicePluginRoot.getPlatformComponentType(),
+                                                                                                                                                 templateNetworkServicePluginRoot.getExtraData());
 
                     /*
                      * Register me
@@ -77,19 +84,19 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     /*
                      * Configure my new profile
                      */
-                    networkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
+                    templateNetworkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
 
                     /*
                      * Initialize the connection manager
                      */
-                    networkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
+                    templateNetworkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
 
                     /*
                      * Stop the agent
                      */
                     active = Boolean.FALSE;
 
-                }else if (!networkServicePluginRoot.isRegister()){
+                }else if (!templateNetworkServicePluginRoot.isRegister()){
 
                     try {
                         sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
@@ -98,7 +105,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                         active = Boolean.FALSE;
                     }
 
-                }else if (!networkServicePluginRoot.isRegister()){
+                }else if (!templateNetworkServicePluginRoot.isRegister()){
                     active = Boolean.FALSE;
                 }
 
@@ -131,5 +138,4 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     public boolean getActive() {
         return active;
     }
-
 }

@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantUpdateRecordDataBaseException extends FermatException {
 
-    private static final String DEFAULT_MESSAGE = "CAN'T UPDATE A RECORD IN DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T UPDATE A RECORD IN DATABASE EXCEPTION";
 
     public CantUpdateRecordDataBaseException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);

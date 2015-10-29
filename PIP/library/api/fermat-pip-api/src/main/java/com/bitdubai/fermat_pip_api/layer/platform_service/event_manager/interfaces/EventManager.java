@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddonManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -8,7 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
  * Created by ciencias on 23.01.15.
  * Modified by Leon Acosta - (laion.cj91@gmail.com) on 16/09/2015.
  */
-public interface EventManager {
+public interface EventManager extends FermatAddonManager {
 
     /**
      * The method <code>getNewListener</code> is used to get a new listener.

@@ -60,39 +60,13 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
         DealsWithPluginDatabaseSystem,
         OutgoingIntraActorManager {
 
-    @Override
-    public List<AddonVersionReference> getNeededAddonReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<PluginVersionReference> getNeededPluginReferences() {
-        List<PluginVersionReference> rList = new ArrayList<>();
-
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.BASIC_WALLET   , Plugins.BITCOIN_WALLET     , Developers.BITDUBAI, new Version()));
-        rList.add(new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_TRANSMISSION, Developers.BITDUBAI, new Version()));
-
-        return rList;
-    }
-
-    @Override
-    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    protected void validateAndAssignReferences() {
-
-    }
-
-    @Override
-    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
-        return null;
+    public OutgoingIntraActorTransactionPluginRoot() {
+        super(new PluginVersionReference(new Version()));
     }
 
     /*
-         * DealsWithBitcoinWallet Interface member variables.
-         */
+             * DealsWithBitcoinWallet Interface member variables.
+             */
     private BitcoinWalletManager bitcoinWalletManager;
 
     /*
