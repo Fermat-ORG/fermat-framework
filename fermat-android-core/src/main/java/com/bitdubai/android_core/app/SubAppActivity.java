@@ -67,6 +67,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
         activePlatforms = getIntent().getParcelableArrayListExtra(StartActivity.ACTIVE_PLATFORMS);
 
+        developMode = getIntent().getBooleanExtra(DEVELOP_MODE,false);
 
         setActivityType(ActivityType.ACTIVITY_TYPE_SUB_APP);
 

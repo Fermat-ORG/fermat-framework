@@ -55,6 +55,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     private static final String WALLET_TYPE = "walletType";
     private static final String WALLET_CATEGORY = "walletCategory";
 
+
     private InstalledWallet lastWallet;
 
 
@@ -214,6 +215,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
             resetThisActivity();
             Intent intent = new Intent(this, SubAppActivity.class);
+            intent.putExtra(DEVELOP_MODE, developMode);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             finish();
             startActivity(intent);
@@ -505,7 +507,8 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
     public void onNavigationDrawerItemSelected(int position, String activityCode) {
         if(activityCode.equals("develop_mode")){
             developMode = true;
-        }
+            onBackPressed();
+        }else
         changeActivity(activityCode);
     }
 }
