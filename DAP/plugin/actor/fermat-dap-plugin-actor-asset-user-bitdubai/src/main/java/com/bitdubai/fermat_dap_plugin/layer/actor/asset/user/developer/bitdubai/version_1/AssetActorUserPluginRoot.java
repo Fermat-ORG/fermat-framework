@@ -409,6 +409,8 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
             System.out.println("=============Actor Asset Inicia  Peticion Crypto=========");
             CryptoAddress genesisAddress = getGenesisAddress();
             registerGenesisAddressInCryptoAddressBook(genesisAddress);
+            System.out.println("=====Actor Asset Registrando Crypto Local y Enviando======");
+            this.assetUserActorDao.createNewAssetUser(actorAssetUser);
             this.assetUserActorNetworkServiceManager.sendCryptoAddress(actorAssetUser, actorAssetIssuer, genesisAddress);
             System.out.println("=============Actor Asset User envio Crypto================");
             System.out.println("Actor Asset User: " + actorAssetUser.getName());
@@ -419,6 +421,8 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         } catch (CantRegisterCryptoAddressBookRecordException e) {
             e.printStackTrace();
         } catch (CantSendCryptoAddressException e) {
+            e.printStackTrace();
+        } catch (CantAddPendingAssetUserException e) {
             e.printStackTrace();
         }
     }

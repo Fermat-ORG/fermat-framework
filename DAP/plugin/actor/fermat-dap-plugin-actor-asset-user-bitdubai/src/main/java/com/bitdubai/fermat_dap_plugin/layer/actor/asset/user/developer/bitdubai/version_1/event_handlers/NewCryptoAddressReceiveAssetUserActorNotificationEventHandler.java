@@ -9,7 +9,6 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorNetworkServiceAssetUser;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.AssetActorUserPluginRoot;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.NewCryptoAddressReceiveAssetUserActorNotificationEvent;
 
 /**
@@ -17,10 +16,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.N
  */
 public class NewCryptoAddressReceiveAssetUserActorNotificationEventHandler implements FermatEventHandler {
 
-
     private ActorNetworkServiceAssetUser actorNetworkServiceAssetUser;
 
-    public NewCryptoAddressReceiveAssetUserActorNotificationEventHandler(ActorNetworkServiceAssetUser actorNetworkServiceAssetUser){
+    public NewCryptoAddressReceiveAssetUserActorNotificationEventHandler(ActorNetworkServiceAssetUser actorNetworkServiceAssetUser) {
         this.actorNetworkServiceAssetUser = actorNetworkServiceAssetUser;
     }
 
@@ -30,7 +28,7 @@ public class NewCryptoAddressReceiveAssetUserActorNotificationEventHandler imple
 
             System.out.println("Actor Asset User Receive Crypto Address - handleEvent =" + fermatEvent);
 
-            NewCryptoAddressReceiveAssetUserActorNotificationEvent newCryptoAddressReceiveAssetUserActorNotificationEvent =      (NewCryptoAddressReceiveAssetUserActorNotificationEvent) fermatEvent;
+            NewCryptoAddressReceiveAssetUserActorNotificationEvent newCryptoAddressReceiveAssetUserActorNotificationEvent = (NewCryptoAddressReceiveAssetUserActorNotificationEvent) fermatEvent;
 
             ActorAssetUser actorAssetUserSender = (ActorAssetUser) newCryptoAddressReceiveAssetUserActorNotificationEvent.getActorAssetUserSender();
 
