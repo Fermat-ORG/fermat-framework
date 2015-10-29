@@ -22,7 +22,7 @@ public class AssetUserActorRequestListRegisteredNetworksNotificationEventHandler
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        System.out.println("Succesfull Request AssetuserActor List  - handleEvent =" + platformEvent);
+        System.out.println("Actor Asset User Succesfull Request AssetuserActor List  - handleEvent =" + platformEvent);
 
         if (((Service) this.actorNetworkServiceAssetUser).getStatus() == ServiceStatus.STARTED) {
 

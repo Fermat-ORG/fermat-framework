@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
@@ -120,6 +121,7 @@ public class PlatformInfoPlatformServicePluginRootOld implements Addon, DealsWit
         }
          platformInfoPlatformService.setPlatformInfo(platformInfo);
     }
+
 
     /**
      * LogManagerForDevelopers Interface implementation.

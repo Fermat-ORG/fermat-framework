@@ -120,6 +120,7 @@ public class AssetReceptionDeveloperDatabaseFactory implements DealsWithPluginDa
         assetReceptionColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_CRYPTO_STATUS_COLUMN_NAME);
         assetReceptionColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_PROTOCOL_STATUS_COLUMN_NAME);
         assetReceptionColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_ACTOR_ASSET_ISSUER_BITCOIN_ADDRESS_COLUMN_NAME);
+        assetReceptionColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEPTION_ID_COLUMN_NAME);
         /**
          * Table Asset Reception addition.
          */
