@@ -40,10 +40,10 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
     DistributionStatus distributionStatus;
 
     DigitalAssetReceptionVault digitalAssetReceptionVault;
-    AssetVaultManager assetVaultManager;
+    //AssetVaultManager assetVaultManager;
 
-    public DigitalAssetReceptor(AssetVaultManager assetVaultManager, ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
-        super(assetVaultManager,  pluginId, pluginFileSystem);
+    public DigitalAssetReceptor(/*AssetVaultManager assetVaultManager,*/ ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
+        super(/*assetVaultManager,*/  pluginId, pluginFileSystem);
         this.errorManager=errorManager;
     }
 

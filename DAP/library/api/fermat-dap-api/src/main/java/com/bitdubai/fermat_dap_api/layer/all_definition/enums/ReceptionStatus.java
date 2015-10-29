@@ -10,6 +10,7 @@ public enum ReceptionStatus {
     CHECKING_CONTRACT("CCONT"),
     CHECKING_HASH("CHASH"),
     CONTRACT_CHECKED("CONTC"),
+    CRYPTO_RECEIVED("BTCRX"),
     HASH_CHECKED("HASHC"),
     RECEIVING("RXG"),
     REJECTED_BY_CONTRACT("DAMRBC"),
@@ -34,6 +35,8 @@ public enum ReceptionStatus {
                 return ReceptionStatus.CHECKING_HASH;
             case "CONTC":
                 return ReceptionStatus.CONTRACT_CHECKED;
+            case "BTCRX":
+                return ReceptionStatus.CRYPTO_RECEIVED;
             case "HASHC":
                 return ReceptionStatus.HASH_CHECKED;
             case "RXG":
