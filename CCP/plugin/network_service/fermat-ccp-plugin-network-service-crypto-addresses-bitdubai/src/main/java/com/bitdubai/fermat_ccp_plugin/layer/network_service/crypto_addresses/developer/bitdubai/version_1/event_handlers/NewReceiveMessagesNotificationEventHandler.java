@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.event_handlers;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.CryptoAddressesNetworkServicePluginRoot;
@@ -25,14 +26,25 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent =" + platformEvent);
+
+
 
 
         if (platformEvent instanceof NewNetworkServiceMessageSentNotificationEvent) {
 
-            NewNetworkServiceMessageSentNotificationEvent newNetworkServiceMessageSentNotificationEvent = (NewNetworkServiceMessageSentNotificationEvent) platformEvent;
+            NewNetworkServiceMessageSentNotificationEvent event = (NewNetworkServiceMessageSentNotificationEvent) platformEvent;
 
-            cryptoAddressesNetworkServicePluginRoot.handleNewMessages((FermatMessage) newNetworkServiceMessageSentNotificationEvent.getData());
+            FermatMessage eventData = (FermatMessage) event.getData();
+
+            String eventString = "EventSource: "+platformEvent.getSource() + " - EventContent: "+eventData.getContent();
+            System.out.println("********* Crypto Addresses: Event Processed: " + eventString);
+
+            if (event.getSource().equals(CryptoAddressesNetworkServicePluginRoot.EVENT_SOURCE)) {
+
+                System.out.println("********* Crypto Addresses: Event belongs to this NS: " + eventString);
+                cryptoAddressesNetworkServicePluginRoot.handleNewMessages((FermatMessage) event.getData());
+
+            }
 
         }
     }

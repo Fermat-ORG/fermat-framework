@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantAcceptIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCancelIntraWalletUserException;
@@ -91,29 +92,8 @@ import java.util.UUID;
 
 public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithCCPIdentityIntraWalletUser,DealsWithCCPIntraWalletUsers, DealsWithPluginFileSystem, LogManagerForDevelopers, IntraUserModuleManager, Plugin, Service  {
 
-    @Override
-    public List<AddonVersionReference> getNeededAddonReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<PluginVersionReference> getNeededPluginReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    protected void validateAndAssignReferences() {
-
-    }
-
-    @Override
-    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
-        return null;
+    public IntraWalletUserModulePluginRoot() {
+        super(new PluginVersionReference(new Version()));
     }
 
     private static String INTRA_USER_LOGIN_FILE_NAME = "intraUsersLogin";
@@ -611,7 +591,14 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements D
     @Override
     public int getIntraUsersWaitingYourAcceptanceCount() {
        //TODO: falta que este metodo que devuelva la cantidad de request de conexion que tenes
-       return 6;
+        try {
+            return getIntraUsersWaitingYourAcceptance(getActiveIntraUserIdentity().getPublicKey(),100,0).size();
+        } catch (CantGetIntraUsersListException e) {
+            e.printStackTrace();
+        } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
 

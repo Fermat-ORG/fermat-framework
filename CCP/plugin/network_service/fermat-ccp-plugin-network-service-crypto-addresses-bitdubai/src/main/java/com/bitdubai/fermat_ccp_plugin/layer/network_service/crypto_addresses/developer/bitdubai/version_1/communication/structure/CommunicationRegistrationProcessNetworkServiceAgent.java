@@ -21,8 +21,15 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     private static final long SLEEP_TIME = 5000;
     private static final long MAX_SLEEP_TIME = 20000;
 
-    private final CryptoAddressesNetworkServicePluginRoot      networkServicePluginRoot      ;
-    private final CommunicationsClientConnection               communicationsClientConnection;
+    /**
+     * Represent the templateNetworkServicePluginRoot
+     */
+    private CryptoAddressesNetworkServicePluginRoot networkServicePluginRoot;
+
+    /**
+     * Represent the communicationsClientConnection
+     */
+    private CommunicationsClientConnection communicationsClientConnection;
 
     /**
      * Represent the active
@@ -30,14 +37,14 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     private boolean active;
 
     /**
-     * Constructor with parameters.
+     * Constructor with parameters
+     * @param networkServicePluginRoot
+     * @param communicationsClientConnection
      */
-    public CommunicationRegistrationProcessNetworkServiceAgent(final CryptoAddressesNetworkServicePluginRoot      networkServicePluginRoot      ,
-                                                               final CommunicationsClientConnection               communicationsClientConnection) {
-
-        this.networkServicePluginRoot       = networkServicePluginRoot      ;
+    public CommunicationRegistrationProcessNetworkServiceAgent(CryptoAddressesNetworkServicePluginRoot networkServicePluginRoot, CommunicationsClientConnection communicationsClientConnection) {
+        this.networkServicePluginRoot = networkServicePluginRoot;
         this.communicationsClientConnection = communicationsClientConnection;
-        this.active                         = Boolean.FALSE                 ;
+        this.active = Boolean.FALSE;
     }
 
     /**
@@ -48,16 +55,14 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     public void run() {
 
         while (active){
-
-            try {
+            try{
 
                 if (communicationsClientConnection.isRegister() && !networkServicePluginRoot.isRegister()){
 
                     /*
                      * Construct my profile and register me
                      */
-                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
-                            networkServicePluginRoot.getIdentityPublicKey(),
+                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(networkServicePluginRoot.getIdentityPublicKey(),
                             (networkServicePluginRoot.getAlias().toLowerCase()+"_"+networkServicePluginRoot.getId().toString()),
                             (networkServicePluginRoot.getName()+" ("+networkServicePluginRoot.getId()+")"),
                             networkServicePluginRoot.getNetworkServiceType(),
@@ -72,7 +77,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     /*
                      * Configure my new profile
                      */
-                    networkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
+                    networkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
 
                     /*
                      * Initialize the connection manager
@@ -105,7 +110,6 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     e1.printStackTrace();
                     active = Boolean.FALSE;
                 }
-
             }
         }
     }

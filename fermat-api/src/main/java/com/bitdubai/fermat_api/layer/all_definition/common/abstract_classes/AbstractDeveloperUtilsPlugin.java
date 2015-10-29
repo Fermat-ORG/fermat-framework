@@ -26,7 +26,9 @@ public abstract class AbstractDeveloperUtilsPlugin<T extends DeveloperTool> exte
 
     private final DevelopersUtilReference developersUtilReference;
 
-    public AbstractDeveloperUtilsPlugin(final DevelopersUtilReference developersUtilReference) {
+    public AbstractDeveloperUtilsPlugin(final PluginVersionReference  pluginVersionReference,
+                                        final DevelopersUtilReference developersUtilReference) {
+        super(pluginVersionReference);
 
         this.developersUtilReference = developersUtilReference;
 

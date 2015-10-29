@@ -658,7 +658,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
         List<WalletContact> contacts = new ArrayList<>();
         try
         {
-            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listAllActorContactsAndConnections("reference_wallet"/*referenceWalletSession.getWalletSessionType().getWalletPublicKey()*/, intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey());
+            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listAllActorContactsAndConnections(referenceWalletSession.getWalletSessionType().getWalletPublicKey(), intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey());
             for (CryptoWalletWalletContact wcr : walletContactRecords) {
 
                 String contactAddress = "";
