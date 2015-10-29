@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.annotations.NeededAddonReference;
@@ -40,6 +41,8 @@ public abstract class AbstractPlugin implements Plugin, Service {
 
     private final PluginVersionReference pluginVersionReference;
     protected     ServiceStatus          serviceStatus         ;
+
+    protected     UUID                   pluginId              ;
 
     public AbstractPlugin(final PluginVersionReference pluginVersionReference) {
 
@@ -84,7 +87,29 @@ public abstract class AbstractPlugin implements Plugin, Service {
         return null;
     }
 
-    public abstract void setId(final UUID pluginId);
+    @Override
+    public void start() throws CantStartPluginException {
+        this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    @Override
+    public void pause() {
+        this.serviceStatus = ServiceStatus.PAUSED;
+    }
+
+    @Override
+    public void resume() {
+        this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    @Override
+    public void stop() {
+        this.serviceStatus = ServiceStatus.STOPPED;
+    }
+
+    public void setId(final UUID pluginId) {
+        this.pluginId = pluginId;
+    }
 
 
     public final List<AddonVersionReference> getNeededAddons() throws CantListNeededReferencesException {
