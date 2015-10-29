@@ -16,12 +16,12 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.dev
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.Observable;
@@ -94,12 +94,12 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
     /**
      * (non-javadoc)
      */
-    public void sendMessage(final String senderIdentityPublicKey, final String pk, final String messageContent) {
+    public void sendMessage(final String senderIdentityPublicKey,final String receiverPk, final String messageContent) {
 
         try {
 
             FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(senderIdentityPublicKey,  //Sender NetworkService
-                    remoteNetworkServiceProfile.getIdentityPublicKey(),   //Receiver
+                    receiverPk,   //Receiver
                     messageContent,                //Message Content
                     FermatMessageContentType.TEXT);//Type
             /*

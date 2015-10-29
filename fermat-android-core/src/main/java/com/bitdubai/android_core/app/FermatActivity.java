@@ -187,6 +187,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
         try {
 
+            activePlatforms = new ArrayList();
+
             /*
             *  Our Future code goes here ...
             */
@@ -994,8 +996,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
         try {
 
-            if(developMode){
+            if(activePlatforms==null) {
                 activePlatforms = new ArrayList();
+                activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
+            }
+
+            if(developMode){
                 activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
                 activePlatforms.add(Platforms.DIGITAL_ASSET_PLATFORM);
                 activePlatforms.add(Platforms.CRYPTO_BROKER_PLATFORM);
