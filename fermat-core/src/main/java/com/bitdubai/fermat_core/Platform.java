@@ -920,8 +920,8 @@ public class Platform implements Serializable {
                     injectLayerReferences(cryptoTransmissionNetworkService);
                     injectPluginReferencesAndStart(cryptoTransmissionNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_CRYPTO_TRANSMISSION_NETWORK_SERVICE);
 
-                   Plugin cryptoAddressesNetworkService = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, Plugins.CRYPTO_ADDRESSES));
-                   injectPluginReferencesAndStart(cryptoAddressesNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE);
+//                   Plugin cryptoAddressesNetworkService = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, Plugins.CRYPTO_ADDRESSES));
+//                   injectPluginReferencesAndStart(cryptoAddressesNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE);
 
                     layerReference = new LayerReference(platformReference, Layers.MIDDLEWARE);
 
