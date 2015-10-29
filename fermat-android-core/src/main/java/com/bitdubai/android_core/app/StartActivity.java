@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.CantReportCriticalStartingProblemException;
 import com.bitdubai.fermat_api.CantStartPlatformException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.DeviceInfoUtils;
 import com.bitdubai.fermat_api.layer.osa_android.LoggerSystemOs;
@@ -32,6 +33,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions.CantSetPlatformInformationException;
+
+import java.util.ArrayList;
 
 
 /**
@@ -48,9 +51,12 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
 
 
     public static final String START_ACTIVITY_INIT = "Init";
+    public static final String ACTIVE_PLATFORMS = "active";
 
     // Indicate if the app was loaded, for not load again the start activity.
     private static boolean WAS_START_ACTIVITY_LOADED = false;
+
+    ArrayList<Platforms> activePlatforms;
 
 
     private AndroidOsFileSystem fileSystemOs;
@@ -173,6 +179,7 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
 
     private boolean fermatInit() {
         Intent intent = new Intent(this, SubAppActivity.class);
+        intent.putExtra(ACTIVE_PLATFORMS,activePlatforms);
         intent.putExtra(START_ACTIVITY_INIT, "init");
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -280,6 +287,7 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
     private void setPlatformDeviceInfo(PlatformInfoManager platformInfoManager){
         try {
             PlatformInfo platformInfo = platformInfoManager.getPlatformInfo();
+            activePlatforms = loadActivePlatforms(platformInfo);
             platformInfo.setScreenSize(getScreenSize());
             platformInfoManager.setPlatformInfo(platformInfo);
         } catch(CantLoadPlatformInformationException |
@@ -296,5 +304,15 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
         return DeviceInfoUtils.toScreenSize(dpHeight,dpWidth);
 
+    }
+
+    private ArrayList<Platforms> loadActivePlatforms(PlatformInfo platformInfo){
+        ArrayList<Platforms> list;
+        //if(platformInfo.getActivePlatforms().size()==0){
+           list = platformInfo.addActivePlatform(Platforms.CRYPTO_CURRENCY_PLATFORM);
+        //}else{
+         //  list = platformInfo.getActivePlatforms();
+        //}
+        return list;
     }
 }
