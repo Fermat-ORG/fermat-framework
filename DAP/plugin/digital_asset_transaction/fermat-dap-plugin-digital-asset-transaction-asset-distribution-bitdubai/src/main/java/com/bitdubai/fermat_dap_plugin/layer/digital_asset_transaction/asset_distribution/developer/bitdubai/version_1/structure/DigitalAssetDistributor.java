@@ -56,8 +56,8 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
     DigitalAssetDistributionVault digitalAssetDistributionVault;
     //BitcoinNetworkManager bitcoinNetworkManager;
 
-    public DigitalAssetDistributor(AssetVaultManager assetVaultManager, ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
-        super(assetVaultManager,  pluginId, pluginFileSystem);
+    public DigitalAssetDistributor(/*AssetVaultManager assetVaultManager,*/ ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem) throws CantExecuteDatabaseOperationException {
+        super(/*assetVaultManager,*/  pluginId, pluginFileSystem);
         this.errorManager=errorManager;
     }
 

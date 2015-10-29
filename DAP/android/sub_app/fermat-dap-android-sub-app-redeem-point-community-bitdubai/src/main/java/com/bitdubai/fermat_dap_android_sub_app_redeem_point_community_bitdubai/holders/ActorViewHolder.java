@@ -3,9 +3,9 @@ package com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.SquareImageView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
-import com.bitdubai.fermat_android_api.ui.Views.SquareImageView;
 
 /**
  * Created by Nerio on 21/10/15.

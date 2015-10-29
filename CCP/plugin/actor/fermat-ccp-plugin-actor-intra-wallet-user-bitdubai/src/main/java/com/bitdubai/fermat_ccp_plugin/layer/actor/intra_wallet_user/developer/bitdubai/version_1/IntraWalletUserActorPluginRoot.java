@@ -291,6 +291,21 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
         }
     }
 
+
+    @Override
+    public List<IntraWalletUser> getConnectedIntraWalletUsers(String intraUserLoggedInPublicKey) throws CantGetIntraWalletUsersException {
+        try {
+            return this.intraWalletUserActorDao.getAllConnectedIntraWalletUsers(intraUserLoggedInPublicKey,ConnectionState.CONNECTED,100,0);
+
+        }
+        catch (CantGetIntraWalletUsersListException e) {
+            throw new CantGetIntraWalletUsersException("CAN'T LIST INTRA USER CONNECTIONS", e, "", "");
+        }
+        catch (Exception e) {
+            throw new CantGetIntraWalletUsersException("CAN'T LIST INTRA USER CONNECTIONS", FermatException.wrapException(e), "", "");
+        }
+    }
+
     public Actor getActorByPublicKey(String actorPublicKey) throws CantGetNotificationException, NotificationNotFoundException {
 
         try {
@@ -595,7 +610,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
                  * I confirm the application in the Network Service
                  */
                 //TODO: VER PORQUE TIRA ERROR
-                //intraUserNetworkServiceManager.confirmNotification(notification.getId());
+                intraUserNetworkServiceManager.confirmNotification(notification.getId());
             }
 
 

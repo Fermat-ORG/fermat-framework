@@ -42,10 +42,11 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
         setPluginId(pluginId);
         setPluginDatabaseSystem(pluginDatabaseSystem);
         setPluginFileSystem(pluginFileSystem);
-        this.digitalAssetDistributor=new DigitalAssetDistributor(assetVaultManager,
+        this.digitalAssetDistributor=new DigitalAssetDistributor(/*assetVaultManager,*/
                 errorManager,
                 pluginId,
                 pluginFileSystem);
+        this.digitalAssetDistributor.setAssetVaultManager(assetVaultManager);
     }
 
     public void setAssetTransmissionNetworkServiceManager(AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager) throws CantSetObjectException{
