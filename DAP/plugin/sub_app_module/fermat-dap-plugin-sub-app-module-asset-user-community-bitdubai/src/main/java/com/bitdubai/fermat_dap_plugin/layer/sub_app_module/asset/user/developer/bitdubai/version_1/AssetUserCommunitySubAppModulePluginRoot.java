@@ -142,9 +142,7 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
 
         actorAssetList = new ArrayList<>();
 
-//        Location location = new DeviceLocation(00.00, 00.00, 12345678910L, 00.00, LocationProvider.NETWORK);
         try {
-//            actorAssetUserManager.createAndRegisterActorAssetUserTest();
             actorAssetUserManager.registerActorInActorNetowrkSerice();
             actorAssetList = actorAssetUserManager.getAllAssetUserActorInTableRegistered();
         } catch (CantAssetUserActorNotFoundException e) {
