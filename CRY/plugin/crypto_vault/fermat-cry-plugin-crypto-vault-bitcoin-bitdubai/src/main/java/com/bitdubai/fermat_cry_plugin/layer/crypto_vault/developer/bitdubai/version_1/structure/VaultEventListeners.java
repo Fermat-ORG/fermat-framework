@@ -79,7 +79,7 @@ public class VaultEventListeners extends AbstractWalletEventListener {
     }
 
     @Override
-    public void onTransactionConfidenceChanged(final Wallet wallet, final Transaction tx) {
+    public void onTransactionConfidenceChanged(Wallet wallet,Transaction tx) {
         logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Transaction confidence change detected!", "Transaction confidence changed. Transaction: " + tx, "Transaction confidence changed. Transaction: " + tx);
 
         TransactionConfidenceCalculator transactionConfidenceCalculator = new TransactionConfidenceCalculator(tx);

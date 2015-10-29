@@ -103,6 +103,11 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
         record.setLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FEE_COLUMN, assetFactory.getFee());
         record.setLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_AMOUNT_COLUMN, assetFactory.getAmount());
         record.setLongValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_QUANTITY_COLUMN, assetFactory.getQuantity());
+        record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_REDEEMABLE, String.valueOf(assetFactory.getIsRedeemable()));
+        if (assetFactory.getExpirationDate() != null){
+            record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE, assetFactory.getExpirationDate().toString());
+        } else record.setStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE, null);
+
         if (assetFactory.getCreationTimestamp() == null) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeZone(TimeZone.getDefault());
@@ -514,6 +519,24 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
         assetFactory.setCreationTimestamp(Timestamp.valueOf(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CREATION_TIME_COLUMN)));
         assetFactory.setLastModificationTimeststamp(Timestamp.valueOf(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_LAST_UPDATE_TIME_COLUMN)));
         assetFactory.setAssetBehavior(AssetBehavior.getByCode(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_BEHAVIOR_COLUMN)));
+        //Object value = assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE);
+
+        String value = assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE) != null ?
+                               !assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE).toString().equalsIgnoreCase("null") ? assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE) : null : null;
+        assetFactory.setExpirationDate(value != null ? Timestamp.valueOf(value) : null);
+
+//        if (value != null | value != "null")
+//        //if (assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE) != "null")
+//        {
+//            assetFactory.setExpirationDate(Timestamp.valueOf(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE)));
+//        } else{
+//            // date = new Date();
+//            //assetFactory.setExpirationDate(new Timestamp(date.getTime()));
+//            assetFactory.setExpirationDate(null);
+//        }
+
+
+        assetFactory.setIsRedeemable(Boolean.valueOf(assetFactoriesRecord.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_REDEEMABLE)));
 
         return assetFactory;
     }
@@ -693,22 +716,22 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
                 // I will add the contract properties information from database
                 for (DatabaseTableRecord contractpropertyRecords : getContractsData(assetFactory.getPublicKey())) {
 
-                    ContractProperty contractProperty = new ContractProperty(null, null);
-
-                    contractProperty.setName(contractpropertyRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN));
-                    contractProperty.setValue(contractpropertyRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN));
-
-                    if (contractProperty.getName().equalsIgnoreCase("redeemable")) {
-                        assetFactory.setIsRedeemable(Boolean.valueOf(contractProperty.getValue().toString()));
-                    }
-
-                    if (contractProperty.getName().equalsIgnoreCase("expiration_date")) {
-                        //assetFactory.setExpirationDate(Timestamp.valueOf( contractProperty.getValue().toString()));
-                        String value = contractProperty.getValue() != null ?
-                                !contractProperty.getValue().toString().equalsIgnoreCase("null") ? contractProperty.getValue().toString() : null : null;
-                        assetFactory.setExpirationDate(value != null ? Timestamp.valueOf(value) : null);
-                    }
-                    contractProperties.add(contractProperty);
+//                    ContractProperty contractProperty = new ContractProperty(null, null);
+//
+//                    contractProperty.setName(contractpropertyRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN));
+//                    contractProperty.setValue(contractpropertyRecords.getStringValue(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN));
+//
+//                    if (contractProperty.getName().equalsIgnoreCase("redeemable")) {
+//                        assetFactory.setIsRedeemable(Boolean.valueOf(contractProperty.getValue().toString()));
+//                    }
+//
+//                    if (contractProperty.getName().equalsIgnoreCase("expiration_date")) {
+//                        //assetFactory.setExpirationDate(Timestamp.valueOf( contractProperty.getValue().toString()));
+//                        String value = contractProperty.getValue() != null ?
+//                                !contractProperty.getValue().toString().equalsIgnoreCase("null") ? contractProperty.getValue().toString() : null : null;
+//                        assetFactory.setExpirationDate(value != null ? Timestamp.valueOf(value) : null);
+//                    }
+//                    contractProperties.add(contractProperty);
                 }
 
                 AssetIssuerIdentity assetIssuerIdentity = new AssetIssuerIdentity();
@@ -754,9 +777,15 @@ public class AssetFactoryMiddlewareDao implements DealsWithPluginDatabaseSystem,
 
                     resources.add(resource);
                 }
-                assetFactory.setContractProperties(contractProperties);
-                assetFactory.setResources(resources);
-                assetFactory.setIdentityAssetIssuer(assetIssuerIdentity);
+                if (contractProperties != null){
+                    //assetFactory.setContractProperties(contractProperties);
+                }
+                if (resources != null) {
+                    assetFactory.setResources(resources);
+                }
+                if (assetIssuerIdentity != null){
+                    assetFactory.setIdentityAssetIssuer(assetIssuerIdentity);
+                }
 
                 assetFactoryList.add(assetFactory);
             }

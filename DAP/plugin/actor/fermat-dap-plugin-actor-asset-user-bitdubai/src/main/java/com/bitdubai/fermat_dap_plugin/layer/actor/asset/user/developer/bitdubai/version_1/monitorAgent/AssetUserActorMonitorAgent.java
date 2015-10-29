@@ -103,7 +103,7 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
 
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
-        public final int SLEEP_TIME = 60000;/*  / 1000 = TIME in SECONDS = 60 seconds */
+        public final int SLEEP_TIME = 60000 * 3;/*  / 1000 = TIME in SECONDS = 60 seconds */
         boolean threadWorking;
 
         public MonitorAgent(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem) {
@@ -152,7 +152,7 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
                 List<ActorAssetUser> list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
 
                 if (list.isEmpty()) {
-                    System.out.println("Lista de Actores de Actor Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
+                    System.out.println("Lista de Actor Asset Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
                 } else {
                     System.out.println("Se Recibio Lista de: " + list.size() + " Actors desde Actor Network Service - SE PROCEDE A SU REGISTRO");
                     int recordInsert = assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(list);
@@ -160,7 +160,7 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
                 }
 
             } catch (CantRequestListActorAssetUserRegisteredException e) {
-                //throw new CantCreateAssetUserActorException("CAN'T ADD TEST NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
+                throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
             } catch (CantAddPendingAssetUserException e) {
                 e.printStackTrace();
             }

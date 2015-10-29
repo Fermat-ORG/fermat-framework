@@ -68,6 +68,13 @@ public interface ActorAssetUser {
     ConnectionState getConnectionState();
 
     /**
+     * The method <code>getLocation</code> gives us the Location of the represented Asset user
+     *
+     * @return the Location of the Asset user
+     */
+    Location getLocation();
+
+    /**
      * The method <code>getLocationLatitude</code> gives us the Location of the represented Asset user
      *
      * @return the Location Latitude of the Asset user
