@@ -202,7 +202,6 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
         tables.add(incomingNotificationsTable);
 
 
-        System.out.println("ESTE ES MI PRIMER DEBUG CON LAS TABLAS: "+tables);
         return tables;
     }
 
