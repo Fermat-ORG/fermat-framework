@@ -253,7 +253,6 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
 
     @Override
     public IssuingStatus getIssuingStatus(String assetPublicKey) throws CantExecuteDatabaseOperationException {
-        //TODO: to implement
-        return null;
+        return this.assetIssuingTransactionDao.getIssuingStatusByAssetPublicKey(assetPublicKey);
     }
 }
