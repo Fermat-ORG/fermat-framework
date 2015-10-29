@@ -182,7 +182,7 @@ public enum Plugins implements FermatEnum {
 
     public static Plugins getByKey(String code) throws InvalidParameterException {
         for (Plugins plugin : values()) {
-            if (Objects.equals(plugin.getCode(), code)) return plugin;
+            if (plugin.getCode().equals(code)) return plugin;
         }
         throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
     }
