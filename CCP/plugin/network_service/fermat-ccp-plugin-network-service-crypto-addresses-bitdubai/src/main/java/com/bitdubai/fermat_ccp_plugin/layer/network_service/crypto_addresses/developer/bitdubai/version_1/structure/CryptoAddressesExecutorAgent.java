@@ -58,41 +58,34 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
     // network services registered
     private Map<String, String> poolConnectionsWaitingForResponse;
 
-    // counter and wait time
-    private Map<String, CryptoAddressesNetworkServiceConnectionRetry> waitingPlatformComponentProfile;
-
     private CryptoAddressesNetworkServiceDao cryptoAddressesNetworkServiceDao;
 
-    private final CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
     private final CryptoAddressesNetworkServicePluginRoot cryptoAddressesNetworkServicePluginRoot;
-    private final ErrorManager                                 errorManager                                ;
-    private final EventManager                                 eventManager                                ;
-    private final PluginDatabaseSystem                         pluginDatabaseSystem                        ;
-    private final UUID                                         pluginId                                    ;
-    private final WsCommunicationsCloudClientManager           wsCommunicationsCloudClientManager          ;
+    private final ErrorManager                            errorManager                           ;
+    private final EventManager                            eventManager                           ;
+    private final PluginDatabaseSystem                    pluginDatabaseSystem                   ;
+    private final UUID                                    pluginId                               ;
+    private final WsCommunicationsCloudClientManager      wsCommunicationsCloudClientManager     ;
 
-    public CryptoAddressesExecutorAgent(final CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager,
-                                        final CryptoAddressesNetworkServicePluginRoot cryptoAddressesNetworkServicePluginRoot,
-                                        final ErrorManager errorManager,
-                                        final EventManager eventManager,
-                                        final PluginDatabaseSystem pluginDatabaseSystem,
-                                        final UUID pluginId,
-                                        final WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager) {
+    public CryptoAddressesExecutorAgent(final CryptoAddressesNetworkServicePluginRoot cryptoAddressesNetworkServicePluginRoot,
+                                        final ErrorManager                            errorManager                           ,
+                                        final EventManager                            eventManager                           ,
+                                        final PluginDatabaseSystem                    pluginDatabaseSystem                   ,
+                                        final UUID                                    pluginId                               ,
+                                        final WsCommunicationsCloudClientManager      wsCommunicationsCloudClientManager     ) {
 
         System.out.println("********* Crypto Addresses: Executor Agent -> Instantiation started. ");
 
-        this.cryptoAddressesNetworkServicePluginRoot = cryptoAddressesNetworkServicePluginRoot;
-        this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
-        this.errorManager                                 = errorManager                                ;
-        this.eventManager                                 = eventManager                                ;
-        this.pluginDatabaseSystem                         = pluginDatabaseSystem                        ;
-        this.pluginId                                     = pluginId                                    ;
-        this.wsCommunicationsCloudClientManager           = wsCommunicationsCloudClientManager          ;
+        this.cryptoAddressesNetworkServicePluginRoot      = cryptoAddressesNetworkServicePluginRoot;
+        this.errorManager                                 = errorManager                           ;
+        this.eventManager                                 = eventManager                           ;
+        this.pluginDatabaseSystem                         = pluginDatabaseSystem                   ;
+        this.pluginId                                     = pluginId                               ;
+        this.wsCommunicationsCloudClientManager           = wsCommunicationsCloudClientManager     ;
 
-        this.status                                       = AgentStatus.CREATED                         ;
+        this.status                                       = AgentStatus.CREATED                    ;
 
-        waitingPlatformComponentProfile   = new HashMap<>();
-        poolConnectionsWaitingForResponse = new HashMap<>();
+        this.poolConnectionsWaitingForResponse = new HashMap<>();
 
         //Create a thread to send the messages
         this.toSend = new Thread(new Runnable() {
@@ -198,6 +191,9 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                 switch (aer.getAction()) {
 
                     case ACCEPT:
+
+                        System.out.println("********* Crypto Addresses: Executor Agent -> Sending ACCEPTANCE. ");
+
                         sendMessageToActor(
                                 buildJsonAcceptMessage(aer),
                                 aer.getIdentityPublicKeyResponding(),
@@ -210,6 +206,9 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                         break;
 
                     case DENY:
+
+                        System.out.println("********* Crypto Addresses: Executor Agent -> Sending DENIAL. ");
+
                         sendMessageToActor(
                                 buildJsonDenyMessage(aer),
                                 aer.getIdentityPublicKeyResponding(),
@@ -222,6 +221,9 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                         break;
 
                     case REQUEST:
+
+                        System.out.println("********* Crypto Addresses: Executor Agent -> Sending REQUEST. ");
+
                         sendMessageToActor(
                                 buildJsonRequestMessage(aer),
                                 aer.getIdentityPublicKeyRequesting(),
@@ -236,6 +238,8 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
             }
 
         } catch(CantListPendingAddressExchangeRequestsException e) {
+
+            System.out.println("********* Crypto Addresses: Executor Agent -> Sending ERROR ");
 
             reportUnexpectedError(e);
         }
@@ -322,15 +326,24 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
 
         try {
+
+            System.out.println("********* Crypto Addresses: Executor Agent -> Send Message To Actor -> !poolConnectionsWaitingForResponse.containsKey(actorPublicKey): "+!poolConnectionsWaitingForResponse.containsKey(actorPublicKey));
+
             if (!poolConnectionsWaitingForResponse.containsKey(actorPublicKey)) {
 
-                if (communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorPublicKey) == null) {
 
+                System.out.println("********* Crypto Addresses: Executor Agent -> Send Message To Actor -> cryptoAddressesNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey) must be null: "+cryptoAddressesNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey));
+                if (cryptoAddressesNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey) == null) {
+
+                    System.out.println("********* Crypto Addresses: Executor Agent -> Send Message To Actor -> wsCommunicationsCloudClientManager must be ! null: "+wsCommunicationsCloudClientManager);
 
                     if (wsCommunicationsCloudClientManager != null) {
 
+                        System.out.println("********* Crypto Addresses: Executor Agent -> Send Message To Actor -> cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot() must be ! null: "+cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot());
+
                         if (cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot() != null) {
 
+                            System.out.println("********* Crypto Addresses: Executor Agent -> Send Message To Actor -> Invoking connectTo.");
 
                             PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
                                     .constructBasicPlatformComponentProfileFactory(
@@ -343,55 +356,26 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                                             NetworkServiceType.UNDEFINED,
                                             platformComponentTypeSelectorByActorType(actorType));
 
-                            communicationNetworkServiceConnectionManager.connectTo(
+                            cryptoAddressesNetworkServicePluginRoot.getNetworkServiceConnectionManager().connectTo(
                                     applicantParticipant,
                                     cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot(),
                                     remoteParticipant
                             );
 
                             // i put the actor in the pool of connections waiting for response-
-                            poolConnectionsWaitingForResponse.put(actorPublicKey, identityPublicKey);
+                            poolConnectionsWaitingForResponse.put(actorPublicKey, actorPublicKey);
+
+                            System.out.println("********* Crypto Addresses: Executor Agent -> Send Message To Actor -> Invoking connectTo success?.");
                         }
 
                     }
                 } else {
-                    NetworkServiceLocal communicationNetworkServiceLocal = cryptoAddressesNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey);
 
-                    System.out.println("********* Crypto Addresses: Executor Agent -> Now Sending Message.");
-
-                    communicationNetworkServiceLocal.sendMessage(
-                            identityPublicKey,
-                            actorPublicKey,
-                            jsonMessage
-                    );
-
-                    toWaitingResponse(requestId);
-
-                    poolConnectionsWaitingForResponse.put(actorPublicKey, identityPublicKey);
+                    sendMessage(identityPublicKey, actorPublicKey, jsonMessage, requestId);
                 }
             } else {
 
-                NetworkServiceLocal communicationNetworkServiceLocal = cryptoAddressesNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey);
-
-                if (communicationNetworkServiceLocal != null) {
-
-                    try {
-
-                        System.out.println("********* Crypto Addresses: Executor Agent -> Now Sending Message.");
-
-                        communicationNetworkServiceLocal.sendMessage(
-                                identityPublicKey,
-                                actorPublicKey,
-                                jsonMessage
-                        );
-
-                        toWaitingResponse(requestId);
-
-                    } catch (Exception e) {
-
-                        reportUnexpectedError(FermatException.wrapException(e));
-                    }
-                }
+                sendMessage(identityPublicKey, actorPublicKey, jsonMessage, requestId);
             }
 
 
@@ -399,6 +383,32 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
             reportUnexpectedError(FermatException.wrapException(z));
         }
+    }
+
+    private void sendMessage(final String identityPublicKey,
+                             final String actorPublicKey   ,
+                             final String jsonMessage      ,
+                             final UUID   requestId        ) throws PendingRequestNotFoundException, CantChangeProtocolStateException {
+
+        NetworkServiceLocal communicationNetworkServiceLocal = cryptoAddressesNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey);
+
+        System.out.println("********* Crypto Addresses: Executor Agent ->Looking for getNetworkServiceLocalInstance.");
+
+        if (communicationNetworkServiceLocal != null) {
+
+            System.out.println("********* Crypto Addresses: Executor Agent -> Now Sending Message.");
+
+            communicationNetworkServiceLocal.sendMessage(
+                    identityPublicKey,
+                    actorPublicKey,
+                    jsonMessage
+            );
+
+            toWaitingResponse(requestId);
+
+            poolConnectionsWaitingForResponse.remove(actorPublicKey);
+        }
+
     }
 
     private PlatformComponentType platformComponentTypeSelectorByActorType(Actors type) throws InvalidParameterException {
