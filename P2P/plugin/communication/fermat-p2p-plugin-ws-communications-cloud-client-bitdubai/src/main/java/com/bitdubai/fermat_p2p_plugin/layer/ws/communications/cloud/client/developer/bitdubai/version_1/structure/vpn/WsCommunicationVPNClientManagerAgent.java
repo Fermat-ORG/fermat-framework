@@ -143,21 +143,32 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
 
                         System.out.println(" WsCommunicationVPNClientManagerAgent - networkServiceType.size() "+vpnClientActiveCache.get(networkServiceType).size());
 
-                       /* WsCommunicationVPNClient wsCommunicationVPNServer = vpnClientActiveCache.get(networkServiceType).get(remote);
+                       WsCommunicationVPNClient wsCommunicationVPNServer = vpnClientActiveCache.get(networkServiceType).get(remote);
 
-                        //Verified is this vpn is active
-                        if (!wsCommunicationVPNServer.isActive()){
+                        //Verified is this vpn connection is open
+                        if (!wsCommunicationVPNServer.getConnection().isOpen()){
 
-                            wsCommunicationVPNServer.getConnection().close();
-                            vpnClientActiveCache.remove(wsCommunicationVPNServer);
+                            try {
 
-                        } */
+                                wsCommunicationVPNServer.sendPingMessage();
+
+                            }catch (Exception e){
+                                System.out.println(" createNewWsCommunicationVPNClient - Error occurred sending ping to the vpn node, closing the connection to remote node");
+                                wsCommunicationVPNServer.close();
+                                vpnClientActiveCache.remove(wsCommunicationVPNServer);
+                                this.interrupt();
+                                break;
+                            }
+
+                        }
 
                     }
 
                 }
 
-                sleep(WsCommunicationVPNClientManagerAgent.SLEEP_TIME);
+                if (!this.isInterrupted()){
+                    sleep(WsCommunicationVPNClientManagerAgent.SLEEP_TIME);
+                }
 
             }
 

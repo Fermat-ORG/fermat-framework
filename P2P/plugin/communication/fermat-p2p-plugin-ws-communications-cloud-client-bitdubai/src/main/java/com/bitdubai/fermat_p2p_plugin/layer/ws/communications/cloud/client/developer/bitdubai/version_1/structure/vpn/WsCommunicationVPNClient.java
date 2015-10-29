@@ -18,8 +18,11 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 
+import org.java_websocket.WebSocket;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_17;
+import org.java_websocket.framing.Framedata;
+import org.java_websocket.framing.FramedataImpl1;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
@@ -83,6 +86,33 @@ public class WsCommunicationVPNClient extends WebSocketClient implements Communi
         this.remoteParticipantNetworkService = remoteParticipantNetworkService;
         this.vpnServerIdentity = vpnServerIdentity;
         this.pendingIncomingMessages = new ArrayList<>();
+    }
+
+
+    /**
+     * Send ping message to the remote node, to verify is connection
+     * alive
+     */
+    public void sendPingMessage(){
+
+        System.out.println(" WsCommunicationVPNClient - Sending ping message to remote node ("+getConnection().getRemoteSocketAddress()+")");
+        FramedataImpl1 frame = new FramedataImpl1(Framedata.Opcode.PING);
+        frame.setFin(true);
+        getConnection().sendFrame(frame);
+    }
+
+    /**
+     * Receive pong message from the remote node, to verify is connection
+     * alive
+     *
+     * @param conn
+     * @param f
+     */
+    @Override
+    public void onWebsocketPong(WebSocket conn, Framedata f) {
+        System.out.println(" WsCommunicationVPNClient - Pong message receiveRemote from node ("+conn.getRemoteSocketAddress()+") connection is alive");
+        //System.out.println(" WsCommunicationsCloudClientChannel - conn = " + conn);
+        //System.out.println(" WsCommunicationsCloudClientChannel - f = "+f);
     }
 
     /**

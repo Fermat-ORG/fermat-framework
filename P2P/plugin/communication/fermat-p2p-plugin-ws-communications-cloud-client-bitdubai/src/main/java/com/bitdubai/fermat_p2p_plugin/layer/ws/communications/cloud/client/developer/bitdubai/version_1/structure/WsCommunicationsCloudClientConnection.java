@@ -138,8 +138,10 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
          */
         wsCommunicationsCloudClientAgent.start();
 
-
-        //wsCommunicationsCloudClientPingAgent.start();
+        /*
+         * Start the ping agent
+         */
+        wsCommunicationsCloudClientPingAgent.start();
 
     }
 
