@@ -167,6 +167,11 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     private final String LOCAL_STORAGE_PATH = "wallet-resources/";
 
+    /**
+     * Represent the register
+     */
+    private boolean register;
+
 
     /**
      *  Wallet instalation progress
@@ -349,6 +354,15 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
+    }
+
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    @Override
+    public boolean isRegister() {
+        return register;
     }
 
     /**

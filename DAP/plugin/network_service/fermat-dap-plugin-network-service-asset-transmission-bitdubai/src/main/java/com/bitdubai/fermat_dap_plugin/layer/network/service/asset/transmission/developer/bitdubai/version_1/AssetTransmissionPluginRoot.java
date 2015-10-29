@@ -255,9 +255,6 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
         this.eventManager = DealsWithEvents;
     }
 
-    public boolean isRegister() {
-        return register;
-    }
 
     /**
      * Get the IdentityPublicKey
@@ -875,6 +872,15 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
 
         }
 
+    }
+
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    @Override
+    public boolean isRegister() {
+        return register;
     }
 
     @Override
