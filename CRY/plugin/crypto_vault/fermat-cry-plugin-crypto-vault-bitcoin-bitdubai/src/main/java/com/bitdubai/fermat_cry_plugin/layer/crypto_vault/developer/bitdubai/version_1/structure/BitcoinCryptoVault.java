@@ -427,13 +427,7 @@ public class BitcoinCryptoVault implements
             // I create the transaction that will be used to send the bitcoins.
             Wallet.SendRequest request = Wallet.SendRequest.to(address, Coin.valueOf(amount));
 
-            /**
-             * I get the transaction hash and persists this transaction in the database.
-             */
-            Transaction tx = request.tx;
-            String txHash = tx.getHashAsString();
-            // we're ready to go. we'll proceed to save the transaction and commit it.
-            db.persistNewTransaction(fermatTxId.toString(), txHash);
+
             // after we persist the new Transaction, we'll persist it as a Fermat transaction.
             db.persistnewFermatTransaction(fermatTxId.toString());
 
@@ -449,7 +443,12 @@ public class BitcoinCryptoVault implements
              * complete the transaction and commit it.
              */
             vault.completeTx(request);
+            /**
+             * I get the transaction hash and persists this transaction in the database.
+             */
+            db.persistNewTransaction(fermatTxId.toString(), request.tx.getHashAsString());
             vault.commitTx(request.tx);
+
             vault.saveToFile(vaultFile);
 
 
@@ -464,7 +463,7 @@ public class BitcoinCryptoVault implements
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: bitcoin sent!!!", "Address to: " + addressTo.getAddress(), "Amount: " + amount);
 
             //returns the created transaction id
-            return txHash;
+            return request.tx.getHashAsString();
 
         } catch (InsufficientMoneyException insufficientMoneyException) {
 
