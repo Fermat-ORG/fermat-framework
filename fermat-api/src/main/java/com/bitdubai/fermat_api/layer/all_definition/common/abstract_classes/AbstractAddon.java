@@ -6,18 +6,13 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystems;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantAssignReferenceException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantCollectReferencesException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
 import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantListNeededReferencesException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.MissingReferencesException;
+import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.IncompatibleReferenceException;
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
@@ -26,6 +21,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -36,7 +32,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class AbstractAddon implements Addon, Service {
 
-    protected final ConcurrentHashMap<AddonVersionReference, Field> addonNeededReferences = new ConcurrentHashMap<>();
+    private final Map<AddonVersionReference, Field> addonNeededReferences = new ConcurrentHashMap<>();
+
+    private boolean referencesCollected;
 
     private final AddonVersionReference addonVersionReference;
     private final boolean               dealsWithOsContext   ;
@@ -50,14 +48,22 @@ public abstract class AbstractAddon implements Addon, Service {
         this.addonVersionReference = addonVersionReference;
         this.dealsWithOsContext    = false;
         this.operativeSystem       = OperativeSystems.INDIFFERENT;
+        this.instantiateAddon();
     }
 
     public AbstractAddon(final AddonVersionReference addonVersionReference,
                          final OperativeSystems      operativeSystem      ) {
 
         this.addonVersionReference = addonVersionReference;
-        this.dealsWithOsContext    = false;
         this.operativeSystem       = operativeSystem;
+        this.dealsWithOsContext    = !operativeSystem.equals(OperativeSystems.INDIFFERENT);
+        this.instantiateAddon();
+    }
+
+    private void instantiateAddon() {
+
+        this.referencesCollected = false;
+        this.serviceStatus = ServiceStatus.CREATED;
     }
 
     public final AddonVersionReference getAddonVersionReference() {
@@ -129,15 +135,35 @@ public abstract class AbstractAddon implements Addon, Service {
         return null;
     }
 
-    public final ConcurrentHashMap<AddonVersionReference, Class<? extends FermatManager>> getNeededAddons() throws CantListNeededReferencesException {
+    public final List<AddonVersionReference> getNeededAddons() throws CantListNeededReferencesException {
 
         try {
 
-            final ConcurrentHashMap<AddonVersionReference, Class<? extends FermatManager>> neededAddons = new ConcurrentHashMap<>();
+            if (!this.referencesCollected)
+                collectReferences();
 
-            final Class<? extends AbstractAddon> cl = this.getClass();
+        } catch (CantCollectReferencesException e) {
 
-            for (final Field f : cl.getDeclaredFields()) {
+            throw new CantListNeededReferencesException(
+                    e,
+                    this.getAddonVersionReference().toString(),
+                    "There was problems trying to detect the references."
+            );
+        }
+
+        List<AddonVersionReference> references = new ArrayList<>();
+
+        for (final Map.Entry<AddonVersionReference, Field> neededReference : addonNeededReferences.entrySet())
+            references.add(neededReference.getKey());
+
+        return references;
+    }
+
+    private void collectReferences() throws CantCollectReferencesException {
+
+        try {
+
+            for (final Field f : this.getClass().getDeclaredFields()) {
 
                 for (final Annotation a : f.getDeclaredAnnotations()) {
                     if (a instanceof NeededAddonReference) {
@@ -152,17 +178,16 @@ public abstract class AbstractAddon implements Addon, Service {
                                 new Version(addonReference.version())
                         );
 
-                        neededAddons.put(avr, addonReference.referenceManagerClass());
-
                         this.addonNeededReferences.put(avr, f);
                     }
                 }
             }
-            return neededAddons;
+
+            this.referencesCollected = true;
 
         } catch (final Exception e) {
 
-            throw new CantListNeededReferencesException(
+            throw new CantCollectReferencesException(
                     e,
                     this.getAddonVersionReference().toString(),
                     "Error listing needed references for the addon."
@@ -170,17 +195,35 @@ public abstract class AbstractAddon implements Addon, Service {
         }
     }
 
-    public final void assignAddonReference(final AddonVersionReference          avr          ,
-                                           final Class<? extends FermatManager> referenceMger,
-                                           final AbstractAddon                  abstractAddon) throws CantAssignReferenceException {
+    public final void assignAddonReference(final AbstractAddon abstractAddon) throws CantAssignReferenceException   ,
+                                                                                     IncompatibleReferenceException {
+
+        final AddonVersionReference avr = abstractAddon.getAddonVersionReference();
 
         try {
 
-            Field field = this.addonNeededReferences.get(avr);
-            field.setAccessible(true);
-            field.set(this, referenceMger.cast(abstractAddon));
+            final Field field = this.addonNeededReferences.get(avr);
 
-        } catch (IllegalAccessException e) {
+            if (field == null) {
+                throw new CantAssignReferenceException(
+                        "Addon receiving: " + this.addonVersionReference + " ---- Given addon: " + avr.toString(),
+                        "The addon doesn't need the given reference."
+                );
+            }
+
+            final Class<?> refManager = field.getType();
+
+            if(refManager.isAssignableFrom(abstractAddon.getClass())) {
+                field.setAccessible(true);
+                field.set(this, refManager.cast(abstractAddon));
+            } else {
+                throw new IncompatibleReferenceException(
+                        "classExpected: "+refManager.getName() + " --- classReceived: " + abstractAddon.getClass().getName(),
+                        ""
+                );
+            }
+
+        } catch (final IllegalAccessException e) {
 
             throw new CantAssignReferenceException(
                     e,
