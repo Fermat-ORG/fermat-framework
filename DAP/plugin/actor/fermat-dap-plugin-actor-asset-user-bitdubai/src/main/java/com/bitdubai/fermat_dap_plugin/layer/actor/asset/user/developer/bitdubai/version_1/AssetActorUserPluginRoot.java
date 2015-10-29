@@ -659,7 +659,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
                 ConnectionState connectionState = ConnectionState.CONNECTED;
                 Double locationLatitude = new Random().nextDouble();
                 Double locationLongitude = new Random().nextDouble();
-                AssetUserActorRecord record = new AssetUserActorRecord(assetUserActorPublicKey, "Thunder User_" + new Random().nextInt(10), age, genders,
+                AssetUserActorRecord record = new AssetUserActorRecord(assetUserActorPublicKey, "Thunder User_" + new Random().nextInt(90), age, genders,
                         connectionState, locationLatitude, locationLongitude,
                         System.currentTimeMillis(),
                         System.currentTimeMillis(), new byte[0]);
