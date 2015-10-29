@@ -50,25 +50,16 @@ public class CompleteComponentConnectionRequestNotificationEventHandler implemen
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        System.out.println("************** Crypto Addresses - handleEvent platformEvent ="+platformEvent );
+        System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent ="+platformEvent );
 
 
         if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
 
-            System.out.println("************** Crypto Addresses -> handleEvent CompleteComponentConnectionRequest -> Service started." );
-
             CompleteComponentConnectionRequestNotificationEvent completeComponentConnectionRequestNotificationEvent = (CompleteComponentConnectionRequestNotificationEvent) platformEvent;
 
-            System.out.println("************** Crypto Addresses -> handleEvent CompleteComponentConnectionRequest -> Data:" + completeComponentConnectionRequestNotificationEvent.toString());
-
-            System.out.println("************** Crypto Addresses - > completeComponentConnectionRequestNotificationEvent.getNetworkServiceTypeApplicant() = " + completeComponentConnectionRequestNotificationEvent.getNetworkServiceTypeApplicant());
-
-            System.out.println("************** Crypto Addresses - > networkService.getNetworkServiceType() = " + networkService.getNetworkServiceType());
 
 
-            if(completeComponentConnectionRequestNotificationEvent.getNetworkServiceTypeApplicant() == networkService.getNetworkServiceType()){
-
-                System.out.println("************** Crypto Addresses - > calling plugin root method handleCompleteComponentConnectionRequestNotificationEvent");
+            if(completeComponentConnectionRequestNotificationEvent.getNetworkServiceTypeApplicant() == networkService.getPlatformComponentProfilePluginRoot().getNetworkServiceType()){
 
                 /*
                  *  networkService make the job
