@@ -43,8 +43,6 @@ public interface CryptoWallet extends Serializable {
      *
      * @param walletPublicKey
      * @param intraUserPublicKey
-     * @param max
-     * @param offset
      * @return
      * @throws CantGetAllWalletContactsException
      */
