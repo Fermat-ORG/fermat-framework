@@ -780,7 +780,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
             System.out.println("********* Crypto Addresses: Initializing and starting Executor Agent. ");
 
             cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
-                    communicationNetworkServiceConnectionManager,
                     this,
                     errorManager,
                     eventManager,
