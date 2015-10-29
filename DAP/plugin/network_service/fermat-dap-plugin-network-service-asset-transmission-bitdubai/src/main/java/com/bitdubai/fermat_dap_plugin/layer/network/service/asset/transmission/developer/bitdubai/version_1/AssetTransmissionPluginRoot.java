@@ -835,6 +835,11 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
                     }
 
                     @Override
+                    public Location getLocation() {
+                        return null;
+                    }
+
+                    @Override
                     public Double getLocationLatitude() {
                         return null;
                     }

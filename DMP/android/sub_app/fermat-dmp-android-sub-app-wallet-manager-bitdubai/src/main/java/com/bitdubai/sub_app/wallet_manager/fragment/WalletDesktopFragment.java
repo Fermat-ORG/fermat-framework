@@ -290,31 +290,10 @@ public class WalletDesktopFragment extends Fragment implements Thread.UncaughtEx
                 switch (installedWallet.getWalletIcon()) {
 
                     case "reference_wallet_icon":
-                        holder.imageView.setImageResource(R.drawable.fermat);
+                        holder.imageView.setImageResource(R.drawable.bitcoin_wallet);
                         holder.imageView.setTag("WalletBitcoinActivity|4");
                         linearLayout.setTag("WalletBitcoinActivity|4");
 
-                        linearLayout.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                // try {
-                                // check if intra user identity exists
-                                //if (walletManager.hasIntraUserIdentity()) {
-                                //set the next fragment and params
-
-
-                                // }
-                                // else
-                                // {
-
-                                // }
-                                // } catch (Exception e) {
-                                // Toast.makeText(getActivity(),"oooopps have an error ",Toast.LENGTH_SHORT).show();
-                                // }
-
-
-                            }
-                        });
 
                         holder.imageView.setOnClickListener(new View.OnClickListener() {
                             @Override
