@@ -13,6 +13,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.Clo
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.CloseNegotiationDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.OpenContractDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.OpenNegotiationDetailsFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.settings.SettingsActivityFragment;
 
 import static com.bitdubai.reference_wallet.crypto_customer_wallet.fragmentFactory.CryptoCustomerWalletFragmentsEnumType.*;
 
@@ -35,6 +36,8 @@ public class CryptoCustomerWalletFragmentFactory implements WalletFragmentFactor
             return OpenContractDetailsFragment.newInstance();
         if (fragment == CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS)
             return CloseContractDetailsFragment.newInstance();
+        if (fragment == CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS)
+            return SettingsActivityFragment.newInstance();
 
         throw createFragmentNotFoundException(fragment);
     }
