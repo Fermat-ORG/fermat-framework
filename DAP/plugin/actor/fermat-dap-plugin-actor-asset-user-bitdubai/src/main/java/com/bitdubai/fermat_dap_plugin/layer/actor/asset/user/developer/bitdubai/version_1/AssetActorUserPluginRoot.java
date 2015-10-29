@@ -615,7 +615,6 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
                 //todo Actualizar Estado en base de datos para este actorAssetUser ConnectionState = PENDING_REMOTELY_ACCEPTANCE
                 assetUserActorNetworkServiceManager.requestCryptoAddress(requester, actorAssetUser);
             }
-//            assetUserActorNetworkServiceManager.requestCryptoAddress(requester, actorAssetUsers);
         } catch (CantRequestCryptoAddressException e) {
             e.printStackTrace();
         }

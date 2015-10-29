@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -61,6 +62,7 @@ import org.bitcoinj.store.UnreadableWalletException;
 import org.bitcoinj.wallet.DeterministicSeed;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -393,9 +395,9 @@ public class BitcoinCryptoVault implements
      * @throws InsufficientCryptoFundsException if i don't have enough crypto to send
      */
 
-    public String sendBitcoins(final UUID          fermatTxId,
-                               final CryptoAddress addressTo ,
-                               final long          amount    ,
+    public String sendBitcoins(UUID          fermatTxId,
+                               CryptoAddress addressTo ,
+                               long          amount    ,
                                String op_Return) throws InsufficientCryptoFundsException      ,
             InvalidSendToAddressException         ,
             CouldNotSendMoneyException            ,
@@ -448,7 +450,6 @@ public class BitcoinCryptoVault implements
              */
             db.persistNewTransaction(fermatTxId.toString(), request.tx.getHashAsString());
             vault.commitTx(request.tx);
-
             vault.saveToFile(vaultFile);
 
 
@@ -474,6 +475,8 @@ public class BitcoinCryptoVault implements
         } catch (CantExecuteQueryException cantExecuteQueryException) {
 
             throw new CouldNotSendMoneyException("I coudln't persist the internal transaction Id.", cantExecuteQueryException, "Transaction ID: " + fermatTxId.toString(), "An error in the Database plugin..");
+        } catch (CantBroadcastTransactionException e) {
+            throw new CouldNotSendMoneyException("Can't broadcast the transaction.", e, "Transaction ID: " + fermatTxId.toString(), "Network error.");
         } catch(Exception exception){
 
             throw new CouldNotSendMoneyException("Fatal error sending bitcoins.", exception, "Address to:" + addressTo.getAddress() + ", transaction Id:" + fermatTxId.toString(), "Unkwnown.");

@@ -92,4 +92,13 @@ public class CompleteComponentConnectionRequestNotificationEvent extends Abstrac
     public void setApplicantComponent(PlatformComponentProfile applicantComponent) {
         this.applicantComponent = applicantComponent;
     }
+
+    @Override
+    public String toString() {
+        return "CompleteComponentConnectionRequestNotificationEvent{" +
+                "networkServiceTypeApplicant=" + networkServiceTypeApplicant +
+                ", remoteComponent=" + remoteComponent +
+                ", applicantComponent=" + applicantComponent +
+                '}';
+    }
 }

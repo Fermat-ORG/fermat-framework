@@ -95,8 +95,7 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
      * (non-javadoc)
      */
     public void sendMessage(final String senderIdentityPublicKey,final String requestIdentityPublickKey, final String messageContent) {
-
-        try {
+    try {
 
             FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(senderIdentityPublicKey,  //Sender NetworkService
                     requestIdentityPublickKey,   //Receiver

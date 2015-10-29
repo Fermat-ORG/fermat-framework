@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantInsertRecordDataBaseException extends FermatException {
 
-    private static final String DEFAULT_MESSAGE = "CAN'T INSERT RECORD IN DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T INSERT RECORD IN DATABASE EXCEPTION";
 
     public CantInsertRecordDataBaseException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
