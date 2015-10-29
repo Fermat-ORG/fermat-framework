@@ -231,14 +231,14 @@ public class AssetUserActorDao implements Serializable {
     }
 
     //    public void createNewAssetUserRegisterInNetworkService(String assetUserPublicKey, String assetUserName, byte[] profileImage, Location location, CryptoAddress cryptoAddress) throws CantAddPendingAssetUserException {
-    public void createNewAssetUserRegisterInNetworkService(ActorAssetUser actorAssetUserRecord) throws CantAddPendingAssetUserException {
+    public void createNewAssetUserRegisterInNetworkService(ActorAssetUser actorAssetUserRecord, CryptoAddress cryptoAddress) throws CantAddPendingAssetUserException {
         try {
             /**
              * if Asset User exist on table
              * change status
              */
             if (assetUserRegisteredExists(actorAssetUserRecord.getPublicKey())) {
-                this.updateAssetUserConnectionStateActorNetworService(actorAssetUserRecord.getPublicKey(), actorAssetUserRecord.getConnectionState(), actorAssetUserRecord.getCryptoAddress());
+                this.updateAssetUserConnectionStateActorNetworService(actorAssetUserRecord.getPublicKey(), actorAssetUserRecord.getConnectionState(), cryptoAddress);
             } else {
                 /**
                  * Get actual date
@@ -274,9 +274,9 @@ public class AssetUserActorDao implements Serializable {
                 if (actorAssetUserRecord.getLocationLongitude() != null)
                     record.setDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME, actorAssetUserRecord.getLocationLongitude());
 
-                if (actorAssetUserRecord.getCryptoAddress() != null) {
-                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, actorAssetUserRecord.getCryptoAddress().getAddress());
-                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, actorAssetUserRecord.getCryptoAddress().getCryptoCurrency().getCode());
+                if (cryptoAddress != null) {
+                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
+                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode());
                 }
 
                 record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, actorAssetUserRecord.getRegistrationDate());

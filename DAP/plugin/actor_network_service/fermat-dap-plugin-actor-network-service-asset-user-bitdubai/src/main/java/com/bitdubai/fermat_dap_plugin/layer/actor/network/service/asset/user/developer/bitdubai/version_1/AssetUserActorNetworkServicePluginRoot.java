@@ -789,7 +789,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                     if (communicationNetworkServiceLocal != null) {
 
                         //Send the message
-                        communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), null, messageContentIntoJson);
+                        communicationNetworkServiceLocal.sendMessage(actorAssetIssuerSender.getPublicKey(), actorAssetUserDestination.getPublicKey(), messageContentIntoJson);
 
                     } else {
 
@@ -899,7 +899,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                 if (communicationNetworkServiceLocal != null) {
 
                     //Send the message
-                    communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), null, messageContentIntoJson);
+                    communicationNetworkServiceLocal.sendMessage(actorAssetUserSender.getPublicKey(), actorAssetIssuerDestination.getPublicKey(), messageContentIntoJson);
 
                 } else {
 

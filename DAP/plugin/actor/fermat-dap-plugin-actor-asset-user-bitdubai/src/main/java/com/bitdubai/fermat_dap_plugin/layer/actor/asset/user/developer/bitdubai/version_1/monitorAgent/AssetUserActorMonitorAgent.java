@@ -166,36 +166,36 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
             }
         }
 
-        private void test_RegisterActorNetworkService() throws CantCreateAssetUserActorException {
-            try {
-                //Comentar CICLO FOR para realizar prueba directa con Actor Network Service
-                for (int i = 0; i < 10; i++) {
-//                String assetUserActorIdentityToLinkPublicKey = UUID.randomUUID().toString();
-                    String assetUserActorPublicKey = UUID.randomUUID().toString();
-//                CryptoAddress cryptoAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);
-                    CryptoAddress genesisAddress = assetActorUserPluginRoot.getGenesisAddress();
-//                    CryptoAddress genesisAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);
-                    ;
-                    Genders genders = Genders.INDEFINITE;
-                    String age = "25";
-                    ConnectionState connectionState = ConnectionState.CONNECTED;
-                    Double locationLatitude = new Random().nextDouble();
-                    Double locationLongitude = new Random().nextDouble();
-                    AssetUserActorRecord record = new AssetUserActorRecord(assetUserActorPublicKey, "ANS User_" + new Random().nextInt(10), age, genders,
-                            connectionState, locationLatitude, locationLongitude,
-                            genesisAddress, System.currentTimeMillis(),
-                            System.currentTimeMillis(), new byte[0]);
-
-                    assetUserActorDao.createNewAssetUserRegisterInNetworkService(record);
-
-                    assetActorUserPluginRoot.registerGenesisAddressInCryptoAddressBook(genesisAddress);
-                }
-                System.out.println("Actores SIMULANDO Actor Network Service: GUARDADOS - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
-            } catch (CantAddPendingAssetUserException e) {
-                throw new CantCreateAssetUserActorException("CAN'T ADD (TEST) NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
-            } catch (Exception e) {
-                throw new CantCreateAssetUserActorException("CAN'T ADD (TEST) NEW ASSET USER ACTOR NETWORK SERVICE", FermatException.wrapException(e), "", "");
-            }
-        }
+//        private void test_RegisterActorNetworkService() throws CantCreateAssetUserActorException {
+//            try {
+//                //Comentar CICLO FOR para realizar prueba directa con Actor Network Service
+//                for (int i = 0; i < 10; i++) {
+////                String assetUserActorIdentityToLinkPublicKey = UUID.randomUUID().toString();
+//                    String assetUserActorPublicKey = UUID.randomUUID().toString();
+////                CryptoAddress cryptoAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);
+//                    CryptoAddress genesisAddress = assetActorUserPluginRoot.getGenesisAddress();
+////                    CryptoAddress genesisAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);
+//                    ;
+//                    Genders genders = Genders.INDEFINITE;
+//                    String age = "25";
+//                    ConnectionState connectionState = ConnectionState.CONNECTED;
+//                    Double locationLatitude = new Random().nextDouble();
+//                    Double locationLongitude = new Random().nextDouble();
+//                    AssetUserActorRecord record = new AssetUserActorRecord(assetUserActorPublicKey, "ANS User_" + new Random().nextInt(10), age, genders,
+//                            connectionState, locationLatitude, locationLongitude,
+//                            genesisAddress, System.currentTimeMillis(),
+//                            System.currentTimeMillis(), new byte[0]);
+//
+//                    assetUserActorDao.createNewAssetUserRegisterInNetworkService(record);
+//
+//                    assetActorUserPluginRoot.registerGenesisAddressInCryptoAddressBook(genesisAddress);
+//                }
+//                System.out.println("Actores SIMULANDO Actor Network Service: GUARDADOS - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
+//            } catch (CantAddPendingAssetUserException e) {
+//                throw new CantCreateAssetUserActorException("CAN'T ADD (TEST) NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
+//            } catch (Exception e) {
+//                throw new CantCreateAssetUserActorException("CAN'T ADD (TEST) NEW ASSET USER ACTOR NETWORK SERVICE", FermatException.wrapException(e), "", "");
+//            }
+//        }
     }
 }

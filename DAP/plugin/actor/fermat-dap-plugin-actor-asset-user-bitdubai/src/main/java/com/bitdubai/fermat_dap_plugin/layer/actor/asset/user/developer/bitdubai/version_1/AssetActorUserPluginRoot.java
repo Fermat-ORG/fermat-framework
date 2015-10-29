@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -34,6 +35,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.DealsWithAssetVault;
+import com.bitdubai.fermat_cbp_api.all_definition.actor.Actor;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
@@ -398,8 +400,16 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 
     @Override
     public void handleCompleteClientAssetUserActorRegistrationNotificationEvent(ActorAssetUser actorAssetUser) {
-        System.out.println("==========================================================");
-        System.out.println("Actor Asset User se Registro " + actorAssetUser.getName());
+        System.out.println("==============Actor Asset User Registrado=================");
+        System.out.println("Actor Asset User: " + actorAssetUser.getName());
+        System.out.println("Actor Asset User State: " + actorAssetUser.getConnectionState());
+        try {
+//            AssetUserActorRecord actorAssetUser1 = new AssetUserActorRecord();
+//            actorAssetUser1.setConnectionState(ConnectionState.CONNECTED);
+            this.assetUserActorDao.createNewAssetUser(actorAssetUser);
+        } catch (CantAddPendingAssetUserException e) {
+            e.printStackTrace();
+        }
         System.out.println("==========================================================");
     }
 
@@ -408,13 +418,21 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         try {
             System.out.println("=============Actor Asset Inicia  Peticion Crypto=========");
             CryptoAddress genesisAddress = getGenesisAddress();
+            System.out.println("=====Actor Asset Crypto Generada: " + genesisAddress.getAddress());
             registerGenesisAddressInCryptoAddressBook(genesisAddress);
-            System.out.println("=====Actor Asset Registrando Crypto Local y Enviando======");
+            System.out.println("=====Actor Asset Crypto Registrada: " + genesisAddress.getAddress());
+            System.out.println("=======Actor Asset Registrando Crypto Localmente==========");
             this.assetUserActorDao.createNewAssetUser(actorAssetUser);
+            System.out.println("=========Actor Asset Enviando Crypto al ANS USER==========");
             this.assetUserActorNetworkServiceManager.sendCryptoAddress(actorAssetUser, actorAssetIssuer, genesisAddress);
-            System.out.println("=============Actor Asset User envio Crypto================");
-            System.out.println("Actor Asset User: " + actorAssetUser.getName());
-            System.out.println("Actor Asset Crypto Address " + actorAssetUser.getCryptoAddress().getAddress());
+            System.out.println("======Actor Asset User local Actualizado Crypto===========");
+            try {
+                ActorAssetUser actorAssetUser1 = this.assetUserActorDao.getActorAssetUser();
+                System.out.println("Actor Asset User: " + actorAssetUser1.getName());
+                System.out.println("Actor Asset Crypto Address " + actorAssetUser1.getCryptoAddress().getAddress());
+            } catch (CantGetAssetUsersListException e) {
+                e.printStackTrace();
+            }
             System.out.println("==========================================================");
         } catch (CantGetGenesisAddressException e) {
             e.printStackTrace();
@@ -429,9 +447,11 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 
     public void handleDeliveredCryptoAddresFromRemoteAssetUserEvent(ActorAssetUser actorAssetUser, CryptoAddress cryptoAddress) {
         try {
-            System.out.println("=============Actor Asset Inicia  Recepcion Crypto=========");
+            System.out.println("=============Actor Asset Inicia Recepcion Crypto=========");
+            System.out.println("Actor Asset User: " + actorAssetUser.getName());
+            System.out.println("Actor Asset Crypto Address: " + cryptoAddress.getAddress());
             //todo actualizar tabla de usuarios registrados con nueva crypto address.
-            this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(actorAssetUser);
+            this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(actorAssetUser, cryptoAddress);
             System.out.println("=============Actor Asset User Recibida Crypto================");
             System.out.println("Actor Asset User: " + actorAssetUser.getName());
             System.out.println("Actor Asset Crypto Address: " + actorAssetUser.getCryptoAddress().getAddress());
@@ -591,11 +611,11 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
     @Override
     public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException {
         try {
-            //for (ActorAssetUser actorAssetUser : actorAssetUsers){
-            //    //todo Actualizar Estado en base de datos para este actorAssetUser ConnectionState = PENDING_REMOTELY_ACCEPTANCE
-            //    assetUserActorNetworkServiceManager.requestCryptoAddress(requester, actorAssetUser);
-            //}
-            assetUserActorNetworkServiceManager.requestCryptoAddress(requester, actorAssetUsers.get(1));
+            for (ActorAssetUser actorAssetUser : actorAssetUsers){
+                //todo Actualizar Estado en base de datos para este actorAssetUser ConnectionState = PENDING_REMOTELY_ACCEPTANCE
+                assetUserActorNetworkServiceManager.requestCryptoAddress(requester, actorAssetUser);
+            }
+//            assetUserActorNetworkServiceManager.requestCryptoAddress(requester, actorAssetUsers);
         } catch (CantRequestCryptoAddressException e) {
             e.printStackTrace();
         }
@@ -613,11 +633,13 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 //            for (int i = 9; i < 10; i++) {
 //                String assetUserActorIdentityToLinkPublicKey = UUID.randomUUID().toString();
                 String assetUserActorPublicKey = UUID.randomUUID().toString();
+//                ECCKeyPair eccKeyPair = new ECCKeyPair();
+//                String assetUserActorPublicKey = new ECCKeyPair();
 //                CryptoAddress cryptoAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);
 //                CryptoAddress genesisAddress = getGenesisAddress();
                 Genders genders = Genders.MALE;
                 String age = "25";
-                ConnectionState connectionState = ConnectionState.CONNECTED;
+                ConnectionState connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
                 Double locationLatitude = new Random().nextDouble();
                 Double locationLongitude = new Random().nextDouble();
                 AssetUserActorRecord record = new AssetUserActorRecord(assetUserActorPublicKey, "Thunder User_" + new Random().nextInt(10), age, genders,

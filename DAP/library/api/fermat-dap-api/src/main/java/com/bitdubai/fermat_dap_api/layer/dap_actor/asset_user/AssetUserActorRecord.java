@@ -239,7 +239,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
         if(connectionState != null)
            this.connectionState = connectionState;
         else
-            this.connectionState = ConnectionState.CONNECTED;
+            this.connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
     }
 
     /**

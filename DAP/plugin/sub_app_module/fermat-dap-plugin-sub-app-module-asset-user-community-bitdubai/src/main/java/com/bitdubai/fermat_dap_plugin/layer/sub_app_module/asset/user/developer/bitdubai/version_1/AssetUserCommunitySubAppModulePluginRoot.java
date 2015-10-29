@@ -147,28 +147,14 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
 //            actorAssetUserManager.createAndRegisterActorAssetUserTest();
             actorAssetUserManager.registerActorInActorNetowrkSerice();
             actorAssetList = actorAssetUserManager.getAllAssetUserActorInTableRegistered();
-
-
         } catch (CantAssetUserActorNotFoundException e) {
             e.printStackTrace();
         } catch (CantCreateAssetUserActorException e) {
             e.printStackTrace();
         }
-
-        ActorAssetIssuer actorAssetIssuer;
-        try {
-            actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
-                actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetList);
-        } catch (CantConnectToAssetUserException e) {
-            e.printStackTrace();
-        } catch (CantGetAssetIssuerActorsException e) {
-            e.printStackTrace();
-        }
-
         return actorAssetList;
     }
 
-    //TODO verificar por posible modificacion de la firma del metodo
     @Override
     public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException{
         //todo SE DEBE CONOCER QUIEN ES EL ISSUER SOLICITANTE Y QUIEN EL USER SOLICITADO
@@ -176,7 +162,6 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
         ActorAssetIssuer actorAssetIssuer;
         //TODO Para Realizacion de TEST se tomara el ISSUER de la BD LOCAL
         //TODO Se necesita PASAR el ActorAssetUser seleccionado en la Community
-        //TODO Para TEST se usara la lista generada para seleccionar aleatoriamente el User Register
         try {
             actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
             actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetUsers);
