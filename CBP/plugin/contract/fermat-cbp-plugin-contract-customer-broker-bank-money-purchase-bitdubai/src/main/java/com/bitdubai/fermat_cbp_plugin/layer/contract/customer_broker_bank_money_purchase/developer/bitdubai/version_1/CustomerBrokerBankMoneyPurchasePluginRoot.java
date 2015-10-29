@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantCreateCustomerBrokerBankMoneyPurchaseException;
@@ -146,8 +147,8 @@ public class CustomerBrokerBankMoneyPurchasePluginRoot implements CustomerBroker
     }
 
     @Override
-    public void updateCustomerBrokerBankMoneyPurchase(UUID ContractId) throws CantupdateCustomerBrokerBankMoneyPurchaseException {
-
+    public void updateCustomerBrokerBankMoneyPurchase(UUID contractId, ContractStatus status) throws CantupdateCustomerBrokerBankMoneyPurchaseException {
+        this.customerBrokerBankMoneyPurchaseContractDao.updateCustomerBrokerBankMoneyPurchase(contractId, status);
     }
 
     @Override
