@@ -110,7 +110,7 @@ public class CustomerBrokerBankMoneyPurchaseContractDao {
 
     public void updateCustomerBrokerBankMoneyPurchase(
             UUID contractId,
-            String status
+            ContractStatus status
     ) throws CantupdateCustomerBrokerBankMoneyPurchaseException {
 
         try {
@@ -118,7 +118,7 @@ public class CustomerBrokerBankMoneyPurchaseContractDao {
             BankMoneyPurchaseContractTable.setUUIDFilter(CustomerBrokerBankMoneyPurchaseContractDatabaseConstants.CONTRACT_CUSTOMER_BROKER_BANK_MONEY_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractId, DatabaseFilterType.EQUAL);
 
             DatabaseTableRecord recordToUpdate = BankMoneyPurchaseContractTable.getEmptyRecord();
-            recordToUpdate.setStringValue(CustomerBrokerBankMoneyPurchaseContractDatabaseConstants.CONTRACT_CUSTOMER_BROKER_BANK_MONEY_PURCHASE_STATUS_COLUMN_NAME, status);
+            recordToUpdate.setStringValue(CustomerBrokerBankMoneyPurchaseContractDatabaseConstants.CONTRACT_CUSTOMER_BROKER_BANK_MONEY_PURCHASE_STATUS_COLUMN_NAME, status.getCode());
 
             BankMoneyPurchaseContractTable.updateRecord(recordToUpdate);
         } catch (CantUpdateRecordException e) {
