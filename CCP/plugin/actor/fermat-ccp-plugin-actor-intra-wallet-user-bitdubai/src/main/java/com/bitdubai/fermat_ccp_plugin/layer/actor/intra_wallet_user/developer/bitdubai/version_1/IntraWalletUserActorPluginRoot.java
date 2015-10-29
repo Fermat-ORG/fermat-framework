@@ -610,7 +610,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
                  * I confirm the application in the Network Service
                  */
                 //TODO: VER PORQUE TIRA ERROR
-                //intraUserNetworkServiceManager.confirmNotification(notification.getId());
+                intraUserNetworkServiceManager.confirmNotification(notification.getId());
             }
 
 
