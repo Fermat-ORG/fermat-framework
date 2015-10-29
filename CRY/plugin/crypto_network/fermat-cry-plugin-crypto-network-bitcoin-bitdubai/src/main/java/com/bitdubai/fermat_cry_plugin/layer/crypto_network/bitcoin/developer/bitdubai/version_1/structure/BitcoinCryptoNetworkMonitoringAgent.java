@@ -269,7 +269,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
                 //while (true){
                     //endless loop. Since bitcoinj upgrade, this is no longer running as a guava service.
                     // so we need to keep the thread active.
-               // }
+                //}
             } catch (Exception exception) {
                 exception.printStackTrace();
                 throw new CantConnectToBitcoinNetwork("Couldn't connect to Bitcoin Network.", exception, "", "Error executing Agent.");
@@ -285,11 +285,6 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
             peers.start();
 
         /**
-         * I will make sure I have all blocks
-         */
-        peers.downloadBlockChain();
-
-        /**
          * If I don't have any peers connected, I will continue trying to connect before broadcasting.
          */
         while (peers.numConnectedPeers() == 0){
@@ -299,13 +294,9 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
             peers.downloadBlockChain();
         }
 
-        TransactionBroadcast broadcast = peers.broadcastTransaction(transaction);
-        broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
-            @Override
-            public void onBroadcastProgress(double progress) {
-                System.out.println("broadCast progress: " + progress);
-            }
-        });
-        broadcast.future().get();
+        /**
+         * broadcast it and wait.
+         */
+        peers.broadcastTransaction(transaction).future().get();
     }
 }

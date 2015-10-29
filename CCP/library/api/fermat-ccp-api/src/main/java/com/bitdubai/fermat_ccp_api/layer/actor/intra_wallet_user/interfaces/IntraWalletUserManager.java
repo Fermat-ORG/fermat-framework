@@ -1,11 +1,17 @@
 package com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces;
 
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantAcceptIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCancelIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantDenyConnectionException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantDisconnectIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantSetPhotoException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.IntraUserNotFoundException;
 
 import java.util.List;
 
@@ -110,5 +116,33 @@ public interface IntraWalletUserManager {
      */
     List<IntraWalletUser> getWaitingTheirAcceptanceIntraWalletUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraWalletUsersException;
 
+
+    /**
+     *
+     * @param actorName
+     * @param photo
+     * @return
+     * @throws CantCreateIntraUserException
+     */
+
+    Actor createActor(String walletPublicKey, String actorPublicKey, String actorName, byte[] photo) throws CantCreateIntraUserException;
+
+
+    /**
+     *
+     * @param actorPublicKey
+     * @return
+     */
+    Actor getActorByPublicKey(String walletPublicKey, String actorPublicKey) throws CantGetIntraUserException, IntraUserNotFoundException;
+
+
+    /**
+     *
+     * @param actorPublicKey
+     * @param photo
+     * @throws CantSetPhotoException
+     * @throws IntraUserNotFoundException
+     */
+    void setPhoto(String actorPublicKey, byte[] photo) throws CantSetPhotoException, IntraUserNotFoundException;
 
 }
