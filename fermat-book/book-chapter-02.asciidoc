@@ -1,45 +1,20 @@
 :numbered:
 == Fermat: a platform stack system
-
-
 *Fermat* is, technically speaking, an Open Source P2P (Peer-to-Peer) Platform Stack System built on a Plug-ins Architecture running on end-user's devices. 
 
+////
 .What distinguish Fermat among other implementations of financial applications ?  
+////
+
+[horizontal]
 Open Source :: the code can be reviewed and audited by anyone.
 P2P network and decentralized :: censorship resistent and difficult to be attacked.
 Platform Stack :: functionalities are wrapped in categories easy  
 Plug-in Architecture :: reuse of componentes and open to the participation of any developer.
 Ir runs on end users' devices :: users control on their money without the need to trust a third party.
 
-=== Business Model
-* **Fermat is inclusive.** By creating their own plugins, current industry members can integrate with Fermat to offer their services and products to Fermat user base. 
-
-* **Fermat segments the world population and offers a custom tailored solution for each segment.** Any developer can easily create niche wallets for a particular group of people. Brands can create their own wallets for their followers. All the heavy lifting is done by the Fermat platform.
-
-At the same time, the open source *plug-in platform* allows any skilled actor in the community to jump in and develop applications and offer services with different abstraction levels and addressing a wide range of segmented markets. In fact, as we have seen in the section about Fermat as a _master plan_, the possibility of using the existent global talent and intelligence that the community already has in a clever collaborative way, can rapidily expand this technology to mass adoption. + 
-Instead of beginning a new project in this industry completley from scratch, the clear and firm logic of Fermat can make it a new standard in the industry, giving the collective a strong and stabile group coherence it had never experienced before. All participants in the different sectors get , because of Fermat's transparency, clear logic and solid foundations, a sense of trust, safety and equity, and the corresponding right to become a revenue for each one's contribution and effort.
-
-* PUBLIC
-Anybody can connect to the Fermat P2P network and use its services. Anybody can write plug-ins for its platforms.
-
-* OPEN
-Anybody can participate and innovate without requiring permission.
-
-* INCLUSIVE
-Any existing crypto service running outside the Fermat network / platform can be integrated and consumed from within the network.
-
-* OPEN STANDARD
-Can be freely adopted, implemented and extended.
-
-
-* *Fermat guaratees plugins and wallet developers a revenue stream.* Fermat implements an innovative business model which allows plugins and wallet developers to define a use license, and Fermat itself enforces this license on behalf of developers. )
-
-=== Target 
-The first goal is to get very close to the *end user* offering and easy way of coming onboard the crytocurrency world by means of possesing a digital *wallet* running on his preferred device. +
-
 === What is Fermat made of ?
 
-.Types of components
 * *libraries*: structural components of the core of the system (low level layers) (Fermat-CORE - Fermat-API) 
 * *desktops*: applications that run on an specific Operating System and present the graphic user interface.
 * *plug-ins*: components which encapsulates a very specific sets of functions, consum services from other components and offer a public interface for the services they provide to other components.
@@ -70,7 +45,7 @@ There are certain *Layers* that provide services at a system-wide scale (see <<s
 
 ==== multi OS architecture
 Fermat is *code-base portable*, meaning that the components are written in code that runs in different operating systems. 
-So, through Fermat-OSA (Fermat OPERATING SYSTEM API) , the components that are specific to a given Operating System connect to the rest of Fermat that is OS independent.
+So, through _Fermat Operating Systems API Superlayer_, the components that are specific to a given Operating System connect to the rest of Fermat that is OS independent.
 
 [[multilayer]]
 ==== multilayer architecture
@@ -81,14 +56,10 @@ There are certain *Layers* that provide services at a system-wide scale (see *su
 
 *Plug-ins* have an outstanding feature: as long as theier INTERFACE (i.e. the shape of the interconnection) is known and public, the plug-in can interact with others, consuming and offering services, INDEPENDENTLY of its inner structure and how it is built. As long as they conserve this INTERFACE, they can safely evolve to more efficient functioning WITHOUT altering a single service that has been built upon it ! 
 Inside Fermat, each plug-in is given certain specific responsability within the whole, it lives in a certain layer, and it is allowed to consume services of components on _lower layers_ and to provide services to components of _upper layers_. Plug-ins participate in high level processes and they are programmed in a way to live in an uncontrolled environment (end user devices) and to co-exist with untrusted third party plug-ins as well. 
-
-NOTE: Fermat'S core concept of providing REUSABLE COMPONENTS is based on this *plug-in/add-on architecture*.
-
 Through its plug-ins, Fermat is able to connect and reuse most of the infrastructure deployed by the industry.
 
-
 ==== platform architecture
-A *platform* consists of a group of components living in different *layers* interconnected to offer a specific set of services for a discovered niche. For example, if we address to cryptocurrency users, we will need a _crytocurrency wallet_ for each cryptocurrency available running on Fermat Crypto Currency Platform. This wallet would operate on the selected cryptonetwork by means of a connection to it provided by the Block Chain Platform, and will interact with the user by means of an *desktop* living in the OS specific layers. 
+A *platform* consists of a group of components living in different *layers* interconnected to offer a specific set of services for a discovered niche. For example, if we address to cryptocurrency users, we will need a _crytocurrency wallet_ for each cryptocurrency available running on _Fermat Crypto Currency Platform_. This wallet would operate on the selected cryptonetwork by means of a connection to it provided by the _Block Chain Platform_, and will interact with the user by means of an *desktop* living in the OS specific layers. 
 
 
 .General overview on Fermat'S platforms and superlayers.
@@ -111,14 +82,10 @@ A *platform* consists of a group of components living in different *layers* inte
 . *Fermat Distributed Private Network*
 
 
-:numbered:
-
-
-
 For a cool visualization of the constant growing system of platforms and superlayers visit http://fermat.org
 
 
-link:book-appendix-03-money.asciidoc[Appendix 03: Fiat Money & Crypto Currency]
+
 
 
 

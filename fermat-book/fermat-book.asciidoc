@@ -11,7 +11,9 @@ include::book-chapter-01.asciidoc[]
 
 include::book-chapter-02.asciidoc[]
 
-include::fbk-03.asciidoc[]
+include::book-chapter-03.asciidoc[]
+
+include::fbk-03b.asciidoc[]
 
 include::fbk-04.asciidoc[]
 
@@ -57,3 +59,4 @@ include::index.asciidoc[]
 
 include::book-appendix-01-principles.asciidoc[]
 include::book-appendix-02-history.asciidoc[]
+include::book-appendix-03-money.asciidoc[]
