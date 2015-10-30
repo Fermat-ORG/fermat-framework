@@ -41,7 +41,7 @@ import java.util.UUID;
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 15/10/2015.
  */
-public class CryptoAddressesExecutorAgent extends FermatAgent {
+public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
     // Represent the sleep time for the cycles of receive and send in this agent, with both cycles send and receive 15000 millis.
     private static final long SLEEP_TIME = 7500;
@@ -91,7 +91,7 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
         });
     }
 
-    public void start() throws CantStartAgentException {
+    public final void start() throws CantStartAgentException {
 
 
 
@@ -122,7 +122,7 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
     // TODO MANAGE PAUSE, STOP AND RESUME METHODS.
 
-    public void sendCycle() {
+    private void sendCycle() {
 
         try {
 
@@ -214,7 +214,7 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
         }
     }
 
-    public void receiveCycle() {
+    private void receiveCycle() {
 
         try {
 
