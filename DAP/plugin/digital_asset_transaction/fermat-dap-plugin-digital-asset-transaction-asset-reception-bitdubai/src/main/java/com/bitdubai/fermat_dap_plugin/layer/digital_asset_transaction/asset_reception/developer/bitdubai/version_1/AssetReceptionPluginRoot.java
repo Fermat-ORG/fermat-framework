@@ -221,7 +221,7 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                 throw new CantStartPluginException("Asset reception Event Recorded could not be started", exception, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION.getKey(), "The plugin event recorder is not started");
             }
-            testDeveloperDatabase();
+            //testDeveloperDatabase();
 
         } catch (CantSetObjectException exception) {
             this.serviceStatus=ServiceStatus.STOPPED;
@@ -232,10 +232,10 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
         } catch (CantStartServiceException exception) {
             this.serviceStatus=ServiceStatus.STOPPED;
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Reception plugin", "Cannot start event recorder service");
-        }catch(Exception exception){
+        }/*catch(Exception exception){
             System.out.println("ASSET RECEPTION EXCEPTION TEST "+exception);
             exception.printStackTrace();
-        }
+        }*/
 
         this.serviceStatus=ServiceStatus.STARTED;
         //testRaiseEvent();
