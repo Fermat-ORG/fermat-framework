@@ -151,6 +151,7 @@ public enum Plugins implements FermatEnum {
 
     BITCOIN_VAULT          ("BV" ),
     BITCOIN_WALLET         ("BW" ),
+    CLOUD_CLIENT           ("CCL" ),
     CRYPTO_ADDRESSES       ("CA" ),
     CRYPTO_ADDRESS_BOOK    ("CAB" ),
     CRYPTO_PAYMENT_REQUEST ("CPR"  ),
@@ -388,6 +389,7 @@ public enum Plugins implements FermatEnum {
 
             case "BV":  return BITCOIN_VAULT         ;
             case "BW":  return BITCOIN_WALLET        ;
+            case "CCL": return CLOUD_CLIENT          ;
             case "CA":  return CRYPTO_ADDRESSES      ;
             case "CAB": return CRYPTO_ADDRESS_BOOK   ;
             case "CPR": return CRYPTO_PAYMENT_REQUEST;
