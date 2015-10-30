@@ -26,13 +26,21 @@ The solution we propose begins with a Framework that must be portable into diffe
 
 We identify 3 different kind of components that we arbitrary call Addons, Plug-in, and GUI components. We define Addons as low level components that do not need to identify themselves to consume services from other components. This impacts in that they have broad access to the file system and databases. On the other side, Plug-ins have their own identity and must identify themselves to other plugins or addons to consume their services which in turn restrict the scope of their services based on the caller's identity (for example the filesystem addon would only give access to a plugin's own folder structure, the database system addon would only give access to a plugin's own databases, and so on). In this way is handled the problem of running plugins from untrusted sources.
 
-The Framework's core is in charge of initializing Addons and Plug-ins and managing Plug-ins identities. An API library holds the public interfaces that each component exposes to the rest of it's peers within the same device in orther to allow then to consume their services.
+The Framework's core is in charge of initializing Addons and Plug-ins and managing Plug-ins identities. An API library holds the public interfaces that each component exposes to the rest of it's peers within the same device in orther to allow then to consume their services. This provides a strong encapsulation of each component's business logic allowing them to freely define their internal structure and data model.
 
 ### Crypto Networks
 
+A set of plug-ins is needed for each crypto network that want to be supported. One for interfacing the network and being able to push outgoing transactions and monitor incoming transactions. Another couple being the digital vaults where the crypto currency value and digital assets are stored.
+
+Wallets are higher level abstractions and have their own set of Plug-ins for keeping the accounting of each kind of them. This means that the we split the accounting from the value having components at different layers to handle each of them.
 
 ### Fermat Network
 
+
+
+
+
+### Incentive
 
 ### Transactions
 
@@ -48,6 +56,7 @@ The Framework's core is in charge of initializing Addons and Plug-ins and managi
 ### GUI
 
 
+### Syncronization
 
 
 
