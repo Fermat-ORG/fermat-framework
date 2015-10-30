@@ -198,21 +198,13 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     }
 
     public void processReceive(){
-
-
        try {
-
-            // process notifications
             List<ActorNetworkServiceRecord> lstActorRecord = actorNetworkServicePluginRoot.getIncomingNotificationsDao().listRequestsByProtocolStateAndType(
                     ActorProtocolState.PROCESSING_RECEIVE
             );
-
-
             for(ActorNetworkServiceRecord cpr : lstActorRecord) {
                 switch (cpr.getNotificationDescriptor()) {
-
                     case ASKFORACCEPTANCE:
-
                         System.out.println("----------------------------\n" +
                                 "MENSAJE PROCESANDOSE:" + cpr
                                 + "\n-------------------------------------------------");
@@ -220,9 +212,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         lauchNotification();
 
                         try {
-
                             actorNetworkServicePluginRoot.getIncomingNotificationsDao().changeProtocolState(cpr.getId(),ActorProtocolState.PENDING_ACTION);
-
                         } catch (CantUpdateRecordDataBaseException e) {
                             e.printStackTrace();
                         } catch (CantUpdateRecordException e) {
@@ -230,7 +220,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         } catch (RequestNotFoundException e) {
                             e.printStackTrace();
                         }
-
 
 //                        Gson gson = new Gson();
 //
@@ -248,8 +237,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 //                        System.out.print("-----------------------\n" +
 //                                "ENVIANDO RESPUESTA !!!!! -----------------------\n" +
 //                                "-----------------------\n NOTIFICATION: " + cpr);
-
-
                         break;
                     case ACCEPTED:
 
