@@ -232,7 +232,7 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
             reportUnexpectedError(FermatException.wrapException(e));
         } catch(Exception e) {
 
-            reportUnexpectedError(FermatException.wrapException(e));
+            reportUnexpectedError(e);
         }
 
     }
@@ -454,7 +454,7 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
         eventManager.raiseEvent(eventToRaise);
     }
 
-    private void reportUnexpectedError(final FermatException e) {
+    private void reportUnexpectedError(final Exception e) {
         errorManager.reportUnexpectedPluginException(cryptoAddressesNetworkServicePluginRoot.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
