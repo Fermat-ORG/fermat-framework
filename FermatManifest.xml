@@ -4408,7 +4408,7 @@
 						name="Crypto Broker Identity"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4441,7 +4441,7 @@
 						name="Crypto Customer Identity"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4493,7 +4493,7 @@
 						name="Sub App Manager"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4510,7 +4510,7 @@
 						name="Wallet Manager"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4569,7 +4569,7 @@
 						name="Crypto Broker Identity"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4602,7 +4602,7 @@
 						name="Crypto Customer Identity"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4656,7 +4656,7 @@
 						name="Sub App Manager"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4672,7 +4672,7 @@
 						name="Wallet Manager"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4906,7 +4906,7 @@
 						name="Wallet Manager"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4922,7 +4922,7 @@
 						name="Sub App Manager"
 						description=""
 						difficulty="6"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -5163,7 +5163,7 @@
 						name="Crypto Broker"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -5180,7 +5180,7 @@
 						name="Crypto Customer"
 						description=""
 						difficulty="4"
-						code-level="development"
+						code-level="qa"
 						>
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
