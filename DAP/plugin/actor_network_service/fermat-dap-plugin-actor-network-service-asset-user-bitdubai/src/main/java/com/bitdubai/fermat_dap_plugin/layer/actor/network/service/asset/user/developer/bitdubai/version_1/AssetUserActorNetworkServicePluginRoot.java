@@ -606,7 +606,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                 PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetUserToRegister.getPublicKey(),
                         actorAssetUserToRegister.getName().toLowerCase().trim(),
                         actorAssetUserToRegister.getName(),
-                        NetworkServiceType.UNDEFINED,
+                        NetworkServiceType.ASSET_USER_ACTOR,
                         PlatformComponentType.ACTOR_ASSET_USER,
                         Arrays.toString(actorAssetUserToRegister.getProfileImage()));
                 /*
@@ -622,7 +622,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                 PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetUserToRegister.getPublicKey(),
                         actorAssetUserToRegister.getName().toLowerCase().trim(),
                         actorAssetUserToRegister.getName(),
-                        NetworkServiceType.UNDEFINED,
+                        NetworkServiceType.ASSET_USER_ACTOR,
                         PlatformComponentType.ACTOR_ASSET_USER,
                         Arrays.toString(actorAssetUserToRegister.getProfileImage()));
                 /*
