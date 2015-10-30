@@ -81,10 +81,11 @@ public interface CommunicationsClientConnection {
     /**
      * Method that register a platform component with for Communication like online
      *
+     * @param networkServiceNetworkServiceTypeApplicant
      * @param platformComponentProfile
      * @throws CantRegisterComponentException
      */
-    public void registerComponentForCommunication(PlatformComponentProfile platformComponentProfile) throws CantRegisterComponentException;
+    public void registerComponentForCommunication(NetworkServiceType networkServiceNetworkServiceTypeApplicant, PlatformComponentProfile platformComponentProfile) throws CantRegisterComponentException;
 
     /**
      * Method that request to the communication cloud server the list of component registered that match

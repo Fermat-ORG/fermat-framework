@@ -624,7 +624,7 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
                 /*
                  * ask to the communication cloud client to register
                  */
-                communicationsClientConnection.registerComponentForCommunication(platformComponentProfileAssetUser);
+                communicationsClientConnection.registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileAssetUser);
 
             }else{
 
@@ -807,7 +807,7 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
                      * ask to the communication cloud client to register
                      */
                     try {
-                        communicationsClientConnection.registerComponentForCommunication(platformComponentProfileAssetIssuer);
+                        communicationsClientConnection.registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileAssetIssuer);
                     } catch (CantRegisterComponentException e) {
                         e.printStackTrace();
                     }

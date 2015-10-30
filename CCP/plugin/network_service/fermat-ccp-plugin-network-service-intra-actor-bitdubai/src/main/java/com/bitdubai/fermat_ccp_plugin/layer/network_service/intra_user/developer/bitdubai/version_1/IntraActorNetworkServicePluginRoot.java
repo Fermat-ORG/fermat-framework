@@ -679,7 +679,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 for(PlatformComponentProfile platformComponentProfile : actorsToRegisterCache){
 
-                    communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+                    communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
 
                     System.out.print("-----------------------\n" +
                             "INTENTANDO REGISTRAR ACTOR  -----------------------\n" +
@@ -1348,7 +1348,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 if (register) {
                     try {
-                        communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+                        communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
 
                     } catch (CantRegisterComponentException e) {
                         e.printStackTrace();
