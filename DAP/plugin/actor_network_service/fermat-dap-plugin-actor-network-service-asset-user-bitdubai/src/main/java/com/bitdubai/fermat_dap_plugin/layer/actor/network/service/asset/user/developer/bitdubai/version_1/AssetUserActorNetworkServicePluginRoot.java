@@ -599,6 +599,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
              */
             if (this.isRegister()) {
 
+                System.out.println("Actor Asset User en A.N.S USER para Registro");
 
                 /*
                  * Construct the profile
@@ -629,7 +630,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                  * Add to the list of pending to register
                  */
                 actorAssetUserPendingToRegistration.add(platformComponentProfileAssetUser);
-
+                System.out.println("Actor Asset User AGREGADO a lista de PENDIENTE para Registro en A.N.S");
             }
 
         } catch (Exception e) {
@@ -1123,6 +1124,8 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                 createactorAgentnum=1;
 
             }
+
+            System.out.println("Actor Asset User REGISTRADO en A.N.S - Enviando Evento de Notificacion");
 
             FermatEvent event = eventManager.getNewEvent(EventType.COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION);
             event.setSource(EventSource.ACTOR_ASSET_USER);
