@@ -51,9 +51,6 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, IntraUse
                 options.inPurgeable = true;
                 Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length, options);
                 holder.thumbnail.setImageBitmap(bitmap);
-            } else {
-                Picasso.with(context).load(R.drawable.profile_image).into(holder.thumbnail);
-                
             }
         }
 
