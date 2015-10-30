@@ -397,7 +397,6 @@ Updates the count of notifications in the ActionBar.
 
             dataSet = moduleManager.getAllIntraUsers(moduleManager.getActiveIntraUserIdentity().getPublicKey(),MAX,offset);
             offset = dataSet.size();
-
         } catch (CantGetIntraUsersListException e) {
             e.printStackTrace();
         } catch (Exception e){
