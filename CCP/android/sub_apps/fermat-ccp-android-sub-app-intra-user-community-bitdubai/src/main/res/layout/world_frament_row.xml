@@ -3,6 +3,7 @@
     android:layout_width= "120dp"
     android:layout_height="120dp"
     android:padding="2dp"
+    android:background="#d9d6d6"
     >
     <com.bitdubai.fermat_android_api.ui.Views.SquareImageView android:id="@+id/profile_Image"
         android:layout_width="match_parent"

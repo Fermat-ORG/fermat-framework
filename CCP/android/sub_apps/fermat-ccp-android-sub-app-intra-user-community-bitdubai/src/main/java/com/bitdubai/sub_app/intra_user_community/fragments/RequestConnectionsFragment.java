@@ -157,16 +157,15 @@ public class RequestConnectionsFragment extends FermatListFragment<IntraUserInfo
 
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
-        Toast.makeText(getActivity(),data.getName(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(),data.getName()+" accepted",Toast.LENGTH_SHORT).show();
         try {
-
             moduleManager.acceptIntraUser(moduleManager.getActiveIntraUserIdentity().getPublicKey(),data.getName(),data.getPublicKey(),data.getProfileImage());
-            
         } catch (CantAcceptRequestException e) {
             e.printStackTrace();
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
+        onRefresh();
     }
 
     @Override
