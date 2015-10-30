@@ -141,8 +141,7 @@ public class CryptoWalletWalletModuleManager implements
         DealsWithOutgoingIntraActor,
         DealsWithWalletContacts,
         DealsWithCryptoAddressBook,
-        DealsWithCryptoPayment,
-        DealsWithIntraUsersNetworkService { // TODO ADDED TO TEST CRYPTO ADDRESSES PLUGIN
+        DealsWithCryptoPayment{ // TODO ADDED TO TEST CRYPTO ADDRESSES PLUGIN
 
 
     /**
@@ -169,16 +168,6 @@ public class CryptoWalletWalletModuleManager implements
      * DealsWithCCPIntraWalletUsers Interface member variables.
      */
     private IntraWalletUserManager intraUserManager;
-
-
-    // TODO JUST TESTING
-    IntraUserManager intraUserManagercito;
-
-    @Override
-    public void setIntraUserNetworkServiceManager(IntraUserManager intraUserManagercito) {
-        this.intraUserManagercito=intraUserManagercito;
-    }
-    // TODO END JUST TESTING
 
     /**
      * DealsWithCCPIdentityIntraWalletUser Interface member variables.
@@ -248,33 +237,10 @@ public class CryptoWalletWalletModuleManager implements
 
     }
 
-    private void justTesting() {
-        // TODO JUST TESTING
-        try {
-
-            List<com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser> list = this.getActiveIdentities();
-            List<IntraUserInformation> actorsList = this.intraUserManagercito.getIntraUsersSuggestions(100, 0);
-
-            for (IntraUserInformation iui :actorsList)
-            cryptoAddressesNSManager.sendAddressExchangeRequest(
-                    "reference_wallet",
-                    CryptoCurrency.BITCOIN ,
-                    Actors.INTRA_USER,
-                    Actors.INTRA_USER,
-                    list.get(0).getPublicKey(),
-                    iui.getPublicKey(),
-                    BlockchainNetworkType.TEST );
-
-        } catch (Exception e) {
-            System.err.println(e);
-        }
-    }
-
     @Override
     public List<CryptoWalletWalletContact> listWalletContacts(String walletPublicKey) throws CantGetAllWalletContactsException {
         try {
 
-            Actor actor;
             List<CryptoWalletWalletContact> finalRecordList = new ArrayList<>();
             finalRecordList.clear();
             WalletContactsSearch walletContactsSearch = walletContactsRegistry.searchWalletContact(walletPublicKey);
@@ -294,8 +260,6 @@ public class CryptoWalletWalletModuleManager implements
 
     @Override
     public List<CryptoWalletWalletContact> listAllActorContactsAndConnections(String walletPublicKey,String intraUserPublicKey) throws CantGetAllWalletContactsException {
-        justTesting();
-        // todo just testing
         try {
             Map<String, CryptoWalletWalletContact> contactMap = new HashMap<>();
 

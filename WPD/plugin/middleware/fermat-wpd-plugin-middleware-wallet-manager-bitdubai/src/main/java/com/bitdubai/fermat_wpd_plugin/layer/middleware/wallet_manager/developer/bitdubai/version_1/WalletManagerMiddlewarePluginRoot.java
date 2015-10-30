@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
@@ -92,7 +93,16 @@ import java.util.logging.Logger;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDevelopers,DealsWithErrors,DealsWithEvents,DealsWithLogger,DealsWithWalletResources,DealsWithPluginDatabaseSystem,LogManagerForDevelopers, Plugin, Service, WalletManagerManager {
+public class WalletManagerMiddlewarePluginRoot implements
+        DatabaseManagerForDevelopers,
+        DealsWithErrors,
+        DealsWithEvents,
+        DealsWithLogger
+        ,DealsWithWalletResources,
+        DealsWithPluginDatabaseSystem,
+        LogManagerForDevelopers,
+        Plugin, Service,
+        WalletManagerManager {
 
     String walletPublicKey = "reference_wallet";
 
@@ -754,7 +764,92 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
         try {
             List<InstalledWallet> installedWalletList = this.getInstalledWallets();
             if (installedWalletList.isEmpty())
-                return null;
+                return new InstalledWallet() {
+                    @Override
+                    public List<InstalledLanguage> getLanguagesId() {
+                        return null;
+                    }
+
+                    @Override
+                    public List<InstalledSkin> getSkinsId() {
+                        return null;
+                    }
+
+                    @Override
+                    public WalletCategory getWalletCategory() {
+                        return WalletCategory.REFERENCE_WALLET;
+                    }
+
+                    @Override
+                    public WalletType getWalletType() {
+                        return WalletType.REFERENCE;
+                    }
+
+                    @Override
+                    public String getWalletScreenSize() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getWalletNavigationStructureVersion() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getWalletPlatformIdentifier() {
+                        return "BWBW";
+                    }
+
+                    @Override
+                    public String getWalletIcon() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getWalletPublicKey() {
+                        return "reference_wallet";
+                    }
+
+                    @Override
+                    public String getWalletName() {
+                        return null;
+                    }
+
+                    @Override
+                    public Version getWalletVersion() {
+                        return new Version();
+                    }
+
+                    @Override
+                    public UUID getWalletCatalogId() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getWalletDeveloperName() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getWalletDeviceUserPublicKey() {
+                        return null;
+                    }
+
+                    @Override
+                    public Platforms getPlatform() {
+                        return Platforms.CRYPTO_CURRENCY_PLATFORM;
+                    }
+
+                    @Override
+                    public Actors getActorType() {
+                        return Actors.INTRA_USER;
+                    }
+
+                    @Override
+                    public CryptoCurrency getCryptoCurrency() {
+                        return CryptoCurrency.BITCOIN;
+                    }
+                };
             else
                 return installedWalletList.get(0);
         } catch (CantListWalletsException e) {
