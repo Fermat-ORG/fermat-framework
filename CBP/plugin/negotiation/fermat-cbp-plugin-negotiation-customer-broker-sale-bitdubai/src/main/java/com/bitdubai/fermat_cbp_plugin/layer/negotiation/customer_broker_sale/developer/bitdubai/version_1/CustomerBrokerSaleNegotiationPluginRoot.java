@@ -34,7 +34,7 @@ import java.util.UUID;
 /**
  * Created by jorge on 12-10-2015.
  */
-public class CustomerBrokerSalePluginRoot implements CustomerBrokerSaleNegotiationManager, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Service, Plugin {
+public class CustomerBrokerSaleNegotiationPluginRoot implements CustomerBrokerSaleNegotiationManager, DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Service, Plugin {
 
     private ErrorManager errorManager;
     private LogManager logManager;
@@ -73,11 +73,11 @@ public class CustomerBrokerSalePluginRoot implements CustomerBrokerSaleNegotiati
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
         for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-            if (CustomerBrokerSalePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                CustomerBrokerSalePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                CustomerBrokerSalePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (CustomerBrokerSaleNegotiationPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                CustomerBrokerSaleNegotiationPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                CustomerBrokerSaleNegotiationPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                CustomerBrokerSalePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                CustomerBrokerSaleNegotiationPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
     }
