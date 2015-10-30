@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
@@ -18,13 +17,11 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesEvent;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.CryptoAddressesNetworkServicePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantChangeProtocolStateException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantInitializeCryptoAddressesNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantInitializeExecutorAgentException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.AcceptMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.DenyMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.RequestMessage;
@@ -32,7 +29,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloud
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,13 +43,11 @@ import java.util.UUID;
  */
 public class CryptoAddressesExecutorAgent extends FermatAgent {
 
-    // Represent the sleep time for the cycles of receive and send in this agent.
-    private static final long SEND_SLEEP_TIME    = 15000;
-    private static final long RECEIVE_SLEEP_TIME = 15000;
+    // Represent the sleep time for the cycles of receive and send in this agent, with both cycles send and receive 15000 millis.
+    private static final long SLEEP_TIME = 7500;
 
     // Represent the receive and send cycles for this agent.
-    private Thread toSend   ;
-    private Thread toReceive;
+    private Thread agentThread;
 
     // network services registered
     private Map<String, String> poolConnectionsWaitingForResponse;
@@ -74,8 +68,6 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                                         final UUID                                    pluginId                               ,
                                         final WsCommunicationsCloudClientManager      wsCommunicationsCloudClientManager     ) {
 
-        System.out.println("********* Crypto Addresses: Executor Agent -> Instantiation started. ");
-
         this.cryptoAddressesNetworkServicePluginRoot      = cryptoAddressesNetworkServicePluginRoot;
         this.errorManager                                 = errorManager                           ;
         this.eventManager                                 = eventManager                           ;
@@ -88,24 +80,15 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
         this.poolConnectionsWaitingForResponse = new HashMap<>();
 
         //Create a thread to send the messages
-        this.toSend = new Thread(new Runnable() {
+        this.agentThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (isRunning())
+                while (isRunning()) {
                     sendCycle();
-            }
-        });
-
-        //Create a thread to receive the messages
-        this.toReceive = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (isRunning())
                     receiveCycle();
+                }
             }
         });
-
-        System.out.println("********* Crypto Addresses: Executor Agent -> Instantiation finished. ");
     }
 
     public void start() throws CantStartAgentException {
@@ -113,8 +96,6 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
 
         try {
-
-            System.out.println("********* Crypto Addresses: Executor Agent -> Agent Starting. ");
 
             try {
 
@@ -129,13 +110,9 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                 throw new CantInitializeExecutorAgentException(e, "", "Problem initializing Crypto Addresses DAO from Executor Agent.");
             }
 
-            toSend.start();
-
-            toReceive.start();
+            agentThread.start();
 
             this.status = AgentStatus.STARTED;
-
-            System.out.println("********* Crypto Addresses: Executor Agent -> Agent Started OK. ");
 
         } catch (Exception exception) {
 
@@ -149,18 +126,14 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
         try {
 
-            System.out.println("********* Crypto Addresses: Executor Agent -> Send Cycle running. ");
-
             if(cryptoAddressesNetworkServicePluginRoot.isRegister()) {
 
                 // function to process and send the rigth message to the counterparts.
                 processSend();
             }
 
-            System.out.println("********* Crypto Addresses: Executor Agent -> Send Cycle process finished, go to sleep. ");
-
             //Sleep for a time
-            toSend.sleep(SEND_SLEEP_TIME);
+            Thread.sleep(SLEEP_TIME);
 
         } catch (InterruptedException e) {
 
@@ -179,14 +152,7 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                     ProtocolState.PROCESSING_SEND
             );
 
-            if (!addressExchangeRequestList.isEmpty())
-                System.out.println("********* Crypto Addresses: Executor Agent -> Send Cycle -> Processing "+addressExchangeRequestList.size()+ " requests.");
-            else
-                System.out.println("********* Crypto Addresses: Executor Agent -> Send Cycle -> Not available requests to process.");
-
             for(AddressExchangeRequest aer : addressExchangeRequestList) {
-
-                System.out.println("********* Crypto Addresses: Executor Agent -> Processing Send for Request: "+aer);
 
                 switch (aer.getAction()) {
 
@@ -239,8 +205,6 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
         } catch(CantListPendingAddressExchangeRequestsException e) {
 
-            System.out.println("********* Crypto Addresses: Executor Agent -> Sending ERROR ");
-
             reportUnexpectedError(e);
         }
     }
@@ -249,19 +213,14 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
         try {
 
-            System.out.println("********* Crypto Addresses: Executor Agent -> Receive Cycle running. ");
-
             if(cryptoAddressesNetworkServicePluginRoot.isRegister()) {
 
-
-                // function to process and send the rigth message to the counterparts.
+                // function to process and send the right message to the counterparts.
                 processReceive();
             }
 
-            System.out.println("********* Crypto Addresses: Executor Agent -> Receive Cycle process finished, go to sleep. ");
-
-            //Sleep for a time
-            toReceive.sleep(RECEIVE_SLEEP_TIME);
+            //Sleep for a while
+            Thread.sleep(SLEEP_TIME);
 
         } catch (InterruptedException e) {
 
@@ -281,25 +240,23 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                     ProtocolState.PROCESSING_RECEIVE
             );
 
-            if (!addressExchangeRequestList.isEmpty())
-                System.out.println("********* Crypto Addresses: Executor Agent -> Receive Cycle -> Processing "+addressExchangeRequestList.size()+ " requests.");
-            else
-                System.out.println("********* Crypto Addresses: Executor Agent -> Receive Cycle -> Not available requests to process.");
-
             for(AddressExchangeRequest cpr : addressExchangeRequestList) {
                 switch(cpr.getAction()) {
 
                     case ACCEPT:
+                        System.out.println("************** Crypto Addresses -> Received Address Acceptance: " +cpr);
                         raiseEvent(EventType.CRYPTO_ADDRESS_RECEIVED, cpr.getRequestId(), cpr.getIdentityTypeResponding());
                         toPendingAction(cpr.getRequestId());
 
                         break;
                     case DENY:
+                        System.out.println("************** Crypto Addresses -> Received Address Denied: " +cpr);
                         raiseEvent(EventType.CRYPTO_ADDRESS_DENIED, cpr.getRequestId(), cpr.getIdentityTypeResponding());
                         toPendingAction(cpr.getRequestId());
 
                         break;
                     case REQUEST:
+                        System.out.println("************** Crypto Addresses -> Received Address Request: " +cpr);
                         raiseEvent(EventType.CRYPTO_ADDRESS_REQUESTED, cpr.getRequestId(), cpr.getIdentityTypeResponding());
                         toPendingAction(cpr.getRequestId());
 
@@ -322,28 +279,15 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                                     final Actors actorType        ,
                                     final UUID   requestId        ) {
 
-        System.out.println("********* Crypto Addresses: Executor Agent -> Send Message To actor.");
-
-
         try {
-
-            System.out.println("********* Crypto Addresses: Executor Agent -> Send Message To Actor -> !poolConnectionsWaitingForResponse.containsKey(actorPublicKey): "+!poolConnectionsWaitingForResponse.containsKey(actorPublicKey));
 
             if (!poolConnectionsWaitingForResponse.containsKey(actorPublicKey)) {
 
-
-                System.out.println("********* Crypto Addresses: Executor Agent -> Send Message To Actor -> cryptoAddressesNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey) must be null: "+cryptoAddressesNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey));
                 if (cryptoAddressesNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey) == null) {
-
-                    System.out.println("********* Crypto Addresses: Executor Agent -> Send Message To Actor -> wsCommunicationsCloudClientManager must be ! null: "+wsCommunicationsCloudClientManager);
 
                     if (wsCommunicationsCloudClientManager != null) {
 
-                        System.out.println("********* Crypto Addresses: Executor Agent -> Send Message To Actor -> cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot() must be ! null: "+cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot());
-
                         if (cryptoAddressesNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot() != null) {
-
-                            System.out.println("********* Crypto Addresses: Executor Agent -> Send Message To Actor -> Invoking connectTo.");
 
                             PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
                                     .constructBasicPlatformComponentProfileFactory(
@@ -364,8 +308,6 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
                             // i put the actor in the pool of connections waiting for response-
                             poolConnectionsWaitingForResponse.put(actorPublicKey, actorPublicKey);
-
-                            System.out.println("********* Crypto Addresses: Executor Agent -> Send Message To Actor -> Invoking connectTo success?.");
                         }
 
                     }
@@ -392,11 +334,7 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
         NetworkServiceLocal communicationNetworkServiceLocal = cryptoAddressesNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey);
 
-        System.out.println("********* Crypto Addresses: Executor Agent ->Looking for getNetworkServiceLocalInstance.");
-
         if (communicationNetworkServiceLocal != null) {
-
-            System.out.println("********* Crypto Addresses: Executor Agent -> Now Sending Message.");
 
             communicationNetworkServiceLocal.sendMessage(
                     identityPublicKey,
