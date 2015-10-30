@@ -93,7 +93,46 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
 
     @Override
     public Clause modifyClause(Clause clause, String value) throws CantUpdateClausesException {
-        return this.customerBrokerSaleNegotiationDao.modifyClause(this.negotiationId, clause, value);
+        Clause clauseRejected = modifyClauseStatus(clause, ClauseStatus.REJECTED);
+
+        if( clause.getType() == ClauseType.CUSTOMER_PAYMENT_METHOD ){
+            try {
+                ClauseType type = getNextClauseTypeByCurrencyType( CurrencyType.getByCode(clause.getValue() ) );
+
+                switch (type){
+                    case CUSTOMER_CRYPTO_ADDRESS:
+                        rejectClauseByType(ClauseType.BROKER_CRYPTO_ADDRESS);
+
+                    case CUSTOMER_BANK:
+                        rejectClauseByType(ClauseType.CUSTOMER_BANK);
+                        rejectClauseByType(ClauseType.CUSTOMER_BANK_ACCOUNT);
+
+                    case PLACE_TO_MEET:
+                        rejectClauseByType(ClauseType.PLACE_TO_MEET);
+                        rejectClauseByType(ClauseType.DATE_TIME_TO_MEET);
+
+                    case CUSTOMER_PLACE_TO_DELIVER:
+                        rejectClauseByType(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
+                        rejectClauseByType(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
+
+                }
+
+            } catch (CantGetNextClauseTypeException e) {
+                throw new CantUpdateClausesException(CantUpdateClausesException.DEFAULT_MESSAGE, e, "", "");
+            } catch (InvalidParameterException e) {
+                throw new CantUpdateClausesException(CantUpdateClausesException.DEFAULT_MESSAGE, e, "", "");
+            }
+        }
+
+        try {
+            if (clause.getProposedBy() == this.getBrokerPublicKey()){
+                return addNewBrokerClause(clauseRejected.getType(), value);
+            }else{
+                return addNewCustomerClause(clauseRejected.getType(), value);
+            }
+        } catch (CantAddNewClausesException e) {
+            throw new CantUpdateClausesException(CantUpdateClausesException.DEFAULT_MESSAGE, e, "", "");
+        }
     }
 
     @Override
