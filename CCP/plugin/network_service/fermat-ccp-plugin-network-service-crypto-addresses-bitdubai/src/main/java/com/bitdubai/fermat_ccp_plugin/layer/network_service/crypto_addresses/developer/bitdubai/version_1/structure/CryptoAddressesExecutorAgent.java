@@ -411,11 +411,13 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
     }
 
-    private PlatformComponentType platformComponentTypeSelectorByActorType(Actors type) throws InvalidParameterException {
+    private PlatformComponentType platformComponentTypeSelectorByActorType(final Actors type) throws InvalidParameterException {
 
         switch (type) {
 
             case INTRA_USER  : return PlatformComponentType.ACTOR_INTRA_USER  ;
+            case CCM_INTRA_WALLET_USER: return PlatformComponentType.ACTOR_INTRA_USER  ;
+            case CCP_INTRA_WALLET_USER  : return PlatformComponentType.ACTOR_INTRA_USER  ;
             case DAP_ASSET_ISSUER: return PlatformComponentType.ACTOR_ASSET_ISSUER;
             case DAP_ASSET_USER  : return PlatformComponentType.ACTOR_ASSET_USER  ;
 
@@ -426,7 +428,7 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
         }
     }
 
-    private String buildJsonAcceptMessage(AddressExchangeRequest aer) {
+    private String buildJsonAcceptMessage(final AddressExchangeRequest aer) {
 
         return new AcceptMessage(
                 aer.getRequestId(),
@@ -434,7 +436,7 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
         ).toJson();
     }
 
-    private String buildJsonDenyMessage(AddressExchangeRequest aer) {
+    private String buildJsonDenyMessage(final AddressExchangeRequest aer) {
 
         return new DenyMessage(
                 aer.getRequestId(),
@@ -455,13 +457,13 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
         ).toJson();
     }
 
-    private void toPendingAction(UUID requestId) throws CantChangeProtocolStateException,
+    private void toPendingAction(final UUID requestId) throws CantChangeProtocolStateException,
                                                         PendingRequestNotFoundException {
 
         cryptoAddressesNetworkServiceDao.changeProtocolState(requestId, ProtocolState.PENDING_ACTION);
     }
 
-    private void toWaitingResponse(UUID requestId) throws CantChangeProtocolStateException,
+    private void toWaitingResponse(final UUID requestId) throws CantChangeProtocolStateException,
                                                           PendingRequestNotFoundException {
 
         cryptoAddressesNetworkServiceDao.changeProtocolState(requestId, ProtocolState.WAITING_RESPONSE);
@@ -480,11 +482,11 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
         eventManager.raiseEvent(eventToRaise);
     }
 
-    private void reportUnexpectedError(FermatException e) {
+    private void reportUnexpectedError(final FermatException e) {
         errorManager.reportUnexpectedPluginException(cryptoAddressesNetworkServicePluginRoot.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
-    public void connectionFailure(String identityPublicKey){
+    public void connectionFailure(final String identityPublicKey){
         this.poolConnectionsWaitingForResponse.remove(identityPublicKey);
     }
 
