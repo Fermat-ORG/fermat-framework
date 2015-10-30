@@ -170,6 +170,11 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
                     actorType
             );
 
+            System.out.println("----------------------------\n" +
+                    "WALLET CONTACT MIDDLEWARE  : executePendingAddressExchangeRequests " +  addressExchangeRequestRespondedList.size()
+                    + "\n-------------------------------------------------");
+
+
             for (AddressExchangeRequest request : addressExchangeRequestRespondedList) {
 
                 if (request.getAction().equals(RequestAction.ACCEPT))
