@@ -42,7 +42,7 @@ public class IntraUserIdentityInfoAdapter extends FermatAdapter<IntraWalletUser,
 
         byte[] profileImage = null;  //data.getProfileImage();
         Bitmap imageBitmap = profileImage == null ?
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.deniz_profile_picture) :
+                BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image) :
                 BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
 
         Bitmap roundedBitmap = UtilsFuncs.getRoundedShape(imageBitmap);

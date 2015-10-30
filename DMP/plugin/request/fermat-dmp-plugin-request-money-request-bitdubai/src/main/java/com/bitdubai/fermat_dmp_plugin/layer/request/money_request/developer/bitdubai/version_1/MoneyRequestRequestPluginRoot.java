@@ -59,6 +59,11 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
 
     PluginFileSystem pluginFileSystem;
 
+    /**
+     * Represent the register
+     */
+    private boolean register;
+
 
     /**
      * DealsWithEvents Interface menber variables.
@@ -243,6 +248,15 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
+    }
+
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    @Override
+    public boolean isRegister() {
+        return register;
     }
 
     /*

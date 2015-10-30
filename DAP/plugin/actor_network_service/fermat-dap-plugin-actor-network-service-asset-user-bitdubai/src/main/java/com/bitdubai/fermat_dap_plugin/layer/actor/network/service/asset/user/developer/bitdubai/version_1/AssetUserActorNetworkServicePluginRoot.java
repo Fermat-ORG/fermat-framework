@@ -260,6 +260,11 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
         this.eventManager = DealsWithEvents;
     }
 
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    @Override
     public boolean isRegister() {
         return register;
     }

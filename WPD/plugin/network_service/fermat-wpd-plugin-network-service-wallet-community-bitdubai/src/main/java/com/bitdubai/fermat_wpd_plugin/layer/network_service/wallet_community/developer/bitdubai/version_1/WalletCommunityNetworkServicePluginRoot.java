@@ -66,6 +66,11 @@ public class WalletCommunityNetworkServicePluginRoot implements Service, Network
      */
     UUID pluginId;
 
+    /**
+     * Represent the register
+     */
+    private boolean register;
+
 
 
     /**
@@ -187,6 +192,15 @@ public class WalletCommunityNetworkServicePluginRoot implements Service, Network
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
+    }
+
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    @Override
+    public boolean isRegister() {
+        return register;
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
@@ -37,7 +37,7 @@ public abstract class AbstractCommunicationBaseEventHandler<E extends Communicat
      * @throws Exception
      */
     @Override
-    public void handleEvent(FermatEvent platformEvent) throws FermatException {
+    public final void handleEvent(FermatEvent platformEvent) throws FermatException {
 
         System.out.println("CompleteComponentConnectionRequestNotificationEventHandler - handleEvent platformEvent ="+platformEvent );
 
