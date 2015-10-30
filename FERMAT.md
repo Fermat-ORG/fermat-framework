@@ -36,6 +36,16 @@ Wallets are higher level abstractions and have their own set of Plug-ins for kee
 
 ### Fermat Network
 
+The network is intended for two main things: 
+
+a. clients finding other clients
+b. clients calling other clients.  
+
+Every Node has a copy of a distributed geo-localized inventory of all network nodes. They run a protocol that allows them to keep their copy syncronized. 
+
+To be able to be found, a client registers itself and some inner componets and identities with the geographically closest node. When it needs to find another client it runs a protocol based on the approximate location of the client it is willing to connect to.
+
+
 
 
 
