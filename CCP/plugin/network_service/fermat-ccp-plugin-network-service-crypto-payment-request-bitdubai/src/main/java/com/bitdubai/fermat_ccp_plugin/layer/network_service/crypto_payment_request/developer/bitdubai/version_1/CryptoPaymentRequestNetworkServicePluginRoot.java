@@ -734,13 +734,12 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             try {
 
                 cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
-                        communicationNetworkServiceConnectionManager,
                         this,
                         errorManager,
                         eventManager,
                         pluginDatabaseSystem,
                         pluginId,
-                        null
+                        wsCommunicationsCloudClientManager
                 );
 
                 cryptoPaymentRequestExecutorAgent.start();
