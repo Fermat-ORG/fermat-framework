@@ -75,6 +75,7 @@ public class WsCommunicationsCloudClientPingAgent extends Thread {
                     } catch (Exception ex) {
                         System.out.println(" WsCommunicationsCloudClientPingAgent - Error occurred sending ping to the node, closing the connection to remote node");
                         wsCommunicationsCloudClientChannel.getConnection().close();
+                        wsCommunicationsCloudClientChannel.setIsRegister(Boolean.FALSE);
                         this.interrupt();
 
                         //TODO: START CONNECTION AGENT AND RISE EVENT NOTIFY THE CONNECTION
