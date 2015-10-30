@@ -5,6 +5,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.CustomerBrokerNego
 /**
  * Created by jorge on 10-10-2015.
  */
-public interface CustomerBrokerSaleNegotiation extends CustomerBrokerNegotiation{
+public interface CustomerBrokerSaleNegotiation extends CustomerBrokerNegotiation {
 
 }

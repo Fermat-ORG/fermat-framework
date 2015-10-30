@@ -30,15 +30,15 @@
 
 
     <declare-styleable name="RoundProgressBar">
-        <attr name="tlcp_strokeWidth" format="dimension"/>
-        <attr name="tlcp_text" format="reference"/>
-        <attr name="tlcp_textSize" format="dimension"/>
-        <attr name="tlcp_drawable" format="reference"/>
-        <attr name="tlcp_progress_color" format="reference"/>
-        <attr name="tlcp_progress2_color" format="reference"/>
-        <attr name="tlcp_bg_color" format="reference"/>
-        <attr name="tlcp_progress" format="integer"/>
-        <attr name="tlcp_progress2" format="integer"/>
+        <attr name="tlcp_strokeWidth" format="dimension" />
+        <attr name="tlcp_text" format="reference" />
+        <attr name="tlcp_textSize" format="dimension" />
+        <attr name="tlcp_drawable" format="reference" />
+        <attr name="tlcp_progress_color" format="reference" />
+        <attr name="tlcp_progress2_color" format="reference" />
+        <attr name="tlcp_bg_color" format="reference" />
+        <attr name="tlcp_progress" format="integer" />
+        <attr name="tlcp_progress2" format="integer" />
     </declare-styleable>
 
 

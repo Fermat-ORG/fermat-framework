@@ -32,7 +32,7 @@ public class LogicTest {
         */
 /**
          * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
-         *//*
+ *//*
 
 
         BITDUBAI_BITCOIN_WALLET_BASIC_WALLET            ("BBWBW" , Developers.BITDUBAI, Layers.BASIC_WALLET   ),

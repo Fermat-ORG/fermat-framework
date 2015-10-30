@@ -2,22 +2,22 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.develope
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateNotificationException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetNotificationException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.NotificationNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.NotificationDescriptor;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateNotificationException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetNotificationException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.NotificationNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.NotificationDescriptor;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantConfirmNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserNotification;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
@@ -47,17 +47,17 @@ public class IncomingNotificationDao implements DAO {
         return database.getTable(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TABLE_NAME);
     }
 
-    public ActorNetworkServiceRecord createNotification(final UUID                            notificationId      ,
-                                                        final String                          senderPublicKey     ,
-                                                        final Actors                          senderType          ,
-                                                        final String                          destinationPublicKey,
-                                                        final String                          senderAlias         ,
-                                                        final byte[]                          senderProfileImage  ,
-                                                        final Actors                          destinationType     ,
-                                                        final NotificationDescriptor descriptor          ,
-                                                        final long                            timestamp           ,
-                                                        final ActorProtocolState              protocolState       ,
-                                                        final boolean                         flagReaded          ) throws CantCreateNotificationException {
+    public ActorNetworkServiceRecord createNotification(final UUID notificationId,
+                                                        final String senderPublicKey,
+                                                        final Actors senderType,
+                                                        final String destinationPublicKey,
+                                                        final String senderAlias,
+                                                        final byte[] senderProfileImage,
+                                                        final Actors destinationType,
+                                                        final NotificationDescriptor descriptor,
+                                                        final long timestamp,
+                                                        final ActorProtocolState protocolState,
+                                                        final boolean flagReaded) throws CantCreateNotificationException {
 
         try {
 
@@ -67,16 +67,16 @@ public class IncomingNotificationDao implements DAO {
 
 
             ActorNetworkServiceRecord cryptoPaymentRequestRecord = new ActorNetworkServiceRecord(
-                    notificationId      ,
-                    senderAlias         ,
-                    senderProfileImage  ,
-                    descriptor          ,
-                    destinationType     ,
-                    senderType          ,
-                    senderPublicKey     ,
+                    notificationId,
+                    senderAlias,
+                    senderProfileImage,
+                    descriptor,
+                    destinationType,
+                    senderType,
+                    senderPublicKey,
                     destinationPublicKey,
-                    timestamp           ,
-                    protocolState       ,
+                    timestamp,
+                    protocolState,
                     flagReaded
 
             );
@@ -87,9 +87,10 @@ public class IncomingNotificationDao implements DAO {
 
         } catch (CantInsertRecordException e) {
 
-            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+            throw new CantCreateNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.", "");
         }
     }
+
     public void createNotification(ActorNetworkServiceRecord actorNetworkServiceRecord) throws CantCreateNotificationException {
 
         try {
@@ -101,7 +102,7 @@ public class IncomingNotificationDao implements DAO {
 
         } catch (CantInsertRecordException e) {
 
-            throw new CantCreateNotificationException( "",e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.","");
+            throw new CantCreateNotificationException("", e, "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.", "");
         }
     }
 
@@ -145,13 +146,13 @@ public class IncomingNotificationDao implements DAO {
 
         } catch (CantGetNotificationException e) {
 
-            throw new CantConfirmNotificationException(e, "notificationId:"+notificationId, "Error trying to get the notification.");
+            throw new CantConfirmNotificationException(e, "notificationId:" + notificationId, "Error trying to get the notification.");
         } catch (NotificationNotFoundException e) {
 
-            throw new CantConfirmNotificationException(e, "notificationId:"+notificationId, "Notification not found.");
+            throw new CantConfirmNotificationException(e, "notificationId:" + notificationId, "Notification not found.");
         } catch (CantUpdateRecordDataBaseException e) {
 
-            throw new CantConfirmNotificationException(e, "notificationId:"+notificationId, "Error updating database.");
+            throw new CantConfirmNotificationException(e, "notificationId:" + notificationId, "Error updating database.");
         }
     }
 
@@ -209,21 +210,21 @@ public class IncomingNotificationDao implements DAO {
             if (!records.isEmpty())
                 return buildActorNetworkServiceRecord(records.get(0));
             else
-                throw new NotificationNotFoundException("",null, "RequestID: "+notificationId, "Can not find an crypto payment request with the given request id.");
+                throw new NotificationNotFoundException("", null, "RequestID: " + notificationId, "Can not find an crypto payment request with the given request id.");
 
 
         } catch (CantLoadTableToMemoryException exception) {
 
-            throw new CantGetNotificationException( "",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+            throw new CantGetNotificationException("", exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
         } catch (InvalidParameterException exception) {
 
-            throw new CantGetNotificationException("",exception, "Check the cause."                                                                                ,"");
+            throw new CantGetNotificationException("", exception, "Check the cause.", "");
         }
 
     }
 
 
-    public void changeProtocolState(final UUID               requestId    ,
+    public void changeProtocolState(final UUID requestId,
                                     final ActorProtocolState protocolState) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException {
 
         if (requestId == null)
@@ -262,7 +263,7 @@ public class IncomingNotificationDao implements DAO {
     }
 
     public void changeIntraUserNotificationDescriptor(final String                 senderPublicKey    ,
-                                    final NotificationDescriptor notificationDescriptor) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException {
+                                                      final NotificationDescriptor notificationDescriptor) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException {
 
 
         if (senderPublicKey == null)
@@ -301,7 +302,7 @@ public class IncomingNotificationDao implements DAO {
     }
 
     public ActorNetworkServiceRecord changeIntraUserNotificationDescriptor(final String                 senderPublicKey    ,
-                                                      final NotificationDescriptor notificationDescriptor,
+                                                                           final NotificationDescriptor notificationDescriptor,
                                                       final ActorProtocolState actorProtocolState) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException {
 
 
@@ -378,7 +379,7 @@ public class IncomingNotificationDao implements DAO {
     }
 
     public List<ActorNetworkServiceRecord> listRequestsByProtocolStateAndType(final ActorProtocolState protocolState,
-                                                                         final NotificationDescriptor notificationDescriptor) throws CantListIntraWalletUsersException {
+                                                                              final NotificationDescriptor notificationDescriptor) throws CantListIntraWalletUsersException {
 
         if (protocolState == null)
             throw new CantListIntraWalletUsersException("protocolState null",null, "The protocolState is required, can not be null","");
@@ -390,7 +391,7 @@ public class IncomingNotificationDao implements DAO {
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
             cryptoPaymentRequestTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
-            cryptoPaymentRequestTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME     , notificationDescriptor.getCode(), DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, notificationDescriptor.getCode(), DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.loadToMemory();
 
@@ -413,20 +414,20 @@ public class IncomingNotificationDao implements DAO {
     }
 
 
-    private DatabaseTableRecord buildDatabaseRecord(final DatabaseTableRecord       dbRecord,
-                                                    final ActorNetworkServiceRecord record  ) {
+    private DatabaseTableRecord buildDatabaseRecord(final DatabaseTableRecord dbRecord,
+                                                    final ActorNetworkServiceRecord record) {
 
         dbRecord.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME, record.getId());
-        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME       , record.getActorSenderAlias());
-        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME       , record.getActorSenderProfileImage().toString());
-        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME         , record.getNotificationDescriptor().getCode());
-        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME      , record.getActorDestinationType().getCode());
-        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME        , record.getActorSenderType().getCode());
-        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME  , record.getActorSenderPublicKey());
+        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME, record.getActorSenderAlias());
+        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_IMAGE_COLUMN_NAME, record.getActorSenderProfileImage().toString());
+        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME, record.getNotificationDescriptor().getCode());
+        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME, record.getActorDestinationType().getCode());
+        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME, record.getActorSenderType().getCode());
+        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME, record.getActorSenderPublicKey());
         dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, record.getActorDestinationPublicKey());
-        dbRecord.setLongValue  (CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME          , record.getSentDate());
-        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME     , record.getActorProtocolState().getCode());
-        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME          , String.valueOf(record.isFlagReadead()));
+        dbRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME, record.getSentDate());
+        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, record.getActorProtocolState().getCode());
+        dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME, String.valueOf(record.isFlagReadead()));
 
         return dbRecord;
     }

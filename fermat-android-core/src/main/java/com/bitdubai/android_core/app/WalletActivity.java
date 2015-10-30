@@ -3,10 +3,8 @@ package com.bitdubai.android_core.app;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.Menu;

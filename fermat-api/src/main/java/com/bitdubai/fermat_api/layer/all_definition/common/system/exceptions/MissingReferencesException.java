@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * The exception <code>MissingReferencesException</code>
  * is thrown when there is missing references for a plugin or addon.
- * <p>
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 26/10/2015.
  */
 public class MissingReferencesException extends FermatException {

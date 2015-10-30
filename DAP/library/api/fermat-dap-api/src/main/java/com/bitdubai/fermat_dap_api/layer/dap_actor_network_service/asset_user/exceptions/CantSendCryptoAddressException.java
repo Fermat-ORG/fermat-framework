@@ -16,7 +16,7 @@ import com.bitdubai.fermat_api.layer.DAPException;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CantSendCryptoAddressException  extends DAPException {
+public class CantSendCryptoAddressException extends DAPException {
 
 
     public static final String DEFAULT_MESSAGE = "CAN'T SEND CRYPTO ADDRESS";

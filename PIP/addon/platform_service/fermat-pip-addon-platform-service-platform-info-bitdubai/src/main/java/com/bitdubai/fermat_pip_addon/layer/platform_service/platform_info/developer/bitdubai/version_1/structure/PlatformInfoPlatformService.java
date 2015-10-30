@@ -83,7 +83,7 @@ public class PlatformInfoPlatformService {
 
         } catch (Exception e) {
 
-            throw new CantSetPlatformInformationException(e, "There was an error trying persist Platform info xml file." , null);
+            throw new CantSetPlatformInformationException(e, "There was an error trying persist Platform info xml file.", null);
         }
 
     }

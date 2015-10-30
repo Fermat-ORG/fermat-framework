@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums;
 
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 
 /**
  * Created by franklin on 24/09/15.
  */
-public enum BalanceType {
+public enum BalanceType implements FermatEnum {
     AVAILABLE("AVAILABLE"),
     BOOK("BOOK");
 
@@ -15,6 +15,7 @@ public enum BalanceType {
         this.code = code;
     }
 
+    @Override
     public String getCode()   { return this.code ; }
 
     public static BalanceType getByCode(String code) {

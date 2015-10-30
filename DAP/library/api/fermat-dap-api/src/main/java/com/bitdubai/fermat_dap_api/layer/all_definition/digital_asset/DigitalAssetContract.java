@@ -6,6 +6,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.exceptions.Can
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by rodrigo on 9/4/15.
@@ -35,7 +36,7 @@ public class DigitalAssetContract implements Contract {
     public void setContractProperty(ContractProperty contractProperty) throws CantDefineContractPropertyException {
         boolean isExistingProperty = false;
         for (ContractProperty property : properties){
-            if (contractProperty.getName() == property.getName()){
+            if (contractProperty.getName().equals(property.getName())) {
                 property.setValue(contractProperty.getValue());
                 isExistingProperty = true;
             }
@@ -48,7 +49,7 @@ public class DigitalAssetContract implements Contract {
     public ContractProperty getContractProperty(String propertyName) {
         ContractProperty returnedContractProperty = null;
         for (ContractProperty contractProperty : properties){
-            if (contractProperty.getName() == propertyName)
+            if (contractProperty.getName().equals(propertyName))
                 returnedContractProperty = contractProperty;
         }
 

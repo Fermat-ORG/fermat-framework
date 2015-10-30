@@ -331,7 +331,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         }
 
                     }
-                }else{
+                } else {
                     NetworkServiceLocal communicationNetworkServiceLocal = actorNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey());
 
                     System.out.println("----------------------------\n" +

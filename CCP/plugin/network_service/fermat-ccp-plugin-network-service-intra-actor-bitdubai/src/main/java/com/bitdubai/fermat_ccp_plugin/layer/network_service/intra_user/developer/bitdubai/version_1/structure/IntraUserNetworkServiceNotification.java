@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.NotificationDescriptor;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserNotification;
 
-
 import java.util.UUID;
 
 /**
@@ -19,7 +18,7 @@ public class IntraUserNetworkServiceNotification implements IntraUserNotificatio
     private String alias;
 
 
-    public IntraUserNetworkServiceNotification(String intraUserLogedInPublicKey,String alias,String intraUserToConnectPublicKey, NotificationDescriptor notificationDescriptor, byte[] profileImage)
+    public IntraUserNetworkServiceNotification(String intraUserLogedInPublicKey, String alias, String intraUserToConnectPublicKey, NotificationDescriptor notificationDescriptor, byte[] profileImage)
     {
         this.intraUserLogedInPublicKey = intraUserLogedInPublicKey;
         this.notificationDescriptor = notificationDescriptor;

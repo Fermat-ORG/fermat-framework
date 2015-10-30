@@ -4,10 +4,10 @@ import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEventMonitor;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEventMonitor;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.io.Serializable;
@@ -20,7 +20,7 @@ import java.util.Map;
  * Created by ciencias on 23.01.15.
  * Updated by Leon Acosta (laion.cj91@gmail.com) on 22-08-2015.
  */
-public class EventManagerPlatformServiceAddonRootOld implements Addon, EventManager, DealsWithEventMonitor, Service,Serializable {
+public class EventManagerPlatformServiceAddonRootOld implements Addon, EventManager, DealsWithEventMonitor, Service, Serializable {
 
     /**
      * Service Interface member variables.

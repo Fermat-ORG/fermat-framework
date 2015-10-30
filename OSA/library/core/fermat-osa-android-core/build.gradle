@@ -24,7 +24,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        debug{
+        debug {
             debuggable true
             testCoverageEnabled = true
         }
@@ -61,7 +61,7 @@ pmd {
 }
 
 // Configuracion de FindBugs
-tasks.withType (FindBugs) {
+tasks.withType(FindBugs) {
     reports {
         xml.enabled = true
         html.enabled = false
@@ -75,7 +75,7 @@ def coverageSourceDirs = [
 
 def jacocoHtmlReport = ""
 
-task jacocoTestReport(type:JacocoReport, dependsOn: [assemble, "testDebug"]) {
+task jacocoTestReport(type: JacocoReport, dependsOn: [assemble, "testDebug"]) {
     group = "Reporting"
 
     description = "Generate Jacoco coverage reports"

@@ -42,7 +42,7 @@ public class SetNewProfileImageTest extends TestCase {
     */
 /**
      * DealsWithErrors interface Mocked
-     *//*
+ *//*
 
     @Mock
     private ErrorManager mockErrorManager;
@@ -50,7 +50,7 @@ public class SetNewProfileImageTest extends TestCase {
     */
 /**
      * UsesFileSystem Interface member variables.
-     *//*
+ *//*
 
     @Mock
     private PluginFileSystem mockPluginFileSystem;
@@ -59,7 +59,7 @@ public class SetNewProfileImageTest extends TestCase {
     */
 /**
      * DealWithIntraUserIdentityManager Interface member variables.
-     *//*
+ *//*
 
     @Mock
     private IntraUserIdentityManager mockIntraUserIdentityManager;

@@ -12,16 +12,10 @@ public class DeveloperBitDubaiOld implements AddonDeveloper {
     Addon addon;
 
 
-
-
-
     @Override
     public Addon getAddon() {
         return addon;
     }
-
-
-
 
 
     public DeveloperBitDubaiOld() {

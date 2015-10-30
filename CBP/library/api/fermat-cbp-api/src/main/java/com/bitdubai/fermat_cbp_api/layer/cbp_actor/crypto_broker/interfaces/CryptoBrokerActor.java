@@ -14,6 +14,8 @@ import java.util.Collection;
  */
 public interface CryptoBrokerActor extends Actor {
     CustomerBrokerNegotiation createSale(ActorIdentity cryptoCustomer, Iterable<Clause> clauses) throws CantCreateSaleException;
+
     Collection<CustomerBrokerNegotiation> getSales();
+
     Collection<CustomerBrokerNegotiation> getSales(NegotiationStatus status);
 }

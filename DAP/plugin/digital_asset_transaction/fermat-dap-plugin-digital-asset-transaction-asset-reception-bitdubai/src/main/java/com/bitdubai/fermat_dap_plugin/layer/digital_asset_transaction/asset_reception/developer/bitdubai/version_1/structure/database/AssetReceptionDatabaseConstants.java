@@ -17,8 +17,8 @@ public class AssetReceptionDatabaseConstants {
     public static final String ASSET_RECEPTION_RECEPTION_STATUS_COLUMN_NAME = "reception_status";
     public static final String ASSET_RECEPTION_CRYPTO_STATUS_COLUMN_NAME = "crypto_status";
     public static final String ASSET_RECEPTION_PROTOCOL_STATUS_COLUMN_NAME = "protocol_status";
-    public static final String ASSET_RECEPTION_ACTOR_ASSET_ISSUER_BITCOIN_ADDRESS_COLUMN_NAME ="actor_issuer_bitcoin_address";
-    public static final String ASSET_RECEPTION_RECEPTION_ID_COLUMN_NAME="reception_id";
+    public static final String ASSET_RECEPTION_ACTOR_ASSET_ISSUER_BITCOIN_ADDRESS_COLUMN_NAME = "actor_issuer_bitcoin_address";
+    public static final String ASSET_RECEPTION_RECEPTION_ID_COLUMN_NAME = "reception_id";
 
     public static final String ASSET_RECEPTION_FIRST_KEY_COLUMN = "genesis_transaction";
 

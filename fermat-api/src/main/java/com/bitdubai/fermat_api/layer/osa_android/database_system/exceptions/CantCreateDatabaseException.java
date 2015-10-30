@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions;
 
-import com.bitdubai.fermat_api.FermatException;
-
 /**
  * Created by toshiba on 23/03/2015.
  */

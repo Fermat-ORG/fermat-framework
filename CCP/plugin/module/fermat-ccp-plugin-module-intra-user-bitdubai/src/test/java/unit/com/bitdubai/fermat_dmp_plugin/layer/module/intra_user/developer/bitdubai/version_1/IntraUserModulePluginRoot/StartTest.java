@@ -39,7 +39,7 @@ public class StartTest extends TestCase {
     */
 /**
      * DealsWithErrors interface Mocked
-     *//*
+ *//*
 
     @Mock
     private ErrorManager mockErrorManager;
@@ -47,7 +47,7 @@ public class StartTest extends TestCase {
     */
 /**
      * UsesFileSystem Interface member variables.
-     *//*
+ *//*
 
     @Mock
     private PluginFileSystem mockPluginFileSystem;

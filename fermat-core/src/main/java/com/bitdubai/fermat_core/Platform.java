@@ -42,7 +42,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.DealsWithCryptoPaymentRequestNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.DealsWithCryptoPayment;
-import com.bitdubai.fermat_ccp_core.CCPPlatform;
+import com.bitdubai.fermat_bch_core.BCHPlatform;
 import com.bitdubai.fermat_core.layer.cbp.identity.CBPIdentityLayer;
 import com.bitdubai.fermat_core.layer.cbp.sub_app_module.CBPSubAppModuleLayer;
 import com.bitdubai.fermat_core.layer.ccm.actor.CCMActorLayer;
@@ -903,7 +903,7 @@ public class Platform implements Serializable {
 
                 try {
 
-                    AbstractPlatform ccpPlatform = new CCPPlatform();
+                    AbstractPlatform ccpPlatform = new BCHPlatform();
                     ccpPlatform.start();
 
                     PlatformReference platformReference = new PlatformReference(Platforms.CRYPTO_CURRENCY_PLATFORM);
@@ -915,9 +915,9 @@ public class Platform implements Serializable {
 
                     layerReference = new LayerReference(platformReference, Layers.NETWORK_SERVICE);
 
-//                    Plugin cryptoPaymentRequestNetworkService = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, CCPPlugins.BITDUBAI_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE));
-//                    injectLayerReferences(cryptoPaymentRequestNetworkService);
-//                    injectPluginReferencesAndStart(cryptoPaymentRequestNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE);
+                    Plugin cryptoPaymentRequestNetworkService = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, Plugins.CRYPTO_PAYMENT_REQUEST));
+                    injectLayerReferences(cryptoPaymentRequestNetworkService);
+                    injectPluginReferencesAndStart(cryptoPaymentRequestNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE);
 
 
                     Plugin intraUserNetworkService = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, Plugins.INTRA_WALLET_USER));
@@ -1080,7 +1080,7 @@ public class Platform implements Serializable {
             * Plugin Extra User Actor
             * -------------------------------
 //            */
-//                Plugin extraUser = ((ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER)).getmActorExtraUser();
+//                Plugin extraUser = ((CryptoVaultLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER)).getmActorExtraUser();
 //                injectPluginReferencesAndStart(extraUser, Plugins.BITDUBAI_ACTOR_EXTRA_USER);
 
            /*
@@ -1300,6 +1300,13 @@ public class Platform implements Serializable {
                 injectPluginReferencesAndStart(assetReceptionTransaction, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION);
 
            /*
+            * Plugin Redeem Point Redemption Transaction.
+            * -----------------------------
+            */
+                Plugin redeemPointRedemptionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetRedeemPointRedemptionPlugin();
+                injectPluginReferencesAndStart(redeemPointRedemptionTransaction, Plugins.BITDUBAI_ASSET_REDEEM_POINT_REDEMPTION_TRANSACTION);
+
+           /*
             * Plugin Asset Issuer Identity Layer
             * -------------------------
             */
@@ -1376,6 +1383,7 @@ public class Platform implements Serializable {
             */
                 Plugin redeemPointSubAppModuleCommunity = ((DAPSubAppModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_SUB_APP_MODULE_LAYER)).getRedeemPointCommunity();
                 injectPluginReferencesAndStart(redeemPointSubAppModuleCommunity, Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE);
+
 
             }
 
@@ -1470,7 +1478,7 @@ public class Platform implements Serializable {
             * Plugin Intra User Actor
             * -----------------------------
             */
-            //   Plugin intraUserActor = ((com.bitdubai.fermat_core.layer.dmp_actor.ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_ACTOR_LAYER)).getActorIntraUser();
+            //   Plugin intraUserActor = ((com.bitdubai.fermat_core.layer.dmp_actor.CryptoVaultLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_ACTOR_LAYER)).getActorIntraUser();
             //injectPluginReferencesAndStart(intraUserActor, Plugins.BITDUBAI_INTRA_USER_ACTOR);
 
             /*

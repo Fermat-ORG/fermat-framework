@@ -543,9 +543,7 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
         }
     }
 
-    public boolean isRegister() {
-        return register;
-    }
+
 
     /**
      * Get the IdentityPublicKey
@@ -701,6 +699,15 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
         requestRemoteNetworkServicesRegisteredList(discoveryQueryParametersAssetIssuer);
     }
 
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    @Override
+    public boolean isRegister() {
+        return register;
+    }
+
     @Override
     public List<ActorAssetIssuer> getListActorAssetIssuerRegistered() throws RequestedListNotReadyRecevivedException {
         return actorAssetIssuerRegisteredList;
@@ -779,7 +786,7 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
          * If the component registered have my profile and my identity public key
          */
         if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.ASSET_ISSUER_ACTOR &&
+                platformComponentProfileRegistered.getNetworkServiceType() == NetworkServiceType.ASSET_ISSUER_ACTOR &&
                 platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
 
             /*
@@ -812,8 +819,7 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
             /* test register one actor */
 
 
-
-            ActorAssetIssuer  actorAssetIssuerNewRegsitered = new AssetIssuerActorRecord("Pedrito","18009",new byte[]{9},0);
+            ActorAssetIssuer actorAssetIssuerNewRegsitered = new AssetIssuerActorRecord("Pedrito", "18009", new byte[]{9}, 0);
 
 
             try {
@@ -837,7 +843,7 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
 
             System.out.println("///////////////////////////////////////////////////////////////");
 
-            System.out.println(" Actor Asset Issuer Registered "+platformComponentProfileRegistered.getIdentityPublicKey()+"\n Alias "+platformComponentProfileRegistered.getAlias());
+            System.out.println(" Actor Asset Issuer Registered " + platformComponentProfileRegistered.getIdentityPublicKey() + "\n Alias " + platformComponentProfileRegistered.getAlias());
 
 //            ReturnAssetUserActorNetworkService returnactor = new AssetUserANS();
 //
@@ -891,7 +897,7 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
             //communicationNetworkServiceConnectionManager.connectTo(remoteNetworkServiceToConnect);
 
 
-            if(remoteNetworkServiceToConnect.getNetworkServiceType()== NetworkServiceType.UNDEFINED &&  remoteNetworkServiceToConnect.getPlatformComponentType()== PlatformComponentType.ACTOR_ASSET_ISSUER ){
+            if (remoteNetworkServiceToConnect.getNetworkServiceType() == NetworkServiceType.UNDEFINED && remoteNetworkServiceToConnect.getPlatformComponentType() == PlatformComponentType.ACTOR_ASSET_ISSUER) {
 
 
 

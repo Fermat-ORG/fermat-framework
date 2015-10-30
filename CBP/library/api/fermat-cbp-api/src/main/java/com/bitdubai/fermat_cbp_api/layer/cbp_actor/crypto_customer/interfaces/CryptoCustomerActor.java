@@ -13,6 +13,8 @@ import java.util.Collection;
  */
 public interface CryptoCustomerActor extends Actor {
     CustomerBrokerNegotiation createPurchase(ActorIdentity cryptoBroker) throws CantCreatePurchaseException;
+
     Collection<CustomerBrokerNegotiation> getPurchases();
+
     Collection<CustomerBrokerNegotiation> getPurchases(NegotiationStatus status);
 }

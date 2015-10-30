@@ -38,8 +38,8 @@ tasks.withType(FindBugs) {
 
 def jacocoHtmlReport = ""
 
-jacocoTestReport{
-    reports{
+jacocoTestReport {
+    reports {
         jacocoHtmlReport = "Code Coverage HTML Report: file://" + html.destination + "/index.html"
     }
 }

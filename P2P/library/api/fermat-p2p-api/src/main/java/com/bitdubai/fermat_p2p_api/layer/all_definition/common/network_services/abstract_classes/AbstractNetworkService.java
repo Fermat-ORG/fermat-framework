@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -7,6 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 
 /**
  * The class <code>AbstractNetworkService</code>
@@ -14,7 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.Networ
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 29/10/2015.
  */
-public abstract class AbstractNetworkService extends AbstractPlugin {
+public abstract class AbstractNetworkService extends AbstractPlugin implements NetworkService {
 
     /**
      * Network Service details.
@@ -93,5 +96,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin {
     }
 
     public abstract void initializeCommunicationNetworkServiceConnectionManager();
+
+    public abstract void handleNewMessages(FermatMessage message);
 
 }

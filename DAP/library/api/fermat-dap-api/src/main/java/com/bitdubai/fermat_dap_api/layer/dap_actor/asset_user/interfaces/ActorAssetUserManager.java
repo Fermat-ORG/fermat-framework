@@ -1,16 +1,9 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAcceptAssetUserActorException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCancelAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDenyConnectionAssetUserActorException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDisconnectAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 
 import java.util.List;
@@ -63,7 +56,7 @@ public interface ActorAssetUserManager {
 
 //  void createAndRegisterActorAssetUserTest() throws CantCreateAssetUserActorException;
 
-   void registerActorInActorNetowrkSerice() throws CantCreateAssetUserActorException;
+  void registerActorInActorNetowrkSerice() throws CantCreateAssetUserActorException;
 
 
   void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException;

@@ -17,30 +17,31 @@ public class IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandle
     AssetReceptionRecorderService assetReceptionRecorderService;
 
     public void setAssetReceptionRecorderService(AssetReceptionRecorderService assetReceptionRecorderService) throws CantSetObjectException {
-        if(assetReceptionRecorderService==null){
+        if (assetReceptionRecorderService == null) {
             throw new CantSetObjectException("assetReceptionRecorderService is null");
         }
-        this.assetReceptionRecorderService=assetReceptionRecorderService;
+        this.assetReceptionRecorderService = assetReceptionRecorderService;
     }
+
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
-        if(this.assetReceptionRecorderService.getStatus()== ServiceStatus.STARTED) {
+        if (this.assetReceptionRecorderService.getStatus() == ServiceStatus.STARTED) {
 
             try {
                 this.assetReceptionRecorderService.incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent((IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent) fermatEvent);
-            } catch(CantSaveEventException exception){
-                throw new CantSaveEventException(exception,"Handling the IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent", "Check the cause");
-            } catch(ClassCastException exception){
+            } catch (CantSaveEventException exception) {
+                throw new CantSaveEventException(exception, "Handling the IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent", "Check the cause");
+            } catch (ClassCastException exception) {
                 //Logger LOG = Logger.getGlobal();
                 //LOG.info("EXCEPTION DETECTOR----------------------------------");
                 //exception.printStackTrace();
                 throw new CantSaveEventException(FermatException.wrapException(exception), "Handling the IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent", "Cannot cast this event");
-            } catch(Exception exception){
-                throw new CantSaveEventException(exception,"Handling the IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent", "Unexpected exception");
+            } catch (Exception exception) {
+                throw new CantSaveEventException(exception, "Handling the IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent", "Unexpected exception");
             }
 
-        }else {
+        } else {
             throw new TransactionServiceNotStartedException();
         }
 

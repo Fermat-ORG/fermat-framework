@@ -22,7 +22,7 @@ public interface ActorAssetUser {
      *
      * @return the public key
      */
-     String getPublicKey();
+    String getPublicKey();
 
     /**
      * The method <code>getName</code> gives us the name of the represented Asset User
