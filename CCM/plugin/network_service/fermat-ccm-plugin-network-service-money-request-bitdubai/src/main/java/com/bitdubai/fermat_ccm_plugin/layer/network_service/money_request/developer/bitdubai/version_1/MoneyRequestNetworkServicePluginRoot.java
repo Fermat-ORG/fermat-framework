@@ -239,6 +239,11 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
 
     }
 
+    @Override
+    public boolean isRegister() {
+        return false;
+    }
+
     /*
      * MoneyRequestNetworkServiceManager Interface methods implementatio
      */

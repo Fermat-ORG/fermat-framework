@@ -346,6 +346,11 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     }
 
+    @Override
+    public boolean isRegister() {
+        return false;
+    }
+
     /**
      * Dealing with plugin database system
      */

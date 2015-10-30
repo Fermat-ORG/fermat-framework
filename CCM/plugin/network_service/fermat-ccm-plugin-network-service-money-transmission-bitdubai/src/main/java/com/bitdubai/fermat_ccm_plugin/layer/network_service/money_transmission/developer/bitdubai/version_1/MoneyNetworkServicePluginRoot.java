@@ -187,6 +187,11 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
 
     }
 
+    @Override
+    public boolean isRegister() {
+        return false;
+    }
+
 
     /**
      * UsesFileSystem Interface implementation.

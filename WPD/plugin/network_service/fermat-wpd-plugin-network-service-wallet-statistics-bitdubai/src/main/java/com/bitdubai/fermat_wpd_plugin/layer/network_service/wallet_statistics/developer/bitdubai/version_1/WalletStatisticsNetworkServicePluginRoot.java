@@ -159,6 +159,11 @@ public class WalletStatisticsNetworkServicePluginRoot implements DealsWithErrors
 
     }
 
+    @Override
+    public boolean isRegister() {
+        return false;
+    }
+
     /**
      *DealWithErrors Interface implementation.
      */
