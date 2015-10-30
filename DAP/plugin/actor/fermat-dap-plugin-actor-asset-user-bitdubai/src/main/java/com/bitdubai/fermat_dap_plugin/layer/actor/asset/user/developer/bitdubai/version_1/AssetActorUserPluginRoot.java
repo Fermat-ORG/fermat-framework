@@ -320,6 +320,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         fermatEventListener.setEventHandler(new AssetUserActorCompleteRegistrationNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
+        System.out.println("Actor Asset User Listener de Registracion: INICIADO");
 
         fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.NEW_CRYPTO_ADDRESS_REQUEST_ASSET_USER);
         fermatEventListener.setEventHandler(new NewCryptoAddressRequestAssetUserActorNotificationEventHandler(this));
@@ -656,12 +657,13 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
              */
             ActorAssetUser actorAssetUser = this.assetUserActorDao.getActorAssetUser();
             //TODO Se necesita saber cuando se desconecta del Actor Networ Service para actualizar Estado y volver a registrar
-            if (actorAssetUser.getConnectionState() != ConnectionState.CONNECTED) {
+            //TODO no se puede activar aun el (if) hasta saber como tener notificacion de DES-REGISTRO
+//            if (actorAssetUser.getConnectionState() != ConnectionState.CONNECTED) {
                 System.out.println("Actor Asset User: ENVIANDO A REGISTRO en Actor Network Service");
                 assetUserActorNetworkServiceManager.registerActorAssetUser(this.assetUserActorDao.getActorAssetUser());
-            } else {
-                System.out.println("Actor Asset User YA REGISTRADO - NO Puede volver a registrarse");
-            }
+//            } else {
+//                System.out.println("Actor Asset User YA REGISTRADO - NO Puede volver a registrarse");
+//            }
         } catch (CantRegisterActorAssetUserException | CantGetAssetUsersListException e) {
             e.printStackTrace();
         }

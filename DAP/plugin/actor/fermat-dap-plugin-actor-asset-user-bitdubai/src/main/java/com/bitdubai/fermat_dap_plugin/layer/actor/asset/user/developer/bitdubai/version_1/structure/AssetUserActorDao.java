@@ -624,7 +624,8 @@ public class AssetUserActorDao implements Serializable {
                 throw new CantGetUserDeveloperIdentitiesException("Cant get asset User identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
             }//TODO Filtro de Busqueda en Tabla NO colocado para que traiga toda la informacion que contiene
             // 2) Find  Asset Users Registered by Connection State = CONNECTED.
-            //table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, "CTC", DatabaseFilterType.EQUAL);
+//            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, "CTC", DatabaseFilterType.EQUAL);
+
 //            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserToAddPublicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             // 3) Get Asset Users Record.
