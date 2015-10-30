@@ -269,15 +269,6 @@ public class CustomerBrokerSaleNegotiationDao {
                 }
             }
 
-            public Clause modifyClause(UUID negotiationId, Clause clause, String value) throws CantUpdateClausesException {
-                try {
-                    modifyClauseStatus(negotiationId, clause, ClauseStatus.REJECTED);
-                    return addNewClause(negotiationId, clause.getType(), value, clause.getProposedBy());
-                } catch (CantAddNewClausesException e) {
-                    throw new CantUpdateClausesException(CantAddNewClausesException.DEFAULT_MESSAGE, e, "", "");
-                }
-            }
-
             public void rejectClauseByType(UUID negotiationId, ClauseType type) throws CantUpdateClausesException {
                 try {
                     DatabaseTable SaleClauseTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
