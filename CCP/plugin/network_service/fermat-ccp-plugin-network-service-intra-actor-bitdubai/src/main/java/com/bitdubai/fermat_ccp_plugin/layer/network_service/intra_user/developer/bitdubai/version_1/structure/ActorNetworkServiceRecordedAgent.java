@@ -18,6 +18,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.C
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -52,17 +53,15 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
 
     private final CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
-    private final com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot actorNetworkServicePluginRoot;
+    private final IntraActorNetworkServicePluginRoot actorNetworkServicePluginRoot;
     private final ErrorManager errorManager                                ;
     private final EventManager eventManager                                ;
     private final WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager          ;
-    private PluginFileSystem pluginFileSystem;
 
     public ActorNetworkServiceRecordedAgent(final CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager,
-                                             final com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot ActorNetworkServicePluginRoot,
+                                             final IntraActorNetworkServicePluginRoot ActorNetworkServicePluginRoot,
                                              final ErrorManager                                 errorManager                                ,
                                              final EventManager                                 eventManager                                ,
-                                             final PluginFileSystem                             pluginFileSystem                            ,
                                              final WsCommunicationsCloudClientManager           wsCommunicationsCloudClientManager) {
 
         this.actorNetworkServicePluginRoot = ActorNetworkServicePluginRoot;
@@ -70,8 +69,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
         this.errorManager                                 = errorManager                                ;
         this.eventManager                                 = eventManager                                ;
         this.wsCommunicationsCloudClientManager           = wsCommunicationsCloudClientManager          ;
-        this.pluginFileSystem                             = pluginFileSystem                            ;
-
         this.status                                       = AgentStatus.CREATED                         ;
 
         waitingPlatformComponentProfile   = new HashMap<>();

@@ -608,7 +608,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     this,
                     errorManager,
                     eventManager,
-                    pluginFileSystem,
                     wsCommunicationsCloudClientManager);
 
 
