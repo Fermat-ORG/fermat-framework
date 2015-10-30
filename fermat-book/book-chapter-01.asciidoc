@@ -11,7 +11,7 @@ The goal is to have a framework for developing financial applications in a trust
 
 The basic infrastructure ::  
 the _Fermat Core Platform_ is the part of the system which initilizes the entire set of modules, starting every plugin and putting them to run. This creates the interconection that let all the services to be offered as being integral part of one unified system.
-The basics services ::
+The basic services ::
 ** connection to the different Operating Systems that will run Fermat on a chosen device.
 ** interconnectivity to cryptonetworks and blockchain services providers to enable the *transport of value*.
 ** P2P communication of the devices running Fermat to enable the *transport of information (meta-data)*
