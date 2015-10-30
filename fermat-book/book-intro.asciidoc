@@ -5,14 +5,13 @@ image::https://github.com/bitDubai/fermat-graphic-design/blob/master/2D%20Design
 == Introduction
 
 === What is Fermat? 
-
-Fermat is a P2P Multi-Digital-Wallet system that handles both _crypto currencies_ and _digital assets_ and it allows non-developers to create their own digital wallets reusing or combining other wallets or wallet components built into the system as plugins. It is like Wordpress for digital wallets.
-
-To achieve this a first layer of _reference wallets_ are developed to address different use cases, one per wallet. + 
+Fermat is a *trust-less financial application framework*, which contains a Multi-Digital-Wallet system that handles both _crypto currencies_ and _digital assets_ . It allows non-developers to create their own digital wallets or trust-less financial applications reusing or combining other wallets or wallet components built into the system as plugins. It also holds a P2P network for transporting metadata and inter-connecting clients one to the other. +
+Fermat is a set of services facing the end user and based on the existing blockchain protocols. +
+In order to bridge the existing gap between the underlying crypto technology and the end user, Fermat offers a first layer of _reference wallets_ that are developed to address different use cases, one per wallet. + 
 A second layer of _niche wallets_ combine reference wallets functionalities and add their own touch. + 
-This enables a third layer of *_branded wallets_* that can be generated just by changing the look and feel and navigation structure of niche wallets.   
-
-The goal is the allow any company big or small, brand or institution to have their own digital wallet with *any* subset of the whole functionality built for the entire user community.
+This both enables a third layer of *_branded wallets_* that can be generated just by changing the look and feel and navigation structure of niche wallets without the need of a developer. +
+The goal is to allow any company big or small, brand or institution to have their own digital wallet with *any* subset of the whole functionality built for the entire user community.+
+Fermat's architechture includes the possibility of interconnecting the trust-less financial applications developed within its framework to the existent legacy financial system. 
 
 === Fermat Community
 
@@ -77,7 +76,7 @@ The community developing the Fermat System agreed on the following founding prin
 
 === Fermat Book
 
-Learning about Fermat is very easy. It's just a matter of continuing reading this book that will guide you step by step all the way until you reach a complete understanding of this amazing techology.
+Learning about Fermat is very easy. It's just a matter of continuing reading this book that will guide you step by step all the way until you reach a complete understanding of this amazing technology.
 
 === Continue Reading
 
