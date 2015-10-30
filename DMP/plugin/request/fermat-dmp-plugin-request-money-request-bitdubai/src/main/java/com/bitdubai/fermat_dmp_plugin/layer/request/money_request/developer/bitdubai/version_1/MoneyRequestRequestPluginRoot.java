@@ -187,11 +187,6 @@ public class MoneyRequestRequestPluginRoot implements Service, NetworkService, D
     }
 
     @Override
-    public UUID getId() {
-        return this.pluginId;
-    }
-
-    @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return null;
     }

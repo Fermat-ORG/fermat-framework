@@ -70,8 +70,8 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                      * Construct my profile and register me
                      */
                     PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(cryptoTransmissionNetworkServicePluginRoot.getIdentityPublicKey(),
-                                                                                                                                                (cryptoTransmissionNetworkServicePluginRoot.getAlias().toLowerCase()+"_"+cryptoTransmissionNetworkServicePluginRoot.getId().toString()),
-                                                                                                                                                (cryptoTransmissionNetworkServicePluginRoot.getName()+" ("+cryptoTransmissionNetworkServicePluginRoot.getId()+")"),
+                                                                                                                                                cryptoTransmissionNetworkServicePluginRoot.getAlias().toLowerCase(),
+                                                                                                                                                cryptoTransmissionNetworkServicePluginRoot.getName(),
                                                                                                                                                  cryptoTransmissionNetworkServicePluginRoot.getNetworkServiceType(),
                                                                                                                                                  cryptoTransmissionNetworkServicePluginRoot.getPlatformComponentType(),
                                                                                                                                                  cryptoTransmissionNetworkServicePluginRoot.getExtraData());
