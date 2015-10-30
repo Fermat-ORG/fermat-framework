@@ -882,7 +882,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey())
                 .sendMessage(
                         actorNetworkServiceRecord.getActorSenderPublicKey(),
-                        actorNetworkServiceRecord.getActorSenderAlias(),
+                        actorNetworkServiceRecord.getActorDestinationPublicKey(),
                         actorNetworkServiceRecord.toJson());
     }
 
