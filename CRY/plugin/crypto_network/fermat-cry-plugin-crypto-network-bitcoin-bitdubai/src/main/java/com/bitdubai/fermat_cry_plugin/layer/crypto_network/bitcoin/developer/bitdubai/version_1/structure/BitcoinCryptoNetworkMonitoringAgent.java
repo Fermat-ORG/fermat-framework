@@ -265,11 +265,22 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
         private void doTheMainTask() throws CantConnectToBitcoinNetwork {
             try {
                 peers.start();
-                peers.downloadBlockChain();
-                //while (true){
+                peers.startBlockChainDownload(myListeners);
+                while (true){
                     //endless loop. Since bitcoinj upgrade, this is no longer running as a guava service.
                     // so we need to keep the thread active.
-               // }
+                    Thread.sleep(60000);
+                    System.out.println("**CryptoNetwork ConnectedPeers: " + peers.getConnectedPeers().size());
+                    System.out.println("**CryptoNetwork PeerToDownload: " + peers.getDownloadPeer().toString());
+                    System.out.println("**CryptoNetwork PendingTransactions: " + wallet.getPendingTransactions().toString());
+
+                    if (wallet.getPendingTransactions().size() > 0){
+                        peers.stop();
+                        peers.addPeerDiscovery(new DnsDiscovery(networkParameters));
+                        System.out.println("**CryptoNetwork restarting with new peer discovery...");
+                        peers.start();
+                    }
+                }
             } catch (Exception exception) {
                 exception.printStackTrace();
                 throw new CantConnectToBitcoinNetwork("Couldn't connect to Bitcoin Network.", exception, "", "Error executing Agent.");
@@ -285,11 +296,6 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
             peers.start();
 
         /**
-         * I will make sure I have all blocks
-         */
-        peers.downloadBlockChain();
-
-        /**
          * If I don't have any peers connected, I will continue trying to connect before broadcasting.
          */
         while (peers.numConnectedPeers() == 0){
@@ -299,13 +305,9 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
             peers.downloadBlockChain();
         }
 
-        TransactionBroadcast broadcast = peers.broadcastTransaction(transaction);
-        broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
-            @Override
-            public void onBroadcastProgress(double progress) {
-                System.out.println("broadCast progress: " + progress);
-            }
-        });
-        broadcast.future().get();
+        /**
+         * broadcast it and wait.
+         */
+        peers.broadcastTransaction(transaction).future().get();
     }
 }

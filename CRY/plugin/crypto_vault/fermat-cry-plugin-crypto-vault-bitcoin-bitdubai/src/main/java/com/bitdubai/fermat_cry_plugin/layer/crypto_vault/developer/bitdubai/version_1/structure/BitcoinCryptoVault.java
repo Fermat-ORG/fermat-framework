@@ -411,20 +411,12 @@ public class BitcoinCryptoVault implements
 
             // check if the transaction was already sent, this might be an error. we're not going to send it again.
             if (!db.isNewFermatTransaction(fermatTxId)) {
-
-                throw new CryptoTransactionAlreadySentException(
-                        "Transaction ID: " + fermatTxId.toString(),
-                        "An error in a previous module."
-                );
+                System.out.println("Crypto Vault reSending previously sent transaction...");
             }
 
             // generate the address in the BitcoinJ format
             Address address = new Address(this.networkParameters, addressTo.getAddress());
 
-            /**
-             * Get the peer that will broadcast the transaction into the network.
-             */
-            PeerGroup peers = (PeerGroup) bitcoinCryptoNetworkManager.getBroadcasters();
 
             // I create the transaction that will be used to send the bitcoins.
             Wallet.SendRequest request = Wallet.SendRequest.to(address, Coin.valueOf(amount));
@@ -451,13 +443,6 @@ public class BitcoinCryptoVault implements
             db.persistNewTransaction(fermatTxId.toString(), request.tx.getHashAsString());
             vault.commitTx(request.tx);
             vault.saveToFile(vaultFile);
-
-
-            /**
-             * broadcast it.
-             */
-            if (!peers.isRunning())
-                peers.start();
 
             bitcoinCryptoNetworkManager.broadcastTransaction(request.tx);
 
