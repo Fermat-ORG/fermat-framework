@@ -701,7 +701,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
                 dataBase,
                 errorManager,
-                eventManager
+                eventManager,
+                this.getEventSource()
         );
     }
 
