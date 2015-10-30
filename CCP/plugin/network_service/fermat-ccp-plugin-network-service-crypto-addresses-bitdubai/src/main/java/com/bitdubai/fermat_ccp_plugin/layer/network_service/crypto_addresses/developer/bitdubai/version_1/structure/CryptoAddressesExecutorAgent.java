@@ -230,10 +230,10 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
         } catch (InterruptedException e) {
 
             reportUnexpectedError(FermatException.wrapException(e));
-        } /*catch(Exception e) {
+        } catch(Exception e) {
 
             reportUnexpectedError(FermatException.wrapException(e));
-        }*/
+        }
 
     }
 
@@ -241,6 +241,7 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
         try {
 
+            // if still processing_send, will send an event and change the state to pending action.
             List<AddressExchangeRequest> addressExchangeRequestList = cryptoAddressesNetworkServiceDao.listPendingRequestsByProtocolState(
                     ProtocolState.PROCESSING_RECEIVE
             );
@@ -266,6 +267,24 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                         toPendingAction(cpr.getRequestId());
 
                         break;
+                }
+            }
+
+            // if still pending actions, will send an event for each one of them again.
+            addressExchangeRequestList = cryptoAddressesNetworkServiceDao.listPendingRequestsByProtocolState(
+                    ProtocolState.PENDING_ACTION
+            );
+
+            for(AddressExchangeRequest cpr : addressExchangeRequestList) {
+                switch(cpr.getAction()) {
+
+                    case ACCEPT:  raiseEvent(EventType.CRYPTO_ADDRESS_RECEIVED , cpr.getRequestId(), cpr.getIdentityTypeRequesting());
+                        break;
+                    case DENY:    raiseEvent(EventType.CRYPTO_ADDRESS_DENIED   , cpr.getRequestId(), cpr.getIdentityTypeRequesting());
+                        break;
+                    case REQUEST: raiseEvent(EventType.CRYPTO_ADDRESS_REQUESTED, cpr.getRequestId(), cpr.getIdentityTypeResponding());
+                        break;
+
                 }
             }
 
