@@ -1,3 +1,4 @@
+:numbered!:
 
 image::https://github.com/bitDubai/fermat-graphic-design/blob/master/2D%20Design/Fermat/Fermat%20Logotype/logo_jpg/logo_github_readme.jpg[Fermat Logo]
 
@@ -5,9 +6,11 @@ image::https://github.com/bitDubai/fermat-graphic-design/blob/master/2D%20Design
 
 === What is Fermat? 
 
-Fermat is a P2P Multi-Digital-Wallet system that handles both crypto currencies and digital assets and it allows non-developers to create their own digital wallets reusing or combining other wallets or wallet components built into the system as plugins. It is like Wordpress for digital wallets.
+Fermat is a P2P Multi-Digital-Wallet system that handles both _crypto currencies_ and _digital assets_ and it allows non-developers to create their own digital wallets reusing or combining other wallets or wallet components built into the system as plugins. It is like Wordpress for digital wallets.
 
-To achieve this a first layer of reference wallets are developed to address different use cases, one per wallet. A second layer of niche wallets combine reference wallets functionalities and add their own touch. This enables a third layer of branded wallets that can be generated just by changing the look and feel and navigation structure of niche wallets.   
+To achieve this a first layer of _reference wallets_ are developed to address different use cases, one per wallet. + 
+A second layer of _niche wallets_ combine reference wallets functionalities and add their own touch. + 
+This enables a third layer of *_branded wallets_* that can be generated just by changing the look and feel and navigation structure of niche wallets.   
 
 The goal is the allow any company big or small, brand or institution to have their own digital wallet with *any* subset of the whole functionality built for the entire user community.
 
