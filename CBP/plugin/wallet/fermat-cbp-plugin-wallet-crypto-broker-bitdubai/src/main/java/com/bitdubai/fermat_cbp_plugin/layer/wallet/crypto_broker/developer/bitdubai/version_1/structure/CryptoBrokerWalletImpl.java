@@ -8,6 +8,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.wallet.WalletTransaction;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantPerformTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerWallet;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseDao;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,10 +24,12 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
     private final KeyPair walletKeyPair;
     private final String ownerPublicKey;
     private final ConcurrentHashMap<FermatEnum, Stock> stockMap;
+    private final CryptoBrokerWalletDatabaseDao databaseDao;
 
-    public CryptoBrokerWalletImpl(final KeyPair walletKeyPair, final String ownerPublicKey){
+    public CryptoBrokerWalletImpl(final KeyPair walletKeyPair, final String ownerPublicKey, final CryptoBrokerWalletDatabaseDao databaseDao){
         this.walletKeyPair = walletKeyPair;
         this.ownerPublicKey = ownerPublicKey;
+        this.databaseDao = databaseDao;
         stockMap = new ConcurrentHashMap<>();
     }
 
