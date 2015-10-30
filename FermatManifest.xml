@@ -4937,27 +4937,6 @@
 				</plugins>
 			</layer>
 
-			<layer name="Agent" language="java">
-				<plugins>
-					<plugin
-						name="Crypto Broker"
-						description=""
-						difficulty="6"
-						code-level="development"
-						>
-						<authors>
-							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
-							<author name="jorgeejgonzalez" scope="design" percentage="100"></author>
-							<author name="yalayn" scope="implementation" percentage="10"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-				</plugins>
-			</layer>
-
 			<layer name="Business Transaction" language="java">
 				<plugins>
 					<plugin
