@@ -179,4 +179,23 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
             throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
         }
     }
+
+    private ClauseType getNextClauseTypeByCurrencyType(CurrencyType paymentMethod) throws CantGetNextClauseTypeException {
+        switch (paymentMethod) {
+            case CRYPTO_MONEY:
+                return ClauseType.CUSTOMER_CRYPTO_ADDRESS;
+
+            case BANK_MONEY:
+                return ClauseType.CUSTOMER_BANK;
+
+            case CASH_ON_HAND_MONEY:
+                return ClauseType.PLACE_TO_MEET;
+
+            case CASH_DELIVERY_MONEY:
+                return ClauseType.CUSTOMER_PLACE_TO_DELIVER;
+
+            default:
+                throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
+        }
+    }
 }
