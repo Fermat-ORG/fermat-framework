@@ -3,9 +3,9 @@ package com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.exce
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by nelson on 22/09/15.
+ * Created by nelson on 22/10/15.
  */
-public class CantCreateBuyRequestException extends FermatException {
+public class CantGetNegotiationsWaitingForBrokerException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantCreateBuyRequestException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantCreateBuyRequestException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetNegotiationsWaitingForBrokerException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
