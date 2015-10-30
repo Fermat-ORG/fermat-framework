@@ -123,23 +123,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
 
                 case BROKER_PAYMENT_METHOD:
                     CurrencyType paymentMethod = CurrencyType.getByCode(this.customerBrokerSaleNegotiationDao.getPaymentMethod(this.negotiationId));
-
-                    switch (paymentMethod) {
-                        case CRYPTO_MONEY:
-                            return ClauseType.BROKER_CRYPTO_ADDRESS;
-
-                        case BANK_MONEY:
-                            return ClauseType.BROKER_BANK;
-
-                        case CASH_ON_HAND_MONEY:
-                            return ClauseType.PLACE_TO_MEET;
-
-                        case CASH_DELIVERY_MONEY:
-                            return ClauseType.BROKER_PLACE_TO_DELIVER;
-
-                        default:
-                            throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
-                    }
+                    return getNextClauseTypeByCurrencyType(paymentMethod);
 
                 case BROKER_BANK:
                     return ClauseType.BROKER_BANK_ACCOUNT;
