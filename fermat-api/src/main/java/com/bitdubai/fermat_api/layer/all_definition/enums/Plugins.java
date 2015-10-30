@@ -159,6 +159,7 @@ public enum Plugins implements FermatEnum {
     CRYPTO_WALLET          ("CW"  ),
     DEVICE_USER            ("DU"),
     EXTRA_WALLET_USER      ("EWU" ),
+    INCOMING_CRYPTO        ("IC" ),
     INCOMING_EXTRA_USER    ("IEU" ),
     INCOMING_INTRA_USER    ("IIU" ),
     INTRA_WALLET_USER      ("IWU" ),
