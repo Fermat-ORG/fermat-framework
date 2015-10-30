@@ -413,7 +413,7 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
     private void testDeveloperDatabase() throws CantExecuteDatabaseOperationException, CantDefineContractPropertyException, CantPersistDigitalAssetException {
         System.out.println("START TEST DEVELOPER DATABASE ASSET DISTRIBUTION");
         MockDigitalAssetMetadataForTesting mockDigitalAssetMetadataForTesting=new MockDigitalAssetMetadataForTesting();
-        System.out.println("ASSET DISTRIBUTION DAM:"+mockDigitalAssetMetadataForTesting);
+        System.out.println("ASSET DISTRIBUTION MOCKED DAM:"+mockDigitalAssetMetadataForTesting);
         AssetDistributionDao assetDistributionDao=new AssetDistributionDao(pluginDatabaseSystem,pluginId);
         assetDistributionDao.persistDigitalAsset(
                 mockDigitalAssetMetadataForTesting.getGenesisTransaction(),
