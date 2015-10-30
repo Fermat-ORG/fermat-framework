@@ -59,6 +59,8 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.DealsWithActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
@@ -108,7 +110,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
  */
-public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DealsWithAssetVault, DealsWithAssetIssuerWallet, DealsWithBitcoinWallet, DealsWithBitcoinNetwork, DealsWithCryptoVault,DatabaseManagerForDevelopers, DealsWithCryptoAddressBook, /*DealsWithCryptoVault,*/ DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithOutgoingIntraActor, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service/*, TransactionProtocolManager*/ {
+public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, DealsWithActorAssetIssuer, DealsWithAssetVault, DealsWithAssetIssuerWallet, DealsWithBitcoinWallet, DealsWithBitcoinNetwork, DealsWithCryptoVault,DatabaseManagerForDevelopers, DealsWithCryptoAddressBook, /*DealsWithCryptoVault,*/ DealsWithDeviceUser, DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithOutgoingIntraActor, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service/*, TransactionProtocolManager*/ {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     AssetIssuingTransactionManager assetIssuingTransactionManager;
@@ -132,6 +134,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     AssetIssuerWalletManager assetIssuerWalletManager;
     BitcoinNetworkManager bitcoinNetworkManager;
     CryptoVaultManager cryptoVaultManager;
+    ActorAssetIssuerManager actorAssetIssuerManager;
 
     //TODO: Delete this log object
     Logger LOG = Logger.getGlobal();
@@ -205,6 +208,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         }try{
             digitalAssetIssuingVault =new DigitalAssetIssuingVault(this.pluginId, this.pluginFileSystem, this.errorManager);
             digitalAssetIssuingVault.setAssetIssuerWalletManager(this.assetIssuerWalletManager);
+            digitalAssetIssuingVault.setActorAssetIssuerManager(this.actorAssetIssuerManager);
             this.assetIssuingTransactionDao=new AssetIssuingTransactionDao(this.pluginDatabaseSystem,this.pluginId);
             this.assetIssuingEventRecorderService =new AssetIssuingRecorderService(assetIssuingTransactionDao, eventManager);
             this.assetIssuingTransactionManager=new AssetIssuingTransactionManager(this.pluginId,
@@ -490,6 +494,11 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
         this.bitcoinNetworkManager=bitcoinNetworkManager;
     }
 
+    @Override
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
+        this.actorAssetIssuerManager=actorAssetIssuerManager;
+    }
+
     /**
      * Test methods.
      * Todo: delete them in production
@@ -702,4 +711,5 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
     public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
         this.cryptoVaultManager=cryptoVaultManager;
     }
+
 }

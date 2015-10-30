@@ -128,6 +128,13 @@ public class AssetReceptionDao {
         }
     }
 
+    public String getActorUserPublicKeyByGenesisTransaction(String genesisTransaction) throws CantCheckAssetReceptionProgressException, UnexpectedResultReturnedFromDatabaseException {
+        return getStringValueFromSelectedTableTableByFieldCode(AssetReceptionDatabaseConstants.ASSET_RECEPTION_TABLE_NAME,
+                genesisTransaction,
+                AssetReceptionDatabaseConstants.ASSET_RECEPTION_ACTOR_ASSET_ISSUER_ID_COLUMN_NAME,
+                AssetReceptionDatabaseConstants.ASSET_RECEPTION_GENESIS_TRANSACTION_COLUMN_NAME);
+    }
+
     public String getTransactionIdByGenesisTransaction(String genesisTransaction) throws CantCheckAssetReceptionProgressException, UnexpectedResultReturnedFromDatabaseException {
         return getStringValueFromSelectedTableTableByFieldCode(AssetReceptionDatabaseConstants.ASSET_RECEPTION_TABLE_NAME,
                 genesisTransaction,
