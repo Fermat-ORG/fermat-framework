@@ -25,7 +25,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by luis on 29/10/15.
+ * Created by Luis Campo (campusprize@gmail.com) on 29/10/15.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class CreateDatabaseTest {
