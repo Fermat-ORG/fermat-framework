@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -30,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
 /**
@@ -263,7 +265,11 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
     }
 
     @Override
-    public void broadcastTransaction(Transaction transaction) {
-        bitcoinCryptoNetworkMonitoringAgent.broadcastTransaction(transaction);
+    public void broadcastTransaction(Transaction transaction) throws CantBroadcastTransactionException {
+        try {
+            bitcoinCryptoNetworkMonitoringAgent.broadcastTransaction(transaction);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new CantBroadcastTransactionException (CantBroadcastTransactionException.DEFAULT_MESSAGE, e, null, null);
+        }
     }
 }

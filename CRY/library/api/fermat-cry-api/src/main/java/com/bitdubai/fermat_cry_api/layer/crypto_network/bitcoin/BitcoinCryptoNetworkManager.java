@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin;
 
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
 
@@ -14,5 +15,5 @@ public interface BitcoinCryptoNetworkManager {
     public void connectToBitcoinNetwork() throws CantConnectToBitcoinNetwork;
     public void disconnectFromBitcoinNetwork();
     public Object getBroadcasters();
-    public void broadcastTransaction(Transaction transaction);
+    public void broadcastTransaction(Transaction transaction) throws CantBroadcastTransactionException;
 }

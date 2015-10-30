@@ -28,6 +28,7 @@ import org.bitcoinj.params.RegTestParams;
 
 import java.net.InetSocketAddress;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by rodrigo on 08/06/15.
@@ -264,11 +265,22 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
         private void doTheMainTask() throws CantConnectToBitcoinNetwork {
             try {
                 peers.start();
-                peers.downloadBlockChain();
-                //while (true){
+                peers.startBlockChainDownload(myListeners);
+                while (true){
                     //endless loop. Since bitcoinj upgrade, this is no longer running as a guava service.
                     // so we need to keep the thread active.
-               // }
+                    Thread.sleep(60000);
+                    System.out.println("**CryptoNetwork ConnectedPeers: " + peers.getConnectedPeers().size());
+                    System.out.println("**CryptoNetwork PeerToDownload: " + peers.getDownloadPeer().toString());
+                    System.out.println("**CryptoNetwork PendingTransactions: " + wallet.getPendingTransactions().toString());
+
+                    if (wallet.getPendingTransactions().size() > 0){
+                        peers.stop();
+                        peers.addPeerDiscovery(new DnsDiscovery(networkParameters));
+                        System.out.println("**CryptoNetwork restarting with new peer discovery...");
+                        peers.start();
+                    }
+                }
             } catch (Exception exception) {
                 exception.printStackTrace();
                 throw new CantConnectToBitcoinNetwork("Couldn't connect to Bitcoin Network.", exception, "", "Error executing Agent.");
@@ -276,16 +288,26 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
         }
     }
 
-    public void broadcastTransaction(Transaction transaction) {
-        TransactionBroadcast broadcast = peers.broadcastTransaction(transaction, 2);
-        broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
-            @Override
-            public void onBroadcastProgress(double progress) {
-                System.out.println("broadCast progress: " + progress);
-            }
-        });
+    public void broadcastTransaction(Transaction transaction) throws ExecutionException, InterruptedException {
+        /**
+         * I make sure the service is running.
+         */
+        if (!peers.isRunning())
+            peers.start();
 
-        broadcast.setMinConnections(1);
-        broadcast.broadcast();
+        /**
+         * If I don't have any peers connected, I will continue trying to connect before broadcasting.
+         */
+        while (peers.numConnectedPeers() == 0){
+            peers.stop();
+            peers.addPeerDiscovery(new DnsDiscovery(networkParameters));
+            peers.start();
+            peers.downloadBlockChain();
+        }
+
+        /**
+         * broadcast it and wait.
+         */
+        peers.broadcastTransaction(transaction).future().get();
     }
 }
