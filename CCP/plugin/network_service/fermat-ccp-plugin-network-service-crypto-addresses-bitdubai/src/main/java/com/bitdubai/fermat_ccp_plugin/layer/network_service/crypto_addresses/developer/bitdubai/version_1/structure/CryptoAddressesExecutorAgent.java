@@ -160,15 +160,15 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
                         System.out.println("********* Crypto Addresses: Executor Agent -> Sending ACCEPTANCE. "+aer);
 
-                        sendMessageToActor(
+                        if (sendMessageToActor(
                                 buildJsonAcceptMessage(aer),
                                 aer.getIdentityPublicKeyRequesting(),
                                 aer.getIdentityTypeRequesting(),
                                 aer.getIdentityPublicKeyResponding(),
                                 aer.getIdentityTypeResponding()
-                        );
-
-                        toDone(aer.getRequestId());
+                        )) {
+                            toDone(aer.getRequestId());
+                        }
 
                         break;
 
@@ -176,15 +176,15 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
                         System.out.println("********* Crypto Addresses: Executor Agent -> Sending DENIAL. "+aer);
 
-                        sendMessageToActor(
+                        if (sendMessageToActor(
                                 buildJsonDenyMessage(aer),
                                 aer.getIdentityPublicKeyRequesting(),
                                 aer.getIdentityTypeRequesting(),
                                 aer.getIdentityPublicKeyResponding(),
                                 aer.getIdentityTypeResponding()
-                        );
-
-                        toDone(aer.getRequestId());
+                        )) {
+                            toDone(aer.getRequestId());
+                        }
 
                         break;
 
@@ -192,15 +192,15 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
                         System.out.println("********* Crypto Addresses: Executor Agent -> Sending REQUEST. "+aer);
 
-                        sendMessageToActor(
+                        if (sendMessageToActor(
                                 buildJsonRequestMessage(aer),
                                 aer.getIdentityPublicKeyRequesting(),
                                 aer.getIdentityTypeRequesting(),
                                 aer.getIdentityPublicKeyResponding(),
                                 aer.getIdentityTypeResponding()
-                        );
-
-                        toWaitingResponse(aer.getRequestId());
+                        )) {
+                            toWaitingResponse(aer.getRequestId());
+                        }
 
                         break;
                 }
