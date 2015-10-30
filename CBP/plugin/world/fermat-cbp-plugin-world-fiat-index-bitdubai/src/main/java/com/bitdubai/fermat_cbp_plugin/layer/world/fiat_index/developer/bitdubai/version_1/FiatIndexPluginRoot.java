@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1;
+package com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
@@ -7,12 +7,17 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.world.Index;
+import com.bitdubai.fermat_cbp_api.layer.cbp_world.cbp_fiat_index.exceptions.CantGetIndexException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_world.cbp_fiat_index.interfaces.FiatIndexManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +32,7 @@ import java.util.regex.Pattern;
 
  */
 
-public class CommunitySubAppModuleCryptoBrokenPluginRoot implements  DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class FiatIndexPluginRoot implements FiatIndexManager,DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
 
 
     /**
@@ -50,7 +55,7 @@ public class CommunitySubAppModuleCryptoBrokenPluginRoot implements  DealsWithEr
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.CommunitySubAppModuleCryptoBrokenPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.FiatIndexPluginRoot");
 
         /**
          * I return the values.
@@ -68,11 +73,11 @@ public class CommunitySubAppModuleCryptoBrokenPluginRoot implements  DealsWithEr
                 /**
                  * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
                  */
-                if (CommunitySubAppModuleCryptoBrokenPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                    CommunitySubAppModuleCryptoBrokenPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                    CommunitySubAppModuleCryptoBrokenPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                if (FiatIndexPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                    FiatIndexPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                    FiatIndexPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 } else {
-                    CommunitySubAppModuleCryptoBrokenPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                    FiatIndexPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 }
             }
         } catch (Exception exception) {
@@ -156,7 +161,7 @@ public class CommunitySubAppModuleCryptoBrokenPluginRoot implements  DealsWithEr
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
-            return CommunitySubAppModuleCryptoBrokenPluginRoot.newLoggingLevel.get(correctedClass[0]);
+            return FiatIndexPluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e) {
             System.err.println("CantGetLogLevelByClass: " + e.getMessage());
             /**
@@ -167,4 +172,28 @@ public class CommunitySubAppModuleCryptoBrokenPluginRoot implements  DealsWithEr
     }
 
 
+    @Override
+    public FermatEnum getReferenceCurrency() {
+        return null;
+    }
+
+    @Override
+    public Collection<FermatEnum> getSupportedCurrencies() {
+        return null;
+    }
+
+    @Override
+    public Index getCurrentIndex(FermatEnum currency) throws CantGetIndexException {
+        return null;
+    }
+
+    @Override
+    public Index getIndexInDate(FermatEnum currency, long timestamp) throws CantGetIndexException {
+        return null;
+    }
+
+    @Override
+    public Collection<Index> getQueriedIndexHistory(FermatEnum currency) {
+        return null;
+    }
 }

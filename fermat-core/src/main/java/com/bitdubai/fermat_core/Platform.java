@@ -1411,7 +1411,7 @@ public class Platform implements Serializable {
 
 
             /*
-             * Plugin Blockchain Info World
+             * Plugin Blockchain Info Index
              * -----------------------------
              */
             // Plugin blockchainInfoWorld = ((WorldLayer)  mWorldLayer).getBlockchainInfo();
@@ -1419,7 +1419,7 @@ public class Platform implements Serializable {
             // injectPluginReferencesAndStart(blockchainInfoWorld, Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD);
 
             /*
-             * Plugin Shape Shift World
+             * Plugin Shape Shift Index
              * -----------------------------
              */
             // Plugin shapeShiftWorld = ((WorldLayer)  mWorldLayer).getShapeShift();
@@ -1427,7 +1427,7 @@ public class Platform implements Serializable {
             // injectPluginReferencesAndStart(shapeShiftWorld, Plugins.BITDUBAI_SHAPE_SHIFT_WORLD);
 
             /*
-             * Plugin Coinapult World
+             * Plugin Coinapult Index
              * -----------------------------
              */
             // Plugin coinapultWorld = ((WorldLayer)  mWorldLayer).getCoinapult();
@@ -1435,7 +1435,7 @@ public class Platform implements Serializable {
             // injectPluginReferencesAndStart(coinapultWorld, Plugins.BITDUBAI_COINAPULT_WORLD);
 
             /*
-             * Plugin Coinbase World
+             * Plugin Coinbase Index
              * -----------------------------
              */
             // Plugin coinbaseWorld = ((WorldLayer)  mWorldLayer).getCoinbase();
@@ -1443,7 +1443,7 @@ public class Platform implements Serializable {
             // injectPluginReferencesAndStart(coinbaseWorld, Plugins.BITDUBAI_COINBASE_WORLD);
 
             /*
-             * Plugin Location World
+             * Plugin Location Index
              * -----------------------------
              */
             // Plugin locationWorld = ((WorldLayer)  mWorldLayer).getLocation();
@@ -1451,7 +1451,7 @@ public class Platform implements Serializable {
             // injectPluginReferencesAndStart(locationWorld, Plugins.BITDUBAI_LOCATION_WORLD);
 
             /*
-             * Plugin Crypto Index World
+             * Plugin Crypto Index Index
              * -----------------------------
              */
             // Plugin cryptoIndexWorld = ((WorldLayer)  mWorldLayer).getCryptoIndex();
