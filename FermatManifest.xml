@@ -4726,7 +4726,7 @@
 
 			<layer name="Contract" language="java">
 				<plugins>
-					<plugin name="Customer Broker Crypto Money Purchase"
+					<plugin name="Customer Broker Purchase"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4741,7 +4741,7 @@
 						<certifications>
 						</certifications>
 					</plugin>
-					<plugin name="Customer Broker Cash Money Purchase"
+					<plugin name="Customer Broker Sale"
 						description=""
 						difficulty="6"
 						code-level="development"
@@ -4750,96 +4750,6 @@
 							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
 							<author name="jorgeejgonzalez" scope="design" percentage="100"></author>
 							<author name="vlzangel" scope="implementation" percentage="10"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin name="Customer Broker Bank Money Purchase"
-						description=""
-						difficulty="6"
-						code-level="development"
-						>
-						<authors>
-							<author name="jorgeejgonzalez" scope="architecture" percentage="100"></author>
-							<author name="jorgeejgonzalez" scope="design" percentage="100"></author>
-							<author name="vlzangel" scope="implementation" percentage="10"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin name="Customer Broker Crypto Money Sale"
-						description=""
-						difficulty="6"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="vlzangel" scope="implementation" percentage="10"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin name="Customer Broker Cash Money Sale"
-						description=""
-						difficulty="6"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="vlzangel" scope="implementation" percentage="10"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin name="Customer Broker Bank Money Sale"
-						description=""
-						difficulty="6"
-						code-level="development"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="vlzangel" scope="implementation" percentage="10"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-						name="Broker To Broker"
-						description=""
-						difficulty="0"
-						code-level="concept"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-						</authors>
-						<mantainers>
-						</mantainers>
-						<certifications>
-						</certifications>
-					</plugin>
-					<plugin
-						name="Broker To Wholesaler"
-						description=""
-						difficulty="0"
-						code-level="concept"
-						>
-						<authors>
-							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5206,7 +5116,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="jorgeejgonzalez" scope="implementation" percentage="10"></author>
+							<author name="lnacosta" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
@@ -5222,7 +5132,7 @@
 						<authors>
 							<author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
 							<author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-							<author name="jorgeejgonzalez" scope="implementation" percentage="10"></author>
+							<author name="lnacosta" scope="implementation" percentage="10"></author>
 						</authors>
 						<mantainers>
 						</mantainers>
