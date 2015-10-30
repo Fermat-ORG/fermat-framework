@@ -769,7 +769,7 @@ public class Platform implements Serializable {
             boolean CCP = true;
             boolean CRY = true;
             boolean CSH = true;
-            boolean DAP = true; /* se desactiva debido a la gran cantidad de excepciones observadas en el start-up de la app, se avisó a través del gruṕo de skype fermat extended team, DE NADA*/
+            boolean DAP = true; /* DAP no da errores al iniciar, si la desactivas enviar mensaje a Rodrigo por favor*/
             boolean DMP = true;//DOBLEMENTE TEMPORAL
             boolean MKT = true;
             boolean OSA = true;

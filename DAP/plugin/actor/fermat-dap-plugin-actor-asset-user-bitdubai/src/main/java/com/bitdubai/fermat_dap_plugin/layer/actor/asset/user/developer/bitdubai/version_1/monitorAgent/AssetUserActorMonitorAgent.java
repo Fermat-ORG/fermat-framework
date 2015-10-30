@@ -103,7 +103,7 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
 
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
-        public final int SLEEP_TIME = 60000 * 3;/*  / 1000 = TIME in SECONDS = 60 seconds */
+        public final int SLEEP_TIME = 30000;/*  / 1000 = TIME in SECONDS = 60 seconds */
         boolean threadWorking;
 
         public MonitorAgent(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem) {
@@ -173,7 +173,7 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
 //                String assetUserActorIdentityToLinkPublicKey = UUID.randomUUID().toString();
                     String assetUserActorPublicKey = UUID.randomUUID().toString();
 //                CryptoAddress cryptoAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);
-                    CryptoAddress genesisAddress = assetActorUserPluginRoot.getGenesisAddress();
+                    CryptoAddress genesisAddress = assetActorUserPluginRoot.getGenesisAddress(null);
 //                    CryptoAddress genesisAddress = new CryptoAddress(UUID.randomUUID().toString(), CryptoCurrency.BITCOIN);
                     ;
                     Genders genders = Genders.INDEFINITE;

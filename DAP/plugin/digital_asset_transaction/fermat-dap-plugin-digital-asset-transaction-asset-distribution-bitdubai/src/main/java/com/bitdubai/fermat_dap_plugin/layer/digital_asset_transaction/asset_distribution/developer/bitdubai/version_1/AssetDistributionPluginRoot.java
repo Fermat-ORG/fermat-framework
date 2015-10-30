@@ -36,6 +36,8 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.DealsWithActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.DealsWithActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DealsWithAssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
@@ -74,10 +76,11 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/09/15.
  */
-public class AssetDistributionPluginRoot implements AssetDistributionManager, DealsWithActorAssetIssuer, DealsWithAssetIssuerWallet, DealsWithAssetTransmissionNetworkServiceManager, DealsWithBitcoinNetwork, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithDeviceUser, DealsWithErrors, DealsWithEvents, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
+public class AssetDistributionPluginRoot implements AssetDistributionManager, DealsWithActorAssetIssuer, DealsWithActorAssetUser, DealsWithAssetIssuerWallet, DealsWithAssetTransmissionNetworkServiceManager, DealsWithBitcoinNetwork, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithDeviceUser,DealsWithErrors, DealsWithEvents, DealsWithLogger,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     ActorAssetIssuerManager actorAssetIssuerManager;
+    ActorAssetUserManager actorAssetUserManager;
     AssetDistributionTransactionManager assetDistributionTransactionManager;
     AssetDistributionMonitorAgent assetDistributionMonitorAgent;
     AssetIssuerWalletManager assetIssuerWalletManager;
@@ -137,8 +140,10 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
                     throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Asset Distribution plugin - "+this.pluginId, "Cannot open or create the plugin database");
                 }
             }
-            this.digitalAssetDistributionVault = new DigitalAssetDistributionVault(this.pluginId, this.pluginFileSystem, this.errorManager);
+            this.digitalAssetDistributionVault =new DigitalAssetDistributionVault(this.pluginId, this.pluginFileSystem, this.errorManager);
             this.digitalAssetDistributionVault.setAssetIssuerWalletManager(this.assetIssuerWalletManager);
+            this.digitalAssetDistributionVault.setErrorManager(this.errorManager);
+            this.digitalAssetDistributionVault.setActorAssetIssuerManager(this.actorAssetIssuerManager);
             AssetDistributionDao assetDistributionDao=new AssetDistributionDao(pluginDatabaseSystem, pluginId);
             this.assetDistributionTransactionManager=new AssetDistributionTransactionManager(
                     this.assetVaultManager,
@@ -192,15 +197,14 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
 
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the asset distribution plugin
-     *
      * @throws CantGetLoggedInDeviceUserException
      * @throws CantSetObjectException
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
-        if (this.assetDistributionMonitorAgent == null) {
+        if(this.assetDistributionMonitorAgent==null){
             String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
-            this.assetDistributionMonitorAgent = new AssetDistributionMonitorAgent(this.eventManager,
+            this.assetDistributionMonitorAgent=new AssetDistributionMonitorAgent(this.eventManager,
                     this.pluginDatabaseSystem,
                     this.errorManager,
                     this.pluginId,
@@ -210,8 +214,9 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
             this.assetDistributionMonitorAgent.setBitcoinNetworkManager(bitcoinNetworkManager);
             this.assetDistributionMonitorAgent.setDigitalAssetDistributionVault(this.digitalAssetDistributionVault);
             this.assetDistributionMonitorAgent.setAssetTransmissionManager(this.assetTransmissionNetworkServiceManager);
+            //this.assetDistributionMonitorAgent.setActorAssetUserManager(this.actorAssetUserManager);
             this.assetDistributionMonitorAgent.start();
-        } else {
+        }else{
             this.assetDistributionMonitorAgent.start();
         }
     }
@@ -223,25 +228,25 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
         digitalAssetsToDistribute=getDistributionHashMapForTesting();
 
         ActorAssetUser registeredActorAssetUser = null;
-        for (ActorAssetUser actorAssetUser : digitalAssetsToDistribute.values()) {
+        for (ActorAssetUser actorAssetUser: digitalAssetsToDistribute.values() ){
             registeredActorAssetUser = actorAssetUser;
         }
 
-        for (DigitalAssetMetadata digitalAssetMetadata : digitalAssetsToDistribute.keySet()) {
+        for (DigitalAssetMetadata digitalAssetMetadata: digitalAssetsToDistribute.keySet()){
             digitalAssetsToDistribute.put(digitalAssetMetadata, registeredActorAssetUser);
         }
 
         printSomething("The Wallet public key is hardcoded");
         walletPublicKey = "walletPublicKeyTest";
-        try {
+        try{
             startMonitorAgent();
             this.assetDistributionTransactionManager.distributeAssets(digitalAssetsToDistribute, walletPublicKey);
         } catch (CantSetObjectException exception) {
-            throw new CantDistributeDigitalAssetsException(exception, "Beginning the Digital Asset Distribution", "The setting object is null");
+            throw new CantDistributeDigitalAssetsException(exception,"Beginning the Digital Asset Distribution", "The setting object is null");
         } catch (CantStartAgentException exception) {
-            throw new CantDistributeDigitalAssetsException(exception, "Beginning the Digital Asset Distribution", "Cannot start the Asset Distribution Monitor Agent");
+            throw new CantDistributeDigitalAssetsException(exception,"Beginning the Digital Asset Distribution", "Cannot start the Asset Distribution Monitor Agent");
         } catch (CantGetLoggedInDeviceUserException exception) {
-            throw new CantDistributeDigitalAssetsException(exception, "Beginning the Digital Asset Distribution", "Cannot get the user logged in this device");
+            throw new CantDistributeDigitalAssetsException(exception,"Beginning the Digital Asset Distribution", "Cannot get the user logged in this device");
         }
     }
 
@@ -364,14 +369,20 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
         this.actorAssetIssuerManager=actorAssetIssuerManager;
     }
 
+
+    @Override
+    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
+        this.actorAssetUserManager=actorAssetUserManager;
+    }
+
     @Override
     public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
-        this.deviceUserManager = deviceUserManager;
+        this.deviceUserManager=deviceUserManager;
     }
 
     @Override
     public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
+        this.logManager=logManager;
     }
 
     private HashMap<DigitalAssetMetadata, ActorAssetUser> getDistributionHashMapForTesting(){
@@ -391,4 +402,5 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
         eventManager.raiseEvent(eventToRaise);
         printSomething("End event RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION");
     }
+
 }
