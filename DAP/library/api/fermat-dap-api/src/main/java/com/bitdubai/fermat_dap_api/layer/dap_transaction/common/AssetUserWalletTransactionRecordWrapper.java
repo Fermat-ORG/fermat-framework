@@ -5,16 +5,15 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransactionRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransactionRecord;
 
 import java.util.Date;
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 06/10/15.
- * Based on com/bitdubai/fermat_dap_plugin/layer/wallet/asset/issuer/developer/bitdubai/version_1/structure/AssetIssuerWalletTransactionRecordWrapper.java
- * Implemented by franklin on 01/10/15.
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 29/10/15.
  */
-public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWalletTransactionRecord {
+public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletTransactionRecord{
     private final DigitalAsset digitalAsset;
     private final String digitalAssetPublicKey;
     private final String name;
@@ -31,7 +30,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
     private final String digitalAssetMetadataHash;
     private final String transactionId;
 
-    AssetIssuerWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
+    AssetUserWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
                                               String digitalAssetPublicKey,
                                               String name,
                                               String description,
@@ -63,10 +62,10 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
         this.transactionId = transactionId;
     }
 
-    public AssetIssuerWalletTransactionRecordWrapper(DigitalAssetMetadata digitalAssetMetadata,
-                                              CryptoTransaction cryptoGenesisTransaction,
-                                              String actorFromPublicKey,
-                                              String actorToPublicKey){
+    public AssetUserWalletTransactionRecordWrapper(DigitalAssetMetadata digitalAssetMetadata,
+                                                     CryptoTransaction cryptoGenesisTransaction,
+                                                     String actorFromPublicKey,
+                                                     String actorToPublicKey){
         this.digitalAsset = digitalAssetMetadata.getDigitalAsset();
         this.digitalAssetPublicKey = this.digitalAsset.getPublicKey();
         this.name = this.digitalAsset.getName();
@@ -91,7 +90,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
     }
 
     @Override
-    public String getDigitalAssetPublicKey() {
+    public String getAssetIssuingPublicKey() {
         return digitalAssetPublicKey;
     }
 
