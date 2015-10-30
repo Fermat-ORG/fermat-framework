@@ -103,4 +103,10 @@ public interface NetworkService {
      */
     void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile);
 
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    public boolean isRegister();
+
 }
