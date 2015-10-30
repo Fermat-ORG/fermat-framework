@@ -4,7 +4,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNewReceiveMessagesNotificationEventHandler;
 
 /**
- * The abstract Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.NewReceiveMessagesNotificationEventHandler</code>
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.NewReceiveMessagesNotificationEventHandler</code>
  * contains all the basic functionality of a NewReceiveMessagesNotificationEventHandler.
  *
  * The method <code>handleNewMessages</code> can be override to modify its behavior.
