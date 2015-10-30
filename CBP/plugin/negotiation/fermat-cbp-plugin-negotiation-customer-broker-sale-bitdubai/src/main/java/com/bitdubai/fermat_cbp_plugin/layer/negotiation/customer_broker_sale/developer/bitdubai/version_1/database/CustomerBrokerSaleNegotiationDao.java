@@ -278,6 +278,22 @@ public class CustomerBrokerSaleNegotiationDao {
                 }
             }
 
+            public void rejectClauseByType(UUID negotiationId, ClauseType type) throws CantUpdateClausesException {
+                try {
+                    DatabaseTable SaleClauseTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
+                    DatabaseTableRecord recordToUpdate   = SaleClauseTable.getEmptyRecord();
+        
+                    SaleClauseTable.setUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
+                    SaleClauseTable.setStringFilter(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_TYPE_COLUMN_NAME, type.getCode(), DatabaseFilterType.EQUAL);
+        
+                    recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_STATUS_COLUMN_NAME, ClauseStatus.REJECTED.getCode());
+        
+                    SaleClauseTable.updateRecord(recordToUpdate);
+                } catch (CantUpdateRecordException e) {
+                    throw new CantUpdateClausesException(CantUpdateClausesException.DEFAULT_MESSAGE, e, "", "");
+                }
+            }
+
             public ClauseType getNextClauseType(UUID negotiationId) throws CantGetNextClauseTypeException {
 
                 try {
