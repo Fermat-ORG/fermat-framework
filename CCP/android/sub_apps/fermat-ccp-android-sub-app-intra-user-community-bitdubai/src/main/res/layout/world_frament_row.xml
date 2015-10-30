@@ -6,7 +6,7 @@
     >
     <com.bitdubai.fermat_android_api.ui.Views.SquareImageView android:id="@+id/profile_Image"
         android:layout_width="match_parent"
-        android:src="@drawable/kid_3"
+        android:src="@drawable/profile_image"
         android:scaleType="centerCrop"
         android:layout_height="match_parent"/>
     <FrameLayout
@@ -34,5 +34,6 @@
         android:id="@+id/imageView_connection"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:src="@drawable/ic_action_add_person_grey"/>
+        android:src="@drawable/ic_action_add_person_grey"
+        android:visibility="gone"/>
 </RelativeLayout>

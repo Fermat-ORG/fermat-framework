@@ -98,17 +98,23 @@ public class WsCommunicationVpnServerManagerAgent extends Thread{
                     isRunning = Boolean.FALSE;
                 }
 
-            /*    for (WsCommunicationVPNServer wsCommunicationVPNServer : vpnServersActivesCache) {
+                for (WsCommunicationVPNServer wsCommunicationVPNServer : vpnServersActivesCache) {
 
-                    //Verified is this vpn is active
-                    if (!wsCommunicationVPNServer.isActive()){
+                    try {
+                        /*
+                         * Send the ping message to this participant
+                         */
+                        wsCommunicationVPNServer.sendPingMessage();
 
-                        //If no active stop it
+                    }catch (Exception ex){
+
+                        //Close all connection and stop the vpn server
+                        wsCommunicationVPNServer.closeAllConnections();
                         wsCommunicationVPNServer.stop();
                         vpnServersActivesCache.remove(wsCommunicationVPNServer);
-
                     }
-                } */
+
+                }
 
                 sleep(WsCommunicationVpnServerManagerAgent.SLEEP_TIME);
 

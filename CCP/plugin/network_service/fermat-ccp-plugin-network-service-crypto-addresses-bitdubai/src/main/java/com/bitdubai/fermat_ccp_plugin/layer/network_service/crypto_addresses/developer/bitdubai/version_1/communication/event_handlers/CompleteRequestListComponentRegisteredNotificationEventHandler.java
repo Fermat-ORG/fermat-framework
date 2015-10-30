@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers;
 
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.AbstractCommunicationBaseEventHandler;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractCommunicationBaseEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
 
 /**

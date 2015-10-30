@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.Networ
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by ciencias on 30.12.14.
@@ -104,5 +103,10 @@ public interface NetworkService {
      */
     void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile);
 
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    public boolean isRegister();
 
 }

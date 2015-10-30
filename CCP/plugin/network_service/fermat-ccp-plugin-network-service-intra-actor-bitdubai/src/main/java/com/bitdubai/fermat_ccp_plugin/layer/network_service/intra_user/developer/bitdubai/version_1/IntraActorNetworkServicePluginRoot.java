@@ -939,6 +939,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
      * Get is Register
      * @return boolean
      */
+    @Override
     public boolean isRegister() {
         return register;
     }

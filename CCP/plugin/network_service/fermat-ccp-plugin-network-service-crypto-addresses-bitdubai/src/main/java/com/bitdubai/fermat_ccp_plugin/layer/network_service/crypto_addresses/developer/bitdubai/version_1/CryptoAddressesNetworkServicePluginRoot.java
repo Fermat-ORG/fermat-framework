@@ -832,7 +832,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
     }
 
-    public void handleNewMessages(final FermatMessage fermatMessage) throws CantHandleNewMessagesException {
+    public void handleNewMessages(final FermatMessage fermatMessage) {
 
         try {
 
