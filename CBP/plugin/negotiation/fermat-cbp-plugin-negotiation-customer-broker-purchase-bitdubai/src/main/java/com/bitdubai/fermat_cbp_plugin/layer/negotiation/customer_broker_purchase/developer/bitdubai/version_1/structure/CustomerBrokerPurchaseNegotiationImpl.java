@@ -127,7 +127,11 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
         }
 
         try {
-            return addNewBrokerClause(clauseRejected.getType(), value);
+            if (clause.getProposedBy() == this.getBrokerPublicKey()){
+                return addNewBrokerClause(clauseRejected.getType(), value);
+            }else{
+                return addNewCustomerClause(clauseRejected.getType(), value);
+            }
         } catch (CantAddNewClausesException e) {
             throw new CantUpdateClausesException(CantUpdateClausesException.DEFAULT_MESSAGE, e, "", "");
         }
