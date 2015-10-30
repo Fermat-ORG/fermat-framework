@@ -160,7 +160,7 @@ public class GetNumberOfIssuedAssetsTest {
         when(deviceUser.getPublicKey()).thenReturn("myPublicKey");
         when(deviceUserManager.getLoggedInDeviceUser()).thenReturn(deviceUser);
 
-        //TODO arreglar: llamada a getNewListener
+        //TODO fix: call getNewListener
 //        when(eventManager.getNewListener(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER)).thenReturn(fermatEventListener1);
 //        when(eventManager.getNewListener(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER)).thenReturn(fermatEventListener2);
 //        when(eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER)).thenReturn(fermatEventListener3);
