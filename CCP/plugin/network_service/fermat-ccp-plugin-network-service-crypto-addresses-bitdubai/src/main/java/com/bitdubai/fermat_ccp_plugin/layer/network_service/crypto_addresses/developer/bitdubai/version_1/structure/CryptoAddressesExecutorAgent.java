@@ -250,13 +250,13 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
                     case ACCEPT:
                         System.out.println("************** Crypto Addresses -> Received Address Acceptance: " +cpr);
-                        raiseEvent(EventType.CRYPTO_ADDRESS_RECEIVED, cpr.getRequestId(), cpr.getIdentityTypeResponding());
+                        raiseEvent(EventType.CRYPTO_ADDRESS_RECEIVED, cpr.getRequestId(), cpr.getIdentityTypeRequesting());
                         toPendingAction(cpr.getRequestId());
 
                         break;
                     case DENY:
                         System.out.println("************** Crypto Addresses -> Received Address Denied: " +cpr);
-                        raiseEvent(EventType.CRYPTO_ADDRESS_DENIED, cpr.getRequestId(), cpr.getIdentityTypeResponding());
+                        raiseEvent(EventType.CRYPTO_ADDRESS_DENIED, cpr.getRequestId(), cpr.getIdentityTypeRequesting());
                         toPendingAction(cpr.getRequestId());
 
                         break;
