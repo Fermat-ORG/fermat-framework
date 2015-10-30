@@ -102,6 +102,11 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
     }
 
     @Override
+    public void rejectClauseByType(ClauseType type) throws CantUpdateClausesException {
+        this.customerBrokerSaleNegotiationDao.rejectClauseByType(this.negotiationId, type);
+    }
+
+    @Override
     public ClauseType getNextClauseType() throws CantGetNextClauseTypeException {
         try {
             ClauseType type = this.customerBrokerSaleNegotiationDao.getNextClauseType(this.negotiationId);
