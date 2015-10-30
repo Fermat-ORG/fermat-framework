@@ -109,3 +109,18 @@ Sys Monitor ::
 Feedback ::
 Reviews :: +
 
+
+
+. *Fermat Wallet Production & Distribution Platform*
+. *Fermat Crypto Currency Platform*
+. *Fermat Crypto Commodity Money*
+. *Fermat Bank Notes Platform*
+. *Fermat Shop Platform*
+. *Fermat Digital Assets Platform*
+. *Fermat Marketing Platform*
+. *Fermat Cash Money Platform*
+. *Fermat Bank Money Platform*
+. *Fermat Crypto Brokers Platform*
+. *Fermat Crypto Distribution Network*
+. *Fermat Distributed Private Network*
+
