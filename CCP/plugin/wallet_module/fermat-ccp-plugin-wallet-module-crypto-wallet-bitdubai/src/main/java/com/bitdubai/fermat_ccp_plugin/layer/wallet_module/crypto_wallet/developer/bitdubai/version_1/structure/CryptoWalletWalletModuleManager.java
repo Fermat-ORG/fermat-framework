@@ -23,11 +23,14 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIdentityIntraWalletUser;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.DealsWithCryptoTransmissionNetworkService;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.DealsWithIntraUsersNetworkService;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListPaymentRequestDateOrderException;
@@ -124,7 +127,21 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCryptoTransmissionNetworkService,DealsWithCryptoAddressesNetworkService,DealsWithCCPIntraWalletUsers,DealsWithCCPIdentityIntraWalletUser,DealsWithBitcoinWallet, DealsWithCryptoVault, DealsWithErrors, DealsWithExtraUsers, DealsWithOutgoingExtraUser, DealsWithOutgoingIntraActor,DealsWithWalletContacts, DealsWithCryptoAddressBook, DealsWithCryptoPayment {
+public class CryptoWalletWalletModuleManager implements
+        CryptoWallet,
+        DealsWithCryptoTransmissionNetworkService,
+        DealsWithCryptoAddressesNetworkService,
+        DealsWithCCPIntraWalletUsers,
+        DealsWithCCPIdentityIntraWalletUser,
+        DealsWithBitcoinWallet,
+        DealsWithCryptoVault,
+        DealsWithErrors,
+        DealsWithExtraUsers,
+        DealsWithOutgoingExtraUser,
+        DealsWithOutgoingIntraActor,
+        DealsWithWalletContacts,
+        DealsWithCryptoAddressBook,
+        DealsWithCryptoPayment{ // TODO ADDED TO TEST CRYPTO ADDRESSES PLUGIN
 
 
     /**
@@ -151,8 +168,6 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
      * DealsWithCCPIntraWalletUsers Interface member variables.
      */
     private IntraWalletUserManager intraUserManager;
-
-
 
     /**
      * DealsWithCCPIdentityIntraWalletUser Interface member variables.
@@ -219,13 +234,13 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
           catch (Exception e){
             throw new CantInitializeCryptoWalletManagerException(CantInitializeCryptoWalletManagerException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
+
     }
 
     @Override
     public List<CryptoWalletWalletContact> listWalletContacts(String walletPublicKey) throws CantGetAllWalletContactsException {
         try {
 
-            Actor actor;
             List<CryptoWalletWalletContact> finalRecordList = new ArrayList<>();
             finalRecordList.clear();
             WalletContactsSearch walletContactsSearch = walletContactsRegistry.searchWalletContact(walletPublicKey);
@@ -397,8 +412,6 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,DealsWithCr
         try{
 
          //get to Crypto Address NS the intra user actor address
-
-
             cryptoAddressesNSManager.sendAddressExchangeRequest(walletPublicKey,
                                                                 walletCryptoCurrency ,
                                                                 actorWalletType,

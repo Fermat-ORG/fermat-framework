@@ -47,7 +47,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 
 
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.NetworkService;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesInstalationManager;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
@@ -103,7 +102,7 @@ import java.util.UUID;
  * * * * * * *
  */
 
-public class SubAppResourcesInstallationNetworkServicePluginRoot implements Service, NetworkService, DealsWithPluginDatabaseSystem,DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, SubAppResourcesInstalationManager, SubAppResourcesProviderManager {
+public class SubAppResourcesInstallationNetworkServicePluginRoot implements Service, DealsWithPluginDatabaseSystem,DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, SubAppResourcesInstalationManager, SubAppResourcesProviderManager {
 
 
     /**
@@ -269,8 +268,6 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
     /**
      * NetworkService Interface implementation.
      */
-
-    @Override
     public UUID getId() {
         return this.pluginId;
     }

@@ -300,47 +300,38 @@ public class WsCommunicationVPNServer extends WebSocketServer{
 
             System.out.println("WsCommunicationVPNServer - fermatMessage = "+fermatMessage);
 
+
+
             /*
-             * Send the message to the other participantsConnections
+            * Construct a new fermat packet whit the same message and different destination
+            */
+            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(vpnClientIdentityByParticipants.get(fermatMessage.getReceiver()), //Destination
+                                                                                                                        vpnServerIdentity.getPublicKey(),                         //Sender
+                                                                                                                        fermatMessage.toJson(),                                   //Message Content
+                                                                                                                        FermatPacketType.MESSAGE_TRANSMIT,                        //Packet type
+                                                                                                                        vpnServerIdentity.getPrivateKey());                       //Sender private key
+
+            /*
+             * Get the connection of the destination
              */
-           // for (String participantIdentity : participantsConnections.keySet()) {
-
-                //If participantIdentity is different from the sender, send the message
-             //  if (participantIdentity != receiveFermatPacket.getSender()){
-
-                    /*
-                    * Construct a new fermat packet whit the same message and different destination
-                    */
-                    FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(vpnClientIdentityByParticipants.get(fermatMessage.getReceiver()), //Destination
-                                                                                                                                vpnServerIdentity.getPublicKey(),                         //Sender
-                                                                                                                                fermatMessage.toJson(),                                   //Message Content
-                                                                                                                                FermatPacketType.MESSAGE_TRANSMIT,                        //Packet type
-                                                                                                                                vpnServerIdentity.getPrivateKey());                       //Sender private key
-
-                    /*
-                     * Get the connection of the destination
-                     */
-                    WebSocket clientConnectionDestination = participantsConnections.get(fermatMessage.getReceiver());
+            WebSocket clientConnectionDestination = participantsConnections.get(fermatMessage.getReceiver());
 
 
 
-                    /*
-                     * If the connection to client destination available
-                     */
-                    if (clientConnectionDestination != null && clientConnectionDestination.isOpen()){
+            /*
+             * If the connection to client destination available
+             */
+            if (clientConnectionDestination != null && clientConnectionDestination.isOpen()){
 
-                        System.out.println("WsCommunicationVPNServer - sending to destination "+fermatPacketRespond.getDestination());
+                System.out.println("WsCommunicationVPNServer - sending to destination "+fermatPacketRespond.getDestination());
 
-                       /*
-                        * Send the encode packet to the destination
-                        */
-                        clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
+               /*
+                * Send the encode packet to the destination
+                */
+                clientConnectionDestination.send(FermatPacketEncoder.encode(fermatPacketRespond));
 
-                    }
+            }
 
-           //    }
-
-         //   }
 
         }else {
             System.out.println("WsCommunicationVPNServer - Packet type " + receiveFermatPacket.getFermatPacketType() + "is not supported");

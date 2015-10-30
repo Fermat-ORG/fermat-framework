@@ -611,13 +611,13 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                 PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetUserToRegister.getPublicKey(),
                         actorAssetUserToRegister.getName().toLowerCase().trim(),
                         actorAssetUserToRegister.getName(),
-                        NetworkServiceType.UNDEFINED,
+                        NetworkServiceType.ASSET_USER_ACTOR,
                         PlatformComponentType.ACTOR_ASSET_USER,
                         Arrays.toString(actorAssetUserToRegister.getProfileImage()));
                 /*
                  * ask to the communication cloud client to register
                  */
-                communicationsClientConnection.registerComponentForCommunication(platformComponentProfileAssetUser);
+                communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfileAssetUser);
 
             }else {
 
@@ -627,7 +627,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                 PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetUserToRegister.getPublicKey(),
                         actorAssetUserToRegister.getName().toLowerCase().trim(),
                         actorAssetUserToRegister.getName(),
-                        NetworkServiceType.UNDEFINED,
+                        NetworkServiceType.ASSET_USER_ACTOR,
                         PlatformComponentType.ACTOR_ASSET_USER,
                         Arrays.toString(actorAssetUserToRegister.getProfileImage()));
                 /*
@@ -794,7 +794,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                     if (communicationNetworkServiceLocal != null) {
 
                         //Send the message
-                        communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), null, messageContentIntoJson);
+                        communicationNetworkServiceLocal.sendMessage(actorAssetIssuerSender.getPublicKey(), actorAssetUserDestination.getPublicKey(), messageContentIntoJson);
 
                     } else {
 
@@ -904,7 +904,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                 if (communicationNetworkServiceLocal != null) {
 
                     //Send the message
-                    communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), null, messageContentIntoJson);
+                    communicationNetworkServiceLocal.sendMessage(actorAssetUserSender.getPublicKey(), actorAssetIssuerDestination.getPublicKey(), messageContentIntoJson);
 
                 } else {
 
@@ -1005,11 +1005,6 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
     }
 
     @Override
-    public UUID getId() {
-        return this.pluginId;
-    }
-
-    @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
@@ -1086,7 +1081,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                      * ask to the communication cloud client to register
                      */
                     try {
-                        communicationsClientConnection.registerComponentForCommunication(platformComponentProfileAssetUser);
+                        communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfileAssetUser);
                     } catch (CantRegisterComponentException e) {
                         e.printStackTrace();
                     }

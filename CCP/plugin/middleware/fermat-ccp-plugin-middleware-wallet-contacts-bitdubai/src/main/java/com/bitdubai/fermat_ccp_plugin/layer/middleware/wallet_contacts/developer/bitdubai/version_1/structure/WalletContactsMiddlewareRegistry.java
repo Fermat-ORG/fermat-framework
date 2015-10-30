@@ -394,7 +394,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                 // if i can't find it (WalletContactNotFound) i confirm the request ....
                 // else i add the crypto address received.
                 WalletContactRecord walletContactRecord = this.getWalletContactByActorAndWalletPublicKey(
-                        request.getIdentityPublicKeyRequesting(),
+                        request.getIdentityPublicKeyResponding(),
                         request.getWalletPublicKey()
                 );
 

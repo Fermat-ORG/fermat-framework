@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_ccp_core.layer.network_service;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractLayer;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterPluginException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartLayerException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractLayer;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPluginException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_ccp_core.layer.network_service.crypto_addresses.CryptoAddressesPluginSubsystem;
 import com.bitdubai.fermat_ccp_core.layer.network_service.crypto_payment_request.CryptoPaymentRequestPluginSubsystem;

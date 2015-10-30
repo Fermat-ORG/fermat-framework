@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_pip_core.layer.platform_service.event_manager;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddonSubsystem;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddonSubsystem;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer.bitdubai.DeveloperBitDubai;
 
