@@ -3,8 +3,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.de
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -76,14 +76,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * This plugin manages the exchange of crypto addresses between actors.
  *
  * Created by Leon Acosta (laion.cj91@gmail.com) on 22/09/2015.
  */
-public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin implements
+public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkService implements
         CryptoAddressesManager,
         DealsWithWsCommunicationsCloudClientManager,
         DealsWithErrors,
@@ -102,18 +101,11 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
      */
     private EventManager eventManager;
     private List<FermatEventListener> listenersAdded;
-    public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_CRYPTO_ADDRESSES;
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * DealsWithPluginIdentity Interface member variables.
-     */
-    private UUID pluginId;
-
 
     /**
      * Represent the wsCommunicationsCloudClientManager
@@ -135,35 +127,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
      */
     private Database dataBase;
 
-    /**
-     * Represent the identity
-     */
-    private ECCKeyPair identity;
-
-    /**
-     * Represent the platformComponentProfile
-     */
-    private PlatformComponentProfile platformComponentProfile;
-
-    /**
-     * Crypto Payment Request Network Service details.
-     */
-    private final PlatformComponentType platformComponentType;
-    private final NetworkServiceType networkServiceType;
-    private final String name;
-    private final String alias;
-    private final String extraData;
-
-    /**
-     * Represent the platformComponentProfilePluginRoot
-     */
-    private PlatformComponentProfile platformComponentProfilePluginRoot;
-    /**
-     * Represent the register
-     */
-    private boolean register;
-
-    private AtomicBoolean connectionArrived;
 
     /**
      * Represent the registrationProcessNetworkServiceAgent
@@ -175,13 +138,19 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
     private CryptoAddressesNetworkServiceDao cryptoAddressesNetworkServiceDao;
 
     public CryptoAddressesNetworkServicePluginRoot() {
-        super(new PluginVersionReference(new Version()));
+
+        super(
+                new PluginVersionReference(new Version()),
+                PlatformComponentType.NETWORK_SERVICE,
+                NetworkServiceType.CRYPTO_ADDRESSES,
+                "Crypto Addresses Network Service",
+                "CryptoAddressesNetworkService",
+                null,
+                EventSource.NETWORK_SERVICE_CRYPTO_ADDRESSES
+        );
+
         this.listenersAdded = new ArrayList<>();
-        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
-        this.networkServiceType    = NetworkServiceType.CRYPTO_ADDRESSES;
-        this.name                  = "Crypto Addresses Network Service";
-        this.alias                 = "CryptoAddressesNetworkService";
-        this.extraData             = null;
+
     }
 
 
@@ -244,16 +213,12 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
-            remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<PlatformComponentProfile>();
-
-            connectionArrived = new AtomicBoolean(false);
+            remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
 
             /*
              * Its all ok, set the new status
             */
             this.serviceStatus = ServiceStatus.STARTED;
-
-
 
         } catch (CantInitializeNetworkServiceDatabaseException exception) {
 
@@ -378,15 +343,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
 
         }
 
-    }
-
-    /**
-     * Set the PlatformComponentProfile
-     *
-     * @param platformComponentProfilePluginRoot
-     */
-    public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfilePluginRoot) {
-        this.platformComponentProfilePluginRoot = platformComponentProfilePluginRoot;
     }
 
     @Override
@@ -612,15 +568,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
     }
 
     /**
-     * (non-Javadoc)
-     * @see NetworkService#getId()
-     */
-    @Override
-    public UUID getId() {
-        return this.pluginId;
-    }
-
-    /**
      * (non-javadoc)
      * @see NetworkService#getRemoteNetworkServicesRegisteredList()
      */
@@ -643,7 +590,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
          */
         try {
 
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfilePluginRoot, discoveryQueryParameters);
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(this.getPlatformComponentProfilePluginRoot(), discoveryQueryParameters);
 
         } catch (CantRequestListException e) {
 
@@ -671,49 +618,17 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
      * IMPORTANT: Call this method only in the RegistrationProcessNetworkServiceAgent, when execute the registration process
      * because at this moment, is create the platformComponentProfile for this component
      */
-    public void initializeCommunicationNetworkServiceConnectionManager(){
+    @Override
+    public void initializeCommunicationNetworkServiceConnectionManager() {
         this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
-                platformComponentProfile,
+                this.getPlatformComponentProfilePluginRoot(),
                 identity,
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
                 dataBase,
                 errorManager,
-                eventManager
+                eventManager,
+                this.getEventSource()
         );
-    }
-
-    public String getIdentityPublicKey(){
-        return this.identity.getPublicKey();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAlias() {
-        return alias;
-    }
-
-    public String getExtraData() {
-        return extraData;
-    }
-
-    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
-        return platformComponentProfile;
-    }
-
-    @Override
-    public PlatformComponentType getPlatformComponentType() {
-        return platformComponentType;
-    }
-
-    @Override
-    public NetworkServiceType getNetworkServiceType() {
-        return networkServiceType;
-    }
-
-    public void setPlatformComponentProfile(final PlatformComponentProfile platformComponentProfile) {
-        this.platformComponentProfile = platformComponentProfile;
     }
 
     /**
@@ -757,14 +672,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractPlugin impl
                 fromOtherPlatformComponentType,
                 fromOtherNetworkServiceType
         );
-    }
-
-    /**
-     * Get is Register
-     * @return boolean
-     */
-    public boolean isRegister() {
-        return register;
     }
 
     /**

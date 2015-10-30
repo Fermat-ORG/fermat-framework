@@ -476,12 +476,12 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
         eventToRaise.setRequestId(requestId);
         eventToRaise.setActorType(actorType);
 
-        eventToRaise.setSource(CryptoAddressesNetworkServicePluginRoot.EVENT_SOURCE);
+        eventToRaise.setSource(cryptoAddressesNetworkServicePluginRoot.getEventSource());
         eventManager.raiseEvent(eventToRaise);
     }
 
     private void reportUnexpectedError(FermatException e) {
-        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        errorManager.reportUnexpectedPluginException(cryptoAddressesNetworkServicePluginRoot.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
     public void connectionFailure(String identityPublicKey){
