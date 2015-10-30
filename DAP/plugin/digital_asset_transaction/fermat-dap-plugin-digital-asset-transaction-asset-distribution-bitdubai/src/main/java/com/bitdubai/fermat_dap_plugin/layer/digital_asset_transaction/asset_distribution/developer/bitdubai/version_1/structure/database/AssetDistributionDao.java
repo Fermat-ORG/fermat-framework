@@ -298,6 +298,13 @@ public class AssetDistributionDao {
         }
     }
 
+    public String getActorUserPublicKeyByGenesisTransaction(String genesisTransaction) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
+        return getStringValueFromSelectedTableTableByFieldCode(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME,
+                genesisTransaction,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_ACTOR_ASSET_USER_PUBLIC_KEY_COLUMN_NAME,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME);
+    }
+
     public String getPublicKeyByGenesisTransaction(String genesisTransaction) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
         return getStringValueFromSelectedTableTableByFieldCode(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME,
                 genesisTransaction,

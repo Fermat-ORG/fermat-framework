@@ -3,7 +3,7 @@ package com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions;
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The Class <code>ExtraUserNotFoundException</code>
+ * The Class <code>IntraUserNotFoundException</code>
  * is thrown when we can't find an extra user
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 02/09/2015.
