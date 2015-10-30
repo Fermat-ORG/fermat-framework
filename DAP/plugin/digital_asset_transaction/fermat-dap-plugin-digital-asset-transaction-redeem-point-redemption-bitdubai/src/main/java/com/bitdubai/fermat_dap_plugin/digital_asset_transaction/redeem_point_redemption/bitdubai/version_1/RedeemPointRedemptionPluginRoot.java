@@ -85,9 +85,7 @@ public class RedeemPointRedemptionPluginRoot implements Plugin, Service, DealsWi
     //PUBLIC METHODS
     @Override
     public void start() throws CantStartPluginException {
-        System.out.println("******************************************************");
-        System.out.println("PLUGIN REDEEMPOINT REDEMPTION REGISTRADO!!");
-        System.out.println("******************************************************");
+        System.out.println("PLUGIN REDEEMPOINT REDEMPTION INICIADO!!");
 
         String context = "pluginId : " + pluginId + "\n" +
                 "ErrorManager : " + errorManager + "\n" +
