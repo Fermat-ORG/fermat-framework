@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.FermatException;
 public class CantAskIntraUserForAcceptanceException extends FermatException {
 
     private static final String DEFAULT_MESSAGE = "CAN'T ASK AN INTRA USER FOR ACCEPTANCE EXCEPTION.";
-
     public CantAskIntraUserForAcceptanceException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }

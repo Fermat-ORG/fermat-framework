@@ -3,15 +3,15 @@ package com.bitdubai.fermat_pip_addon.layer.hardware.local_device.developer.bitd
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_pip_api.layer.pip_hardware.Hardware;
 import com.bitdubai.fermat_pip_api.layer.pip_hardware.local_device.LocalDeviceHardwareManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;

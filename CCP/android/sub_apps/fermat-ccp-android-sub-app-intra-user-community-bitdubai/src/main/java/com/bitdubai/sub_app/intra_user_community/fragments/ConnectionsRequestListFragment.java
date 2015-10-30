@@ -46,7 +46,6 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserS
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.CheckBoxListItem;
 import com.bitdubai.sub_app.intra_user_community.adapters.ListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
@@ -54,6 +53,7 @@ import com.bitdubai.sub_app.intra_user_community.common.adapters.IntraUserConnec
 import com.bitdubai.sub_app.intra_user_community.common.models.IntraUserConnectionListItem;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
+import com.bitdubai.sub_app.intra_user_community.R;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -29,11 +29,10 @@ public interface DAO {
                                            String                      senderAlias,
                                            byte[]                      senderProfileImage,
                                            Actors                      destinationType        ,
-                                                                NotificationDescriptor descriptor,
+                                           NotificationDescriptor descriptor      ,
                                            long                        timestamp   ,
                                            ActorProtocolState protocolState    ,
-                                                                boolean flagReaded) throws CantCreateNotificationException;
-
+                                           boolean                     flagReaded      ) throws CantCreateNotificationException;
     public ActorNetworkServiceRecord getNotificationById(final UUID notificationId) throws CantGetNotificationException, NotificationNotFoundException;
 
     public void changeIntraUserNotificationDescriptor(final String                 senderPublicKey    ,

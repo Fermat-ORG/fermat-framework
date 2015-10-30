@@ -17,7 +17,7 @@ import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.develo
  */
 public class DeveloperBitDubai extends AbstractAddonDeveloper {
 
-    public DeveloperBitDubai() {
+    public DeveloperBitDubai () {
         super(new AddonDeveloperReference(Developers.BITDUBAI));
 
 

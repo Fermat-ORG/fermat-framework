@@ -14,34 +14,37 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantCreateNewDesignerException;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantGetUserDesignerIdentitiesException;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentityManager;
+
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantCreateNewDesignerException;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantGetUserDesignerIdentitiesException;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentityManager;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.database.IdentityDesignerDatabaseConstants;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.developerUtils.IdentityDesignerDeveloperDataBaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.estructure.IdentityDesignerDao;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.estructure.IdentityDesignerDesigner;
-import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.exceptions.CantInitializeDesignerIdentityDatabaseException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.developerUtils.IdentityDesignerDeveloperDataBaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.database.IdentityDesignerDatabaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.estructure.IdentityDesignerDesigner;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -14,7 +14,9 @@ public enum DeviceDirectory implements FermatEnum {
      */
     LOCAL_USERS   ("LUS", "localusers"             ),
     LOCAL_WALLETS ("LWA", "localwallets"           ),
-    SYSTEM("SYS", "com/bitdubai/fermat_api"),;
+    SYSTEM        ("SYS", "com/bitdubai/fermat_api"),
+
+    ;
 
     private String code;
     private String name;

@@ -1,6 +1,6 @@
 package test.com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.DeveloperBitDubai;
 
-import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.DeveloperBitDubaiOld;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.DeveloperBitDubai;
 
 import org.fest.assertions.api.Assertions;
 import org.junit.Ignore;
@@ -13,17 +13,17 @@ public class GetAddressTest {
     @Ignore
     @Test
     public void constructorTest (){
-        DeveloperBitDubaiOld developerBitDubaiOld = new DeveloperBitDubaiOld();
-        Assert.assertNotNull(developerBitDubaiOld.getPlugin());
+        DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
+        Assert.assertNotNull(developerBitDubai.getPlugin());
     }
     @Test
     public void getAddressTest_thisMethodIsCalledNoAddressSet_returnsNull() throws Exception{
 
-        DeveloperBitDubaiOld testDeveloperBitDubaiOld =new DeveloperBitDubaiOld();
-        String address= testDeveloperBitDubaiOld.getAddress();
+        DeveloperBitDubai testDeveloperBitDubai=new DeveloperBitDubai();
+        String address=testDeveloperBitDubai.getAddress();
         Assertions.assertThat(address)
                 //.isEqualTo("13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv");
                 .isNotNull();
-        Assert.assertEquals(testDeveloperBitDubaiOld.getAddress(), "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv");
+        Assert.assertEquals(testDeveloperBitDubai.getAddress(), "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv");
     }
 }

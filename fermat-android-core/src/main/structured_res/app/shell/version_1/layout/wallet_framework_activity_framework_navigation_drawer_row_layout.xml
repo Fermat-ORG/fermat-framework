@@ -32,7 +32,8 @@
         android:textColor="#DDDDDDDD"
         android:textSize="16sp"
 
-        ></com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView>
+        >
+    </com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView>
 
 
 

@@ -25,10 +25,6 @@ dependencies {
     compile project(':fermat-pip-core')
     // End  PIP Projects (Plugins)
 
-    // Init BCH Projects (Plugins)
-    //compile project(':fermat-bch-api')
-    compile project(':fermat-bch-core')
-    // End  BCH Projects (Plugins)
 
     //BCH projects
     compile project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
@@ -78,7 +74,6 @@ dependencies {
     compile project(':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai')
     compile project(':fermat-dap-plugin-digital-asset-transaction-asset-distribution-bitdubai')
     compile project(':fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai')
-    compile project(':fermat-dap-plugin-digital-asset-transaction-redeem-point-redemption-bitdubai')
     compile project(':fermat-dap-plugin-middleware-asset-factory-bitdubai')
     compile project(':fermat-dap-plugin-sub-app-module-asset-factory-bitdubai')
     compile project(':fermat-dap-plugin-sub-app-module-asset-issuer-community-bitdubai')

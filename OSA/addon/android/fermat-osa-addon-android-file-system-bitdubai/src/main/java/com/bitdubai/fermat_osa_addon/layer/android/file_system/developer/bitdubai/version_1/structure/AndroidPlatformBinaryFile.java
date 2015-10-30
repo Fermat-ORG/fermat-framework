@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure;
 
+import android.content.Context;
 import android.os.Environment;
-
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -9,7 +9,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;

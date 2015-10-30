@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer.cry_crypto_module.crypto_address_book;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.CantStartSubsystemException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.CryptoSubsystem;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.DeveloperBitDubaiOld;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Crypto Address Book Sub System
@@ -27,8 +27,8 @@ public class CryptoAddressBookSubsystem implements CryptoSubsystem {
          */
 
         try {
-            DeveloperBitDubaiOld developerBitDubaiOld = new DeveloperBitDubaiOld();
-            plugin = developerBitDubaiOld.getPlugin();
+            DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
+            plugin = developerBitDubai.getPlugin();
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException();

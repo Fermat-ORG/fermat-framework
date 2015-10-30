@@ -2,12 +2,13 @@ package com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.dev
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionService;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -51,7 +52,7 @@ public class IncomingExtraUserEventRecorderService implements DealsWithEvents, D
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
 
-    public IncomingExtraUserEventRecorderService(final EventManager eventManager, final IncomingExtraUserRegistry registry) {
+    public IncomingExtraUserEventRecorderService(final EventManager eventManager, final IncomingExtraUserRegistry registry){
         this.eventManager = eventManager;
         this.registry = registry;
     }

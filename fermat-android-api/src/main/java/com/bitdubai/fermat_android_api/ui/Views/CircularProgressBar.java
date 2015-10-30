@@ -67,7 +67,7 @@ public class CircularProgressBar extends View {
 
     public void init(AttributeSet attrs, int style) {
         TypedArray ta = getContext().obtainStyledAttributes(attrs,
-                R.styleable.RoundProgressBar, style, 0);
+                 R.styleable.RoundProgressBar, style, 0);
 
         mStrokeWidth = ta.getDimension(R.styleable.RoundProgressBar_tlcp_strokeWidth,
                 STROKE_WIDTH);
@@ -233,13 +233,11 @@ public class CircularProgressBar extends View {
         this.mText = text;
         postInvalidate();
     }
-
-    public void setProgressColor(int color) {
+    public void setProgressColor(int color){
         mProgressColor = color;
         mPaintProgress.setColor(mProgressColor);
     }
-
-    public void setProgressColor2(int color) {
+    public void setProgressColor2(int color){
         mProgressColor2 = color;
         mPaintProgress2.setColor(mProgressColor2);
     }

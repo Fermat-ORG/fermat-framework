@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure;
 
+import android.content.Context;
 import android.os.Environment;
 
 import com.bitdubai.fermat_api.FermatException;

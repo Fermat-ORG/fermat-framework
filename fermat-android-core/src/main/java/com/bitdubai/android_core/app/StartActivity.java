@@ -12,7 +12,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsDataBaseSystem;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsFileSystem;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsLocationSystem;
@@ -248,7 +247,7 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
                 databaseSystemOs = new AndroidOsDataBaseSystem(context.getFilesDir().getPath());
                 platform.setDataBaseSystemOs(databaseSystemOs);
 
-            locationSystemOs = new AndroidOsLocationSystem(context);
+           locationSystemOs = new AndroidOsLocationSystem(context);
                     platform.setLocationSystemOs(locationSystemOs);
 
 
@@ -291,8 +290,8 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
             activePlatforms = loadActivePlatforms(platformInfo);
             platformInfo.setScreenSize(getScreenSize());
             platformInfoManager.setPlatformInfo(platformInfo);
-        } catch (CantLoadPlatformInformationException |
-                CantSetPlatformInformationException e) {
+        } catch(CantLoadPlatformInformationException |
+                CantSetPlatformInformationException  e) {
             e.printStackTrace();
         }
     }

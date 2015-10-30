@@ -6,10 +6,10 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
@@ -138,10 +138,8 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
          */
         wsCommunicationsCloudClientAgent.start();
 
-        /*
-         * Start the ping agent
-         */
-        wsCommunicationsCloudClientPingAgent.start();
+
+        //wsCommunicationsCloudClientPingAgent.start();
 
     }
 
@@ -281,7 +279,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
 
         }catch (Exception e){
-            e.printStackTrace();
+
             CantRegisterComponentException pluginStartException = new CantRegisterComponentException(CantRegisterComponentException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
             throw pluginStartException;
 
@@ -348,12 +346,6 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
         try {
 
-            if(!isRegister() || !isConnected()){
-
-                CantRequestListException cantRequestListException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, null, "The communication client is no register", "Connection with server loose");
-                throw cantRequestListException;
-            }
-
             /*
              * Validate parameter
              */
@@ -387,7 +379,6 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
             String respondText = respond.getText();
             System.out.println("WsCommunicationsCloudClientConnection - Respond Text:" + respondText);
-            System.out.println("WsCommunicationsCloudClientConnection - Respond Text length:" + respondText.length());
 
             /*
              * if respond have the result list
@@ -597,7 +588,4 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     public boolean isRegister() {
         return wsCommunicationsCloudClientChannel.isRegister();
     }
-
-
-
 }

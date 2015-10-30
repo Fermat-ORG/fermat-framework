@@ -38,7 +38,6 @@ public class MockErrorManager implements ErrorManager {
     public void reportUnexpectedPluginException(Plugins exceptionSource, UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception) {
         this.reportedException = exception.toString();
     }
-
     @Override
     public void reportUnexpectedPluginException(PluginVersionReference exceptionSource, UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception) {
         this.reportedException = exception.toString();

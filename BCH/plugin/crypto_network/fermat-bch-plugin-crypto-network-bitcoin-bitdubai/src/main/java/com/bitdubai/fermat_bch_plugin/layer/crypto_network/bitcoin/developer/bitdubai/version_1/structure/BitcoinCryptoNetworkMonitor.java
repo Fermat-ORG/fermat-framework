@@ -151,7 +151,7 @@ class BitcoinCryptoNetworkMonitor implements Agent {
                  * Peer 1
                  */
                 InetSocketAddress inetSocketAddress1 = new InetSocketAddress(BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_IP, BitcoinNetworkConfiguration.BITCOIN_FULL_NODE_1_PORT);
-                PeerAddress peerAddress1 = new PeerAddress(inetSocketAddress1);
+               PeerAddress peerAddress1 = new PeerAddress(inetSocketAddress1);
                 peerGroup.addAddress(peerAddress1);
 
                 /**

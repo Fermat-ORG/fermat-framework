@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_core.layer.dap_transaction.asset_distribution.AssetDistributionSubsystem;
 import com.bitdubai.fermat_core.layer.dap_transaction.asset_issuing.AssetIssuingSubsystem;
 import com.bitdubai.fermat_core.layer.dap_transaction.asset_reception.AssetReceptionSubsystem;
-import com.bitdubai.fermat_core.layer.dap_transaction.asset_redemption.AssetRedeemPointRedemptionSubsystem;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantStartSubsystemException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.DAPTransactionSubsystem;
 
@@ -17,14 +16,12 @@ public class DAPTransactionLayer implements PlatformLayer {
     private Plugin assetIssuing;
     private Plugin assetDistribution;
     private Plugin assetReception;
-    private Plugin assetRedeemPointRedemption;
 
     @Override
     public void start() throws CantStartLayerException {
         assetIssuing =getPlugin(new AssetIssuingSubsystem());
         assetDistribution=getPlugin(new AssetDistributionSubsystem());
         assetReception=getPlugin(new AssetReceptionSubsystem());
-        assetRedeemPointRedemption=getPlugin(new AssetRedeemPointRedemptionSubsystem());
     }
 
     private Plugin getPlugin(DAPTransactionSubsystem dapTransactionSubsystem) throws CantStartLayerException {
@@ -39,5 +36,5 @@ public class DAPTransactionLayer implements PlatformLayer {
     public Plugin getAssetIssuingPlugin() {return assetIssuing;}
     public Plugin getAssetDistributionPlugin() {return assetDistribution;}
     public Plugin getAssetReceptionPlugin() {return assetReception;}
-    public Plugin getAssetRedeemPointRedemptionPlugin(){return assetRedeemPointRedemption;}
+
 }

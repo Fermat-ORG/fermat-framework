@@ -17,7 +17,7 @@ public enum EventStatus {
 
     public String getCode() { return this.code ; }
 
-    public static EventStatus getByCode(String code) throws InvalidParameterException {
+    public EventStatus getByCode(String code) throws InvalidParameterException {
         switch (code){
             case "NOTD":
                 return EventStatus.NOTIFIED;

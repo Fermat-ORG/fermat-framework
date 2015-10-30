@@ -291,7 +291,7 @@ public class AssetDistributionDao {
             throw new CantCheckAssetDistributionProgressException(exception, "Getting "+referenceColumn+" list", "Cannot load table to memory");
         } catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
-            throw new CantCheckAssetDistributionProgressException(exception, "Getting " + referenceColumn + " list", "Cannot open or find the Asset Distribution database");
+            throw new CantCheckAssetDistributionProgressException(exception, "Getting "+referenceColumn+" list", "Cannot open or find the Asset Distribution database");
         } catch(Exception exception){
             this.database.closeDatabase();
             throw new CantCheckAssetDistributionProgressException(FermatException.wrapException(exception), "Getting "+referenceColumn+" list", "Unexpected exception");

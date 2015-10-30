@@ -169,7 +169,7 @@ public class LoaderService extends Service {
             PlatformInfo platformInfo = platformInfoManager.getPlatformInfo();
             platformInfo.setScreenSize(getScreenSize());
             platformInfoManager.setPlatformInfo(platformInfo);
-        } catch (CantSetPlatformInformationException |
+        } catch(CantSetPlatformInformationException  |
                 CantLoadPlatformInformationException e) {
             e.printStackTrace();
         }

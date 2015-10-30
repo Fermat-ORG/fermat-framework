@@ -26,7 +26,7 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
     private ActorProtocolState actorProtocolState;
     private boolean flagReadead;
 
-    public ActorNetworkServiceRecord(UUID id, String actorSenderAlias, byte[] actorSenderProfileImage, NotificationDescriptor notificationDescriptor, Actors actorDestinationType, Actors actorSenderType, String actorSenderPublicKey, String actorDestinationPublicKey, long sentDate, ActorProtocolState actorProtocolState, boolean flagReadead) {
+    public ActorNetworkServiceRecord(UUID id, String actorSenderAlias, byte[] actorSenderProfileImage, NotificationDescriptor notificationDescriptor, Actors actorDestinationType, Actors actorSenderType, String actorSenderPublicKey, String actorDestinationPublicKey,long sentDate,ActorProtocolState actorProtocolState,boolean flagReadead) {
         this.id = id;
         this.actorSenderAlias = actorSenderAlias;
         this.actorSenderProfileImage = actorSenderProfileImage;
@@ -89,7 +89,7 @@ public class ActorNetworkServiceRecord implements IntraUserNotification {
         return actorProtocolState;
     }
 
-    public void changeDescriptor(NotificationDescriptor notificationDescriptor) {
+    public void changeDescriptor(NotificationDescriptor notificationDescriptor){
         this.notificationDescriptor = notificationDescriptor;
     }
 

@@ -5,8 +5,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
@@ -17,12 +18,12 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistsTransactionUUIDException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetSwap;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
@@ -95,8 +96,8 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CHECKING_HASH,genesisTransactionFromDigitalAssetMetadata);
             String digitalAssetMetadataHash=digitalAssetMetadata.getDigitalAssetHash();
             List<CryptoTransaction> cryptoTransactionList = bitcoinNetworkManager.getGenesisTransaction(genesisTransactionFromDigitalAssetMetadata);
-            if (cryptoTransactionList == null || cryptoTransactionList.isEmpty()) {
-                throw new CantGetGenesisTransactionException(CantGetGenesisTransactionException.DEFAULT_MESSAGE, null, "Getting the genesis transaction from Crypto Network", "The crypto transaction received is null");
+            if(cryptoTransactionList==null||cryptoTransactionList.isEmpty()){
+                throw new CantGetGenesisTransactionException(CantGetGenesisTransactionException.DEFAULT_MESSAGE,null,"Getting the genesis transaction from Crypto Network","The crypto transaction received is null");
             }
             //This won't work until I can get the CryptoTransaction from AssetVault
             String op_ReturnFromAssetVault=cryptoTransaction.getOp_Return();
@@ -189,7 +190,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
             genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
             System.out.println("ASSET DISTRIBUTION Delivering genesis transaction "+genesisTransaction);
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.DELIVERING, genesisTransaction);
-            System.out.println("ASSET DISTRIBUTION Sender Actor name " + this.actorAssetIssuer.getName());
+            System.out.println("ASSET DISTRIBUTION Sender Actor name "+this.actorAssetIssuer.getName());
             System.out.println("ASSET DISTRIBUTION Before deliver - remote asset user ");
             this.assetTransmissionNetworkServiceManager.sendDigitalAssetMetadata(this.actorAssetIssuer,remoteActorAssetUser,digitalAssetMetadata);
         } catch (CantExecuteQueryException exception) {

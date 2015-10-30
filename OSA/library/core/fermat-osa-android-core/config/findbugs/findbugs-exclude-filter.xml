@@ -1,4 +1,5 @@
-<?xml version="1.0"?><!--
+<?xml version="1.0"?>
+<!--
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
    this work for additional information regarding copyright ownership.
@@ -21,10 +22,10 @@
   put here to instruct Findbugs it must ignore them.
 -->
 <FindBugsFilter>
-
+    
     <!-- Don't check android -->
     <Match>
         <Package name="com.bitdubai.fermat_osa_addon.*" />
     </Match>
-
+    
 </FindBugsFilter>

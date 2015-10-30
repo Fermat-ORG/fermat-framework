@@ -6,7 +6,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterExc
 /**
  * Created by Yordin Alayn on 24.09.15.
  */
-
+ 
 public enum CryptoCurrencyType implements FermatEnum {
     BITCOIN("BTC");
 

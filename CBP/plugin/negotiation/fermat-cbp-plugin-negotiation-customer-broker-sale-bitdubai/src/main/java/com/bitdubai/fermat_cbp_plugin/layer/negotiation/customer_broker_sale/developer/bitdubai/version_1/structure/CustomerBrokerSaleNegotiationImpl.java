@@ -15,15 +15,15 @@ import java.util.Collection;
 import java.util.UUID;
 
 /**
- * Created by angel on 19/10/15.
+ *  Created by angel on 19/10/15.
  */
 
 public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNegotiation {
 
-    private final UUID negotiationId;
+    private final UUID   negotiationId;
     private final String publicKeyCustomer;
     private final String publicKeyBroker;
-    private final long startDataTime;
+    private final long   startDataTime;
     private NegotiationStatus statusNegotiation;
 
     private CustomerBrokerSaleNegotiationDao customerBrokerSaleNegotiationDao;
@@ -35,7 +35,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
             long startDataTime,
             NegotiationStatus statusNegotiation,
             CustomerBrokerSaleNegotiationDao customerBrokerSaleNegotiationDao
-    ) {
+    ){
         this.negotiationId = negotiationId;
         this.publicKeyCustomer = publicKeyCustomer;
         this.publicKeyBroker = publicKeyBroker;

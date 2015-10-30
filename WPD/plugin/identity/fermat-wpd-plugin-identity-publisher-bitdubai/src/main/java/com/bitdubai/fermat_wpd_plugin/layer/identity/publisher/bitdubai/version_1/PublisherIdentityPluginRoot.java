@@ -9,11 +9,16 @@ package com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version
 
 // Packages and classes to import of jdk 1.7
 
+import java.util.*;
+import java.util.regex.Pattern;
+
+// Packages and classes to import of fermat api.
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -25,6 +30,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -32,30 +38,22 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.interfaces.PublisherIdentity;
+import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.interfaces.PublisherIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.exceptions.CantCreateNewPublisherException;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
+
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.exceptions.CantGetUserPublisherIdentitiesException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.interfaces.PublisherIdentity;
-import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.interfaces.PublisherIdentityManager;
-import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseConstants;
-import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseFactory;
+import com.bitdubai.fermat_wpd_api.layer.wpd_identity.publisher.exceptions.CantCreateNewPublisherException;
 import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.developerUtils.PublisherIdentityDeveloperDataBaseFactory;
 import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.exceptions.CantInitializePublisherIdentityDatabaseException;
 import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.structure.PublisherIdentityDao;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.regex.Pattern;
-
-// Packages and classes to import of fermat api.
+import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseConstants;
+import com.bitdubai.fermat_wpd_plugin.layer.identity.publisher.bitdubai.version_1.database.PublisherIdentityDatabaseFactory;
 
 
 /**

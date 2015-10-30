@@ -41,7 +41,7 @@ public class AcceptIntraUserTest extends TestCase {
     */
 /**
      * DealsWithErrors interface Mocked
- *//*
+     *//*
 
     @Mock
     private ErrorManager mockErrorManager;
@@ -49,7 +49,7 @@ public class AcceptIntraUserTest extends TestCase {
     */
 /**
      * UsesFileSystem Interface member variables.
- *//*
+     *//*
 
     @Mock
     private PluginFileSystem mockPluginFileSystem;
@@ -57,7 +57,7 @@ public class AcceptIntraUserTest extends TestCase {
     */
 /**
      * DealWithActorIntraUserManager Interface member variables.
- *//*
+     *//*
 
     @Mock
     private IntraWalletUserManager mockIntraWalletUserManager;
@@ -66,7 +66,7 @@ public class AcceptIntraUserTest extends TestCase {
     */
 /**
      * DealWithIntraUserNetworkServiceManager Interface member variables.
- *//*
+     *//*
 
     @Mock
     private IntraUserManager mockIntraUserNetworkServiceManager;

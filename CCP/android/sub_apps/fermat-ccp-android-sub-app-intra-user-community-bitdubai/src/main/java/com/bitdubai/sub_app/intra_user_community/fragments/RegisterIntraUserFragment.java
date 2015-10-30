@@ -33,9 +33,10 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.sub_app.intra_user_community.R;
+
 import com.bitdubai.sub_app.intra_user_community.common.Views.RoundedDrawable;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.intra_user_community.R;
 import com.squareup.picasso.Picasso;
 
 /**

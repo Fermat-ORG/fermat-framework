@@ -245,26 +245,26 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
         switch (platformComponentType){
 
             case COMMUNICATION_CLOUD_SERVER :
-                if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().isEmpty()) {
+                if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().isEmpty()){
                     temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudServerCache().values());
                 }
                 break;
 
             case COMMUNICATION_CLOUD_CLIENT :
-                if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().isEmpty()) {
+                if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().isEmpty()){
                     temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
                 }
                 break;
 
             case NETWORK_SERVICE :
-                if (getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()) {
+                if(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()){
                     temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
                 }
                 break;
 
             //Others
             default :
-                if (getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()) {
+                if (getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()){
                     temporalList = getWsCommunicationCloudServer().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
                 }
                 break;
@@ -301,7 +301,7 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
         /*
          * Prepare the list
          */
-        List<PlatformComponentProfile> temporalList = new ArrayList<>();
+        List<PlatformComponentProfile> temporalList =  new ArrayList<>();
         List<PlatformComponentProfile>  finalFilteredList = new ArrayList<>();
 
          /*
@@ -316,13 +316,13 @@ public class DiscoveryComponentConnectionRequestPacketProcessor extends FermatPa
                 break;
 
             case COMMUNICATION_CLOUD_CLIENT :
-                if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().isEmpty()) {
+                if (!getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().isEmpty()){
                     temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredCommunicationsCloudClientCache().values());
                 }
                 break;
 
             case NETWORK_SERVICE :
-                if (getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()) {
+                if(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()) {
                     temporalList = new ArrayList<>(getWsCommunicationCloudServer().getRegisteredNetworkServicesCache().get(networkServiceType));
                 }
                 break;

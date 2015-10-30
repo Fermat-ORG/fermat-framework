@@ -46,7 +46,7 @@ public class CompleteRequestListRegisteredAssetUserActorNetworksNotificationEven
              *  ActorNetworkServiceAssetUser make the job
              */
 
-            // this.actorNetworkServiceAssetUser.handleCompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent(completeRequestListRegisteredAssetUserActorNetworksNotificationEvent.getActorAssetUserList());
+           // this.actorNetworkServiceAssetUser.handleCompleteRequestListRegisteredAssetUserActorNetworksNotificationEvent(completeRequestListRegisteredAssetUserActorNetworksNotificationEvent.getActorAssetUserList());
 
 
 

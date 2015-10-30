@@ -27,10 +27,8 @@ public enum CurrencyType implements FermatEnum {
         switch (code) {
             case "CRYP": return CurrencyType.CRYPTO_MONEY;
             case "BANK": return CurrencyType.BANK_MONEY;
-            case "CASHOH":
-                return CurrencyType.CASH_ON_HAND_MONEY;
-            case "CASHD":
-                return CurrencyType.CASH_DELIVERY_MONEY;
+            case "CASHOH": return CurrencyType.CASH_ON_HAND_MONEY;
+            case "CASHD": return CurrencyType.CASH_DELIVERY_MONEY;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");
         }
     }

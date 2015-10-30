@@ -3,22 +3,15 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
@@ -30,8 +23,6 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCryptoNetworkDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkEventsAgent;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkManager;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -45,34 +36,31 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 9/23/15.
  */
-public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
-        BitcoinNetworkManager,
-        DatabaseManagerForDevelopers,
-        DealsWithEvents,
-        DealsWithPluginDatabaseSystem {
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
-    private ErrorManager errorManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
-    private EventManager eventManager;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    public BitcoinCryptoNetworkPluginRoot() {
-        super(new PluginVersionReference(new Version()));
-    }
-
+public class BitcoinCryptoNetworkPluginRoot implements BitcoinNetworkManager, DatabaseManagerForDevelopers, DealsWithEvents, DealsWithPluginDatabaseSystem, Plugin, Service {
     /**
      * BitcoinNetworkManager variable
      */
     BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
 
+    /**
+     * DealsWithEvents interface variable and implementation
+     */
+    EventManager eventManager;
     @Override
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
     }
+
+    /**
+     * Plugin interface variable and implementation
+     * @param pluginId
+     */
+    UUID pluginId;
+    @Override
+    public void setId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
+
 
     /**
      * DatabaseManagerForDevelopers interface implementations
@@ -101,10 +89,19 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
         return bitcoinCryptoNetworkDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
+    /**
+     * DealsWithPluginDatabaseSystem interface variable and implementation
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
+
+    /**
+     *Service interface variable and implementation
+     */
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     @Override
     public void start() throws CantStartPluginException {
@@ -127,6 +124,38 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
          * nothing left to do.
          */
         this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    /**
+     * pauses the plugin
+     */
+    @Override
+    public void pause() {
+
+        this.serviceStatus = ServiceStatus.PAUSED;
+    }
+
+    /**
+     * resumes the plugin
+     */
+    @Override
+    public void resume() {
+
+        this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    /**
+     * stops the plugin
+     */
+    @Override
+    public void stop() {
+        this.serviceStatus = ServiceStatus.STOPPED;
+
+    }
+
+    @Override
+    public ServiceStatus getStatus() {
+        return this.serviceStatus;
     }
 
     /**

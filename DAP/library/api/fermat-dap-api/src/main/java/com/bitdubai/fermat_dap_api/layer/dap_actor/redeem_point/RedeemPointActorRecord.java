@@ -4,7 +4,6 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Address;
 
@@ -15,7 +14,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
     private String name;
     private String publicKey;
-    private byte[] profileImage;
+    private byte[] profileImage ;
     private long registrationDate;
     private ConnectionState connectionState;
     private CryptoAddress cryptoAddress;
@@ -34,7 +33,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
     }
 
-    public RedeemPointActorRecord(String name, String publicKey, byte[] profileImage, long registrationDate, ConnectionState contactState) {
+    public RedeemPointActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, ConnectionState contactState){
         this.name = name;
         this.publicKey = publicKey;
         this.profileImage = profileImage.clone();
@@ -86,7 +85,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
      */
     @Override
     public String getName() {
-        return Validate.verifyString(this.name);
+        return this.name;
     }
 
     /**
@@ -112,6 +111,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
 
     /**
+     *
      * {@inheritDoc}
      */
     @Override
@@ -120,6 +120,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     }
 
     /**
+     *
      * {@inheritDoc}
      */
     @Override
@@ -147,6 +148,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     }
 
     /**
+     *
      * {@inheritDoc}
      */
     @Override
@@ -155,19 +157,21 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     }
 
     /**
+     *
      * {@inheritDoc}
      */
     @Override
     public String getContactInformation() {
-        return Validate.verifyString(contactInformation);
+        return contactInformation;
     }
 
     /**
+     *
      * {@inheritDoc}
      */
     @Override
     public String getHoursOfOperation() {
-        return Validate.verifyString(hoursOfOperation);
+        return hoursOfOperation;
     }
 
     public void setName(String name) {

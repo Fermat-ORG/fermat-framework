@@ -19,7 +19,7 @@ public class AssetUserCommunitySupAppModuleManager {
     }
 
     public List<ActorAssetUser> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
-        return actorAssetUserManager.getAllAssetUserActorInTableRegistered();
+            return actorAssetUserManager.getAllAssetUserActorInTableRegistered();
     }
 
 }

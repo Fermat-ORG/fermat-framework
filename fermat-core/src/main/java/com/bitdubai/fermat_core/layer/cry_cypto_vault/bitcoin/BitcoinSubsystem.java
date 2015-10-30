@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer.cry_cypto_vault.bitcoin;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CantStartSubsystemException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultSubsystem;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.DeveloperBitDubaiOld;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by loui on 08/06/15.
@@ -33,8 +33,8 @@ public class BitcoinSubsystem implements CryptoVaultSubsystem {
          */
 
         try {
-            DeveloperBitDubaiOld developerBitDubaiOld = new DeveloperBitDubaiOld();
-            plugin = developerBitDubaiOld.getPlugin();
+            DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
+            plugin = developerBitDubai.getPlugin();
         }
         catch (Exception e)
         {

@@ -34,7 +34,7 @@ public class LogicTest {
 
         PluginReference basicWallet = buildPR(CCPPlugins.BITCOIN_WALLET_BASIC_WALLET);
         PluginReference cryptoWallet = buildPR(CCPPlugins.CRYPTO_WALLET_MODULE);
-        PluginReference intraActor = buildPR(CCPPlugins.INTRA_WALLET_USER_ACTOR);
+        PluginReference intraActor  = buildPR(CCPPlugins.INTRA_WALLET_USER_ACTOR);
         PluginReference intraIdentity = buildPR(CCPPlugins.INTRA_WALLET_USER_IDENTITY);
 
         List<PluginReference> basicWalletRefs = buildRL(
@@ -87,7 +87,7 @@ public class LogicTest {
         pluginReferenceListMap = new HashMap<>();
         PluginReference basicWallet = buildPR(CCPPlugins.BITCOIN_WALLET_BASIC_WALLET);
         PluginReference cryptoWallet = buildPR(CCPPlugins.CRYPTO_WALLET_MODULE);
-        PluginReference intraActor = buildPR(CCPPlugins.INTRA_WALLET_USER_ACTOR);
+        PluginReference intraActor  = buildPR(CCPPlugins.INTRA_WALLET_USER_ACTOR);
         PluginReference intraIdentity = buildPR(CCPPlugins.INTRA_WALLET_USER_IDENTITY);
 
         List<PluginReference> basicWalletRefs = buildRL(

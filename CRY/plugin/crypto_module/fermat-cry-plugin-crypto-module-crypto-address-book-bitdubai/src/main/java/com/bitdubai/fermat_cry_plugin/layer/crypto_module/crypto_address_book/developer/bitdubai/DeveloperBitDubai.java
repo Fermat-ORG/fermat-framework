@@ -1,36 +1,38 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
+import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.CryptoAddressBookCryptoModulePluginRoot;
 
 /**
- * Created by Leon Acosta (laion.cj91@gmail.com) on 30/10/2015.
+ * Developer BitDubai.
+ *
+ * Created by Leon Acosta (laion.cj91@gmail.com on 02/09/2015.
  */
-public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
+public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
 
-    public DeveloperBitDubai() {
-        super(new PluginDeveloperReference(Developers.BITDUBAI));
-    }
+    Plugin plugin;
+
 
     @Override
-    public void start() throws CantStartPluginDeveloperException {
-        try {
-
-            this.registerVersion(new CryptoAddressBookCryptoModulePluginRoot());
-
-        } catch (CantRegisterVersionException e) {
-
-            throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
-        }
+    public Plugin getPlugin() {
+        return plugin;
     }
 
+
+    public DeveloperBitDubai() {
+
+        /**
+         * I will choose from the different versions of my implementations which one to start. Now there is only one, so
+         * it is easy to choose.
+         */
+
+        plugin = new CryptoAddressBookCryptoModulePluginRoot();
+
+    }
 
     @Override
     public int getAmountToPay() {
@@ -44,12 +46,11 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
 
     @Override
     public String getAddress() {
-        return "19qRypu7wrndwW4FRCxU1JPr5hvMmcQ3eh";
+        return "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv";
     }
 
     @Override
     public TimeFrequency getTimePeriod() {
         return TimeFrequency.MONTHLY;
     }
-
 }

@@ -29,7 +29,7 @@ import java.util.UUID;
 /**
  * Created by natalia on 29/07/15.
  */
-public class PlatformInfoPlatformServicePluginRootOld implements Addon, DealsWithErrors, DealsWithPlatformFileSystem, LogManagerForDevelopers, PlatformInfoManager, Service, Serializable {
+public class PlatformInfoPlatformServicePluginRootOld implements Addon, DealsWithErrors, DealsWithPlatformFileSystem, LogManagerForDevelopers,PlatformInfoManager,Service,Serializable {
     PlatformInfoPlatformService platformInfoPlatformService;
 
     /**
@@ -67,6 +67,7 @@ public class PlatformInfoPlatformServicePluginRootOld implements Addon, DealsWit
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
     }
+
 
 
     public void start() throws CantStartPluginException {
@@ -110,7 +111,6 @@ public class PlatformInfoPlatformServicePluginRootOld implements Addon, DealsWit
 
     /**
      * persist the changes sent
-     *
      * @param platformInfo
      * @throws CantLoadPlatformInformationException
      */
@@ -119,7 +119,7 @@ public class PlatformInfoPlatformServicePluginRootOld implements Addon, DealsWit
         if (platformInfoPlatformService == null) {
             platformInfoPlatformService = new PlatformInfoPlatformService(platformFileSystem);
         }
-        platformInfoPlatformService.setPlatformInfo(platformInfo);
+         platformInfoPlatformService.setPlatformInfo(platformInfo);
     }
 
 
@@ -132,7 +132,7 @@ public class PlatformInfoPlatformServicePluginRootOld implements Addon, DealsWit
         List<String> returnedClasses = new ArrayList<String>();
         returnedClasses.add("com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.PlatformInfoPlatformServicePluginRootOld");
         returnedClasses.add("com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.structure.PlatformInfoPlatformService");
-        /**
+           /**
          * I return the values.
          */
         return returnedClasses;

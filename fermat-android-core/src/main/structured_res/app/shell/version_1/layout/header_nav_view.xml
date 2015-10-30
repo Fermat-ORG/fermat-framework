@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="180dp"
-    android:background="#77000000">
+    android:background="#77000000"
+    >
+
 
 
     <ImageView
@@ -11,7 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:scaleType="centerCrop"
-        android:src="@drawable/tessa_profile_picture" />
+        android:src="@drawable/tessa_profile_picture"
+        />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -35,7 +38,8 @@
             android:paddingTop="14dip"
             android:text="Tessa Crankston"
             android:textColor="#DDDDDDDD"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            />
 
 
     </FrameLayout>
@@ -46,7 +50,7 @@
         android:id="@+id/imageView_intra_users"
         android:src="@drawable/ic_action_search"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"/>
 
 
 </RelativeLayout>

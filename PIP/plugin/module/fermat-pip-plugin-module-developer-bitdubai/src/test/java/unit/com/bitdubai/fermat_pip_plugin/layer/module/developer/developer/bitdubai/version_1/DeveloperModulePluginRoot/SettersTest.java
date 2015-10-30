@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by Nerio on 18/07/15.

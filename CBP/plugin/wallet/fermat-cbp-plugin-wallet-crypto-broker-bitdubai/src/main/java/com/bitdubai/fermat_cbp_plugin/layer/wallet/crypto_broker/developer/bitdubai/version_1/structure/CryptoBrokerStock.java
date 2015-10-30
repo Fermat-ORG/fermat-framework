@@ -5,6 +5,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.wallet.Stock;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockTransaction;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseDao;
 
+import java.util.UUID;
+
 /**
  * Created by jorge on 26-10-2015.
  */
@@ -13,7 +15,7 @@ public class CryptoBrokerStock implements Stock {
     private final FermatEnum stockType;
     private final CryptoBrokerWalletDatabaseDao databaseDao;
 
-    public CryptoBrokerStock(final FermatEnum stockType, final CryptoBrokerWalletDatabaseDao databaseDao) {
+    public CryptoBrokerStock(final FermatEnum stockType, final CryptoBrokerWalletDatabaseDao databaseDao){
         this.stockType = stockType;
         this.databaseDao = databaseDao;
     }
@@ -37,7 +39,7 @@ public class CryptoBrokerStock implements Stock {
 
     @Override
     public void addCrebit(StockTransaction transaction) {
-        //aqui se crea un record a partir de la stock transaction y se le envia al DAO
+    //aqui se crea un record a partir de la stock transaction y se le envia al DAO
     }
 
     /*

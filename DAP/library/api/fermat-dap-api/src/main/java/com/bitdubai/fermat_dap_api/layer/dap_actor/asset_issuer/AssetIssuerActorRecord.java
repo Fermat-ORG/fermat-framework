@@ -3,7 +3,6 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 
 /**
@@ -14,7 +13,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     private String name;
     private String description;
     private String publicKey;
-    private byte[] profileImage;
+    private byte[] profileImage ;
     private long registrationDate;
     private ConnectionState connectionState;
     private Location location;
@@ -113,10 +112,11 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
     /**
      * {@inheritDoc}
+     *
      */
     @Override
     public String getDescription() {
-        return Validate.verifyString(description);
+        return description;
     }
 
     @Override

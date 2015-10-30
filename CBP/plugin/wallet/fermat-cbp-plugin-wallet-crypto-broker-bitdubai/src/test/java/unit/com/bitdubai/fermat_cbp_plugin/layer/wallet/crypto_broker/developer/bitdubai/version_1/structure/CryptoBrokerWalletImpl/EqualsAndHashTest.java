@@ -47,7 +47,7 @@ public class EqualsAndHashTest {
     private CryptoBrokerStockTransactionRecord testIdentity1, testIdentity2;
 
     @Before
-    public void setUpWallet() {
+    public void setUpWallet(){
         testkeyPairWallet = AsymmetricCryptography.createKeyPair(TEST_PRIVATE_KEY);
         testkeyPairBroker = AsymmetricCryptography.createKeyPair(TEST_PRIVATE_KEY);
         testkeyPairCustomer = AsymmetricCryptography.createKeyPair(TEST_PRIVATE_KEY);
@@ -68,7 +68,7 @@ public class EqualsAndHashTest {
     }
 
     @Test
-    public void Equals_SameValues_True() {
+    public void Equals_SameValues_True(){
         testIdentity2 = new CryptoBrokerStockTransactionRecordImpl(
                 transactionId,
                 testkeyPairWallet,
@@ -88,7 +88,7 @@ public class EqualsAndHashTest {
     }
 
     @Test
-    public void Equals_DifferentKeyPairWallet_False() {
+    public void Equals_DifferentKeyPairWallet_False(){
         testIdentity2 = new CryptoBrokerStockTransactionRecordImpl(
                 transactionId,
                 AsymmetricCryptography.generateECCKeyPair(),
@@ -108,7 +108,7 @@ public class EqualsAndHashTest {
     }
 
     @Test
-    public void Equals_DifferentKeyPairBroker_False() {
+    public void Equals_DifferentKeyPairBroker_False(){
         testIdentity2 = new CryptoBrokerStockTransactionRecordImpl(
                 transactionId,
                 testkeyPairWallet,

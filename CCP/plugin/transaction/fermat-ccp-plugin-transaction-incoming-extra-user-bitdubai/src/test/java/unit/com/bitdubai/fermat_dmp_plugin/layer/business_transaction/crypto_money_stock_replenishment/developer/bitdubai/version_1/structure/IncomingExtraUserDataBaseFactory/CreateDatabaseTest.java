@@ -15,10 +15,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.fest.assertions.api.Assertions.*;
 
 /**
  * Created by jorgegonzalez on 2015.07.08..

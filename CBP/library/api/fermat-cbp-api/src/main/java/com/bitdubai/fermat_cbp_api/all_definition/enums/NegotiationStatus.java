@@ -6,7 +6,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterExc
 /**
  * Created by angel on 18/9/15.
  */
-
+ 
 public enum NegotiationStatus implements FermatEnum {
     WAITING_FOR_BROKER("WFB"),
     WAITING_FOR_CUSTOMER("WFC"),
@@ -28,14 +28,10 @@ public enum NegotiationStatus implements FermatEnum {
 
     public static NegotiationStatus getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "WFB":
-                return NegotiationStatus.WAITING_FOR_BROKER;
-            case "WFC":
-                return NegotiationStatus.WAITING_FOR_CUSTOMER;
-            case "STB":
-                return NegotiationStatus.SENT_TO_BROKER;
-            case "STC":
-                return NegotiationStatus.SENT_TO_CUSTOMER;
+            case "WFB": return NegotiationStatus.WAITING_FOR_BROKER;
+            case "WFC": return NegotiationStatus.WAITING_FOR_CUSTOMER;
+            case "STB": return NegotiationStatus.SENT_TO_BROKER;
+            case "STC": return NegotiationStatus.SENT_TO_CUSTOMER;
             case "CLO": return NegotiationStatus.CLOSED;
             case "CAN": return NegotiationStatus.CANCELLED;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");

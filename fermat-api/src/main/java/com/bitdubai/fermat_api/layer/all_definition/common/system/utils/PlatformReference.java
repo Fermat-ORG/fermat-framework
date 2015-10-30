@@ -12,22 +12,22 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 public class PlatformReference {
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
-    private static final int HASH_PRIME_NUMBER_ADD = 2819;
+    private static final int HASH_PRIME_NUMBER_ADD     = 2819;
 
     private final OperativeSystems operativeSystem;
-    private final Platforms platform;
+    private final Platforms        platform       ;
 
     public PlatformReference(final Platforms platform) {
 
         this.operativeSystem = OperativeSystems.INDIFFERENT;
-        this.platform = platform;
+        this.platform        = platform;
     }
 
     public PlatformReference(final OperativeSystems operativeSystem,
-                             final Platforms platform) {
+                             final Platforms        platform       ) {
 
         this.operativeSystem = operativeSystem;
-        this.platform = platform;
+        this.platform        = platform       ;
     }
 
     public final Platforms getPlatform() {

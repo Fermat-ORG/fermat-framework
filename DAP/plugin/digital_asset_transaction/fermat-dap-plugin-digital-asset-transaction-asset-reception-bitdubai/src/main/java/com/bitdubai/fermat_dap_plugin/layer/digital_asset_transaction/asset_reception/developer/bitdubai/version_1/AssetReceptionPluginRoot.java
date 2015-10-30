@@ -297,23 +297,23 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
 
     @Override
     public void setAssetTransmissionNetworkServiceManager(AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager) {
-        this.assetTransmissionNetworkServiceManager = assetTransmissionNetworkServiceManager;
+        this.assetTransmissionNetworkServiceManager=assetTransmissionNetworkServiceManager;
     }
 
     @Override
     public void setAssetUserManager(AssetUserWalletManager assetUserWalletManager) {
-        this.assetUserWalletManager = assetUserWalletManager;
+        this.assetUserWalletManager=assetUserWalletManager;
     }
 
-    public static LogLevel getLogLevelByClass(String className) {
-        try {
+    public static LogLevel getLogLevelByClass(String className){
+        try{
             /**
              * sometimes the classname may be passed dinamically with an $moretext
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
             return AssetReceptionPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e) {
+        } catch (Exception e){
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
              */
@@ -323,7 +323,7 @@ public class AssetReceptionPluginRoot implements AssetReceptionManager, DealsWit
 
     @Override
     public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
-        this.actorAssetUserManager = actorAssetUserManager;
+        this.actorAssetUserManager=actorAssetUserManager;
     }
 
     @Override

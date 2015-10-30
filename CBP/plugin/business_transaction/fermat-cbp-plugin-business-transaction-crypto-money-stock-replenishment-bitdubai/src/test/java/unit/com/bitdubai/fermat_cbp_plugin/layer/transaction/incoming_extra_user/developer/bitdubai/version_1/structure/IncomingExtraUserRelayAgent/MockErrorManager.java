@@ -33,7 +33,6 @@ public class MockErrorManager implements ErrorManager {
     public void reportUnexpectedPlatformException(PlatformComponents exceptionSource, UnexpectedPlatformExceptionSeverity unexpectedPlatformExceptionSeverity, Exception exception) {
         this.reportedException = exception.toString();
     }
-
     @Override
     public void reportUnexpectedPluginException(PluginVersionReference exceptionSource, UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception) {
         this.reportedException = exception.toString();

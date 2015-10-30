@@ -1,13 +1,14 @@
 package com.bitdubai.fermat_wpd_plugin.layer.desktop_module.wallet_manager.developer.bitdubai.version_1.event_handlers;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.dmp_module.ModuleNotRunningException;
+import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantCreateDefaultWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.DeviceUserCreatedEvent;
 
 /**

@@ -378,21 +378,11 @@
                 <package>com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure</package>
                 <package>com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer</package>
                 <package>com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer.bitdubai.version_1</package>
-                <package>
-                    com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai
-                </package>
-                <package>
-                    com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1
-                </package>
-                <package>
-                    com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1.exception
-                </package>
-                <package>
-                    com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1.interfaces
-                </package>
-                <package>
-                    com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1.structure
-                </package>
+                <package>com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai</package>
+                <package>com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1</package>
+                <package>com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1.exception</package>
+                <package>com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1.interfaces</package>
+                <package>com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.version_1.structure</package>
                 <package>com.bitdubai.fremat_ccp_plugin.layer._16_transaction.incoming_device_user.developer.bitdubai</package>
                 <package>com.bitdubai.fremat_ccp_plugin.layer._16_transaction.incoming_device_user.developer.bitdubai.version_1</package>
                 <package>com.bitdubai.fremat_ccp_plugin.layer._16_transaction.incoming_device_user.developer.bitdubai.version_1.Event_handlers</package>

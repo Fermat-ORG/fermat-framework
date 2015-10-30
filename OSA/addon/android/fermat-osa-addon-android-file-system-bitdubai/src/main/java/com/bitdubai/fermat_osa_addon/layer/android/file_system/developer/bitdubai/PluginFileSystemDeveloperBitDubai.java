@@ -10,9 +10,9 @@ import com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitduba
 /**
  * The class <code>com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.PluginFileSystemDeveloperBitDubai</code>
  * Haves the logic of instantiation of all versions of Plugin File System Android Addon.
- * <p/>
+ *
  * Here we can choose between the different versions of the Plugin File System Addon.
- * <p/>
+ *
  * Created by lnacosta (laion.cj91@gmail.com) on 27/10/2015.
  */
 public class PluginFileSystemDeveloperBitDubai extends AbstractAddonDeveloper {

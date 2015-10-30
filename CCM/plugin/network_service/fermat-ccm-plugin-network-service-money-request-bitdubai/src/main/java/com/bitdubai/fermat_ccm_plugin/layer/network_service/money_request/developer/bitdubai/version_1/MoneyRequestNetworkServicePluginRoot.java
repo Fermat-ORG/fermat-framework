@@ -7,15 +7,13 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.enums.CryptoRequestState;
 import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.exceptions.CantDeleteFromPendingCryptoRequestsException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.exceptions.CantGetPendingCryptoRequestsException;
@@ -24,18 +22,21 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.exception
 import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.exceptions.CantSendMoneyRequestException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.interfaces.CryptoRequest;
 import com.bitdubai.fermat_api.layer.dmp_network_service.money_request.interfaces.MoneyRequestNetworkServiceManager;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyRequestReceivedEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingMoneyRequestApprovedEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingMoneyRequestDeliveredEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingMoneyRequestRejectedEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,11 +71,6 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
      * Plugin interface menber varuiables. 
      */
     UUID pluginId;
-
-    /**
-     * Represent the register
-     */
-    private boolean register;
 
 
     /**
@@ -241,15 +237,6 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
-    }
-
-    /**
-     * Get is Register
-     * @return boolean
-     */
-    @Override
-    public boolean isRegister() {
-        return register;
     }
 
     /*

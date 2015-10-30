@@ -29,14 +29,14 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterExc
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.CryptoBrokerWalletPluginRoot;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerWalletDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetBalanceRecordException;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantExecuteCryptoBrokerTransactionException;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetCryptoBrokerWalletPrivateKeyException;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantListCryptoBrokerWalletTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantAddCreditException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantAddDebitException;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantExecuteCryptoBrokerTransactionException;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetBalanceRecordException;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetCryptoBrokerWalletPrivateKeyException;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerWalletDatabaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantListCryptoBrokerWalletTransactionException;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 
 import java.util.ArrayList;
@@ -106,7 +106,7 @@ public class CryptoBrokerWalletDatabaseDao {
     }
 
     /*LIST TRANSACTION*/
-    public List<CryptoBrokerStockTransactionRecord> getTransactionsList(DeviceUser deviceUser) throws CantListCryptoBrokerWalletTransactionException {
+    public List<CryptoBrokerStockTransactionRecord> getTransactionsList (DeviceUser deviceUser) throws CantListCryptoBrokerWalletTransactionException {
         List<CryptoBrokerStockTransactionRecord> list = new ArrayList<CryptoBrokerStockTransactionRecord>();
         DatabaseTable cryptoBrokerTable;
         try {
@@ -131,7 +131,7 @@ public class CryptoBrokerWalletDatabaseDao {
     }
 
     /*ADD CREDIT*/
-    public void addDebit(final CryptoBrokerStockTransactionRecord cryptoBrokerTransactionRecord, final BalanceType balanceType, final String privateKeyWallet) throws CantAddDebitException {
+    public void addDebit(final CryptoBrokerStockTransactionRecord cryptoBrokerTransactionRecord, final BalanceType balanceType, final String privateKeyWallet) throws CantAddDebitException{
         try {
             if (isTransactionInTable(cryptoBrokerTransactionRecord.getTransactionId(), TransactionType.DEBIT, balanceType))
                 throw new CantAddDebitException(CantAddDebitException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
@@ -144,7 +144,7 @@ public class CryptoBrokerWalletDatabaseDao {
     }
 
     /*ADD DEBIT*/
-    public void addCredit(final CryptoBrokerStockTransactionRecord cryptoBrokerTransactionRecord, final BalanceType balanceType, final String privateKeyWallet) throws CantAddCreditException {
+    public void addCredit(final CryptoBrokerStockTransactionRecord cryptoBrokerTransactionRecord, final BalanceType balanceType, final String privateKeyWallet) throws CantAddCreditException{
         try {
             if (isTransactionInTable(cryptoBrokerTransactionRecord.getTransactionId(), TransactionType.CREDIT, balanceType))
                 throw new CantAddCreditException(CantAddCreditException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
@@ -238,7 +238,7 @@ public class CryptoBrokerWalletDatabaseDao {
             DatabaseTable totalBalancesTable = this.database.getTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TOTAL_BALANCES_TABLE_NAME);
             DatabaseTableRecord totalBalancesRecord = totalBalancesTable.getEmptyRecord();
 
-            totalBalancesTable.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TOTAL_BALANCES_TABLE_NAME, cryptoBrokerTransactionRecord.getWalletPublicKey(), DatabaseFilterType.EQUAL);
+            totalBalancesTable.setStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TOTAL_BALANCES_TABLE_NAME, cryptoBrokerTransactionRecord.getWalletPublicKey(), DatabaseFilterType.EQUAL );
             totalBalancesTable.loadToMemory();
             String description = "TRANSACTION: " +transactionType.getCode()+ ". BALANCE " + balanceType.getCode();
             loadtotalBalancesRecordAsNew(totalBalancesRecord, cryptoBrokerTransactionRecord, description);
@@ -288,7 +288,7 @@ public class CryptoBrokerWalletDatabaseDao {
         databaseTableRecord.setFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TOTAL_BALANCES_AVAILABLE_BALANCE_COLUMN_NAME, cryptoBrokerTransactionRecord.getRunningAvailableBalance());
     }
 
-    private CryptoBrokerStockTransactionRecord getCryptoBrokerFromRecord(final DatabaseTableRecord record) throws CantGetCryptoBrokerWalletPrivateKeyException, InvalidParameterException {
+    private CryptoBrokerStockTransactionRecord getCryptoBrokerFromRecord(final DatabaseTableRecord record) throws CantGetCryptoBrokerWalletPrivateKeyException, InvalidParameterException{
         UUID  transactionId                 = record.getUUIDValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TRANSACTION_ID_COLUMN_NAME);
         String publickeyWalle               = getCryptoBrokerPrivateKeyWallet(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_WALLET_COLUMN_NAME));
         String publickeyBroker              = getCryptoBrokerPrivateKeyBroker(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_BROKER_COLUMN_NAME));

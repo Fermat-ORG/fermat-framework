@@ -13,14 +13,15 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.sub_app.intra_user_identity.common.adapters.IntraUserIdentityInfoAdapter;
+
 import com.bitdubai.sub_app.intra_user_identity.common.model.IntraUserIdentityInformationImp;
 import com.bitdubai.sub_app.intra_user_identity.common.views.DividerItemDecoration;
+
 import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
 import com.bitdubai.sub_app.intra_user_identity.util.CommonLogger;
 import com.melnykov.fab.FloatingActionButton;
@@ -62,41 +63,20 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalle
     protected void initViews(View layout) {
         super.initViews(layout);
 
-         try {
+        FloatingActionButton newIdentityButton = (FloatingActionButton) layout.findViewById(R.id.new_crypto_broker_identity_float_action_button);
+        newIdentityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
+            }
+        });
 
-             FloatingActionButton newIdentityButton = (FloatingActionButton) layout.findViewById(R.id.new_crypto_broker_identity_float_action_button);
-             newIdentityButton.setOnClickListener(new View.OnClickListener() {
-                 @Override
-                 public void onClick(View view) {
-                     changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
-                 }
-             });
-
-             if (getActivity().getActionBar() != null) {
-                 getActivity().getActionBar().setDisplayShowHomeEnabled(false);
-             }
-
-             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
-             recyclerView.addItemDecoration(itemDecoration);
-
-             //TODO: para la primer version limitamos la cantidad de identidades a una sola
-             if(moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser().size() > 0)
-                 newIdentityButton.setVisibility(View.INVISIBLE);
-             else
-                 newIdentityButton.setVisibility(View.VISIBLE);
-         }
-        catch (CantListIntraWalletUsersException e)
-        {
-            Toast.makeText(getActivity().getApplicationContext(), "Can't Get Intra User List", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
-        catch (Exception e)
-        {
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
+        if (getActivity().getActionBar() != null) {
+            getActivity().getActionBar().setDisplayShowHomeEnabled(false);
         }
 
-
+        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
+        recyclerView.addItemDecoration(itemDecoration);
     }
 
     @Override

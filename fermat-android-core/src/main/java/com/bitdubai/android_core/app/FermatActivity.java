@@ -3,9 +3,11 @@ package com.bitdubai.android_core.app;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -24,6 +26,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
@@ -34,6 +37,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
@@ -559,7 +563,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 }
 
                 //if (navigationDrawerFragment == null)
-                //navigationDrawerFragment = (navigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+                    //navigationDrawerFragment = (navigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
 //                navigationDrawerFragment = NavigationDrawerFragment.newInstance(this);
 //
@@ -653,7 +657,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 /**
                  * Paint layout without navigationDrawer
                  */
-            } else {
+            }else {
                 if (ActivityType.ACTIVITY_TYPE_SUB_APP == activityType) {
                     setCurrentViewById(R.layout.runtime_app_activity_runtime);
                 } else if (ActivityType.ACTIVITY_TYPE_WALLET == activityType) {
@@ -661,19 +665,19 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 }
 
             }
-        } catch (Exception e) {
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, e);
+        }catch (Exception e){
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY,UnexpectedUIExceptionSeverity.CRASH,e);
         }
     }
 
-    public void setCurrentViewById(int id) {
-        if (getCurrentViewById() != id) {
+    public void setCurrentViewById(int id){
+        if(getCurrentViewById() != id) {
             setContentView(id);
             currentViewId = id;
         }
     }
 
-    public int getCurrentViewById() {
+    public int getCurrentViewById(){
         return currentViewId;
     }
 

@@ -6,8 +6,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterExc
 /**
  * Created by Yordin Alayn on 23.09.15.
  */
-
-public enum BusinessTransactionType implements FermatEnum {
+ 
+public enum BusinessTransactionType  implements FermatEnum {
     STOCK("STO"),
     SALE("SAL"),
     PURCHASE("PUR");

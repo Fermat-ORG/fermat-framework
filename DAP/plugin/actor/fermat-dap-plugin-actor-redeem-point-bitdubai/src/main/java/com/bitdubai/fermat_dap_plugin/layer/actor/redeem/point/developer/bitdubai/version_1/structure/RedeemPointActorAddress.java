@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Address;
 
 /**
@@ -26,7 +25,7 @@ public class RedeemPointActorAddress implements Address {
      */
     @Override
     public String getCountryName() {
-        return Validate.verifyString(countryName);
+        return verifyString(countryName);
     }
 
     /**
@@ -34,12 +33,12 @@ public class RedeemPointActorAddress implements Address {
      */
     @Override
     public String getProvinceName() {
-        return Validate.verifyString(provinceName);
+        return verifyString(provinceName);
     }
 
     @Override
     public String getCityName() {
-        return Validate.verifyString(cityName);
+        return verifyString(cityName);
     }
 
     /**
@@ -47,7 +46,7 @@ public class RedeemPointActorAddress implements Address {
      */
     @Override
     public String getStreetName() {
-        return Validate.verifyString(streetName);
+        return verifyString(streetName);
     }
 
     /**
@@ -55,7 +54,7 @@ public class RedeemPointActorAddress implements Address {
      */
     @Override
     public String getPostalCode() {
-        return Validate.verifyString(postalCode);
+        return verifyString(postalCode);
     }
 
     /**
@@ -63,7 +62,15 @@ public class RedeemPointActorAddress implements Address {
      */
     @Override
     public String getHouseNumber() {
-        return Validate.verifyString(houseNumber);
+        return verifyString(houseNumber);
+    }
+
+    private String verifyString(String string) {
+        if (string == null) {
+            return "unknown";
+        } else {
+            return string;
+        }
     }
 
     public void setCountryName(String countryName) {

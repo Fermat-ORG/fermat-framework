@@ -7,9 +7,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorMan
 /**
  * The class <code>com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer.bitdubai.version_1.structure.EventManagerPlatformServiceEventMonitor</code> is the responsible
  * to manage all the exceptions of the events in fermat platform.
- * <p/>
+ *
  * The event monitor is called when an Event Handler cant handle an Exception.
- * <p/>
+ *
  * Created by lnacosta (laion.cj91@gmail.com) on 26/10/2015.
  */
 
@@ -22,8 +22,8 @@ public class EventManagerPlatformServiceEventMonitor implements FermatEventMonit
         this.errorManager = errorManager;
     }
 
-    public void handleEventException(final Exception exception,
-                                     final FermatEvent fermatEvent) {
+    public void handleEventException (final Exception   exception  ,
+                                      final FermatEvent fermatEvent){
 
         // TODO here you can add an specific logic to manage the exceptions in events.
 

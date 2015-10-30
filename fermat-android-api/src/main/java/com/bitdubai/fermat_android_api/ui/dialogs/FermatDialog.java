@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.widget.Toast;
-
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;

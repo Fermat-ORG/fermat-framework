@@ -83,7 +83,7 @@ public enum EventType implements FermatEventEnum {
      * @throws InvalidParameterException error with is no a valid code
      */
     public static EventType getByCode(String code) throws InvalidParameterException {
-        for (EventType eventType : values()) {
+        for (EventType eventType : EventType.values()) {
             if (eventType.code.equals(code)) {
                 return eventType;
             }

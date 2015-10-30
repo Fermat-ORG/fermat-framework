@@ -4,8 +4,9 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetFeatureForDevelopersException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FeatureForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -15,10 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
@@ -32,7 +30,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraUserException;
@@ -79,11 +76,14 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
 
 /**
  * This plugin manages connections between users of the platform..
@@ -104,39 +104,85 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
         DealsWithPluginFileSystem,
         DealsWithIntraUsersNetworkService,
         IntraWalletUserManager,
-        LogManagerForDevelopers {
-
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private EventManager eventManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.LOG_MANAGER)
-    private LogManager logManager;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID, addon = Addons.PLUGIN_DATABASE_SYSTEM)
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID, addon = Addons.PLUGIN_FILE_SYSTEM)
-    private PluginFileSystem pluginFileSystem;
-
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.INTRA_WALLET_USER)
-    private IntraUserManager intraUserNetworkServiceManager;
-
-
-    private final List<FermatEventListener> listenersAdded = new ArrayList<>();
-
+        LogManagerForDevelopers
+{
     private IntraWalletUserActorDao intraWalletUserActorDao;
+
+    /**
+     * DealsWithErrors Interface member variables.
+     */
+    ErrorManager errorManager;
+
+    /**
+     * DealsWithEvents Interface member variables.
+     */
+    EventManager eventManager;
+
+    /**
+     * DealsWithDeviceUsers Interface member variables.
+     */
+    private DeviceUserManager deviceUserManager;
+
+
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
+
+    /**
+     * DealsWithLogger interface member variable
+     */
+
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+
+    /**
+     * DealsWithIntraWalletUsersNetworkService interface member variable
+     */
+    IntraUserManager intraUserNetworkServiceManager;
+
+    /**
+     * DealsWithPlatformDatabaseSystem Interface member variables.
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
+
+
+    /**
+     * FileSystem Interface member variables.
+     */
+    PluginFileSystem pluginFileSystem;
+
+
+    /**
+     * Plugin Interface member variables.
+     */
+    UUID pluginId;
+
+    /**
+     * Service Interface member variables.
+     */
+    //ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     public static final String INTRA_USERS_PRIVATE_KEYS_DIRECTORY_NAME = "intraUserIdentityPrivateKeys";
 
+    /**
+     * AbstractPlugin interface implementation.
+     */
 
     public IntraWalletUserActorPluginRoot() {
         super(new PluginVersionReference(new Version()));
 
     }
+
+    @Override
+    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
+        return null;
+    }
+
+
+
+
+
+    /**
+     * ActorIntraWalletUserManager interface implementation.
+     */
+
 
     /**
      * That method registers a new intra user in the list
@@ -503,13 +549,29 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 
     }
 
-    public void stop() {
-        for (FermatEventListener eventListener : listenersAdded ){
-            eventManager.removeListener(eventListener);
-        }
-        listenersAdded.clear();
-        serviceStatus = ServiceStatus.STOPPED;
+    @Override
+    public void pause() {
+        this.serviceStatus = ServiceStatus.PAUSED;
     }
+
+    @Override
+    public void resume() {
+        this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    @Override
+    public void stop() {
+        this.serviceStatus = ServiceStatus.STOPPED;
+    }
+
+    /**
+     * PlugIn Interface implementation.
+     */
+    @Override
+    public void setId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
+
 
     /**
      * DatabaseManagerForDevelopers Interface implementation.
@@ -547,7 +609,6 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
         return new ArrayList<>();
     }
 
-    private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     @Override
     public List<String> getClassesFullPath() {

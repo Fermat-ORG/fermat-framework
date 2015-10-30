@@ -24,7 +24,6 @@ import com.google.gson.JsonParser;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.framing.Framedata;
-import org.java_websocket.framing.FramedataImpl1;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
@@ -120,33 +119,6 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
         this.registeredNetworkServicesCache           = new ConcurrentHashMap<>();
         this.registeredOtherPlatformComponentProfileCache = new ConcurrentHashMap<>();
     }
-
-    /**
-     * Send ping message to the remote node, to verify is connection
-     * alive
-     */
-    public void sendPingMessage(WebSocket conn){
-
-        System.out.println(" WsCommunicationVPNClient - Sending ping message to remote node ("+conn.getRemoteSocketAddress()+")");
-        FramedataImpl1 frame = new FramedataImpl1(Framedata.Opcode.PING);
-        frame.setFin(true);
-        conn.sendFrame(frame);
-    }
-
-    /**
-     * Receive pong message from the remote node, to verify is connection
-     * alive
-     *
-     * @param conn
-     * @param f
-     */
-    @Override
-    public void onWebsocketPong(WebSocket conn, Framedata f) {
-        System.out.println(" WsCommunicationVPNClient - Pong message receiveRemote from node ("+conn.getRemoteSocketAddress()+") connection is alive");
-        //System.out.println(" WsCommunicationsCloudClientChannel - conn = " + conn);
-        //System.out.println(" WsCommunicationsCloudClientChannel - f = "+f);
-    }
-
 
     /**
      * (non-javadoc)
@@ -302,6 +274,14 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
          * Close the connection
          */
         clientConnection.closeConnection(505, "- ERROR :" + ex.getLocalizedMessage());
+    }
+
+    @Override
+    public void onWebsocketPing(WebSocket conn, Framedata f) {
+
+        System.out.println(" WsCommunicationCloudServer - onWebsocketPing");
+        System.out.println(" WsCommunicationCloudServer - Framedata = " + f.getOpcode());
+        super.onWebsocketPing(conn, f);
     }
 
     /**

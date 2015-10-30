@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -38,13 +40,14 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserL
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserSearch;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
+import com.bitdubai.sub_app.intra_user_community.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -154,7 +157,7 @@ public class ConnectionsWorldFragment  extends FermatFragment implements SearchV
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
-            //rootView.setBackgroundColor(Color.parseColor("#000b12"));
+            rootView.setBackgroundColor(Color.parseColor("#000b12"));
 
             onRefresh();
 

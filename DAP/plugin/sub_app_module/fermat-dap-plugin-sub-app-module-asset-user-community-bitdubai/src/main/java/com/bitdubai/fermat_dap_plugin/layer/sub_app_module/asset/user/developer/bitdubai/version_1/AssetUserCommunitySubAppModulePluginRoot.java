@@ -6,6 +6,9 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -28,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -72,7 +76,6 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
     public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
         this.actorAssetIssuerManager = actorAssetIssuerManager;
     }
-
     @Override
     public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager)  throws CantSetObjectException {
         this.actorAssetUserManager = actorAssetUserManager;
@@ -151,7 +154,7 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
     }
 
     @Override
-    public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException {
+    public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException{
         //todo SE DEBE CONOCER QUIEN ES EL ISSUER SOLICITANTE Y QUIEN EL USER SOLICITADO
 
         ActorAssetIssuer actorAssetIssuer;

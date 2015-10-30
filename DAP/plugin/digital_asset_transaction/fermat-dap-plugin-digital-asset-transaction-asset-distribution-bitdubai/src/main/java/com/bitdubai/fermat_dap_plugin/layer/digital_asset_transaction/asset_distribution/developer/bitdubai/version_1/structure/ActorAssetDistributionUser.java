@@ -24,7 +24,6 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
     public String getPublicLinkedIdentity() {
         return new ECCKeyPair().getPublicKey();
     }
-
     @Override
     public String getPublicKey() {
         return this.publicKey;

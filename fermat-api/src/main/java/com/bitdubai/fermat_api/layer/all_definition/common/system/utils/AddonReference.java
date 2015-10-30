@@ -11,10 +11,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 public class AddonReference {
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
-    private static final int HASH_PRIME_NUMBER_ADD = 2819;
+    private static final int HASH_PRIME_NUMBER_ADD     = 2819;
 
-    private LayerReference layerReference;
-    private final Addons addon;
+    private       LayerReference layerReference;
+    private final Addons         addon         ;
 
     public AddonReference(final Addons addon) {
 
@@ -22,7 +22,7 @@ public class AddonReference {
     }
 
     public AddonReference(final LayerReference layerReference,
-                          final Addons addon) {
+                          final Addons         addon         ) {
 
         this.layerReference = layerReference;
         this.addon          = addon         ;

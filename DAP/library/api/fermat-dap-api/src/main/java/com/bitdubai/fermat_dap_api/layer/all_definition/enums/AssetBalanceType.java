@@ -1,12 +1,11 @@
 package com.bitdubai.fermat_dap_api.layer.all_definition.enums;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 02/10/15.
  */
-public enum AssetBalanceType implements FermatEnum {
+public enum AssetBalanceType {
     AVAILABLE("AVAI"),
     BOOK("BOOK");
 
@@ -16,7 +15,6 @@ public enum AssetBalanceType implements FermatEnum {
         this.code=code;
     }
 
-    @Override
     public String getCode(){
         return this.code;
     }

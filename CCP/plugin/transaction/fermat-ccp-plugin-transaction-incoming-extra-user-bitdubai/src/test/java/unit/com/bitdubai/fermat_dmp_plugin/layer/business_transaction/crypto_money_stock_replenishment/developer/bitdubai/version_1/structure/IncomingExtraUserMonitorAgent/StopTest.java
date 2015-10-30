@@ -3,9 +3,9 @@ package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_use
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserMonitorAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRegistry;
-import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +15,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
+import static com.googlecode.catchexception.CatchException.catchException;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;

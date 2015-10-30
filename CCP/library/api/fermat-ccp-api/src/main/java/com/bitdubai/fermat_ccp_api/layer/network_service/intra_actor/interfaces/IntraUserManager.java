@@ -3,13 +3,13 @@ package com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantAskIntraUserForAcceptanceException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantConfirmNotificationException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantGetNotificationsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorAcceptIntraUserException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantAskIntraUserForAcceptanceException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorCancellingIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorDenyConnectingIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorDisconnectingIntraUserException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantGetNotificationsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorInIntraUserSearchException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.ErrorSearchingSuggestionsException;
 
@@ -46,7 +46,7 @@ public interface IntraUserManager {
      * @param intraUserToAddPublicKey    The public key of the intra user to send the request to
      * @param myProfileImage             The profile image of the user sending the request
      */
-    void askIntraUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserLoggedName, Actors senderType, String intraUserToAddName, String intraUserToAddPublicKey, Actors destinationType, byte[] myProfileImage) throws CantAskIntraUserForAcceptanceException;
+    void askIntraUserForAcceptance(String intraUserLoggedInPublicKey,String intraUserLoggedName,Actors senderType, String intraUserToAddName, String intraUserToAddPublicKey,Actors destinationType, byte[] myProfileImage) throws CantAskIntraUserForAcceptanceException;
 
     /**
      * The method <code>acceptIntraUser</code> send an acceptance message of a connection request.

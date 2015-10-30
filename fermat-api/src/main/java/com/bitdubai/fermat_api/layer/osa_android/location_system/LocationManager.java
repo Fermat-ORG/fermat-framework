@@ -19,7 +19,8 @@ public interface LocationManager {
      * of the device in which you're working.
      *
      * @return an instance of location with the gps coordinates.
-     * @throws CantGetDeviceLocationException if something goes wrong.
+     *
+     * @throws CantGetDeviceLocationException  if something goes wrong.
      */
     Location getLocation() throws CantGetDeviceLocationException;
 

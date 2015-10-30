@@ -6,7 +6,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterExc
 /**
  * Created by angel on 18/9/15.
  */
-
+ 
 public enum ContractStatus implements FermatEnum {
     NEGOTIATION("NEG"),
     PAUSED("PAU"),
