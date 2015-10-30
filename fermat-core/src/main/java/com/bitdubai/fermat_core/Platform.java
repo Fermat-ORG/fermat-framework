@@ -42,7 +42,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.DealsWithCryptoPaymentRequestNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.DealsWithCryptoPayment;
-import com.bitdubai.fermat_ccp_core.CCPPlatform;
+import com.bitdubai.fermat_bch_core.BCHPlatform;
 import com.bitdubai.fermat_core.layer.cbp.identity.CBPIdentityLayer;
 import com.bitdubai.fermat_core.layer.cbp.sub_app_module.CBPSubAppModuleLayer;
 import com.bitdubai.fermat_core.layer.ccm.actor.CCMActorLayer;
@@ -903,7 +903,7 @@ public class Platform implements Serializable {
 
                 try {
 
-                    AbstractPlatform ccpPlatform = new CCPPlatform();
+                    AbstractPlatform ccpPlatform = new BCHPlatform();
                     ccpPlatform.start();
 
                     PlatformReference platformReference = new PlatformReference(Platforms.CRYPTO_CURRENCY_PLATFORM);
@@ -1080,7 +1080,7 @@ public class Platform implements Serializable {
             * Plugin Extra User Actor
             * -------------------------------
 //            */
-//                Plugin extraUser = ((ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER)).getmActorExtraUser();
+//                Plugin extraUser = ((CryptoVaultLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER)).getmActorExtraUser();
 //                injectPluginReferencesAndStart(extraUser, Plugins.BITDUBAI_ACTOR_EXTRA_USER);
 
            /*
@@ -1470,7 +1470,7 @@ public class Platform implements Serializable {
             * Plugin Intra User Actor
             * -----------------------------
             */
-            //   Plugin intraUserActor = ((com.bitdubai.fermat_core.layer.dmp_actor.ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_ACTOR_LAYER)).getActorIntraUser();
+            //   Plugin intraUserActor = ((com.bitdubai.fermat_core.layer.dmp_actor.CryptoVaultLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_ACTOR_LAYER)).getActorIntraUser();
             //injectPluginReferencesAndStart(intraUserActor, Plugins.BITDUBAI_INTRA_USER_ACTOR);
 
             /*

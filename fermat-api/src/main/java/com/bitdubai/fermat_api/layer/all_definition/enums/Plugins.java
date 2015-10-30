@@ -149,24 +149,27 @@ public enum Plugins implements FermatEnum {
 
     // Init new Plugins
 
-    BITCOIN_VAULT          ("BV" ),
-    BITCOIN_WALLET         ("BW" ),
-    CLOUD_CLIENT           ("CCL" ),
-    CRYPTO_ADDRESSES       ("CA" ),
-    CRYPTO_ADDRESS_BOOK    ("CAB" ),
-    CRYPTO_PAYMENT_REQUEST ("CPR"  ),
-    CRYPTO_TRANSMISSION    ("CT" ),
-    CRYPTO_WALLET          ("CW"  ),
-    DEVICE_USER            ("DU"),
-    EXTRA_WALLET_USER      ("EWU" ),
-    INCOMING_CRYPTO        ("IC" ),
-    INCOMING_EXTRA_USER    ("IEU" ),
-    INCOMING_INTRA_USER    ("IIU" ),
-    INTRA_WALLET_USER      ("IWU" ),
-    OUTGOING_EXTRA_USER    ("OEU" ),
-    OUTGOING_INTRA_ACTOR   ("OIA" ),
-    WALLET_CONTACTS        ("WC"  ),
-    WALLET_MANAGER         ("WM"),
+    BITCOIN_ASSET_VAULT      ("BAV" ),
+    BITCOIN_NETWORK          ("BN" ),
+    BITCOIN_VAULT            ("BV" ),
+    BITCOIN_WALLET           ("BW" ),
+    BITCOIN_WATCH_ONLY_VAULT ("BWOV" ),
+    CLOUD_CLIENT             ("CCL" ),
+    CRYPTO_ADDRESSES         ("CA" ),
+    CRYPTO_ADDRESS_BOOK      ("CAB" ),
+    CRYPTO_PAYMENT_REQUEST   ("CPR"  ),
+    CRYPTO_TRANSMISSION      ("CT" ),
+    CRYPTO_WALLET            ("CW"  ),
+    DEVICE_USER              ("DU"),
+    EXTRA_WALLET_USER        ("EWU" ),
+    INCOMING_CRYPTO          ("IC" ),
+    INCOMING_EXTRA_USER      ("IEU" ),
+    INCOMING_INTRA_USER      ("IIU" ),
+    INTRA_WALLET_USER        ("IWU" ),
+    OUTGOING_EXTRA_USER      ("OEU" ),
+    OUTGOING_INTRA_ACTOR     ("OIA" ),
+    WALLET_CONTACTS          ("WC"  ),
+    WALLET_MANAGER           ("WM"),
 
     // End  new Plugins
 
@@ -388,23 +391,26 @@ public enum Plugins implements FermatEnum {
 
             // Init new Plugins
 
-            case "BV":  return BITCOIN_VAULT         ;
-            case "BW":  return BITCOIN_WALLET        ;
-            case "CCL": return CLOUD_CLIENT          ;
-            case "CA":  return CRYPTO_ADDRESSES      ;
-            case "CAB": return CRYPTO_ADDRESS_BOOK   ;
-            case "CPR": return CRYPTO_PAYMENT_REQUEST;
-            case "CT":  return CRYPTO_TRANSMISSION   ;
-            case "CW":  return CRYPTO_WALLET         ;
-            case "DU":  return DEVICE_USER           ;
-            case "EWU": return EXTRA_WALLET_USER     ;
-            case "IEU": return INCOMING_EXTRA_USER   ;
-            case "IIU": return INCOMING_INTRA_USER   ;
-            case "IWU": return INTRA_WALLET_USER     ;
-            case "OEU": return OUTGOING_EXTRA_USER   ;
-            case "OIA": return OUTGOING_INTRA_ACTOR  ;
-            case "WC":  return WALLET_CONTACTS       ;
-            case "WM":  return WALLET_MANAGER        ;
+            case "BAV":  return BITCOIN_ASSET_VAULT     ;
+            case "BN":   return BITCOIN_NETWORK         ;
+            case "BV":   return BITCOIN_VAULT           ;
+            case "BW":   return BITCOIN_WALLET          ;
+            case "BWOV": return BITCOIN_WATCH_ONLY_VAULT;
+            case "CCL":  return CLOUD_CLIENT            ;
+            case "CA":   return CRYPTO_ADDRESSES        ;
+            case "CAB":  return CRYPTO_ADDRESS_BOOK     ;
+            case "CPR":  return CRYPTO_PAYMENT_REQUEST  ;
+            case "CT":   return CRYPTO_TRANSMISSION     ;
+            case "CW":   return CRYPTO_WALLET           ;
+            case "DU":   return DEVICE_USER             ;
+            case "EWU":  return EXTRA_WALLET_USER       ;
+            case "IEU":  return INCOMING_EXTRA_USER     ;
+            case "IIU":  return INCOMING_INTRA_USER     ;
+            case "IWU":  return INTRA_WALLET_USER       ;
+            case "OEU":  return OUTGOING_EXTRA_USER     ;
+            case "OIA":  return OUTGOING_INTRA_ACTOR    ;
+            case "WC":   return WALLET_CONTACTS         ;
+            case "WM":   return WALLET_MANAGER          ;
 
             // End  new Plugins
 

@@ -18,6 +18,7 @@ public enum Layers implements FermatEnum {
     BASIC_WALLET    ("BSW"),
     COMMUNICATION   ("COM"),
     CRYPTO_MODULE   ("CRM"),
+    CRYPTO_NETWORK  ("CRN"),
     CRYPTO_ROUTER   ("CRR"),
     CRYPTO_VAULT    ("CRV"),
     DEFINITION      ("DEF"),
@@ -50,6 +51,7 @@ public enum Layers implements FermatEnum {
                 case "BSW":  return BASIC_WALLET;
                 case "COM":  return COMMUNICATION;
                 case "CRM":  return CRYPTO_MODULE;
+                case "CRN":  return CRYPTO_NETWORK;
                 case "CRR":  return CRYPTO_ROUTER;
                 case "CRV":  return CRYPTO_VAULT;
                 case "DEF":  return DEFINITION;
