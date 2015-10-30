@@ -137,6 +137,13 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot implements CustomerBrok
     @Override
     public void closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation){
         try {
+            //TODO validar que todas las clausulas esten en modo AGREED segun el tipo de negociacion
+            //TODO evaluar clausulas del cambio
+            //TODO evaluar clausulas del metodo de ejecucion
+            //TODO evaluar clausulas del metodo de pago
+
+            //TODO si las clausulas no estan agreed hay que lanzar una excepcion
+
             customerBrokerPurchaseNegotiationDao.closeNegotiation(negotiation);
         } catch (CantUpdateCustomerBrokerPurchaseException e){
             new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");

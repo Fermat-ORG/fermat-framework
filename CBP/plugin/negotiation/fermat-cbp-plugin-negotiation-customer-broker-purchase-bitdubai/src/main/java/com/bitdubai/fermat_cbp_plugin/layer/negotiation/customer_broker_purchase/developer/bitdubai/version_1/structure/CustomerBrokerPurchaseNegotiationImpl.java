@@ -83,17 +83,23 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
 
     @Override
     public Clause addNewBrokerClause(ClauseType type, String value) throws CantAddNewClausesException {
-        return this.customerBrokerPurchaseNegotiationDao.addNewClause(this.negotiationId, type, value, this.getBrokerPublicKey());
+        return this.customerBrokerPurchaseNegotiationDao.addNewClause(this.negotiationId, type, value, this.publicKeyBroker);
     }
 
     @Override
     public Clause addNewCustomerClause(ClauseType type, String value) throws CantAddNewClausesException {
-        return this.customerBrokerPurchaseNegotiationDao.addNewClause(this.negotiationId, type, value, this.getCustomerPublicKey());
+        return this.customerBrokerPurchaseNegotiationDao.addNewClause(this.negotiationId, type, value, this.publicKeyCustomer);
     }
 
     @Override
     public Clause modifyClause(Clause clause, String value) throws CantUpdateClausesException {
-        return this.customerBrokerPurchaseNegotiationDao.modifyClause(this.negotiationId, clause, value);
+        //TODO agregar analisis de modificacion de clausulas
+        Clause clauseRejected = modifyClauseStatus(clause, ClauseStatus.REJECTED);
+        try {
+            return addNewBrokerClause(clauseRejected.getType(), value);
+        } catch (CantAddNewClausesException e) {
+            throw new CantUpdateClausesException(CantUpdateClausesException.DEFAULT_MESSAGE, e, "", "");
+        }
     }
 
     @Override
