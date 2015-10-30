@@ -607,7 +607,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                 PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetUserToRegister.getPublicKey(),
                         actorAssetUserToRegister.getName().toLowerCase().trim(),
                         actorAssetUserToRegister.getName(),
-                        NetworkServiceType.ASSET_USER_ACTOR,
+                        NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_ASSET_USER,
                         Arrays.toString(actorAssetUserToRegister.getProfileImage()));
                 /*
@@ -616,6 +616,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfileAssetUser);
 
             }else {
+                System.out.println("Actor Asset User en A.N.S USER CONTRUCCION de Profile");
 
                 /*
                  * Construct the profile
@@ -623,7 +624,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                 PlatformComponentProfile platformComponentProfileAssetUser = communicationsClientConnection.constructPlatformComponentProfileFactory(actorAssetUserToRegister.getPublicKey(),
                         actorAssetUserToRegister.getName().toLowerCase().trim(),
                         actorAssetUserToRegister.getName(),
-                        NetworkServiceType.ASSET_USER_ACTOR,
+                        NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_ASSET_USER,
                         Arrays.toString(actorAssetUserToRegister.getProfileImage()));
                 /*
@@ -1001,11 +1002,6 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
     }
 
     @Override
-    public UUID getId() {
-        return this.pluginId;
-    }
-
-    @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
@@ -1055,7 +1051,8 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
 
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
+        System.out.println("Actor Asset User: handleCompleteComponentRegistrationNotificationEvent - A.N.S");
+        System.out.println("CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
           /*
          * If the component registered have my profile and my identity public key
@@ -1097,10 +1094,14 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
         /*
          * If is a actor registered
          */
+        System.out.println("Actor Asset User: IF para saber si hay Actor Registrado");
+
         if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.ACTOR_ASSET_USER &&
                 platformComponentProfileRegistered.getNetworkServiceType() == NetworkServiceType.UNDEFINED) {
 
 
+            System.out.println("Actor Asset User Registered: "+platformComponentProfileRegistered.getIdentityPublicKey());
+            System.out.println("Actor Asset User Alias: "+platformComponentProfileRegistered.getAlias());
 
             Location loca = null;
 

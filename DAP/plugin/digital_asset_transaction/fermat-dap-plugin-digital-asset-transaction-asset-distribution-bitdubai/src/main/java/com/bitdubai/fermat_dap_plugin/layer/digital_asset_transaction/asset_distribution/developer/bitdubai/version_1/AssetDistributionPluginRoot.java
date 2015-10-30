@@ -230,12 +230,14 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
     public void distributeAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute, String walletPublicKey) throws CantDistributeDigitalAssetsException {
         //I will hardcode the hashmap and wallet public key for testing, TODO: please change this in production
         printSomething("The hashmap to distribute is hardcoded");
-        digitalAssetsToDistribute=getDistributionHashMapForTesting();
+
 
         ActorAssetUser registeredActorAssetUser = null;
         for (ActorAssetUser actorAssetUser: digitalAssetsToDistribute.values() ){
             registeredActorAssetUser = actorAssetUser;
         }
+
+        digitalAssetsToDistribute=getDistributionHashMapForTesting();
 
         for (DigitalAssetMetadata digitalAssetMetadata: digitalAssetsToDistribute.keySet()){
             digitalAssetsToDistribute.put(digitalAssetMetadata, registeredActorAssetUser);
