@@ -17,6 +17,8 @@ public enum Layers implements FermatEnum {
     ANDROID         ("AND"),
     BASIC_WALLET    ("BSW"),
     COMMUNICATION   ("COM"),
+    CRYPTO_MODULE   ("CRM"),
+    CRYPTO_VAULT    ("CRV"),
     DEFINITION      ("DEF"),
     ENGINE          ("ENG"),
     HARDWARE        ("HAR"),
@@ -27,6 +29,7 @@ public enum Layers implements FermatEnum {
     REQUEST         ("REQ"),
     SUB_APP_MODULE  ("SAM"),
     TRANSACTION     ("TRA"),
+    USER            ("USR"),
     WALLET_MODULE   ("WAM"),
     WORLD           ("WRL"),
     ;
@@ -45,6 +48,8 @@ public enum Layers implements FermatEnum {
                 case "AND":  return ANDROID;
                 case "BSW":  return BASIC_WALLET;
                 case "COM":  return COMMUNICATION;
+                case "CRM":  return CRYPTO_MODULE;
+                case "CRV":  return CRYPTO_VAULT;
                 case "DEF":  return DEFINITION;
                 case "ENG":  return ENGINE;
                 case "HAR":  return HARDWARE;
@@ -55,6 +60,7 @@ public enum Layers implements FermatEnum {
                 case "REQ":  return REQUEST;
                 case "SAM":  return SUB_APP_MODULE;
                 case "TRA":  return TRANSACTION;
+                case "USR":  return USER;
                 case "WAM":  return WALLET_MODULE;
                 case "WRL":  return WORLD;
 

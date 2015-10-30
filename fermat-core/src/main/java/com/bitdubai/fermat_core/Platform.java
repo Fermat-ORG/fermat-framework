@@ -915,9 +915,9 @@ public class Platform implements Serializable {
 
                     layerReference = new LayerReference(platformReference, Layers.NETWORK_SERVICE);
 
-//                    Plugin cryptoPaymentRequestNetworkService = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, CCPPlugins.BITDUBAI_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE));
-//                    injectLayerReferences(cryptoPaymentRequestNetworkService);
-//                    injectPluginReferencesAndStart(cryptoPaymentRequestNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE);
+                    Plugin cryptoPaymentRequestNetworkService = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, Plugins.CRYPTO_PAYMENT_REQUEST));
+                    injectLayerReferences(cryptoPaymentRequestNetworkService);
+                    injectPluginReferencesAndStart(cryptoPaymentRequestNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE);
 
 
                     Plugin intraUserNetworkService = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, Plugins.INTRA_WALLET_USER));
