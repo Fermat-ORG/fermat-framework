@@ -55,7 +55,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.event_handlers.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantCreateCryptoPaymentRequestException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantListRequestsException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantTakeActionException;
@@ -85,13 +84,12 @@ import java.util.UUID;
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 01/10/2015.
  */
-public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractNetworkService implements
+public final class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractNetworkService implements
         CryptoPaymentRequestManager,
         DealsWithWsCommunicationsCloudClientManager,
         DealsWithErrors,
         DealsWithEvents,
-        DealsWithPluginDatabaseSystem,
-        NetworkService {
+        DealsWithPluginDatabaseSystem {
 
        /**
      * DealsWithErrors Interface member variables.
@@ -102,23 +100,12 @@ public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractNetwor
      * DealsWithEvents Interface member variables
      */
     private EventManager eventManager;
-    private List<FermatEventListener> listenersAdded;
-    public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST;
+    private List<FermatEventListener> listenersAdded;;
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * Plugin Interface member variables.
-     */
-    private UUID pluginId;
-
-    /**
-     * Service Interface member variables.
-     */
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     /**
      * Represent the wsCommunicationsCloudClientManager
@@ -141,19 +128,9 @@ public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractNetwor
     private Database dataBase;
 
     /**
-     * Represent the identity
-     */
-    private ECCKeyPair identity;
-
-    /**
      * Represent the platformComponentProfile
      */
     private PlatformComponentProfile platformComponentProfile;
-
-    /**
-     * Represent the register
-     */
-    private boolean register;
 
     /**
      * Represent the registrationProcessNetworkServiceAgent
@@ -188,16 +165,16 @@ public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractNetwor
      * - Type          : SENT.
      */
     @Override
-    public void sendCryptoPaymentRequest(UUID                  requestId        ,
-                                         String                identityPublicKey,
-                                         Actors                identityType     ,
-                                         String                actorPublicKey   ,
-                                         Actors                actorType        ,
-                                         CryptoAddress         cryptoAddress    ,
-                                         String                description      ,
-                                         long                  amount           ,
-                                         long                  startTimeStamp   ,
-                                         BlockchainNetworkType networkType      ) throws CantSendRequestException {
+    public final void sendCryptoPaymentRequest(final UUID                  requestId        ,
+                                               final String                identityPublicKey,
+                                               final Actors                identityType     ,
+                                               final String                actorPublicKey   ,
+                                               final Actors                actorType        ,
+                                               final CryptoAddress         cryptoAddress    ,
+                                               final String                description      ,
+                                               final long                  amount           ,
+                                               final long                  startTimeStamp   ,
+                                               final BlockchainNetworkType networkType      ) throws CantSendRequestException {
 
         try {
 
@@ -871,18 +848,18 @@ public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractNetwor
             RequestType          direction     = RequestType         .RECEIVED          ;
 
             cryptoPaymentRequestNetworkServiceDao.createCryptoPaymentRequest(
-                    requestMessage.getRequestId()        ,
-                    requestMessage.getActorPublicKey()   , // the actor receiving, is the identity now.
-                    requestMessage.getActorType()        , // the actor receiving, is the identity now.
+                    requestMessage.getRequestId(),
+                    requestMessage.getActorPublicKey(), // the actor receiving, is the identity now.
+                    requestMessage.getActorType(), // the actor receiving, is the identity now.
                     requestMessage.getIdentityPublicKey(), // the identity who sent the request, is the actor now.
-                    requestMessage.getIdentityType()     , // the identity who sent the request, is the actor now.
-                    requestMessage.getCryptoAddress()    ,
-                    requestMessage.getDescription()      ,
-                    requestMessage.getAmount()           ,
-                    requestMessage.getStartTimeStamp()   ,
-                    direction                            ,
-                    action                               ,
-                    protocolState                        ,
+                    requestMessage.getIdentityType(), // the identity who sent the request, is the actor now.
+                    requestMessage.getCryptoAddress(),
+                    requestMessage.getDescription(),
+                    requestMessage.getAmount(),
+                    requestMessage.getStartTimeStamp(),
+                    direction,
+                    action,
+                    protocolState,
                     requestMessage.getNetworkType()
             );
 
@@ -940,11 +917,6 @@ public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractNetwor
     @Override
     public void setPluginDatabaseSystem(final PluginDatabaseSystem pluginDatabaseSystemManager) {
         this.pluginDatabaseSystem = pluginDatabaseSystemManager;
-    }
-
-    @Override
-    public void setId(final UUID pluginId) {
-        this.pluginId = pluginId;
     }
 
 }
