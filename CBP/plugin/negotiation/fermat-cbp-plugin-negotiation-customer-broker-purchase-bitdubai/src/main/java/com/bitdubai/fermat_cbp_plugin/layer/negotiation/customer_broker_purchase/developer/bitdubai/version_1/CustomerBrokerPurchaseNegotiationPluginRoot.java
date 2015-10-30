@@ -151,6 +151,21 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot implements CustomerBrok
     }
 
     @Override
+    public CustomerBrokerPurchaseNegotiation sendToCustomer(CustomerBrokerPurchaseNegotiation negotiation) {
+        //TODO modifica el status de la negociacion a SENT_TO_CUSTOMER
+        //TODO modifica las clausulas de AGREED o DRAFT a SENT_TO_CUSTOMER
+        return null;
+    }
+
+    @Override
+    public CustomerBrokerPurchaseNegotiation waitForCustomer(CustomerBrokerPurchaseNegotiation negotiation) {
+        //TODO modifica el status de la negociacion a WAITING_FOR_CUSTOMER
+        //TODO modifica las clausulas de SENT_TO_CUSTOMER a WAITING_FOR_CUSTOMER
+        return null;
+    }
+
+
+    @Override
     public Collection<CustomerBrokerPurchaseNegotiation> getNegotiations() throws CantListPurchaseNegotianionsException{
         try {
             Collection<CustomerBrokerPurchaseNegotiation> negotiations = new ArrayList<CustomerBrokerPurchaseNegotiation>();
