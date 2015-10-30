@@ -34,7 +34,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
     public AssetUserActorRecord(){
 
     }
-
+//TODO Posible a reemplazar
     public AssetUserActorRecord(String publicKey, String name, byte[] profileImage, Location location) {
 
         this.name = name;
@@ -54,6 +54,26 @@ public class AssetUserActorRecord implements ActorAssetUser {
 //        this.cryptoAddress = cryptoAddress;
         this.connectionState = ConnectionState.CONNECTED;
 
+    }
+
+//TODO Sustituto
+    public AssetUserActorRecord(String publicKey, String name, byte[] profileImage, Location location, ConnectionState connectionState) {
+
+        this.name = name;
+        this.publicKey = publicKey;
+        this.profileImage = profileImage.clone();
+
+        if (location != null) {
+            this.locationLatitude = location.getLatitude();
+            this.locationLongitude = location.getLongitude();
+        }else{
+            this.locationLatitude = Double.valueOf(0);
+            this.locationLongitude = Double.valueOf(0);
+        }
+
+        this.genders = Genders.INDEFINITE;
+//        this.age = age;
+        this.connectionState = connectionState;
     }
 
     /**
@@ -239,7 +259,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
         if(connectionState != null)
            this.connectionState = connectionState;
         else
-            this.connectionState = ConnectionState.CONNECTED;
+            this.connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
     }
 
     /**

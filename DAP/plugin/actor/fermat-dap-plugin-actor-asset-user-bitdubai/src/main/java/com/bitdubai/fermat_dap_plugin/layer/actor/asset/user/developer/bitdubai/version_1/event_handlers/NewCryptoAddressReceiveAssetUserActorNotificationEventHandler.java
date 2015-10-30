@@ -36,6 +36,8 @@ public class NewCryptoAddressReceiveAssetUserActorNotificationEventHandler imple
 
             CryptoAddress cryptoAddress = (CryptoAddress) newCryptoAddressReceiveAssetUserActorNotificationEvent.getCryptoAddress();
 
+            System.out.println("Actor Asset User: llamando a handleDeliveredCrypto en Actor AssetActorUserPluginRoot");
+
             this.actorNetworkServiceAssetUser.handleDeliveredCryptoAddresFromRemoteAssetUserEvent(actorAssetUserSender, cryptoAddress);
         }
     }
