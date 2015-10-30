@@ -95,15 +95,15 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
     public Clause modifyClause(Clause clause, String value) throws CantUpdateClausesException {
         Clause clauseRejected = modifyClauseStatus(clause, ClauseStatus.REJECTED);
 
-        if( clause.getType() == ClauseType.CUSTOMER_PAYMENT_METHOD ){
+        if( clause.getType() == ClauseType.BROKER_PAYMENT_METHOD ){
             try {
                 ClauseType type = getNextClauseTypeByCurrencyType( CurrencyType.getByCode(clause.getValue() ) );
 
                 switch (type){
-                    case CUSTOMER_CRYPTO_ADDRESS:
+                    case BROKER_CRYPTO_ADDRESS:
                         rejectClauseByType(ClauseType.BROKER_CRYPTO_ADDRESS);
 
-                    case CUSTOMER_BANK:
+                    case BROKER_BANK:
                         rejectClauseByType(ClauseType.CUSTOMER_BANK);
                         rejectClauseByType(ClauseType.CUSTOMER_BANK_ACCOUNT);
 
@@ -111,9 +111,9 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
                         rejectClauseByType(ClauseType.PLACE_TO_MEET);
                         rejectClauseByType(ClauseType.DATE_TIME_TO_MEET);
 
-                    case CUSTOMER_PLACE_TO_DELIVER:
-                        rejectClauseByType(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
-                        rejectClauseByType(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
+                    case BROKER_PLACE_TO_DELIVER:
+                        rejectClauseByType(ClauseType.BROKER_PLACE_TO_DELIVER);
+                        rejectClauseByType(ClauseType.BROKER_DATE_TIME_TO_DELIVER);
 
                 }
 
