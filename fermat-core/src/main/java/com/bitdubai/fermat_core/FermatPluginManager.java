@@ -1,13 +1,13 @@
 package com.bitdubai.fermat_core;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantPausePluginException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantResumePluginException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPluginException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStopPluginException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.UnexpectedServiceStatusException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.VersionNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantPausePluginException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantResumePluginException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStopPluginException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.UnexpectedServiceStatusException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 
 /**
  * The class <code>com.bitdubai.fermat_core.FermatPluginManager</code>

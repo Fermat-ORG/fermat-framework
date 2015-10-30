@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.de
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
@@ -22,45 +23,26 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceLocal</code> represent
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal</code> represent
  * the remote network services locally
  * <p/>
  * This class extend of the <code>java.util.Observer</code> class,  its used on the software design pattern called: The observer pattern,
  * for more info see @link https://en.wikipedia.org/wiki/Observer_pattern
  * <p/>
  * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 15/10/2015.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 21/07/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
 public class CommunicationNetworkServiceLocal implements Observer, NetworkServiceLocal {
 
-
-    /**
-     * Represent the profile of the remote network service
-     */
-    private PlatformComponentProfile remoteNetworkServiceProfile;
-
-    /**
-     * Represent the profile of the local network service
-     */
-    private NetworkServiceType networkServiceTypePluginRoot;
-
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    private ErrorManager errorManager;
-
-    /**
-     * DealWithEvents Interface member variables.
-     */
-    private EventManager eventManager;
-
-    /**
-     * Represent the outgoingMessageDao
-     */
-    private OutgoingMessageDao outgoingMessageDao;
+    private final PlatformComponentProfile remoteNetworkServiceProfile ;
+    private final NetworkServiceType       networkServiceTypePluginRoot;
+    private final ErrorManager             errorManager                ;
+    private final EventManager             eventManager                ;
+    private final OutgoingMessageDao       outgoingMessageDao          ;
+    private final EventSource              eventSource                 ;
 
     /**
      * Represent the lastMessageReceived
@@ -74,15 +56,19 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
      * @param errorManager                  instance
      * @param outgoingMessageDao            instance
      */
-    public CommunicationNetworkServiceLocal(PlatformComponentProfile remoteNetworkServiceProfile,
-                                            ErrorManager errorManager, EventManager eventManager,
-                                            OutgoingMessageDao outgoingMessageDao,
-                                            NetworkServiceType networkServiceTypePluginRoot) {
-        this.remoteNetworkServiceProfile = remoteNetworkServiceProfile;
-        this.errorManager = errorManager;
-        this.eventManager = eventManager;
-        this.outgoingMessageDao = outgoingMessageDao;
+    public CommunicationNetworkServiceLocal(final PlatformComponentProfile remoteNetworkServiceProfile ,
+                                            final ErrorManager             errorManager                ,
+                                            final EventManager             eventManager                ,
+                                            final OutgoingMessageDao       outgoingMessageDao          ,
+                                            final NetworkServiceType       networkServiceTypePluginRoot,
+                                            final EventSource              eventSource                 ) {
+
+        this.remoteNetworkServiceProfile  = remoteNetworkServiceProfile ;
+        this.errorManager                 = errorManager                ;
+        this.eventManager                 = eventManager                ;
+        this.outgoingMessageDao           = outgoingMessageDao          ;
         this.networkServiceTypePluginRoot = networkServiceTypePluginRoot;
+        this.eventSource                  = eventSource                 ;
     }
 
 
@@ -94,9 +80,9 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
         try {
 
             FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(senderIdentityPublicKey,  //Sender NetworkService
-                    remoteNetworkServiceProfile.getIdentityPublicKey(),   //Receiver
-                    messageContent,                //Message Content
-                    FermatMessageContentType.TEXT);//Type
+                                                                                                    remoteNetworkServiceProfile.getIdentityPublicKey(),   //Receiver
+                                                                                                    messageContent,                //Message Content
+                                                                                                    FermatMessageContentType.TEXT);//Type
             /*
              * Configure the correct status
              */
@@ -135,7 +121,7 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
          * Put the message on a event and fire new event
          */
         FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
-        fermatEvent.setSource(CryptoAddressesNetworkServicePluginRoot.EVENT_SOURCE);
+        fermatEvent.setSource(eventSource);
         ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingMessage);
         ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setNetworkServiceTypeApplicant(networkServiceTypePluginRoot);
         eventManager.raiseEvent(fermatEvent);

@@ -10,12 +10,8 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -609,16 +605,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         this.pluginFileSystem = pluginFileSystem;
     }
 
-
-    /**
-     * (non-Javadoc)
-     * @see NetworkService#getId()
-     */
-    @Override
-    public UUID getId() {
-        return this.pluginId;
-    }
-
     /**
      * (non-Javadoc)
      * @see Plugin#setId(UUID)
@@ -1199,7 +1185,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 //
 //            actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
 
-            changeActor(actorNetworkServiceRecord);
+            actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToAddPublicKey);
+            actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
 
             actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.ACCEPTED);
 

@@ -50,23 +50,14 @@ public class CompleteComponentRegistrationNotificationEventHandler implements Fe
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        String eventString = "source: "+platformEvent.getSource()+" --- evenType: "+platformEvent.getEventType();
-        System.out.println("*********** Crypto Addresses - handleEvent platformEvent = "+eventString );
-
-        System.out.println("*********** Crypto Addresses - serviceStatus: " + ((Service) this.networkService).getStatus());
+        System.out.println("CompleteComponentRegistrationNotificationEventHandler - handleEvent platformEvent ="+platformEvent );
 
         if (((Service) this.networkService).getStatus().equals(ServiceStatus.STARTED)) {
 
 
             CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent = (CompleteComponentRegistrationNotificationEvent) platformEvent;
 
-            System.out.println("*********** Crypto Addresses - serviceStatus: "+((Service) this.networkService).getStatus());
-
-            System.out.println("*********** Crypto Addresses - network service type: "+networkService.getNetworkServiceType());
-
-            System.out.println("*********** Crypto Addresses - registered profile: "+completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered());
-
-            if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getNetworkServiceType().equals(networkService.getNetworkServiceType())) {
+            if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getNetworkServiceType() == networkService.getNetworkServiceType()) {
 
                 /*
                  *  networkService make the job

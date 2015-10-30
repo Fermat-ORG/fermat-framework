@@ -603,11 +603,6 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
     }
 
     @Override
-    public UUID getId() {
-        return this.pluginId;
-    }
-
-    @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
@@ -831,6 +826,11 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
 
                     @Override
                     public ConnectionState getConnectionState() {
+                        return null;
+                    }
+
+                    @Override
+                    public Location getLocation() {
                         return null;
                     }
 

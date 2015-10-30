@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfac
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
 
@@ -46,5 +47,12 @@ public interface AssetIssuingManager /*extends TransactionProtocolManager<Crypto
      */
     int getNumberOfIssuedAssets(String assetPublicKey) throws CantExecuteDatabaseOperationException;
 
+    /**
+     * This method returns the IssuingStatus from the complete issuing process about a Digital Asset
+     * @param assetPublicKey
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    IssuingStatus getIssuingStatus(String assetPublicKey) throws CantExecuteDatabaseOperationException;
 
 }

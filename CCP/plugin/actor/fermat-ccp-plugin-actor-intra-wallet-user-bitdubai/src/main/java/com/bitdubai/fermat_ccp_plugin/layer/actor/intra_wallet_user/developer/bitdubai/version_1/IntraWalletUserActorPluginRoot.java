@@ -3,12 +3,12 @@ package com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.b
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetFeatureForDevelopersException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FeatureForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.DevelopersUtilReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -16,12 +16,26 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+
+
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetNotificationException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.NotificationNotFoundException;
+
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetIntraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantSetPhotoException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.IntraUserNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantAcceptIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCancelIntraWalletUserException;
@@ -45,10 +59,14 @@ import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bi
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.database.IntraWalletUserActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.event_handlers.IntraWalletUserNewNotificationsEventHandlers;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantAddPendingIntraWalletUserException;
+import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantGetIntraWalletUserActorException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantGetIntraWalletUsersListException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraWalletUserActorDatabaseException;
+import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantLoadPrivateKeyException;
+import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantProcessNotificationsExceptions;
 import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantUpdateConnectionException;
+import com.bitdubai.fermat_ccp_plugin.layer.actor.intra_wallet_user.developer.bitdubai.version_1.structure.IntraUserActorRecord;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -86,12 +104,8 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
         DealsWithPluginFileSystem,
         DealsWithIntraUsersNetworkService,
         IntraWalletUserManager,
-        LogManagerForDevelopers {
-
-    public IntraWalletUserActorPluginRoot() {
-        super(new PluginVersionReference(new Version()));
-    }
-
+        LogManagerForDevelopers
+{
     private IntraWalletUserActorDao intraWalletUserActorDao;
 
     /**
@@ -145,6 +159,25 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
      */
     //ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
+    public static final String INTRA_USERS_PRIVATE_KEYS_DIRECTORY_NAME = "intraUserIdentityPrivateKeys";
+
+    /**
+     * AbstractPlugin interface implementation.
+     */
+
+    public IntraWalletUserActorPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+
+    }
+
+    @Override
+    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
+        return null;
+    }
+
+
+
+
 
     /**
      * ActorIntraWalletUserManager interface implementation.
@@ -166,7 +199,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
     @Override
     public void askIntraWalletUserForAcceptance(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws CantCreateIntraWalletUserException {
         try {
-            this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
+            this.intraWalletUserActorDao.createNewIntraWalletUser(intraUserLoggedInPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage, ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
         } catch (CantAddPendingIntraWalletUserException e) {
             throw new CantCreateIntraWalletUserException("CAN'T ADD NEW INTRA USER CONNECTION", e, "", "");
         } catch (Exception e) {
@@ -286,28 +319,6 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
         }
     }
 
-    public Actor getActorByPublicKey(String actorPublicKey) throws CantGetNotificationException, NotificationNotFoundException {
-
-        try {
-            //TODO verificar si se usa
-
-//            ActorIntraUser actor = intraUserActorDao.getIntraUser(actorPublicKey);
-
-            //not found actor
-           // if(actor == null)
-               // throw new NotificationNotFoundException("", null, ".","Intra User not found");
-
-           // return new IntraUserActorRecord(actorPublicKey, "",actor.getName(),actor.getProfileImage());
-
-//            return new IntraUserActorRecord("afd0647a-87de-4c56-9bc9-be736e0c5059", "","wallat user",new byte[0]);
-
-       // } catch (com.bitdubai.fermat_dmp_plugin.layer.actor.intra_user.developer.bitdubai.version_1.exceptions.CantGetNotificationException  e) {
-          //  throw new CantGetNotificationException("", e, ".","Cant Get Intra USer from Data Base");
-         } catch (Exception e) {
-            throw new CantGetNotificationException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
-        }
-        return null;
-    }
 
 
     /**
@@ -361,6 +372,120 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
             throw new CantCreateIntraWalletUserException("CAN'T ADD NEW INTRA USER REQUEST CONNECTION", FermatException.wrapException(e), "", "");
         }
 
+    }
+
+
+
+
+    @Override
+    public Actor createActor(String walletPublicKey, String actorPublicKey, String actorName, byte[] photo) throws CantCreateIntraUserException{
+
+        ECCKeyPair keyPair = new ECCKeyPair();
+        String publicKey = keyPair.getPublicKey();
+        String privateKey = keyPair.getPrivateKey();
+
+        try {
+
+            persistPrivateKey(privateKey, actorPublicKey);
+
+            intraWalletUserActorDao.createActorIntraWalletUser(walletPublicKey, actorName, actorPublicKey, photo, ConnectionState.CONNECTED);
+        }
+        catch (CantCreateIntraWalletUserException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreateIntraUserException(CantCreateIntraUserException.DEFAULT_MESSAGE, e, "Cannot create .", null);
+
+        }
+        catch (CantPersistPrivateKeyException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreateIntraUserException(CantCreateIntraUserException.DEFAULT_MESSAGE, e, "Cannot persist private key file.", null);
+        }
+        catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreateIntraUserException(CantCreateIntraUserException.DEFAULT_MESSAGE, FermatException.wrapException(e), "There is a problem I can't identify.", null);
+        }
+
+        return new IntraUserActorRecord(publicKey, privateKey, actorName);
+
+    }
+
+
+
+    @Override
+    public Actor getActorByPublicKey(String walletPublicKey, String actorPublicKey) throws CantGetIntraUserException, IntraUserNotFoundException{
+
+        try
+        {
+            String privateKey = getPrivateKey(actorPublicKey);
+
+            Actor actor = this.intraWalletUserActorDao.getIntraUserActorByPublicKey(walletPublicKey,actorPublicKey);
+
+            //not found actor
+            if(actor == null)
+                throw new IntraUserNotFoundException("", null, ".","Intra User not found");
+
+            return new IntraUserActorRecord(actorPublicKey, privateKey,actor.getName(), actor.getPhoto());
+        }
+        catch(CantGetIntraWalletUserActorException e)
+        {
+            throw new CantGetIntraUserException("CAN'T GET INTRA USER ACTOR", FermatException.wrapException(e), "", "unknown error");
+        }
+        catch(CantLoadPrivateKeyException e){
+            throw new CantGetIntraUserException("CAN'T GET INTRA USER ACTOR", FermatException.wrapException(e), "", "unknown error");
+        }
+        catch(Exception e)
+        {
+            throw new CantGetIntraUserException("CAN'T GET INTRA USER ACTOR", e, "", "");
+        }
+
+
+    }
+
+
+    @Override
+    public void setPhoto(String actorPublicKey, byte[] photo) throws CantSetPhotoException, IntraUserNotFoundException{
+
+    }
+
+
+    private void persistPrivateKey(String privateKey, String publicKey) throws CantPersistPrivateKeyException {
+        try {
+            PluginTextFile file = this.pluginFileSystem.createTextFile(
+                    pluginId,
+                    DeviceDirectory.LOCAL_USERS.getName() + "/" + INTRA_USERS_PRIVATE_KEYS_DIRECTORY_NAME,
+                    publicKey,
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
+            file.setContent(privateKey);
+
+            file.persistToMedia();
+
+        } catch (CantPersistFileException | CantCreateFileException e) {
+            throw new CantPersistPrivateKeyException(CantPersistPrivateKeyException.DEFAULT_MESSAGE, e, "Error creating or persisting file.", null);
+        } catch (Exception e) {
+            throw new CantPersistPrivateKeyException(CantPersistPrivateKeyException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
+        }
+    }
+
+    private String getPrivateKey(String publicKey) throws CantLoadPrivateKeyException {
+        try {
+            PluginTextFile file = this.pluginFileSystem.getTextFile(
+                    pluginId,
+                    DeviceDirectory.LOCAL_USERS.getName() + "/" + INTRA_USERS_PRIVATE_KEYS_DIRECTORY_NAME,
+                    publicKey,
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+            file.loadFromMedia();
+            return file.getContent();
+        } catch (CantLoadFileException e) {
+            throw new CantLoadPrivateKeyException(CantLoadPrivateKeyException.DEFAULT_MESSAGE, e, "Error persist file.", null);
+        } catch (CantCreateFileException e) {
+            throw new CantLoadPrivateKeyException(CantLoadPrivateKeyException.DEFAULT_MESSAGE, e, "Error creating file.", null);
+        } catch (Exception e) {
+            throw new CantLoadPrivateKeyException(CantLoadPrivateKeyException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "unknown error");
+        }
     }
 
 
@@ -543,10 +668,10 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
         try {
 
             System.out.println("PROCESSING NOTIFICATIONS IN INTRA USER WALLET ");
-            List<IntraUserNotification> intraUserNotificationes = intraUserNetworkServiceManager.getPendingNotifications();
+            List<IntraUserNotification> intraUserNotifications = intraUserNetworkServiceManager.getPendingNotifications();
 
 
-            for (IntraUserNotification notification : intraUserNotificationes) {
+            for (IntraUserNotification notification : intraUserNotifications) {
 
                 String intraUserSendingPublicKey = notification.getActorSenderPublicKey();
 
@@ -556,7 +681,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
                     //ASKFORACCEPTANCE occurs when other user request you a connection
                     case ASKFORACCEPTANCE:
 
-                        //this.askIntraWalletUserForAcceptance(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserSendingPublicKey, notification.getActorSenderProfileImage());
+                        //this.askIntraWalletUserForAccepombretance(intraUserSendingPublicKey, notification.getActorSenderAlias(), intraUserSendingPublicKey, notification.getActorSenderProfileImage());
                         this.receivingIntraWalletUserRequestConnection(intraUserToConnectPublicKey, notification.getActorSenderAlias(), intraUserSendingPublicKey, notification.getActorSenderProfileImage());
                         break;
                     case CANCEL:
@@ -635,4 +760,17 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
     }
 
 
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
