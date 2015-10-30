@@ -34,5 +34,6 @@
         android:id="@+id/imageView_connection"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:src="@drawable/ic_action_add_person_grey"/>
+        android:src="@drawable/ic_action_add_person_grey"
+        android:visibility="gone"/>
 </RelativeLayout>
