@@ -44,6 +44,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exce
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.DealsWithAssetIssuerWallet;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.developer_utils.AssetDistributionDeveloperDatabaseFactory;
@@ -158,13 +159,17 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
             this.assetDistributionTransactionManager.setBitcoinManager(this.bitcoinNetworkManager);
             this.assetDistributionTransactionManager.setActorAssetIssuerManager(this.actorAssetIssuerManager);
             //distributeAssets(null, null);
+            testDeveloperDatabase();
         }catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Distribution plugin", "Cannot set an object, probably is null");
         } catch (CantExecuteDatabaseOperationException exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting pluginDatabaseSystem in DigitalAssetDistributor", "Error in constructor method AssetDistributor");
         } /*catch (CantDistributeDigitalAssetsException e) {
             e.printStackTrace();
-        }*/
+        }*/catch(Exception exception){
+            System.out.println("Asset Distribution test exception "+exception);
+            exception.printStackTrace();
+        }
         this.serviceStatus=ServiceStatus.STARTED;
         //testRaiseEvent();
 
@@ -225,12 +230,14 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
     public void distributeAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute, String walletPublicKey) throws CantDistributeDigitalAssetsException {
         //I will hardcode the hashmap and wallet public key for testing, TODO: please change this in production
         printSomething("The hashmap to distribute is hardcoded");
-        digitalAssetsToDistribute=getDistributionHashMapForTesting();
+
 
         ActorAssetUser registeredActorAssetUser = null;
         for (ActorAssetUser actorAssetUser: digitalAssetsToDistribute.values() ){
             registeredActorAssetUser = actorAssetUser;
         }
+
+        digitalAssetsToDistribute=getDistributionHashMapForTesting();
 
         for (DigitalAssetMetadata digitalAssetMetadata: digitalAssetsToDistribute.keySet()){
             digitalAssetsToDistribute.put(digitalAssetMetadata, registeredActorAssetUser);
@@ -401,6 +408,19 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
         eventToRaise.setSource(EventSource.CRYPTO_ROUTER);
         eventManager.raiseEvent(eventToRaise);
         printSomething("End event RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION");
+    }
+
+    private void testDeveloperDatabase() throws CantExecuteDatabaseOperationException, CantDefineContractPropertyException, CantPersistDigitalAssetException {
+        System.out.println("START TEST DEVELOPER DATABASE ASSET DISTRIBUTION");
+        MockDigitalAssetMetadataForTesting mockDigitalAssetMetadataForTesting=new MockDigitalAssetMetadataForTesting();
+        System.out.println("ASSET DISTRIBUTION DAM:"+mockDigitalAssetMetadataForTesting);
+        AssetDistributionDao assetDistributionDao=new AssetDistributionDao(pluginDatabaseSystem,pluginId);
+        assetDistributionDao.persistDigitalAsset(
+                mockDigitalAssetMetadataForTesting.getGenesisTransaction(),
+                "testLocalStorage",
+                mockDigitalAssetMetadataForTesting.getDigitalAssetHash(),
+                "testReceiverPublicKey",
+                mockDigitalAssetMetadataForTesting.getDigitalAsset().getGenesisAddress().getAddress());
     }
 
 }

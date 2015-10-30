@@ -125,11 +125,6 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
      */
 
     @Override
-    public UUID getId() {
-        return this.pluginId;
-    }
-
-    @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return null;
     }

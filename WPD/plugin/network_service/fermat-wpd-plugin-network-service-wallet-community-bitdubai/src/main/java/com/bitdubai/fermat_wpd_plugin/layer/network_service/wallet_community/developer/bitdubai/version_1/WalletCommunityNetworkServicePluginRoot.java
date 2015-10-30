@@ -122,12 +122,6 @@ public class WalletCommunityNetworkServicePluginRoot implements Service, Network
     /**
      * NetworkService Interface implementation.
      */
-
-    @Override
-    public UUID getId() {
-        return this.pluginId;
-    }
-
     @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return null;

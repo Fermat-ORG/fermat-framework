@@ -408,11 +408,6 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
      */
 
     @Override
-    public UUID getId() {
-        return pluginId;
-    }
-
-    @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return null;
     }

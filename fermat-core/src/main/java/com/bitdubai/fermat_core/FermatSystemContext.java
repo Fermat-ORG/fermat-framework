@@ -1,30 +1,30 @@
 package com.bitdubai.fermat_core;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddon;
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddonDeveloper;
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddonSubsystem;
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractLayer;
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlatform;
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginDeveloper;
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginSubsystem;
-import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystems;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.AddonNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterPlatformException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPlatformException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.DeveloperNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.LayerNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.PlatformNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.PluginNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.VersionNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonDeveloperReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginDeveloperReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddonDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddonSubsystem;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractLayer;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginSubsystem;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.OperativeSystems;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.AddonNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPlatformException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPlatformException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.DeveloperNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.LayerNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.PlatformNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.PluginNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonDeveloperReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.LayerReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,20 +39,20 @@ public class FermatSystemContext {
 
     private final Map<PlatformReference, AbstractPlatform> platforms;
 
-    private final Object osContext;
-    private final OperativeSystems operativeSystem;
+    private final Object           osContext          ;
+    private final OperativeSystems operativeSystem    ;
 
     /**
      * Constructor without params, initializes the platforms Map with an empty concurrent hash map.
      * The platforms array contains all the references to the platforms.
      * The key is an element of the Platforms enum, and the value is the Platform in-self.
      */
-    public FermatSystemContext(final Object osContext,
+    public FermatSystemContext(final Object           osContext      ,
                                final OperativeSystems operativeSystem) {
 
-        this.osContext = osContext;
+        this.osContext       = osContext;
         this.operativeSystem = operativeSystem;
-        this.platforms = new ConcurrentHashMap<>();
+        this.platforms       = new ConcurrentHashMap<>();
     }
 
     /**

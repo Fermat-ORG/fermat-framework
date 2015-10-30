@@ -61,7 +61,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     public void run() {
 
         while (active){
-            try {
+            try{
 
                 if (communicationsClientConnection.isRegister() && !templateNetworkServicePluginRoot.isRegister()){
 
@@ -69,8 +69,8 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                      * Construct my profile and register me
                      */
                     PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(templateNetworkServicePluginRoot.getIdentityPublicKey(),
-                            (templateNetworkServicePluginRoot.getAlias().toLowerCase() + "_" + templateNetworkServicePluginRoot.getId().toString()),
-                            (templateNetworkServicePluginRoot.getName() + " (" + templateNetworkServicePluginRoot.getId() + ")"),
+                            templateNetworkServicePluginRoot.getAlias().toLowerCase(),
+                            templateNetworkServicePluginRoot.getName(),
                             templateNetworkServicePluginRoot.getNetworkServiceType(),
                             templateNetworkServicePluginRoot.getPlatformComponentType(),
                             templateNetworkServicePluginRoot.getExtraData());

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_iss
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
@@ -253,6 +254,14 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
 
     @Override
     public IssuingStatus getIssuingStatus(String assetPublicKey) throws CantExecuteDatabaseOperationException {
-        return this.assetIssuingTransactionDao.getIssuingStatusByAssetPublicKey(assetPublicKey);
+        try {
+            String issuingStatusCode=this.assetIssuingTransactionDao.getIssuingStatusByPublicKey(assetPublicKey);
+            return IssuingStatus.getByCode(issuingStatusCode);
+        } catch (CantCheckAssetIssuingProgressException exception) {
+            throw new CantExecuteDatabaseOperationException(exception,"Getting the Issuing status","Cannot check the Asset Issuing progress");
+        } catch (InvalidParameterException exception) {
+            throw new CantExecuteDatabaseOperationException(exception,"Getting the Issuing status","Cannot invalid parameter in IssuingStatus enum");
+        }
+
     }
 }

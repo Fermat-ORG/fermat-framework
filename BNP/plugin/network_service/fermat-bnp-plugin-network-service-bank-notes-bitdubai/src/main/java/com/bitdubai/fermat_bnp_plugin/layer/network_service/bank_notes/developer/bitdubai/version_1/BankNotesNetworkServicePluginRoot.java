@@ -107,11 +107,6 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
      */
 
     @Override
-    public UUID getId() {
-        return pluginId;
-    }
-
-    @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return null;
     }

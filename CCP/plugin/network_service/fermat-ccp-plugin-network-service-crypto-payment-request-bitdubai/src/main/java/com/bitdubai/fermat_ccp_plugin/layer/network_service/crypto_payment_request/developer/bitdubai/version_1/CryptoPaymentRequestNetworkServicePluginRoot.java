@@ -2,12 +2,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_requ
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -81,7 +77,6 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -90,7 +85,7 @@ import java.util.UUID;
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 01/10/2015.
  */
-public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractPlugin implements
+public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractNetworkService implements
         CryptoPaymentRequestManager,
         DealsWithWsCommunicationsCloudClientManager,
         DealsWithErrors,
@@ -156,15 +151,6 @@ public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractPlugin
     private PlatformComponentProfile platformComponentProfile;
 
     /**
-     * Crypto Payment Request Network Service details.
-     */
-    private final PlatformComponentType platformComponentType;
-    private final NetworkServiceType networkServiceType;
-    private final String name;
-    private final String alias;
-    private final String extraData;
-
-    /**
      * Represent the register
      */
     private boolean register;
@@ -179,21 +165,20 @@ public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractPlugin
     private CryptoPaymentRequestNetworkServiceDao cryptoPaymentRequestNetworkServiceDao;
 
     /**
-     *  Active connectionss
-     */
-    private Map<String,PlatformComponentProfile> cacheConnections;
-
-    /**
      * Constructor
      */
     public CryptoPaymentRequestNetworkServicePluginRoot() {
-        super(new PluginVersionReference(new Version()));
+        super(
+                new PluginVersionReference(new Version()),
+                PlatformComponentType.NETWORK_SERVICE,
+                NetworkServiceType.CRYPTO_PAYMENT_REQUEST,
+                "Crypto Payment Request Network Service",
+                "CryptoPaymentRequestNetworkService",
+                null,
+                EventSource.NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST
+        );
+
         this.listenersAdded = new ArrayList<>();
-        this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
-        this.networkServiceType    = NetworkServiceType.CRYPTO_PAYMENT_REQUEST;
-        this.name                  = "Crypto Payment Request Network Service";
-        this.alias                 = "CryptoPaymentRequestNetworkService";
-        this.extraData             = null;
     }
 
     /**
@@ -638,15 +623,6 @@ public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractPlugin
     }
 
     /**
-     * (non-Javadoc)
-     * @see NetworkService#getId()
-     */
-    @Override
-    public UUID getId() {
-        return this.pluginId;
-    }
-
-    /**
      * (non-javadoc)
      * @see NetworkService#getRemoteNetworkServicesRegisteredList()
      */
@@ -752,46 +728,9 @@ public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractPlugin
         );
     }
 
-    public String getIdentityPublicKey(){
-        return this.identity.getPublicKey();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAlias() {
-        return alias;
-    }
-
-    public String getExtraData() {
-        return extraData;
-    }
-
-    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
-        return platformComponentProfile;
-    }
-
-    @Override
-    public PlatformComponentType getPlatformComponentType() {
-        return platformComponentType;
-    }
-
-    @Override
-    public NetworkServiceType getNetworkServiceType() {
-        return networkServiceType;
-    }
 
     public void setPlatformComponentProfile(final PlatformComponentProfile platformComponentProfile) {
         this.platformComponentProfile = platformComponentProfile;
-    }
-
-    /**
-     * Get is Register
-     * @return boolean
-     */
-    public boolean isRegister() {
-        return register;
     }
 
     /**

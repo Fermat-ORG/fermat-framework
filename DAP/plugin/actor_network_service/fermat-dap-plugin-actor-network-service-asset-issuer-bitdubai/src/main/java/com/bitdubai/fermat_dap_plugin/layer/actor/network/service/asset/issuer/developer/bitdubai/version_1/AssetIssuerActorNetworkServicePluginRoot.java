@@ -726,11 +726,6 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
     }
 
     @Override
-    public UUID getId() {
-        return this.pluginId;
-    }
-
-    @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }

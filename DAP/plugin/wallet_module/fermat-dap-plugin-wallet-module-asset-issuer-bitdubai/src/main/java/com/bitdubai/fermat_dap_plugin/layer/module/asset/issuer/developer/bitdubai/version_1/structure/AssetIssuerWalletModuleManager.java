@@ -1,34 +1,59 @@
 package com.bitdubai.fermat_dap_plugin.layer.module.asset.issuer.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.DealsWithAssetIssuerWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.DealsWithAssetIssuerWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by franklin on 06/10/15.
  */
 public class AssetIssuerWalletModuleManager {
     //TODO: Documentar
+    public static final String PATH_DIRECTORY = "assetissuer/assets";
     AssetIssuerWalletManager assetIssuerWalletManager;
-    ActorAssetUserManager actorAssetUserManager;
+    ActorAssetUserManager    actorAssetUserManager;
+    AssetDistributionManager assetDistributionManager;
+    UUID                     pluginId;
+    PluginFileSystem         pluginFileSystem;
 
     /**
      * constructor
      * @param assetIssuerWalletManager
      */
-    public AssetIssuerWalletModuleManager(AssetIssuerWalletManager assetIssuerWalletManager,ActorAssetUserManager actorAssetUserManager) {
+    public AssetIssuerWalletModuleManager(AssetIssuerWalletManager assetIssuerWalletManager,ActorAssetUserManager actorAssetUserManager, AssetDistributionManager assetDistributionManager, UUID pluginId, PluginFileSystem pluginFileSystem) {
         this.assetIssuerWalletManager = assetIssuerWalletManager;
         this.actorAssetUserManager    = actorAssetUserManager;
+        this.assetDistributionManager = assetDistributionManager;
+        this.pluginId                 = pluginId;
+        this.pluginFileSystem         = pluginFileSystem;
     }
 
     public List<AssetIssuerWalletList>  getAssetIssuerWalletBalancesAvailable(String publicKey) throws CantLoadWalletException{
@@ -53,7 +78,17 @@ public class AssetIssuerWalletModuleManager {
             //TODO: Solo para prueba de Distribution
             if (getAllAssetUserActorConnected().size() > 0){
                 System.out.println("******* ASSET DISTRIBUTION TEST (Init Distribution)******");
-                assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest").distributionAssets(assetPublicKey, walletPublicKey, getAllAssetUserActorConnected());
+                walletPublicKey = "walletPublicKeyTest"; //TODO: Solo para la prueba del Distribution
+                //createMapDistribution(walletPublicKey, assetPublicKey);
+                /////////////////////////////////////////
+                //TODO: Solo para prueba de Distribution
+                HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
+                actorAssetUsers = getAllAssetUserActorConnected();
+                for (ActorAssetUser actorAssetUser : actorAssetUsers){
+                    hashMap.put(null, actorAssetUser);
+                }
+                /////////////////////////////////////////
+                assetDistributionManager.distributeAssets(hashMap, walletPublicKey);
             }else{
                 System.out.println("******* ASSET DISTRIBUTION TEST (The list must contain at least one Actor User)******");
             }
@@ -71,5 +106,38 @@ public class AssetIssuerWalletModuleManager {
         }catch (Exception exception){
             throw new CantGetAssetUserActorsException("Error Get Actor Connected", exception, "Method: getAllAssetUserActorConnected", "Class: AssetIssuerWalletModuleManager");
         }
+    }
+
+    public List<AssetIssuerWalletTransaction>  getTransactionsAssetAll(String walletPublicKey, String assetPublicKey) throws CantGetTransactionsException {
+        try {
+            return assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey).getTransactionsAssetAll(assetPublicKey);
+        }catch (Exception exception){
+            throw new CantGetTransactionsException("Error Error load Wallet Asset Transaction", exception, "Method: getTransactionsAssetAll", "Class: AssetIssuerWalletModuleManager");
+        }
+    }
+
+    private HashMap<DigitalAssetMetadata, ActorAssetUser> createMapDistribution(String walletPublicKey, String assetPublicKey) throws CantGetTransactionsException{
+        List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions = getTransactionsAssetAll(walletPublicKey, assetPublicKey);
+        //TODO: Comentado para la prueba del Distribution no Borrar
+        HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
+//        int i = 0;
+//        for (AssetIssuerWalletTransaction assetIssuerWalletTransactionList : assetIssuerWalletTransactions){
+//            //TODO: Optimizar para que vea el registro de la tabla Balance Wallet
+//            DigitalAsset digitalAsset = new  DigitalAsset();
+//            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, PATH_DIRECTORY, assetIssuerWalletTransactionList.getAssetPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+//            String digitalAssetData = pluginTextFile.getContent();
+//            digitalAsset = (DigitalAsset) XMLParser.parseXML(digitalAssetData, digitalAsset);
+//            DigitalAssetMetadata digitalAssetMetadata = new DigitalAssetMetadata();
+//            digitalAssetMetadata.setDigitalAsset(digitalAsset);
+//            digitalAssetMetadata.setGenesisTransaction(assetIssuerWalletTransactionList.getTransactionHash());
+//            hashMap.put(digitalAssetMetadata, actorAssetUsers.get(i));
+//
+//            if (i > actorAssetUsers.size()){
+//                break;
+//            }
+//
+//            i++;
+//        }
+        return hashMap;
     }
 }

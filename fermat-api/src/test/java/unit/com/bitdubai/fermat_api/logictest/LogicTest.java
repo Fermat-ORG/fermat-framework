@@ -2,7 +2,7 @@
 package unit.com.bitdubai.fermat_api.logictest;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;

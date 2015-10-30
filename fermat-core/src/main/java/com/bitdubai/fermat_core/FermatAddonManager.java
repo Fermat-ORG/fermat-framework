@@ -1,13 +1,13 @@
 package com.bitdubai.fermat_core;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddon;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantPauseAddonException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantResumeAddonException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartAddonException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStopAddonException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.UnexpectedServiceStatusException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.VersionNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantPauseAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantResumeAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStopAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.UnexpectedServiceStatusException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 
 /**
  * The class <code>com.bitdubai.fermat_core.FermatAddonManager</code>
@@ -17,11 +17,11 @@ import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionRef
  */
 public class FermatAddonManager {
 
-    private final FermatSystemContext systemContext;
+    private final FermatSystemContext systemContext  ;
 
-    public FermatAddonManager(final FermatSystemContext systemContext) {
+    public FermatAddonManager(final FermatSystemContext systemContext  ) {
 
-        this.systemContext = systemContext;
+        this.systemContext   = systemContext  ;
     }
 
     public final void startAddon(final AddonVersionReference addonVersionReference) throws CantStartAddonException  ,
@@ -40,7 +40,7 @@ public class FermatAddonManager {
 
         try {
 
-            if (abstractAddon.isDealsWithOsContext())
+            if(abstractAddon.isDealsWithOsContext())
                 abstractAddon.setOsContext(systemContext.getOsContext());
 
             abstractAddon.start();

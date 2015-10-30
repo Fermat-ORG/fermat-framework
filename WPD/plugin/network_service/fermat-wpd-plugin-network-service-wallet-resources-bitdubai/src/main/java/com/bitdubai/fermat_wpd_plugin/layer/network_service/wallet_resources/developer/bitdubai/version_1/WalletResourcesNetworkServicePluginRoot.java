@@ -278,11 +278,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      */
 
     @Override
-    public UUID getId() {
-        return pluginId;
-    }
-
-    @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return null;
     }

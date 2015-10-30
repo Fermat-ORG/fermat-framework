@@ -270,44 +270,53 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         return null;
     }
 
-    public void distributionAssets(String assetPublicKey, String walletPublicKey, List<ActorAssetUser> actorAssetUsers)  throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException {
-        try{
-            //TODO: Esta comentado solo para la prueba del Distribution
-            //Buscar el Asset Balance con la data para traerse las propiedades del Digital Asset que me entrego el Issuing en su momento.
-//            List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions;
-//
-//            HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
-//            assetIssuerWalletTransactions = assetIssuerWalletDao.distributeAssets(assetPublicKey);
-//            int i = 0;
-//            for (AssetIssuerWalletTransaction assetIssuerWalletTransactionList : assetIssuerWalletTransactions){
-//                //TODO: Optimizar para que vea el registro de la tabla Balance Wallet
-//                DigitalAsset digitalAsset = new  DigitalAsset();
-//                PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, PATH_DIRECTORY, assetIssuerWalletTransactionList.getAssetPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-//                String digitalAssetData = pluginTextFile.getContent();
-//                digitalAsset = (DigitalAsset) XMLParser.parseXML(digitalAssetData, digitalAsset);
-//                DigitalAssetMetadata digitalAssetMetadata = new DigitalAssetMetadata();
-//                digitalAssetMetadata.setDigitalAsset(digitalAsset);
-//                digitalAssetMetadata.setGenesisTransaction(assetIssuerWalletTransactionList.getTransactionHash());
-//                hashMap.put(digitalAssetMetadata, actorAssetUsers.get(i));
-//
-//                if (i > actorAssetUsers.size()){
-//                    break;
-//                }
-//
-//                i++;
-//            }
-            //assetDistributionManager.distributeAssets(hashMap, walletPublicKey);
-            HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
-            for (ActorAssetUser actorAssetUser : actorAssetUsers) {
-                hashMap.put(null, actorAssetUser);
-            }
-            assetDistributionManager.distributeAssets(hashMap, null);
-
-        }//catch(CantDistributeDigitalAssetsException | CantGetTransactionsException | CantCreateFileException | FileNotFoundException  cantDistributeDigitalAssetsException){
-        catch(CantDistributeDigitalAssetsException cantDistributeDigitalAssetsException){
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(cantDistributeDigitalAssetsException));
-            throw new CantDistributeDigitalAssetsException(cantDistributeDigitalAssetsException, "Error Distribution Asset", "Method: distributionAssets()");
-        }
+    @Override
+    public List<AssetIssuerWalletTransaction> getTransactionsAssetAll(String assetPublicKey) throws CantGetTransactionsException
+    {
+        List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions;
+        assetIssuerWalletTransactions = assetIssuerWalletDao.distributeAssets(assetPublicKey);
+        return assetIssuerWalletTransactions;
     }
+
+//    @Override
+//    public void distributionAssets(String assetPublicKey, String walletPublicKey, List<ActorAssetUser> actorAssetUsers)  throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException {
+//        try{
+//            //TODO: Esta comentado solo para la prueba del Distribution
+//            //Buscar el Asset Balance con la data para traerse las propiedades del Digital Asset que me entrego el Issuing en su momento.
+////            List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions;
+////
+////            HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
+////            assetIssuerWalletTransactions = assetIssuerWalletDao.distributeAssets(assetPublicKey);
+////            int i = 0;
+////            for (AssetIssuerWalletTransaction assetIssuerWalletTransactionList : assetIssuerWalletTransactions){
+////                //TODO: Optimizar para que vea el registro de la tabla Balance Wallet
+////                DigitalAsset digitalAsset = new  DigitalAsset();
+////                PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, PATH_DIRECTORY, assetIssuerWalletTransactionList.getAssetPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+////                String digitalAssetData = pluginTextFile.getContent();
+////                digitalAsset = (DigitalAsset) XMLParser.parseXML(digitalAssetData, digitalAsset);
+////                DigitalAssetMetadata digitalAssetMetadata = new DigitalAssetMetadata();
+////                digitalAssetMetadata.setDigitalAsset(digitalAsset);
+////                digitalAssetMetadata.setGenesisTransaction(assetIssuerWalletTransactionList.getTransactionHash());
+////                hashMap.put(digitalAssetMetadata, actorAssetUsers.get(i));
+////
+////                if (i > actorAssetUsers.size()){
+////                    break;
+////                }
+////
+////                i++;
+////            }
+//            //assetDistributionManager.distributeAssets(hashMap, walletPublicKey);
+//            HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
+//            for (ActorAssetUser actorAssetUser : actorAssetUsers){
+//                hashMap.put(null, actorAssetUser);
+//            }
+//            assetDistributionManager.distributeAssets(hashMap, null);
+//
+//        }//catch(CantDistributeDigitalAssetsException | CantGetTransactionsException | CantCreateFileException | FileNotFoundException  cantDistributeDigitalAssetsException){
+//        catch(CantDistributeDigitalAssetsException cantDistributeDigitalAssetsException){
+//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(cantDistributeDigitalAssetsException));
+//            throw new CantDistributeDigitalAssetsException(cantDistributeDigitalAssetsException, "Error Distribution Asset", "Method: distributionAssets()");
+//        }
+//    }
 
 }

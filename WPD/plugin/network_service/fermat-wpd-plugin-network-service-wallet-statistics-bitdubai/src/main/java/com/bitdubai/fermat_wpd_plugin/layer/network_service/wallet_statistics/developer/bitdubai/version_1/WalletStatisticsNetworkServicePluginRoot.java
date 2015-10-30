@@ -96,11 +96,6 @@ public class WalletStatisticsNetworkServicePluginRoot implements DealsWithErrors
     /**
      * NetworkService Interface implementation.
      */
-    
-    @Override
-    public UUID getId() {
-        return pluginId;
-    }
 
     @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {

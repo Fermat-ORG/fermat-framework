@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_core;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantListReferencesException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CyclicalRelationshipFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantListReferencesException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CyclicalRelationshipFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
 
 /**
  * The class <code>com.bitdubai.fermat_core.FermatAddonReferencesCalculator</code>

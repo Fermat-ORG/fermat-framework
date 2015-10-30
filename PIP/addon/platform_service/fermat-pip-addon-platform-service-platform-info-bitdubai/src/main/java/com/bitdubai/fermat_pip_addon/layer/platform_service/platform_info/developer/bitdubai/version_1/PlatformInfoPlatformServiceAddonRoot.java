@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddon;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetFeatureForDevelopersException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FeatureForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implements PlatformInfoManager {
 
-    private ErrorManager errorManager;
+    private ErrorManager       errorManager      ;
     private PlatformFileSystem platformFileSystem;
 
     private PlatformInfoPlatformService platformInfoPlatformService;
@@ -50,7 +50,7 @@ public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implemen
 
             return platformInfoPlatformService.getPlatformInfo();
 
-        } catch (final CantLoadPlatformInformationException e) {
+        } catch(final CantLoadPlatformInformationException e) {
 
             reportUnexpectedError(e);
             throw e;
@@ -75,7 +75,7 @@ public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implemen
 
             platformInfoPlatformService.setPlatformInfo(platformInfo);
 
-        } catch (final CantSetPlatformInformationException e) {
+        } catch(final CantSetPlatformInformationException e) {
 
             reportUnexpectedError(e);
             throw e;

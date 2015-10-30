@@ -452,6 +452,40 @@ public class AssetIssuingTransactionDao {
 
     }
 
+    public String getIssuingStatusByPublicKey(String publicKey) throws CantCheckAssetIssuingProgressException {
+        try{
+            this.database.openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME);
+            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            DatabaseTableRecord databaseTableRecord;
+            List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
+            if (databaseTableRecords.size() > 1){
+                this.database.closeDatabase();
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.",  "Public key:" + publicKey);
+            }
+            else {
+                databaseTableRecord = databaseTableRecords.get(0);
+            }
+            String issuingStatus=databaseTableRecord.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ISSUING_STATUS_COLUMN_NAME);
+            this.database.closeDatabase();
+            return issuingStatus;
+
+        } catch (DatabaseNotFoundException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception,"Getting the number of Digital Assets generated","Cannot found the Asset Issuing database");
+        } catch (CantOpenDatabaseException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception,"Getting the number of Digital Assets generated","Cannot open the Asset Issuing database");
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception,"Getting the number of Digital Assets generated","Cannot load the Asset Issuing database");
+        } catch (Exception exception){
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception),"Getting the number of Digital Assets generated","Unexpected exception");
+        }
+    }
+
     public int getNumberOfIssuedAssets(String publicKey) throws CantCheckAssetIssuingProgressException {
         try {
             this.database.openDatabase();
