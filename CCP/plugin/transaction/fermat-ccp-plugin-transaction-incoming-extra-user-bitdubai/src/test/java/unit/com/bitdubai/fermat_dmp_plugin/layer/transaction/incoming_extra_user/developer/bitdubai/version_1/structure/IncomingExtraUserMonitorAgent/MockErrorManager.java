@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserMonitorAgent;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -7,17 +8,19 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import ErrorManager;
+import UnexpectedAddonsExceptionSeverity;
+import UnexpectedPlatformExceptionSeverity;
+import UnexpectedPluginExceptionSeverity;
+import UnexpectedSubAppExceptionSeverity;
+import UnexpectedUIExceptionSeverity;
+import UnexpectedWalletExceptionSeverity;
 
+*/
 /**
  * Created by jorgegonzalez on 2015.07.02..
- */
+ *//*
+
 public class MockErrorManager implements ErrorManager {
 
     private String reportedException;
@@ -62,3 +65,4 @@ public class MockErrorManager implements ErrorManager {
 
     }
 }
+*/

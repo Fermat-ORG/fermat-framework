@@ -74,14 +74,14 @@ import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.develop
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.developerUtils.DeveloperDatabaseFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.DealsWithPlatformInfo;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.platform_info.interfaces.PlatformInfoManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.DealsWithPlatformInfo;
+import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -126,6 +126,8 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     public void setPlatformInfoManager(PlatformInfoManager platformInfoManager) {
         this.platformInfoManager = platformInfoManager;
     }
+
+    private boolean register;
 
     /**
      * DealsWithCommunicationLayerManager interface variables and implementation
@@ -407,12 +409,7 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
      */
 
     @Override
-    public UUID getId() {
-        return pluginId;
-    }
-
-    @Override
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return null;
     }
 
@@ -473,6 +470,15 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
+    }
+
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    @Override
+    public boolean isRegister() {
+        return register;
     }
 
     @Override

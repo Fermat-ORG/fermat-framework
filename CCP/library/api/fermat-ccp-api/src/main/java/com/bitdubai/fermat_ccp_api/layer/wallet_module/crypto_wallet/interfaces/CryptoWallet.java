@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
@@ -34,6 +36,17 @@ public interface CryptoWallet extends Serializable {
      * @throws CantGetAllWalletContactsException if something goes wrong
      */
     List<CryptoWalletWalletContact> listWalletContacts(String walletPublicKey) throws CantGetAllWalletContactsException;
+
+
+    /**
+     * List  wallet contact and intra user connections related to an specific wallet.
+     *
+     * @param walletPublicKey
+     * @param intraUserPublicKey
+     * @return
+     * @throws CantGetAllWalletContactsException
+     */
+    List<CryptoWalletWalletContact> listAllActorContactsAndConnections(String walletPublicKey,String intraUserPublicKey) throws CantGetAllWalletContactsException;
 
     /**
      * List all wallet contact related to an specific wallet.
@@ -87,6 +100,34 @@ public interface CryptoWallet extends Serializable {
                                                   String        actorLastName,
                                                   Actors        actorType,
                                                   String        walletPublicKey) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
+
+    /**
+     * Convert a intra user connection to a new wallet contact
+     *
+     * @param actorAlias
+     * @param actorConnectedType
+     * @param actorConnectedPublicKey
+     * @param actorPhoto
+     * @param actorWalletType
+     * @param identityWalletPublicKey
+     * @param walletPublicKey
+     * @param walletCryptoCurrency
+     * @param blockchainNetworkType
+     * @return
+     * @throws CantCreateWalletContactException
+     * @throws ContactNameAlreadyExistsException
+     */
+    CryptoWalletWalletContact convertConnectionToContact( String        actorAlias,
+                                                          Actors        actorConnectedType,
+                                                          String        actorConnectedPublicKey,
+                                                          byte[]        actorPhoto,
+                                                          Actors        actorWalletType ,
+                                                          String        identityWalletPublicKey,
+                                                          String        walletPublicKey,
+                                                          CryptoCurrency walletCryptoCurrency,
+                                                          BlockchainNetworkType blockchainNetworkType) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
+        ;
+
 
     /**
      * Create a new contact with a photo for an specific wallet

@@ -113,7 +113,7 @@ public class RedeemPointActorDeveloperDatabaseFactory implements DealsWithPlugin
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME);
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_NAME_COLUMN_NAME);
-        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATE_COLUMN_NAME);
+        redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_CONNECTION_STATE_COLUMN_NAME);
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME);
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME);
         redeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_CONTACT_INFORMATION_COLUMN_NAME);
@@ -142,7 +142,7 @@ public class RedeemPointActorDeveloperDatabaseFactory implements DealsWithPlugin
         registeredRedeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME);
         registeredRedeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         registeredRedeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_NAME_COLUMN_NAME);
-        registeredRedeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_STATE_COLUMN_NAME);
+        registeredRedeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME);
         registeredRedeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME);
         registeredRedeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_MODIFIED_DATE_COLUMN_NAME);
         registeredRedeemPointActorColumns.add(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONTACT_INFORMATION_COLUMN_NAME);

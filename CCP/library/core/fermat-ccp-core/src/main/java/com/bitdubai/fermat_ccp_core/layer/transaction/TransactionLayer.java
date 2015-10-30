@@ -1,14 +1,13 @@
 package com.bitdubai.fermat_ccp_core.layer.transaction;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractLayer;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterPluginException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartLayerException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractLayer;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPluginException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_ccp_core.layer.transaction.incoming_extra_user.IncomingExtraUserPluginSubsystem;
 import com.bitdubai.fermat_ccp_core.layer.transaction.incoming_intra_user.IncomingIntraUserPluginSubsystem;
 import com.bitdubai.fermat_ccp_core.layer.transaction.outgoing_extra_user.OutgoingExtraUserPluginSubsystem;
 import com.bitdubai.fermat_ccp_core.layer.transaction.outgoing_intra_actor.OutgoingIntraActorPluginSubsystem;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.CCPPlugins;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 25/09/2015.

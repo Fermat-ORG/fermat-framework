@@ -19,7 +19,7 @@
 //import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 //import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
 //import com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.IntraWalletUserModulePluginRoot;
-//import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+//import ErrorManager;
 //
 //import junit.framework.TestCase;
 //

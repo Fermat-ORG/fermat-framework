@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.DeviceUserLoggedInEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.DeviceUserLoggedInEvent;
 
 /**
  * Created by ciencias on 24.01.15.

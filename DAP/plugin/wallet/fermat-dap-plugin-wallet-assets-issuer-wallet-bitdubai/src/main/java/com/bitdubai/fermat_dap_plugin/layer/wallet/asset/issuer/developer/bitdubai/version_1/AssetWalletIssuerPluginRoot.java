@@ -41,19 +41,17 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfac
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransactionRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerWalletImpl;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database.DeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.exceptions.CantDeliverDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -289,7 +287,7 @@ public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, 
 
         DigitalAsset digitalAsset1 = new DigitalAsset();
         digitalAsset1.setPublicKey("assetPublicKeyNew2");
-        digitalAsset1.setName("Coupon Patriotico");
+        digitalAsset1.setName("Asset for Distribution");
         digitalAsset1.setDescription("2x1 La Patria te Da Mas");
         CryptoAddress cryptoFromAddress1 = new CryptoAddress("cryptoAddresFrom", CryptoCurrency.BITCOIN);
         CryptoAddress cryptoToAddress1 = new CryptoAddress("cryptoAddresFrom", CryptoCurrency.BITCOIN);
@@ -297,7 +295,7 @@ public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, 
         AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper3 = new AssetIssuerWalletTransactionRecordWrapper(
                 digitalAsset1,
                 "",
-                "Coupon Patriotico",
+                "Asset for Distribution",
                 "2x1  La Patria te Da Mas",
                 cryptoFromAddress1,
                 cryptoToAddress1,
@@ -356,46 +354,52 @@ public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, 
             e.printStackTrace();
         }
         try {
-            List<AssetIssuerWalletList> assetIssuerWalletLists = assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).getAssetIssuerWalletBalancesAvailable();
-            //List<AssetIssuerWalletList> assetIssuerWalletLists = assetIssuerWallet.getBookBalance(BalanceType.BOOK).getAssetIssuerWalletBalancesAvailable();
-            System.out.println("--------LISTADO DE ASSET BALANCE---------------------------------------------");
-
-            for (AssetIssuerWalletList assetIssuerWalletList : assetIssuerWalletLists){
-                System.out.println("-------------------------------------------------------------------------");
-                System.out.println("Asset PublicKey        : "   + assetIssuerWalletList.getAssetPublicKey());
-                System.out.println("Asset Name             : "   + assetIssuerWalletList.getName());
-                System.out.println("Asset Description      : "   + assetIssuerWalletList.getDescription());
-                System.out.println("Asset Balance Available: "   + assetIssuerWalletList.getAvailableBalance());
-                System.out.println("Asset Balance Book     : "   + assetIssuerWalletList.getBookBalance());
-                System.out.println("-------------------------------------------------------------------------");
-            }
-
-            List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions = assetIssuerWallet.getTransactionsAll(BalanceType.AVAILABLE, TransactionType.CREDIT, "assetPublicKeyNew2");
-            //List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions = assetIssuerWallet.getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, 1, 1000, "assetPublicKey");
-            System.out.println("--------LISTADO DE TRANSACTIONS CREDITOS-------------------------------------");
-            for (AssetIssuerWalletTransaction assetIssuerWalletTransaction : assetIssuerWalletTransactions){
-                System.out.println("-------------------------------------------------------------------------");
-                System.out.println("Asset PublicKey        : "   + assetIssuerWalletTransaction.getAssetPublicKey());
-                System.out.println("Address From           : "   + assetIssuerWalletTransaction.getAddressFrom());
-                System.out.println("Address To             : "   + assetIssuerWalletTransaction.getAddressTo());
-                System.out.println("Amount                 : "   + assetIssuerWalletTransaction.getAmount());
-                System.out.println("Transaction Type       : "   + assetIssuerWalletTransaction.getTransactionType().getCode());
-                System.out.println("TransactionId          : "   + assetIssuerWalletTransaction.getTransactionId());
-                System.out.println("-------------------------------------------------------------------------");
-            }
-            List<AssetIssuerWalletTransaction> assetIssuerWalletTransactionsD = assetIssuerWallet.getTransactionsAll(BalanceType.AVAILABLE, TransactionType.DEBIT, "assetPublicKey");
-            System.out.println("--------LISTADO DE TRANSACTIONS DEBITOS-------------------------------------");
-            for (AssetIssuerWalletTransaction assetIssuerWalletTransaction : assetIssuerWalletTransactionsD){
-                System.out.println("-------------------------------------------------------------------------");
-                System.out.println("Asset PublicKey        : "   + assetIssuerWalletTransaction.getAssetPublicKey());
-                System.out.println("Address From           : "   + assetIssuerWalletTransaction.getAddressFrom());
-                System.out.println("Address To             : "   + assetIssuerWalletTransaction.getAddressTo());
-                System.out.println("Amount                 : "   + assetIssuerWalletTransaction.getAmount());
-                System.out.println("Transaction Type       : "   + assetIssuerWalletTransaction.getTransactionType().getCode());
-                System.out.println("TransactionId          : "   + assetIssuerWalletTransaction.getTransactionId());
-                System.out.println("-------------------------------------------------------------------------");
-            }
+//            List<AssetIssuerWalletList> assetIssuerWalletLists = assetIssuerWallet.getBookBalance(BalanceType.AVAILABLE).getAssetIssuerWalletBalancesAvailable();
+//            //List<AssetIssuerWalletList> assetIssuerWalletLists = assetIssuerWallet.getBookBalance(BalanceType.BOOK).getAssetIssuerWalletBalancesAvailable();
+//            System.out.println("--------LISTADO DE ASSET BALANCE---------------------------------------------");
+//
+//            for (AssetIssuerWalletList assetIssuerWalletList : assetIssuerWalletLists){
+//                System.out.println("-------------------------------------------------------------------------");
+//                System.out.println("Asset PublicKey        : "   + assetIssuerWalletList.getAssetPublicKey());
+//                System.out.println("Asset Name             : "   + assetIssuerWalletList.getName());
+//                System.out.println("Asset Description      : "   + assetIssuerWalletList.getDescription());
+//                System.out.println("Asset Balance Available: "   + assetIssuerWalletList.getAvailableBalance());
+//                System.out.println("Asset Balance Book     : "   + assetIssuerWalletList.getBookBalance());
+//                System.out.println("-------------------------------------------------------------------------");
+//            }
+//
+//            List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions = assetIssuerWallet.getTransactionsAll(BalanceType.AVAILABLE, TransactionType.CREDIT, "assetPublicKeyNew2");
+//            //List<AssetIssuerWalletTransaction> assetIssuerWalletTransactions = assetIssuerWallet.getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, 1, 1000, "assetPublicKey");
+//            System.out.println("--------LISTADO DE TRANSACTIONS CREDITOS-------------------------------------");
+//            for (AssetIssuerWalletTransaction assetIssuerWalletTransaction : assetIssuerWalletTransactions){
+//                System.out.println("-------------------------------------------------------------------------");
+//                System.out.println("Asset PublicKey        : "   + assetIssuerWalletTransaction.getAssetPublicKey());
+//                System.out.println("Address From           : "   + assetIssuerWalletTransaction.getAddressFrom());
+//                System.out.println("Address To             : "   + assetIssuerWalletTransaction.getAddressTo());
+//                System.out.println("Amount                 : "   + assetIssuerWalletTransaction.getAmount());
+//                System.out.println("Transaction Type       : "   + assetIssuerWalletTransaction.getTransactionType().getCode());
+//                System.out.println("TransactionId          : "   + assetIssuerWalletTransaction.getTransactionId());
+//                System.out.println("-------------------------------------------------------------------------");
+//            }
+//            List<AssetIssuerWalletTransaction> assetIssuerWalletTransactionsD = assetIssuerWallet.getTransactionsAll(BalanceType.AVAILABLE, TransactionType.DEBIT, "assetPublicKey");
+//            System.out.println("--------LISTADO DE TRANSACTIONS DEBITOS-------------------------------------");
+//            for (AssetIssuerWalletTransaction assetIssuerWalletTransaction : assetIssuerWalletTransactionsD){
+//                System.out.println("-------------------------------------------------------------------------");
+//                System.out.println("Asset PublicKey        : "   + assetIssuerWalletTransaction.getAssetPublicKey());
+//                System.out.println("Address From           : "   + assetIssuerWalletTransaction.getAddressFrom());
+//                System.out.println("Address To             : "   + assetIssuerWalletTransaction.getAddressTo());
+//                System.out.println("Amount                 : "   + assetIssuerWalletTransaction.getAmount());
+//                System.out.println("Transaction Type       : "   + assetIssuerWalletTransaction.getTransactionType().getCode());
+//                System.out.println("TransactionId          : "   + assetIssuerWalletTransaction.getTransactionId());
+//                System.out.println("-------------------------------------------------------------------------");
+//            }
             ActorAssetUser actorAssetUser = new ActorAssetUser() {
+
+                @Override
+                public String getPublicLinkedIdentity() {
+                    return "publicLinkedKeyActor";
+                }
+
                 @Override
                 public String getPublicKey() {
                     return "publicKeyActor";
@@ -407,7 +411,12 @@ public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, 
                 }
 
                 @Override
-                public long getContactRegistrationDate() {
+                public long getRegistrationDate() {
+                    return 0;
+                }
+
+                @Override
+                public long getLastConnectionDate() {
                     return 0;
                 }
 
@@ -418,6 +427,11 @@ public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, 
 
                 @Override
                 public ConnectionState getConnectionState() {
+                    return null;
+                }
+
+                @Override
+                public Location getLocation() {
                     return null;
                 }
 
@@ -437,7 +451,7 @@ public class AssetWalletIssuerPluginRoot implements DealsWithAssetDistribution, 
 //                }
 
                 @Override
-                public Genders getGender() {
+                public Genders getGenders() {
                     return null;
                 }
 

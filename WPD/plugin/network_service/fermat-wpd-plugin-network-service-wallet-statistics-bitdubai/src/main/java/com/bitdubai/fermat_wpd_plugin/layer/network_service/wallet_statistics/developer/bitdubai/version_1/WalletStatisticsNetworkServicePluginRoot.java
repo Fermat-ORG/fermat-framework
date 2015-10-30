@@ -17,8 +17,8 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.N
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,6 +62,11 @@ public class WalletStatisticsNetworkServicePluginRoot implements DealsWithErrors
      */
     UUID pluginId;
 
+    /**
+     * Represent the register
+     */
+    private boolean register;
+
 
 
     /**
@@ -96,14 +101,9 @@ public class WalletStatisticsNetworkServicePluginRoot implements DealsWithErrors
     /**
      * NetworkService Interface implementation.
      */
-    
-    @Override
-    public UUID getId() {
-        return pluginId;
-    }
 
     @Override
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return null;
     }
 
@@ -162,6 +162,15 @@ public class WalletStatisticsNetworkServicePluginRoot implements DealsWithErrors
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile,PlatformComponentProfile remoteComponentProfile) {
 
+    }
+
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    @Override
+    public boolean isRegister() {
+        return register;
     }
 
     /**

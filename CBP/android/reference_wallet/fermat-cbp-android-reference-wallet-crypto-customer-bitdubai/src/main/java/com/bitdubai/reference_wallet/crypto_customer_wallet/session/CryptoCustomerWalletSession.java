@@ -1,11 +1,12 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.session;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,9 +29,9 @@ public class CryptoCustomerWalletSession implements WalletSession {
     private ErrorManager errorManager;
 
     /**
-     * Wallet Store Module
+     * Crypto Customer Wallet Module
      */
-    private WalletStoreModuleManager moduleManager;
+    private CryptoCustomerWalletModuleManager moduleManager;
 
 
     /**
@@ -40,7 +41,7 @@ public class CryptoCustomerWalletSession implements WalletSession {
      * @param errorManager             the error manager
      * @param moduleManager the module of this SubApp
      */
-    public CryptoCustomerWalletSession(InstalledWallet wallet, ErrorManager errorManager, WalletStoreModuleManager moduleManager) {
+    public CryptoCustomerWalletSession(InstalledWallet wallet, ErrorManager errorManager, CryptoCustomerWalletModuleManager moduleManager) {
         this.wallet = wallet;
         data = new HashMap<String, Object>();
         this.errorManager = errorManager;
@@ -100,7 +101,7 @@ public class CryptoCustomerWalletSession implements WalletSession {
      *
      * @return reference to the Wallet Store Module
      */
-    public WalletStoreModuleManager getModuleManager() {
+    public CryptoCustomerWalletModuleManager getModuleManager() {
         return moduleManager;
     }
 

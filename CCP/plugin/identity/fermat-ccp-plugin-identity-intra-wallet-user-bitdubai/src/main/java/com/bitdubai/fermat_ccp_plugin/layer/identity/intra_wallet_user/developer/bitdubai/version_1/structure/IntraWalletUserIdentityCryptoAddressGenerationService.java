@@ -37,15 +37,15 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
 
     public static final Actors actorType = Actors.INTRA_USER;
 
-    private final CryptoAddressesManager                cryptoAddressesManager;
-    private final CryptoAddressBookManager              cryptoAddressBookManager;
-    private final IntraWalletUserIdentityVaultAdministrator vaultAdministrator;
-    private final WalletManagerManager                  walletManagerManager;
+    private final CryptoAddressesManager                    cryptoAddressesManager  ;
+    private final CryptoAddressBookManager                  cryptoAddressBookManager;
+    private final IntraWalletUserIdentityVaultAdministrator vaultAdministrator      ;
+    private final WalletManagerManager                      walletManagerManager    ;
 
-    public IntraWalletUserIdentityCryptoAddressGenerationService(final CryptoAddressesManager cryptoAddressesManager,
-                                                                 final CryptoAddressBookManager cryptoAddressBookManager,
-                                                                 final IntraWalletUserIdentityVaultAdministrator vaultAdministrator,
-                                                                 final WalletManagerManager walletManagerManager) {
+    public IntraWalletUserIdentityCryptoAddressGenerationService(final CryptoAddressesManager                    cryptoAddressesManager  ,
+                                                                 final CryptoAddressBookManager                  cryptoAddressBookManager,
+                                                                 final IntraWalletUserIdentityVaultAdministrator vaultAdministrator      ,
+                                                                 final WalletManagerManager                      walletManagerManager    ) {
 
         this.cryptoAddressesManager   = cryptoAddressesManager;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
@@ -53,10 +53,7 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
         this.walletManagerManager     = walletManagerManager;
     }
 
-    // TODO what happens if i don't recognize the actor? if the request arrives to me must belongs.. but...
-
-
-    public void handleCryptoAddressRequestedEvent(UUID requestId) throws CantHandleCryptoAddressRequestEventException {
+    public void handleCryptoAddressRequestedEvent(final UUID requestId) throws CantHandleCryptoAddressRequestEventException {
 
         try {
             AddressExchangeRequest request = cryptoAddressesManager.getPendingRequest(requestId);
@@ -67,7 +64,7 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
         }
     }
 
-    public void handleCryptoAddressRequestedEvent(AddressExchangeRequest request) throws CantHandleCryptoAddressRequestEventException {
+    public void handleCryptoAddressRequestedEvent(final AddressExchangeRequest request) throws CantHandleCryptoAddressRequestEventException {
 
         try {
 
@@ -86,6 +83,8 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
 
                 ReferenceWallet referenceWallet = ReferenceWallet.getByCategoryAndIdentifier(wallet.getWalletCategory(), wallet.getWalletPlatformIdentifier());
 
+                System.out.println("************ Crypto Addresses -> updating ok.");
+
                 cryptoAddressBookManager.registerCryptoAddress(
                         cryptoAddress,
                         request.getIdentityPublicKeyResponding(),
@@ -99,10 +98,16 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
                         referenceWallet
                 );
 
+                System.out.println("************ Crypto Addresses ->registered crypto address.");
+
+                System.out.println("************ Crypto Addresses -> i will accept the address exchange request.");
+
                 cryptoAddressesManager.acceptAddressExchangeRequest(
                         request.getRequestId(),
                         cryptoAddress
                 );
+
+                System.out.println("************ Crypto Addresses -> i already accept the address exchange request.");
 
             } catch(DefaultWalletNotFoundException z) {
 

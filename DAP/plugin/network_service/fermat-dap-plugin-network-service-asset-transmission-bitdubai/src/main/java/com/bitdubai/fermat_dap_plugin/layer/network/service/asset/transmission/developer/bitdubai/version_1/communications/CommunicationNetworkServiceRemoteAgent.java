@@ -24,10 +24,10 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,8 +51,8 @@ import java.util.Observable;
 public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
     /*
-   * Represent the sleep time for the read or send (2000 milliseconds)
-   */
+     * Represent the sleep time for the read or send (2000 milliseconds)
+     */
     private static final long SLEEP_TIME = 2000;
 
     /**
@@ -138,6 +138,8 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
             }
         });
 
+//        ExecutorService executorService =
+
     }
 
     /**
@@ -192,14 +194,14 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         try {
 
-            //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.isActive() = "+communicationsVPNConnection.isActive());
+            // System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
 
             /**
              * Verified the status of the connection
              */
             if (communicationsVPNConnection.isActive()){
 
-                //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.getUnreadMessagesCount() = "+communicationsVPNConnection.getUnreadMessagesCount());
+                //   System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.getUnreadMessagesCount());
 
                 /**
                  * process all pending messages
@@ -210,6 +212,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                      * Read the next message in the queue
                      */
                     FermatMessage message = communicationsVPNConnection.readNextMessage();
+
 
                     /*
                      * Validate the message signature
@@ -295,7 +298,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                         String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
                         ((FermatMessageCommunication) message).setSignature(signature);
 
-
                             /*
                              * Send the message
                              */
@@ -304,7 +306,6 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                             /*
                              * Change the message and update in the data base
                              */
-
                         ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
                         outgoingMessageDao.update(message);
 

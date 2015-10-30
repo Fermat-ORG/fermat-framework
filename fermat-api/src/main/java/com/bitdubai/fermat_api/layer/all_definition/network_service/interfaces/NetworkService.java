@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.Networ
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by ciencias on 30.12.14.
@@ -16,29 +15,22 @@ import java.util.UUID;
 public interface NetworkService {
 
     /**
-     * Get the Id
-     *
-     * @return UUID
-     */
-    public UUID getId();
-
-    /**
      * Get the PlatformComponentProfile for this network service
      * @return PlatformComponentProfile
      */
-    public PlatformComponentProfile getPlatformComponentProfile();
+    PlatformComponentProfile getPlatformComponentProfilePluginRoot();
 
     /**
      * Get the PlatformComponentType for this network service
      * @return PlatformComponentType
      */
-    public PlatformComponentType getPlatformComponentType();
+    PlatformComponentType getPlatformComponentType();
 
     /**
      * Get the NetworkServiceType for this network service
      * @return NetworkServiceType
      */
-    public NetworkServiceType getNetworkServiceType();
+    NetworkServiceType getNetworkServiceType();
 
     /*
      * Get the RemoteNetworkServicesRegisteredList, this method may be called after
@@ -47,7 +39,7 @@ public interface NetworkService {
      *
      * @return List<PlatformComponentProfile>
      */
-    public List<PlatformComponentProfile> getRemoteNetworkServicesRegisteredList();
+    List<PlatformComponentProfile> getRemoteNetworkServicesRegisteredList();
 
     /**
      * Make a request of the Remote Network Services Registered in the cloud server, that
@@ -55,13 +47,13 @@ public interface NetworkService {
      *
      * @param discoveryQueryParameters
      */
-    public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters);
+    void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters);
 
     /**
      * Get the NetworkServiceConnectionManager
      * @return NetworkServiceConnectionManager
      */
-    public NetworkServiceConnectionManager getNetworkServiceConnectionManager();
+    NetworkServiceConnectionManager getNetworkServiceConnectionManager();
 
     /**
      * Construct a DiscoveryQueryParameters instance, for use in the process
@@ -82,33 +74,39 @@ public interface NetworkService {
      * @param fromOtherNetworkServiceType
      * @return DiscoveryQueryParameters
      */
-    public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType);
+    DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType);
 
 
     /**
      * Handles the events CompleteComponentRegistrationNotification
      * @param platformComponentProfileRegistered
      */
-    public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered);
+    void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered);
 
     /**
      * Handles the events FailureComponentConnectionRequestNotificationEvent
      * @param networkServiceApplicant
      * @param remoteNetworkService
      */
-    public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteNetworkService);
+    void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteNetworkService);
 
 
     /**
      * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
      * @param platformComponentProfileRegisteredList
      */
-    public void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList);
+    void handleCompleteRequestListComponentRegisteredNotificationEvent(List<PlatformComponentProfile> platformComponentProfileRegisteredList);
 
     /**
      * Handles the events CompleteRequestListComponentRegisteredNotificationEvent
      * @param applicantComponentProfile
      */
-    public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile);
+    void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile);
+
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    public boolean isRegister();
 
 }

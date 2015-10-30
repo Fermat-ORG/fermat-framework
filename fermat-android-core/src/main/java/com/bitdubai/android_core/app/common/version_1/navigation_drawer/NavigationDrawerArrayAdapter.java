@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_api.layer.identity.common.IdentityUserInformation;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -30,14 +31,12 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
     public NavigationDrawerArrayAdapter(Context context, List<String> values) {
         super(context, R.layout.wallet_framework_activity_main_navigation_drawer_row_layout_empty, values);
-        try
-        {
+        try {
 
             this.context = context;
             this.values = values;
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             throw e;
         }
 
@@ -49,8 +48,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
     public View getView(int position, View convertView, ViewGroup parent) {
         Typeface tf=Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
         View rowView = convertView;
-        try
-        {
+        try {
             if (position == 0) {
 
 
@@ -68,6 +66,8 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 userName = (TextView) rowView.findViewById(R.id.label);
 
                 imageView_intra_users = (ImageView) rowView.findViewById(R.id.icon_change_profile);
+
+                Picasso.with(context).load(R.drawable.profile_image).into(imageView_intra_users);
 
 
 
@@ -105,7 +105,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
             else {
                 LayoutInflater inflater = (LayoutInflater) context
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
+               // rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
 
 
                 //test mati
@@ -122,6 +122,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 */
                 ImageView imageView = null;
                 imageView = (ImageView) rowView.findViewById(R.id.icon);
+
                 if(rowView.findViewById(R.id.label) != null)
                 {
                     TextView textView = (TextView) rowView.findViewById(R.id.label);
@@ -132,35 +133,30 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
 
                 //if (ApplicationSession.getActivityId() == "DesktopActivity") {
-
                 switch (position) {
                     case 1:
-                        imageView.setImageResource(R.drawable.ic_action_store);
+                        imageView.setImageResource(R.drawable.btn_drawer_home_active);
                         break;
                     case 2:
-                        imageView.setImageResource(R.drawable.ic_action_wallet);
+                        imageView.setImageResource(R.drawable.btn_drawer_profile_normal);
                         break;
                     case 3:
-                        imageView.setImageResource(R.drawable.ic_action_factory);
-                        break;
-                    case 4:
-                        imageView.setImageResource(R.drawable.ic_action_exit);
-
-                        break;
-                    case 5:
                         imageView.setImageResource(R.drawable.ic_action_wallet);
                         break;
-
-                    case 6:
-                        imageView.setImageResource(R.drawable.ic_action_wallet_published);
+                    case 4:
+                        imageView.setImageResource(R.drawable.ic_action_factory);
                         break;
+                    case 5:
+                        imageView.setImageResource(R.drawable.btn_drawer_logout_normal);
+
+                        break;
+
                     default:
                         imageView.setImageResource(R.drawable.unknown_icon);
                 }
 
-
-
             }
+
 
             //}
         }

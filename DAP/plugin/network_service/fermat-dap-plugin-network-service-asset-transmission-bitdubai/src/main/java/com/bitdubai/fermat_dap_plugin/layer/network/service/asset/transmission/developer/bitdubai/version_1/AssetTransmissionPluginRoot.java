@@ -77,7 +77,6 @@ import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.d
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.DigitalAssetMetadataTransactionImpl;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.EncodeMsjContent;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.test.MockDigitalAssetMetadataForTesting;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.test.MockIdentityAssetIssuerForTest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
@@ -89,11 +88,11 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatM
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -256,9 +255,6 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
         this.eventManager = DealsWithEvents;
     }
 
-    public boolean isRegister() {
-        return register;
-    }
 
     /**
      * Get the IdentityPublicKey
@@ -298,7 +294,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
      *
      * @param platformComponentProfile
      */
-    public void setPlatformComponentProfile(PlatformComponentProfile platformComponentProfile) {
+    public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfile) {
         this.platformComponentProfile = platformComponentProfile;
     }
 
@@ -604,12 +600,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
     }
 
     @Override
-    public UUID getId() {
-        return this.pluginId;
-    }
-
-    @Override
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
 
@@ -732,132 +723,15 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
 
         System.out.println(" AssetTransmissionPluginRoot - remoteNetworkServicesRegisteredList.size() "+remoteNetworkServicesRegisteredList.size());
 
-         /* -----------------------------------------------------------------------
-         * This is for test and example of how to use
-         */
-        if(getRemoteNetworkServicesRegisteredList() != null && !getRemoteNetworkServicesRegisteredList().isEmpty()){
+    }
 
-            /*
-             * Get a remote network service registered from the list requested
-             */
-            final PlatformComponentProfile remoteToConnect = getRemoteNetworkServicesRegisteredList().get(0);
-
-            System.out.println(" AssetTransmissionPluginRoot - remoteToConnect "+remoteToConnect);
-            
-            try {
-
-                ActorAssetIssuer actorAssetIssuer = new ActorAssetIssuer() {
-                    @Override
-                    public String getPublicKey() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getName() {
-                        return null;
-                    }
-
-                    @Override
-                    public long getContactRegistrationDate() {
-                        return 0;
-                    }
-
-                    @Override
-                    public byte[] getProfileImage() {
-                        return new byte[0];
-                    }
-
-                    @Override
-                    public ConnectionState getContactState() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getDescription() {
-                        return null;
-                    }
-
-                    @Override
-                    public Location getLocation() {
-                        return null;
-                    }
-
-                    @Override
-                    public CryptoAddress getCryptoAddress() {
-                        return null;
-                    }
-
-
-                };
-
-                ActorAssetUser actorAssetUser = new ActorAssetUser() {
-                    @Override
-                    public String getPublicKey() {
-                        return remoteToConnect.getIdentityPublicKey();
-                    }
-
-                    @Override
-                    public String getName() {
-                        return remoteToConnect.getName();
-                    }
-
-                    @Override
-                    public long getContactRegistrationDate() {
-                        return 0;
-                    }
-
-                    @Override
-                    public byte[] getProfileImage() {
-                        return new byte[0];
-                    }
-
-                    @Override
-                    public ConnectionState getConnectionState() {
-                        return null;
-                    }
-
-                    @Override
-                    public Double getLocationLatitude() {
-                        return null;
-                    }
-
-                    @Override
-                    public Double getLocationLongitude() {
-                        return null;
-                    }
-
-
-                    @Override
-                    public Genders getGender() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getAge() {
-                        return null;
-                    }
-
-                    @Override
-                    public CryptoAddress getCryptoAddress() {
-                        return null;
-                    }
-                };
-
-
-                MockDigitalAssetMetadataForTesting mockDigitalAssetForTesting = new MockDigitalAssetMetadataForTesting();
-
-                sendDigitalAssetMetadata(actorAssetIssuer,actorAssetUser, mockDigitalAssetForTesting);
-
-
-            } catch (CantDefineContractPropertyException e) {
-                e.printStackTrace();
-            } catch (CantSendDigitalAssetMetadataException e) {
-                e.printStackTrace();
-            }
-
-
-        }
-
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    @Override
+    public boolean isRegister() {
+        return register;
     }
 
     @Override
@@ -883,8 +757,6 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
              * Get a remote network service registered from the list requested
              */
             PlatformComponentProfile remoteNetworkServiceToConnect = remoteNetworkServicesRegisteredList.get(0);
-
-
 
         }
 
@@ -1065,7 +937,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             if (communicationNetworkServiceLocal != null) {
 
                 //Send the message
-                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), msjContent);
+                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),"", msjContent);
 
             }else{
 
@@ -1154,7 +1026,7 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
             if (communicationNetworkServiceLocal != null) {
 
                 //Send the message
-                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), msjContent);
+                communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),"", msjContent);
 
             }else{
 

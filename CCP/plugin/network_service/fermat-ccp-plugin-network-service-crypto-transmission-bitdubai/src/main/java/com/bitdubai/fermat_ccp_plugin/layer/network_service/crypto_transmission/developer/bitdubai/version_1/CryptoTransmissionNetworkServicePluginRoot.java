@@ -9,14 +9,11 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetFeatureForDevelopersException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FeatureForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.DevelopersUtilReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -43,6 +40,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.FermatCryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionStates;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantAcceptCryptoRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CantGetTransactionStateException;
@@ -91,11 +89,11 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloud
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -112,27 +110,17 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin implements CryptoTransmissionNetworkServiceManager, Service, NetworkService, DealsWithWsCommunicationsCloudClientManager, DealsWithPluginDatabaseSystem, DealsWithEvents, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, DatabaseManagerForDevelopers {
+public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin implements
+        CryptoTransmissionNetworkServiceManager,
+        NetworkService,
+        DealsWithWsCommunicationsCloudClientManager,
+        DealsWithPluginDatabaseSystem,
+        DealsWithEvents,
+        DealsWithErrors,
+        DealsWithLogger,
+        LogManagerForDevelopers,
+        DatabaseManagerForDevelopers {
 
-    @Override
-    public List<AddonVersionReference> getNeededAddonReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<PluginVersionReference> getNeededPluginReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    protected void validateAndAssignReferences() {
-
-    }
 
     @Override
     public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
@@ -283,7 +271,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      * Constructor
      */
     public CryptoTransmissionNetworkServicePluginRoot() {
-        super();
+        super(new PluginVersionReference(new Version()));
         this.listenersAdded = new ArrayList<>();
         this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
         this.networkServiceType    = NetworkServiceType.CRYPTO_TRANSMISSION;
@@ -776,15 +764,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     /**
      * (non-Javadoc)
-     * @see NetworkService#getId()
-     */
-    @Override
-    public UUID getId() {
-        return this.pluginId;
-    }
-
-    /**
-     * (non-Javadoc)
      * @see Plugin#setId(UUID)
      */
     @Override
@@ -968,9 +947,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     /**
      * (non-Javadoc)
-     * @see NetworkService#getPlatformComponentProfile()
+     * @see NetworkService#getPlatformComponentProfilePluginRoot()
      */
-    public PlatformComponentProfile getPlatformComponentProfile() {
+    public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
 
@@ -1005,6 +984,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      * Get is Register
      * @return boolean
      */
+    @Override
     public boolean isRegister() {
         return register;
     }

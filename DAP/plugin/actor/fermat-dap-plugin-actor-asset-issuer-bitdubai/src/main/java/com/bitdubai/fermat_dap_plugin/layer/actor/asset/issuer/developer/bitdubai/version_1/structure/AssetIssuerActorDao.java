@@ -1,12 +1,10 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -28,6 +26,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.database.AssetIssuerActorDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.database.AssetIssuerActorDatabaseFactory;
@@ -119,6 +118,61 @@ public class AssetIssuerActorDao implements Serializable {
         }
     }
 
+    public void createNewAssetIssuer(ActorAssetIssuer assetIssuerActorRecord) throws CantAddPendingAssetIssuerException {
+        try {
+            /**
+             * if Asset Issuer exist on table
+             * change status
+             */
+//            if (assetIssuerExists(assetIssuerActorRecord.getPublicKey())) {
+//                this.updateAssetIssuerConnectionState(assetIssuerLoggedInPublicKey, assetIssuerActorRecord.getPublicKey(), assetIssuerActorRecord.getConnectionState());
+//            } else {
+                /**
+                 * Get actual date
+                 */
+            DatabaseTable table = this.database.getTable(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_TABLE_NAME);
+            if (table == null) {
+                throw new CantGetUserDeveloperIdentitiesException("CANT GET ASSET ISSUER ACTOR, TABLE NOT FOUND.", " ASSET ISSUER ACTOR", "");
+            } else {
+                table.loadToMemory();
+                if (table.getRecords().size() == 0) {
+                    DatabaseTableRecord record = table.getEmptyRecord();
+
+                    record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, "-");
+
+                    record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME, assetIssuerActorRecord.getPublicKey());
+                    record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_NAME_COLUMN_NAME, assetIssuerActorRecord.getName());
+
+                    record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, assetIssuerActorRecord.getConnectionState().getCode());
+
+                    record.setDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LATITUDE_COLUMN_NAME, assetIssuerActorRecord.getLocationLatitude());
+                    record.setDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME, assetIssuerActorRecord.getLocationLongitude());
+
+                    record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTRATION_DATE_COLUMN_NAME, assetIssuerActorRecord.getRegistrationDate());
+                    record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_MODIFIED_DATE_COLUMN_NAME, System.currentTimeMillis());
+
+                    record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_EXTENDED_COLUMN_NAME, "-");
+//                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME, assetIssuerActorRecord.getCryptoAddress().getCryptoCurrency().getCode());
+//                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME, assetIssuerActorRecord.getCryptoAddress().getAddress());
+                    record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_DESCRIPTION_COLUMN_NAME, assetIssuerActorRecord.getDescription());
+
+                    table.insertRecord(record);
+                    /**
+                     * Persist profile image on a file
+                     */
+                    persistNewAssetIssuerProfileImage(assetIssuerActorRecord.getPublicKey(), assetIssuerActorRecord.getProfileImage());
+                }
+            }
+            database.closeDatabase();
+        } catch (CantInsertRecordException e) {
+            throw new CantAddPendingAssetIssuerException("CAN'T INSERT ASSET ISSUER", e, "", "Cant create new ASSET ISSUER, insert database problems.");
+        } catch (Exception e) {
+            throw new CantAddPendingAssetIssuerException("CAN'T INSERT ASSET ISSUER", FermatException.wrapException(e), "", "Cant create new ASSET ISSUER, unknown failure.");
+        } finally {
+            database.closeDatabase();
+        }
+    }
+
     /**
      * Crea un nuevo registro en la tabla de Actor AssetIssuer con los
      * parámetros suministrados.
@@ -137,58 +191,51 @@ public class AssetIssuerActorDao implements Serializable {
      *                                            the given public key is null.
      */
     public void createNewAssetIssuer(String assetIssuerLoggedInPublicKey, ActorAssetIssuer assetIssuerActorRecord) throws CantAddPendingAssetIssuerException {
-
         try {
             /**
              * if Asset Issuer exist on table
              * change status
              */
             if (assetIssuerExists(assetIssuerActorRecord.getPublicKey())) {
-
-                this.updateAssetIssuerConnectionState(assetIssuerLoggedInPublicKey, assetIssuerActorRecord.getPublicKey(), assetIssuerActorRecord.getContactState());
-
+                this.updateAssetIssuerConnectionState(assetIssuerLoggedInPublicKey, assetIssuerActorRecord.getPublicKey(), assetIssuerActorRecord.getConnectionState());
             } else {
                 /**
                  * Get actual date
                  */
-
                 DatabaseTable table = this.database.getTable(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_TABLE_NAME);
                 DatabaseTableRecord record = table.getEmptyRecord();
 
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_PUBLIC_KEY_COLUMN_NAME, assetIssuerActorRecord.getPublicKey());
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_NAME_COLUMN_NAME, assetIssuerActorRecord.getName());
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_STATE_COLUMN_NAME, assetIssuerActorRecord.getContactState().getCode());
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetIssuerLoggedInPublicKey);
-                record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
-                record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_MODIFIED_DATE_COLUMN_NAME, System.currentTimeMillis());
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME, assetIssuerActorRecord.getCryptoAddress().getCryptoCurrency().getCode());
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME, assetIssuerActorRecord.getCryptoAddress().getAddress());
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_DESCRIPTION_COLUMN_NAME, assetIssuerActorRecord.getDescription());
-                record.setDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME, assetIssuerActorRecord.getLocation().getLongitude());
-                record.setDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_LOCATION_LATITUDE_COLUMN_NAME, assetIssuerActorRecord.getLocation().getLatitude());
-
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME, assetIssuerActorRecord.getPublicKey());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetIssuerLoggedInPublicKey);
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_NAME_COLUMN_NAME, assetIssuerActorRecord.getName());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, assetIssuerActorRecord.getConnectionState().getCode());
+                record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
+                record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_MODIFIED_DATE_COLUMN_NAME, System.currentTimeMillis());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_EXTENDED_COLUMN_NAME, "-");
+//                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME, assetIssuerActorRecord.getCryptoAddress().getCryptoCurrency().getCode());
+//                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME, assetIssuerActorRecord.getCryptoAddress().getAddress());
+                record.setDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LATITUDE_COLUMN_NAME, assetIssuerActorRecord.getLocation().getLatitude());
+                record.setDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME, assetIssuerActorRecord.getLocation().getLongitude());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_DESCRIPTION_COLUMN_NAME, assetIssuerActorRecord.getDescription());
 
                 table.insertRecord(record);
                 /**
                  * Persist profile image on a file
                  */
                 persistNewAssetIssuerProfileImage(assetIssuerActorRecord.getPublicKey(), assetIssuerActorRecord.getProfileImage());
-
             }
         } catch (CantInsertRecordException e) {
             throw new CantAddPendingAssetIssuerException("CAN'T INSERT ASSET ISSUER", e, "", "Cant create new ASSET ISSUER, insert database problems.");
         } catch (CantUpdateAssetIssuerException e) {
             throw new CantAddPendingAssetIssuerException("CAN'T INSERT ASSET ISSUER", FermatException.wrapException(e), "", "Cant update exist ASSET ISSUER state, unknown failure.");
         } catch (Exception e) {
-            // Failure unknown.
             throw new CantAddPendingAssetIssuerException("CAN'T INSERT ASSET ISSUER", FermatException.wrapException(e), "", "Cant create new ASSET ISSUER, unknown failure.");
-        } finally{
+        } finally {
             database.closeDatabase();
         }
     }
 
     public void createNewAssetIssuerRegistered(ActorAssetIssuer assetIssuerActorRecord) throws CantAddPendingAssetIssuerException {
-
         try {
             /**
              * if Asset Issuer exist on table
@@ -200,22 +247,20 @@ public class AssetIssuerActorDao implements Serializable {
                 /**
                  * Get actual date
                  */
-
                 DatabaseTable table = this.database.getTable(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TABLE_NAME);
                 DatabaseTableRecord record = table.getEmptyRecord();
 
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_PUBLIC_KEY_COLUMN_NAME, assetIssuerActorRecord.getPublicKey());
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_NAME_COLUMN_NAME, assetIssuerActorRecord.getName());
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_STATE_COLUMN_NAME, assetIssuerActorRecord.getContactState().getCode());
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, "-");
-                record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
-                record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_MODIFIED_DATE_COLUMN_NAME, System.currentTimeMillis());
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME, assetIssuerActorRecord.getCryptoAddress().getCryptoCurrency().getCode());
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME, assetIssuerActorRecord.getCryptoAddress().getAddress());
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_DESCRIPTION_COLUMN_NAME, assetIssuerActorRecord.getDescription());
-                record.setDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME, assetIssuerActorRecord.getLocation().getLongitude());
-                record.setDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_LOCATION_LATITUDE_COLUMN_NAME, assetIssuerActorRecord.getLocation().getLatitude());
-
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, assetIssuerActorRecord.getPublicKey());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_NAME_COLUMN_NAME, assetIssuerActorRecord.getName());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, assetIssuerActorRecord.getConnectionState().getCode());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, "-");
+                record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
+                record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_MODIFIED_DATE_COLUMN_NAME, System.currentTimeMillis());
+//                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME, assetIssuerActorRecord.getCryptoAddress().getCryptoCurrency().getCode());
+//                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME, assetIssuerActorRecord.getCryptoAddress().getAddress());
+                record.setDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME, assetIssuerActorRecord.getLocationLatitude());
+                record.setDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME, assetIssuerActorRecord.getLocationLongitude());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_DESCRIPTION_COLUMN_NAME, assetIssuerActorRecord.getDescription());
 
                 table.insertRecord(record);
                 /**
@@ -229,9 +274,8 @@ public class AssetIssuerActorDao implements Serializable {
         } catch (CantUpdateAssetIssuerException e) {
             throw new CantAddPendingAssetIssuerException("CAN'T INSERT ASSET ISSUER", FermatException.wrapException(e), "", "Cant update exist ASSET ISSUER state, unknown failure.");
         } catch (Exception e) {
-            // Failure unknown.
             throw new CantAddPendingAssetIssuerException("CAN'T INSERT ASSET ISSUER", FermatException.wrapException(e), "", "Cant create new ASSET ISSUER, unknown failure.");
-        } finally{
+        } finally {
             database.closeDatabase();
         }
     }
@@ -275,11 +319,11 @@ public class AssetIssuerActorDao implements Serializable {
             }
 
             // 2) Find the Asset Issuer , filter by keys.
-            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_PUBLIC_KEY_COLUMN_NAME, actorAssetIssuer.getPublicKey(), DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME, actorAssetIssuer.getPublicKey(), DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
-            if(table.getRecords().isEmpty()){
+            if (table.getRecords().isEmpty()) {
                 throw new AssetIssuerNotFoundException("The following public key was not found: " + actorAssetIssuer.getPublicKey());
             }
 
@@ -287,14 +331,14 @@ public class AssetIssuerActorDao implements Serializable {
             for (DatabaseTableRecord record : table.getRecords()) {
                 //UPDATE PROPERTIES
 
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_STATE_COLUMN_NAME, actorAssetIssuer.getContactState().getCode());
-                record.setDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME, actorAssetIssuer.getLocation().getLongitude());
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_NAME_COLUMN_NAME, actorAssetIssuer.getName());
-                record.setDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_LOCATION_LATITUDE_COLUMN_NAME, actorAssetIssuer.getLocation().getLatitude());
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME, actorAssetIssuer.getCryptoAddress().getAddress());
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME, actorAssetIssuer.getCryptoAddress().getCryptoCurrency().getCode());
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_DESCRIPTION_COLUMN_NAME, actorAssetIssuer.getDescription());
-                record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_MODIFIED_DATE_COLUMN_NAME, System.currentTimeMillis());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, actorAssetIssuer.getConnectionState().getCode());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_NAME_COLUMN_NAME, actorAssetIssuer.getName());
+                record.setDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LATITUDE_COLUMN_NAME, actorAssetIssuer.getLocation().getLatitude());
+                record.setDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME, actorAssetIssuer.getLocation().getLongitude());
+//                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME, actorAssetIssuer.getCryptoAddress().getAddress());
+//                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME, actorAssetIssuer.getCryptoAddress().getCryptoCurrency().getCode());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_DESCRIPTION_COLUMN_NAME, actorAssetIssuer.getDescription());
+                record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_MODIFIED_DATE_COLUMN_NAME, System.currentTimeMillis());
 
                 //UPDATE PROFILE IMAGE
                 updateAssetIssuerProfileImage(actorAssetIssuer.getPublicKey(), actorAssetIssuer.getProfileImage());
@@ -306,7 +350,7 @@ public class AssetIssuerActorDao implements Serializable {
             throw new CantUpdateAssetIssuerException(e.getMessage(), e, "asset issuer Actor", "Cant load " + AssetIssuerActorDatabaseConstants.ASSET_ISSUER_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantUpdateAssetIssuerException(e.getMessage(), FermatException.wrapException(e), "asset issuer Actor", "Cant get developer identity list, unknown failure.");
-        } finally{
+        } finally {
             database.closeDatabase();
         }
     }
@@ -330,15 +374,15 @@ public class AssetIssuerActorDao implements Serializable {
             }
 
             // 2) Find the Asset Issuer , filter by keys.
-            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_PUBLIC_KEY_COLUMN_NAME, assetIssuerToAddPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetIssuerLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME, assetIssuerToAddPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetIssuerLoggedInPublicKey, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
             // 3) Get Asset Issuer record and update state.
             for (DatabaseTableRecord record : table.getRecords()) {
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_STATE_COLUMN_NAME, connectionState.getCode());
-                record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_MODIFIED_DATE_COLUMN_NAME, System.currentTimeMillis());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode());
+                record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_MODIFIED_DATE_COLUMN_NAME, System.currentTimeMillis());
                 table.updateRecord(record);
             }
 
@@ -346,7 +390,7 @@ public class AssetIssuerActorDao implements Serializable {
             throw new CantUpdateAssetIssuerException(e.getMessage(), e, "asset issuer Actor", "Cant load " + AssetIssuerActorDatabaseConstants.ASSET_ISSUER_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantUpdateAssetIssuerException(e.getMessage(), FermatException.wrapException(e), "asset issuer Actor", "Cant get developer identity list, unknown failure.");
-        } finally{
+        } finally {
             database.closeDatabase();
         }
     }
@@ -370,14 +414,14 @@ public class AssetIssuerActorDao implements Serializable {
             }
 
             // 2) Find the Asset Issuer , filter by keys.
-            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_PUBLIC_KEY_COLUMN_NAME, assetIssuerToAddPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, assetIssuerToAddPublicKey, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
             // 3) Get Asset Issuer record and update state.
             for (DatabaseTableRecord record : table.getRecords()) {
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_STATE_COLUMN_NAME, connectionState.getCode());
-                record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_MODIFIED_DATE_COLUMN_NAME, System.currentTimeMillis());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode());
+                record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_MODIFIED_DATE_COLUMN_NAME, System.currentTimeMillis());
                 table.updateRecord(record);
             }
 
@@ -385,7 +429,7 @@ public class AssetIssuerActorDao implements Serializable {
             throw new CantUpdateAssetIssuerException(e.getMessage(), e, "asset issuer Actor", "Cant load " + AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantUpdateAssetIssuerException(e.getMessage(), FermatException.wrapException(e), "asset issuer Actor", "Cant get developer identity list, unknown failure.");
-        } finally{
+        } finally {
             database.closeDatabase();
         }
     }
@@ -412,15 +456,15 @@ public class AssetIssuerActorDao implements Serializable {
             }
 
             // 2) Find all Asset Users.
-            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetIssuerLoggedInPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_STATE_COLUMN_NAME, ConnectionState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, assetIssuerLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, ConnectionState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
             table.loadToMemory();
 
             // 3) Get Asset Users Recorod.
 
-            addRecordsToList(list, table.getRecords());
+            this.addRecordsToList(list, table.getRecords());
 
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetIssuersListException(e.getMessage(), e, "Asset Issuer Actor", "Cant load " + AssetIssuerActorDatabaseConstants.ASSET_ISSUER_TABLE_NAME + " table in memory.");
@@ -429,7 +473,7 @@ public class AssetIssuerActorDao implements Serializable {
             throw new CantGetAssetIssuersListException(e.getMessage(), e, "Asset Issuer Actor", "Can't get profile ImageMiddleware.");
         } catch (Exception e) {
             throw new CantGetAssetIssuersListException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer Actor", "Cant get Asset Issuer Actor list, unknown failure.");
-        }  finally{
+        } finally {
             database.closeDatabase();
         }
         // Return the list values.
@@ -457,14 +501,14 @@ public class AssetIssuerActorDao implements Serializable {
                 throw new CantGetUserDeveloperIdentitiesException("Cant get asset issuer identity list, table not found.", "Plugin Identity", "Cant get asset issuer identity list, table not found.");
             }
             // 2) Find  Asset Users by state.
-            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, aasetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_STATE_COLUMN_NAME, connectionState.getCode(), DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, aasetUserLoggedInPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode(), DatabaseFilterType.EQUAL);
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
             table.loadToMemory();
 
             // 3) Get Asset Users Recorod.
-            addRecordsToList(list, table.getRecords());
+            this.addRecordsToList(list, table.getRecords());
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetIssuersListException(e.getMessage(), e, "Asset Issuer Actor", "Cant load " + AssetIssuerActorDatabaseConstants.ASSET_ISSUER_TABLE_NAME + " table in memory.");
         } catch (CantGetAssetIssuerActorProfileImageException e) {
@@ -472,7 +516,80 @@ public class AssetIssuerActorDao implements Serializable {
             throw new CantGetAssetIssuersListException(e.getMessage(), e, "Asset Issuer Actor", "Can't get profile ImageMiddleware.");
         } catch (Exception e) {
             throw new CantGetAssetIssuersListException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer Actor", "Cant get Asset Issuer Actor list, unknown failure.");
-        }  finally{
+        } finally {
+            database.closeDatabase();
+        }
+        // Return the list values.
+        return list;
+    }
+
+    public ActorAssetIssuer getActorAssetIssuer() throws CantGetAssetIssuersListException {
+
+        ActorAssetIssuer assetIssuerActorRecord = new AssetIssuerActorRecord();
+        DatabaseTable table;
+
+        // Get Asset Users identities list.
+        try {
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get asset User identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
+            }
+            table.loadToMemory();
+            // 3) Get Asset Users Record.
+            assetIssuerActorRecord = this.addRecords(table.getRecords());
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetAssetIssuersListException(e.getMessage(), e, "Asset User Actor", "Cant load " + AssetIssuerActorDatabaseConstants.ASSET_ISSUER_TABLE_NAME + " table in memory.");
+        } catch (CantGetAssetIssuerActorProfileImageException e) {
+            throw new CantGetAssetIssuersListException(e.getMessage(), e, "Asset User Actor", "Can't get profile ImageMiddleware.");
+        } catch (Exception e) {
+            throw new CantGetAssetIssuersListException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
+        } finally {
+            database.closeDatabase();
+        }
+        // Return the values.
+        return assetIssuerActorRecord;
+    }
+
+    public List<ActorAssetIssuer> getAllAssetIssuerActorConnected() throws CantGetAssetIssuersListException {
+        List<ActorAssetIssuer> list = new ArrayList<>(); // Asset User Actor list.
+        DatabaseTable table;
+        // Get Asset Users identities list.
+        try {
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get asset User identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
+            }
+            // 2) Find  Asset Users by Connection State.
+//            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, "-", DatabaseFilterType.GRATER_THAN);
+//            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserToAddPublicKey, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            this.addRecordsTableRegisteredToList(list, table.getRecords());
+
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetAssetIssuersListException(e.getMessage(), e, "Asset User Actor", "Cant load " + AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TABLE_NAME + " table in memory.");
+        } catch (CantGetAssetIssuerActorProfileImageException e) {
+            throw new CantGetAssetIssuersListException(e.getMessage(), e, "Asset User Actor", "Can't get profile ImageMiddleware.");
+        } catch (Exception e) {
+            throw new CantGetAssetIssuersListException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
+        } finally {
             database.closeDatabase();
         }
         // Return the list values.
@@ -530,23 +647,23 @@ public class AssetIssuerActorDao implements Serializable {
         for (DatabaseTableRecord record : records) {
 
             //Inicializar el AssetIssuerActorRecord, nombre y public key son obligatorios.
-            AssetIssuerActorRecord assetIssuerActorRecord = new AssetIssuerActorRecord(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_NAME_COLUMN_NAME), record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_PUBLIC_KEY_COLUMN_NAME));
+            AssetIssuerActorRecord assetIssuerActorRecord = new AssetIssuerActorRecord(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_NAME_COLUMN_NAME), record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME));
 
-            assetIssuerActorRecord.setContactState(ConnectionState.getByCode(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_STATE_COLUMN_NAME)));
-            assetIssuerActorRecord.setProfileImage(getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_PUBLIC_KEY_COLUMN_NAME)));
-            assetIssuerActorRecord.setDescription(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_DESCRIPTION_COLUMN_NAME));
-            assetIssuerActorRecord.setRegistrationDate(record.getLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_REGISTRATION_DATE_COLUMN_NAME));
+            assetIssuerActorRecord.setContactState(ConnectionState.getByCode(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME)));
+            assetIssuerActorRecord.setProfileImage(getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME)));
+            assetIssuerActorRecord.setDescription(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_DESCRIPTION_COLUMN_NAME));
+            assetIssuerActorRecord.setRegistrationDate(record.getLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTRATION_DATE_COLUMN_NAME));
 
             //CRYPTOADDRESS
-            CryptoAddress cryptoAddress = new CryptoAddress();
-            cryptoAddress.setCryptoCurrency(CryptoCurrency.getByCode(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME)));
-            cryptoAddress.setAddress(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME));
-            assetIssuerActorRecord.setCryptoAddress(cryptoAddress);
+//            CryptoAddress cryptoAddress = new CryptoAddress();
+//            cryptoAddress.setCryptoCurrency(CryptoCurrency.getByCode(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME)));
+//            cryptoAddress.setAddress(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME));
+//            assetIssuerActorRecord.setCryptoAddress(cryptoAddress);
 
             //LOCATION
             DeviceLocation deviceLocation = new DeviceLocation();
-            deviceLocation.setLatitude(record.getDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_LOCATION_LATITUDE_COLUMN_NAME));
-            deviceLocation.setLongitude(record.getDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME));
+            deviceLocation.setLatitude(record.getDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LATITUDE_COLUMN_NAME));
+            deviceLocation.setLongitude(record.getDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME));
             assetIssuerActorRecord.setLocation(deviceLocation);
             // Add records to list. AssetIssuerActorRecord
 
@@ -595,12 +712,12 @@ public class AssetIssuerActorDao implements Serializable {
          * I select records on table
          */
         try {
-            table = this.database.getTable(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_TABLE_NAME);
+            table = this.database.getTable(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TABLE_NAME);
 
             if (table == null) {
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists, table not  found.", "Asset Issuer Actor", "Cant check if alias exists, table not found.");
             }
-            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_ISSUER_PUBLIC_KEY_COLUMN_NAME, assetIssuerToAddPublicKey, DatabaseFilterType.EQUAL);
+            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, assetIssuerToAddPublicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             return table.getRecords().size() > 0;
@@ -637,24 +754,66 @@ public class AssetIssuerActorDao implements Serializable {
             // 3) Get Asset Issuer Recorod.
             for (DatabaseTableRecord record : table.getRecords()) {
                 // Add records to list.
-                list.add(new AssetIssuerActorRecord(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_NAME_COLUMN_NAME),
-                        record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_PUBLIC_KEY_COLUMN_NAME),
-                        getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_PUBLIC_KEY_COLUMN_NAME)),
-                        record.getLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_ISSUER_REGISTRATION_DATE_COLUMN_NAME)));           }
-
-            database.closeDatabase();
+                list.add(new AssetIssuerActorRecord(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_NAME_COLUMN_NAME),
+                        record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME),
+                        getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME)),
+                        record.getLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME)));
+            }
         } catch (CantLoadTableToMemoryException e) {
-            database.closeDatabase();
             throw new CantGetAssetIssuersListException(e.getMessage(), e, "Asset Issuer Actor Registered", "Cant load " + AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TABLE_NAME + " table in memory.");
         } catch (CantGetAssetIssuerActorProfileImageException e) {
-            database.closeDatabase();
-            // Failure unknown.
             throw new CantGetAssetIssuersListException(e.getMessage(), e, "Asset Issuer Actor Registered", "Can't get profile ImageMiddleware.");
         } catch (Exception e) {
-            database.closeDatabase();
             throw new CantGetAssetIssuersListException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer Actor Registered", "Cant get Asset Issuer Actor Registered list, unknown failure.");
+        } finally {
+            database.closeDatabase();
         }
         // Return the list values.
         return list;
+    }
+
+    private ActorAssetIssuer addRecords(List<DatabaseTableRecord> records) throws InvalidParameterException, CantGetAssetIssuerActorProfileImageException {
+        AssetIssuerActorRecord actorAssetIssuer = null;
+        for (DatabaseTableRecord record : records) {
+
+//            CryptoAddress cryptoAddress = new CryptoAddress(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME),
+//                    CryptoCurrency.getByCode(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME)));
+
+            actorAssetIssuer = new AssetIssuerActorRecord(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME),
+                    record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_NAME_COLUMN_NAME),
+//                    record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_AGE_COLUMN_NAME),
+//                    Genders.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GENDER_COLUMN_NAME)),
+                    ConnectionState.getByCode(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME)),
+                    record.getDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LATITUDE_COLUMN_NAME),
+                    record.getDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LOCATION_LONGITUDE_COLUMN_NAME),
+//                    cryptoAddress,
+                    record.getLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTRATION_DATE_COLUMN_NAME),
+//                    record.getLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_LAST_CONNECTION_DATE_COLUMN_NAME),
+                    getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME)),
+                    record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_DESCRIPTION_COLUMN_NAME));
+        }
+        return actorAssetIssuer;
+    }
+
+    private void addRecordsTableRegisteredToList(List<ActorAssetIssuer> list, List<DatabaseTableRecord> records) throws InvalidParameterException, CantGetAssetIssuerActorProfileImageException {
+
+        for (DatabaseTableRecord record : records) {
+
+//            CryptoAddress cryptoAddress = new CryptoAddress(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME),
+//                    CryptoCurrency.getByCode(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME)));
+
+            list.add(new AssetIssuerActorRecord(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME),
+                    record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_NAME_COLUMN_NAME),
+//                    record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_AGE_COLUMN_NAME),
+//                    Genders.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_GENDER_COLUMN_NAME)),
+                    ConnectionState.getByCode(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME)),
+                    record.getDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME),
+                    record.getDoubleValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME),
+//                    cryptoAddress,
+                    record.getLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME),
+//                    record.getLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME),
+                    getAssetIssuerProfileImagePrivateKey(record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_PUBLIC_KEY_COLUMN_NAME)),
+                    record.getStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_DESCRIPTION_COLUMN_NAME)));
+        }
     }
 }

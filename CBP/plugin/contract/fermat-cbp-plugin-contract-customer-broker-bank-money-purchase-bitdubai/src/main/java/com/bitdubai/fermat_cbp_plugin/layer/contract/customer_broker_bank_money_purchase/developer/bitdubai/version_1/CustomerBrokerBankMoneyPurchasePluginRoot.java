@@ -22,8 +22,8 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.interfaces.CustomerBrokerBankMoneyPurchaseManager;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_bank_money_purchase.developer.bitdubai.version_1.database.CustomerBrokerBankMoneyPurchaseContractDao;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_bank_money_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerBankMoneyPurchaseContractDaoException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;

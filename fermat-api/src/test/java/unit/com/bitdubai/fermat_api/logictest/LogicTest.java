@@ -1,7 +1,8 @@
+/*
 package unit.com.bitdubai.fermat_api.logictest;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatPluginsEnum;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -19,16 +20,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+*/
 /**
  * Created by lnacosta (laion.cj91@gmail.com) on 21/10/2015.
- */
+ *//*
+
 public class LogicTest {
 
     public enum CCPPlugins implements FermatPluginsEnum {
 
-        /**
+        */
+/**
          * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
-         */
+         *//*
+
 
         BITDUBAI_BITCOIN_WALLET_BASIC_WALLET            ("BBWBW" , Developers.BITDUBAI, Layers.BASIC_WALLET   ),
         BITDUBAI_CRYPTO_ADDRESSES_NETWORK_SERVICE       ("BCANS" , Developers.BITDUBAI, Layers.NETWORK_SERVICE),
@@ -368,3 +373,4 @@ public class LogicTest {
         return true;
     }
 }
+*/

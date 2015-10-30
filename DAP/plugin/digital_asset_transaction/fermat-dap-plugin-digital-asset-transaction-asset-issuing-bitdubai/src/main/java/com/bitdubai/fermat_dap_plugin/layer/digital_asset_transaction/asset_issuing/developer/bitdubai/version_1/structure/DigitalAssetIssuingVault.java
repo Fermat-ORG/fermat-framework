@@ -7,17 +7,18 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetIssuerWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.DigitalAssetVault;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetVault;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import java.util.UUID;
 
@@ -25,7 +26,7 @@ import java.util.UUID;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 01/10/15.
  * This class must be started with the AssetIssuing Plugin
  */
-public class DigitalAssetIssuingVault extends DigitalAssetVault {
+public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
 
     ErrorManager errorManager;
     //For testing I'm gonna use this type of privacy, change to PRIVATE in production release
@@ -78,16 +79,18 @@ public class DigitalAssetIssuingVault extends DigitalAssetVault {
         // TODO: Coloque esto porque es la wallet qye tengo hardcore para la wallet y para hacer las pruebas
         this.walletPublicKey = "walletPublicKeyTest";
         /////////////////////////////////////////////
-        System.out.println("Before delivering - Wallet public key:"+this.walletPublicKey);
+        System.out.println("ASSET ISSUING Before delivering - Wallet public key is:"+this.walletPublicKey);
         AssetIssuerWallet assetIssuerWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
         AssetIssuerWalletBalance assetIssuerWalletBalance= assetIssuerWallet.getBookBalance(balanceType);
-        System.out.println("Transaction to deliver: "+genesisTransaction.getTransactionHash());
+        System.out.println("ASSET ISSUING Transaction to deliver: "+genesisTransaction.getTransactionHash());
         AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper=new AssetIssuerWalletTransactionRecordWrapper(
                 digitalAssetMetadata,
                 genesisTransaction,
                 "testActorFromPublicKey",
                 "testActorToPublicKey"
         );
+        System.out.println("ASSET ISSUING AssetIssuerWalletTransactionRecordWrapper: "+ assetIssuerWalletTransactionRecordWrapper.getDescription());
+        System.out.println("ASSET ISSUING Balance Type: "+ balanceType);
         assetIssuerWalletBalance.credit(assetIssuerWalletTransactionRecordWrapper, balanceType);
     }
 

@@ -157,7 +157,7 @@ public class CryptoAddressesNetworkServiceDao {
             DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
             addressExchangeRequestTable.setStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_TYPE_RESPONDING_COLUMN_NAME, actorType    .getCode(), DatabaseFilterType.EQUAL);
-            addressExchangeRequestTable.setStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME                  , protocolState.getCode(), DatabaseFilterType.EQUAL);
+            addressExchangeRequestTable.setStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME                   , protocolState.getCode(), DatabaseFilterType.EQUAL);
 
             addressExchangeRequestTable.loadToMemory();
 
@@ -267,6 +267,8 @@ public class CryptoAddressesNetworkServiceDao {
                                              final ProtocolState state        ) throws CantAcceptAddressExchangeRequestException,
                                                                                        PendingRequestNotFoundException          {
 
+        System.out.println("************ Crypto Addresses -> i'm processing dao acceptance.");
+
         if (requestId == null)
             throw new CantAcceptAddressExchangeRequestException(null, "", "The requestId is required, can not be null");
 
@@ -278,7 +280,9 @@ public class CryptoAddressesNetworkServiceDao {
 
         try {
 
-            RequestAction action = RequestAction.ACCEPT         ;
+            System.out.println("************ Crypto Addresses -> dao validation ok.");
+
+            RequestAction action = RequestAction.ACCEPT;
 
             DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
@@ -286,9 +290,12 @@ public class CryptoAddressesNetworkServiceDao {
 
             addressExchangeRequestTable.loadToMemory();
 
+            System.out.println("************ Crypto Addresses -> load to memory ok.");
+
             List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
 
             if (!records.isEmpty()) {
+                System.out.println("************ Crypto Addresses -> i will update the record.");
                 DatabaseTableRecord record = records.get(0);
 
                 record.setStringValue(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
@@ -297,6 +304,7 @@ public class CryptoAddressesNetworkServiceDao {
 
                 addressExchangeRequestTable.updateRecord(record);
 
+                System.out.println("************ Crypto Addresses -> updating ok.");
             } else
                 throw new PendingRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an address exchange request with that requestId.");
 
@@ -320,8 +328,8 @@ public class CryptoAddressesNetworkServiceDao {
      * @throws CantDenyAddressExchangeRequestException      if something goes wrong.
      * @throws PendingRequestNotFoundException              if i can't find the record.
      */
-    public void denyAddressExchangeRequest(final UUID requestId,
-                                           final ProtocolState state) throws CantDenyAddressExchangeRequestException,
+    public void denyAddressExchangeRequest(final UUID          requestId,
+                                           final ProtocolState state    ) throws CantDenyAddressExchangeRequestException,
                                                                         PendingRequestNotFoundException        {
 
         if (requestId == null)

@@ -12,7 +12,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,12 +32,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 
-import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetLogToolException;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.LogTool;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;

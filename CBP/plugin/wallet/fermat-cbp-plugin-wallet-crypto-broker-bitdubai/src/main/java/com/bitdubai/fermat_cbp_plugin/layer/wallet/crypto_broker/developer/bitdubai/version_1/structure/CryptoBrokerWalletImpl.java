@@ -1,122 +1,70 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerTransactionRecord;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_cbp_api.all_definition.wallet.Stock;
+import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.wallet.WalletTransaction;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantPerformTransactionException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerWallet;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseDao;
 
-import java.util.UUID;
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by Yordin Alayn on 19.10.15.
+ * Created by jorge on 26-10-2015.
  */
-public class CryptoBrokerWalletImpl implements CryptoBrokerTransactionRecord {
-    //CAMBIAR ESTOS NUMEROS PRIIMOS POR OTRS DE LA LISTA
-    private static final int HASH_PRIME_NUMBER_PRODUCT = 7681;
-    private static final int HASH_PRIME_NUMBER_ADD = 3581;
+public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
 
-    private UUID transactionId;
-    private KeyPair keyPairWallet;
-    private KeyPair keyPairBroker;
-    private KeyPair keyPairCustomer;
-    private BalanceType balanceType;
-    private TransactionType transactionType;
-    private float amount;
-    private CurrencyType currencyType;
-    private float runningBookBalance;
-    private float runningAvailableBalance;
-    private long timeStamp;
-    private String memo;
+    private static final int HASH_PRIME_NUMBER_PRODUCT = 5147;
+    private static final int HASH_PRIME_NUMBER_ADD = 4789;
 
-    public CryptoBrokerWalletImpl(
-            UUID transactionId,
-            KeyPair keyPairWallet,
-            KeyPair keyPairBroker,
-            KeyPair keyPairCustomer,
-            BalanceType balanceType,
-            TransactionType transactionType,
-            CurrencyType currencyType,
-            float amount,
-            float runningBookBalance,
-            float runningAvailableBalance,
-            long timeStamp,
-            String memo
-    ){
-        this.transactionId = transactionId;
-        this.keyPairWallet = keyPairWallet;
-        this.keyPairBroker = keyPairBroker;
-        this.keyPairCustomer = keyPairCustomer;
-        this.balanceType = balanceType;
-        this.transactionType = transactionType;
-        this.amount = amount;
-        this.currencyType = currencyType;
-        this.runningBookBalance = runningBookBalance;
-        this.runningAvailableBalance = runningAvailableBalance;
-        this.timeStamp = timeStamp;
-        this.memo = memo;
+    private final KeyPair walletKeyPair;
+    private final String ownerPublicKey;
+    private final ConcurrentHashMap<FermatEnum, Stock> stockMap;
+    private final CryptoBrokerWalletDatabaseDao databaseDao;
+
+    public CryptoBrokerWalletImpl(final KeyPair walletKeyPair, final String ownerPublicKey, final CryptoBrokerWalletDatabaseDao databaseDao){
+        this.walletKeyPair = walletKeyPair;
+        this.ownerPublicKey = ownerPublicKey;
+        this.databaseDao = databaseDao;
+        stockMap = new ConcurrentHashMap<>();
     }
 
     @Override
-    public UUID getTransactionId() { return this.transactionId; }
-    public void setTransactionId(UUID id) { this.transactionId = id; }
+    public String getWalletPublicKey() { return this.walletKeyPair.getPublicKey(); }
 
     @Override
-    public BalanceType getBalanceType() { return this.balanceType; }
-    public void setBalanceType(BalanceType balance) { this.balanceType = balance; }
+    public String getOwnerPublicKey() {return this.ownerPublicKey;}
 
     @Override
-    public TransactionType getTransactionType() { return this.transactionType; }
-    public void setBalanceType(TransactionType transaction) { this.transactionType = transaction; }
+    public void addStock(FermatEnum stockType) { }
 
     @Override
-    public CurrencyType getCurrencyType() { return this.currencyType; }
-    public void setCurrencyType(CurrencyType currency) { this.currencyType = currency; }
+    public Stock getStock(FermatEnum stockType) {
+        return null;
+    }
 
     @Override
-    public String getPublicKeyWallet() { return this.keyPairWallet.getPublicKey(); }
-    public void setPublicKeyWallet(String publicKey) { this.keyPairWallet = keyPairWallet; }
+    public Collection<Stock> getStocks() { return null; }
 
     @Override
-    public String getPublicKeyBroker() { return this.keyPairBroker.getPublicKey(); }
-    public void setPublicKeyBroker(String publicKey) { this.keyPairBroker = keyPairBroker; }
-
-    @Override
-    public String getPublicKeyCustomer() { return this.keyPairCustomer.getPublicKey(); }
-    public void setPublicKeyCustomer(String publicKey) { this.keyPairCustomer = keyPairCustomer; }
-
-    @Override
-    public float getAmount() { return this.amount; }
-    public void setAmount(float amount) { this.amount = amount; }
-
-    @Override
-    public float getRunningBookBalance() { return this.runningBookBalance; }
-    public void setRunningBookBalance(float bookBalance) { this.runningBookBalance = bookBalance; }
-
-    @Override
-    public float getRunningAvailableBalance() { return this.runningAvailableBalance; }
-    public void setRunningAvailableBalance(float availableBalance) { this.runningAvailableBalance = availableBalance; }
-
-    @Override
-    public long getTimestamp() { return this.timeStamp; }
-    public void setTimestamp(long time) { this.timeStamp = time; }
-
-    @Override
-    public String getMemo() { return this.memo; }
-    public void setMemo(String memo) { this.memo = memo; }
+    public void performTransaction(WalletTransaction transaction) { }
 
     public boolean equals(Object o){
-        if(!(o instanceof CryptoBrokerTransactionRecord))
+        if(!(o instanceof CryptoBrokerStockTransactionRecord))
             return false;
-        CryptoBrokerTransactionRecord compare = (CryptoBrokerTransactionRecord) o;
-        return keyPairBroker.getPublicKey().equals(compare.getPublicKeyBroker()) && keyPairWallet.getPublicKey().equals(compare.getPublicKeyWallet());
+        CryptoBrokerStockTransactionRecord compare = (CryptoBrokerStockTransactionRecord) o;
+        return ownerPublicKey.equals(compare.getOwnerPublicKey()) && walletKeyPair.getPublicKey().equals(compare.getWalletPublicKey());
     }
 
     @Override
     public int hashCode(){
         int c = 0;
-        c += keyPairBroker.hashCode();
-        c += keyPairWallet.hashCode();
+        c += ownerPublicKey.hashCode();
+        c += walletKeyPair.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 }

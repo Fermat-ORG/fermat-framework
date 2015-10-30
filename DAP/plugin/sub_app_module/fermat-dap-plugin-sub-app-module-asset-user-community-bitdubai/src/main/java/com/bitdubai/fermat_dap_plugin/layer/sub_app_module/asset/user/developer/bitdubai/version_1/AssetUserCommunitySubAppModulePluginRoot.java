@@ -13,7 +13,13 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.DealsWithActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
@@ -25,12 +31,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 /**
  * Created by Nerio on 13/10/15.
  */
-public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommunitySubAppModuleManager, DealsWithActorAssetUser, DealsWithLogger, LogManagerForDevelopers, Plugin, Service {
+public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommunitySubAppModuleManager, DealsWithActorAssetIssuer, DealsWithActorAssetUser, DealsWithLogger, LogManagerForDevelopers, Plugin, Service {
 
     UUID pluginId;
 
@@ -51,6 +58,8 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
 
     ActorAssetUserManager actorAssetUserManager;
 
+    ActorAssetIssuerManager actorAssetIssuerManager;
+
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
@@ -63,6 +72,10 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
+    @Override
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
+        this.actorAssetIssuerManager = actorAssetIssuerManager;
+    }
     @Override
     public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager)  throws CantSetObjectException {
         this.actorAssetUserManager = actorAssetUserManager;
@@ -122,24 +135,53 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
         }
     }
 
+    List<ActorAssetUser> actorAssetList;// = new ArrayList<>();
+
     @Override
     public List<ActorAssetUser> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException {
-        List<ActorAssetUser> actorAssetList = new ArrayList<>();
+
+        actorAssetList = new ArrayList<>();
 
 //        Location location = new DeviceLocation(00.00, 00.00, 12345678910L, 00.00, LocationProvider.NETWORK);
-
-//        actorAssetList.add(new AssetUserActorRecord("Rodrigo Acosta",UUID.randomUUID().toString(),new byte[0],location));
-//        actorAssetList.add(new AssetUserActorRecord("Franklin Marcano",UUID.randomUUID().toString(),new byte[0],location));
-//        actorAssetList.add(new AssetUserActorRecord("Manuel Colmenares",UUID.randomUUID().toString(),new byte[0],location));
-//        actorAssetList.add(new AssetUserActorRecord("Nerio Indriago",UUID.randomUUID().toString(),new byte[0],location));
-
         try {
-            actorAssetList = actorAssetUserManager.getAllAssetUserActorRegistered();
+//            actorAssetUserManager.createAndRegisterActorAssetUserTest();
+            actorAssetUserManager.registerActorInActorNetowrkSerice();
+            actorAssetList = actorAssetUserManager.getAllAssetUserActorInTableRegistered();
+
+
         } catch (CantAssetUserActorNotFoundException e) {
             e.printStackTrace();
+        } catch (CantCreateAssetUserActorException e) {
+            e.printStackTrace();
         }
+
+        ActorAssetIssuer actorAssetIssuer;
+        try {
+            actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
+                actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetList);
+        } catch (CantConnectToAssetUserException e) {
+            e.printStackTrace();
+        } catch (CantGetAssetIssuerActorsException e) {
+            e.printStackTrace();
+        }
+
         return actorAssetList;
     }
 
+    //TODO verificar por posible modificacion de la firma del metodo
+    @Override
+    public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException{
+        //todo SE DEBE CONOCER QUIEN ES EL ISSUER SOLICITANTE Y QUIEN EL USER SOLICITADO
 
+        ActorAssetIssuer actorAssetIssuer;
+        //TODO Para Realizacion de TEST se tomara el ISSUER de la BD LOCAL
+        //TODO Se necesita PASAR el ActorAssetUser seleccionado en la Community
+        //TODO Para TEST se usara la lista generada para seleccionar aleatoriamente el User Register
+        try {
+            actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
+            actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetUsers);
+        } catch (CantGetAssetIssuerActorsException e) {
+            throw new CantConnectToAssetUserException(CantConnectToAssetUserException.DEFAULT_MESSAGE, e, "There was an error connecting to users.", null);
+        }
+    }
 }

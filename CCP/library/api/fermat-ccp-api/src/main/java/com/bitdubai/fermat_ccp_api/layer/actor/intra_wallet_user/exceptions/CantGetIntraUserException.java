@@ -3,7 +3,7 @@ package com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions;
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by natalia on 05/10/15.
+ * Created by natalia on 28/10/15.
  */
 public class CantGetIntraUserException extends FermatException {
     /**

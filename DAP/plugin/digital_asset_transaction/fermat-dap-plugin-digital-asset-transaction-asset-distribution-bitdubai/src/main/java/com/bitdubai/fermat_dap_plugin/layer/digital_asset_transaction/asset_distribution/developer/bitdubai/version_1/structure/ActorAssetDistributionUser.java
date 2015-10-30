@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -16,8 +17,13 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
     private String publicKey;
     private byte[] profileImage;
     private long registrationDate;
+    private long lastConnectionDate;
     private ConnectionState connectionState;
 
+    @Override
+    public String getPublicLinkedIdentity() {
+        return new ECCKeyPair().getPublicKey();
+    }
     @Override
     public String getPublicKey() {
         return this.publicKey;
@@ -37,12 +43,21 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
     }
 
     @Override
-    public long getContactRegistrationDate() {
+    public long getRegistrationDate() {
         return this.registrationDate;
     }
 
-    public void setContactRegistrationDate(long contactRegistrationDate){
-        this.registrationDate=contactRegistrationDate;
+    @Override
+    public long getLastConnectionDate() {
+        return this.lastConnectionDate;
+    }
+
+    public void setRegistrationDate(long registrationDate){
+        this.registrationDate = registrationDate;
+    }
+
+    public void setLastConnectionDate(long lastConnectionDate){
+        this.lastConnectionDate = lastConnectionDate;
     }
 
     @Override
@@ -57,6 +72,16 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
     @Override
     public ConnectionState getConnectionState() {
         return this.connectionState;
+    }
+
+    /**
+     * The method <code>getLocation</code> gives us the Location of the represented Asset user
+     *
+     * @return the Location of the Asset user
+     */
+    @Override
+    public Location getLocation() {
+        return null;
     }
 
     /**
@@ -90,7 +115,7 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
      * @return the Gender of the Asset user
      */
     @Override
-    public Genders getGender() {
+    public Genders getGenders() {
         return null;
     }
 
@@ -119,11 +144,11 @@ public class ActorAssetDistributionUser implements ActorAssetUser {
     }
 
     public void setActorAssetUser(ActorAssetUser actorAssetUser){
-        setContactRegistrationDate(actorAssetUser.getContactRegistrationDate());
+        setRegistrationDate(actorAssetUser.getRegistrationDate());
+        setLastConnectionDate(actorAssetUser.getLastConnectionDate());
         setContactState(actorAssetUser.getConnectionState());
         setName(actorAssetUser.getName());
         setProfileImage(actorAssetUser.getProfileImage());
         setPublicKey(actorAssetUser.getPublicKey());
     }
-
 }

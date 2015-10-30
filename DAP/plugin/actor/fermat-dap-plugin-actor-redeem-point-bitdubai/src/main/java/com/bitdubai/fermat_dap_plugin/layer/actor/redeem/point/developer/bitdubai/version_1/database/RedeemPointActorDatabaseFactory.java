@@ -58,7 +58,7 @@ public class RedeemPointActorDatabaseFactory implements DealsWithPluginDatabaseS
 
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_NAME_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
 
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_CONNECTION_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
@@ -99,7 +99,7 @@ public class RedeemPointActorDatabaseFactory implements DealsWithPluginDatabaseS
 
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_NAME_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
 
-            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_MODIFIED_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);

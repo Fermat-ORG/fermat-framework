@@ -3,26 +3,27 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
+import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.exceptions.CantGetNegotiationsWaitingForCustomerException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWallet;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.NegotiationBasicInformation;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItem;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationBasicInformationImpl;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationInformationTestData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 
@@ -37,26 +38,18 @@ import java.util.List;
  * @version 1.0
  * @since 20/10/2015
  */
-public class OpenNegotiationsTabFragment extends FermatWalletFragment implements ExpandableRecyclerAdapter.ExpandCollapseListener {
-    private static final String TAG = "OpenNegotiationsTabFragment";
+public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragment<GrouperItem>
+        implements FermatListItemListeners<CustomerBrokerNegotiationInformation> {
 
-    // UI
-    private RecyclerView mRecyclerView;
-    private OpenNegotiationsExpandableAdapter adapter;
-
-    // MANAGERS
+    // Fermat Managers
     private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
-    // DATA
-    private ArrayList<GrouperItem> openNegotiations;
+    // Data
+    private List<GrouperItem> openNegotiationList;
     private CryptoBrokerWallet cryptoBrokerWallet;
 
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     */
     public static OpenNegotiationsTabFragment newInstance() {
         return new OpenNegotiationsTabFragment();
     }
@@ -68,62 +61,70 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
         try {
             moduleManager = ((CryptoBrokerWalletSession) walletSession).getModuleManager();
             errorManager = walletSession.getErrorManager();
-            openNegotiations = getOpenNegotiations();
-
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+        }
 
-            if (errorManager != null) {
-                errorManager.reportUnexpectedWalletException(
-                        Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT,
-                        ex);
-            }
+        openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+    }
+
+    @Override
+    protected void initViews(View layout) {
+        super.initViews(layout);
+
+        RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
+        recyclerView.addItemDecoration(itemDecoration);
+
+        if (openNegotiationList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            View emptyListViewsContainer = layout.findViewById(R.id.empty);
+            emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_open_negotiations, container, false);
-        initViews(layout);
-
-        return layout;
-    }
-
-    private void initViews(View layout) {
-        ArrayList<GrouperItem> openNegotiations = getOpenNegotiations();
-        adapter = new OpenNegotiationsExpandableAdapter(getActivity(), openNegotiations);
-        adapter.setExpandCollapseListener(this);
-
-        mRecyclerView = (RecyclerView) layout.findViewById(R.id.open_negotiations_recycler_view);
-        mRecyclerView.setAdapter(adapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    protected boolean hasMenu() {
+        return false;
     }
 
     @Override
-    public void onListItemExpanded(int position) {
-        Toast.makeText(getActivity(), "Item expanded: " + position, Toast.LENGTH_SHORT).show();
+    public ExpandableRecyclerAdapter getAdapter() {
+        if (adapter == null) {
+            adapter = new OpenNegotiationsExpandableAdapter(getActivity(), openNegotiationList);
+            // setting up event listeners
+            adapter.setChildItemFermatEventListeners(this);
+        }
+        return adapter;
     }
 
     @Override
-    public void onListItemCollapsed(int position) {
-        Toast.makeText(getActivity(), "Item collapsed: " + position, Toast.LENGTH_SHORT).show();
+    public RecyclerView.LayoutManager getLayoutManager() {
+        if (layoutManager == null)
+            layoutManager = new LinearLayoutManager(getActivity());
+
+        return layoutManager;
     }
 
-    /**
-     * Save the instance state of the adapter to keep expanded/collapsed states when rotating or
-     * pausing the activity.
-     */
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        adapter.onSaveInstanceState(outState);
+    protected int getLayoutResource() {
+        return R.layout.fragment_open_contracts_tab;
     }
 
-    /**
-     * @return the list of open negotiations grouped in negotiations waiting for the broker and those wating for the customer
-     */
-    public ArrayList<GrouperItem> getOpenNegotiations() {
+    @Override
+    protected int getRecyclerLayoutId() {
+        return R.id.open_contracts_recycler_view;
+    }
+
+    @Override
+    protected int getSwipeRefreshLayoutId() {
+        return R.id.swipe_refresh;
+    }
+
+    @Override
+    public List<GrouperItem> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         ArrayList<GrouperItem> data = new ArrayList<>();
         String grouperText;
 
@@ -131,14 +132,16 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
             try {
                 cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet("crypto_broker_wallet");
 
-                grouperText = "Waiting for you";
-                List<NegotiationBasicInformation> waitingForBroker = cryptoBrokerWallet.getNegotiationsWaitingForBroker(0, 10);
-                GrouperItem<NegotiationBasicInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
+                grouperText = getActivity().getString(R.string.waiting_for_you);
+                List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
+                waitingForBroker.addAll(cryptoBrokerWallet.getNegotiationsWaitingForBroker(0, 10));
+                GrouperItem<CustomerBrokerNegotiationInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
                 data.add(waitingForBrokerGrouper);
 
-                grouperText = "Waiting for the customer";
-                List<NegotiationBasicInformation> waitingForCustomer = cryptoBrokerWallet.getNegotiationsWaitingForCustomer(0, 10);
-                GrouperItem<NegotiationBasicInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
+                grouperText = getActivity().getString(R.string.waiting_for_the_customer);
+                List<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
+                waitingForBroker.addAll(cryptoBrokerWallet.getNegotiationsWaitingForCustomer(0, 10));
+                GrouperItem<CustomerBrokerNegotiationInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
                 data.add(waitingForCustomerGrouper);
 
             } catch (CantGetCryptoBrokerWalletException | CantGetNegotiationsWaitingForBrokerException | CantGetNegotiationsWaitingForCustomerException ex) {
@@ -150,29 +153,66 @@ public class OpenNegotiationsTabFragment extends FermatWalletFragment implements
             }
 
         } else {
-            NegotiationBasicInformationImpl child;
+            NegotiationInformationTestData child;
 
-            grouperText = "Waiting for you";
-            List<NegotiationBasicInformation> waitingForBroker = new ArrayList<>();
-            child = new NegotiationBasicInformationImpl("Customer 1", "USD", "Crypto Transfer", "BTC");
+            grouperText = getActivity().getString(R.string.waiting_for_you);
+            List<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
+            child = new NegotiationInformationTestData("nelsonalfo", "USD", "Crypto Transfer", "BTC", NegotiationStatus.WAITING_FOR_BROKER);
             waitingForBroker.add(child);
-            child = new NegotiationBasicInformationImpl("Customer 2", "BTC", "Cash in Hand", "USD");
+            child = new NegotiationInformationTestData("jorgeegonzalez", "BTC", "Cash in Hand", "USD", NegotiationStatus.WAITING_FOR_BROKER);
             waitingForBroker.add(child);
-            child = new NegotiationBasicInformationImpl("Customer 3", "USD", "Cash in Hand", "BsF");
+            child = new NegotiationInformationTestData("neoperol", "USD", "Cash in Hand", "BsF", NegotiationStatus.WAITING_FOR_BROKER);
             waitingForBroker.add(child);
-            GrouperItem<NegotiationBasicInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
+            GrouperItem<CustomerBrokerNegotiationInformation> waitingForBrokerGrouper = new GrouperItem<>(grouperText, waitingForBroker, true);
             data.add(waitingForBrokerGrouper);
 
-            grouperText = "Waiting for the customer";
-            List<NegotiationBasicInformation> waitingForCustomer = new ArrayList<>();
-            child = new NegotiationBasicInformationImpl("Customer 4", "USD", "Bank Transfer", "BTC");
+            grouperText = getActivity().getString(R.string.waiting_for_the_customer);
+            List<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
+            child = new NegotiationInformationTestData("Nelson Orlando", "USD", "Bank Transfer", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
             waitingForCustomer.add(child);
-            child = new NegotiationBasicInformationImpl("Customer 5", "BsF", "Cash Delivery", "BTC");
+            child = new NegotiationInformationTestData("Customer 5", "BsF", "Cash Delivery", "BTC", NegotiationStatus.WAITING_FOR_CUSTOMER);
             waitingForCustomer.add(child);
-            GrouperItem<NegotiationBasicInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
+            GrouperItem<CustomerBrokerNegotiationInformation> waitingForCustomerGrouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
             data.add(waitingForCustomerGrouper);
         }
 
         return data;
     }
+
+    @Override
+    protected boolean recyclerHasFixedSize() {
+        return true;
+    }
+
+    @Override
+    public void onItemClickListener(CustomerBrokerNegotiationInformation data, int position) {
+        //TODO abrir actividad de detalle de contrato abierto
+    }
+
+    @Override
+    public void onLongItemClickListener(CustomerBrokerNegotiationInformation data, int position) {
+    }
+
+    @Override
+    public void onPostExecute(Object... result) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            if (result != null && result.length > 0) {
+                openNegotiationList = (ArrayList) result[0];
+                if (adapter != null)
+                    adapter.changeDataSet(openNegotiationList);
+            }
+        }
+    }
+
+    @Override
+    public void onErrorOccurred(Exception ex) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+        }
+    }
 }
+

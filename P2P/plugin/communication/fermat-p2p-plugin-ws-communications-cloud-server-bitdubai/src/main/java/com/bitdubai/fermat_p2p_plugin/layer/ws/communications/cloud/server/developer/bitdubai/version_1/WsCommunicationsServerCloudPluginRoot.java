@@ -19,16 +19,17 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationCloudServer;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationsCloudServerPingAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentConnectionRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.ComponentRegistrationRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.DiscoveryComponentConnectionRequestPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.processors.RequestListComponentRegisterPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.webservices.RestletCommunicationCloudServer;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.java_websocket.WebSocketImpl;
 
@@ -111,6 +112,11 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
      * Represent the disableServerFlag
      */
     private Boolean disableServerFlag;
+
+    /**
+     * Represent the  wsCommunicationsCloudServerPingAgent
+     */
+    private WsCommunicationsCloudServerPingAgent wsCommunicationsCloudServerPingAgent;
 
 
     /**
@@ -219,8 +225,13 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
                         wsCommunicationCloudServer.registerFermatPacketProcessor(new ComponentConnectionRequestPacketProcessor());
                         wsCommunicationCloudServer.registerFermatPacketProcessor(new DiscoveryComponentConnectionRequestPacketProcessor());
                         wsCommunicationCloudServer.registerFermatPacketProcessor(new RequestListComponentRegisterPacketProcessor());
-
                         wsCommunicationCloudServer.start();
+
+                        /*
+                         * Start the ping agent
+                         */
+                        wsCommunicationsCloudServerPingAgent = new WsCommunicationsCloudServerPingAgent(wsCommunicationCloudServer);
+                        wsCommunicationsCloudServerPingAgent.start();
 
                         System.out.println("New CommunicationChannelAddress linked on " + networkInterface.getName());
                         System.out.println("Host = " + inetSocketAddress.getHostString());
@@ -234,6 +245,9 @@ public class WsCommunicationsServerCloudPluginRoot implements Service, DealsWith
                 }
 
             }
+
+
+
 
             /*
              * Create and start the restlet server

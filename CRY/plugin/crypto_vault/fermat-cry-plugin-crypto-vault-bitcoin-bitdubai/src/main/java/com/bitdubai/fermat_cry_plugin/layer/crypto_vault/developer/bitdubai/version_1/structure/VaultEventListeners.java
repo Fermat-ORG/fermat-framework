@@ -9,9 +9,9 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantCalculateTransactionConfidenceException;
@@ -55,14 +55,13 @@ public class VaultEventListeners extends AbstractWalletEventListener {
 
     @Override
     public void onCoinsReceived(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
-        System.out.println("Money Received at crypto vault");
         logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: Ney money received!!! New balance: " + newBalance.getValue(), null, null);
         /**
          * I save this transaction in the database
          */
         try {
-
-            dbActions.saveIncomingTransaction(UUID.randomUUID(), tx.getHashAsString());
+            if (tx.getPurpose() != Transaction.Purpose.USER_PAYMENT)
+                dbActions.saveIncomingTransaction(UUID.randomUUID(), tx.getHashAsString());
         } catch (Exception e) {
             reportUnexpectedError(e);
         }
@@ -80,7 +79,7 @@ public class VaultEventListeners extends AbstractWalletEventListener {
     }
 
     @Override
-    public void onTransactionConfidenceChanged(final Wallet wallet, final Transaction tx) {
+    public void onTransactionConfidenceChanged(Wallet wallet,Transaction tx) {
         logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Transaction confidence change detected!", "Transaction confidence changed. Transaction: " + tx, "Transaction confidence changed. Transaction: " + tx);
 
         TransactionConfidenceCalculator transactionConfidenceCalculator = new TransactionConfidenceCalculator(tx);

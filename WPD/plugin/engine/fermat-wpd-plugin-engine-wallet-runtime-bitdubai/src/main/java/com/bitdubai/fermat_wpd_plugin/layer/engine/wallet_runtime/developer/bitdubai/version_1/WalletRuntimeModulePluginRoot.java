@@ -35,12 +35,12 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
@@ -470,257 +470,14 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         /**
          * CRYPTO BROKER WALLET
          */
-        runtimeWalletNavigationStructure = new WalletNavigationStructure();
-        runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
-        runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
-        runtimeWalletNavigationStructure.setPublicKey("crypto_broker_wallet");
-
-
-        // Side Menu
-        runtimeSideMenu = new SideMenu();
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Contracts History");
-        runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Earnings");
-        runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-
-        // Activity: Home
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
-        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_HOME.getCode());
-        runtimeActivity.setColor("#03A9F4");
-        runtimeActivity.setSideMenu(runtimeSideMenu);
-        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.setStartActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Crypto Broker Wallet");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#0288D1");
-        runtimeActivity.setStatusBar(runtimeStatusBar);
-
-        runtimeHeader = new Header();
-        runtimeHeader.setLabel("Market rate");
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_MARKET_RATE_STATISTICS.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_MARKET_RATE_STATISTICS.getKey(), runtimeFragment);
-
-        runtimeTabStrip = new TabStrip();
-        runtimeTabStrip.setTabsColor("#0288D1");
-        runtimeTabStrip.setTabsTextColor("#FFFFFF");
-        runtimeTabStrip.setTabsIndicateColor("#72af9c");
-        runtimeTabStrip.setDividerColor(0x72af9c);
-        runtimeActivity.setTabStrip(runtimeTabStrip);
-
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Negotiations");
-        runtimeTab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB);
-        runtimeTabStrip.addTab(runtimeTab);
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey());
-
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Contracts");
-        runtimeTab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB);
-        runtimeTabStrip.addTab(runtimeTab);
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB.getKey(), runtimeFragment);
-
-        // TODO falta agregar un footer a navigation structure
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey(), runtimeFragment);
-
-
-        // Activity: Open Negotiation details
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS);
-        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getCode());
-        runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
-        runtimeActivity.setColor("#03A9F4");
-        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Negotiation Details");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#0288D1");
-        runtimeActivity.setStatusBar(runtimeStatusBar);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey());
-
-
-        // Activity: Close Negotiation details
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS);
-        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS.getCode());
-        runtimeActivity.setColor("#03A9F4");
-        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Negotiation Details");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#0288D1");
-        runtimeActivity.setStatusBar(runtimeStatusBar);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS.getKey());
-
-
-        // Activity: Open Contract Details
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS);
-        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS.getCode());
-        runtimeActivity.setColor("#03A9F4");
-        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Contract Details");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#0288D1");
-        runtimeActivity.setStatusBar(runtimeStatusBar);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS.getKey());
-
-
-        // Activity: Close Contract Details
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS);
-        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getCode());
-        runtimeActivity.setColor("#03A9F4");
-        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Contract Details");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#0288D1");
-        runtimeActivity.setStatusBar(runtimeStatusBar);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getKey());
-
-
-        // Activity: Contracts History
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY);
-        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getCode());
-        runtimeActivity.setColor("#03A9F4");
-        runtimeActivity.setSideMenu(runtimeSideMenu);
-        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Contracts History");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#0288D1");
-        runtimeActivity.setStatusBar(runtimeStatusBar);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getKey());
-
-
-        // Activity: Earnings
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS);
-        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS.getCode());
-        runtimeActivity.setColor("#03A9F4");
-        runtimeActivity.setSideMenu(runtimeSideMenu);
-        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Earnings");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#0288D1");
-        runtimeActivity.setStatusBar(runtimeStatusBar);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_EARNINGS.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_EARNINGS.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_EARNINGS.getKey());
-
-
-        // Activity: Settings
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS);
-        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS.getCode());
-        runtimeActivity.setColor("#03A9F4");
-        runtimeActivity.setSideMenu(runtimeSideMenu);
-        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Settings");
-        runtimeTitleBar.setColor("#FFFFFF");
-        runtimeTitleBar.setLabelSize(16);
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        runtimeStatusBar = new StatusBar();
-        runtimeStatusBar.setColor("#0288D1");
-        runtimeActivity.setStatusBar(runtimeStatusBar);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_SETTINGS.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SETTINGS.getKey(), runtimeFragment);
-
-
+        runtimeWalletNavigationStructure = createCryptoBrokerWalletNavigationStructure();
         setNavigationStructureXml(runtimeWalletNavigationStructure);
 
+        /**
+         * CRYPTO CUSTOMER WALLET
+         */
+        runtimeWalletNavigationStructure = createCryptoCustomerWalletNavigationStructure();
+        setNavigationStructureXml(runtimeWalletNavigationStructure);
 
         /**
          * fin asset issuer
@@ -1510,6 +1267,564 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
     }
 
+    private WalletNavigationStructure createCryptoBrokerWalletNavigationStructure() {
+        WalletNavigationStructure runtimeWalletNavigationStructure;
+        SideMenu runtimeSideMenu;
+        MenuItem runtimeMenuItem;
+        Activity runtimeActivity;
+        TitleBar runtimeTitleBar;
+        StatusBar runtimeStatusBar;
+        Header runtimeHeader;
+        Fragment runtimeFragment;
+        TabStrip runtimeTabStrip;
+        Tab runtimeTab;
+        runtimeWalletNavigationStructure = new WalletNavigationStructure();
+        runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
+        runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
+        runtimeWalletNavigationStructure.setPublicKey("crypto_broker_wallet");
+
+
+        // Side Menu
+        runtimeSideMenu = new SideMenu();
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("");
+        runtimeMenuItem.setIcon("picture");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Contracts History");
+        runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Earnings");
+        runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+        // Activity: Home
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
+        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_HOME.getCode());
+        runtimeActivity.setColor("#1189a5");
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeWalletNavigationStructure.setStartActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Crypto Broker Wallet");
+        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeHeader = new Header();
+        runtimeHeader.setLabel("Market rate");
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_MARKET_RATE_STATISTICS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_MARKET_RATE_STATISTICS.getKey(), runtimeFragment);
+
+        runtimeTabStrip = new TabStrip();
+        runtimeTabStrip.setTabsColor("#1189a5");
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+        runtimeTabStrip.setTabsIndicateColor("#03A9F4");
+        runtimeTabStrip.setDividerColor(0x72af9c);
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Negotiations");
+        runtimeTab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey());
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Contracts");
+        runtimeTab.setFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACTS_TAB.getKey(), runtimeFragment);
+
+        // TODO falta agregar un footer a navigation structure
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_STOCK_STATISTICS.getKey(), runtimeFragment);
+
+
+        // Activity: Open Negotiation details
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS);
+        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
+        runtimeActivity.setColor("#1189a5");
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Negotiation Details");
+        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey());
+
+
+        // Activity: Close Negotiation details
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS);
+        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS.getCode());
+        runtimeActivity.setColor("#1189a5");
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Negotiation Details");
+        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS.getKey());
+
+
+        // Activity: Open Contract Details
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS);
+        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
+        runtimeActivity.setColor("#1189a5");
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Contract Details");
+        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS.getKey());
+
+
+        // Activity: Close Contract Details
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS);
+        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY);
+        runtimeActivity.setColor("#1189a5");
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Contract Details");
+        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getKey());
+
+
+        // Activity: Contracts History
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY);
+        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getCode());
+        runtimeActivity.setColor("#1189a5");
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Contracts History");
+        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getKey());
+
+
+        // Activity: Earnings
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS);
+        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS.getCode());
+        runtimeActivity.setColor("#1189a5");
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Earnings");
+        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_EARNINGS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_EARNINGS.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_EARNINGS.getKey());
+
+
+        // Activity: Settings
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS);
+        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS.getCode());
+        runtimeActivity.setColor("#1189a5");
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Settings");
+        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_SETTINGS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SETTINGS.getKey(), runtimeFragment);
+
+
+        return runtimeWalletNavigationStructure;
+
+    }
+
+    private WalletNavigationStructure createCryptoCustomerWalletNavigationStructure() {
+        WalletNavigationStructure runtimeWalletNavigationStructure;
+        SideMenu runtimeSideMenu;
+        MenuItem runtimeMenuItem;
+        Activity runtimeActivity;
+        TitleBar runtimeTitleBar;
+        StatusBar runtimeStatusBar;
+        Header runtimeHeader;
+        Fragment runtimeFragment;
+        TabStrip runtimeTabStrip;
+        Tab runtimeTab;
+        runtimeWalletNavigationStructure = new WalletNavigationStructure();
+        runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
+        runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
+        runtimeWalletNavigationStructure.setPublicKey("crypto_customer_wallet");
+
+
+        // Side Menu
+        runtimeSideMenu = new SideMenu();
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("");
+        runtimeMenuItem.setIcon("picture");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Contracts History");
+        runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Broker List");
+        runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setLinkToActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+        // Activity: Home
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
+        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME.getCode());
+        runtimeActivity.setColor("#1189a5");
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeWalletNavigationStructure.setStartActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Crypto Customer Wallet");
+        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeHeader = new Header();
+        runtimeHeader.setLabel("Market rate");
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_MARKET_RATE_STATISTICS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_MARKET_RATE_STATISTICS.getKey(), runtimeFragment);
+
+        runtimeTabStrip = new TabStrip();
+        runtimeTabStrip.setTabsColor("#1189a5");
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+        runtimeTabStrip.setTabsIndicateColor("#03A9F4");
+        runtimeTabStrip.setDividerColor(0x72af9c);
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Negotiations");
+        runtimeTab.setFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATIONS_TAB);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATIONS_TAB.getKey());
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Contracts");
+        runtimeTab.setFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACTS_TAB);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACTS_TAB.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACTS_TAB.getKey(), runtimeFragment);
+
+
+        // Activity: Start Negotiation
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_START_NEGOTIATION);
+        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_START_NEGOTIATION.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST);
+        runtimeActivity.setColor("#1189a5");
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Start a Negotiation");
+        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_START_NEGOTIATION.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_START_NEGOTIATION.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_START_NEGOTIATION.getKey());
+
+
+        // Activity: Open Negotiation details
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS);
+        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
+        runtimeActivity.setColor("#1189a5");
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Negotiation Details");
+        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS.getKey());
+
+
+        // Activity: Close Negotiation details
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS);
+        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS.getCode());
+        runtimeActivity.setColor("#1189a5");
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Negotiation Details");
+        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS.getKey());
+
+        // Activity: Open Contract Details
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACT_DETAILS);
+        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACT_DETAILS.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
+        runtimeActivity.setColor("#1189a5");
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Contract Details");
+        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACT_DETAILS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACT_DETAILS.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACT_DETAILS.getKey());
+
+
+        // Activity: Close Contract Details
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS);
+        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACTS_HISTORY);
+        runtimeActivity.setColor("#1189a5");
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Contract Details");
+        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_CLOSE_CONTRACT_DETAILS.getKey());
+
+
+        // Activity: Contracts History
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY);
+        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY.getCode());
+        runtimeActivity.setColor("#1189a5");
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Contracts History");
+        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS.getKey());
+
+
+        // Activity: Broker List
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST);
+        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST.getCode());
+        runtimeActivity.setColor("#1189a5");
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Broker's List");
+        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_BROKER_LIST.getKey());
+
+
+        // Activity: Settings
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS);
+        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS.getCode());
+        runtimeActivity.setColor("#1189a5");
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Settings");
+        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS.getKey(), runtimeFragment);
+
+
+        return runtimeWalletNavigationStructure;
+    }
 
     private void loadLastWalletNavigationStructure() throws CantFactoryReset {
         String walletCategory = null;
@@ -1774,6 +2089,10 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeSideMenu = new SideMenu();
 
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("");
+        runtimeMenuItem.setIcon("picture");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
@@ -1788,27 +2107,22 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Request History");
+        runtimeMenuItem.setIcon("Request History");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+        runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Transactions");
         runtimeMenuItem.setIcon("transactions");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Payment request");
-        runtimeMenuItem.setIcon("Payment_request");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-
-       /* runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Settings");
-        runtimeMenuItem.setIcon("Settings");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_SETTINGS);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);*/
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Exit");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+        runtimeMenuItem.setLabel("Logout");
+        runtimeMenuItem.setLinkToActivity(Activities.DEVELOP_MODE);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeActivity.setSideMenu(runtimeSideMenu);
@@ -1890,6 +2204,10 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeSideMenu = new SideMenu();
 
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("");
+        runtimeMenuItem.setIcon("picture");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
@@ -1904,23 +2222,26 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Request History");
+        runtimeMenuItem.setIcon("Request History");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+        runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Transactions");
         runtimeMenuItem.setIcon("transactions");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Payment request");
-        runtimeMenuItem.setIcon("Payment_request");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Exit");
+        runtimeMenuItem.setLabel("Logout");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeActivity.setSideMenu(runtimeSideMenu);
+
 
         //fin navigation
 
@@ -1984,6 +2305,10 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeSideMenu = new SideMenu();
 
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("");
+        runtimeMenuItem.setIcon("picture");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
@@ -1998,19 +2323,21 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Request History");
+        runtimeMenuItem.setIcon("request");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+        runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Transactions");
         runtimeMenuItem.setIcon("transactions");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Payment request");
-        runtimeMenuItem.setIcon("Payment_request");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Exit");
+        runtimeMenuItem.setLabel("Logout");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -2025,6 +2352,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS);
+        runtimeActivity.setActivityType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_CONTACTS.getCode());
         runtimeActivity.setColor("#12aca1");
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
 
@@ -2060,10 +2388,14 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeSideMenu = new SideMenu();
 
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("");
+        runtimeMenuItem.setIcon("picture");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Home");
-        runtimeMenuItem.setIcon("Home");
+        runtimeMenuItem.setIcon("home");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
@@ -2074,21 +2406,22 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Request History");
+        runtimeMenuItem.setIcon("request");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+        runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Transactions");
         runtimeMenuItem.setIcon("transactions");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Payment request");
-        runtimeMenuItem.setIcon("Payment_request");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Exit");
+        runtimeMenuItem.setLabel("Logout");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
-
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeActivity.setSideMenu(runtimeSideMenu);

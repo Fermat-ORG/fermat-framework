@@ -1,34 +1,35 @@
 :numbered:
-
+[[superlayers]]
 == FERMAT Operating Systems Superlayer
 
 NOTE: We call in FERMAT *Superlayer* to a group of layers whose modules offer services to be consumed system-wide, i.e. offering an infrastructure that hold the different *platforms* running over FERMAT. (it is like a "common ground" where different "towers" (the platforms) are built, sharing basics level services - like water, electricity and gas supply for a real world building-. )
 
-This superlayer allow the connectivity of OS dependant modul=es to the rest of FERMAT multiplatform (_OS independent_). The modules offer the necessary functions to interact with the corresponding OS. The specific layers will be added as long as FERMAT's releases include new OS.
+This superlayer allow the connectivity of OS dependant modules to the rest of FERMAT multiplatform (_OS independent_). The modules offer the necessary functions to interact with the corresponding OS. The specific layers will be added as long as FERMAT's releases include new OS.
 
 === _Android layer_
 In this layer, we find the different modules to allow FERMAT function on a device running Android. The usual requirements of storing and retrieving information, managing files, managing user log-on, checking the device status, location, etc are taken by each specific modules.
+This modules are written in a _android language_.
+This low level layer allows to build in sucesive layer the modules to implement the *Applications* and Subapplications running on Android.
 
-File System ::
-Database System ::
+File System :: it allows creation of files in a reserved memory area for each plug-in (it functions as a "private folder")
+Database System :: it allows creation of a database only readable for the plugin who owns it.  
 Logger :: acces to the OS activity log.
-Device Location ::
+Device Location :: acces to the GPS coordinates to determine device location.
 Device Connectivity :: access to peripheals connecting to the device through USB Port / Bluetooh Port / etc.. 
 Device Power ::
 Device Contacts ::
-Device Hardware:: +
+Device Hardware:: information about the hardware of the device running the platform +
 
 === _Multi OS layer_
 In this layer there are components that run in more than one OS at the time (Linux / MacOs / Windows)
+The modules are similar to the other _OS layers_.
+This low level layer allows to build in sucesive layer the modules to implement the *Desktop Applications* running on either of the OS mentioned. 
 
-File System ::
-Database System :: +
+File System :: access to the file system
+Database System :: access to plugin propietary databases +
 
-=== _Linux layer_
-=== _Mac OS layer_
-=== _Microsoft Windows layer_
-=== _I-OS _
+=== _I-OS_ layer
+(for further development) ...
 
-...
 
 

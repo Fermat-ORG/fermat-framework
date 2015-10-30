@@ -10,6 +10,7 @@ project(':fermat-bnk-api').projectDir = new File('BNK/library/api/fermat-bnk-api
 include ':fermat-cbp-api'
 project(':fermat-cbp-api').projectDir = new File('CBP/library/api/fermat-cbp-api')
 include ':fermat-cry-api'
+project(':fermat-cry-api').projectDir = new File('CRY/library/api/fermat-cry-api')
 include ':fermat-csh-api'
 project(':fermat-csh-api').projectDir = new File('CSH/library/api/fermat-csh-api')
 
@@ -18,6 +19,10 @@ project(':fermat-dap-api').projectDir = new File('DAP/library/api/fermat-dap-api
 
 
 include ':fermat-pip-api'
+project(':fermat-pip-api').projectDir = new File('PIP/library/api/fermat-pip-api')
+
+include ':fermat-pip-core'
+project(':fermat-pip-core').projectDir = new File('PIP/library/core/fermat-pip-core')
 
 include ':fermat-p2p-api'
 project(':fermat-p2p-api').projectDir = new File('P2P/library/api/fermat-p2p-api')
@@ -114,6 +119,11 @@ project(':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai').projectDir 
 // OSA Projects (Android)
 
 // Milestone 1 project:
+
+include ':fermat-osa-android-core'
+project(':fermat-osa-android-core').projectDir = new File('OSA/library/core/fermat-osa-android-core')
+
+
 include ':fermat-osa-addon-android-database-system-bitdubai'
 project(':fermat-osa-addon-android-database-system-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai')
 
@@ -159,8 +169,8 @@ project(':fermat-pip-addon-platform-service-platform-info-bitdubai').projectDir 
 include ':fermat-pip-addon-platform-service-error-manager-bitdubai'
 project(':fermat-pip-addon-platform-service-error-manager-bitdubai').projectDir = new File('PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai')
 
-include ':fermat-pip-addon-platform-service-location-subsystem-bitdubai'
-project(':fermat-pip-addon-platform-service-location-subsystem-bitdubai').projectDir = new File('PIP/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai')
+include ':fermat-pip-addon-platform-service-location-manager-bitdubai'
+project(':fermat-pip-addon-platform-service-location-manager-bitdubai').projectDir = new File('PIP/addon/platform_service/fermat-pip-addon-platform-service-location-manager-bitdubai')
 
 include ':fermat-pip-addon-hardware-local-device-bitdubai'
 project(':fermat-pip-addon-hardware-local-device-bitdubai').projectDir = new File('PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai')
@@ -756,18 +766,10 @@ include ':fermat-cbp-plugin-business-transaction-customer-broker-crypto-sale-bit
 project(':fermat-cbp-plugin-business-transaction-customer-broker-crypto-sale-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-broker-crypto-sale-bitdubai')
 
 //Contract
-include ':fermat-cbp-plugin-contract-customer-broker-bank-money-purchase-bitdubai'
-project(':fermat-cbp-plugin-contract-customer-broker-bank-money-purchase-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-bank-money-purchase-bitdubai')
-include ':fermat-cbp-plugin-contract-customer-broker-bank-money-sale-bitdubai'
-project(':fermat-cbp-plugin-contract-customer-broker-bank-money-sale-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-bank-money-sale-bitdubai')
-include ':fermat-cbp-plugin-contract-customer-broker-cash-money-purchase-bitdubai'
-project(':fermat-cbp-plugin-contract-customer-broker-cash-money-purchase-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-cash-money-purchase-bitdubai')
-include ':fermat-cbp-plugin-contract-customer-broker-cash-money-sale-bitdubai'
-project(':fermat-cbp-plugin-contract-customer-broker-cash-money-sale-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-cash-money-sale-bitdubai')
-include ':fermat-cbp-plugin-contract-customer-broker-crypto-money-purchase-bitdubai'
-project(':fermat-cbp-plugin-contract-customer-broker-crypto-money-purchase-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-crypto-money-purchase-bitdubai')
-include ':fermat-cbp-plugin-contract-customer-broker-crypto-money-sale-bitdubai'
-project(':fermat-cbp-plugin-contract-customer-broker-crypto-money-sale-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-crypto-money-sale-bitdubai')
+include ':fermat-cbp-plugin-contract-customer-broker-purchase-bitdubai'
+project(':fermat-cbp-plugin-contract-customer-broker-purchase-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-purchase-bitdubai')
+include ':fermat-cbp-plugin-contract-customer-broker-sale-bitdubai'
+project(':fermat-cbp-plugin-contract-customer-broker-sale-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-sale-bitdubai')
 
 //Desktop Module
 include ':fermat-cbp-plugin-desktop-module-sub-app-manager-bitdubai'

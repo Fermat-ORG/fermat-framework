@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorNetworkServiceAssetUser;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent;
 
 /**
  * Created by Nerio on 08/10/15.
@@ -22,11 +22,11 @@ public class AssetUserActorRequestListRegisteredNetworksNotificationEventHandler
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        System.out.println("Succesfull Request AssetuserActor List  - handleEvent =" + platformEvent);
+        System.out.println("Actor Asset User Succesfull Request AssetuserActor List  - handleEvent =" + platformEvent);
 
         if (((Service) this.actorNetworkServiceAssetUser).getStatus() == ServiceStatus.STARTED) {
 
-            AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent completeRequestListRegisteredAssetUserActorNetworksNotificationEvent = (AssetUserActorRequestListRegisteredNetworkServiceNotificationEvent) platformEvent;
+            ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent completeRequestListRegisteredAssetUserActorNetworksNotificationEvent = (ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent) platformEvent;
              /*
              *  ActorNetworkServiceAssetUser make the job
              */

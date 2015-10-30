@@ -25,7 +25,7 @@
             android:layout_marginTop="10dp" />
 
         <EditText
-            style="@style/Text_Style"
+
             android:id="@+id/search_view"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
@@ -40,7 +40,7 @@
             />
 
         <ImageButton
-            style="@style/Clear_Contact_Search_Button"
+
             android:id="@+id/clear_search_image_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
             android:layout_marginEnd="35dp"
             android:layout_marginRight="35dp"
 
-            android:src="@drawable/ic_action_add_grey"
+            android:src="@drawable/ic_contact_newcontact"
             fab:fab_colorNormal="#1173aa"
             fab:fab_colorPressed="@color/material_blue_grey_800"
             fab:fab_colorRipple="@color/ripple_material_dark"/>

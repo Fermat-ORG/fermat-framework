@@ -13,9 +13,9 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.Bitco
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
@@ -25,9 +25,9 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issu
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.events.AssetIssuingTransactionMonitorAgent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 
 import java.util.UUID;
@@ -130,7 +130,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
                     this.outgoingIntraActorManager);
             this.assetIssuingTransactionMonitorAgent.setDigitalAssetIssuingVault(digitalAssetIssuingVault);
             this.assetIssuingTransactionMonitorAgent.setLogManager(this.logManager);
-            this.setBitcoinNetworkManager(bitcoinNetworkManager);
+            this.assetIssuingTransactionMonitorAgent.setBitcoinNetworkManager(bitcoinNetworkManager);
             this.assetIssuingTransactionMonitorAgent.start();
         }else{
             this.assetIssuingTransactionMonitorAgent.start();
@@ -249,5 +249,11 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         } catch (CantCheckAssetIssuingProgressException exception) {
             throw new CantExecuteDatabaseOperationException(exception, "Getting the number of issued assets","Cannot check the asset issuing progress");
         }
+    }
+
+    @Override
+    public IssuingStatus getIssuingStatus(String assetPublicKey) throws CantExecuteDatabaseOperationException {
+        //TODO: to implement
+        return null;
     }
 }

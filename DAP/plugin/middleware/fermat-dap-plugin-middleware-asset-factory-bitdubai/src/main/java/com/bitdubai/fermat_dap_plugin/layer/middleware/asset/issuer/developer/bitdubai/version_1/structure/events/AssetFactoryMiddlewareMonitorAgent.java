@@ -7,32 +7,35 @@ import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentE
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantInitializeAssetMonitorAgentException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.AssetFactoryMiddlewarePluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.AssetFactoryMiddlewareManager;
-import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssertFactoryMiddlewareDatabaseConstant;
-import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDao;
-import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDatabaseFactory;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
  * Created by franklin on 12/10/15.
  */
-public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogger, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogger, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity, DealsWithPluginFileSystem {
     Database database;
     Thread agentThread;
     MonitorAgent monitorAgent;
@@ -43,19 +46,25 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
     AssetFactoryMiddlewareManager assetFactoryMiddlewareManager;
     AssetIssuingManager assetIssuingManager;
     UUID pluginId;
+    /**
+     * DealsWithPluginFileSystem Interface member variables.
+     */
+    private PluginFileSystem pluginFileSystem;
 
     public AssetFactoryMiddlewareMonitorAgent(EventManager eventManager,
                                               PluginDatabaseSystem pluginDatabaseSystem,
                                               ErrorManager errorManager,
                                               AssetFactoryMiddlewareManager assetFactoryMiddlewareManager,
                                               AssetIssuingManager assetIssuingManager,
-                                              UUID pluginId) throws CantSetObjectException {
+                                              UUID pluginId,
+                                              PluginFileSystem pluginFileSystem) throws CantSetObjectException {
         this.eventManager= eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
         setAssetFactoryMiddlewareManager(assetFactoryMiddlewareManager);
         setAssetIssuingManager(assetIssuingManager);
         this.pluginId = pluginId;
+        this.pluginFileSystem = pluginFileSystem;
 
     }
 
@@ -70,6 +79,7 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
         if (assetIssuingManager == null){
             throw new CantSetObjectException("AssetIssuingManager is null");
         }
+        this.assetIssuingManager = assetIssuingManager;
     }
 
     @Override
@@ -83,11 +93,11 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
         ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
         ((DealsWithErrors) this.monitorAgent).setErrorManager(this.errorManager);
 
-        try {
-            ((MonitorAgent) this.monitorAgent).Initialize();
-        } catch (CantInitializeAssetMonitorAgentException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-        }
+//        try {
+//            ((MonitorAgent) this.monitorAgent).Initialize();
+//        } catch (CantInitializeAssetMonitorAgentException exception) {
+//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+//        }
 
 
         this.agentThread = new Thread(monitorAgent);
@@ -121,6 +131,11 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
         this.pluginId = pluginId;
     }
 
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
+
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
@@ -129,9 +144,8 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
 
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
-        public final int SLEEP_TIME = /*AssetIssuingTransactionNotificationAgent.AGENT_SLEEP_TIME*/5000;
+        public final int SLEEP_TIME = 5000;
         int iterationNumber = 0;
-        AssetFactoryMiddlewareDao assetFactoryMiddlewareDao;
         boolean threadWorking;
         @Override
         public void setErrorManager(ErrorManager errorManager) {
@@ -144,8 +158,7 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
         }
         @Override
         public void run() {
-            threadWorking=true;
-            logManager.log( AssetFactoryMiddlewarePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuing Transaction Protocol Notification Agent: running...", null, null);
+            threadWorking = true;
             while(threadWorking){
                 /**
                  * Increase the iteration counter
@@ -161,10 +174,8 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
                  * now I will check if there are pending transactions to raise the event
                  */
                 try {
-
-                    logManager.log(AssetFactoryMiddlewarePluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
-                } //catch (CantDeliverDigitalAssetToAssetWalletException | CantCheckAssetIssuingProgressException | CantExecuteQueryException e) {
+                }
                     catch (Exception e){
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
@@ -172,33 +183,39 @@ public class AssetFactoryMiddlewareMonitorAgent implements Agent, DealsWithLogge
             }
         }
 
-        private void doTheMainTask(){
-            //TODO: Implementar ese metodo que tendra toda la logica que tendra el Agente
-        }
+        private void doTheMainTask() throws CantSaveAssetFactoryException , CantExecuteDatabaseOperationException, CantPersistFileException, CantCreateFileException, CantGetAssetFactoryException{
+            try
+            {
+                List<AssetFactory> assetFactories = getAssetFactoryAll();
 
-        public void Initialize() throws CantInitializeAssetMonitorAgentException {
-
-            try {
-
-                database = this.pluginDatabaseSystem.openDatabase(pluginId,  AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
-            }
-            catch (DatabaseNotFoundException databaseNotFoundException) {
-
-                Logger LOG = Logger.getGlobal();
-                LOG.info("Database in Asset Factory monitor agent doesn't exists");
-                AssetFactoryMiddlewareDatabaseFactory  assetFactoryMiddlewareDatabaseFactory = new AssetFactoryMiddlewareDatabaseFactory(this.pluginDatabaseSystem);
-                try {
-                    database = assetFactoryMiddlewareDatabaseFactory.createDatabase(pluginId,  AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
-                } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,cantCreateDatabaseException);
-                    throw new CantInitializeAssetMonitorAgentException(cantCreateDatabaseException,"Initialize Monitor Agent - trying to create the plugin database","Please, check the cause");
+                for(AssetFactory assetFactory : assetFactories){
+                    if (assetFactory.getState().getCode() != State.DRAFT.getCode())
+                    {
+                        int numberOfIssuedAssets = assetIssuingManager.getNumberOfIssuedAssets(assetFactory.getPublicKey());
+                        int totalFaltante = assetFactory.getQuantity() - numberOfIssuedAssets;
+                        if (totalFaltante == 0){
+                            assetFactoryMiddlewareManager.markAssetFactoryState(State.FINAL, assetFactory.getPublicKey());
+                        }
+                    }
                 }
-            } catch (CantOpenDatabaseException exception) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-                throw new CantInitializeAssetMonitorAgentException(exception,"Initialize Monitor Agent - trying to open the plugin database","Please, check the cause");
+            } catch (CantSaveAssetFactoryException e) {
+                throw new CantSaveAssetFactoryException(e, "Cant Save Asset Factory", "Method: doTheMainTask");
+            } catch (CantExecuteDatabaseOperationException e) {
+                e.printStackTrace();
+            } catch (CantPersistFileException e) {
+                throw new CantPersistFileException("Cant Persist File", e, "Method: doTheMainTask", null);
+            } catch (CantCreateFileException e) {
+                throw new CantCreateFileException("Cant Create File", e, "Method: doTheMainTask", null);
+            } catch (CantGetAssetFactoryException e) {
+                throw new CantGetAssetFactoryException("Cant Get Asset Factory", e, "Method: doTheMainTask", null);
             }
+
         }
 
+        private List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException
+        {
+            return assetFactoryMiddlewareManager.getAssetFactoryAll();
+        }
 
     }
 }

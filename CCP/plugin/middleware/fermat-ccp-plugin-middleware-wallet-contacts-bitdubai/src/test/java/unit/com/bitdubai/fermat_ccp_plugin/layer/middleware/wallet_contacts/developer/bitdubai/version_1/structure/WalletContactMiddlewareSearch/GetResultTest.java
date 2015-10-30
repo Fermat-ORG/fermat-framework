@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactMiddlewareSearch;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -14,7 +15,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareSearch;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.search.SearchField;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.search.SearchOrder;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import ErrorManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,9 +37,11 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+*/
 /**
  * Created by natalia on 11/09/15.
- */
+ *//*
+
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({CryptoCurrency.class,Actors.class})
@@ -137,3 +140,4 @@ public class GetResultTest {
 
 
 }
+*/

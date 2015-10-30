@@ -1,10 +1,9 @@
 package com.bitdubai.fermat_ccp_core.layer.identity.intra_wallet_user;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginDeveloper;
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginSubsystem;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
-import com.bitdubai.fermat_ccp_api.all_definition.enums.CCPPlugins;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginSubsystem;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.DeveloperBitDubai;
 
 /**
@@ -16,7 +15,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer
 public class IntraWalletUserPluginSubsystem extends AbstractPluginSubsystem {
 
     public IntraWalletUserPluginSubsystem() {
-        super(new PluginReference(CCPPlugins.BITDUBAI_INTRA_WALLET_USER_IDENTITY));
+        super(new PluginReference(Plugins.INTRA_WALLET_USER));
     }
 
     @Override

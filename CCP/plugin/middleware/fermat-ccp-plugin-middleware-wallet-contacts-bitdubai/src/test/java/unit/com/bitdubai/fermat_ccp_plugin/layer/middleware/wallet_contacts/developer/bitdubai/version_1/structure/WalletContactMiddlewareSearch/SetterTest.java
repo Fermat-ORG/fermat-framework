@@ -1,3 +1,4 @@
+/*
 package unit.com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactMiddlewareSearch;
 
 
@@ -6,7 +7,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareSearch;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.search.SearchField;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.search.SearchOrder;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import ErrorManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,9 +21,11 @@ import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 
+*/
 /**
  * Created by natalia on 11/09/15.
- */
+ *//*
+
 public class SetterTest {
     private WalletContactsMiddlewareDao walletContactsMiddlewareDao;
 
@@ -74,3 +77,4 @@ public class SetterTest {
 
 }
 
+*/

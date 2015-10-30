@@ -1,11 +1,17 @@
 package com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces;
 
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantAcceptIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCancelIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantDenyConnectionException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantDisconnectIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantSetPhotoException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.IntraUserNotFoundException;
 
 import java.util.List;
 
@@ -13,7 +19,7 @@ import java.util.List;
  * The interface <code>IntraWalletUserManager</code>
  * defines the methods to administrate the intra users,
  */
-public interface IntraWalletUserManager extends com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager {
+public interface IntraWalletUserManager {
 
     /**
      * The method <code>askIntraWalletUserForAcceptance</code> registers a new intra user in the list
@@ -82,6 +88,15 @@ public interface IntraWalletUserManager extends com.bitdubai.fermat_ccp_api.laye
     List<IntraWalletUser> getAllIntraWalletUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraWalletUsersException;
 
     /**
+     * The method <code>getAcceptedIntraWalletUsers</code> shows the list of all intra users that are accepted for the logged in one.
+     *
+     * @param intraUserLoggedInPublicKey
+     * @return
+     * @throws CantGetIntraWalletUsersException
+     */
+    List<IntraWalletUser> getConnectedIntraWalletUsers(String intraUserLoggedInPublicKey) throws CantGetIntraWalletUsersException;
+
+    /**
      * The method <code>getWaitingYourAcceptanceIntraWalletUsers</code> shows the list of all intra users
      * that sent a connection request and are waiting for the acceptance of the logged in one.
      *
@@ -101,5 +116,33 @@ public interface IntraWalletUserManager extends com.bitdubai.fermat_ccp_api.laye
      */
     List<IntraWalletUser> getWaitingTheirAcceptanceIntraWalletUsers(String intraUserLoggedInPublicKey, int max, int offset) throws CantGetIntraWalletUsersException;
 
+
+    /**
+     *
+     * @param actorName
+     * @param photo
+     * @return
+     * @throws CantCreateIntraUserException
+     */
+
+    Actor createActor(String walletPublicKey, String actorPublicKey, String actorName, byte[] photo) throws CantCreateIntraUserException;
+
+
+    /**
+     *
+     * @param actorPublicKey
+     * @return
+     */
+    Actor getActorByPublicKey(String walletPublicKey, String actorPublicKey) throws CantGetIntraUserException, IntraUserNotFoundException;
+
+
+    /**
+     *
+     * @param actorPublicKey
+     * @param photo
+     * @throws CantSetPhotoException
+     * @throws IntraUserNotFoundException
+     */
+    void setPhoto(String actorPublicKey, byte[] photo) throws CantSetPhotoException, IntraUserNotFoundException;
 
 }

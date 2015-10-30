@@ -19,6 +19,7 @@ public class AssetDistributionDatabaseConstants {
     public static final String ASSET_DISTRIBUTION_CRYPTO_STATUS_COLUMN_NAME = "crypto_status";
     public static final String ASSET_DISTRIBUTION_PROTOCOL_STATUS_COLUMN_NAME = "protocol_status";
     public static final String ASSET_DISTRIBUTION_ACTOR_ASSET_USER_BITCOIN_ADDRESS_COLUMN_NAME ="actor_user_bitcoin_address";
+    public static final String ASSET_DISTRIBUTION_DISTRIBUTION_ID_COLUMN_NAME="distribution_id";
 
     public static final String ASSET_DISTRIBUTION_FIRST_KEY_COLUMN = "genesis_transaction";
 

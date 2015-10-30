@@ -18,7 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
+
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -49,11 +49,12 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserI
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserSearch;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.intra_user_community.adapters.CheckBoxListItem;
 import com.bitdubai.sub_app.intra_user_community.adapters.ListAdapter;
+import com.bitdubai.sub_app.intra_user_community.common.Utils.FernatAnimationUtils;
 import com.bitdubai.sub_app.intra_user_community.common.Views.Utils;
 import com.bitdubai.sub_app.intra_user_community.common.adapters.IntraUserConnectionsAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.models.IntraUserConnectionListItem;
@@ -134,7 +135,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
         dialog.setTitle("Loading connections");
         dialog.setMessage("Please wait...");
         dialog.show();
-        showView(false, empty);
+        FernatAnimationUtils.showView(false, empty);
         new FermatWorker(getActivity(), new FermatWorkerCallBack() {
             @SuppressWarnings("unchecked")
             @Override
@@ -148,7 +149,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
                         isStartList = true;
 
                     }
-                    showEmpty();
+                    FernatAnimationUtils.showEmpty(isAttached, empty, intraUserItemList);
                 }
             }
 
@@ -158,7 +159,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
                     dialog.dismiss();
                     dialog = null;
                     Toast.makeText(getActivity(), "Some Error Occurred: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
-                    showEmpty();
+                    FernatAnimationUtils.showEmpty(isAttached, empty, intraUserItemList);
                 }
             }
         }) {
@@ -326,7 +327,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
         ArrayList<IntraUserConnectionListItem> data=null;
 
         try {
-            List<IntraUserInformation> lstIntraUser = intraUserModuleManager.getAllIntraUsers(0,10);
+            List<IntraUserInformation> lstIntraUser = intraUserModuleManager.getAllIntraUsers(intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),0,10);
             //List<WalletStoreCatalogueItem> catalogueItems = catalogue.getWalletCatalogue(0, 0);
 
             data = new ArrayList<>();
@@ -631,38 +632,7 @@ public class ConnectionsListFragment extends FermatListFragment<IntraUserConnect
         }
     }
 
-    /**
-     * Show or Hide any view
-     *
-     * @param show true if you want to show the view, otherwise false
-     * @param view View object to show or hide
-     */
-    public void showView(boolean show, View view) {
-        if (view == null)
-            return;
-        view.setAnimation(AnimationUtils
-                .loadAnimation(getActivity(), show ? R.anim.abc_fade_in : R.anim.abc_fade_out));
-        if (show && (view.getVisibility() == View.GONE || view.getVisibility() == View.INVISIBLE)) {
-            view.setVisibility(View.VISIBLE);
-        } else if (!show && view.getVisibility() == View.VISIBLE) {
-            view.setVisibility(View.GONE);
-        }
-    }
 
-    /**
-     * Show or hide empty view if needed
-     */
-    public void showEmpty() {
-        if (!isAttached || empty == null)
-            return;
-        if (intraUserItemList == null || intraUserItemList.isEmpty()) {
-            if (empty.getVisibility() == View.GONE || empty.getVisibility() == View.INVISIBLE) {
-                empty.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.abc_fade_in));
-                empty.setVisibility(View.VISIBLE);
-            }
-        } else if (empty.getVisibility() == View.VISIBLE) {
-            empty.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.abc_fade_out));
-            empty.setVisibility(View.GONE);
-        }
-    }
+
+
 }

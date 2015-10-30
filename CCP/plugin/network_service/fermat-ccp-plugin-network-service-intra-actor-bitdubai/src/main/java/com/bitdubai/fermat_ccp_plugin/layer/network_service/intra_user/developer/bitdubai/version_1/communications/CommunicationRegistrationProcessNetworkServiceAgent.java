@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 
@@ -29,7 +30,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     /**
      * Represent the templateNetworkServicePluginRoot
      */
-    private com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot templateNetworkServicePluginRoot;
+    private IntraActorNetworkServicePluginRoot templateNetworkServicePluginRoot;
 
     /**
      * Represent the communicationsClientConnection
@@ -46,7 +47,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
      * @param templateNetworkServicePluginRoot
      * @param communicationsClientConnection
      */
-    public CommunicationRegistrationProcessNetworkServiceAgent(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot templateNetworkServicePluginRoot, CommunicationsClientConnection communicationsClientConnection) {
+    public CommunicationRegistrationProcessNetworkServiceAgent(IntraActorNetworkServicePluginRoot templateNetworkServicePluginRoot, CommunicationsClientConnection communicationsClientConnection) {
         this.templateNetworkServicePluginRoot = templateNetworkServicePluginRoot;
         this.communicationsClientConnection = communicationsClientConnection;
         this.active = Boolean.FALSE;
@@ -68,8 +69,8 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                      * Construct my profile and register me
                      */
                     PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(templateNetworkServicePluginRoot.getIdentityPublicKey(),
-                                                                                                                                                (templateNetworkServicePluginRoot.getAlias().toLowerCase()+"_"+templateNetworkServicePluginRoot.getId().toString()),
-                                                                                                                                                (templateNetworkServicePluginRoot.getName()+" ("+templateNetworkServicePluginRoot.getId()+")"),
+                                                                                                                                                templateNetworkServicePluginRoot.getAlias().toLowerCase(),
+                                                                                                                                                templateNetworkServicePluginRoot.getName(),
                                                                                                                                                  templateNetworkServicePluginRoot.getNetworkServiceType(),
                                                                                                                                                  templateNetworkServicePluginRoot.getPlatformComponentType(),
                                                                                                                                                  templateNetworkServicePluginRoot.getExtraData());
@@ -82,7 +83,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     /*
                      * Configure my new profile
                      */
-                    templateNetworkServicePluginRoot.setPlatformComponentProfile(platformComponentProfile);
+                    templateNetworkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
 
                     /*
                      * Initialize the connection manager
