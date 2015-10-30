@@ -400,11 +400,7 @@ public class CryptoWalletWalletModuleManager implements
                                                                  BlockchainNetworkType blockchainNetworkType) throws CantCreateWalletContactException, ContactNameAlreadyExistsException{
         try{
 
-            CryptoAddress actorCryptoAddress = new CryptoAddress("",walletCryptoCurrency);
-
          //get to Crypto Address NS the intra user actor address
-
-
             cryptoAddressesNSManager.sendAddressExchangeRequest(walletPublicKey,
                                                                 walletCryptoCurrency ,
                                                                 actorWalletType,
@@ -420,15 +416,13 @@ public class CryptoWalletWalletModuleManager implements
             } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
                 String actorPublicKey = createActor(walletPublicKey,actorConnectedPublicKey,actorAlias, actorConnectedType, actorPhoto);
 
-                List<CryptoAddress> cryptoAddresses = new ArrayList<>();
-                cryptoAddresses.add(actorCryptoAddress);
+
                 WalletContactRecord walletContactRecord = walletContactsRegistry.createWalletContact(
                         actorPublicKey,
                         actorAlias,
                         "",
                         "",
                         actorConnectedType,
-                        cryptoAddresses,
                         walletPublicKey
                 );
                 return new CryptoWalletWalletModuleWalletContact(walletContactRecord, actorPhoto);

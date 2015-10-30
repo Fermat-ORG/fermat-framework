@@ -83,6 +83,8 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
 
                 ReferenceWallet referenceWallet = ReferenceWallet.getByCategoryAndIdentifier(wallet.getWalletCategory(), wallet.getWalletPlatformIdentifier());
 
+                System.out.println("************ Crypto Addresses -> updating ok.");
+
                 cryptoAddressBookManager.registerCryptoAddress(
                         cryptoAddress,
                         request.getIdentityPublicKeyResponding(),
@@ -96,10 +98,16 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
                         referenceWallet
                 );
 
+                System.out.println("************ Crypto Addresses ->registered crypto address.");
+
+                System.out.println("************ Crypto Addresses -> i will accept the address exchange request.");
+
                 cryptoAddressesManager.acceptAddressExchangeRequest(
                         request.getRequestId(),
                         cryptoAddress
                 );
+
+                System.out.println("************ Crypto Addresses -> i already accept the address exchange request.");
 
             } catch(DefaultWalletNotFoundException z) {
 

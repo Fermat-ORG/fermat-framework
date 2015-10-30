@@ -847,6 +847,9 @@ public class Platform implements Serializable {
 
             }
 
+            Plugin cryptoAddressBookCrypto = ((CryptoLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CRYPTO_LAYER)).getCryptoAddressBook();
+            injectPluginReferencesAndStart(cryptoAddressBookCrypto, Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK);
+
             if (CRY) {
            /*
             * Plugin Bitcoin Crypto Network
@@ -862,8 +865,7 @@ public class Platform implements Serializable {
             *  Plugin Crypto Address Book         *
             * ------------------------------------*
             */
-                Plugin cryptoAddressBookCrypto = ((CryptoLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CRYPTO_LAYER)).getCryptoAddressBook();
-                injectPluginReferencesAndStart(cryptoAddressBookCrypto, Plugins.BITDUBAI_CRYPTO_ADDRESS_BOOK);
+
 
            /*
             * Plugin Bitcoin Crypto Vault

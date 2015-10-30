@@ -158,52 +158,57 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
 
                     case ACCEPT:
 
-                        System.out.println("********* Crypto Addresses: Executor Agent -> Sending ACCEPTANCE. ");
+                        System.out.println("********* Crypto Addresses: Executor Agent -> Sending ACCEPTANCE. "+aer);
 
                         sendMessageToActor(
                                 buildJsonAcceptMessage(aer),
-                                aer.getIdentityPublicKeyResponding(),
-                                aer.getIdentityTypeResponding(),
                                 aer.getIdentityPublicKeyRequesting(),
                                 aer.getIdentityTypeRequesting(),
-                                aer.getRequestId()
+                                aer.getIdentityPublicKeyResponding(),
+                                aer.getIdentityTypeResponding()
                         );
+
+                        toDone(aer.getRequestId());
 
                         break;
 
                     case DENY:
 
-                        System.out.println("********* Crypto Addresses: Executor Agent -> Sending DENIAL. ");
+                        System.out.println("********* Crypto Addresses: Executor Agent -> Sending DENIAL. "+aer);
 
                         sendMessageToActor(
                                 buildJsonDenyMessage(aer),
-                                aer.getIdentityPublicKeyResponding(),
-                                aer.getIdentityTypeResponding(),
                                 aer.getIdentityPublicKeyRequesting(),
                                 aer.getIdentityTypeRequesting(),
-                                aer.getRequestId()
+                                aer.getIdentityPublicKeyResponding(),
+                                aer.getIdentityTypeResponding()
                         );
+
+                        toDone(aer.getRequestId());
 
                         break;
 
                     case REQUEST:
 
-                        System.out.println("********* Crypto Addresses: Executor Agent -> Sending REQUEST. ");
+                        System.out.println("********* Crypto Addresses: Executor Agent -> Sending REQUEST. "+aer);
 
                         sendMessageToActor(
                                 buildJsonRequestMessage(aer),
                                 aer.getIdentityPublicKeyRequesting(),
                                 aer.getIdentityTypeRequesting(),
                                 aer.getIdentityPublicKeyResponding(),
-                                aer.getIdentityTypeResponding(),
-                                aer.getRequestId()
+                                aer.getIdentityTypeResponding()
                         );
+
+                        toWaitingResponse(aer.getRequestId());
 
                         break;
                 }
             }
 
-        } catch(CantListPendingAddressExchangeRequestsException e) {
+        } catch(CantListPendingAddressExchangeRequestsException |
+                CantChangeProtocolStateException                |
+                PendingRequestNotFoundException                 e) {
 
             reportUnexpectedError(e);
         }
@@ -272,12 +277,11 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
         }
     }
 
-    private void sendMessageToActor(final String jsonMessage      ,
-                                    final String identityPublicKey,
-                                    final Actors identityType     ,
-                                    final String actorPublicKey   ,
-                                    final Actors actorType        ,
-                                    final UUID   requestId        ) {
+    private boolean sendMessageToActor(final String jsonMessage      ,
+                                       final String identityPublicKey,
+                                       final Actors identityType     ,
+                                       final String actorPublicKey   ,
+                                       final Actors actorType        ) {
 
         try {
 
@@ -311,26 +315,30 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                         }
 
                     }
+
+                    return false;
+
                 } else {
 
-                    sendMessage(identityPublicKey, actorPublicKey, jsonMessage, requestId);
+                    return sendMessage(identityPublicKey, actorPublicKey, jsonMessage);
+
                 }
             } else {
 
-                sendMessage(identityPublicKey, actorPublicKey, jsonMessage, requestId);
+                return sendMessage(identityPublicKey, actorPublicKey, jsonMessage);
             }
 
 
         } catch (Exception z) {
 
             reportUnexpectedError(FermatException.wrapException(z));
+            return false;
         }
     }
 
-    private void sendMessage(final String identityPublicKey,
-                             final String actorPublicKey   ,
-                             final String jsonMessage      ,
-                             final UUID   requestId        ) throws PendingRequestNotFoundException, CantChangeProtocolStateException {
+    private boolean sendMessage(final String identityPublicKey,
+                                final String actorPublicKey   ,
+                                final String jsonMessage      ) {
 
         NetworkServiceLocal communicationNetworkServiceLocal = cryptoAddressesNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey);
 
@@ -342,11 +350,12 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
                     jsonMessage
             );
 
-            toWaitingResponse(requestId);
-
             poolConnectionsWaitingForResponse.remove(actorPublicKey);
+
+            return true;
         }
 
+        return false;
     }
 
     private PlatformComponentType platformComponentTypeSelectorByActorType(final Actors type) throws InvalidParameterException {
@@ -396,15 +405,21 @@ public class CryptoAddressesExecutorAgent extends FermatAgent {
     }
 
     private void toPendingAction(final UUID requestId) throws CantChangeProtocolStateException,
-                                                        PendingRequestNotFoundException {
+                                                              PendingRequestNotFoundException {
 
         cryptoAddressesNetworkServiceDao.changeProtocolState(requestId, ProtocolState.PENDING_ACTION);
     }
 
     private void toWaitingResponse(final UUID requestId) throws CantChangeProtocolStateException,
-                                                          PendingRequestNotFoundException {
+                                                                PendingRequestNotFoundException {
 
         cryptoAddressesNetworkServiceDao.changeProtocolState(requestId, ProtocolState.WAITING_RESPONSE);
+    }
+
+    private void toDone(final UUID requestId) throws CantChangeProtocolStateException,
+                                                     PendingRequestNotFoundException {
+
+        cryptoAddressesNetworkServiceDao.changeProtocolState(requestId, ProtocolState.DONE);
     }
 
     private void raiseEvent(final EventType eventType,
