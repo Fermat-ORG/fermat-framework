@@ -77,6 +77,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * TODO This plugin do.
@@ -100,7 +101,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
      * DealsWithEvents Interface member variables
      */
     private EventManager eventManager;
-    private List<FermatEventListener> listenersAdded;;
+    private List<FermatEventListener> listenersAdded;
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -115,7 +116,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     /**
      *  Represent the remoteNetworkServicesRegisteredList
      */
-    private List<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
+    private CopyOnWriteArrayList<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
 
     /**
      * Represent the cryptoPaymentRequestNetworkServiceConnectionManager
@@ -150,6 +151,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                 EventSource.NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST
         );
 
+        this.remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
         this.listenersAdded = new ArrayList<>();
     }
 
@@ -474,8 +476,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             throw pluginStartException;
         }
 
-
-
     }
 
     private void addCryptoPaymentRequestListener(final FermatEventEnum fermatEventEnum,
@@ -585,6 +585,12 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         // close all connections.
         communicationNetworkServiceConnectionManager.closeAllConnection();
 
+        // interrupt the registration agent execution
+        communicationRegistrationProcessNetworkServiceAgent.stop();
+
+        // interrupt the executor agent execution
+        cryptoPaymentRequestExecutorAgent.stop();
+
         // set to not registered.
         register = Boolean.FALSE;
 
@@ -617,20 +623,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(this.getPlatformComponentProfilePluginRoot(), discoveryQueryParameters);
 
         } catch (CantRequestListException e) {
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "Plugin was not registered";
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_TRANSMISSION_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
@@ -758,7 +750,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
         System.out.print(" CPR NS - SUCCESSFUL CONNECTION: : " + getName());
 
-        remoteNetworkServicesRegisteredList.addAll(platformComponentProfileRegisteredList);
+        remoteNetworkServicesRegisteredList.addAllAbsent(platformComponentProfileRegisteredList);
 
     }
 
