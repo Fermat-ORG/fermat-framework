@@ -159,17 +159,17 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
             this.assetDistributionTransactionManager.setBitcoinManager(this.bitcoinNetworkManager);
             this.assetDistributionTransactionManager.setActorAssetIssuerManager(this.actorAssetIssuerManager);
             //distributeAssets(null, null);
-            testDeveloperDatabase();
+            //testDeveloperDatabase();
         }catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Distribution plugin", "Cannot set an object, probably is null");
         } catch (CantExecuteDatabaseOperationException exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting pluginDatabaseSystem in DigitalAssetDistributor", "Error in constructor method AssetDistributor");
         } /*catch (CantDistributeDigitalAssetsException e) {
             e.printStackTrace();
-        }*/catch(Exception exception){
+        }catch(Exception exception){
             System.out.println("Asset Distribution test exception "+exception);
             exception.printStackTrace();
-        }
+        }*/
         this.serviceStatus=ServiceStatus.STARTED;
         //testRaiseEvent();
 
@@ -413,7 +413,7 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
     private void testDeveloperDatabase() throws CantExecuteDatabaseOperationException, CantDefineContractPropertyException, CantPersistDigitalAssetException {
         System.out.println("START TEST DEVELOPER DATABASE ASSET DISTRIBUTION");
         MockDigitalAssetMetadataForTesting mockDigitalAssetMetadataForTesting=new MockDigitalAssetMetadataForTesting();
-        System.out.println("ASSET DISTRIBUTION DAM:"+mockDigitalAssetMetadataForTesting);
+        System.out.println("ASSET DISTRIBUTION MOCKED DAM:"+mockDigitalAssetMetadataForTesting);
         AssetDistributionDao assetDistributionDao=new AssetDistributionDao(pluginDatabaseSystem,pluginId);
         assetDistributionDao.persistDigitalAsset(
                 mockDigitalAssetMetadataForTesting.getGenesisTransaction(),
