@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.de
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.database.IncomingMessageDao;
@@ -28,68 +29,48 @@ import java.util.Map;
  */
 public class CommunicationNetworkServiceConnectionManager implements NetworkServiceConnectionManager {
 
-    /**
-     * Represent the communicationsClientConnection
-     */
-    private CommunicationsClientConnection communicationsClientConnection;
-
-    /**
-     * Represent the platformComponentProfile
-     */
-    private PlatformComponentProfile platformComponentProfile;
-
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    private ErrorManager errorManager;
-
-    /**
-     * DealWithEvents Interface member variables.
-     */
-    private EventManager eventManager;
+    private final CommunicationsClientConnection communicationsClientConnection;
+    private final PlatformComponentProfile       platformComponentProfile      ;
+    private final ErrorManager                   errorManager                  ;
+    private final EventManager                   eventManager                  ;
+    private final IncomingMessageDao             incomingMessageDao            ;
+    private final OutgoingMessageDao             outgoingMessageDao            ;
+    private final ECCKeyPair                     identity                      ;
+    private final EventSource                    eventSource                   ;
 
     /**
      * Holds all references to the communication network service locals
      */
-    private Map<String, CommunicationNetworkServiceLocal> communicationNetworkServiceLocalsCache;
+    private final Map<String, CommunicationNetworkServiceLocal> communicationNetworkServiceLocalsCache;
 
     /**
      * Holds all references to the communication network service remote agents
      */
-    private Map<String,CommunicationNetworkServiceRemoteAgent> communicationNetworkServiceRemoteAgentsCache;
+    private final Map<String,CommunicationNetworkServiceRemoteAgent> communicationNetworkServiceRemoteAgentsCache;
 
     /**
-     * Represent the incomingMessageDao
+     * Constructor with parameters.
      */
-    private IncomingMessageDao incomingMessageDao;
+    public CommunicationNetworkServiceConnectionManager(final PlatformComponentProfile       platformComponentProfile      ,
+                                                        final ECCKeyPair                     identity                      ,
+                                                        final CommunicationsClientConnection communicationsClientConnection,
+                                                        final Database                       dataBase                      ,
+                                                        final ErrorManager                   errorManager                  ,
+                                                        final EventManager                   eventManager                  ,
+                                                        final EventSource                    eventSource                   ) {
 
-    /**
-     * Represent the outgoingMessageDao
-     */
-    private OutgoingMessageDao outgoingMessageDao;
-
-    /**
-     * Represent the identity
-     */
-    private ECCKeyPair identity;
-
-
-    /**
-     * Constructor with parameters
-     *
-     * @param communicationsClientConnection a communicationLayerManager instance
-     * @param errorManager              a errorManager instance
-     */
-    public CommunicationNetworkServiceConnectionManager(PlatformComponentProfile platformComponentProfile, ECCKeyPair identity, CommunicationsClientConnection communicationsClientConnection, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
         super();
-        this.platformComponentProfile = platformComponentProfile;
-        this.identity = identity;
+        this.platformComponentProfile       = platformComponentProfile      ;
+        this.identity                       = identity                      ;
         this.communicationsClientConnection = communicationsClientConnection;
-        this.errorManager = errorManager;
-        this.eventManager = eventManager;
+        this.errorManager                   = errorManager                  ;
+        this.eventManager                   = eventManager                  ;
+        this.eventSource                    = eventSource                   ;
+
         this.incomingMessageDao = new IncomingMessageDao(dataBase);
         this.outgoingMessageDao = new OutgoingMessageDao(dataBase);
-        this.communicationNetworkServiceLocalsCache = new HashMap<>();
+
+        this.communicationNetworkServiceLocalsCache       = new HashMap<>();
         this.communicationNetworkServiceRemoteAgentsCache = new HashMap<>();
     }
 
@@ -181,12 +162,12 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
                  /*
                  * Instantiate the local reference
                  */
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao,platformComponentProfile.getNetworkServiceType());
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao,platformComponentProfile.getNetworkServiceType(), eventSource);
 
                 /*
                  * Instantiate the remote reference
                  */
-                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
+                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao, eventSource);
 
                 /*
                  * Register the observer to the observable agent
@@ -251,21 +232,5 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
             communicationNetworkServiceRemoteAgentsCache.get(key).resume();
         }
 
-    }
-
-    /**
-     * Get the OutgoingMessageDao
-     * @return OutgoingMessageDao
-     */
-    public OutgoingMessageDao getOutgoingMessageDao() {
-        return outgoingMessageDao;
-    }
-
-    /**
-     * Get the IncomingMessageDao
-     * @return IncomingMessageDao
-     */
-    public IncomingMessageDao getIncomingMessageDao() {
-        return incomingMessageDao;
     }
 }
