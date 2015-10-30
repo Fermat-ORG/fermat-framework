@@ -11,8 +11,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantCreateCustomerBrokerBankMoneyPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantDeleteCustomerBrokerBankMoneyPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantGetListCustomerBrokerBankMoneyPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantupdateCustomerBrokerBankMoneyPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.interfaces.CustomerBrokerBankMoneyPurchase;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.interfaces.CustomerBrokerBankMoneyPurchaseManager;
@@ -107,33 +111,55 @@ public class CustomerBrokerBankMoneyPurchasePluginRoot implements CustomerBroker
     }
 
     @Override
-    public List<CustomerBrokerBankMoneyPurchase> getAllCustomerBrokerBankMoneyPurchaseFromCurrentDeviceUser() {
-        return null;
+    public List<CustomerBrokerBankMoneyPurchase> getAllCustomerBrokerBankMoneyPurchaseFromCurrentDeviceUser() throws CantGetListCustomerBrokerBankMoneyPurchaseException {
+        return this.customerBrokerBankMoneyPurchaseContractDao.getAllCustomerBrokerBankMoneyPurchaseFromCurrentDeviceUser();
     }
 
     @Override
-    public List<CustomerBrokerBankMoneyPurchase> getCustomerBrokerBankMoneyPurchaseForContractId(UUID ContractId) {
-        return null;
+    public CustomerBrokerBankMoneyPurchase getCustomerBrokerBankMoneyPurchaseForContractId(UUID ContractId) throws CantGetListCustomerBrokerBankMoneyPurchaseException {
+        return this.customerBrokerBankMoneyPurchaseContractDao.getCustomerBrokerBankMoneyPurchaseForContractId(ContractId);
     }
 
     @Override
-    public CustomerBrokerBankMoneyPurchase createCustomerBrokerBankMoneyPurchase(String publicKeyCustomer, String publicKeyBroker, Float merchandiseAmount, String merchandiseCurrency, Float referencePrice, String referenceCurrency, Float paymentAmount, String paymentCurrency, long paymentExpirationDate, long merchandiseDeliveryExpirationDate) throws CantCreateCustomerBrokerBankMoneyPurchaseException {
-        return null;
+    public CustomerBrokerBankMoneyPurchase createCustomerBrokerBankMoneyPurchase(
+            String publicKeyCustomer,
+            String publicKeyBroker,
+            Float merchandiseAmount,
+            CurrencyType merchandiseCurrency,
+            Float referencePrice,
+            ReferenceCurrency referenceCurrency,
+            Float paymentAmount,
+            CurrencyType paymentCurrency,
+            long paymentExpirationDate,
+            long merchandiseDeliveryExpirationDate) throws CantCreateCustomerBrokerBankMoneyPurchaseException {
+
+        return this.customerBrokerBankMoneyPurchaseContractDao.createCustomerBrokerBankMoneyPurchase(
+                publicKeyCustomer,
+                publicKeyBroker,
+                merchandiseAmount,
+                merchandiseCurrency,
+                referencePrice,
+                referenceCurrency,
+                paymentAmount,
+                paymentCurrency,
+                paymentExpirationDate,
+                merchandiseDeliveryExpirationDate
+        );
     }
 
     @Override
-    public void updateCustomerBrokerBankMoneyPurchase(UUID ContractId) throws CantupdateCustomerBrokerBankMoneyPurchaseException {
-
+    public void updateCustomerBrokerBankMoneyPurchase(UUID contractId, ContractStatus status) throws CantupdateCustomerBrokerBankMoneyPurchaseException {
+        this.customerBrokerBankMoneyPurchaseContractDao.updateCustomerBrokerBankMoneyPurchase(contractId, status);
     }
 
     @Override
     public void deleteCustomerBrokerBankMoneyPurchase(UUID contractID) throws CantDeleteCustomerBrokerBankMoneyPurchaseException {
-
+        this.customerBrokerBankMoneyPurchaseContractDao.deleteCustomerBrokerBankMoneyPurchase(contractID);
     }
 
     @Override
     public DatabaseTableRecord getCustomerBrokerBankMoneySaleContractTable() {
-        return null;
+        return this.customerBrokerBankMoneyPurchaseContractDao.getCustomerBrokerBankMoneyPurchaseContractTable();
     }
 
     @Override
