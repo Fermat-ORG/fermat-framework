@@ -16,7 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
-import com.bitdubai.fermat_ccp_core.CCPPlatform;
+import com.bitdubai.fermat_bch_core.BCHPlatform;
 import com.bitdubai.fermat_pip_core.PIPPlatform;
 
 import java.util.List;
@@ -46,7 +46,7 @@ public final class FermatSystem {
 
         try {
 
-            fermatSystemContext.registerPlatform(new CCPPlatform());
+            fermatSystemContext.registerPlatform(new BCHPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform());
 
             final List<PluginVersionReference> referenceList = new FermatPluginReferencesCalculator(fermatSystemContext).listReferencesByInstantiationOrder(

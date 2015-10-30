@@ -1,7 +1,6 @@
 package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.DeveloperBitDubai;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.DeveloperBitDubaiOld;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,7 +11,7 @@ import org.junit.Test;
 public class DeveloperBitDubaiTest {
     @Test
     public void test(){
-        DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-        Assert.assertNotNull(developerBitDubai.getPlugin());
+        DeveloperBitDubaiOld developerBitDubaiOld = new DeveloperBitDubaiOld();
+        Assert.assertNotNull(developerBitDubaiOld.getPlugin());
     }
 }

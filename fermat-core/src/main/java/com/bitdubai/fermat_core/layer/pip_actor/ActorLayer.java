@@ -8,7 +8,7 @@ import com.bitdubai.fermat_pip_api.layer.pip_actor.CantStartSubsystemException;
 import com.bitdubai.fermat_core.layer.pip_actor.actor_developer.ActorDeveloperSubsystem;
 
 /**
- * The interface <code>com.bitdubai.fermat_core.layer.pip_actor.ActorLayer</code>
+ * The interface <code>com.bitdubai.fermat_core.layer.pip_actor.CryptoVaultLayer</code>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 25/06/15.
  * @version 1.0
