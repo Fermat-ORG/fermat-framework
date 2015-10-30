@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_ccp_core.layer.network_service.crypto_payment_request;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPluginSubsystem;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginSubsystem;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.DeveloperBitDubai;
 

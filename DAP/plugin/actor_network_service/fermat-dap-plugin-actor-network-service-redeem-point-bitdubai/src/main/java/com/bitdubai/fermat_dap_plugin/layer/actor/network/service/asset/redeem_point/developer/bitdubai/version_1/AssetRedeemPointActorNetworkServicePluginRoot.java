@@ -739,11 +739,6 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
     }
 
     @Override
-    public UUID getId() {
-        return this.pluginId;
-    }
-
-    @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }

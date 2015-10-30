@@ -6,5 +6,5 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 24/09/15.
  */
 public interface DealsWithAssetDistribution {
-    void setAssetDistributionManager(AssetDistributionManager assetIssuingManager)throws CantSetObjectException;
+    void setAssetDistributionManager(AssetDistributionManager assetDistributionManager)throws CantSetObjectException;
 }

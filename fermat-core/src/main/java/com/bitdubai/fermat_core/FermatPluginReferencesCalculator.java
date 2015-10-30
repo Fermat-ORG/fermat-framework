@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_core;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantListNeededReferencesException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantListReferencesException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CyclicalRelationshipFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.VersionNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantListNeededReferencesException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantListReferencesException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CyclicalRelationshipFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 
 import java.util.ArrayList;
 import java.util.Collections;

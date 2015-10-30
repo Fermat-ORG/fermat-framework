@@ -231,14 +231,14 @@ public class AssetUserActorDao implements Serializable {
     }
 
     //    public void createNewAssetUserRegisterInNetworkService(String assetUserPublicKey, String assetUserName, byte[] profileImage, Location location, CryptoAddress cryptoAddress) throws CantAddPendingAssetUserException {
-    public void createNewAssetUserRegisterInNetworkService(ActorAssetUser actorAssetUserRecord) throws CantAddPendingAssetUserException {
+    public void createNewAssetUserRegisterInNetworkService(ActorAssetUser actorAssetUserRecord, ConnectionState connectionState, CryptoAddress cryptoAddress) throws CantAddPendingAssetUserException {
         try {
             /**
              * if Asset User exist on table
              * change status
              */
             if (assetUserRegisteredExists(actorAssetUserRecord.getPublicKey())) {
-                this.updateAssetUserConnectionStateActorNetworService(actorAssetUserRecord.getPublicKey(), actorAssetUserRecord.getConnectionState(), actorAssetUserRecord.getCryptoAddress());
+                this.updateAssetUserConnectionStateActorNetworService(actorAssetUserRecord.getPublicKey(), connectionState, cryptoAddress);
             } else {
                 /**
                  * Get actual date
@@ -274,9 +274,9 @@ public class AssetUserActorDao implements Serializable {
                 if (actorAssetUserRecord.getLocationLongitude() != null)
                     record.setDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME, actorAssetUserRecord.getLocationLongitude());
 
-                if (actorAssetUserRecord.getCryptoAddress() != null) {
-                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, actorAssetUserRecord.getCryptoAddress().getAddress());
-                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, actorAssetUserRecord.getCryptoAddress().getCryptoCurrency().getCode());
+                if (cryptoAddress != null) {
+                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
+                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode());
                 }
 
                 record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, actorAssetUserRecord.getRegistrationDate());
@@ -308,6 +308,7 @@ public class AssetUserActorDao implements Serializable {
              * if Asset User exist on table
              * change status
              */
+
             for (ActorAssetUser actorAssetUser : actorAssetUserRecord) {
 
                 if (compareRegisterTables(actorAssetUser)) {
@@ -340,7 +341,12 @@ public class AssetUserActorDao implements Serializable {
 
                         record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_GENDER_COLUMN_NAME, actorAssetUser.getGenders().getCode());
 
-                        record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, actorAssetUser.getConnectionState().getCode());
+                        System.out.println("Actor Asset User AÑADIDO a tabla REGISTER: "+ actorAssetUser.getName());
+                        System.out.println("Actor Asset User AÑADIDO a tabla REGISTER: "+ ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
+
+
+                        //TODO se le coloca estado PENDING_LOCALLY_ACCEPTANCE indicando registro local  "Visible en Community". - conversar para crear 2 posibles NUEVOS ESTADOS
+                        record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, ConnectionState.PENDING_LOCALLY_ACCEPTANCE.getCode());//actorAssetUser.getConnectionState().getCode());
 
                         if (actorAssetUser.getLocationLatitude() != null)
                             record.setDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME, actorAssetUser.getLocationLatitude());
@@ -364,6 +370,9 @@ public class AssetUserActorDao implements Serializable {
                     }
                 }
             }
+            if(actorAssetUserRecord.isEmpty()){
+                this.updateActorAssetUserActorNetworService(ConnectionState.DISCONNECTED_REMOTELY);
+            }
             database.closeDatabase();
         } catch (CantInsertRecordException e) {
             throw new CantAddPendingAssetUserException("CAN'T INSERT ASSET USER REGISTERED IN ACTOR NETWORK SERVICE", e, "", "Cant create new ASSET USER REGISTERED IN ACTOR NETWORK SERVICE, insert database problems.");
@@ -375,6 +384,49 @@ public class AssetUserActorDao implements Serializable {
             database.closeDatabase();
         }
         return recordInsert;
+    }
+    //TODO Metodo para actualizar estado de los Actores retornados por A.N.S que se han desconectado
+    public void updateActorAssetUserActorNetworService(ConnectionState connectionState) throws CantUpdateAssetUserConnectionException {
+        DatabaseTable table;
+
+        try {
+            table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_TABLE_NAME);
+
+            if (table == null) {
+                throw new CantGetUserDeveloperIdentitiesException("Cant get asset User actor list, table not found.", "Asset User Actor", "");
+            }
+
+            // 2) Find the Asset User , filter by keys.
+//            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, assetUserPublicKey, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            if(table.getRecords().size() > 0) {
+                // 3) Get Asset User record and update state.
+                for (DatabaseTableRecord record : table.getRecords()) {
+                    System.out.println("Actor Asset User Actualizando tabla REGISTER - Desde lista VACIA: "+record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NAME_COLUMN_NAME));
+                    System.out.println("Actor Asset User Actualizando tabla REGISTER - Desde lista VACIA: "+ ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
+                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode());
+
+//                if(cryptoAddress != null) {
+//                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
+//                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode());
+//                }
+
+                    record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
+                    table.updateRecord(record);
+                }
+            }
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantUpdateAssetUserConnectionException(e.getMessage(), e, "asset User REGISTERED Actor", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_TABLE_NAME + " table in memory.");
+        } catch (CantUpdateRecordException e) {
+            throw new CantUpdateAssetUserConnectionException(e.getMessage(), e, "asset User REGISTERED Actor", "Cant Update " + AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantUpdateAssetUserConnectionException(e.getMessage(), FermatException.wrapException(e), "Asset User REGISTERED Actor", "Cant get developer identity list, unknown failure.");
+        } finally {
+            database.closeDatabase();
+        }
     }
 
     public void updateAssetUserConnectionStateActorNetworService(String assetUserPublicKey, ConnectionState connectionState, CryptoAddress cryptoAddress) throws CantUpdateAssetUserConnectionException {
@@ -571,8 +623,9 @@ public class AssetUserActorDao implements Serializable {
                  */
                 throw new CantGetUserDeveloperIdentitiesException("Cant get asset User identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
             }//TODO Filtro de Busqueda en Tabla NO colocado para que traiga toda la informacion que contiene
-            // 2) Find  Asset Users by public Key.
-//            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_STATE_COLUMN_NAME, "CTC", DatabaseFilterType.EQUAL);
+            // 2) Find  Asset Users Registered by Connection State = CONNECTED.
+//            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, "CTC", DatabaseFilterType.EQUAL);
+
 //            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserToAddPublicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             // 3) Get Asset Users Record.
@@ -602,15 +655,11 @@ public class AssetUserActorDao implements Serializable {
             table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_TABLE_NAME);
 
             if (table == null) {
-                /**
-                 * Table not found.
-                 */
                 throw new CantGetUserDeveloperIdentitiesException("Cant get asset User identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
             }
             // 2) Find  Asset Users by Connection State.
-
-            //table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, "-", DatabaseFilterType.GRATER_THAN);
-//            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_USER_PUBLIC_KEY_COLUMN_NAME, assetUserToAddPublicKey, DatabaseFilterType.EQUAL);
+            //TODO Actor Asset User en Tabla REGISTERED con Connection State CONNECTED indicara que se tiene CryptoAddress
+            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, "CTC", DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
