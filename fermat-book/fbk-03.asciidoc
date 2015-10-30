@@ -1,29 +1,5 @@
 :numbered:
 
-== Setting FERMAT to work. 
-=== Getting the application for your device
-Connect to FERMAT offical site ( http://www.fermat.org), choose the Operating System of the device where you want to install FERMAT, and download FERMAT APK (Android) or FERMAT installation file (windows)...
-
-[system initialization]
-=== Initialization
-
-The application written for the chosen Operating System of your device (eg. Android in FERMAT'S first release) is a bundle of software packages that alltogether build FERMAT MULTI-PLATFORM SYSTEM. Few components are OS dependant but most of them (written in JAVA) is not (i.e. OS INDEPENDENT). +
-At its core we find FERMAT CORE PLATFORM which is responsible for deploying the multiplatform infrastructure and initializing it. 
-
-NOTE: Android is a *special case* because of some programming restrictions that only allow initialization from components written in android's language. Therefore the initialization sequence in this case, begins in the module *android core* which is the first one to become active and after that, it sets FERMAT CORE to run.
-
-FERMAT CORE initializes every single platform of the system and instantiate every single plug-in giving the "start" signal by means of an usual "service"interface (each plugin knows what "start"means in each case). Then, in a second initialization round, the core platform collects information from the corresponding *application public interfaces (API)*, creates a "communication channel" between each component of the system and delivers to each one the *reference* on its dependance to consume services from one another.  + 
- 
-NOTE: FERMAT Plug-ins are not allowed to consume services directly among them, but referencing themselves to the corresponding platform via the platform's *api module* 
-
-.FERMAT Api modules
-* There is an *api module* for each FERMAT platform, where *public interfaces* of each plug-in are published in order to let them comsume services from others living in the same platform.
-
-When all the basic infrastructure is layed out and some initial plug-ins are running, then the process thread turns to the *OS application* which starts the graphic interfaces and ressources needed to interact with the user, and the application opens its "starting screen". +
-From that moment on, the activation of other dormant modules of FERMAT will follow according user's demand (depending on users activity).
-
-TIP: Following in this chapter the description of each platform and each layer within each platform. We recommend to visit FERMAT offcial site (http://fermat.org) to have a picture in mind when reading, to help understand the system structure. _Layers_ description follow the sequence from bottom to top (like "stacking" them), and _platforms_ from left to right. 
-
 === System-wide definitions
 One of main concept's inside FERMAT's design is the distinction of different _levels of identities_ depending on the realm where this _identities_ are valid. These creates a hierarchical structure of _identities_ and the _credentials_ associated with it.
 The *real person* who wants to use FERMAT, has to install the software in at least one *device* and then let it run.
@@ -44,33 +20,56 @@ For the external world, each _wallet identity_ appears to be a "different person
 ** *actor identity3* eg. "Aunt Betty Muffins asset issuer"
 
 
-=== FERMAT Core Platform
-This is the *core platform* of FERMAT Multiplatform System. It contains the deepest levels of layers in the layers stack. Its modules encasulapte the basics definitions and functionalities that let FERMAT operate as an _integrated system_. +
-The platform first defines a _plugin identity_ for each plugin (this is done only ONCE for the whole system), which let the plugin being *recognized* as member of FERMAT and then access to certain data specifically owned by it (like accesing to the file system or data base systems, etc). Then it put them to run ( see [system initialization] ) and builds the pattern of relationships among the isolated plug-ins, therefore deploying all the system wide infrastructure. +
-FERMAT Core Platform is written in JAVA as the most of FERMAT, and that there is a JAVA implementation for each known operating system, that makes FERMAT *code base portable*. + 
-After initialization, this platform monitors the way the system is behaving as a whole.
+=== Fermat'S actors
+Cryptocurrencies live in a public and distributed ledger, the *blockchain*, in a decentralized p2p network (spread in every network node). + 
+They are held and stored by their owners in specific applications called *wallets* living in a certain device which has access to the corresponding cryptonetwork. +
+*Wallets* store the owner's _privat key_ and the corresponding _public key_ to unlock the cryptocurrency amount of a given *transaction*. + 
+For a *transaction* to take place, a *crypto address* is needed to identify both the sender of the value as well as the receiver. + 
+*Crypto addresses* are generated by the wallet derived from the _privat/public key_ pair of the wallet's owner. +
+Although *wallets* are similar in relationship to their basic functionalities, the _natural segmentation of the world population_ and the specific demand of every segment requires to be taken into account when designing *wallets*. +
+Fermat defines different system *actors* to identify the specific needs and level of abstraction required to each actor, and consequently being able to design Fermat's products with the appropiated orientation.
+ 
 
-.FERMAT Core modules
-fermat core :: 
-Initializes all system-wide plug-ins and start a specific *core module* for each platform/superlayer running on FERMAT, which in turn initializes the platform/superlayer's specific set of plugins.
-android core :: 
-Initializes android's components that connect FERMAT to the android user's environment, by giving access to the modules of _android layer_ in *Fermat Operating System Superlayer*.
-platform specific core ::
-There's a *core module* for each one of the platform existent in FERMAT, which creates the _plugin indentity_ and initializes all platform/superlayer's specific plug-ins: +
-. _Operating Systems core_
-. _BlockChain core_
-. _P2P Network and Communication core_
-. _Plug-ins Platform core_
-. _Wallet Production & Distribution core_
-. _Crypto Currency core_
-. _Crypto Commodity Money core_
-. _Bank Notes core_
-. _Shoping core_
-. _Digital Assets core_
-. _Marketing core_
-. _Crypto Brokers core_
-. _Crypto Distribution Network core_
-. _Distributed Private Network_
+:numbered!:
+
+==== segmentation 
+Fermat understands that there exists on the world so many different tastes and preferences like humans exists on earth, because each one is _unique_, and therefore there are potentially a huge number of differents ways of shaping the applications being developed, considering its functionalities, accessibility, and appearance among other various customizable characteristics, although they are conceived to deal with the same tasks of managing cryptocurrencies and blockchain technology.  + 
+Here begins the huge differentation between Fermat applications and the rest ! + 
+Fermat takes very _seriously_ into account the _actor's profile_ to develop attractive applications in each case to match very specificaly the demand of each consumer's niche. For instance, some actors with a more complex relationships world require more complexity in their wallets and in the wallet of his partners.
+
+==== levels of abstraction
+On the other hand, while certain actors need basic operations, other's use of blockchain technology may demand higher levels of abstraction.
+For instance, low abstraction is needed for user that only need to see their value in *cryptocurrency*. Others may want to have their wallets showing them their content in *fiat money*. Others might need some functionalities that prevent them for *losing value* depending on the exchange rate they purchased the currency and when they want to spend it, and some of them would like even to see the profitable exchange rate as a *discount* obtained in the purchase of goods.. There are also many who will only serve themselves of the cryptonetwork not to transport value, but to issue *digital assets* instead, assets that are made public through the blockchain ledger... + 
+All this different _*abstraction levels*_ are possible within Fermat, and Fermat multi-platform system is specifically designed to match this increasing demand in the industry, and at the same time, the use of Fermat'S products foster the creation of real-world environments, connecting in a very efficient, secure, and scalable way, the actors offering services with those consuming them.
+
+
+==== Overview of Fermat's products and their actors
+
+Fermat WALLET FACTORY ::   -> for marketers to re-brand any of the already existing segment specific wallets in a few steps (without the need to deal with the source code of the base wallet selected!)
+Fermat WALLET PUBLISHER ::  -> for wallet designers/marketing agency to offer their rebranded Wallet to the world !
+Fermat WALLET STORE ::  -> the store where available wallets live, ready to be adopted !
+Fermat BITCOIN WALLET :: -> for those devoted "BTC-only" users!
+Fermat BITCOIN LOSS PROTECTED WALLET -> for conservative user's caring about never selling under the purchase price ! (preserving value!)
+Fermat ARGENTINE BLP WALLET :: -> for citizen's of the nr.1 potential mass market for BTC (designed to match argentine culture of steady comparison between argentine$, USD (oficial and blue!) and even Eu$!)
+Fermat CRYPTO COMMODITY MONEY WALLET :: ->
+Fermat DISCOUNT WALLET :: -> for discount and bonus chasers! ( recommend selling when price gets convinient, and shows it as a " discount" !)*
+Fermat BANK NOTES  WALLET :: -> for those wanting to visualize their investment in "real money traditional bank notes" of their usual fiat/currency ( rest on Fermat, we do the "dirty work" with all the crypto stuff!)*
+Fermat SHOP WALLET :: -> *for shop owners who accept cryptocurrency in payment of their products !*
+Fermat BRAND WALLET :: -> *for brands owners who accept cryptocurrency in their retailers network.*
+Fermat RETAILER WALLET :: -> *for* 
+Fermat ASSET ISSUER WALLET :: -> for company or brand that issues a Digital Assets to offer to their customers*
+Fermat ASSET USER  WALLET :: -> for *the customer who accepts/obtain some Digital Assets according to his interests*
+Fermat REDEEM POINT WALLET :: -> for the place/shop/person that exchanges the Asset for a certain service or product (redeems it).*
+Fermat VOUCHER WALLET :: -> for 
+Fermat COUPON WALLET :: -> for 
+Fermat DISCOUNT WALLET :: -> for 
+Fermat CRYPTO BROKER WALLET :: -> for persons/organizations whose business activity is exchanging cryptocurrency for fiat-money
+Fermat CRYPTO BROKER'S USER WALLET ::  ->  for customers of the cryptobroker
+Fermat CRYPTO WHOLESALER WALLET :: -> for organizations owing a certain large amount of crypto-credit to sell through a distribution chain.
+Fermat CRYPTO DISTRIBUTOR WALLET :: -> for those who form the next level in the distribution, buying to wholesalers and re-selling to Top Up Point
+Fermat TOP UP POINT WALLET :: -> for shops/organizations/persons who transfer crypto-credit in exchange for fiat-money (receives money - gives crypto)
+Fermat CASH OUT POINT WALLET :: -> for shops/organizations/persons who gives out money in exchange for a transfer of crypto (receive crypto - gives money)
+
 
 
 
