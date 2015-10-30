@@ -724,18 +724,6 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 //                System.out.println("Actor Asset GenesisAddress in Crypto Address Book: " + actorAssetUser.getCryptoAddress().getAddress());
                 System.out.println("********************************************************************************************************");
             }
-//            registerActorInActorNetowrkSerice();
-//                else {
-            /**
-             * Register User in Table Actor Asset User Registered,
-             * Simulating other users on their devices, Registered in (Actor Network Service User)
-             */
-            // this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(record);
-//                }
-//                registerGenesisAddressInCryptoAddressBook(genesisAddress);
-
-
-//            }
         } catch (CantAddPendingAssetUserException e) {
             throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR", e, "", "");
         } catch (Exception e) {
