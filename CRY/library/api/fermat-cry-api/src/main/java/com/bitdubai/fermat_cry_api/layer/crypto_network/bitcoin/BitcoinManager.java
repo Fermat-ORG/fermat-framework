@@ -29,7 +29,7 @@ public interface BitcoinManager {
     /**
      * Bitcoin network used to run plug in Bitcoin Crypto network.
      */
-    public final BitcoinNetworkUsed NETWORK_CONNECTION = BitcoinNetworkUsed.Test3_NET;
+    public final BitcoinNetworkUsed NETWORK_CONNECTION = BitcoinNetworkUsed.REGTEST_NET;
 
     /**
      * Bitcoin server hosted in cloud
