@@ -1,17 +1,22 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.DAPException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetGenesisTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.ReceptionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistsTransactionUUIDException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetSwap;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.exceptions.CantReceiveDigitalAssetException;
@@ -32,6 +37,7 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
     String digitalAssetFileStoragePath;
     //String digitalAssetMetadataFileStoragePath;
     AssetReceptionDao assetReceptionDao;
+    DistributionStatus distributionStatus;
 
     DigitalAssetReceptionVault digitalAssetReceptionVault;
     AssetVaultManager assetVaultManager;
@@ -58,12 +64,39 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
     public void receiveDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata, String senderId) throws CantReceiveDigitalAssetException {
         try{
             persistDigitalAsset(digitalAssetMetadata, senderId);
-            checkDigitalAssetMetadata(digitalAssetMetadata);
-            //TODO: Send message to issuer from asset transmission
-        } catch (CantPersistDigitalAssetException e) {
-            e.printStackTrace();
-        } catch (CantCreateDigitalAssetFileException e) {
-            e.printStackTrace();
+            DigitalAsset digitalAsset=digitalAssetMetadata.getDigitalAsset();
+            String genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
+            DigitalAssetContract digitalAssetContract=digitalAsset.getContract();
+            this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.CHECKING_CONTRACT, genesisTransaction);
+            if(!isValidContract(digitalAssetContract)){
+                System.out.println("ASSET RECEPTION The contract is not valid");
+                this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.REJECTED_BY_CONTRACT, genesisTransaction);
+                return;
+                //I don't want to throw this exception right now, I need to inform to issuer the asset condition
+                //throw new CantReceiveDigitalAssetException("The DigitalAsset Contract is not valid, the expiration date has passed");
+            }
+            this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.CONTRACT_CHECKED, genesisTransaction);
+            this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.CHECKING_HASH, genesisTransaction);
+            if(!isDigitalAssetHashValid(digitalAssetMetadata)){
+                System.out.println("ASSET RECEPTION The DAM Hash is not valid");
+                this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.REJECTED_BY_HASH, genesisTransaction);
+                return;
+                //throw new CantReceiveDigitalAssetException("The DigitalAsset hash is not valid");
+            }
+            this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.HASH_CHECKED, genesisTransaction);
+            this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.ASSET_ACCEPTED, genesisTransaction);
+        } catch (CantPersistDigitalAssetException exception) {
+            throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "Cannot persist Digital Asset Metadata");
+        } catch (CantCreateDigitalAssetFileException exception) {
+            throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "Cannot create Digital Asset Metadata file in local storage");
+        } catch (CantExecuteQueryException exception) {
+            throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "There is a error executing a database operation");
+        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
+            throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "Unexpected result in databse");
+        } catch (CantGetGenesisTransactionException exception) {
+            throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "Cannot get the genesis transaction from crypto network");
+        } catch (DAPException exception) {
+            throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "Unexpected DAP exception");
         }
 
     }
@@ -79,12 +112,12 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
     }
 
     /**
-     * This method check if the DigitalAssetMetadata remains with not modifications
+     * This method check if the DigitalAssetMetadata remains with no modifications
      * */
     public void checkDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata) throws CantReceiveDigitalAssetException {
         try{
             String genesisTransactionFromDigitalAssetMetadata=digitalAssetMetadata.getGenesisTransaction();
-            this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(DistributionStatus.CHECKING_HASH, genesisTransactionFromDigitalAssetMetadata);
+            this.assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.CHECKING_HASH, genesisTransactionFromDigitalAssetMetadata);
             String digitalAssetMetadataHash=digitalAssetMetadata.getDigitalAssetHash();
             List<CryptoTransaction> cryptoTransactionList = bitcoinNetworkManager.getGenesisTransaction(digitalAssetMetadata.getGenesisTransaction());
             if(cryptoTransactionList==null||cryptoTransactionList.isEmpty()){
@@ -121,8 +154,14 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
 
     @Override
     public void persistInLocalStorage(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateDigitalAssetFileException {
-        //TODO: I need to asing an internal UUID and persist it in database, for now this id is null
-        this.digitalAssetReceptionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata,null);
+        UUID receptionId=UUID.randomUUID();
+        try {
+            this.assetReceptionDao.persistReceptionId(digitalAssetMetadata.getGenesisTransaction(), receptionId);
+            this.digitalAssetReceptionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, receptionId.toString());
+        } catch (CantPersistsTransactionUUIDException exception) {
+            throw new CantCreateDigitalAssetFileException(exception,"Persiting Receiving digital asset metadata","Cannot persists internal id in database");
+        }
+
     }
 
     @Override

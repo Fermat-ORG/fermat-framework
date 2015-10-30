@@ -62,6 +62,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Wallet
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -133,6 +134,7 @@ import static java.lang.System.gc;
 public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications, PaintActivtyFeactures, Observer,FermatNotificationListener {
 
     private static final String TAG = "fermat-core";
+    public static final String DEVELOP_MODE = "develop_mode";
     private MainMenu mainMenu;
 
     /**
@@ -161,168 +163,9 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      */
     private ActivityType activityType;
 
+    ArrayList activePlatforms;
 
-    public static Bitmap fastblur(Bitmap sentBitmap, int radius) {
-        Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
-        if (radius < 1) {
-            return (null);
-        }
-        int w = bitmap.getWidth();
-        int h = bitmap.getHeight();
-        int[] pix = new int[w * h];
-        Log.e("pix", w + " " + h + " " + pix.length);
-        bitmap.getPixels(pix, 0, w, 0, 0, w, h);
-        int wm = w - 1;
-        int hm = h - 1;
-        int wh = w * h;
-        int div = radius + radius + 1;
-        int r[] = new int[wh];
-        int g[] = new int[wh];
-        int b[] = new int[wh];
-        int rsum, gsum, bsum, x, y, i, p, yp, yi, yw;
-        int vmin[] = new int[Math.max(w, h)];
-        int divsum = (div + 1) >> 1;
-        divsum *= divsum;
-        int dv[] = new int[256 * divsum];
-        for (i = 0; i < 256 * divsum; i++) {
-            dv[i] = (i / divsum);
-        }
-        yw = yi = 0;
-        int[][] stack = new int[div][3];
-        int stackpointer;
-        int stackstart;
-        int[] sir;
-        int rbs;
-        int r1 = radius + 1;
-        int routsum, goutsum, boutsum;
-        int rinsum, ginsum, binsum;
-        for (y = 0; y < h; y++) {
-            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
-            for (i = -radius; i <= radius; i++) {
-                p = pix[yi + Math.min(wm, Math.max(i, 0))];
-                sir = stack[i + radius];
-                sir[0] = (p & 0xff0000) >> 16;
-                sir[1] = (p & 0x00ff00) >> 8;
-                sir[2] = (p & 0x0000ff);
-                rbs = r1 - Math.abs(i);
-                rsum += sir[0] * rbs;
-                gsum += sir[1] * rbs;
-                bsum += sir[2] * rbs;
-                if (i > 0) {
-                    rinsum += sir[0];
-                    ginsum += sir[1];
-                    binsum += sir[2];
-                } else {
-                    routsum += sir[0];
-                    goutsum += sir[1];
-                    boutsum += sir[2];
-                }
-            }
-            stackpointer = radius;
-            for (x = 0; x < w; x++) {
-                r[yi] = dv[rsum];
-                g[yi] = dv[gsum];
-                b[yi] = dv[bsum];
-                rsum -= routsum;
-                gsum -= goutsum;
-                bsum -= boutsum;
-                stackstart = stackpointer - radius + div;
-                sir = stack[stackstart % div];
-                routsum -= sir[0];
-                goutsum -= sir[1];
-                boutsum -= sir[2];
-                if (y == 0) {
-                    vmin[x] = Math.min(x + radius + 1, wm);
-                }
-                p = pix[yw + vmin[x]];
-                sir[0] = (p & 0xff0000) >> 16;
-                sir[1] = (p & 0x00ff00) >> 8;
-                sir[2] = (p & 0x0000ff);
-                rinsum += sir[0];
-                ginsum += sir[1];
-                binsum += sir[2];
-                rsum += rinsum;
-                gsum += ginsum;
-                bsum += binsum;
-                stackpointer = (stackpointer + 1) % div;
-                sir = stack[(stackpointer) % div];
-                routsum += sir[0];
-                goutsum += sir[1];
-                boutsum += sir[2];
-                rinsum -= sir[0];
-                ginsum -= sir[1];
-                binsum -= sir[2];
-                yi++;
-            }
-            yw += w;
-        }
-        for (x = 0; x < w; x++) {
-            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
-            yp = -radius * w;
-            for (i = -radius; i <= radius; i++) {
-                yi = Math.max(0, yp) + x;
-                sir = stack[i + radius];
-                sir[0] = r[yi];
-                sir[1] = g[yi];
-                sir[2] = b[yi];
-                rbs = r1 - Math.abs(i);
-                rsum += r[yi] * rbs;
-                gsum += g[yi] * rbs;
-                bsum += b[yi] * rbs;
-                if (i > 0) {
-                    rinsum += sir[0];
-                    ginsum += sir[1];
-                    binsum += sir[2];
-                } else {
-                    routsum += sir[0];
-                    goutsum += sir[1];
-                    boutsum += sir[2];
-                }
-                if (i < hm) {
-                    yp += w;
-                }
-            }
-            yi = x;
-            stackpointer = radius;
-            for (y = 0; y < h; y++) {
-// Preserve alpha channel: ( 0xff000000 & pix[yi] )
-                pix[yi] = (0xff000000 & pix[yi]) | (dv[rsum] << 16) | (dv[gsum] << 8) | dv[bsum];
-                rsum -= routsum;
-                gsum -= goutsum;
-                bsum -= boutsum;
-                stackstart = stackpointer - radius + div;
-                sir = stack[stackstart % div];
-                routsum -= sir[0];
-                goutsum -= sir[1];
-                boutsum -= sir[2];
-                if (x == 0) {
-                    vmin[y] = Math.min(y + r1, hm) * w;
-                }
-                p = x + vmin[y];
-                sir[0] = r[p];
-                sir[1] = g[p];
-                sir[2] = b[p];
-                rinsum += sir[0];
-                ginsum += sir[1];
-                binsum += sir[2];
-                rsum += rinsum;
-                gsum += ginsum;
-                bsum += binsum;
-                stackpointer = (stackpointer + 1) % div;
-                sir = stack[stackpointer];
-                routsum += sir[0];
-                goutsum += sir[1];
-                boutsum += sir[2];
-                rinsum -= sir[0];
-                ginsum -= sir[1];
-                binsum -= sir[2];
-                yi += w;
-            }
-        }
-        Log.e("pix", w + " " + h + " " + pix.length);
-        bitmap.setPixels(pix, 0, w, 0, 0, w, h);
-        return (bitmap);
-    }
+    protected boolean developMode;
 
     /**
      * Called when the activity is first created
@@ -347,6 +190,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
 
         try {
+
+            activePlatforms = new ArrayList();
 
             /*
             *  Our Future code goes here ...
@@ -948,7 +793,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                     window.setStatusBarColor(Color.TRANSPARENT);
 
                     gc();
-                    InputStream inputStream = getAssets().open("drawables/fondo.jpg");
+                    InputStream inputStream = getAssets().open("drawables/mdpi.jpg");
 
 
                     window.setBackgroundDrawable(Drawable.createFromStream(inputStream, null));
@@ -1155,6 +1000,16 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
         try {
 
+            if(activePlatforms==null) {
+                activePlatforms = new ArrayList();
+                activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
+            }
+
+            if(developMode){
+                activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
+                activePlatforms.add(Platforms.DIGITAL_ASSET_PLATFORM);
+                activePlatforms.add(Platforms.CRYPTO_BROKER_PLATFORM);
+            }
 
             List<android.app.Fragment> fragments = new Vector<android.app.Fragment>();
 
@@ -1165,26 +1020,31 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 switch (desktopObject.getType()) {
                     case "DCCP":
                         //por ahora va esto
-                        WalletManager manager = getWalletManager();
-                        WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
-                        fragments.add(walletDesktopFragment);
+                        if(activePlatforms.contains(Platforms.CRYPTO_CURRENCY_PLATFORM)) {
+                            WalletManager manager = getWalletManager();
+                            WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
+                            fragments.add(walletDesktopFragment);
 
-                        SubAppDesktopFragment subAppDesktopFragment = SubAppDesktopFragment.newInstance(0);
+                            SubAppDesktopFragment subAppDesktopFragment = SubAppDesktopFragment.newInstance(0);
 
-                        fragments.add(subAppDesktopFragment);
+                            fragments.add(subAppDesktopFragment);
+                        }
                         break;
                     case "DDAP":
-                        com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment went1 = com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment.newInstance(0);
-                        fragments.add(went1);
-                        com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment dapDesktopFragment = com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment.newInstance(0);
-                        fragments.add(dapDesktopFragment);
+                        if(activePlatforms.contains(Platforms.DIGITAL_ASSET_PLATFORM)) {
+                            com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment went1 = com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment.newInstance(0);
+                            fragments.add(went1);
+                            com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment dapDesktopFragment = com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment.newInstance(0);
+                            fragments.add(dapDesktopFragment);
+                        }
                         break;
                     case "DCBP":
-
-                        com.bitdubai.desktop.wallet_manager.fragments.WalletDesktopFragment dapDesktopFragment3 = com.bitdubai.desktop.wallet_manager.fragments.WalletDesktopFragment.newInstance(0);
-                        fragments.add(dapDesktopFragment3);
-                        com.bitdubai.desktop.sub_app_manager.SubAppDesktopFragment walletDesktopFragment2 = com.bitdubai.desktop.sub_app_manager.SubAppDesktopFragment.newInstance(0);
-                        fragments.add(walletDesktopFragment2);
+                        if(activePlatforms.contains(Platforms.CRYPTO_BROKER_PLATFORM)) {
+                            com.bitdubai.desktop.wallet_manager.fragments.WalletDesktopFragment dapDesktopFragment3 = com.bitdubai.desktop.wallet_manager.fragments.WalletDesktopFragment.newInstance(0);
+                            fragments.add(dapDesktopFragment3);
+                            com.bitdubai.desktop.sub_app_manager.SubAppDesktopFragment walletDesktopFragment2 = com.bitdubai.desktop.sub_app_manager.SubAppDesktopFragment.newInstance(0);
+                            fragments.add(walletDesktopFragment2);
+                        }
                         break;
 
                 }
@@ -1204,10 +1064,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             pager.setAdapter(this.screenPagerAdapter);
 
             if (pager.getBackground() == null) {
-                //Drawable d = Drawable.createFromStream(getAssets().open("drawables/fondo.jpg"), null);
-                Bitmap bitmap = fastblur(BitmapFactory.decodeStream(getAssets().open("drawables/fondo.jpg")), 5);
-                Drawable drawable = new BitmapDrawable(bitmap);
-                pager.setBackground(drawable);
+                Drawable d = Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null);
+                pager.setBackground(d);
             }
 
 

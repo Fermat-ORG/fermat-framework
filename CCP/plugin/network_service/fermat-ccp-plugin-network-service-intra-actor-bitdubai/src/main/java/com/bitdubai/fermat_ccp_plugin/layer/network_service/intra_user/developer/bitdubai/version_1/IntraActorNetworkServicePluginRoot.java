@@ -35,6 +35,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateNotificationException;
@@ -139,32 +140,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {
 
-
-
-    @Override
-    public List<AddonVersionReference> getNeededAddonReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<PluginVersionReference> getNeededPluginReferences() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    protected void validateAndAssignReferences() {
-
-    }
-
-    @Override
-    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
-        return null;
-    }
 
     /******************************************************************
      * IMPORTANT: CHANGE THE EVENT_SOURCE TO THE NEW PLUGIN TO IMPLEMENT
@@ -316,7 +291,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
      * Constructor
      */
     public IntraActorNetworkServicePluginRoot() {
-        super();
+        super(new PluginVersionReference(new Version()));
         this.listenersAdded = new ArrayList<>();
         this.platformComponentType = PlatformComponentType.NETWORK_SERVICE;
         this.networkServiceType    = NetworkServiceType.INTRA_USER;
@@ -1224,7 +1199,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 //
 //            actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
 
-            changeActor(actorNetworkServiceRecord);
+            actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToAddPublicKey);
+            actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
 
             actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.ACCEPTED);
 

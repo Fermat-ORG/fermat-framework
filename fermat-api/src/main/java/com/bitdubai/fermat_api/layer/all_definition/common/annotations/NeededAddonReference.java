@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.annotations;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystems;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddonManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -28,7 +28,5 @@ public @interface NeededAddonReference {
     Addons           addon();
     Developers       developer()       default Developers.BITDUBAI;
     String           version()         default "1.0.0";
-
-    Class<? extends FermatManager> referenceManagerClass();
 
 }
