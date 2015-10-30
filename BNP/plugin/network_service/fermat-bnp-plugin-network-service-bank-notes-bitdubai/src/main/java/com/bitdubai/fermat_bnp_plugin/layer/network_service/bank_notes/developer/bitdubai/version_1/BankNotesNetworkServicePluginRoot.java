@@ -58,6 +58,11 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
      */
     UUID pluginId;
 
+    /**
+     * Represent the register
+     */
+    private boolean register;
+
 
     /**
      * Service Interface implementation.
@@ -169,6 +174,15 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
+    }
+
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    @Override
+    public boolean isRegister() {
+        return register;
     }
 
     /**

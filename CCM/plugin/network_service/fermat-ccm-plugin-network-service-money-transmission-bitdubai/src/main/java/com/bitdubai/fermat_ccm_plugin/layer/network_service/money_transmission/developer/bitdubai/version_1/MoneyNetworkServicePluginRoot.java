@@ -58,6 +58,11 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
      */
     UUID pluginId;
 
+    /**
+     * Represent the register
+     */
+    private boolean register;
+
 
     /**
      * MoneyPluginRoot Interface implementation.
@@ -157,6 +162,15 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
     @Override
     public DiscoveryQueryParameters constructDiscoveryQueryParamsFactory(PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String alias, String identityPublicKey, Location location, Double distance, String name, String extraData, Integer firstRecord, Integer numRegister, PlatformComponentType fromOtherPlatformComponentType, NetworkServiceType fromOtherNetworkServiceType) {
         return null;
+    }
+
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    @Override
+    public boolean isRegister() {
+        return register;
     }
 
     /**

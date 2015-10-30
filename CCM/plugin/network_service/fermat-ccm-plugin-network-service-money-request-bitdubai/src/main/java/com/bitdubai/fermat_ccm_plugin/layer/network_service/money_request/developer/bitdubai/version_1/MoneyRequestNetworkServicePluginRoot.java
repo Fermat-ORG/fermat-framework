@@ -71,6 +71,11 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
      */
     UUID pluginId;
 
+    /**
+     * Represent the register
+     */
+    private boolean register;
+
 
     /**
      *  MoneyRequestNetworkServicePluginRoot methods implementation.
@@ -236,6 +241,15 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
+    }
+
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    @Override
+    public boolean isRegister() {
+        return register;
     }
 
     /*

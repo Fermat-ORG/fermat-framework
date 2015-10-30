@@ -2,12 +2,17 @@ package com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_intra_actor.de
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -52,53 +57,30 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
         DealsWithPluginDatabaseSystem,
         OutgoingIntraActorManager {
 
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.BITCOIN_WALLET)
+    private BitcoinWalletManager bitcoinWalletManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private EventManager eventManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_VAULT   , plugin = Plugins.BITCOIN_VAULT)
+    private CryptoVaultManager cryptoVaultManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM        , layer = Layers.NETWORK_SERVICE   , plugin = Plugins.CRYPTO_TRANSMISSION)
+    private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
+
+
     public OutgoingIntraActorTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
-    /*
-             * DealsWithBitcoinWallet Interface member variables.
-             */
-    private BitcoinWalletManager bitcoinWalletManager;
-
-    /*
-     * DealsWithCryptoTransmissionNetworkService Interface member variables.
-     */
-    private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
-
-    /*
-     * DealsWithCryptoVault Interface member variables.
-     */
-    private CryptoVaultManager cryptoVaultManager;
-
-    /*
-     * DealsWithErrors Interface member variables.
-     */
-    private ErrorManager errorManager;
-
-    /*
-     * DealsWithEvents Interface member variables
-     */
-    private EventManager eventManager;
-    /*
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    /*
-     * OutgoingIntraActorManager Interface member variables.
-     */
-
-    /*
-     * Plugin Interface member variables.
-     */
-    private UUID pluginId;
-
-
-    /*
-     * Service Interface member variables.
-     */
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
 
     /*
