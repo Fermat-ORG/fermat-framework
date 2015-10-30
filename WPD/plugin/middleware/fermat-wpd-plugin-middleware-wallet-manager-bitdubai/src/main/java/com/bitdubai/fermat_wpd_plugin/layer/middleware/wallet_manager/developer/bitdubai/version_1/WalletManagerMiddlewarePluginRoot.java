@@ -414,15 +414,15 @@ public class WalletManagerMiddlewarePluginRoot implements
         // Harcoded para testear el circuito más arriba
         InstalledWallet installedWallet= new WalletManagerMiddlewareInstalledWallet(
 
-                WalletCategory.REFERENCE_WALLET,
+                WalletCategory.REFERENCE_WALLET, // CATEGORY
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
-                "reference_wallet_icon",
-                "bitDubai bitcoin Wallet",
-                "reference_wallet",
-                "wallet_platform_identifier",
-                new Version(1,0,0),
-                WalletType.REFERENCE,
+                "reference_wallet_icon", // ICOIN
+                "bitDubai bitcoin Wallet", // WALLET NAME
+                "reference_wallet", // PUBLIC KEY
+                "BWBW", //  WALLET PLATFORM IDENTIFIER
+                new Version(1,0,0), //VERSION
+                WalletType.REFERENCE, // WALLET TYPE
                 "medium",
                 "1.0.0",
                 null,
@@ -764,92 +764,7 @@ public class WalletManagerMiddlewarePluginRoot implements
         try {
             List<InstalledWallet> installedWalletList = this.getInstalledWallets();
             if (installedWalletList.isEmpty())
-                return new InstalledWallet() {
-                    @Override
-                    public List<InstalledLanguage> getLanguagesId() {
-                        return null;
-                    }
-
-                    @Override
-                    public List<InstalledSkin> getSkinsId() {
-                        return null;
-                    }
-
-                    @Override
-                    public WalletCategory getWalletCategory() {
-                        return WalletCategory.REFERENCE_WALLET;
-                    }
-
-                    @Override
-                    public WalletType getWalletType() {
-                        return WalletType.REFERENCE;
-                    }
-
-                    @Override
-                    public String getWalletScreenSize() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getWalletNavigationStructureVersion() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getWalletPlatformIdentifier() {
-                        return "BWBW";
-                    }
-
-                    @Override
-                    public String getWalletIcon() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getWalletPublicKey() {
-                        return "reference_wallet";
-                    }
-
-                    @Override
-                    public String getWalletName() {
-                        return null;
-                    }
-
-                    @Override
-                    public Version getWalletVersion() {
-                        return new Version();
-                    }
-
-                    @Override
-                    public UUID getWalletCatalogId() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getWalletDeveloperName() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getWalletDeviceUserPublicKey() {
-                        return null;
-                    }
-
-                    @Override
-                    public Platforms getPlatform() {
-                        return Platforms.CRYPTO_CURRENCY_PLATFORM;
-                    }
-
-                    @Override
-                    public Actors getActorType() {
-                        return Actors.INTRA_USER;
-                    }
-
-                    @Override
-                    public CryptoCurrency getCryptoCurrency() {
-                        return CryptoCurrency.BITCOIN;
-                    }
-                };
+                return null;
             else
                 return installedWalletList.get(0);
         } catch (CantListWalletsException e) {
