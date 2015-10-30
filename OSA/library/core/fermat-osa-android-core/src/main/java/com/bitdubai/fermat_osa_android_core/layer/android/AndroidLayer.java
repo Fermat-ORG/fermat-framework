@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_osa_android_core.layer.android;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractLayer;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterAddonException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartLayerException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractLayer;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_osa_android_core.layer.android.platform_database_system.PlatformDatabaseSystemAddonSubsystem;
 import com.bitdubai.fermat_osa_android_core.layer.android.platform_file_system.PlatformFileSystemAddonSubsystem;
