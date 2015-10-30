@@ -826,7 +826,7 @@ public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractNetwor
     }
 
 
-    public void handleNewMessages(FermatMessage fermatMessage) throws CantHandleNewMessagesException {
+    public void handleNewMessages(FermatMessage fermatMessage) {
 
         try {
 
