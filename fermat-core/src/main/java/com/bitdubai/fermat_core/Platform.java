@@ -12,7 +12,6 @@ import com.bitdubai.fermat_api.layer.PlatformLayer;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlatform;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FermatAddonManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
@@ -1297,6 +1296,13 @@ public class Platform implements Serializable {
                 injectPluginReferencesAndStart(assetReceptionTransaction, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION);
 
            /*
+            * Plugin Redeem Point Redemption Transaction.
+            * -----------------------------
+            */
+                Plugin redeemPointRedemptionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetRedeemPointRedemptionPlugin();
+                injectPluginReferencesAndStart(redeemPointRedemptionTransaction, Plugins.BITDUBAI_ASSET_REDEEM_POINT_REDEMPTION_TRANSACTION);
+
+           /*
             * Plugin Asset Issuer Identity Layer
             * -------------------------
             */
@@ -1373,6 +1379,7 @@ public class Platform implements Serializable {
             */
                 Plugin redeemPointSubAppModuleCommunity = ((DAPSubAppModuleLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_SUB_APP_MODULE_LAYER)).getRedeemPointCommunity();
                 injectPluginReferencesAndStart(redeemPointSubAppModuleCommunity, Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE);
+
 
             }
 

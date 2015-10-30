@@ -81,7 +81,15 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
 
     //CONSTRUCTORS
 
-    public RedeemPointRedemptionMonitorAgent(ErrorManager errorManager, LogManager logManager, AssetTransmissionNetworkServiceManager assetTransmissionManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, ActorAssetRedeemPointManager actorAssetRedeemPointManager, AssetRedeemPointWalletManager assetRedeemPointWalletManager) throws CantSetObjectException {
+    public RedeemPointRedemptionMonitorAgent(ErrorManager errorManager,
+                                             LogManager logManager,
+                                             AssetTransmissionNetworkServiceManager assetTransmissionManager,
+                                             PluginDatabaseSystem pluginDatabaseSystem,
+                                             PluginFileSystem pluginFileSystem,
+                                             UUID pluginId,
+                                             ActorAssetRedeemPointManager actorAssetRedeemPointManager,
+                                             AssetRedeemPointWalletManager assetRedeemPointWalletManager,
+                                             ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
         this.errorManager = Validate.verifySetter(errorManager, "errorManager is null");
         this.logManager = Validate.verifySetter(logManager, "logManager is null");
         this.assetTransmissionManager = Validate.verifySetter(assetTransmissionManager, "assetTransmissionManager is null");
@@ -90,7 +98,6 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
         this.pluginId = Validate.verifySetter(pluginId, "pluginId is null");
         this.actorAssetRedeemPointManager = Validate.verifySetter(actorAssetRedeemPointManager, "actorAssetRedeemPointManager is null");
         this.assetRedeemPointWalletManager = Validate.verifySetter(assetRedeemPointWalletManager, "assetRedeemPointWalletManager is null");
-        this.wallet = Validate.verifySetter(wallet, "wallet is null");
         this.actorAssetUserManager = Validate.verifySetter(actorAssetUserManager, "actorAssetUserManager is null");
     }
 
@@ -104,12 +111,15 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
             latch = new CountDownLatch(1);
             agent = new RedemptionAgent(pluginId, pluginFileSystem);
             agentThread = new Thread(agent);
-            wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("WALLET ID");
+            //TODO LOAD WALLET
+            //wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("WALLET ID");
             agentThread.start();
-        } catch (CantLoadWalletException e) {
+        } /*catch (CantLoadWalletException e) {
             throw new CantStartAgentException();
-        } catch (CantSetObjectException e) {
+        }*/ catch (CantSetObjectException e) {
             //THIS CAN'T NEVER HAPPEN. I ALREADY ENSURE THAT THERE AREN'T NULL REFERENCES.
+            throw new CantStartAgentException();
+        } catch (Exception e) {
             throw new CantStartAgentException();
         }
         this.status = ServiceStatus.STARTED;
@@ -198,12 +208,6 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
             startAgent();
         }
 
-        /**
-         * Computes a result, or throws an exception if unable to do so.
-         *
-         * @return computed result
-         * @throws Exception if unable to compute a result
-         */
         @Override
         public void run() {
             while (agentRunning) {

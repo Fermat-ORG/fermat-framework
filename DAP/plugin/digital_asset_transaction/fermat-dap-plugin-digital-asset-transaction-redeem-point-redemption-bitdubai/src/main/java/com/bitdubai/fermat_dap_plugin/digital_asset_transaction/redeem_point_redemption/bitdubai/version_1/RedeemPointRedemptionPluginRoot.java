@@ -17,6 +17,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.DealsWithActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.DealsWithActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
@@ -42,7 +44,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 16/09/15.
  */
-public class RedeemPointRedemptionPluginRoot implements Plugin, Service, DealsWithErrors, LogManagerForDevelopers, DealsWithPluginIdentity, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, DealsWithLogger, DealsWithActorAssetRedeemPoint, DealsWithAssetTransmissionNetworkServiceManager, DealsWithAssetRedeemPointWallet, DealsWithEvents {
+public class RedeemPointRedemptionPluginRoot implements Plugin, Service, DealsWithErrors, LogManagerForDevelopers, DealsWithPluginIdentity, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, DealsWithLogger, DealsWithActorAssetRedeemPoint, DealsWithAssetTransmissionNetworkServiceManager, DealsWithAssetRedeemPointWallet, DealsWithEvents, DealsWithActorAssetUser {
 
     //VARIABLE DECLARATION
     private static Map<String, LogLevel> newLoggingLevel;
@@ -68,9 +70,12 @@ public class RedeemPointRedemptionPluginRoot implements Plugin, Service, DealsWi
     private AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager;
     private LogManager logManager;
     private EventManager eventManager;
+    private ActorAssetUserManager actorAssetUserManager;
 
     RedeemPointRedemptionMonitorAgent monitorAgent;
     RedeemPointRedemptionRecorderService recorderService;
+
+
     //CONSTRUCTORS
 
     public RedeemPointRedemptionPluginRoot() {
@@ -80,6 +85,10 @@ public class RedeemPointRedemptionPluginRoot implements Plugin, Service, DealsWi
     //PUBLIC METHODS
     @Override
     public void start() throws CantStartPluginException {
+        System.out.println("******************************************************");
+        System.out.println("PLUGIN REDEEMPOINT REDEMPTION REGISTRADO!!");
+        System.out.println("******************************************************");
+
         String context = "pluginId : " + pluginId + "\n" +
                 "ErrorManager : " + errorManager + "\n" +
                 "pluginDatabaseSystem : " + pluginDatabaseSystem + "\n" +
@@ -141,7 +150,8 @@ public class RedeemPointRedemptionPluginRoot implements Plugin, Service, DealsWi
                 pluginFileSystem,
                 pluginId,
                 actorAssetRedeemPointManager,
-                assetRedeemPointWalletManager);
+                assetRedeemPointWalletManager,
+                actorAssetUserManager);
         return monitorAgent;
     }
 
@@ -257,6 +267,11 @@ public class RedeemPointRedemptionPluginRoot implements Plugin, Service, DealsWi
     @Override
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
+    }
+
+    @Override
+    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
+        this.actorAssetUserManager = actorAssetUserManager;
     }
     //INNER CLASSES
 }

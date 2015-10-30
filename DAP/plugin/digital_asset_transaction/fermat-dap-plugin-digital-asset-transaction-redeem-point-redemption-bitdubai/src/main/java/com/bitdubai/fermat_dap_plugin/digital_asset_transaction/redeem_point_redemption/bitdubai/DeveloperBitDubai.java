@@ -1,3 +1,5 @@
+package com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai;
+
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;

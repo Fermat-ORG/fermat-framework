@@ -70,7 +70,7 @@ public class AssetRedeemPointRedemptionDeveloperDatabaseFactory implements Deals
                   /*
                    * We create the new database
                    */
-                database = redeemPointRedemptionDatabaseFactory.createDatabase(pluginId, AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_DATABASE);
+                database = redeemPointRedemptionDatabaseFactory.createDatabase(pluginId);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
