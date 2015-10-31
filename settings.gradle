@@ -766,18 +766,10 @@ include ':fermat-cbp-plugin-business-transaction-customer-broker-crypto-sale-bit
 project(':fermat-cbp-plugin-business-transaction-customer-broker-crypto-sale-bitdubai').projectDir = new File('CBP/plugin/business_transaction/fermat-cbp-plugin-business-transaction-customer-broker-crypto-sale-bitdubai')
 
 //Contract
-include ':fermat-cbp-plugin-contract-customer-broker-bank-money-purchase-bitdubai'
-project(':fermat-cbp-plugin-contract-customer-broker-bank-money-purchase-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-bank-money-purchase-bitdubai')
-include ':fermat-cbp-plugin-contract-customer-broker-bank-money-sale-bitdubai'
-project(':fermat-cbp-plugin-contract-customer-broker-bank-money-sale-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-bank-money-sale-bitdubai')
-include ':fermat-cbp-plugin-contract-customer-broker-cash-money-purchase-bitdubai'
-project(':fermat-cbp-plugin-contract-customer-broker-cash-money-purchase-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-cash-money-purchase-bitdubai')
-include ':fermat-cbp-plugin-contract-customer-broker-cash-money-sale-bitdubai'
-project(':fermat-cbp-plugin-contract-customer-broker-cash-money-sale-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-cash-money-sale-bitdubai')
-include ':fermat-cbp-plugin-contract-customer-broker-crypto-money-purchase-bitdubai'
-project(':fermat-cbp-plugin-contract-customer-broker-crypto-money-purchase-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-crypto-money-purchase-bitdubai')
-include ':fermat-cbp-plugin-contract-customer-broker-crypto-money-sale-bitdubai'
-project(':fermat-cbp-plugin-contract-customer-broker-crypto-money-sale-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-crypto-money-sale-bitdubai')
+include ':fermat-cbp-plugin-contract-customer-broker-purchase-bitdubai'
+project(':fermat-cbp-plugin-contract-customer-broker-purchase-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-purchase-bitdubai')
+include ':fermat-cbp-plugin-contract-customer-broker-sale-bitdubai'
+project(':fermat-cbp-plugin-contract-customer-broker-sale-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-sale-bitdubai')
 
 //Desktop Module
 include ':fermat-cbp-plugin-desktop-module-sub-app-manager-bitdubai'

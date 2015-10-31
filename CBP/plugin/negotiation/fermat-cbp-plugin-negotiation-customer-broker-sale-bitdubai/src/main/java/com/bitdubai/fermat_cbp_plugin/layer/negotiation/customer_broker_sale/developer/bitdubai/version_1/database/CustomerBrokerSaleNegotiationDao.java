@@ -269,12 +269,19 @@ public class CustomerBrokerSaleNegotiationDao {
                 }
             }
 
-            public Clause modifyClause(UUID negotiationId, Clause clause, String value) throws CantUpdateClausesException {
+            public void rejectClauseByType(UUID negotiationId, ClauseType type) throws CantUpdateClausesException {
                 try {
-                    modifyClauseStatus(negotiationId, clause, ClauseStatus.REJECTED);
-                    return addNewClause(negotiationId, clause.getType(), value, clause.getProposedBy());
-                } catch (CantAddNewClausesException e) {
-                    throw new CantUpdateClausesException(CantAddNewClausesException.DEFAULT_MESSAGE, e, "", "");
+                    DatabaseTable SaleClauseTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_TABLE_NAME);
+                    DatabaseTableRecord recordToUpdate   = SaleClauseTable.getEmptyRecord();
+        
+                    SaleClauseTable.setUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
+                    SaleClauseTable.setStringFilter(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_TYPE_COLUMN_NAME, type.getCode(), DatabaseFilterType.EQUAL);
+        
+                    recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_STATUS_COLUMN_NAME, ClauseStatus.REJECTED.getCode());
+        
+                    SaleClauseTable.updateRecord(recordToUpdate);
+                } catch (CantUpdateRecordException e) {
+                    throw new CantUpdateClausesException(CantUpdateClausesException.DEFAULT_MESSAGE, e, "", "");
                 }
             }
 
