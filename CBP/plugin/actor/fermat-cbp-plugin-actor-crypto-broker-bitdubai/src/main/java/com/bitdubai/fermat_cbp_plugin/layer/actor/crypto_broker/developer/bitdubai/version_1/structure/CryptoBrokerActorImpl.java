@@ -47,7 +47,7 @@ public class CryptoBrokerActorImpl implements CryptoBrokerActor {
     }
 
     @Override
-    public CustomerBrokerNegotiation getSale(UUID negotiationId) throws CantGetSaleException{
+    public CustomerBrokerNegotiation getSale(final UUID negotiationId) throws CantGetSaleException{
         try {
             for(CustomerBrokerNegotiation sale : saleNegotiationManager.getNegotiationsByBroker(identity)){
                 if(sale.getNegotiationId().equals(negotiationId))
@@ -71,7 +71,7 @@ public class CryptoBrokerActorImpl implements CryptoBrokerActor {
     }
 
     @Override
-    public Collection<CustomerBrokerNegotiation> getSales(NegotiationStatus status) throws CantGetSaleException{
+    public Collection<CustomerBrokerNegotiation> getSales(final NegotiationStatus status) throws CantGetSaleException{
         try {
             HashSet<CustomerBrokerNegotiation> sales = new HashSet<>();
             for(CustomerBrokerNegotiation sale : saleNegotiationManager.getNegotiationsByBroker(identity)){
@@ -91,7 +91,7 @@ public class CryptoBrokerActorImpl implements CryptoBrokerActor {
     }
 
     @Override
-    public boolean equals(Object o){
+    public boolean equals(final Object o){
         if(!(o instanceof CryptoBrokerActor))
             return false;
         CryptoBrokerActor compare = (CryptoBrokerActor) o;
