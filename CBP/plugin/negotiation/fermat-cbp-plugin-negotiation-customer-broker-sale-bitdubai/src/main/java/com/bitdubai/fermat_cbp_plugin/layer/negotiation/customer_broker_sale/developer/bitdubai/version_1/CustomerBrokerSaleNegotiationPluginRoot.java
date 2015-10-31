@@ -14,10 +14,9 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantUpdateCustomerBrokerSaleException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleNegotiationDao;
@@ -121,18 +120,43 @@ public class CustomerBrokerSaleNegotiationPluginRoot implements CustomerBrokerSa
     }
 
     @Override
-    public CustomerBrokerSaleNegotiation createNegotiation(String publicKeyCustomer, String publicKeyBroker, Collection<Clause> clauses) throws CantCreateCustomerBrokerSaleNegotiationException {
-        return null;
+    public CustomerBrokerSaleNegotiation createNegotiation(String publicKeyCustomer, String publicKeyBroker) throws CantCreateCustomerBrokerSaleNegotiationException {
+        return customerBrokerSaleNegotiationDao.createCustomerBrokerSaleNegotiation(publicKeyCustomer, publicKeyBroker);
     }
 
     @Override
-    public void cancelNegotiation(CustomerBrokerSaleNegotiation negotiation) {
-        
+    public void cancelNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+        try {
+            customerBrokerSaleNegotiationDao.cancelNegotiation(negotiation);
+        } catch (CantUpdateCustomerBrokerSaleException e) {
+            throw new CantUpdateCustomerBrokerSaleException(CantUpdateCustomerBrokerSaleException.DEFAULT_MESSAGE, e, "", "");
+        }
     }
 
     @Override
-    public void closeNegotiation(CustomerBrokerSaleNegotiation negotiation) {
+    public void closeNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+        try {
+            //TODO validar que todas las clausulas esten en modo AGREED segun el tipo de negociacion
+            //TODO evaluar clausulas del cambio
+            //TODO evaluar clausulas del metodo de ejecucion
+            //TODO evaluar clausulas del metodo de pago
 
+            //TODO si las clausulas no estan agreed hay que lanzar una excepcion
+
+            customerBrokerSaleNegotiationDao.closeNegotiation(negotiation);
+        } catch (CantUpdateCustomerBrokerSaleException e){
+            throw new CantUpdateCustomerBrokerSaleException(CantUpdateCustomerBrokerSaleException.DEFAULT_MESSAGE, e, "", "");
+        }
+    }
+
+    @Override
+    public CustomerBrokerSaleNegotiation sendToCustomer(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+        return customerBrokerSaleNegotiationDao.sendToCustomer(negotiation);
+    }
+
+    @Override
+    public CustomerBrokerSaleNegotiation waitForCustomer(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+        return customerBrokerSaleNegotiationDao.waitForCustomer(negotiation);
     }
 
     @Override
