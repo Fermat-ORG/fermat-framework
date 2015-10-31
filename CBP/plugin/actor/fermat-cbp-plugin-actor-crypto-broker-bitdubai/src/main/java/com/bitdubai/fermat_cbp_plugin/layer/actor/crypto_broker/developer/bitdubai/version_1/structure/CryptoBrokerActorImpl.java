@@ -4,12 +4,11 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.CustomerBrokerNegotiation;
-import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.exceptions.CantCreateSaleException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.exceptions.CantGetSaleException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.exceptions.CantCreateSaleNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.exceptions.CantGetSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.interfaces.CryptoBrokerActor;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantListSaleNegotianionsException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 
 import java.util.Collection;
@@ -38,40 +37,40 @@ public class CryptoBrokerActorImpl implements CryptoBrokerActor {
     }
 
     @Override
-    public CustomerBrokerNegotiation createSale(ActorIdentity cryptoCustomer, Collection<Clause> clauses) throws CantCreateSaleException {
+    public CustomerBrokerNegotiation createSale(ActorIdentity cryptoCustomer, Collection<Clause> clauses) throws CantCreateSaleNegotiationException {
         try {
             return saleNegotiationManager.createNegotiation(cryptoCustomer.getPublicKey(), identity.getPublicKey(), clauses);
         } catch (CantCreateCustomerBrokerSaleNegotiationException exception) {
-            throw new CantCreateSaleException(CantCreateSaleException.DEFAULT_MESSAGE, exception, "", "");
+            throw new CantCreateSaleNegotiationException(CantCreateSaleNegotiationException.DEFAULT_MESSAGE, exception, "", "");
         }
     }
 
     @Override
-    public CustomerBrokerNegotiation getSale(final UUID negotiationId) throws CantGetSaleException{
+    public CustomerBrokerNegotiation getSale(final UUID negotiationId) throws CantGetSaleNegotiationException {
         try {
             for(CustomerBrokerNegotiation sale : saleNegotiationManager.getNegotiationsByBroker(identity)){
                 if(sale.getNegotiationId().equals(negotiationId))
                     return sale;
             }
-            throw new CantGetSaleException(CantGetSaleException.DEFAULT_MESSAGE, null, "Negotiation ID: " + negotiationId.toString(), "NegotiationId not Found");
+            throw new CantGetSaleNegotiationException(CantGetSaleNegotiationException.DEFAULT_MESSAGE, null, "Negotiation ID: " + negotiationId.toString(), "NegotiationId not Found");
         } catch (CantListSaleNegotianionsException e) {
-            throw new CantGetSaleException(CantGetSaleException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantGetSaleNegotiationException(CantGetSaleNegotiationException.DEFAULT_MESSAGE, e, "", "");
         }
     }
 
     @Override
-    public Collection<CustomerBrokerNegotiation> getSales() throws CantGetSaleException{
+    public Collection<CustomerBrokerNegotiation> getSales() throws CantGetSaleNegotiationException {
         try {
             HashSet<CustomerBrokerNegotiation> sales = new HashSet<>();
             sales.addAll(saleNegotiationManager.getNegotiationsByBroker(identity));
             return sales;
         } catch (CantListSaleNegotianionsException e) {
-            throw new CantGetSaleException(CantGetSaleException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantGetSaleNegotiationException(CantGetSaleNegotiationException.DEFAULT_MESSAGE, e, "", "");
         }
     }
 
     @Override
-    public Collection<CustomerBrokerNegotiation> getSales(final NegotiationStatus status) throws CantGetSaleException{
+    public Collection<CustomerBrokerNegotiation> getSales(final NegotiationStatus status) throws CantGetSaleNegotiationException {
         try {
             HashSet<CustomerBrokerNegotiation> sales = new HashSet<>();
             for(CustomerBrokerNegotiation sale : saleNegotiationManager.getNegotiationsByBroker(identity)){
@@ -80,7 +79,7 @@ public class CryptoBrokerActorImpl implements CryptoBrokerActor {
             }
             return sales;
         } catch (CantListSaleNegotianionsException e) {
-            throw new CantGetSaleException(CantGetSaleException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantGetSaleNegotiationException(CantGetSaleNegotiationException.DEFAULT_MESSAGE, e, "", "");
         }
 
     }
