@@ -9,7 +9,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantDenyAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantGetPendingAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantSendAddressExchangeRequestException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingAddressExchangeRequestsException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 
 import java.util.List;
@@ -65,9 +65,18 @@ public interface CryptoAddressesManager {
      *
      * @return a list a request that can be handled by the actor
      *
-     * @throws CantListPendingAddressExchangeRequestsException if something goes wrong.
+     * @throws CantListPendingCryptoAddressRequestsException if something goes wrong.
      */
-    List<AddressExchangeRequest> listPendingRequests(Actors actorType) throws CantListPendingAddressExchangeRequestsException;
+    List<AddressExchangeRequest> listPendingRequests(Actors actorType) throws CantListPendingCryptoAddressRequestsException;
+
+    /**
+     * The method <code>listPendingRequests</code> return the list of requests waiting for a local action.
+     *
+     * @return a list a request that can be handled by the crypto addresses middleware plugin.
+     *
+     * @throws CantListPendingCryptoAddressRequestsException if something goes wrong.
+     */
+    List<AddressExchangeRequest> listPendingRequests() throws CantListPendingCryptoAddressRequestsException;
 
     /**
      * Throw the method <code>getPendingRequest</code> brings an unique pending address exchange request by request id

@@ -32,7 +32,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantConfirmAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantDenyAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantGetPendingAddressExchangeRequestException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingAddressExchangeRequestsException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantChangeProtocolStateException;
@@ -143,12 +143,12 @@ public class CryptoAddressesNetworkServiceDao {
      *
      * @param actorType  type of actor asking for pending requests
      *
-     * @throws CantListPendingAddressExchangeRequestsException      if something goes wrong.
+     * @throws CantListPendingCryptoAddressRequestsException      if something goes wrong.
      */
-    public List<AddressExchangeRequest> listPendingRequestsByActorType(Actors actorType) throws CantListPendingAddressExchangeRequestsException {
+    public List<AddressExchangeRequest> listPendingRequestsByActorType(Actors actorType) throws CantListPendingCryptoAddressRequestsException {
 
         if (actorType == null)
-            throw new CantListPendingAddressExchangeRequestsException(null, "", "actorType, can not be null");
+            throw new CantListPendingCryptoAddressRequestsException(null, "", "actorType, can not be null");
 
         try {
 
@@ -173,10 +173,10 @@ public class CryptoAddressesNetworkServiceDao {
 
         } catch (CantLoadTableToMemoryException exception) {
 
-            throw new CantListPendingAddressExchangeRequestsException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+            throw new CantListPendingCryptoAddressRequestsException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (InvalidParameterException exception) {
 
-            throw new CantListPendingAddressExchangeRequestsException(exception, "", "Check the cause."                                                                                );
+            throw new CantListPendingCryptoAddressRequestsException(exception, "", "Check the cause."                                                                                );
         }
     }
 
@@ -185,12 +185,12 @@ public class CryptoAddressesNetworkServiceDao {
      *
      * @param protocolState  that we need.
      *
-     * @throws CantListPendingAddressExchangeRequestsException      if something goes wrong.
+     * @throws CantListPendingCryptoAddressRequestsException      if something goes wrong.
      */
-    public List<AddressExchangeRequest> listPendingRequestsByProtocolState(ProtocolState protocolState) throws CantListPendingAddressExchangeRequestsException {
+    public List<AddressExchangeRequest> listPendingRequestsByProtocolState(ProtocolState protocolState) throws CantListPendingCryptoAddressRequestsException {
 
         if (protocolState == null)
-            throw new CantListPendingAddressExchangeRequestsException(null, "", "actorType, can not be null");
+            throw new CantListPendingCryptoAddressRequestsException(null, "", "actorType, can not be null");
 
         try {
 
@@ -212,10 +212,10 @@ public class CryptoAddressesNetworkServiceDao {
 
         } catch (CantLoadTableToMemoryException exception) {
 
-            throw new CantListPendingAddressExchangeRequestsException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+            throw new CantListPendingCryptoAddressRequestsException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (InvalidParameterException exception) {
 
-            throw new CantListPendingAddressExchangeRequestsException(exception, "", "Check the cause."                                                                                );
+            throw new CantListPendingCryptoAddressRequestsException(exception, "", "Check the cause."                                                                                );
         }
     }
 
