@@ -24,6 +24,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionTy
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIdentityIntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
@@ -418,6 +419,7 @@ public class CryptoWalletWalletModuleManager implements
                                                                 actorConnectedType ,
                                                                 identityWalletPublicKey,
                                                                 actorConnectedPublicKey,
+                                                                CryptoAddressDealers.CRYPTO_WALLET,
                                                                 blockchainNetworkType );
 
             try {
