@@ -58,7 +58,7 @@ public final class FermatSystem {
             fermatSystemContext.registerPlatform(new BCHPlatform());
             fermatSystemContext.registerPlatform(new CCPPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform());
-
+/*
             final List<PluginVersionReference> referenceList = new FermatPluginReferencesCalculator(fermatSystemContext).listReferencesByInstantiationOrder(
                 new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.WALLET_MODULE, Plugins.CRYPTO_WALLET, Developers.BITDUBAI, new Version())
             );
@@ -67,7 +67,7 @@ public final class FermatSystem {
             for (PluginVersionReference pvr : referenceList)
                 System.out.println(pvr);
 
-            System.out.println("\nFin de la lista de instanciación.\n\n");
+            System.out.println("\nFin de la lista de instanciación.\n\n");*/
 
         } catch(CantRegisterPlatformException e) {
 
