@@ -14,7 +14,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -46,7 +48,6 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantGetPendingAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantSendAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -428,6 +429,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                                            final Actors                identityTypeResponding     ,
                                            final String                identityPublicKeyRequesting,
                                            final String                identityPublicKeyResponding,
+                                           final CryptoAddressDealers  dealer                     ,
                                            final BlockchainNetworkType blockchainNetworkType      ) throws CantSendAddressExchangeRequestException {
 
         try {
@@ -441,16 +443,17 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
             RequestAction action = RequestAction.REQUEST        ;
 
             cryptoAddressesNetworkServiceDao.createAddressExchangeRequest(
-                    newId,
-                    walletPublicKey,
-                    cryptoCurrency,
-                    identityTypeRequesting,
-                    identityTypeResponding,
+                    newId                      ,
+                    walletPublicKey            ,
+                    cryptoCurrency             ,
+                    identityTypeRequesting     ,
+                    identityTypeResponding     ,
                     identityPublicKeyRequesting,
                     identityPublicKeyResponding,
-                    state,
-                    type,
-                    action,
+                    state                      ,
+                    type                       ,
+                    action                     ,
+                    dealer                     ,
                     blockchainNetworkType
             );
 
@@ -506,7 +509,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      * @throws CantListPendingCryptoAddressRequestsException      if something goes wrong.
      */
     @Override
-    public List<AddressExchangeRequest> listPendingRequests(Actors actorType) throws CantListPendingCryptoAddressRequestsException {
+    public List<CryptoAddressRequest> listPendingCryptoAddressRequests(Actors actorType) throws CantListPendingCryptoAddressRequestsException {
 
         try {
 
@@ -526,15 +529,16 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     /**
      * we'll return to the crypto addresses all the pending requests pending a local action.
      * State : PENDING_ACTION.
+     * Action: REQUEST.
      *
      * @throws CantListPendingCryptoAddressRequestsException      if something goes wrong.
      */
     @Override
-    public List<AddressExchangeRequest> listPendingRequests() throws CantListPendingCryptoAddressRequestsException {
+    public List<CryptoAddressRequest> listPendingCryptoAddressRequests() throws CantListPendingCryptoAddressRequestsException {
 
         try {
 
-            return cryptoAddressesNetworkServiceDao.listPendingRequestsByProtocolState(ProtocolState.PENDING_ACTION);
+            return cryptoAddressesNetworkServiceDao.listPendingRequestsByProtocolStateAndAction(ProtocolState.PENDING_ACTION, RequestAction.REQUEST);
 
         } catch (CantListPendingCryptoAddressRequestsException e){
 
@@ -549,7 +553,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
 
     @Override
-    public AddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException,
+    public CryptoAddressRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException,
                                                                            PendingRequestNotFoundException              {
 
         try {
@@ -927,6 +931,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     protocolState                                  ,
                     type                                           ,
                     action                                         ,
+                    requestMessage.getCryptoAddressDealer()        ,
                     requestMessage.getBlockchainNetworkType()
             );
 

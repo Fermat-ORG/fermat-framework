@@ -7,29 +7,29 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.CryptoAddressesMiddlewarePluginRoot;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.exceptions.CryptoAddressesMiddlewarePluginNotStartedException;
-import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.structure.CryptoAddressesMiddlewareRegistry;
+import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.structure.CryptoAddressMiddlewareExecutorService;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressReceivedEvent;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressesNewsEvent;
 
 /**
- * The class <code>com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.event_handlers.CryptoAddressReceivedEventHandler</code>
- * contains all the functionality to handle events of type CRYPTO_ADDRESS_RECEIVED.
+ * The class <code>com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.event_handlers.CryptoAddressesNewsEventHandler</code>
+ * contains all the functionality to handle events of type CRYPTO_ADDRESSES_NEWS.
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 31/10/2015.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoAddressReceivedEventHandler implements FermatEventHandler {
+public class CryptoAddressesNewsEventHandler implements FermatEventHandler {
 
-    private final CryptoAddressesMiddlewareRegistry   cryptoAddressesMiddlewareRegistry  ;
-    private final CryptoAddressesMiddlewarePluginRoot cryptoAddressesMiddlewarePluginRoot;
+    private final CryptoAddressMiddlewareExecutorService executorService;
+    private final CryptoAddressesMiddlewarePluginRoot    pluginRoot  ;
 
-    public CryptoAddressReceivedEventHandler(final CryptoAddressesMiddlewareRegistry   cryptoAddressesMiddlewareRegistry  ,
-                                             final CryptoAddressesMiddlewarePluginRoot cryptoAddressesMiddlewarePluginRoot) {
+    public CryptoAddressesNewsEventHandler(final CryptoAddressMiddlewareExecutorService executorService,
+                                           final CryptoAddressesMiddlewarePluginRoot    pluginRoot     ) {
 
-        this.cryptoAddressesMiddlewareRegistry   = cryptoAddressesMiddlewareRegistry  ;
-        this.cryptoAddressesMiddlewarePluginRoot = cryptoAddressesMiddlewarePluginRoot;
+        this.executorService = executorService;
+        this.pluginRoot      = pluginRoot     ;
     }
 
     /**
@@ -42,15 +42,14 @@ public class CryptoAddressReceivedEventHandler implements FermatEventHandler {
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
-        if (this.cryptoAddressesMiddlewarePluginRoot.getStatus() == ServiceStatus.STARTED) {
+        if (this.pluginRoot.getStatus() == ServiceStatus.STARTED) {
 
-            if (fermatEvent instanceof CryptoAddressReceivedEvent) {
-                CryptoAddressReceivedEvent cryptoAddressReceivedEvent = (CryptoAddressReceivedEvent) fermatEvent;
+            if (fermatEvent instanceof CryptoAddressesNewsEvent) {
 
-                cryptoAddressesMiddlewareRegistry.handleCryptoAddressReceivedEvent(cryptoAddressReceivedEvent.getRequestId());
+                executorService.executePendingActions();
 
             } else {
-                EventType eventExpected = EventType.CRYPTO_ADDRESS_RECEIVED;
+                EventType eventExpected = EventType.CRYPTO_ADDRESSES_NEWS;
                 String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode()+"\n"+
                                  "Event expected: " + eventExpected.toString()              + " - " + eventExpected.getCode();
                 throw new UnexpectedEventException(context);

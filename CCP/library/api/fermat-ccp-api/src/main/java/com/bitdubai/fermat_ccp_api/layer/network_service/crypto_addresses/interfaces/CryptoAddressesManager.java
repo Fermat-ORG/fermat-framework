@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantAcceptAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantConfirmAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantDenyAddressExchangeRequestException;
@@ -32,6 +33,7 @@ public interface CryptoAddressesManager {
      * @param identityTypeResponding          actor type with whom wants to exchange addresses
      * @param identityPublicKeyRequesting     the actor public key that is sending the request
      * @param identityPublicKeyResponding     the actor with whom we want to exchange addresses
+     * @param cryptoAddressDealer             who is dealing with the plugin.
      * @param blockchainNetworkType           network type in which we're working
      *
      * @throws CantSendAddressExchangeRequestException if something goes wrong.
@@ -42,6 +44,7 @@ public interface CryptoAddressesManager {
                                     Actors                identityTypeResponding     ,
                                     String                identityPublicKeyRequesting,
                                     String                identityPublicKeyResponding,
+                                    CryptoAddressDealers  cryptoAddressDealer        ,
                                     BlockchainNetworkType blockchainNetworkType      ) throws CantSendAddressExchangeRequestException;
 
     /**
@@ -59,7 +62,7 @@ public interface CryptoAddressesManager {
                                                                                   PendingRequestNotFoundException          ;
 
     /**
-     * The method <code>listPendingRequests</code> return the list of requests waiting for a local action for a specific type of actor
+     * The method <code>listPendingCryptoAddressRequests</code> return the list of requests waiting for a local action for a specific type of actor
      *
      * @param actorType  type of actor asking for the pending requests.
      *
@@ -67,28 +70,29 @@ public interface CryptoAddressesManager {
      *
      * @throws CantListPendingCryptoAddressRequestsException if something goes wrong.
      */
-    List<AddressExchangeRequest> listPendingRequests(Actors actorType) throws CantListPendingCryptoAddressRequestsException;
+    List<CryptoAddressRequest> listPendingCryptoAddressRequests(Actors actorType) throws CantListPendingCryptoAddressRequestsException;
 
     /**
-     * The method <code>listPendingRequests</code> return the list of requests waiting for a local action.
+     * The method <code>listPendingCryptoAddressRequests</code> return the list of requests waiting for a local action.
+     * Just the requests, not acceptance or denial messages.
      *
      * @return a list a request that can be handled by the crypto addresses middleware plugin.
      *
      * @throws CantListPendingCryptoAddressRequestsException if something goes wrong.
      */
-    List<AddressExchangeRequest> listPendingRequests() throws CantListPendingCryptoAddressRequestsException;
+    List<CryptoAddressRequest> listPendingCryptoAddressRequests() throws CantListPendingCryptoAddressRequestsException;
 
     /**
      * Throw the method <code>getPendingRequest</code> brings an unique pending address exchange request by request id
      *
      * @param requestId identifier of the request.
      *
-     * @return an instance of a AddressExchangeRequest
+     * @return an instance of a CryptoAddressRequest
      *
      * @throws CantGetPendingAddressExchangeRequestException  if something goes wrong.
      * @throws PendingRequestNotFoundException                if i can't find the pending address exchange request.
      */
-    AddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException,
+    CryptoAddressRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException,
                                                                     PendingRequestNotFoundException              ;
 
     /**
