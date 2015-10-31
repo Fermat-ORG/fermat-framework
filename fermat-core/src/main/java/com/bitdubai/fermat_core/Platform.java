@@ -744,6 +744,7 @@ public class Platform implements Serializable {
             try {
                 fermatSystem.start();
             } catch (FermatException e) {
+                System.err.println(e.toString());
                 System.out.println(e.getPossibleReason());
                 System.out.println(e.getFormattedContext());
                 System.out.println(e.getFormattedTrace());
