@@ -10,11 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.identity.common.IdentityUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
-
 import java.util.List;
 
 
@@ -27,11 +25,13 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
     private TextView userName;
     private ImageView imageView_intra_users;
 
+    private IntraUserInformation activeIntraUser;
 
-    public NavigationDrawerArrayAdapter(Context context, List<String> values) {
+
+    public NavigationDrawerArrayAdapter(Context context, List<String> values,IntraUserInformation activeIntraUser) {
         super(context, R.layout.navigation_drawer_base, values);
+        this.activeIntraUser = activeIntraUser;
         try {
-
             this.context = context;
             this.values = values;
         }
@@ -50,14 +50,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
         try
         {
             if (position == 0) {
-
-
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-
-                //testing
-
-
 
                 rowView = inflater.inflate(R.layout.navigation_drawer_first_row, parent, false);
 
@@ -69,9 +62,12 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
 
                 if(userName != null){
-
                     userName.setTypeface(tf, 1);
-                    userName.setText("Tessa Crankston");
+                    userName.setText(activeIntraUser.getName());
+                }
+
+                if(activeIntraUser.getProfileImage()!=null){
+                    icon.setImageBitmap(BitmapFactory.decodeByteArray(activeIntraUser.getProfileImage(),0,activeIntraUser.getProfileImage().length));
                 }
 
 
@@ -97,7 +93,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 if(rowView.findViewById(R.id.label) != null) {
                     TextView textView = (TextView) rowView.findViewById(R.id.label);
                     textView.setTypeface(tf, 1);
-                    textView.setText(values.get(position));
+                    textView.setText(values.get(position-1));
                 }
 
 
