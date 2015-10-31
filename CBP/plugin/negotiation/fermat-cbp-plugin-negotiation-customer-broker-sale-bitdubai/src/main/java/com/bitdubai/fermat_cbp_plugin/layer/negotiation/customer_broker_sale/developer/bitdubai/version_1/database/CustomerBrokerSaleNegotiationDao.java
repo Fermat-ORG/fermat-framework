@@ -215,7 +215,7 @@ public class CustomerBrokerSaleNegotiationDao {
             identityTable.clearAllFilters();
     
             Collection<CustomerBrokerSaleNegotiation> resultados = new ArrayList<CustomerBrokerSaleNegotiation>();
-    
+
             for (DatabaseTableRecord record : records) {
                 resultados.add(constructCustomerBrokerSaleFromRecord(record));
             }
