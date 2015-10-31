@@ -126,16 +126,16 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot implements CustomerBrok
     }
 
     @Override
-    public void cancelNegotiation(CustomerBrokerPurchaseNegotiation negotiation){
+    public void cancelNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseException {
         try {
             customerBrokerPurchaseNegotiationDao.cancelNegotiation(negotiation);
         } catch (CantUpdateCustomerBrokerPurchaseException e) {
-            new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
         }
     }
 
     @Override
-    public void closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation){
+    public void closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseException {
         try {
             //TODO validar que todas las clausulas esten en modo AGREED segun el tipo de negociacion
             //TODO evaluar clausulas del cambio
@@ -146,7 +146,7 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot implements CustomerBrok
 
             customerBrokerPurchaseNegotiationDao.closeNegotiation(negotiation);
         } catch (CantUpdateCustomerBrokerPurchaseException e){
-            new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
         }
     }
 
