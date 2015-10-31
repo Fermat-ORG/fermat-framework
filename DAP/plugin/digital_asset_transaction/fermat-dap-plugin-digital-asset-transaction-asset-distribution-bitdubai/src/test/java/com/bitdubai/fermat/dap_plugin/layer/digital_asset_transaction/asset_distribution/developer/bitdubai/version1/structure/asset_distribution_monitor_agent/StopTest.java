@@ -22,10 +22,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.UUID;
 
 /**
- * Created by Luis Campo (campusprize@gmail.com)on 30/10/15.
+ * Created by Luis Campo (campusprize@gmail.com)on 31/10/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class StartTest {
+public class StopTest {
     @Mock
     private Database database;
     private String userPublicKey;
@@ -53,8 +53,9 @@ public class StartTest {
     }
 
     @Test
-    public void startSuccesTest() throws CantStartAgentException, InterruptedException {
+    public void stopSuccesTest() throws CantStartAgentException, InterruptedException {
         assetDistributionMonitorAgent.start();
+        assetDistributionMonitorAgent.stop();
     }
 
 }
