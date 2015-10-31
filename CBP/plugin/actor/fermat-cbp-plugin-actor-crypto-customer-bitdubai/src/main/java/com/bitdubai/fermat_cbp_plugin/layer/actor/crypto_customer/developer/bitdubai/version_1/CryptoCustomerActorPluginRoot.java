@@ -14,6 +14,7 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.interfaces.Cr
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.interfaces.CryptoCustomerActorManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.DealsWithCustomerBrokerPurchases;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerActorImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
@@ -94,11 +95,11 @@ public class CryptoCustomerActorPluginRoot implements CryptoCustomerActorManager
 
     @Override
     public CryptoCustomerActor createNewCryptoCustomerActor(ActorIdentity identity) throws CantCreateCryptoCustomerActorException {
-        return null;
+        return new CryptoCustomerActorImpl(identity, purchaseNegotiationManager);
     }
 
     @Override
     public CryptoCustomerActor getCryptoCustomer(ActorIdentity identity) {
-        return null;
+        return new CryptoCustomerActorImpl(identity, purchaseNegotiationManager);
     }
 }
