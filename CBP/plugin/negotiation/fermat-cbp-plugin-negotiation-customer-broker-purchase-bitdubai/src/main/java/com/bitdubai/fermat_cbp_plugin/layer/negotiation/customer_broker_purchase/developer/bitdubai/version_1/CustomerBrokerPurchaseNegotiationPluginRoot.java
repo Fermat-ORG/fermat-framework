@@ -11,15 +11,18 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_Purchase.exceptions.CantUpdateCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerPurchaseNegotiationDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseNegotiationDaoException;
@@ -139,18 +142,70 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot implements CustomerBrok
     @Override
     public void closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseException {
         try {
-
             if(verifyStatusClause(customerBrokerPurchaseNegotiationDao.getClauses(negotiation.getNegotiationId()))){
                 customerBrokerPurchaseNegotiationDao.closeNegotiation(negotiation);
             }else{
                 throw new CantUpdateCustomerBrokerPurchaseException();
             }
-
         } catch (CantGetListClauseException e) {
             throw new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
         } catch (CantUpdateCustomerBrokerPurchaseException e){
             throw new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
         }
+    }
+
+    private boolean verifyStatusClause(Collection<Clause> clausules) throws CantUpdateCustomerBrokerPurchaseException {
+        Map<ClauseType, String> clausesAgreed = new HashMap<ClauseType, String>();
+
+        for(Clause clause : clausules) {
+            if(clause.getStatus() == ClauseStatus.AGREED){
+                clausesAgreed.put(clause.getType(), clause.getValue());
+            }
+        }
+
+        if(
+                ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_CURRENCY) ) &&
+                ( !clausesAgreed.containsKey(ClauseType.EXCHANGE_RATE) ) &&
+                ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_CURRENCY_QUANTITY) ) &&
+                ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_PAYMENT_METHOD) )
+        ){
+            return false;
+        }
+
+        if( clausesAgreed.containsValue(CurrencyType.CRYPTO_MONEY.getCode()) ){
+            if( !clausesAgreed.containsKey(ClauseType.CUSTOMER_CRYPTO_ADDRESS) ){
+                return false;
+            }
+        }
+
+        if( clausesAgreed.containsValue(CurrencyType.BANK_MONEY.getCode()) ){
+            if(
+                    ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_BANK) ) &&
+                    ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_BANK_ACCOUNT) )
+            ){
+                return false;
+            }
+        }
+
+        if( clausesAgreed.containsValue(CurrencyType.CASH_ON_HAND_MONEY.getCode()) ){
+            if(
+                    ( !clausesAgreed.containsKey(ClauseType.PLACE_TO_MEET) ) &&
+                    ( !clausesAgreed.containsKey(ClauseType.DATE_TIME_TO_MEET) )
+            ){
+                return false;
+            }
+        }
+
+        if( clausesAgreed.containsValue(CurrencyType.CASH_DELIVERY_MONEY.getCode()) ){
+            if(
+                    ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_PLACE_TO_DELIVER) ) &&
+                    ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER) )
+            ){
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override
