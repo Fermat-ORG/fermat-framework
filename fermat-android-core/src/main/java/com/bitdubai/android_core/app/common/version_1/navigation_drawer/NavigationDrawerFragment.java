@@ -463,7 +463,9 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
 
     public void changeNavigationDrawerAdapter(ListAdapter adapter){
         mDrawerListView.setAdapter( adapter);
-        //mDrawerListView.deferNotifyDataSetChanged();
+        mDrawerListView.deferNotifyDataSetChanged();
+        //mDrawerListView.invalidate();
+        //
     };
 
 //    public boolean equals(navigationDrawerFragment navigationDrawer){

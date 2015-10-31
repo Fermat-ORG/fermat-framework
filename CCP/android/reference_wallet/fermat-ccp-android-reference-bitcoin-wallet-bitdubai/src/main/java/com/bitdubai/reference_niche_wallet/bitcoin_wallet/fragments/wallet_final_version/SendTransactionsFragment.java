@@ -185,6 +185,9 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
         start = new AtomicBoolean(false);
 
+
+
+
         try {
             cryptoWallet = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
 

@@ -83,21 +83,34 @@ public class FermatWalletFragment extends Fragment implements FermatFragments {
      * Change activity
      */
     protected final void changeActivity(Activities activity) {
-        ((FermatScreenSwapper) getActivity()).changeActivity(activity.getCode());
+        getFermatScreenSwapper().changeActivity(activity.getCode());
     }
 
     /**
      * Change activity
      */
     protected final void changeFragment(String fragment,int idContainer) {
-        ((FermatScreenSwapper) getActivity()).changeScreen(fragment, idContainer,null);
+        getFermatScreenSwapper().changeScreen(fragment, idContainer, null);
     }
+
+    /**
+     *
+     */
 
     /**
      *  Get Activity header
      */
     protected final RelativeLayout getActivityHeader(){
-        return ((PaintActivtyFeactures)getActivity()).getActivityHeader();
+        return getPaintActivtyFeactures().getActivityHeader();
+    }
+
+
+    private PaintActivtyFeactures getPaintActivtyFeactures(){
+        return ((PaintActivtyFeactures)getActivity());
+    }
+
+    private FermatScreenSwapper getFermatScreenSwapper(){
+        return (FermatScreenSwapper) getActivity();
     }
 }
 
