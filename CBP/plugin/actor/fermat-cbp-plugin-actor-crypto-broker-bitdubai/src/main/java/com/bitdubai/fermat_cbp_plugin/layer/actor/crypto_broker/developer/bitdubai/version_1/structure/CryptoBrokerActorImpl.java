@@ -8,7 +8,7 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.exceptions.Cant
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.exceptions.CantGetSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.interfaces.CryptoBrokerActor;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantListSaleNegotianionsException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 
 import java.util.Collection;
@@ -39,7 +39,7 @@ public class CryptoBrokerActorImpl implements CryptoBrokerActor {
     @Override
     public CustomerBrokerNegotiation createSale(ActorIdentity cryptoCustomer, Collection<Clause> clauses) throws CantCreateSaleNegotiationException {
         try {
-            return saleNegotiationManager.createNegotiation(cryptoCustomer.getPublicKey(), identity.getPublicKey(), clauses);
+            return saleNegotiationManager.createNegotiation(cryptoCustomer.getPublicKey(), identity.getPublicKey());
         } catch (CantCreateCustomerBrokerSaleNegotiationException exception) {
             throw new CantCreateSaleNegotiationException(CantCreateSaleNegotiationException.DEFAULT_MESSAGE, exception, "", "");
         }
@@ -53,7 +53,7 @@ public class CryptoBrokerActorImpl implements CryptoBrokerActor {
                     return sale;
             }
             throw new CantGetSaleNegotiationException(CantGetSaleNegotiationException.DEFAULT_MESSAGE, null, "Negotiation ID: " + negotiationId.toString(), "NegotiationId not Found");
-        } catch (CantListSaleNegotianionsException e) {
+        } catch (CantGetListSaleNegotiationsException e) {
             throw new CantGetSaleNegotiationException(CantGetSaleNegotiationException.DEFAULT_MESSAGE, e, "", "");
         }
     }
@@ -64,7 +64,7 @@ public class CryptoBrokerActorImpl implements CryptoBrokerActor {
             HashSet<CustomerBrokerNegotiation> sales = new HashSet<>();
             sales.addAll(saleNegotiationManager.getNegotiationsByBroker(identity));
             return sales;
-        } catch (CantListSaleNegotianionsException e) {
+        } catch (CantGetListSaleNegotiationsException e) {
             throw new CantGetSaleNegotiationException(CantGetSaleNegotiationException.DEFAULT_MESSAGE, e, "", "");
         }
     }
@@ -78,7 +78,7 @@ public class CryptoBrokerActorImpl implements CryptoBrokerActor {
                     sales.add(sale);
             }
             return sales;
-        } catch (CantListSaleNegotianionsException e) {
+        } catch (CantGetListSaleNegotiationsException e) {
             throw new CantGetSaleNegotiationException(CantGetSaleNegotiationException.DEFAULT_MESSAGE, e, "", "");
         }
 

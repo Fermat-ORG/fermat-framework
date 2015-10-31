@@ -5,11 +5,11 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by Yordin Alayn on 09.10.15.
  */
-public class CantListPurchaseNegotianionsException extends FermatException {
+public class CantGetListPurchaseNegotiationsException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T GET LIST PURCHASE NEGOTIATIONS EXCEPTION";
 
-    public CantListPurchaseNegotianionsException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantGetListPurchaseNegotiationsException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
