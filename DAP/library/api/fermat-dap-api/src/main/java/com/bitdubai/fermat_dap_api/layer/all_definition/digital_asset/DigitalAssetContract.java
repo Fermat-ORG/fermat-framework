@@ -35,7 +35,7 @@ public class DigitalAssetContract implements Contract {
     public void setContractProperty(ContractProperty contractProperty) throws CantDefineContractPropertyException {
         boolean isExistingProperty = false;
         for (ContractProperty property : properties){
-            if (contractProperty.getName() == property.getName()){
+            if (property.getName().equals(contractProperty.getName())){
                 property.setValue(contractProperty.getValue());
                 isExistingProperty = true;
             }
@@ -48,7 +48,7 @@ public class DigitalAssetContract implements Contract {
     public ContractProperty getContractProperty(String propertyName) {
         ContractProperty returnedContractProperty = null;
         for (ContractProperty contractProperty : properties){
-            if (contractProperty.getName() == propertyName)
+            if (contractProperty.getName().equals(propertyName))
                 returnedContractProperty = contractProperty;
         }
 
