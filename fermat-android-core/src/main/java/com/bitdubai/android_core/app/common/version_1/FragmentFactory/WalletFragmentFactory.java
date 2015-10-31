@@ -8,6 +8,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.factory.Wallet
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.factory.WalletRedeemPointFragmentFactory;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragmentFactory.ReferenceWalletFragmentFactory;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.CryptoBrokerWalletFragmentFactory;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragmentFactory.CryptoCustomerWalletFragmentFactory;
 
 //import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.factory.WalletAssetIssuerFragmentFactory;
 //import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.factory.WalletAssetUserFragmentFactory;
@@ -39,6 +40,8 @@ public class WalletFragmentFactory {
                                     return new com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.fragmentFactory.ReferenceWalletFragmentFactory();
                                 case "crypto_broker_wallet":
                                     return new CryptoBrokerWalletFragmentFactory();
+                                case "crypto_customer_wallet":
+                                    return new CryptoCustomerWalletFragmentFactory();
                                 case "redeem_point":
                                     return new WalletRedeemPointFragmentFactory();
                                 case "asset_issuer":

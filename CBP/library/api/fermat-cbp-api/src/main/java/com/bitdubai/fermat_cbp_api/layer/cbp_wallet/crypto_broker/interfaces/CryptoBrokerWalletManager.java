@@ -8,6 +8,6 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.Cry
  * Created by jorge on 26-10-2015.
  */
 public interface CryptoBrokerWalletManager {
-    CryptoBrokerWallet createNewCryptoBrokerWallet(ActorIdentity cryptoBroker) throws CantCreateCryptoBrokerWalletException;
-    CryptoBrokerWallet getCryptoBrokerWallet(ActorIdentity cryptoBroker) throws CryptoBrokerWalletNotFoundException;
+    CryptoBrokerWallet createNewCryptoBrokerWallet(String cryptoBroker) throws CantCreateCryptoBrokerWalletException;
+    CryptoBrokerWallet getCryptoBrokerWallet(String cryptoBroker) throws CryptoBrokerWalletNotFoundException;
 }

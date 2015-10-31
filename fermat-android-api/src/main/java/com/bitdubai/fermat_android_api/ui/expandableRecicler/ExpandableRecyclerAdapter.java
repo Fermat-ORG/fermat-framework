@@ -454,8 +454,7 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      *                           state map is loaded
      */
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        if (savedInstanceState == null
-                || !savedInstanceState.containsKey(EXPANDED_STATE_MAP)) {
+        if (savedInstanceState == null || !savedInstanceState.containsKey(EXPANDED_STATE_MAP)) {
             return;
         }
 
@@ -645,6 +644,18 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
     // region Data Manipulation
 
     /**
+     * Change the data set and notify the adapter about this
+     *
+     * @param parentItemList the list of parent items (with children) to be replace with
+     */
+    public void changeDataSet(@NonNull List<? extends ParentListItem> parentItemList) {
+        mParentItemList = parentItemList;
+        mItemList = ExpandableRecyclerAdapterHelper.generateParentChildItemList(parentItemList);
+
+        notifyDataSetChanged();
+    }
+
+    /**
      * Notify any registered observers that the ParentListItem reflected at {@code parentPosition}
      * has been newly inserted. The ParentListItem previously at {@code parentPosition} is now at
      * position {@code parentPosition + 1}.
@@ -706,19 +717,6 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
         }
 
         notifyItemRangeInserted(initialWrapperIndex, sizeChanged);
-    }
-
-    private int addParentWrapper(int wrapperIndex, ParentListItem parentListItem) {
-        int sizeChanged = 1;
-        ParentWrapper parentWrapper = new ParentWrapper(parentListItem);
-        mItemList.add(wrapperIndex, parentWrapper);
-        if (parentWrapper.isInitiallyExpanded()) {
-            parentWrapper.setExpanded(true);
-            List<?> childItemList = parentWrapper.getChildItemList();
-            mItemList.addAll(wrapperIndex + sizeChanged, childItemList);
-            sizeChanged += childItemList.size();
-        }
-        return sizeChanged;
     }
 
     /**
@@ -862,6 +860,19 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      */
     public void setChildItemFermatEventListeners(FermatListItemListeners<CI> eventListeners) {
         this.childItemEventListeners = eventListeners;
+    }
+
+    private int addParentWrapper(int wrapperIndex, ParentListItem parentListItem) {
+        int sizeChanged = 1;
+        ParentWrapper parentWrapper = new ParentWrapper(parentListItem);
+        mItemList.add(wrapperIndex, parentWrapper);
+        if (parentWrapper.isInitiallyExpanded()) {
+            parentWrapper.setExpanded(true);
+            List<?> childItemList = parentWrapper.getChildItemList();
+            mItemList.addAll(wrapperIndex + sizeChanged, childItemList);
+            sizeChanged += childItemList.size();
+        }
+        return sizeChanged;
     }
 
     // endregion

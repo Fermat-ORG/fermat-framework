@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="30dp"
+    android:background="#dfdfdf"
+    android:paddingBottom="@dimen/ccw_grouper_container_padding_vertical"
+    android:paddingTop="@dimen/ccw_grouper_container_padding_vertical">
+
+    <TextView
+        android:id="@+id/ccw_group_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:textColor="@color/black"
+        android:textSize="@dimen/ccw_subtitle_text"
+        tools:text="@string/waiting_for_you"/>
+
+    <TextView
+        android:id="@+id/ccw_customers_count"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_toLeftOf="@+id/ccw_arrow"
+        android:layout_toStartOf="@+id/ccw_arrow"
+        android:background="@drawable/ccw_customer_count_background"
+        android:gravity="center"
+        android:textColor="@color/withe"
+        android:visibility="gone"
+        android:textSize="@dimen/ccw_customer_count_text_size"
+        tools:text="3"/>
+
+    <ImageView
+        android:id="@+id/ccw_arrow"
+        android:layout_width="@dimen/list_item_parent_arrow_size"
+        android:layout_height="@dimen/list_item_parent_arrow_size"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:contentDescription="@string/arrow"
+        android:src="@drawable/selector_arrow_down"/>
+
+</RelativeLayout>
