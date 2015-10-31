@@ -38,7 +38,6 @@ public enum BankCurrencyType implements FermatEnum {
             case "GBP": return LIBRA_ESTERLINA;
             case "JPY": return YEN_JAPONES;
             case "BS": return BOLIVARES;
-
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the BankCurrencyType enum");
         }
     }
