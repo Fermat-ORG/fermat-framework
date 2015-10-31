@@ -43,6 +43,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.DealsWithCryptoPayment;
 import com.bitdubai.fermat_bch_core.BCHPlatform;
+import com.bitdubai.fermat_ccp_core.CCPPlatform;
 import com.bitdubai.fermat_core.layer.cbp.identity.CBPIdentityLayer;
 import com.bitdubai.fermat_core.layer.cbp.sub_app_module.CBPSubAppModuleLayer;
 import com.bitdubai.fermat_core.layer.ccm.actor.CCMActorLayer;
@@ -768,7 +769,7 @@ public class Platform implements Serializable {
             boolean CCP = true;
             boolean CRY = true;
             boolean CSH = true;
-            boolean DAP = true; /* DAP no da errores al iniciar, si la desactivas enviar mensaje a Rodrigo por favor*/
+            boolean DAP = false; /* DAP no da errores al iniciar, si la desactivas enviar mensaje a Rodrigo por favor*/
             boolean DMP = true;//DOBLEMENTE TEMPORAL
             boolean MKT = true;
             boolean OSA = true;
@@ -903,7 +904,7 @@ public class Platform implements Serializable {
 
                 try {
 
-                    AbstractPlatform ccpPlatform = new BCHPlatform();
+                    AbstractPlatform ccpPlatform = new CCPPlatform();
                     ccpPlatform.start();
 
                     PlatformReference platformReference = new PlatformReference(Platforms.CRYPTO_CURRENCY_PLATFORM);
@@ -1555,7 +1556,7 @@ public class Platform implements Serializable {
                 layer.getLayer(),
                 fermatPluginsEnum,
                 Developers.BITDUBAI,
-                new Version("1.0.0")
+                new Version()
         );
     }
 

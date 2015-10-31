@@ -70,17 +70,6 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 Picasso.with(context).load(R.drawable.profile_image).into(imageView_intra_users);
 
 
-
-                /*switch (ApplicationSession.getActivityId())
-                {
-                    case "DesktopActivity":
-                        rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_navigation_drawer_first_row, parent, false);
-                        break;
-                      default:
-                        rowView = inflater.inflate(R.layout.wallet_manager_main_activity_navigation_drawer_first_row_empty, parent, false);
-                          break;
-
-                }*/
                 TextView txtView_description = (TextView) rowView.findViewById(R.id.txtView_description);
                 if(txtView_description != null){
 
@@ -105,21 +94,9 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
             else {
                 LayoutInflater inflater = (LayoutInflater) context
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-               // rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
 
-
-                //test mati
                 rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_framework_navigation_drawer_row_layout, parent, false);
-                /*switch (ApplicationSession.getActivityId()) {
-                    case "DesktopActivity":
-                        rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_framework_navigation_drawer_row_layout, parent, false);
-                        break;
-                      default:
-                        rowView = inflater.inflate(R.layout.wallet_framework_activity_main_navigation_drawer_row_layout_empty, parent, false);
-                        break;
 
-                }
-                */
                 ImageView imageView = null;
                 imageView = (ImageView) rowView.findViewById(R.id.icon);
 

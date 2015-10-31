@@ -15,6 +15,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.co
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -79,11 +80,19 @@ public class ServerHandshakeRespondPacketProcessor extends FermatPacketProcessor
          */
 
         /*
+         * Construc the jsonObject
+         */
+        Gson gson = new Gson();
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, NetworkServiceType.UNDEFINED.toString());
+        jsonObject.addProperty(JsonAttNamesConstants.PROFILE_TO_REGISTER, communicationsCloudClientProfile.toJson());
+
+        /*
          * Construct a fermat packet whit the server identity
          */
         FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(getWsCommunicationsCloudClientChannel().getServerIdentity(),                    //Destination
                                                                                                                     getWsCommunicationsCloudClientChannel().getTemporalIdentity().getPublicKey(),   //Sender
-                                                                                                                    communicationsCloudClientProfile.toJson(),                                      //Message Content
+                                                                                                                    gson.toJson(jsonObject),                                      //Message Content
                                                                                                                     FermatPacketType.COMPONENT_REGISTRATION_REQUEST,                                //Packet type
                                                                                                                     getWsCommunicationsCloudClientChannel().getTemporalIdentity().getPrivateKey()); //Sender private key
 

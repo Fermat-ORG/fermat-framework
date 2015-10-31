@@ -82,6 +82,7 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalle
              recyclerView.addItemDecoration(itemDecoration);
 
              //TODO: para la primer version limitamos la cantidad de identidades a una sola
+             //TODO: Robert sacá esto si queres testear lo tuyo XXOO
              if(moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser().size() > 0)
                  newIdentityButton.setVisibility(View.INVISIBLE);
              else
@@ -172,15 +173,12 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalle
 
         try {
             if (moduleManager == null) {
-                for (int i = 0; i < 20; i++) {
-                    data.add(new IntraUserIdentityInformationImp("Intra User Name " + i,"",new byte[0]));
-                }
+                Toast.makeText(getActivity(),"Nodule manager null",Toast.LENGTH_SHORT).show();
             } else {
                 data = moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser();
             }
         }
-        catch(Exception e)
-        {
+        catch(Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
