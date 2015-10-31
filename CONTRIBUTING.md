@@ -67,6 +67,7 @@ It is very easy to contribute to the book, just edit the desired file and at the
 <br>
 ### Adding a New Plugin
 
+For the details o this process, you can check the [Adding a New Plugin to Fermat](AddingNewPlugin.md) document.
 
 <br>
 ### Adding a New Reference Wallet
