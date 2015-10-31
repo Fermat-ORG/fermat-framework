@@ -33,7 +33,12 @@ After you've done a proper analysis, you must got to https://github.com/bitDubai
  * **'Plugin Name' Event Handling - Event Handler 1**
  * **'Plugin Name' Event Handling - Event Handler 2**
  * **'Plugin Name' Event Handling - Event Handler N**
+
+* **'Plugin Name' Implementation - Unit Testing**
+
+* **'Plugin Name' Implementation - Integration Testing**
  
+* **SUPER ISSUE: 'Plugin Name' QA Approval**
 
 The desired granularity is that you create one issue for each new functionality or implementation that you'll define in one of these categories.  
 
