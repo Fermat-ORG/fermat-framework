@@ -412,17 +412,7 @@ public class CryptoWalletWalletModuleManager implements
                                                                  BlockchainNetworkType blockchainNetworkType) throws CantCreateWalletContactException, ContactNameAlreadyExistsException{
         try{
 
-         //get to Crypto Address NS the intra user actor address
-            cryptoAddressesNSManager.sendAddressExchangeRequest(walletPublicKey,
-                                                                walletCryptoCurrency ,
-                                                                actorWalletType,
-                                                                actorConnectedType ,
-                                                                identityWalletPublicKey,
-                                                                actorConnectedPublicKey,
-                                                                CryptoAddressDealers.CRYPTO_WALLET,
-                                                                blockchainNetworkType );
-
-            try {
+             try {
                 walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorAlias, walletPublicKey);
                 throw new ContactNameAlreadyExistsException(ContactNameAlreadyExistsException.DEFAULT_MESSAGE, null, null, null);
 
@@ -438,7 +428,20 @@ public class CryptoWalletWalletModuleManager implements
                         actorConnectedType,
                         walletPublicKey
                 );
-                return new CryptoWalletWalletModuleWalletContact(walletContactRecord, actorPhoto);
+
+                 //get to Crypto Address NS the intra user actor address
+                 cryptoAddressesNSManager.sendAddressExchangeRequest(walletPublicKey,
+                         walletCryptoCurrency ,
+                         actorWalletType,
+                         actorConnectedType ,
+                         identityWalletPublicKey,
+                         actorPublicKey,
+			 CryptoAddressDealers.CRYPTO_WALLET,
+                         blockchainNetworkType );
+
+
+
+                 return new CryptoWalletWalletModuleWalletContact(walletContactRecord, actorPhoto);
             }
 
         } catch (ContactNameAlreadyExistsException e) {

@@ -30,6 +30,7 @@ public class NewReceiveMessagesNotificationEventHandler extends AbstractCommunic
 
         System.out.print("NOTIFICACION EVENTO LLEGADA MENSAJE A INTRA ACTOR NETWORK SERVICE!!!!");
 
+        if(event.getNetworkServiceTypeApplicant().equals(networkService.getNetworkServiceType()))
         ((CryptoAddressesNetworkServicePluginRoot)networkService).handleNewMessages((FermatMessage) event.getData());
     }
 
