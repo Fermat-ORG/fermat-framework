@@ -763,7 +763,7 @@ public class Platform implements Serializable {
             boolean BCH = true;
             boolean BNK = true;
             boolean BNP = true;
-            boolean CBP = false;
+            boolean CBP = true;
             boolean CCM = false;
             boolean CCP = true;
             boolean CRY = true;
