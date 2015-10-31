@@ -11,9 +11,12 @@ import java.util.List;
  */
 public interface CashMoney {
 
-    CashMoneyBalance getBookBalance(BalanceType balanceType) throws CantTransactionCashMoneyException;
+    //CashMoneyBalance getBookBalance(BalanceType balanceType) throws CantTransactionCashMoneyException;
 
-    CashMoneyBalance getAvailableBalance(BalanceType balanceType) throws CantTransactionCashMoneyException;
+    //CashMoneyBalance getAvailableBalance(BalanceType balanceType) throws CantTransactionCashMoneyException;
+    double getBookBalance(BalanceType balanceType) throws CantTransactionCashMoneyException;
+
+    double getAvailableBalance(BalanceType balanceType) throws CantTransactionCashMoneyException;
 
     List<CashMoneyTransaction> getTransactions(BalanceType balanceType, int max, int offset )throws CantTransactionCashMoneyException;
 

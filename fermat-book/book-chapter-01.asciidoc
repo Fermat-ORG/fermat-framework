@@ -1,138 +1,51 @@
 
 == Chapter 1: Fermat Master Plan
 
-As a Master Plan, Fermat has it's own vision of how a collaborative project should be carried out. The main concept is to define a large master plan far into the future, and start building it phase by phase adjusting the target when needed. It is designed in this way to absorb the efforts of thousands of contributors over the years into a unified architectural vision.
+As a Master Plan, Fermat has it's own vision of how a collaborative project should be carried out. The main concept is to define a large master plan far into the future, and start building it phase by phase adjusting the target when needed. It is designed in this way to absorb the efforts of thousands of contributors over the years into a unified architectural vision. +
+
+After the pioneer step of Sakamoto who gave rise to *Bitcoin* and its revolutionary blockchain technology, in the last years, there has been a lot of fin tech investment money given to a myriad of startup initiating in this industry. This fostered the next evolutionary step, *"cryptocurrency 2.0"* but it has still not reached the level of adoption expected. There seems to exist an unbalance between the considerable investment of funds and effort needed to master this technology and the results they are bringing up. What is more, isolated projects trying to build something useful starting form zero point have it difficult to obtain the necessary support and the persistent endurance needed to succeed... + 
+Precisely aknowledging this weak points in the industry, and choosing *collaboration* within a *master plan* as starting point, it is how the Fermat Community believes to succeed in solving the challenges set in their mission and purpose by building a complete new framework that solves the problem in an efficient, inclusive and attractive way.
+
+=== Phase I: Foundations 
+The goal is to have a framework for developing financial applications in a trust-less environment. What are the services that had to be granted at the lower levels to enable this?
+
+The basic infrastructure ::  
+the _Fermat Core Platform_ is the part of the system which initilizes the entire set of modules, starting every plugin and putting them to run. This creates the interconection that let all the services to be offered as being integral part of one unified system.
+The basic services ::
+** connection to the different Operating Systems that will run Fermat on a chosen device.
+** interconnectivity to cryptonetworks and blockchain services providers to enable the *transport of value*.
+** P2P communication of the devices running Fermat to enable the *transport of information (meta-data)*
+The plug-ins environment ::
+_Fermat Plug-ins Platform_ deals with this task allowing systems users to be identified, low level plugins to be recognized as part of the system, communications services to link plug-ins living in different devices and in a general way,..an so on. In general terms, all these underlying construct allow various _network services_ to run and start building the set of functionalities that will be taken by the applications built on top.
+
+NOTE: At this stage of development, Fermat already offers a wide scope of REUSABLE components for third parts to build on top, encouraging further development of the plan and enrichnening it with every single addition.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-However, although a huge step has been made by Sakamoto's invention - in fact *Bitcoin* that has already become the first widely accepted cryptocurrency and its technology has become a standard - there is still too many technical aspects in using blockchain tech that this prevents it for being mass adopted. 
-
-What's more, in the last years, there has been a lot of fin tech investment money given to a myriad of startup initiating in bitcoin, cryptocurrencies and blockchain technology, and everything has gone so far that after "bitcoin revolution" the new trending wave of investenment is focus on what has been called *"cryptocurrency 2.0"*. Nevertheless, there is still a point of view that is "out of tune" with the very nature and essence of this inventions: is not so wise to run "solo" the race to conquer the world market, because there is so much that has to be done, that is better to do it in a *_collaborative way_*, relying on the lessons of *open source software* and *global projects* with a _"systemic view"_ of the interaction between the involved parties (individual or organizations) and the whole.
- 
-
-
-
-
-
-In this era of a digitalised world, there are so many people who earn their living generating products and services at the heart of this digital world, being interconnected in an complex pattern of giving and receiving, services, money, assets, knowledge, permanently exchanging information of all kinds, weaving relationships, building a *global community*. + 
-
-We do *_believe_* the community collectively has more talent than any of us individually. +
-We *_believe_* it is important to build on top of services and knowledge that others took time and effort to build. + 
-We *_believe_* in *collaborative environments*. + 
-We *_believe_* that growth of individums may generate growth and wealth for everybody if only we dedicate effort to build collectively rather than individually, sharing a *common vision* with a certain level of attained consensus on a "master plan for development". +
-We *_believe_* in *decentralization* . +
-
-NOTE: With the rising of Internet and the giant proliferation of computers permanently connected , what turn "the web" nowadays into "the cloud, among the huge benefits of a myriad of services running 24 hours on-line, we have also witnessed some vulnerability of systems totally dependent on a specific server ( or net of servers) when they crashed victim of hackers attack or when they were banned or controlled by goverments or central institutions not only causing data and money loses, but also spreading an awkward feeling of mistrust and being abused.
-At the contrary, a new era of *distributed systems* which run on a *decentralized peer-to-peer networks*, secured by the use of *cryptographic signatures* is being born, turning the old systems based on a "central" servers or central point of control gradually obsolete. The demand of such distributed systems is getting bigger because they are naturally safer ( ther's no central point to attack or control) and they honor the integrity of every participant and are provably fair and honest.
-
-
-In FERMAT we *_believe_* in people with passion and commitment to attain higher purposes, who are "crazy enough" and corageous to step forward and follow an *inspired vision*, to create a *critical mass* and start a *movement* that can change the world. + 
-We do *_believe_* we are collectively going to change this world and move forward to a prosperous future.
-
-We *_believe_* in a vision of humanity as a COLLABORATIVE LEARNING SPECIES which can trascend current limitations of the mainstream worldview of survival and scarcity into an unlimited and (re)evolutionary conception of humanity leading the path towards a thriving ECOSYSTEM of a *Global Integral Civilisation*.
-
-
-
-
-
-
-
-GUS--> Todo esto está bien pero es demasiado marketinero y aéreo. Abría que moverlo mas abajo, donde se pueda cambiar el tono por algo mas idealístico. Al principio creo que hay que ser neutro si uno quiere que la persona esandard siga leyendo.
-
-
-
-*FERMAT* is:
- 
-* an inspired *vision* about exploring and expanding the potentially biggest technological development since the invention of internet: *blockchain technology*. + 
-* a pioneer *project* to manifest a *master plan* to lay the foundations for a new era of collaborative environments in software industry and financial technologies. +
-* a *group* of passionate *entrepreneurs* and *developers* devoting creativity and effort to bring the project to life +
-* an *invitation* to the steady growing *community* supporting the creation of sustainable collective decentralized environments. +
-* a *service* to extend this amazing technology to a whole *world* of potential users respecting their uniqueness and freedom of choice.  +
-* a *system of software platforms* to build services and create new products on top, reusing the collective inteligence to evolve more efficiently and with greater global coherence. +
-* a *decentralized financial network* based on _blockchain technology_. 
-
-
-=== Fermat Project: foundations for a *master plan*
-
-We strive in FERMAT to lay foundational concepts, technologies and systems to support further developments in blockchain technology in such a way, that the *ecosystem* as a whole can evolve attaining a beautiful, efficient, fair and coherent result, integrating the resultating complexity into a well organized pattern, so as if this pattern had been previously premeditated. +
-The analogy having a big architect wanting to design a new city can serves us for comparison as long as we explore FERMAT'S basic components and their development inside the master plan.
-
-As every master plan, we have to consider that the plan has succesive phases of implementation. +
-
-:numbered!:
-
-==== PHASE I:
-
-* First, we need the ground were to build: in this case, the ground is all the available technology available today in internet, specially the available open source software, and all the devices and network technologies that let digital communication be available at a massive level.
-* Then, we need the basics services like in a city: electricity, gas, water supplies. In FERMAT the unified "company" that provides these servicies is the first platform in the stack, FERMAT-COR (FERMAT CORE PLATFORM), and the basic services supplied are:
-** FERMAT-OSA (FERMAT OPERATING SYSTEMS API ) provides the  connection to the diferent OPERATIVE SYSTEMS (filesystems and data base systems).
-** FERMAT-BCH (FERMAT BLOCKCHAIN) provides interconnectivity to crytonetworks and blockchain services providers.
-** FERMAT-P2P (FERMAT PEER-TO-PEER) provides interconectivity to all kinds of devices running FERMAT. 
-* The first visible infrastructure, or the first "building in the city", it is similar to a huge "main entrance hall" were citizen are identified and granted the permission to enter the city. 
-** FERMAT-PIP (FERMAT PLUG-INS PLATFORM) provides the necessary services to interact (consume services) and develop (create your own) the basic components of the system, the PLUG-INS.
-
-NOTE: At this stage of development, FERMAT already offers a wide scope of REUSABLE components for third parts to build on top, encouraging further development of the plan, enrichnening it with every single addition, which is more profitable for the whole and for the individual actor than struggling for conquering a small niche of a much more limited market with the great burden of building everything from zero point.
-
-NOTE: *At FERMAT we firmly believe that the comunity has much more talent and intelligent collectively than isolated individuals. We strive to reach a world-wide difussion of the blockchain  ecosystem with the conviction that we are laying the foundations of a global collaborative endeavour. Our development is a firm call to peers and colleagues to commiting themselves to be part of the transformation we want to bring forth. We call upon corageous minds who dare to build something great.* 
-
-
-==== PHASE II
-
-Here comes the building of the next set of platforms within FERMAT, that covers the functionalities to offer a:
+=== Phase II: First constructs
+The foundations have been layed out, but to reach the end user oriented applications, it is necessary to create several functionalities. In order to make a visible structure available for further developments and also to provide certain focus to related functionalities, these are wrapped in substructures of Fermat system called *platforms* and *superlayers*. Each of them groups a subset of functionalities that offer the following services : 
 
 * a decentralized Wallet Production Line
-* a Shop platform
-* a Digital Asset platform
+* a Crypto Currency platform to manage the transference of value trough crypto transactions
+* a Shoping platform to vinculate shop owners with brands and their customers 
+* a Digital Asset platform to allow issuing a vast type of digital coupons exchangeable for services and products
 * a Marketing platform based on Digital Assets
-* a Crypto Broker platform
-* a Crypto Distribution Network
+* a Crypto Broker platform to easily administrate the business of exchanging crypto and fiat currency
+* a Crypto Distribution Network to create local commercial environments fostered by crypto money
 
+among others...
     
-A more detailed description of each one of these follow in the next chapters.
+=== Phase III and beyond: 
+Have you grasped the _potential_ of Fermat ? Can you imagine the next phases of development ?
+Are you interested in getting to know Phase I and II deeper? + 
+Follow next chapters to get a more detailed description of each one.
 
-:numbered:
+:numbered!:
   
-=== FERMAT as financial network
- 
-==== What's behind money?
-In our daily live we have accepted money as something present in almost every activity of human endeavour, and most of us use it without reflecting on its origin or its deeper meaning. Making it simple, money is an agreed mean of exchanging value. By its universal adoption it allows a flow of products and services between the different actors in a producer-consumer chain ( or better, in a "web" of commercial interactions) and following this, an exchange of the value associated with each step, rewarding each actor with a portion of the entire value, what we call "profit". 
-During the early ages trading was made directly exchanging certain goods for other goods, then as trading was growing at scale, the necessity of unification of mass and measures lead to the rising of money representing in some way the value of what was being exchange and a relative consensus over it. Later on, with the rising of the different nations which created a certain unification under certain name, language and goverment and rules to be applied to a determined territory and its inhabitants, this nations extended their souveranity also to the issue of a national currency and the printing of "official" paper money. At the begginning the amount of paper money was guaranteed by a national reserve on gold, but most of goverment abandoned the * gold standard* after the 1930 world crisis, and after 1971 the US goverment severed definitely the link between US Dollar to gold. This means, that the current money we use only depends on the "trust" we deposit on the goverment that rules its emission and this "legal curse" is enforced by law. There is NOT ANY OTHER intrinsec propierty on paper money to ensure its value than this!! When talking about corruption in some of our political and financial institutions, we can easily perceive how often this trust has been abused. This kind of money enforced by law which value is not linked to any specific asset has been called *fiat money*.
+=== Continue Reading
 
-==== Cryptocurrency
-When Bitcoin solved the issues that prevented other digital currencies to become a viable digital money ( "authenticity" (of the issuing and ownership) and the "double-spend" problem) it opened a whole new world in financial systems and economy, where cryptography provides the basis for trusting the legitimacy of a user's claim to value. So, this new kind of currency that is entirely virtual and that is implied in transactions that transfer value from sender to recipient based on crytographic signatures is what we call *cryptocurrency*
+link:book-chapter-02.asciidoc[Next Chapter]
 
-NOTE: The undeniable achievement of Bitcoin's electronic signature protocol based on *crytography* is the creation of a distributed public ledger of peer-to-peer electronic transactions that is transparent and at the same time preserves the anonimity and the security needed to become a safe way of transporting *value*, based on *consensus agreement*. This technology opens the door to a new paradigma in economics, computer science, financial operations, and world-wide commerce. +  
-Sakamoto's invention makes possible to unveil the world of financial transactions, to get rid of the necessity of *trust* into a third party institution or central goverments, to make money a secure thing, and transactions transparent and effortless. It returns to the money's owner the absolute control over his richnes. +
-The cryptocurrency scheme encourages us to adopt a radical new point of view on money and the concept of value itself and its transport, so radical, that it will take us  time and effort to really grasp it, because it leads to the unconditionally honoring and empowering of each individual. 
-
-
-TIP: Taking Bitcoin as "the" paradigmatic model of every cryptocurrency, we need to have in mind that for Bitcoin to exist following is needed: +
-* A decentralized peer-to-peer network (the bitcoin protocol) + 
-* A public transaction ledger (the blockchain) +
-* A decentralized mathematical and deterministic currency issuance (distributed mining) +
-* A decentralized transaction verification system (transaction script) +
-
-
+link:book-intro.asciidoc[Previous Chapter]
 
 
 
