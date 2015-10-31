@@ -3,7 +3,7 @@
 
 In the cryptocurrency environment, value is held in specific applications/programs called *WALLET*.
 The main and basic functions of a Wallet is to send and receive money as a result of a transaction between two wallet' s owners.
-Regarding one of FERMAT'S target,i.e. allowing a great segmentation and abstraction levels and at the same time offering the user a pleasant, safe and easy-to-use expierence, the first job is to offer a number of *reference Wallets* for each *niche* discovered, wallets that can be adopted to inmediate use and also which can be taken as a "template" to build other more customized and complex wallets reusing the most of the components available in the platform at the time of the new development.
+Regarding one of FERMAT'S target,i.e. allowing a great segmentation and abstraction levels and at the same time offering the user a pleasant, safe and easy-to-use experience, the first job is to offer a number of *reference Wallets* for each *niche* discovered, wallets that can be adopted to inmediate use and also which can be taken as a "template" to build other more customized and complex wallets reusing the most of the components available in the platform at the time of the new development.
 
 For the first distribution of FERMAT, we have chosen Android as operative system, and a couple of reference wallets and services.
 
