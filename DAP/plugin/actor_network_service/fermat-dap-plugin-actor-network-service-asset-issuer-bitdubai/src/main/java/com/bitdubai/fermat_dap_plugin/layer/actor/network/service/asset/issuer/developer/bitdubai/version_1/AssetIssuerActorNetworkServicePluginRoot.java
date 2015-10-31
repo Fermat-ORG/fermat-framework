@@ -543,9 +543,7 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
         }
     }
 
-    public boolean isRegister() {
-        return register;
-    }
+
 
     /**
      * Get the IdentityPublicKey
@@ -701,6 +699,15 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
         requestRemoteNetworkServicesRegisteredList(discoveryQueryParametersAssetIssuer);
     }
 
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    @Override
+    public boolean isRegister() {
+        return register;
+    }
+
     @Override
     public List<ActorAssetIssuer> getListActorAssetIssuerRegistered() throws RequestedListNotReadyRecevivedException {
         return actorAssetIssuerRegisteredList;
@@ -723,11 +730,6 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
     @Override
     public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
-    }
-
-    @Override
-    public UUID getId() {
-        return this.pluginId;
     }
 
     @Override

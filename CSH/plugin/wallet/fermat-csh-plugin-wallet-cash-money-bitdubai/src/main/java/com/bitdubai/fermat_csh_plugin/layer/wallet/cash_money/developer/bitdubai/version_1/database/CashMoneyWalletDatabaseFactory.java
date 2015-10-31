@@ -117,6 +117,27 @@ public class CashMoneyWalletDatabaseFactory implements DealsWithPluginDatabaseSy
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
+            table = databaseFactory.newTableFactory(ownerId,CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_TABLE_NAME );
+
+            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_CASH_TRANSACTION_ID_COLUMN_NAME,DatabaseDataType.STRING,100,Boolean.TRUE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_PUBLIC_KEY_ACTOR_FROM,DatabaseDataType.STRING,100,Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_PUBLIC_KEY_ACTOR_TO,DatabaseDataType.STRING,100,Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_STATUS,DatabaseDataType.STRING,100,Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_BALANCE_TYPE,DatabaseDataType.STRING,100,Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_TRANSACTION_TYPE,DatabaseDataType.STRING,100,Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_AMAUNT,DatabaseDataType.STRING,100,Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_CASH_CURRENCY_TYPE,DatabaseDataType.STRING,100,Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_CASH_REFERENCE,DatabaseDataType.STRING,100,Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_TIME_STAMP,DatabaseDataType.STRING,100,Boolean.FALSE);
+            table.addColumn(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_MEMO,DatabaseDataType.STRING,100,Boolean.FALSE);
+
+            table.addIndex(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD__FIRST_KEY_COLUMN);
+            try {
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException e) {
+                e.printStackTrace();
+            }
+
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,

@@ -356,6 +356,12 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
     public void handleCryptoAddressReceivedEvent(UUID requestId) throws CantHandleCryptoAddressReceivedEventException {
 
         try {
+
+            System.out.println("----------------------------\n" +
+                    "LLEGO ADDRESS PARA EL REQUEST :" + requestId
+                    + "\n-------------------------------------------------");
+
+
             AddressExchangeRequest request = cryptoAddressesManager.getPendingRequest(requestId);
             handleCryptoAddressReceivedEvent(request);
         } catch (CantGetPendingAddressExchangeRequestException | PendingRequestNotFoundException e) {
@@ -367,6 +373,11 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
     public void handleCryptoAddressDeniedEvent(UUID requestId) throws CantHandleCryptoAddressDeniedEventException {
 
         try {
+            System.out.println("----------------------------\n" +
+                    " ADDRESS DENIED PARA EL REQUEST :" + requestId
+                    + "\n-------------------------------------------------");
+
+
             AddressExchangeRequest request = cryptoAddressesManager.getPendingRequest(requestId);
             handleCryptoAddressDeniedEvent(request);
         } catch (CantGetPendingAddressExchangeRequestException | PendingRequestNotFoundException e) {
@@ -383,7 +394,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                 // if i can't find it (WalletContactNotFound) i confirm the request ....
                 // else i add the crypto address received.
                 WalletContactRecord walletContactRecord = this.getWalletContactByActorAndWalletPublicKey(
-                        request.getIdentityPublicKeyRequesting(),
+                        request.getIdentityPublicKeyResponding(),
                         request.getWalletPublicKey()
                 );
 
@@ -391,6 +402,10 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                     walletContactRecord.getContactId(),
                     request.getCryptoAddress()
                 );
+
+                System.out.println("----------------------------\n" +
+                        "ACTUALIZO ADDRESS PARA EL CONTACTO :" +  walletContactRecord.getContactId()
+                        + "\n-------------------------------------------------");
 
                 walletContactsMiddlewareDao.updateCompatibility(
                     walletContactRecord.getContactId(),

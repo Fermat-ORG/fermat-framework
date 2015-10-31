@@ -1,10 +1,10 @@
 package com.bitdubai.fermat_osa_android_core;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlatform;
-import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystems;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantRegisterLayerException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPlatformException;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PlatformReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.OperativeSystems;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterLayerException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPlatformException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_osa_android_core.layer.android.AndroidLayer;
 
@@ -17,7 +17,7 @@ import com.bitdubai.fermat_osa_android_core.layer.android.AndroidLayer;
 public final class OSAPlatform extends AbstractPlatform {
 
     public OSAPlatform() {
-        super(new PlatformReference(OperativeSystems.ANDROID, Platforms.OPERATIVE_SYSTEM_API));
+        super(new PlatformReference(Platforms.OPERATIVE_SYSTEM_API));
     }
 
     @Override

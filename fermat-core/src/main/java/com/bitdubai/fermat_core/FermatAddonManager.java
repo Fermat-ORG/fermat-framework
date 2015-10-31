@@ -1,14 +1,19 @@
 package com.bitdubai.fermat_core;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddon;
-import com.bitdubai.fermat_api.layer.all_definition.common.enums.OperativeSystems;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantPauseAddonException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantResumeAddonException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartAddonException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStopAddonException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.UnexpectedServiceStatusException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.VersionNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantAssignReferenceException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantListNeededReferencesException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantPauseAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantResumeAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStopAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleReferenceException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.UnexpectedServiceStatusException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
+
+import java.util.List;
 
 /**
  * The class <code>com.bitdubai.fermat_core.FermatAddonManager</code>
@@ -23,6 +28,36 @@ public class FermatAddonManager {
     public FermatAddonManager(final FermatSystemContext systemContext  ) {
 
         this.systemContext   = systemContext  ;
+    }
+
+    public final AbstractAddon startAddonAndReferences(final AddonVersionReference addonVersionReference) throws CantStartAddonException  ,
+                                                                                                                 VersionNotFoundException {
+
+        try {
+            final AbstractAddon abstractAddon = systemContext.getAddonVersion(addonVersionReference);
+
+            if (abstractAddon.isStarted()) {
+                return abstractAddon;
+            }
+
+            final List<AddonVersionReference> neededAddons = abstractAddon.getNeededAddons();
+
+            for (final AddonVersionReference avr : neededAddons) {
+                AbstractAddon reference = startAddonAndReferences(avr);
+                abstractAddon.assignAddonReference(reference);
+            }
+
+            startAddon(abstractAddon);
+
+            return abstractAddon;
+        } catch (CantListNeededReferencesException e) {
+
+            throw new CantStartAddonException(e, addonVersionReference.toString(), "Error listing references for the addon.");
+        } catch(CantAssignReferenceException   |
+                IncompatibleReferenceException e) {
+
+            throw new CantStartAddonException(e, addonVersionReference.toString(), "Error assigning references for the addon.");
+        }
     }
 
     public final void startAddon(final AddonVersionReference addonVersionReference) throws CantStartAddonException  ,

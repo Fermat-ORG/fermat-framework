@@ -30,7 +30,6 @@ public enum CashCurrencyType implements FermatEnum {
 
     public static CashCurrencyType getByCode(String code) throws InvalidParameterException {
         switch (code) {
-
             case "USD": return DOLAR_USA;
             case "EUR": return EURO;
             case "AUD": return DOLAR_AUSTRALIANO;

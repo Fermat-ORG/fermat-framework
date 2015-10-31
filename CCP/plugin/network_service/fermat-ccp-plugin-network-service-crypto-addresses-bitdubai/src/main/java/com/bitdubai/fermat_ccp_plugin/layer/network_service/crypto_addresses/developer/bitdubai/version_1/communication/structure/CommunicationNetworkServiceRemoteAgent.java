@@ -1,17 +1,10 @@
-/*
- * @#TemplateNetworkServiceRemoteAgent.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure;
-
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.CryptoAddressesNetworkServicePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.database.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.database.IncomingMessageDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.database.OutgoingMessageDao;
@@ -50,50 +43,25 @@ import java.util.Observable;
  */
 public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
-    /*
-     * Represent the sleep time for the read or send (2000 milliseconds)
-     */
+    // Represent the sleep time for the read or send (2000 milliseconds)
     private static final long SLEEP_TIME = 2000;
 
-    /**
-     * Represent the communicationsVPNConnection
-     */
-    private CommunicationsVPNConnection communicationsVPNConnection;
-
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    private ErrorManager errorManager;
-
-    /**
-     * DealWithEvents Interface member variables.
-     */
-    private EventManager eventManager;
-
-    /**
-     * Represent the incomingMessageDao
-     */
-    private IncomingMessageDao incomingMessageDao;
-
-    /**
-     * Represent the outgoingMessageDao
-     */
-    private OutgoingMessageDao outgoingMessageDao;
+    private final CommunicationsVPNConnection communicationsVPNConnection;
+    private final ErrorManager                errorManager               ;
+    private final EventManager                eventManager               ;
+    private final IncomingMessageDao          incomingMessageDao         ;
+    private final OutgoingMessageDao          outgoingMessageDao         ;
+    private final EventSource                 eventSource                ;
 
     /**
      * Represent is the tread is running
      */
     private Boolean running;
 
-    /**
-     * Represent the read messages tread of this CommunicationNetworkServiceRemoteAgent
-     */
-    private Thread toReceive;
-
-    /**
-     * Represent the send messages tread of this CommunicationNetworkServiceRemoteAgent
-     */
-    private Thread toSend;
+    //Represent the read messages tread of this CommunicationNetworkServiceRemoteAgent
+    private final Thread toReceive;
+    //Represent the send messages tread of this CommunicationNetworkServiceRemoteAgent
+    private final Thread toSend;
 
     /**
      * Represent the eccKeyPair
@@ -103,21 +71,28 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
     /**
      * Constructor with parameters
      *
-     * @param eccKeyPair from the plugin root
-     * @param errorManager  instance
-     * @param incomingMessageDao instance
-     * @param outgoingMessageDao instance
+     * @param eccKeyPair           from the plugin root
+     * @param errorManager         instance
+     * @param incomingMessageDao   instance
+     * @param outgoingMessageDao   instance
      */
-    public CommunicationNetworkServiceRemoteAgent(ECCKeyPair eccKeyPair, CommunicationsVPNConnection communicationsVPNConnection, ErrorManager errorManager, EventManager eventManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao) {
+    public CommunicationNetworkServiceRemoteAgent(final ECCKeyPair                  eccKeyPair                 ,
+                                                  final CommunicationsVPNConnection communicationsVPNConnection,
+                                                  final ErrorManager                errorManager               ,
+                                                  final EventManager                eventManager               ,
+                                                  final IncomingMessageDao          incomingMessageDao         ,
+                                                  final OutgoingMessageDao          outgoingMessageDao         ,
+                                                  final EventSource                 eventSource                ) {
 
         super();
-        this.eccKeyPair                          = eccKeyPair;
-        this.errorManager                        = errorManager;
-        this.eventManager                        = eventManager;
-        this.running                             = Boolean.FALSE;
-        this.incomingMessageDao                  = incomingMessageDao;
-        this.outgoingMessageDao                  = outgoingMessageDao;
-        this.communicationsVPNConnection         = communicationsVPNConnection;
+        this.eccKeyPair                  = eccKeyPair                 ;
+        this.errorManager                = errorManager               ;
+        this.eventManager                = eventManager               ;
+        this.running                     = Boolean.FALSE              ;
+        this.incomingMessageDao          = incomingMessageDao         ;
+        this.outgoingMessageDao          = outgoingMessageDao         ;
+        this.communicationsVPNConnection = communicationsVPNConnection;
+        this.eventSource                 = eventSource                ;
 
 
         //Create a thread to receive the messages
@@ -316,7 +291,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                              * Put the message on a event and fire new event
                              */
                             FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
-                            fermatEvent.setSource(CryptoAddressesNetworkServicePluginRoot.EVENT_SOURCE);
+                            fermatEvent.setSource(eventSource);
                             ((NewNetworkServiceMessageSentNotificationEvent) fermatEvent).setData(message);
                             eventManager.raiseEvent(fermatEvent);
                         }

@@ -565,6 +565,11 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
         }
     }
 
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    @Override
     public boolean isRegister() {
         return register;
     }
@@ -736,11 +741,6 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
     @Override
     public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
-    }
-
-    @Override
-    public UUID getId() {
-        return this.pluginId;
     }
 
     @Override

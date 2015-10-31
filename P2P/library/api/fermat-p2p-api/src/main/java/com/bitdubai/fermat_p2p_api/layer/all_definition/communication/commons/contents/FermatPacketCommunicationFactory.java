@@ -59,7 +59,7 @@ public class FermatPacketCommunicationFactory {
      * @param fermatPacketType
      * @param clientPrivateKeyToSing
      * @param publicKeyToEncrypt
-     * @return
+     * @return FermatPacket
      */
     public static FermatPacket constructFermatPacketEncryptedAndSingedForMsjTransmit(final String destination, final String sender, final String messageContentJsonString, final FermatPacketType fermatPacketType, final String clientPrivateKeyToSing, final String publicKeyToEncrypt) {
 

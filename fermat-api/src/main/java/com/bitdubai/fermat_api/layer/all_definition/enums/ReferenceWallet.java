@@ -40,7 +40,7 @@ public enum ReferenceWallet implements FermatWalletEnum {
 
     public static ReferenceWallet getByCategoryAndIdentifier(WalletCategory walletCategory, String platformIdentifier) throws InvalidParameterException, CallToGetByCodeOnNONEException {
         switch (walletCategory) {
-            case REFERENCE_WALLET: return getByCode(platformIdentifier);
+            case REFERENCE_WALLET: return ReferenceWallet.getByCode(platformIdentifier);
             case NICHE_WALLET:     return NicheWallet.getByCode(platformIdentifier).getReferenceWallet();
             default:
                 throw new InvalidParameterException();
