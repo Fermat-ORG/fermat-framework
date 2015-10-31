@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -12,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.CashCurrencyType;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.exceptions.CantTransactionCashMoneyException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.interfaces.CashMoneyBalanceRecord;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.interfaces.CashMoneyTransaction;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddCashMoney;
@@ -24,8 +26,12 @@ import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetCashMoneyBalance;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetCashMoneyListException;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetCashMoneyTotalBalanceRecordList;
+import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetCurrentBalanceException;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantInitializeCashMoneyWalletDatabaseException;
+import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.structure.TransactionCashMoney;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -100,15 +106,16 @@ public class CashMoneyWalletDao {
         DatabaseTableRecord record =  table.getEmptyRecord();
 
         record.setUUIDValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_TRANSACTION_ID_COLUMN_NAME, cashMoneyTransaction.getCashTransactionId());
-        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_PUBLIC_KEY_CUSTOMER_COLUMN_NAME,cashMoneyTransaction.getPublicKeyActorFrom());
+        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_PUBLIC_KEY_CUSTOMER_COLUMN_NAME, cashMoneyTransaction.getPublicKeyActorFrom());
         record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_PUBLIC_KEY_BROKER_COLUMN_NAME, cashMoneyTransaction.getPublicKeyActorTo());
         record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode());
         record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_TRANSACTION_TYPE_COLUMN_NAME, transactionType.getCode());
         record.setDoubleValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_AMOUNT_COLUMN_NAME, cashMoneyTransaction.getAmount());
-        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_CURRENCY_TYPE_COLUMN_NAME,cashCurrencyType.getCode());
-        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_REFERENCE_COLUMN_NAME,cashMoneyTransaction.getCashReference());
+        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_CURRENCY_TYPE_COLUMN_NAME, cashCurrencyType.getCode());
+        record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_REFERENCE_COLUMN_NAME, cashMoneyTransaction.getCashReference());
         record.setLongValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_RUNNING_BOOK_BALANCE_COLUMN_NAME, cashMoneyTransaction.getRunningBookBalance());
-        record.setLongValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME,cashMoneyTransaction.getRunningAvailableBalance());
+        record.setLongValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, cashMoneyTransaction.getRunningAvailableBalance());
+        record.setLongValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_TIMESTAMP_COLUMN_NAME, cashMoneyTransaction.getTimestamp());
         record.setStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_STATUS_COLUMN_NAME,cashMoneyTransaction.getStatus().getCode());
 
             table.insertRecord(record);
@@ -190,6 +197,8 @@ public class CashMoneyWalletDao {
            throw new CantAddDebitException(CantAddDebitException.DEFAULT_MESSAGE,e,"Cant Add Debit Exception","Cant Add CashMoney Balance Record Exception");
         } catch (CantGetBalancesRecord cantGetBalancesRecord) {
             throw new CantAddDebitException(CantAddDebitException.DEFAULT_MESSAGE,cantGetBalancesRecord,"Cant Add Debit Exception","Cant Get Balances Record");
+        } catch (CantGetCurrentBalanceException e) {
+            throw new CantAddDebitException(CantAddDebitException.DEFAULT_MESSAGE,e,"Cant Add Debit Exception","Cant Get Current Balance Exception");
         }
     }
     /**
@@ -219,6 +228,8 @@ public class CashMoneyWalletDao {
             throw new CantAddCreditException(CantAddCreditException.DEFAULT_MESSAGE,e,"Cant Add Debit Exception","Cant Add CashMoney Balance Record Exception");
         } catch (CantGetBalancesRecord cantGetBalancesRecord) {
             throw new CantAddCreditException(CantAddCreditException.DEFAULT_MESSAGE,cantGetBalancesRecord,"Cant Add Debit Exception","Cant Get Balances Record");
+        } catch (CantGetCurrentBalanceException e) {
+            throw new CantAddCreditException(CantAddCreditException.DEFAULT_MESSAGE,e,"Cant Add Credit Exception","Cant Get Current Balance Exception");
         }
     }
     /**
@@ -255,6 +266,36 @@ public class CashMoneyWalletDao {
             throw new CantAddCashMoneyBalanceRecordException(CantAddCashMoneyBalanceRecordException.DEFAULT_MESSAGE,e,"Cant Add CashMoney Balance Record Exception","Cant Insert Record Exception");
         }
     }
+
+    /**
+     *
+     * @param balanceType
+     * @param max
+     * @param offset
+     * @return
+     * @throws CantTransactionCashMoneyException
+     */
+    public List<CashMoneyTransaction> getTransactions(BalanceType balanceType, int max, int offset )throws CantTransactionCashMoneyException {
+
+        DatabaseTable table = this.database.getTable(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_RECORD_TABLE_NAME);
+
+        table.setStringFilter(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+        table.setFilterTop(String.valueOf(max));
+        table.setFilterOffSet(String.valueOf(offset));
+
+        try {
+            table.loadToMemory();
+            return createTransactionList(table.getRecords());
+        } catch (CantLoadTableToMemoryException e) {
+           throw new CantTransactionCashMoneyException(
+                   CantTransactionCashMoneyException.DEFAULT_MESSAGE,
+                   e,
+                   "Cant Transaction CashMoney Exception",
+                   "Cant Load Table To Memory Exception"
+           );
+        }
+
+    }
     /**
      *
      * @return
@@ -289,7 +330,7 @@ public class CashMoneyWalletDao {
      * @return
      * @throws CantGetBalancesRecord
      */
-    private Double getCurrentBalance(BalanceType balanceType) throws CantGetBalancesRecord {
+    public double getCurrentBalance(BalanceType balanceType) throws CantGetCurrentBalanceException, CantGetBalancesRecord {
         if (balanceType == balanceType.AVAILABLE)
             return Double.valueOf(getCashMoneyTotalBalance().getStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_TOTAL_BALANCES_AVAILABLE_BALANCE_COLUMN_NAME));
         else
@@ -336,7 +377,48 @@ public class CashMoneyWalletDao {
             } catch (CantLoadTableToMemoryException e) {
               throw new CantGetCashMoneyListException(CantGetCashMoneyListException.DEFAULT_MESSAGE,e,"Cant Get CashMoney List Exception","Cant Load Table To Memory Exception");
             }
-
         }
+
+    private List<CashMoneyTransaction> createTransactionList(Collection<DatabaseTableRecord> records){
+        List<CashMoneyTransaction> cashMoneyTransactionsList = new ArrayList<>();
+
+        for(DatabaseTableRecord record : records)
+            cashMoneyTransactionsList.add(constructCashMoneyTransactionFromRecord(record));
+
+        return cashMoneyTransactionsList;
+    }
+
+    private CashMoneyTransaction constructCashMoneyTransactionFromRecord(DatabaseTableRecord record){
+        UUID cashTransactionId=record.getUUIDValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_TRANSACTION_ID_COLUMN_NAME);
+        String walletKeyBroker=record.getStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_WALLET_KEY_BROKER_COLUMN_NAME);
+        String publicKeyCustomer=record.getStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
+        String publicKeyBroker=record.getStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_PUBLIC_KEY_BROKER_COLUMN_NAME);
+        String balanceType=record.getStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_BALANCE_TYPE_COLUMN_NAME);
+        String transactionType=record.getStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_TRANSACTION_TYPE_COLUMN_NAME);
+        double amount=record.getDoubleValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_AMOUNT_COLUMN_NAME);
+        String cashCurrencyType=record.getStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_CURRENCY_TYPE_COLUMN_NAME);
+        String cashReference=record.getStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_CASH_REFERENCE_COLUMN_NAME);
+        long runningBookBalance=record.getLongValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_RUNNING_BOOK_BALANCE_COLUMN_NAME);
+        long runningAvailableBalance=record.getLongValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
+        long timeStamp=record.getLongValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_TIMESTAMP_COLUMN_NAME);
+        String memo=record.getStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_MEMO_COLUMN_NAME);
+        String status=record.getStringValue(CashMoneyWalletDatabaseConstants.CASH_MONEY_STATUS_COLUMN_NAME);
+
+        return new TransactionCashMoney(
+                cashTransactionId,
+                walletKeyBroker,
+                publicKeyCustomer,
+                publicKeyBroker,
+                balanceType,
+                transactionType,
+                amount,
+                cashCurrencyType,
+                cashReference,
+                runningBookBalance,
+                runningAvailableBalance,
+                timeStamp,
+                memo,
+                status);
+    }
 
 }
