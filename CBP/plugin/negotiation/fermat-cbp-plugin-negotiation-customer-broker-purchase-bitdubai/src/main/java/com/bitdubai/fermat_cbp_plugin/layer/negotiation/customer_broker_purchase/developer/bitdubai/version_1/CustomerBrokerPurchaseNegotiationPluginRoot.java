@@ -19,6 +19,8 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchas
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_Purchase.exceptions.CantUpdateCustomerBrokerPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerPurchaseNegotiationDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseNegotiationDaoException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
@@ -137,14 +139,15 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot implements CustomerBrok
     @Override
     public void closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseException {
         try {
-            //TODO validar que todas las clausulas esten en modo AGREED segun el tipo de negociacion
-            //TODO evaluar clausulas del cambio
-            //TODO evaluar clausulas del metodo de ejecucion
-            //TODO evaluar clausulas del metodo de pago
 
-            //TODO si las clausulas no estan agreed hay que lanzar una excepcion
+            if(verifyStatusClause(customerBrokerPurchaseNegotiationDao.getClauses(negotiation.getNegotiationId()))){
+                customerBrokerPurchaseNegotiationDao.closeNegotiation(negotiation);
+            }else{
+                throw new CantUpdateCustomerBrokerPurchaseException();
+            }
 
-            customerBrokerPurchaseNegotiationDao.closeNegotiation(negotiation);
+        } catch (CantGetListClauseException e) {
+            throw new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
         } catch (CantUpdateCustomerBrokerPurchaseException e){
             throw new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
         }
