@@ -1188,6 +1188,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToAddPublicKey);
             actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
 
+            actorNetworkServiceRecord.setActorSenderAlias(null);
+
             actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.ACCEPTED);
 
             actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_SEND);
