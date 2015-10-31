@@ -18,8 +18,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_Sale.exceptions.CantUpdateCustomerBrokerSaleException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_Sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantUpdateCustomerBrokerSaleException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
@@ -240,6 +238,19 @@ public class CustomerBrokerSaleNegotiationDao {
             }
     
             return resultados;
+        }
+
+        public CustomerBrokerSaleNegotiation getNegotiationsById(UUID negotiationId) throws CantLoadTableToMemoryException, InvalidParameterException {
+            DatabaseTable SaleNegotiationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
+    
+            SaleNegotiationTable.setUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
+    
+            SaleNegotiationTable.loadToMemory();
+    
+            List<DatabaseTableRecord> records = SaleNegotiationTable.getRecords();
+            SaleNegotiationTable.clearAllFilters();
+    
+            return constructCustomerBrokerSaleFromRecord(records.get(0));
         }
 
         /*
