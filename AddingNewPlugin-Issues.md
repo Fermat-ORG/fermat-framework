@@ -15,7 +15,7 @@ After you've done a proper analysis, you must got to https://github.com/bitDubai
 
 The desired granularity is that you create one issue for each new functionality or implementation that you'll define in one of these categories.  
 
-## EXAMPLE 
+## Example
 
 Let's assume you have want to create a Plugin Called 'Litecoin Index', you'll create the following Issues 
 ```
