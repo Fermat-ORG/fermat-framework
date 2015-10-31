@@ -11,14 +11,19 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantUpdateCustomerBrokerSaleException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleNegotiationDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleNegotiationDaoException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
@@ -136,17 +141,69 @@ public class CustomerBrokerSaleNegotiationPluginRoot implements CustomerBrokerSa
     @Override
     public void closeNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
         try {
-            //TODO validar que todas las clausulas esten en modo AGREED segun el tipo de negociacion
-            //TODO evaluar clausulas del cambio
-            //TODO evaluar clausulas del metodo de ejecucion
-            //TODO evaluar clausulas del metodo de pago
-
-            //TODO si las clausulas no estan agreed hay que lanzar una excepcion
+            verifyStatusClause(customerBrokerSaleNegotiationDao.getClauses(negotiation.getNegotiationId()));
 
             customerBrokerSaleNegotiationDao.closeNegotiation(negotiation);
+
+        } catch (CantGetListClauseException e) {
+            throw new CantUpdateCustomerBrokerSaleException(CantUpdateCustomerBrokerSaleException.DEFAULT_MESSAGE, e, "", "");
         } catch (CantUpdateCustomerBrokerSaleException e){
             throw new CantUpdateCustomerBrokerSaleException(CantUpdateCustomerBrokerSaleException.DEFAULT_MESSAGE, e, "", "");
         }
+    }
+
+    private boolean verifyStatusClause(Collection<Clause> clausules) throws CantUpdateCustomerBrokerSaleException {
+        Map<ClauseType, String> clausesAgreed = new HashMap<ClauseType, String>();
+
+        for(Clause clause : clausules) {
+            if(clause.getStatus() == ClauseStatus.AGREED){
+                clausesAgreed.put(clause.getType(), clause.getValue());
+            }
+        }
+
+        if(
+                ( !clausesAgreed.containsKey(ClauseType.BROKER_CURRENCY) ) &&
+                ( !clausesAgreed.containsKey(ClauseType.EXCHANGE_RATE) ) &&
+                ( !clausesAgreed.containsKey(ClauseType.BROKER_CURRENCY_QUANTITY) ) &&
+                ( !clausesAgreed.containsKey(ClauseType.BROKER_PAYMENT_METHOD) )
+        ){
+            return false;
+        }
+
+        if( clausesAgreed.containsValue(CurrencyType.CRYPTO_MONEY.getCode()) ){
+            if( !clausesAgreed.containsKey(ClauseType.BROKER_CRYPTO_ADDRESS) ){
+                return false;
+            }
+        }
+
+        if( clausesAgreed.containsValue(CurrencyType.BANK_MONEY.getCode()) ){
+            if(
+                    ( !clausesAgreed.containsKey(ClauseType.BROKER_BANK) ) &&
+                    ( !clausesAgreed.containsKey(ClauseType.BROKER_BANK_ACCOUNT) )
+            ){
+                return false;
+            }
+        }
+
+        if( clausesAgreed.containsValue(CurrencyType.CASH_ON_HAND_MONEY.getCode()) ){
+            if(
+                    ( !clausesAgreed.containsKey(ClauseType.PLACE_TO_MEET) ) &&
+                    ( !clausesAgreed.containsKey(ClauseType.DATE_TIME_TO_MEET) )
+             ){
+                return false;
+            }
+        }
+
+        if( clausesAgreed.containsValue(CurrencyType.CASH_DELIVERY_MONEY.getCode()) ){
+            if(
+                    ( !clausesAgreed.containsKey(ClauseType.BROKER_PLACE_TO_DELIVER) ) &&
+                    ( !clausesAgreed.containsKey(ClauseType.BROKER_DATE_TIME_TO_DELIVER) )
+            ){
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override
