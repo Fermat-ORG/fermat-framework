@@ -151,13 +151,13 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot implements CustomerBrok
     }
 
     @Override
-    public CustomerBrokerPurchaseNegotiation sendToCustomer(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseException {
-        return customerBrokerPurchaseNegotiationDao.sendToCustomer(negotiation);
+    public CustomerBrokerPurchaseNegotiation sendToBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseException {
+        return customerBrokerPurchaseNegotiationDao.sendToBroker(negotiation);
     }
 
     @Override
-    public CustomerBrokerPurchaseNegotiation waitForCustomer(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseException {
-        return customerBrokerPurchaseNegotiationDao.waitForCustomer(negotiation);
+    public CustomerBrokerPurchaseNegotiation waitForBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseException {
+        return customerBrokerPurchaseNegotiationDao.waitForBroker(negotiation);
     }
 
 
