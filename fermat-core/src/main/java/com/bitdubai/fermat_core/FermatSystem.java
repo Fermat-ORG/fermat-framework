@@ -101,6 +101,7 @@ public final class FermatSystem {
      * @throws ModuleManagerNotFoundException  if we can't find the requested module manager.
      */
     public final ModuleManager getModuleManager(final PluginVersionReference pluginVersionReference) throws CantGetModuleManagerException  ,
+
                                                                                                             ModuleManagerNotFoundException {
 
         try {
