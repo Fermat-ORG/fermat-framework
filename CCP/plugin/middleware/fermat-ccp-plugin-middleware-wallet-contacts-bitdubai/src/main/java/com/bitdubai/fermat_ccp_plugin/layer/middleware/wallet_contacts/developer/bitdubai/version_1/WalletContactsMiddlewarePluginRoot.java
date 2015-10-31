@@ -2,12 +2,9 @@ package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.develope
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -15,7 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -86,37 +83,22 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
      */
     private CryptoAddressesManager cryptoAddressesManager;
 
-    /**
-     * DealWithErrors Interface member variables.
-     */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    /**
-     * DealsWithEvents Interface member variables.
-     */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private EventManager eventManager;
-    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    /**
-     * Plugin Interface member variables.
-     */
-    private UUID pluginId;
-
-    /**
-     * DealsWithLogger interface member variable
-     */
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.LOG_MANAGER)
     private LogManager logManager;
+
+
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     public static final Actors actorType = Actors.INTRA_USER;
 
@@ -188,6 +170,11 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
                     actorType
             );
 
+            System.out.println("----------------------------\n" +
+                    "WALLET CONTACT MIDDLEWARE  : executePendingAddressExchangeRequests " +  addressExchangeRequestRespondedList.size()
+                    + "\n-------------------------------------------------");
+
+
             for (AddressExchangeRequest request : addressExchangeRequestRespondedList) {
 
                 if (request.getAction().equals(RequestAction.ACCEPT))
@@ -207,16 +194,6 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
     }
 
     @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
     public void stop() {
 
         for (FermatEventListener fermatEventListener : listenersAdded) {
@@ -225,15 +202,6 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
         listenersAdded.clear();
 
         this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    /**
-     * Plugin interface implementation
-     * @param pluginId identifying this plugin
-     */
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
     }
 
     /**

@@ -604,15 +604,6 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
 
     /**
      * (non-Javadoc)
-     * @see NetworkService#getId()
-     */
-    @Override
-    public UUID getId() {
-        return this.pluginId;
-    }
-
-    /**
-     * (non-Javadoc)
      * @see Plugin#setId(UUID)
      */
     @Override
@@ -808,6 +799,7 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      * Get is Register
      * @return boolean
      */
+    @Override
     public boolean isRegister() {
         return register;
     }

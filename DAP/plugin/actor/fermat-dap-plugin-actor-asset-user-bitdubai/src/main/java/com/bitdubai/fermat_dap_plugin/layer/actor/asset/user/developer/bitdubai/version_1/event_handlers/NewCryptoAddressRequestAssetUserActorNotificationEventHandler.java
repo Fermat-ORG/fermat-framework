@@ -17,7 +17,7 @@ public class NewCryptoAddressRequestAssetUserActorNotificationEventHandler imple
 
     private ActorNetworkServiceAssetUser actorNetworkServiceAssetUser;
 
-    public NewCryptoAddressRequestAssetUserActorNotificationEventHandler(ActorNetworkServiceAssetUser actorNetworkServiceAssetUser){
+    public NewCryptoAddressRequestAssetUserActorNotificationEventHandler(ActorNetworkServiceAssetUser actorNetworkServiceAssetUser) {
         this.actorNetworkServiceAssetUser = actorNetworkServiceAssetUser;
     }
 
@@ -34,7 +34,7 @@ public class NewCryptoAddressRequestAssetUserActorNotificationEventHandler imple
 
             ActorAssetUser actorAssetUserDestination = (ActorAssetUser) newCryptoAddressRequestAssetUserActorNotificationEvent.getActorAssetUserDestination();
 
-            this.actorNetworkServiceAssetUser.handleRequestCryptoAddresFromRemoteAssetUserEvent(actorAssetIssuerSender,actorAssetUserDestination);
+            this.actorNetworkServiceAssetUser.handleRequestCryptoAddresFromRemoteAssetUserEvent(actorAssetIssuerSender, actorAssetUserDestination);
         }
     }
 }

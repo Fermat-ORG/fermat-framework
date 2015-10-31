@@ -906,8 +906,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 navigationDrawerFragment.onDetach();
                 navigationDrawerFragment = null;
                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().
-                        remove(getFragmentManager().findFragmentById(R.id.navigation_drawer)).commit();
+                //fragmentManager.beginTransaction().
+                  //      remove(getFragmentManager().findFragmentById(R.id.navigation_drawer)).commit();
                 fragmentManager.executePendingTransactions();
             }
 

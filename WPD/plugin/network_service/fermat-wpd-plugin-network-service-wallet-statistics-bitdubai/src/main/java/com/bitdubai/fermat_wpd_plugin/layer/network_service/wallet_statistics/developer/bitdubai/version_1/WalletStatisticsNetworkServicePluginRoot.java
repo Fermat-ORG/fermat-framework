@@ -62,6 +62,11 @@ public class WalletStatisticsNetworkServicePluginRoot implements DealsWithErrors
      */
     UUID pluginId;
 
+    /**
+     * Represent the register
+     */
+    private boolean register;
+
 
 
     /**
@@ -96,11 +101,6 @@ public class WalletStatisticsNetworkServicePluginRoot implements DealsWithErrors
     /**
      * NetworkService Interface implementation.
      */
-    
-    @Override
-    public UUID getId() {
-        return pluginId;
-    }
 
     @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
@@ -162,6 +162,15 @@ public class WalletStatisticsNetworkServicePluginRoot implements DealsWithErrors
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile,PlatformComponentProfile remoteComponentProfile) {
 
+    }
+
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    @Override
+    public boolean isRegister() {
+        return register;
     }
 
     /**
