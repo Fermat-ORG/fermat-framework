@@ -7,29 +7,35 @@ After you've done a proper analysis, you must got to https://github.com/bitDubai
 ## Basic Issues Structure
 
 * **SUPER ISSUE: 'Plugin Name' Implementation**: this is the parent issue for all the issues you're going to create for your Plugin, you should create at least the following structure linking to this issue* 
- * **'Plugin Name' Implementation - Developer Class**
-  * **'Plugin Name' Developer Class - Implement Interface X**
-  * **'Plugin Name' Developer Class - Implement Interface Y**
-  * **'Plugin Name' Developer Class - Implement Interface N**
- * **'Plugin Name' Implementation - Plugin Root**
-  * **'Plugin Name' Plugin Root - Implement Interface X**
-  * **'Plugin Name' Plugin Root - Implement Interface Y**
-  * **'Plugin Name' Plugin Root - Implement Interface N**
- * **'Plugin Name' Implementation - Database**
-  * **'Plugin Name' Database - Database Structure**
-  * **'Plugin Name' Database - DAO Class**
- * **'Plugin Name' Implementation - Public Interfaces**
-  * **'Plugin Name' Public Interfaces - Interface 1**
-  * **'Plugin Name' Public Interfaces - Interface 2**
-  * **'Plugin Name' Public Interfaces - Interface N**
- * **'Plugin Name' Implementation - Internal Structure**
-  * **'Plugin Name' Internal Structure - Class 1**
-  * **'Plugin Name' Internal Structure - Class 2**
-  * **'Plugin Name' Internal Structure - Class N**
-  * **'Plugin Name' Implementation - Event Handling**
-  * **'Plugin Name' Event Handling - Event Handler 1**
-  * **'Plugin Name' Event Handling - Event Handler 2**
-  * **'Plugin Name' Event Handling - Event Handler N**
+
+* **'Plugin Name' Implementation - Developer Class**
+ * **'Plugin Name' Developer Class - Implement Interface X**
+ * **'Plugin Name' Developer Class - Implement Interface Y**
+ * **'Plugin Name' Developer Class - Implement Interface N**
+
+* **'Plugin Name' Implementation - Plugin Root**
+ * **'Plugin Name' Plugin Root - Implement Interface X**
+ * **'Plugin Name' Plugin Root - Implement Interface Y**
+ * **'Plugin Name' Plugin Root - Implement Interface N**
+
+* **'Plugin Name' Implementation - Database**
+ * **'Plugin Name' Database - Database Structure**
+ * **'Plugin Name' Database - DAO Class**
+
+* **'Plugin Name' Implementation - Public Interfaces**
+ * **'Plugin Name' Public Interfaces - Interface 1**
+ * **'Plugin Name' Public Interfaces - Interface 2**
+ * **'Plugin Name' Public Interfaces - Interface N**
+
+* **'Plugin Name' Implementation - Internal Structure**
+ * **'Plugin Name' Internal Structure - Class 1**
+ * **'Plugin Name' Internal Structure - Class 2**
+ * **'Plugin Name' Internal Structure - Class N**
+
+* **'Plugin Name' Implementation - Event Handling**
+ * **'Plugin Name' Event Handling - Event Handler 1**
+ * **'Plugin Name' Event Handling - Event Handler 2**
+ * **'Plugin Name' Event Handling - Event Handler N**
  
 
 The desired granularity is that you create one issue for each new functionality or implementation that you'll define in one of these categories.  
