@@ -39,6 +39,14 @@ After you've done a proper analysis, you must got to https://github.com/bitDubai
 * **'Plugin Name' Implementation - Integration Testing**
  
 * **SUPER ISSUE: 'Plugin Name' QA Approval**
+ * **'Plugin Name' QA - Bug Fix 1**
+ * **'Plugin Name' QA - Bug Fix 2**
+ * **'Plugin Name' QA - Bug Fix N**
+ 
+* **SUPER ISSUE: 'Plugin Name' Production**
+ * **'Plugin Name' Production - Bug Fix 1**
+ * **'Plugin Name' Production - Bug Fix 2**
+ * **'Plugin Name' Production - Bug Fix N**
 
 The desired granularity is that you create one issue for each new functionality or implementation that you'll define in one of these categories.  
 
