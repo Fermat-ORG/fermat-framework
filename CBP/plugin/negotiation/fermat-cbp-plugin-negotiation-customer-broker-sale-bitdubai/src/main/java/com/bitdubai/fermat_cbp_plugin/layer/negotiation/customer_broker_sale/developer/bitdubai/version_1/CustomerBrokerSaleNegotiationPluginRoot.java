@@ -141,9 +141,12 @@ public class CustomerBrokerSaleNegotiationPluginRoot implements CustomerBrokerSa
     @Override
     public void closeNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
         try {
-            verifyStatusClause(customerBrokerSaleNegotiationDao.getClauses(negotiation.getNegotiationId()));
 
-            customerBrokerSaleNegotiationDao.closeNegotiation(negotiation);
+            if(verifyStatusClause(customerBrokerSaleNegotiationDao.getClauses(negotiation.getNegotiationId()))){
+                customerBrokerSaleNegotiationDao.closeNegotiation(negotiation);
+            }else{
+                throw new CantUpdateCustomerBrokerSaleException();
+            }
 
         } catch (CantGetListClauseException e) {
             throw new CantUpdateCustomerBrokerSaleException(CantUpdateCustomerBrokerSaleException.DEFAULT_MESSAGE, e, "", "");
