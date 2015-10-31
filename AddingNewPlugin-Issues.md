@@ -1,14 +1,10 @@
-# Adding a New Plugin to Fermat
-
-## Analysis prior to implementation
+# Adding a New Plugin - Issues Definition
 
 Before adding a new Plugin to Fermat, you should perform an analysis of the problem you are seeking to solve with this plugin and how you're going to address this problem.
 
-After you've decided
- 
-## Issues Definition
+After you've done a proper analysis, you must got to https://github.com/bitDubai/fermat/issues and define a few issues to reflect the work you're going to perform guided by your analysis.
 
-You must got to https://github.com/bitDubai/fermat/issues and define a few issues to reflect the work you're going to perform guided by your analysis.
+## Basic Issues Structure
 
 * **SUPER ISSUE: 'Plugin Name' Implementation**: this is the parent issue for all the issues you're going to create for your Plugin, you should create at least the following structure linking to this issue
  * **'Plugin Name' Implementation - Database**
@@ -81,20 +77,3 @@ Description:
 Generated Id: 6
 ```
 Notice that the parent issue is not linked to the **SUPER ISSUE**(*#1*) but to the categorized one(*#5*)
-
-## Location of a Plugin
-
-## The build.gradle File
-
-### Gradle Plugins
-
-## Folder Structure
-
-### Main Packages
-
-### Test Packages
-
-## The PluginRoot class
-
-## The Database Script
-
