@@ -65,22 +65,22 @@ public class CryptoCustomerActorPluginRoot implements CryptoCustomerActorManager
 
     @Override
     public void start() throws CantStartPluginException {
-
+        this.status = ServiceStatus.STARTED;
     }
 
     @Override
     public void pause() {
-
+        this.status = ServiceStatus.PAUSED;
     }
 
     @Override
     public void resume() {
-
+        this.status = ServiceStatus.STARTED;
     }
 
     @Override
     public void stop() {
-
+        this.status = ServiceStatus.STOPPED;
     }
 
     @Override
