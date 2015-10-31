@@ -29,6 +29,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterExc
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockTransaction;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.CryptoBrokerWalletPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerWalletDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetBalanceRecordException;
@@ -38,6 +39,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdu
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantAddCreditException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantAddDebitException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerStockTransactionRecordImpl;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletImpl;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 
 import java.util.ArrayList;
@@ -82,6 +84,25 @@ public class CryptoBrokerWalletDatabaseDao {
             throw new CantInitializeCryptoBrokerWalletDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
     }
+
+    public CryptoBrokerWallet createCryptoBrokerWallet(final KeyPair walletKeys, final String ownerPublicKey){
+        //TODO agregar exception
+        //TODO almacenar clave privada en un archivo, crear un registro que asocie las claves publicas
+        return new CryptoBrokerWalletImpl(walletKeys, ownerPublicKey, this);
+    }
+
+    public CryptoBrokerWallet getCryptoBrokerWallet(final String ownerPublicKey){
+        //TODO agregar exception
+        //TODO recupera la clave privada segun la clave publica de la wallet que esta en el record da la tabla de wallet
+
+        //esto tiene que cambiar
+        String privateKey = AsymmetricCryptography.createPrivateKey();
+        //esto tiene que cambiar
+
+        KeyPair walletKeys = AsymmetricCryptography.createKeyPair(privateKey);
+        return new CryptoBrokerWalletImpl(walletKeys, ownerPublicKey, this);
+    }
+
 
     /*GET BALANCE BOOKED*/
     public float getCalculateBookBalance() throws CantCalculateBalanceException {

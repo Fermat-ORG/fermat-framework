@@ -93,12 +93,56 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
 
     @Override
     public Clause modifyClause(Clause clause, String value) throws CantUpdateClausesException {
-        return this.customerBrokerSaleNegotiationDao.modifyClause(this.negotiationId, clause, value);
+        Clause clauseRejected = modifyClauseStatus(clause, ClauseStatus.REJECTED);
+
+        if( clause.getType() == ClauseType.BROKER_PAYMENT_METHOD ){
+            try {
+                ClauseType type = getNextClauseTypeByCurrencyType( CurrencyType.getByCode(clause.getValue() ) );
+
+                switch (type){
+                    case BROKER_CRYPTO_ADDRESS:
+                        rejectClauseByType(ClauseType.BROKER_CRYPTO_ADDRESS);
+
+                    case BROKER_BANK:
+                        rejectClauseByType(ClauseType.CUSTOMER_BANK);
+                        rejectClauseByType(ClauseType.CUSTOMER_BANK_ACCOUNT);
+
+                    case PLACE_TO_MEET:
+                        rejectClauseByType(ClauseType.PLACE_TO_MEET);
+                        rejectClauseByType(ClauseType.DATE_TIME_TO_MEET);
+
+                    case BROKER_PLACE_TO_DELIVER:
+                        rejectClauseByType(ClauseType.BROKER_PLACE_TO_DELIVER);
+                        rejectClauseByType(ClauseType.BROKER_DATE_TIME_TO_DELIVER);
+
+                }
+
+            } catch (CantGetNextClauseTypeException e) {
+                throw new CantUpdateClausesException(CantUpdateClausesException.DEFAULT_MESSAGE, e, "", "");
+            } catch (InvalidParameterException e) {
+                throw new CantUpdateClausesException(CantUpdateClausesException.DEFAULT_MESSAGE, e, "", "");
+            }
+        }
+
+        try {
+            if (clause.getProposedBy() == this.getBrokerPublicKey()){
+                return addNewBrokerClause(clauseRejected.getType(), value);
+            }else{
+                return addNewCustomerClause(clauseRejected.getType(), value);
+            }
+        } catch (CantAddNewClausesException e) {
+            throw new CantUpdateClausesException(CantUpdateClausesException.DEFAULT_MESSAGE, e, "", "");
+        }
     }
 
     @Override
     public Clause modifyClauseStatus(Clause clause, ClauseStatus status) throws CantUpdateClausesException {
         return this.customerBrokerSaleNegotiationDao.modifyClauseStatus(this.negotiationId, clause, status);
+    }
+
+    @Override
+    public void rejectClauseByType(ClauseType type) throws CantUpdateClausesException {
+        this.customerBrokerSaleNegotiationDao.rejectClauseByType(this.negotiationId, type);
     }
 
     @Override
@@ -118,23 +162,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
 
                 case BROKER_PAYMENT_METHOD:
                     CurrencyType paymentMethod = CurrencyType.getByCode(this.customerBrokerSaleNegotiationDao.getPaymentMethod(this.negotiationId));
-
-                    switch (paymentMethod) {
-                        case CRYPTO_MONEY:
-                            return ClauseType.BROKER_CRYPTO_ADDRESS;
-
-                        case BANK_MONEY:
-                            return ClauseType.BROKER_BANK;
-
-                        case CASH_ON_HAND_MONEY:
-                            return ClauseType.PLACE_TO_MEET;
-
-                        case CASH_DELIVERY_MONEY:
-                            return ClauseType.BROKER_PLACE_TO_DELIVER;
-
-                        default:
-                            throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
-                    }
+                    return getNextClauseTypeByCurrencyType(paymentMethod);
 
                 case BROKER_BANK:
                     return ClauseType.BROKER_BANK_ACCOUNT;
@@ -150,6 +178,25 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
             }
         } catch (InvalidParameterException e) {
             throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
+        }
+    }
+
+    private ClauseType getNextClauseTypeByCurrencyType(CurrencyType paymentMethod) throws CantGetNextClauseTypeException {
+        switch (paymentMethod) {
+            case CRYPTO_MONEY:
+                return ClauseType.BROKER_CRYPTO_ADDRESS;
+
+            case BANK_MONEY:
+                return ClauseType.BROKER_BANK;
+
+            case CASH_ON_HAND_MONEY:
+                return ClauseType.PLACE_TO_MEET;
+
+            case CASH_DELIVERY_MONEY:
+                return ClauseType.BROKER_PLACE_TO_DELIVER;
+
+            default:
+                throw new CantGetNextClauseTypeException(CantGetNextClauseTypeException.DEFAULT_MESSAGE);
         }
     }
 }

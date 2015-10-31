@@ -42,7 +42,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.DealsWithCryptoPaymentRequestNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.DealsWithCryptoPayment;
-import com.bitdubai.fermat_ccp_core.CCPPlatform;
+import com.bitdubai.fermat_bch_core.BCHPlatform;
 import com.bitdubai.fermat_core.layer.cbp.identity.CBPIdentityLayer;
 import com.bitdubai.fermat_core.layer.cbp.sub_app_module.CBPSubAppModuleLayer;
 import com.bitdubai.fermat_core.layer.ccm.actor.CCMActorLayer;
@@ -903,7 +903,7 @@ public class Platform implements Serializable {
 
                 try {
 
-                    AbstractPlatform ccpPlatform = new CCPPlatform();
+                    AbstractPlatform ccpPlatform = new BCHPlatform();
                     ccpPlatform.start();
 
                     PlatformReference platformReference = new PlatformReference(Platforms.CRYPTO_CURRENCY_PLATFORM);
@@ -915,9 +915,9 @@ public class Platform implements Serializable {
 
                     layerReference = new LayerReference(platformReference, Layers.NETWORK_SERVICE);
 
-//                    Plugin cryptoPaymentRequestNetworkService = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, CCPPlugins.BITDUBAI_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE));
-//                    injectLayerReferences(cryptoPaymentRequestNetworkService);
-//                    injectPluginReferencesAndStart(cryptoPaymentRequestNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE);
+                    Plugin cryptoPaymentRequestNetworkService = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, Plugins.CRYPTO_PAYMENT_REQUEST));
+                    injectLayerReferences(cryptoPaymentRequestNetworkService);
+                    injectPluginReferencesAndStart(cryptoPaymentRequestNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE);
 
 
                     Plugin intraUserNetworkService = ccpPlatform.getPluginVersion(newCCPVersionReference(layerReference, Plugins.INTRA_WALLET_USER));
@@ -1080,7 +1080,7 @@ public class Platform implements Serializable {
             * Plugin Extra User Actor
             * -------------------------------
 //            */
-//                Plugin extraUser = ((ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER)).getmActorExtraUser();
+//                Plugin extraUser = ((CryptoVaultLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER)).getmActorExtraUser();
 //                injectPluginReferencesAndStart(extraUser, Plugins.BITDUBAI_ACTOR_EXTRA_USER);
 
            /*
@@ -1411,7 +1411,7 @@ public class Platform implements Serializable {
 
 
             /*
-             * Plugin Blockchain Info World
+             * Plugin Blockchain Info Index
              * -----------------------------
              */
             // Plugin blockchainInfoWorld = ((WorldLayer)  mWorldLayer).getBlockchainInfo();
@@ -1419,7 +1419,7 @@ public class Platform implements Serializable {
             // injectPluginReferencesAndStart(blockchainInfoWorld, Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD);
 
             /*
-             * Plugin Shape Shift World
+             * Plugin Shape Shift Index
              * -----------------------------
              */
             // Plugin shapeShiftWorld = ((WorldLayer)  mWorldLayer).getShapeShift();
@@ -1427,7 +1427,7 @@ public class Platform implements Serializable {
             // injectPluginReferencesAndStart(shapeShiftWorld, Plugins.BITDUBAI_SHAPE_SHIFT_WORLD);
 
             /*
-             * Plugin Coinapult World
+             * Plugin Coinapult Index
              * -----------------------------
              */
             // Plugin coinapultWorld = ((WorldLayer)  mWorldLayer).getCoinapult();
@@ -1435,7 +1435,7 @@ public class Platform implements Serializable {
             // injectPluginReferencesAndStart(coinapultWorld, Plugins.BITDUBAI_COINAPULT_WORLD);
 
             /*
-             * Plugin Coinbase World
+             * Plugin Coinbase Index
              * -----------------------------
              */
             // Plugin coinbaseWorld = ((WorldLayer)  mWorldLayer).getCoinbase();
@@ -1443,7 +1443,7 @@ public class Platform implements Serializable {
             // injectPluginReferencesAndStart(coinbaseWorld, Plugins.BITDUBAI_COINBASE_WORLD);
 
             /*
-             * Plugin Location World
+             * Plugin Location Index
              * -----------------------------
              */
             // Plugin locationWorld = ((WorldLayer)  mWorldLayer).getLocation();
@@ -1451,7 +1451,7 @@ public class Platform implements Serializable {
             // injectPluginReferencesAndStart(locationWorld, Plugins.BITDUBAI_LOCATION_WORLD);
 
             /*
-             * Plugin Crypto Index World
+             * Plugin Crypto Index Index
              * -----------------------------
              */
             // Plugin cryptoIndexWorld = ((WorldLayer)  mWorldLayer).getCryptoIndex();
@@ -1470,7 +1470,7 @@ public class Platform implements Serializable {
             * Plugin Intra User Actor
             * -----------------------------
             */
-            //   Plugin intraUserActor = ((com.bitdubai.fermat_core.layer.dmp_actor.ActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_ACTOR_LAYER)).getActorIntraUser();
+            //   Plugin intraUserActor = ((com.bitdubai.fermat_core.layer.dmp_actor.CryptoVaultLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_ACTOR_LAYER)).getActorIntraUser();
             //injectPluginReferencesAndStart(intraUserActor, Plugins.BITDUBAI_INTRA_USER_ACTOR);
 
             /*

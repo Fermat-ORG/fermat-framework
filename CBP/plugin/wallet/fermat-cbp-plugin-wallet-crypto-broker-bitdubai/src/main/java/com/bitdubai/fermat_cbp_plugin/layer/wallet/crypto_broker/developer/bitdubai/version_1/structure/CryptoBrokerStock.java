@@ -42,7 +42,7 @@ public class CryptoBrokerStock implements Stock {
     public float getAvailableBalance() throws CantGetAvailableBalanceCryptoBrokerWalletException{
         //esto se tiene que responder con una consulta al DAO para obtener el available balance
         try{
-            return databaseDao.getCalculateBookBalance();
+            return databaseDao.getCalculateAvailableBalance();
         } catch (CantCalculateBalanceException e) {
             throw new CantGetAvailableBalanceCryptoBrokerWalletException("CAN'T GET CRYPTO BROKER WALLET BOOKED BALANCE", e, "", "");
         } catch (Exception e) {
