@@ -253,7 +253,7 @@ public class PublishFactoryProjectSummary extends FermatWizardPageFragment {
             videoUrlString = "https://www.youtube.com/watch?v=GS2JXAZhrYY";//// TODO: 08/09/15 remove this line
             URL url = new URL(videoUrlString);
             manager.publishWallet(project, iconScreenBytes, mainScreenBytes, screenShootsBytes, url,
-                    "Hello World Observation", initialVersion, finalVersion, identity);
+                    "Hello Index Observation", initialVersion, finalVersion, identity);
             return true;
         }
     };
