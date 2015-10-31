@@ -5,11 +5,15 @@
 Gustavo H. Corradi <book@fermat.org>
 v.1.0, october, 2015.
 
-include::fbk-01.asciidoc[]
+include::book-intro.asciidoc[]
 
-include::fbk-02.asciidoc[]
+include::book-chapter-01.asciidoc[]
 
-include::fbk-03.asciidoc[]
+include::book-chapter-02.asciidoc[]
+
+include::book-chapter-03.asciidoc[]
+
+include::fbk-03b.asciidoc[]
 
 include::fbk-04.asciidoc[]
 
@@ -53,4 +57,6 @@ include::glossary.asciidoc[]
 
 include::index.asciidoc[]
 
-include::apx-01-story.asciidoc[]
+include::book-appendix-01-principles.asciidoc[]
+include::book-appendix-02-history.asciidoc[]
+include::book-appendix-03-money.asciidoc[]
