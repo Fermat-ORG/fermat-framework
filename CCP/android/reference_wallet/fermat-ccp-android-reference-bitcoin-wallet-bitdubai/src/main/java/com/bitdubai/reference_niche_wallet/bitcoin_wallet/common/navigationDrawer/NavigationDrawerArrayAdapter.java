@@ -68,23 +68,9 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 imageView_intra_users = (ImageView) rowView.findViewById(R.id.imageView_change_user);
 
 
-
-                /*switch (ApplicationSession.getActivityId())
-                {
-                    case "DesktopActivity":
-                        rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_navigation_drawer_first_row, parent, false);
-                        break;
-                      default:
-                        rowView = inflater.inflate(R.layout.wallet_manager_main_activity_navigation_drawer_first_row_empty, parent, false);
-                          break;
-
-                }*/
-                //TextView txtView_description = (TextView) rowView.findViewById(R.id.txtView_description);
                 if(userName != null){
 
                     userName.setTypeface(tf, 1);
-
-                    //ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
                     userName.setText("Tessa Crankston");
                 }
 

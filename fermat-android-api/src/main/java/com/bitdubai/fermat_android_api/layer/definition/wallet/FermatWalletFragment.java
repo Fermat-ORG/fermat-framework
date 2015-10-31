@@ -105,7 +105,7 @@ public class FermatWalletFragment extends Fragment implements FermatFragments {
     }
 
 
-    private PaintActivtyFeactures getPaintActivtyFeactures(){
+    protected PaintActivtyFeactures getPaintActivtyFeactures(){
         return ((PaintActivtyFeactures)getActivity());
     }
 
