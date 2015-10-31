@@ -7,23 +7,25 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Address;
 
+import java.util.Arrays;
+
 /**
  * Created by Nerio on 22/09/15.
  */
 public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
-    private String name;
-    private String publicKey;
-    private byte[] profileImage ;
-    private long registrationDate;
+    private String          publicKey;
+    private String          name;
+    private long            registrationDate;
     private ConnectionState connectionState;
-    private CryptoAddress cryptoAddress;
-    private Location location;
-    private Double locationLatitude;
-    private Double locationLongitude;
-    private Address address;
-    private String contactInformation;
-    private String hoursOfOperation;
+    private CryptoAddress   cryptoAddress;
+    private Location        location;
+    private Double          locationLatitude;
+    private Double          locationLongitude;
+    private String          contactInformation;
+    private String          hoursOfOperation;
+    private Address         address;
+    private byte[]          profileImage ;
 
     /**
      * Constructor
@@ -33,39 +35,54 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
     }
 
-    public RedeemPointActorRecord(String name,String publicKey,byte[] profileImage,long registrationDate, ConnectionState contactState){
-        this.name = name;
-        this.publicKey = publicKey;
-        this.profileImage = profileImage.clone();
-        this.registrationDate = registrationDate;
-        this.connectionState = contactState;
+    public RedeemPointActorRecord(String name,
+                                  String publicKey,
+                                  byte[] profileImage,
+                                  long registrationDate,
+                                  ConnectionState contactState) {
+
+        this.name               = name                  ;
+        this.publicKey          = publicKey             ;
+        this.profileImage       = profileImage.clone()  ;
+        this.registrationDate   = registrationDate      ;
+        this.connectionState    = contactState          ;
     }
 
-    public RedeemPointActorRecord(String name, String publicKey) {
-        this.publicKey = publicKey;
-        this.name = name;
+    public RedeemPointActorRecord(String name,
+                                  String publicKey) {
+
+        this.publicKey  = publicKey ;
+        this.name       = name      ;
     }
 
-    public RedeemPointActorRecord(String name, String publicKey, byte[] profileImage, long registrationDate) {
+    public RedeemPointActorRecord(String name,
+                                  String publicKey,
+                                  byte[] profileImage,
+                                  long registrationDate) {
 
-        this.name = name;
-        this.publicKey = publicKey;
-        this.profileImage = profileImage.clone();
-        this.registrationDate = registrationDate;
-        this.connectionState = ConnectionState.CONNECTED;
+        this.name               = name                      ;
+        this.publicKey          = publicKey                 ;
+        this.profileImage       = profileImage.clone()      ;
+        this.registrationDate   = registrationDate          ;
+        this.connectionState    = ConnectionState.CONNECTED ;
 
     }
 
-    public RedeemPointActorRecord(String publicKey, String name, ConnectionState connectionState,
-                                  double locationLatitude, double locationLongitude, long registrationDate,
+    public RedeemPointActorRecord(String publicKey,
+                                  String name,
+                                  ConnectionState connectionState,
+                                  double locationLatitude,
+                                  double locationLongitude,
+                                  long registrationDate,
                                   byte[] profileImage) {
-        this.publicKey = publicKey;
-        this.name = name;
-        this.connectionState = connectionState;
-        this.locationLatitude = locationLatitude;
-        this.locationLongitude = locationLongitude;
-        this.registrationDate = registrationDate;
-        this.profileImage = profileImage.clone();
+
+        this.publicKey          = publicKey             ;
+        this.name               = name                  ;
+        this.connectionState    = connectionState       ;
+        this.locationLatitude   = locationLatitude      ;
+        this.locationLongitude  = locationLongitude     ;
+        this.registrationDate   = registrationDate      ;
+        this.profileImage       = profileImage.clone()  ;
     }
 
     /**
@@ -78,6 +95,10 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         return this.publicKey;
     }
 
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
+
     /**
      * The method <code>getName</code> gives us the name of the represented Redeem Point
      *
@@ -88,6 +109,10 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         return this.name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     /**
      * The method <code>getContactRegistrationDate</code> gives us the date when both Redeem Points
      * exchanged their information and accepted each other as contacts.
@@ -95,10 +120,13 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
      * @return the date
      */
     @Override
-    public long getContactRegistrationDate() {
+    public long getRegistrationDate() {
         return this.registrationDate;
     }
 
+    public void setRegistrationDate(long registrationDate) {
+        this.registrationDate = registrationDate;
+    }
     /**
      * The method <coda>getProfileImage</coda> gives us the profile image of the represented Redeem Point
      *
@@ -109,6 +137,9 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         return this.profileImage.clone();
     }
 
+    public void setProfileImage(byte[] profileImage) {
+        this.profileImage = profileImage;
+    }
 
     /**
      *
@@ -117,6 +148,10 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     @Override
     public CryptoAddress getCryptoAddress() {
         return cryptoAddress;
+    }
+
+    public void setCryptoAddress(CryptoAddress cryptoAddress) {
+        this.cryptoAddress = cryptoAddress;
     }
 
     /**
@@ -128,23 +163,38 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         return connectionState;
     }
 
+    public void setConnectionState(ConnectionState connectionState) {
+        this.connectionState = connectionState;
+    }
 //    /**
 //     *
 //     * {@inheritDoc}
 //     */
-//    @Override
-//    public Location getLocation() {
-//        return location;
-//    }
+    @Override
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 
     @Override
     public Double getLocationLatitude() {
         return this.locationLatitude;
     }
 
+    public void setLocationLatitude(Double locationLatitude) {
+        this.locationLatitude = locationLatitude;
+    }
+
     @Override
     public Double getLocationLongitude() {
         return this.locationLongitude;
+    }
+
+    public void setLocationLongitude(Double locationLongitude) {
+        this.locationLongitude = locationLongitude;
     }
 
     /**
@@ -156,6 +206,10 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         return address;
     }
 
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
     /**
      *
      * {@inheritDoc}
@@ -165,6 +219,9 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         return contactInformation;
     }
 
+    public void setContactInformation(String contactInformation) {
+        this.contactInformation = contactInformation;
+    }
     /**
      *
      * {@inheritDoc}
@@ -174,43 +231,25 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         return hoursOfOperation;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPublicKey(String publicKey) {
-        this.publicKey = publicKey;
-    }
-
-    public void setProfileImage(byte[] profileImage) {
-        this.profileImage = profileImage;
-    }
-
-    public void setRegistrationDate(long registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
-    public void setConnectionState(ConnectionState connectionState) {
-        this.connectionState = connectionState;
-    }
-
-    public void setCryptoAddress(CryptoAddress cryptoAddress) {
-        this.cryptoAddress = cryptoAddress;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public void setContactInformation(String contactInformation) {
-        this.contactInformation = contactInformation;
-    }
-
     public void setHoursOfOperation(String hoursOfOperation) {
         this.hoursOfOperation = hoursOfOperation;
+    }
+
+    @Override
+    public String toString() {
+        return "RedeemPointActorRecord{" +
+                "publicKey='" + publicKey + '\'' +
+                ", name='" + name + '\'' +
+                ", registrationDate=" + registrationDate +
+                ", connectionState=" + connectionState +
+                ", cryptoAddress=" + cryptoAddress +
+                ", location=" + location +
+                ", locationLatitude=" + locationLatitude +
+                ", locationLongitude=" + locationLongitude +
+                ", contactInformation='" + contactInformation + '\'' +
+                ", hoursOfOperation='" + hoursOfOperation + '\'' +
+                ", address=" + address +
+                ", profileImage=" + Arrays.toString(profileImage) +
+                '}';
     }
 }

@@ -29,7 +29,7 @@ public interface ActorAssetRedeemPoint {
      *
      * @return the date
      */
-    long getContactRegistrationDate();
+    long getRegistrationDate();
 
     /**
      * The method <coda>getProfileImage</coda> gives us the profile image of the represented Redeem Point
@@ -63,7 +63,7 @@ public interface ActorAssetRedeemPoint {
      * @return un objeto {@link com.bitdubai.fermat_api.layer.osa_android.location_system.Location}
      * que contiene las coordenadas y demas valores para ubicar al RedeemPoint en el mapa.
      */
-//    Location getLocation();
+    Location getLocation();
 
     Double getLocationLatitude();
 

@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 
+import java.util.Arrays;
+
 /**
  * Created by Nerio on 22/09/15.
  */
@@ -180,5 +182,22 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     public void setCryptoAddress(CryptoAddress cryptoAddress) {
         if(cryptoAddress != null)
             this.cryptoAddress = cryptoAddress;
+    }
+
+    @Override
+    public String toString() {
+        return "AssetIssuerActorRecord{" +
+                "publicLinkedIdentity='" + publicLinkedIdentity + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", publicKey='" + publicKey + '\'' +
+                ", registrationDate=" + registrationDate +
+                ", connectionState=" + connectionState +
+                ", location=" + location +
+                ", locationLatitude=" + locationLatitude +
+                ", locationLongitude=" + locationLongitude +
+                ", cryptoAddress=" + cryptoAddress +
+                ", profileImage=" + Arrays.toString(profileImage) +
+                '}';
     }
 }
