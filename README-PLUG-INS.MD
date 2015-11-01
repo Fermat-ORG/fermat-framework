@@ -52,6 +52,8 @@ It is mandatory that you create an initial set of github issues before you proce
 
 A basic hiriarchy of issues is created as a first step. The issues are linked one to the other just by placing a link on the first commet.
 
+#### Plug-in Issue Structure
+
 The mandatory initial structure is the following:
 
 ##### '_Plugin Name_' Plug-In
@@ -59,45 +61,49 @@ The mandatory initial structure is the following:
 This is the root of your issue structure and must be labeled as _SUPER ISSUE_. It is closed only when all of it's children and grand children are closed.
 
 <br>
-1 - **'_Plugin Name_' Analisys**: This is the Analisys root. It is closed whenever all analisys is done.
+##### '_Plugin Name_' Analisys
+
+This is the Analisys root. It is closed whenever all analisys is done.
 
 <br>
-2 - **'_Plugin Name_' Implementation**: This is the Implementation root. It is closed whenever all implementation is done. 
+##### '_Plugin Name_' Implementation
+
+This is the Implementation root. It is closed whenever all implementation is done. 
 
 <br>
-3 - **'_Plugin Name_' Implementation - Developer Class** 
+##### '_Plugin Name_' Implementation - Developer Class 
  
 This issue is closed when this class if fully implemented. 
 
-3.1 - **'_Plugin Name_' Implementation - Plug-in Root** 
+1 - **'_Plugin Name_' Implementation - Plug-in Root** 
 
 This issue is closed when this class if fully implemented. 
 
-3.2 - **'_Plugin Name_' Implementation - Database** 
+2 - **'_Plugin Name_' Implementation - Database** 
  
 This issue is closed when all database classes are fully implemented. 
 
-3.2.1 - '_Plugin Name_' Implementation - Database - Database Factory Class
+2.1 - '_Plugin Name_' Implementation - Database - Database Factory Class
 
 This issue is closed when this class if fully implemented. 
 
-3.2.2 - '_Plugin Name_' Implementation - Database - Database Constants Class
+2.2 - '_Plugin Name_' Implementation - Database - Database Constants Class
 
 This issue is closed when this class if fully implemented.
 
-3.2.3 - '_Plugin Name_' Implementation - Database - Developer Database Factory Class
+2.3 - '_Plugin Name_' Implementation - Database - Developer Database Factory Class
 
 This issue is closed when this class if fully implemented.
 
-3.2.4 - '_Plugin Name_' Implementation - Database - Database Factory Exceptions Class
+2.4 - '_Plugin Name_' Implementation - Database - Database Factory Exceptions Class
 
 This issue is closed when this class if fully implemented.
 
-3.2.5 - '_Plugin Name_' Implementation - Database - DAO Class 
+2.5 - '_Plugin Name_' Implementation - Database - DAO Class 
 
 This issue is closed when this class if fully implemented.
 
-3.3 - **'_Plugin Name_' Implementation - Public Interfaces**
+3 - **'_Plugin Name_' Implementation - Public Interfaces**
 
 This issue is closed when all public interface's code is written.  Note that the 1, 2, n must be replaced with the actual interfase names.
 
