@@ -127,7 +127,7 @@ This issue is closed when the n public interfaces are written.
 <br>
 5 - ISSUE: **'_Plugin Name_' - Implementation - Internal Structure**
 
-This issue is closed when all interna structure's code is written.  Note that the 1, 2, n must be replaced with the actual clase names.
+This issue is closed when all interna structure's code is written.  Note that the 1, 2, n must be replaced with the actual class names.
 
 * ISSUE: '_Plugin Name_' - Implementation - Internal Structure - Class 1
   
