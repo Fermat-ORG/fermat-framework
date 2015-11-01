@@ -57,62 +57,62 @@ A basic hiriarchy of issues is created as a first step. The issues are linked on
 The mandatory initial structure is the following:
 
 <br>
-##### '_Plugin Name_' Plug-In
+##### '_Plugin Name_' - Plug-In
 
 This is the root of your issue structure and must be labeled as _SUPER ISSUE_. It is closed only when all of it's children and grand children are closed.
 
 <br>
-##### '_Plugin Name_' Analisys
+##### '_Plugin Name_' - Analisys
 
 This is the Analisys root. It is closed whenever all analisys is done.
 
 <br>
-##### '_Plugin Name_' Implementation
+##### '_Plugin Name_' - Implementation
 
 This is the Implementation root. It is closed whenever all implementation is done. 
 
 <br>
-1 - **'_Plugin Name_' Implementation - Developer Class** 
+1 - **'_Plugin Name_' - Implementation - Developer Class** 
  
 This issue is closed when this class if fully implemented. 
 
-2 - **'_Plugin Name_' Implementation - Plug-in Root** 
+2 - **'_Plugin Name_' - Implementation - Plug-in Root** 
 
 This issue is closed when this class if fully implemented. 
 
-3 - **'_Plugin Name_' Implementation - Database** 
+3 - **'_Plugin Name_' - Implementation - Database** 
  
 This issue is closed when all database classes are fully implemented. 
 
-3.1 - '_Plugin Name_' Implementation - Database - Database Factory Class
+* '_Plugin Name_' - Implementation - Database - Database Factory Class
 
 This issue is closed when this class if fully implemented. 
 
-3.2 - '_Plugin Name_' Implementation - Database - Database Constants Class
+* '_Plugin Name_' - Implementation - Database - Database Constants Class
 
 This issue is closed when this class if fully implemented.
 
-3.3 - '_Plugin Name_' Implementation - Database - Developer Database Factory Class
+* '_Plugin Name_' - Implementation - Database - Developer Database Factory Class
 
 This issue is closed when this class if fully implemented.
 
-3.4 - '_Plugin Name_' Implementation - Database - Database Factory Exceptions Class
+* '_Plugin Name_' - Implementation - Database - Database Factory Exceptions Class
 
 This issue is closed when this class if fully implemented.
 
-3.5 - '_Plugin Name_' Implementation - Database - DAO Class 
+* '_Plugin Name_' - Implementation - Database - DAO Class 
 
 This issue is closed when this class if fully implemented.
 
-4 - **'_Plugin Name_' Implementation - Public Interfaces**
+4 - **'_Plugin Name_' - Implementation - Public Interfaces**
 
 This issue is closed when all public interface's code is written.  Note that the 1, 2, n must be replaced with the actual interfase names.
 
-3.3.1 - '_Plugin Name_' Implementation - Public Interfaces - Interface 1
+3.3.1 - '_Plugin Name_' - Implementation - Public Interfaces - Interface 1
 
 This issue is closed when the first public interface is written.
 
-3.3.2 - '_Plugin Name_' Implementation - Public Interfaces - Interface 2
+3.3.2 - '_Plugin Name_' - Implementation - Public Interfaces - Interface 2
 
 This issue is closed when the second public interface is written.
 
@@ -120,47 +120,47 @@ This issue is closed when the second public interface is written.
 
 This issue is closed when the n public interfaces are written.
 
-3.4 - **'_Plugin Name_' Implementation - Internal Structure**
+3.4 - **'_Plugin Name_' - Implementation - Internal Structure**
 
 This issue is closed when all interna structure's code is written.  Note that the 1, 2, n must be replaced with the actual clase names.
 
-3.4.1 - '_Plugin Name_' Implementation - Internal Structure - Class 1
+3.4.1 - '_Plugin Name_' - Implementation - Internal Structure - Class 1
   
 This issue is closed when this class if fully implemented.
 
-3.4.2 - '_Plugin Name_' Implementation - Internal Structure - Class 2
+3.4.2 - '_Plugin Name_' - Implementation - Internal Structure - Class 2
   
 This issue is closed when this class if fully implemented.
 
-3.4.4 - '_Plugin Name_' Implementation - Internal Structure - Class n
+3.4.4 - '_Plugin Name_' - Implementation - Internal Structure - Class n
   
 This issue is closed when this class if fully implemented.
 
-3.5 - **'_Plugin Name_' Implementation - Event Handling**
+3.5 - **'_Plugin Name_' - Implementation - Event Handling**
 
 This issue is closed when all event handler classes are written. Note that the 1, 2, n must be replaced with the actual class names.
 
-3.5.1 - **'_Plugin Name_' Implementation - Event Handling - Event Handler 1**
+3.5.1 - **'_Plugin Name_' - Implementation - Event Handling - Event Handler 1**
 
 This issue is closed when this Event Hndler class if fully implemented.
 
-3.5.2 - **'_Plugin Name_' Implementation - Event Handling - Event Handler 2**
+3.5.2 - **'_Plugin Name_' - Implementation - Event Handling - Event Handler 2**
 
 This issue is closed when this Event Hndler class if fully implemented.
 
-3.5.3 - **'_Plugin Name_' Implementation - Event Handling - Event Handler n**
+3.5.3 - **'_Plugin Name_' - Implementation - Event Handling - Event Handler n**
 
 This issue is closed when this Event Hndler class if fully implemented.
 
 
 <br>
-4 - **'_Plugin Name_' Testing** 
+4 - **'_Plugin Name_' - Testing** 
 
 This is the Testing root. It is closed whenever all testing is done. 
 
-4.1 - **'_Plugin Name_' Testing - Unit Testing**
+4.1 - **'_Plugin Name_' - Testing - Unit Testing**
 
-4.2 - **'_Plugin Name_' Testing - Integration Testing**
+4.2 - **'_Plugin Name_' - Testing - Integration Testing**
  
 <br>
 5 - **'_Plugin Name_' QA**
