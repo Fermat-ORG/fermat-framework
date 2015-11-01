@@ -65,12 +65,12 @@ This is the root of your issue structure and must be labeled as _SUPER ISSUE_. I
 <br>
 ##### ISSUE: '_Plugin Name_' - Analisys
 
-This is the Analisys root. It is closed whenever all analisys is done.
+This is the Analisys root. It is closed whenever all analisys is done. This issue must be linked to the root of the issue structure.
 
 <br>
 ##### ISSUE: '_Plugin Name_' - Implementation
 
-This is the Implementation root. It is closed whenever all implementation is done. 
+This is the Implementation root. It is closed whenever all implementation is done. This issue must be linked to the root of the issue structure.
 
 <br>
 1 - ISSUE: **'_Plugin Name_' - Implementation - Developer Class** 
@@ -161,8 +161,7 @@ This issue is closed when this Event Hndler class if fully implemented.
 <br>
 ##### ISSUE: '_Plugin Name_' - Testing
 
-
-This is the Testing root. It is closed whenever all testing is done. 
+This is the Testing root. It is closed whenever all testing is done. This issue must be linked to the root of the issue structure.
 
 * ISSUE: '_Plugin Name_' - Testing - Unit Testing
 
@@ -173,14 +172,14 @@ This is the Testing root. It is closed whenever all testing is done.
 ##### ISSUE: '_Plugin Name_' - QA
  
 
-This is the QA root. It is closed whenever QA tests are passed. 
+This is the QA root. It is closed whenever QA tests are passed. This issue must be linked to the root of the issue structure.
 
 It is expected to have here child issues in the form '_Plugin Name_' QA - Bug Fix n, where n is both the number and the bug name.
 
 <br>
 ##### ISSUE: '_Plugin Name_' - Production
 
-This is the Production root. It is closed whenever the Plug-in reaches production. It can be re-opened if bug issues are found on production and closed again once they are fixed.
+This is the Production root. It is closed whenever the Plug-in reaches production. It can be re-opened if bug issues are found on production and closed again once they are fixed. This issue must be linked to the root of the issue structure.
 
 It is expected to have here child issues in the form  '_Plugin Name_' Production - Bug Fix n, where n is both the number and the bug name.
 
