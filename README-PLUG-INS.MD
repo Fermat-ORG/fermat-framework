@@ -54,7 +54,7 @@ A basic hiriarchy of issues is created as a first step. The issues are linked on
 
 ##### Naming Convention
 
-WHere we refer to '_Plugin Name_' what we expect is the following information:
+Where we refer to '_Plugin Name_' what we expect is the following information:
 
 * Platform or Super Layer name - 3 characters.
 * Layer name
