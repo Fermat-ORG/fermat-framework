@@ -58,43 +58,43 @@ The mandatory initial structure is the following:
 
 This is the root of your issue structure and must be labeled as _SUPER ISSUE_. It is closed only when all of it's children and grand children are closed.
 
-* **'_Plugin Name_' Analisys**: This is the Analisys root. It is closed whenever all analisys is done.* 
+1- **'_Plugin Name_' Analisys**: This is the Analisys root. It is closed whenever all analisys is done.
 
-* **'_Plugin Name_' Implementation**: This is the Implementation root. It is closed whenever all implementation is done.* 
+2- **'_Plugin Name_' Implementation**: This is the Implementation root. It is closed whenever all implementation is done. 
 
- * **'_Plugin Name_' Implementation - Developer Class**
+3- **'_Plugin Name_' Implementation - Developer Class** 
  
 This issue is closed when this class if fully implemented. 
 
- * **'_Plugin Name_' Implementation - Plug-in Root**
+3.1- **'_Plugin Name_' Implementation - Plug-in Root** 
 
 This issue is closed when this class if fully implemented. 
 
- * **'_Plugin Name_' Implementation - Database**
+3.2- **'_Plugin Name_' Implementation - Database** 
  
 This issue is closed when all database classes are fully implemented. 
 
-1. '_Plugin Name_' Implementation - Database - Database Factory Class
+3.2.1- '_Plugin Name_' Implementation - Database - Database Factory Class
 
 This issue is closed when this class if fully implemented. 
 
-2. '_Plugin Name_' Implementation - Database - Database Constants Class
+3.2.2- '_Plugin Name_' Implementation - Database - Database Constants Class
 
 This issue is closed when this class if fully implemented.
 
-3. '_Plugin Name_' Implementation - Database - Developer Database Factory Class
+3.2.3- '_Plugin Name_' Implementation - Database - Developer Database Factory Class
 
 This issue is closed when this class if fully implemented.
 
-4. '_Plugin Name_' Implementation - Database - Database Factory Exceptions Class
+3.2.4- '_Plugin Name_' Implementation - Database - Database Factory Exceptions Class
 
 This issue is closed when this class if fully implemented.
 
-5. '_Plugin Name_' Implementation - Database - DAO Class 
+3.2.5- '_Plugin Name_' Implementation - Database - DAO Class 
 
 This issue is closed when this class if fully implemented.
 
- * **'_Plugin Name_' Implementation - Public Interfaces**
+3.3 **'_Plugin Name_' Implementation - Public Interfaces**
 
 This issue is closed when all public interface's code is written. 
 
