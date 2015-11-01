@@ -48,6 +48,85 @@ This section will help you undestand the workflow needed to be followed in order
 
 #### Issues
 
+It is mandatory that you create an initial set of github issues before you proceed further on the workflow. This will show the rest of the temas that someone is working in this functionality and avoid conflicting work early on. It will also hook the team leader into your workflow and allow him to guide and advise you when needed.
+
+A basic hiriarchy of issues is created as a first step. The issues are linked one to the other just by placing a link on the first commet.
+
+The mandatory initial structure is the following:
+
+##### '_Plugin Name_' Plug-In
+
+This is the root of your issue structure and must be labeled as _SUPER ISSUE_. It is closed only when all of it's children and grand children are closed.
+
+* **'_Plugin Name_' Analisys**: This is the Analisys root. It is closed whenever all analisys is done.* 
+
+* **'_Plugin Name_' Implementation**: This is the Implementation root. It is closed whenever all implementation is done.* 
+
+ * **'_Plugin Name_' Implementation - Developer Class**
+ * **'_Plugin Name_' Implementation - Plug-in Root**
+ * **'_Plugin Name_' Implementation - Database**
+ 
+1. **'_Plugin Name_' Implementation - Database - Database Factory Class** 
+2. **'_Plugin Name_' Implementation - Database - Database Constants Class** 
+3. **'_Plugin Name_' Implementation - Database - Developer Database Factory Class** 
+4. **'_Plugin Name_' Implementation - Database - Database Factory Exceptions Class** 
+5. **'_Plugin Name_' Implementation - Database - DAO Class** 
+
+ * **'_Plugin Name_' Implementation - Public Interfaces**
+ * **'_Plugin Name_' Implementation - Internal Structure**
+ * **'_Plugin Name_' Implementation - Event Handling**
+
+* **'_Plugin Name_' Testing**: This is the Testing root. It is closed whenever all testing is done.* 
+
+ * **'_Plugin Name_' Testing - Unit Testing**
+ * **'_Plugin Name_' Testing - Integration Testing**
+ 
+* **'_Plugin Name_' QA**: This is the QA root. It is closed whenever QA tests are passed.* 
+
+* **'_Plugin Name_' Production**: This is the Production root. It is closed whenever the Plug-in reaches production. It can be re-opened if bug issues are found on production and closed again once they are fixed.* 
+
+
+
+
+* **'Plugin Name' Implementation - Plugin Root**
+
+* **'Plugin Name' Implementation - Database**
+ * **'Plugin Name' Database - Database Factory**
+ * **'Plugin Name' Database - Database Constants**
+ * **'Plugin Name' Database - Developer Database Factory**
+ * **'Plugin Name' Database - Database Factory Exceptions**
+ * **'Plugin Name' Database - DAO Class**
+
+* **'Plugin Name' Implementation - Public Interfaces**
+ * **'Plugin Name' Public Interfaces - Interface 1**
+ * **'Plugin Name' Public Interfaces - Interface 2**
+ * **'Plugin Name' Public Interfaces - Interface N**
+
+* **'Plugin Name' Implementation - Internal Structure**
+ * **'Plugin Name' Internal Structure - Class 1**
+ * **'Plugin Name' Internal Structure - Class 2**
+ * **'Plugin Name' Internal Structure - Class N**
+
+* **'Plugin Name' Implementation - Event Handling**
+ * **'Plugin Name' Event Handling - Event Handler 1**
+ * **'Plugin Name' Event Handling - Event Handler 2**
+ * **'Plugin Name' Event Handling - Event Handler N**
+
+* **'Plugin Name' Implementation - Unit Testing**
+
+* **'Plugin Name' Implementation - Integration Testing**
+ 
+* **SUPER ISSUE: 'Plugin Name' QA Approval**
+ * **'Plugin Name' QA - Bug Fix 1**
+ * **'Plugin Name' QA - Bug Fix 2**
+ * **'Plugin Name' QA - Bug Fix N**
+ 
+* **SUPER ISSUE: 'Plugin Name' Production**
+ * **'Plugin Name' Production - Bug Fix 1**
+ * **'Plugin Name' Production - Bug Fix 2**
+ * **'Plugin Name' Production - Bug Fix N**
+
+
 <br>
 ### Analisys
 
