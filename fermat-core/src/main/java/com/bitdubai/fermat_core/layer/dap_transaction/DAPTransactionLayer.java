@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_core.layer.dap_transaction.asset_distribution.AssetDistributionSubsystem;
 import com.bitdubai.fermat_core.layer.dap_transaction.asset_issuing.AssetIssuingSubsystem;
 import com.bitdubai.fermat_core.layer.dap_transaction.asset_reception.AssetReceptionSubsystem;
+import com.bitdubai.fermat_core.layer.dap_transaction.issuer_redemption.IssuerRedemptionSubsystem;
+import com.bitdubai.fermat_core.layer.dap_transaction.user_redemption.UserRedemptionSubsystem;
 import com.bitdubai.fermat_core.layer.dap_transaction.asset_redemption.AssetRedeemPointRedemptionSubsystem;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.CantStartSubsystemException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.DAPTransactionSubsystem;
@@ -17,6 +19,8 @@ public class DAPTransactionLayer implements PlatformLayer {
     private Plugin assetIssuing;
     private Plugin assetDistribution;
     private Plugin assetReception;
+    private Plugin issuerRedemption;
+    private Plugin userRedemption;
     private Plugin assetRedeemPointRedemption;
 
     @Override
@@ -24,6 +28,8 @@ public class DAPTransactionLayer implements PlatformLayer {
         assetIssuing =getPlugin(new AssetIssuingSubsystem());
         assetDistribution=getPlugin(new AssetDistributionSubsystem());
         assetReception=getPlugin(new AssetReceptionSubsystem());
+        issuerRedemption=getPlugin(new IssuerRedemptionSubsystem());
+        userRedemption=getPlugin(new UserRedemptionSubsystem());
         assetRedeemPointRedemption=getPlugin(new AssetRedeemPointRedemptionSubsystem());
     }
 
@@ -40,4 +46,7 @@ public class DAPTransactionLayer implements PlatformLayer {
     public Plugin getAssetDistributionPlugin() {return assetDistribution;}
     public Plugin getAssetReceptionPlugin() {return assetReception;}
     public Plugin getAssetRedeemPointRedemptionPlugin(){return assetRedeemPointRedemption;}
+    public Plugin getIssuerRedemptionPlugin() {return issuerRedemption;}
+    public Plugin getUserRedemptionPlugin() {return userRedemption;}
+
 }
