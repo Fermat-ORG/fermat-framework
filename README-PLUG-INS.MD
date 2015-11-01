@@ -56,6 +56,7 @@ A basic hiriarchy of issues is created as a first step. The issues are linked on
 
 The mandatory initial structure is the following:
 
+<br>
 ##### '_Plugin Name_' Plug-In
 
 This is the root of your issue structure and must be labeled as _SUPER ISSUE_. It is closed only when all of it's children and grand children are closed.
@@ -71,39 +72,39 @@ This is the Analisys root. It is closed whenever all analisys is done.
 This is the Implementation root. It is closed whenever all implementation is done. 
 
 <br>
-##### '_Plugin Name_' Implementation - Developer Class 
+1 - **'_Plugin Name_' Implementation - Developer Class** 
  
 This issue is closed when this class if fully implemented. 
 
-1 - **'_Plugin Name_' Implementation - Plug-in Root** 
+2 - **'_Plugin Name_' Implementation - Plug-in Root** 
 
 This issue is closed when this class if fully implemented. 
 
-2 - **'_Plugin Name_' Implementation - Database** 
+3 - **'_Plugin Name_' Implementation - Database** 
  
 This issue is closed when all database classes are fully implemented. 
 
-2.1 - '_Plugin Name_' Implementation - Database - Database Factory Class
+3.1 - '_Plugin Name_' Implementation - Database - Database Factory Class
 
 This issue is closed when this class if fully implemented. 
 
-2.2 - '_Plugin Name_' Implementation - Database - Database Constants Class
+3.2 - '_Plugin Name_' Implementation - Database - Database Constants Class
 
 This issue is closed when this class if fully implemented.
 
-2.3 - '_Plugin Name_' Implementation - Database - Developer Database Factory Class
+3.3 - '_Plugin Name_' Implementation - Database - Developer Database Factory Class
 
 This issue is closed when this class if fully implemented.
 
-2.4 - '_Plugin Name_' Implementation - Database - Database Factory Exceptions Class
+3.4 - '_Plugin Name_' Implementation - Database - Database Factory Exceptions Class
 
 This issue is closed when this class if fully implemented.
 
-2.5 - '_Plugin Name_' Implementation - Database - DAO Class 
+3.5 - '_Plugin Name_' Implementation - Database - DAO Class 
 
 This issue is closed when this class if fully implemented.
 
-3 - **'_Plugin Name_' Implementation - Public Interfaces**
+4 - **'_Plugin Name_' Implementation - Public Interfaces**
 
 This issue is closed when all public interface's code is written.  Note that the 1, 2, n must be replaced with the actual interfase names.
 
