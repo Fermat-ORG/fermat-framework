@@ -54,129 +54,129 @@ A basic hiriarchy of issues is created as a first step. The issues are linked on
 
 #### Plug-in Issue Structure
 
-The mandatory initial structure is the following:
+The mandatory initial structure is the following: (note: the word ISSUE it is not part of the name)
 
 <br>
-##### '_Plugin Name_' - Plug-In
+##### ISSUE: '_Plugin Name_' - Plug-In
 
 This is the root of your issue structure and must be labeled as _SUPER ISSUE_. It is closed only when all of it's children and grand children are closed.
 
 <br>
-##### '_Plugin Name_' - Analisys
+##### ISSUE: '_Plugin Name_' - Analisys
 
 This is the Analisys root. It is closed whenever all analisys is done.
 
 <br>
-##### '_Plugin Name_' - Implementation
+##### ISSUE: '_Plugin Name_' - Implementation
 
 This is the Implementation root. It is closed whenever all implementation is done. 
 
 <br>
-1 - **'_Plugin Name_' - Implementation - Developer Class** 
+1 - ISSUE: **'_Plugin Name_' - Implementation - Developer Class** 
  
 This issue is closed when this class if fully implemented. 
 
-2 - **'_Plugin Name_' - Implementation - Plug-in Root** 
+2 - ISSUE: **'_Plugin Name_' - Implementation - Plug-in Root** 
 
 This issue is closed when this class if fully implemented. 
 
-3 - **'_Plugin Name_' - Implementation - Database** 
+3 - ISSUE: **'_Plugin Name_' - Implementation - Database** 
  
 This issue is closed when all database classes are fully implemented. 
 
-* '_Plugin Name_' - Implementation - Database - Database Factory Class
+* ISSUE: '_Plugin Name_' - Implementation - Database - Database Factory Class
 
 This issue is closed when this class if fully implemented. 
 
-* '_Plugin Name_' - Implementation - Database - Database Constants Class
+* ISSUE: '_Plugin Name_' - Implementation - Database - Database Constants Class
 
 This issue is closed when this class if fully implemented.
 
-* '_Plugin Name_' - Implementation - Database - Developer Database Factory Class
+* ISSUE: '_Plugin Name_' - Implementation - Database - Developer Database Factory Class
 
 This issue is closed when this class if fully implemented.
 
-* '_Plugin Name_' - Implementation - Database - Database Factory Exceptions Class
+* ISSUE: '_Plugin Name_' - Implementation - Database - Database Factory Exceptions Class
 
 This issue is closed when this class if fully implemented.
 
-* '_Plugin Name_' - Implementation - Database - DAO Class 
+* ISSUE: '_Plugin Name_' - Implementation - Database - DAO Class 
 
 This issue is closed when this class if fully implemented.
 
-4 - **'_Plugin Name_' - Implementation - Public Interfaces**
+4 - ISSUE: **'_Plugin Name_' - Implementation - Public Interfaces**
 
 This issue is closed when all public interface's code is written.  Note that the 1, 2, n must be replaced with the actual interfase names.
 
-* '_Plugin Name_' - Implementation - Public Interfaces - Interface 1
+* ISSUE: '_Plugin Name_' - Implementation - Public Interfaces - Interface 1
 
 This issue is closed when the first public interface is written.
 
-* '_Plugin Name_' - Implementation - Public Interfaces - Interface 2
+* ISSUE: '_Plugin Name_' - Implementation - Public Interfaces - Interface 2
 
 This issue is closed when the second public interface is written.
 
-* '_Plugin Name_' Implementation - Public Interfaces - Interface n
+* ISSUE: '_Plugin Name_' Implementation - Public Interfaces - Interface n
 
 This issue is closed when the n public interfaces are written.
 
-5 - **'_Plugin Name_' - Implementation - Internal Structure**
+5 - ISSUE: vvv**'_Plugin Name_' - Implementation - Internal Structure**
 
 This issue is closed when all interna structure's code is written.  Note that the 1, 2, n must be replaced with the actual clase names.
 
-* '_Plugin Name_' - Implementation - Internal Structure - Class 1
+* ISSUE: '_Plugin Name_' - Implementation - Internal Structure - Class 1
   
 This issue is closed when this class if fully implemented.
 
-* '_Plugin Name_' - Implementation - Internal Structure - Class 2
+* ISSUE: '_Plugin Name_' - Implementation - Internal Structure - Class 2
   
 This issue is closed when this class if fully implemented.
 
-* '_Plugin Name_' - Implementation - Internal Structure - Class n
+* ISSUE: '_Plugin Name_' - Implementation - Internal Structure - Class n
   
 This issue is closed when this class if fully implemented.
 
-6 - **'_Plugin Name_' - Implementation - Event Handling**
+6 - ISSUE: **'_Plugin Name_' - Implementation - Event Handling**
 
 This issue is closed when all event handler classes are written. Note that the 1, 2, n must be replaced with the actual class names.
 
-* '_Plugin Name_' - Implementation - Event Handling - Event Handler 1
+* ISSUE: '_Plugin Name_' - Implementation - Event Handling - Event Handler 1
 
 This issue is closed when this Event Hndler class if fully implemented.
 
-* '_Plugin Name_' - Implementation - Event Handling - Event Handler 2
+* ISSUE: '_Plugin Name_' - Implementation - Event Handling - Event Handler 2
 
 This issue is closed when this Event Hndler class if fully implemented.
 
-* '_Plugin Name_' - Implementation - Event Handling - Event Handler n
+* ISSUE: '_Plugin Name_' - Implementation - Event Handling - Event Handler n
 
 This issue is closed when this Event Hndler class if fully implemented.
 
 <br>
-##### '_Plugin Name_' - Testing
+##### ISSUE: '_Plugin Name_' - Testing
 
 
 This is the Testing root. It is closed whenever all testing is done. 
 
-4.1 - **'_Plugin Name_' - Testing - Unit Testing**
+* ISSUE: '_Plugin Name_' - Testing - Unit Testing
 
-4.2 - **'_Plugin Name_' - Testing - Integration Testing**
+* ISSUE: '_Plugin Name_' - Testing - Integration Testing
  
  
 <br>
-##### '_Plugin Name_' - QA
+##### ISSUE: '_Plugin Name_' - QA
  
 
 This is the QA root. It is closed whenever QA tests are passed. 
 
-It is expected to have here child issues in the form * '_Plugin Name_' QA - Bug Fix n * where n is both the number and the bug name.
+It is expected to have here child issues in the form '_Plugin Name_' QA - Bug Fix n, where n is both the number and the bug name.
 
 <br>
-##### '_Plugin Name_' - Production
+##### ISSUE: '_Plugin Name_' - Production
 
 This is the Production root. It is closed whenever the Plug-in reaches production. It can be re-opened if bug issues are found on production and closed again once they are fixed.
 
-It is expected to have here child issues in the form * '_Plugin Name_' Production - Bug Fix n * where n is both the number and the bug name.
+It is expected to have here child issues in the form  '_Plugin Name_' Production - Bug Fix n, where n is both the number and the bug name.
 
 
 <br>
