@@ -75,6 +75,10 @@ import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_communi
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_reception.interfaces.AssetReceptionManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_reception.interfaces.DealsWithAssetReception;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.issuer_redemption.interfaces.DealsWithIssuerRedemption;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.issuer_redemption.interfaces.IssuerRedemptionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.interfaces.DealsWithUserRedemption;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.interfaces.UserRedemptionManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.DealsWithAssetRedeemPointWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
@@ -1299,13 +1303,19 @@ public class Platform implements Serializable {
                 Plugin assetReceptionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetReceptionPlugin();
                 injectPluginReferencesAndStart(assetReceptionTransaction, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION);
 
-                /*
+            /*
+            * Plugin Issuer Redemption Transaction
+            * -----------------------------
+            */
+                Plugin issuerRedemptionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getIssuerRedemptionPlugin();
+                injectPluginReferencesAndStart(issuerRedemptionTransaction, Plugins.BITDUBAI_ISSUER_REDEMPTION_TRANSACTION);
 
-            * Plugin Asset Reception Transaction
+            /*
+            * Plugin User Redemption Transaction
             * -----------------------------
             */
                 Plugin userRedemptionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getUserRedemptionPlugin();
-                injectPluginReferencesAndStart(assetReceptionTransaction, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION);
+                injectPluginReferencesAndStart(userRedemptionTransaction, Plugins.BITDUBAI_USER_REDEMPTION_TRANSACTION);
 
            /*
             * Plugin Asset Issuer Identity Layer
@@ -1751,6 +1761,14 @@ public class Platform implements Serializable {
 
             if (plugin instanceof DealsWithAssetReception) {
                 ((DealsWithAssetReception) plugin).setAssetReceptionManager((AssetReceptionManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION));
+            }
+
+            if (plugin instanceof DealsWithIssuerRedemption){
+                ((DealsWithIssuerRedemption) plugin).setIssuerRedemptionManager((IssuerRedemptionManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ISSUER_REDEMPTION_TRANSACTION));
+            }
+
+            if (plugin instanceof DealsWithUserRedemption){
+                ((DealsWithUserRedemption) plugin).setUserRedemptionManager((UserRedemptionManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_USER_REDEMPTION_TRANSACTION));
             }
 
             if (plugin instanceof DealsWithActorAssetIssuer) {
