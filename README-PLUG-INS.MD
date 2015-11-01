@@ -108,53 +108,53 @@ This issue is closed when this class if fully implemented.
 
 This issue is closed when all public interface's code is written.  Note that the 1, 2, n must be replaced with the actual interfase names.
 
-3.3.1 - '_Plugin Name_' - Implementation - Public Interfaces - Interface 1
+* '_Plugin Name_' - Implementation - Public Interfaces - Interface 1
 
 This issue is closed when the first public interface is written.
 
-3.3.2 - '_Plugin Name_' - Implementation - Public Interfaces - Interface 2
+* '_Plugin Name_' - Implementation - Public Interfaces - Interface 2
 
 This issue is closed when the second public interface is written.
 
-3.3.3 - '_Plugin Name_' Implementation - Public Interfaces - Interface n
+* '_Plugin Name_' Implementation - Public Interfaces - Interface n
 
 This issue is closed when the n public interfaces are written.
 
-3.4 - **'_Plugin Name_' - Implementation - Internal Structure**
+5 - **'_Plugin Name_' - Implementation - Internal Structure**
 
 This issue is closed when all interna structure's code is written.  Note that the 1, 2, n must be replaced with the actual clase names.
 
-3.4.1 - '_Plugin Name_' - Implementation - Internal Structure - Class 1
+* '_Plugin Name_' - Implementation - Internal Structure - Class 1
   
 This issue is closed when this class if fully implemented.
 
-3.4.2 - '_Plugin Name_' - Implementation - Internal Structure - Class 2
+* '_Plugin Name_' - Implementation - Internal Structure - Class 2
   
 This issue is closed when this class if fully implemented.
 
-3.4.4 - '_Plugin Name_' - Implementation - Internal Structure - Class n
+* '_Plugin Name_' - Implementation - Internal Structure - Class n
   
 This issue is closed when this class if fully implemented.
 
-3.5 - **'_Plugin Name_' - Implementation - Event Handling**
+6 - **'_Plugin Name_' - Implementation - Event Handling**
 
 This issue is closed when all event handler classes are written. Note that the 1, 2, n must be replaced with the actual class names.
 
-3.5.1 - **'_Plugin Name_' - Implementation - Event Handling - Event Handler 1**
+* '_Plugin Name_' - Implementation - Event Handling - Event Handler 1
 
 This issue is closed when this Event Hndler class if fully implemented.
 
-3.5.2 - **'_Plugin Name_' - Implementation - Event Handling - Event Handler 2**
+* '_Plugin Name_' - Implementation - Event Handling - Event Handler 2
 
 This issue is closed when this Event Hndler class if fully implemented.
 
-3.5.3 - **'_Plugin Name_' - Implementation - Event Handling - Event Handler n**
+* '_Plugin Name_' - Implementation - Event Handling - Event Handler n
 
 This issue is closed when this Event Hndler class if fully implemented.
-
 
 <br>
-4 - **'_Plugin Name_' - Testing** 
+##### '_Plugin Name_' - Testing
+
 
 This is the Testing root. It is closed whenever all testing is done. 
 
@@ -162,15 +162,17 @@ This is the Testing root. It is closed whenever all testing is done.
 
 4.2 - **'_Plugin Name_' - Testing - Integration Testing**
  
+ 
 <br>
-5 - **'_Plugin Name_' QA**
+##### '_Plugin Name_' - QA
+ 
 
 This is the QA root. It is closed whenever QA tests are passed. 
 
 It is expected to have here child issues in the form * '_Plugin Name_' QA - Bug Fix n * where n is both the number and the bug name.
 
 <br>
-6 - **'_Plugin Name_' Production**
+##### '_Plugin Name_' - Production
 
 This is the Production root. It is closed whenever the Plug-in reaches production. It can be re-opened if bug issues are found on production and closed again once they are fixed.
 
