@@ -58,10 +58,13 @@ The mandatory initial structure is the following:
 
 This is the root of your issue structure and must be labeled as _SUPER ISSUE_. It is closed only when all of it's children and grand children are closed.
 
+<br>
 1 - **'_Plugin Name_' Analisys**: This is the Analisys root. It is closed whenever all analisys is done.
 
+<br>
 2 - **'_Plugin Name_' Implementation**: This is the Implementation root. It is closed whenever all implementation is done. 
 
+<br>
 3 - **'_Plugin Name_' Implementation - Developer Class** 
  
 This issue is closed when this class if fully implemented. 
@@ -143,20 +146,23 @@ This issue is closed when this Event Hndler class if fully implemented.
 This issue is closed when this Event Hndler class if fully implemented.
 
 
-
+<br>
 4 - **'_Plugin Name_' Testing** 
 
 This is the Testing root. It is closed whenever all testing is done. 
 
 4.1 - **'_Plugin Name_' Testing - Unit Testing**
+
 4.2 - **'_Plugin Name_' Testing - Integration Testing**
  
+<br>
 5 - **'_Plugin Name_' QA**
 
 This is the QA root. It is closed whenever QA tests are passed. 
 
 It is expected to have here child issues in the form * '_Plugin Name_' QA - Bug Fix n * where n is both the number and the bug name.
 
+<br>
 6 - **'_Plugin Name_' Production**
 
 This is the Production root. It is closed whenever the Plug-in reaches production. It can be re-opened if bug issues are found on production and closed again once they are fixed.
