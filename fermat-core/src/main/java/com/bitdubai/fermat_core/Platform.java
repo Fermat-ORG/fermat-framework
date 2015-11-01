@@ -1322,7 +1322,7 @@ public class Platform implements Serializable {
             * -----------------------------
             */
                 Plugin redeemPointRedemptionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetRedeemPointRedemptionPlugin();
-                injectPluginReferencesAndStart(redeemPointRedemptionTransaction, Plugins.BITDUBAI_ASSET_REDEEM_POINT_REDEMPTION_TRANSACTION);
+                injectPluginReferencesAndStart(redeemPointRedemptionTransaction, Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION);
 
            /*
             * Plugin Asset Issuer Identity Layer

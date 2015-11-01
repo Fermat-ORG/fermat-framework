@@ -106,9 +106,9 @@ public enum Plugins implements FermatEnum {
     BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION               ("BADT"),
     BITDUBAI_ASSET_RECEPTION_TRANSACTION                  ("BADR"),
     BITDUBAI_ISSUER_REDEMPTION_TRANSACTION                ("BIRT"),
+    BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION          ("BRPRT"  ),
     BITDUBAI_USER_REDEMPTION_TRANSACTION                  ("BURT"),
     BITDUBAI_ASSET_APPROPRIATION_TRANSACTION              ("BAAT"   ),
-    BITDUBAI_ASSET_REDEEM_POINT_REDEMPTION_TRANSACTION    ("BRPRT"  ),
     BITDUBAI_ASSET_WALLET_ISSUER                          ("BASWI"  ),
     BITDUBAI_ASSET_FACTORY                                ("BASF"   ),
     BITDUBAI_ASSET_FACTORY_MODULE                         ("BASFM"  ),
@@ -320,6 +320,8 @@ public enum Plugins implements FermatEnum {
                 return BITDUBAI_ISSUER_REDEMPTION_TRANSACTION;
             case "BURT":
                 return BITDUBAI_USER_REDEMPTION_TRANSACTION;
+            case "BRPRT":
+                return BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION;
             case "BAAT":
                 return BITDUBAI_ASSET_APPROPRIATION_TRANSACTION;
             case "BASF":
