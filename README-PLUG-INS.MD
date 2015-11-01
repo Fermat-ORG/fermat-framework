@@ -94,47 +94,47 @@ This issue is closed when this class if fully implemented.
 
 This issue is closed when this class if fully implemented.
 
-3.3 **'_Plugin Name_' Implementation - Public Interfaces**
+3.3- **'_Plugin Name_' Implementation - Public Interfaces**
 
 This issue is closed when all public interface's code is written. 
 
-1. '_Plugin Name_' Implementation - Public Interfaces - Interface 1
+3.3.1- '_Plugin Name_' Implementation - Public Interfaces - Interface 1
 
 This issue is closed when the first public interface is written.
 
-2. '_Plugin Name_' Implementation - Public Interfaces - Interface 2
+3.3.2- '_Plugin Name_' Implementation - Public Interfaces - Interface 2
 
 This issue is closed when the second public interface is written.
 
-3. '_Plugin Name_' Implementation - Public Interfaces - Interface n
+3.3.3- '_Plugin Name_' Implementation - Public Interfaces - Interface n
 
 This issue is closed when the n public interface is written.
 
- * **'_Plugin Name_' Implementation - Internal Structure**
+3.4- **'_Plugin Name_' Implementation - Internal Structure**
 
-1. '_Plugin Name_' Implementation - Internal Structure - Class 1
+3.4.1- '_Plugin Name_' Implementation - Internal Structure - Class 1
   
 This issue is closed when this class if fully implemented.
 
-2. '_Plugin Name_' Implementation - Internal Structure - Class 2
+3.4.2- '_Plugin Name_' Implementation - Internal Structure - Class 2
   
 This issue is closed when this class if fully implemented.
 
-3. '_Plugin Name_' Implementation - Internal Structure - Class n
+3.4.4- '_Plugin Name_' Implementation - Internal Structure - Class n
   
 This issue is closed when this class if fully implemented.
 
- * **'_Plugin Name_' Implementation - Event Handling**
+3.5- **'_Plugin Name_' Implementation - Event Handling**
 
 
-* **'_Plugin Name_' Testing**: This is the Testing root. It is closed whenever all testing is done.* 
+4- **'_Plugin Name_' Testing**: This is the Testing root. It is closed whenever all testing is done.* 
 
  * **'_Plugin Name_' Testing - Unit Testing**
  * **'_Plugin Name_' Testing - Integration Testing**
  
-* **'_Plugin Name_' QA**: This is the QA root. It is closed whenever QA tests are passed.* 
+5- **'_Plugin Name_' QA**: This is the QA root. It is closed whenever QA tests are passed.* 
 
-* **'_Plugin Name_' Production**: This is the Production root. It is closed whenever the Plug-in reaches production. It can be re-opened if bug issues are found on production and closed again once they are fixed.* 
+6- **'_Plugin Name_' Production**: This is the Production root. It is closed whenever the Plug-in reaches production. It can be re-opened if bug issues are found on production and closed again once they are fixed.* 
 
 
 
