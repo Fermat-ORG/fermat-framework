@@ -52,6 +52,7 @@ It is mandatory that you create an initial set of github issues before you proce
 
 A basic hiriarchy of issues is created as a first step. The issues are linked one to the other just by placing a link on the first commet.
 
+<br>
 #### Plug-in Issue Structure
 
 The mandatory initial structure is the following: (note: the word ISSUE it is not part of the name)
@@ -76,10 +77,12 @@ This is the Implementation root. It is closed whenever all implementation is don
  
 This issue is closed when this class if fully implemented. 
 
+<br>
 2 - ISSUE: **'_Plugin Name_' - Implementation - Plug-in Root** 
 
 This issue is closed when this class if fully implemented. 
 
+<br>
 3 - ISSUE: **'_Plugin Name_' - Implementation - Database** 
  
 This issue is closed when all database classes are fully implemented. 
@@ -104,6 +107,7 @@ This issue is closed when this class if fully implemented.
 
 This issue is closed when this class if fully implemented.
 
+<br>
 4 - ISSUE: **'_Plugin Name_' - Implementation - Public Interfaces**
 
 This issue is closed when all public interface's code is written.  Note that the 1, 2, n must be replaced with the actual interfase names.
@@ -120,7 +124,8 @@ This issue is closed when the second public interface is written.
 
 This issue is closed when the n public interfaces are written.
 
-5 - ISSUE: vvv**'_Plugin Name_' - Implementation - Internal Structure**
+<br>
+5 - ISSUE: **'_Plugin Name_' - Implementation - Internal Structure**
 
 This issue is closed when all interna structure's code is written.  Note that the 1, 2, n must be replaced with the actual clase names.
 
@@ -136,6 +141,7 @@ This issue is closed when this class if fully implemented.
   
 This issue is closed when this class if fully implemented.
 
+<br>
 6 - ISSUE: **'_Plugin Name_' - Implementation - Event Handling**
 
 This issue is closed when all event handler classes are written. Note that the 1, 2, n must be replaced with the actual class names.
