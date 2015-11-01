@@ -1,10 +1,10 @@
-package com.bitdubai.desktop.wallet_manager.fragments.provisory_classes;
+package com.bitdubai.sub_app.wallet_manager.structure.provisory_classes;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
+import com.bitdubai.fermat_api.layer.interface_objects.FermatInterfaceObject;
 import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
 
 import java.util.List;
@@ -13,12 +13,9 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.08.19..
  */
 
-public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet {
+public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp,FermatInterfaceObject {
 
-
-
-    private WalletCategory walletCategory;
-    private WalletType walletType;
+    private SubApps subApps;
     private List<InstalledSkin> skinsId;
     private List<InstalledLanguage> languajesId;
     private String walletIcon;
@@ -27,9 +24,8 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     private String walletPlatformIdentifier;
     private Version version;
 
-    public InstalledWallet(WalletCategory walletCategory, WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
-        this.walletCategory = walletCategory;
-        this.walletType = walletType;
+    public InstalledSubApp(SubApps subApps, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
+        this.subApps = subApps;
         this.skinsId = skinsId;
         this.languajesId = languajesId;
         this.walletIcon = walletIcon;
@@ -40,54 +36,54 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     }
 
     /**
+     * InstalledWallet Interface implementation.
+     */
+
+    /**
      * This method gives us the list of all the languages installed for this wallet
      *
-     * @return the saud list of languages
      */
-    @Override
-    public List<InstalledLanguage> getLanguagesId() {
-        return null;
+    public List<InstalledLanguage> getLanguagesId(){
+        return languajesId;
     }
 
     /**
      * This method gives us the list of all the skins installed for this wallet
      *
-     * @return the saud list of skins
      */
-    @Override
-    public List<InstalledSkin> getSkinsId() {
-        return null;
+    public List<InstalledSkin> getSkinsId(){
+        return skinsId;
     }
 
     /**
-     * This method tell us the category of the wallet
+     * This method tell us the type of the subApp
      *
-     * @return the category of the wallet
+     * @return the subApp type
      */
     @Override
-    public WalletCategory getWalletCategory() {
-        return walletCategory;
+    public SubApps getSubAppType() {
+        return subApps;
     }
 
     /**
      * This method gives us a codification of the wallet identifier (the identifier is an enum that
-     * registers the wallet)
+     * registers the subApp)
      *
      * @return an string that is result of the method getCode of an enum that can be inferred by the
-     * WalletCategory of the wallet.
+     * subApp
      */
     @Override
-    public String getWalletPlatformIdentifier() {
-        return walletPlatformIdentifier;
+    public String getSubAppPlatformIdentifier() {
+        return "Method: getSubAppPlatformIdentifier - NO TIENE valor ASIGNADO para RETURN";
     }
 
     /**
-     * This method gives us the name of the wallet icon used to identify the image in the wallet resources plug-in
+     * This method gives us the name of the wallet icon used to identify the image in the subApp resources plug-in
      *
      * @return the name of the said icon
      */
     @Override
-    public String getIcon() {
+    public String getSubAppIcon() {
         return walletIcon;
     }
 
@@ -98,37 +94,43 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
      * @return the public key represented as a string
      */
     @Override
-    public String getWalletPublicKey() {
+    public String getSubAppPublicKey() {
         return publicKey;
     }
 
+    /**
+     * This method gives us the subApp name
+     *
+     * @return the name of the subApp
+     */
     @Override
-    public InterfaceType getType() {
-        return InterfaceType.WALLET;
+    public String getSubAppName() {
+        return walletName;
     }
 
     /**
-     * This method gives us the wallet name
+     * This method gives us the version of the subApp
      *
-     * @return the name of the wallet
+     * @return the version of the subApp
      */
+    @Override
+    public Version getSubAppVersion() {
+        return version;
+    }
+
+
+    @Override
+    public InterfaceType getType() {
+        return InterfaceType.SUB_APP;
+    }
+
     @Override
     public String getName() {
         return walletName;
     }
 
-    /**
-     * This method gives us the version of the wallet
-     *
-     * @return the version of the wallet
-     */
     @Override
-    public Version getWalletVersion() {
-        return version;
-    }
-
-    @Override
-    public WalletType getWalletType() {
-        return walletType;
+    public String getIcon() {
+        return walletIcon;
     }
 }
