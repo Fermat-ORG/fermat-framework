@@ -52,6 +52,26 @@ It is mandatory that you create an initial set of github issues before you proce
 
 A basic hiriarchy of issues is created as a first step. The issues are linked one to the other just by placing a link on the first commet.
 
+##### Naming Convention
+
+WHere we refer to '_Plugin Name_' what we expect is the following information:
+
+* Platform or Super Layer name - 3 characters.
+* Layer name
+* Plug-in name
+
+All of them seprated by " - ". 
+
+##### Linking to parent Issue
+
+Issues that needs to be linked to it's parent must have their first line starting with "Parent: " + http link to parent issue. 
+
+##### Tagging the team leader
+
+Team leaders are tagged in the second line in order to ask them to assign the issue to you and at the same time suscribe to any issue update. This helps team leaders to follow the issue events and provide assistance or guidance is they see something wrong. The suggested format is:
+
+"@team-leader-user-name please assign this issue to me."
+
 <br>
 #### Plug-in Issue Structure
 
