@@ -138,8 +138,9 @@ Fermat foundations had been layed out by the five platforms and superlayers desc
 ._Accesory services
 . *Fermat Distributed Private Network*
 
+Would you like to see the first tangible use of the supporting infrastructure of Fermat ? We invite you in next chapter to meet the _Wallet Production & Distribution Line_.
+
 :numbered!:
-  
 === Continue Reading
 link:book-chapter-09.asciidoc[Next Chapter]
 
