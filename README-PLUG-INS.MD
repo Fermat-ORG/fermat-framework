@@ -4,7 +4,7 @@
 
 ## Introduction
 
-Plug-ins are one of the three basic components that can be added into the Fermat Framework. The two others are Addons, and GUI components. Enach Plug-in has a well defined responsability within the system at usually collaborate from within one or more workflows in which it participates.  
+Plug-ins are one of the three basic components that can be added into the Fermat Framework. The two others are Addons, and GUI components. Each Plug-in has a well defined responsability within the system at usually collaborate from within one or more workflows in which it participates.  
 
 To accomplish it's mission, a Plug-in may have have it's own database and files to persist it's state. It also has an internal structure of classes designed specifically to fullfill it's goals. Some of these classes have public interfaces which exposes the Plug-in public services to other Fermat components.
 
@@ -78,6 +78,21 @@ An Envent Hander is a type of Class that is called by the Event Manager whenever
 
 <br>
 ### Agents
+
+Agents are objects like any other, except that they are created to execute tasks or background processes, also known as demons processes are used when required to perform a repetitive activity to completion and that it does not interfere with the main run Plug-in.
+
+As the basic purpose of an agent is to run a parallel process or simultaneous to the main run of Plug-in, usually in order to achieve this we need to create classes that extend the Thread class, and rewrite the main "run (method) "which is to be run primarily when starting a new thread or process which represent this agent.
+
+We must consider that we should not create indiscriminate agents, we always use as there is no better alternative for carrying out the task or process to be performed, as using excessively Agents they may compromise the stability and system speed.
+
+Whenever you choose this solution for the activity or task required by our plug-in, we should take into account the following points:
+
+As for the name: the name must begin plugin your activity and ending with the word Agent followed.
+ Example: TemplateNetworkServiceRegistrationProcessAgent.
+
+The agent should be smart enough to auto stop when contemplating your task.
+
+Consider and calculate the timeout (sleeping time) between each run, the process performed by the agent, since very straight executions can reduce application performance considerably.
 
 
 <br>
