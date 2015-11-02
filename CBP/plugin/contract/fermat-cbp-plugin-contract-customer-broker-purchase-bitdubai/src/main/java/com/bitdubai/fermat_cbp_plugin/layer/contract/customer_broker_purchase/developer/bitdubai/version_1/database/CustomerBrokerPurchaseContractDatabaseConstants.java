@@ -15,7 +15,7 @@ public class CustomerBrokerPurchaseContractDatabaseConstants {
     /**
      * Contract database table definition.
      */
-    static final String CONTRACT_TABLE_NAME = "contract";
+    static final String CONTRACT_TABLE_NAME = "contract_purchase";
 
     static final String CONTRACT_CONTRACT_ID_COLUMN_NAME = "contract_id";
     static final String CONTRACT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME = "customer_public_key";
