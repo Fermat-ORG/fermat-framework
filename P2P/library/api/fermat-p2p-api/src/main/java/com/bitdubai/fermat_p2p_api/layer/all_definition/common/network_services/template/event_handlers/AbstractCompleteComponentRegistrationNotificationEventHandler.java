@@ -1,15 +1,16 @@
-package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.event_handlers;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.events.exceptions.UnexpectedEventException;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
 
 /**
- * The abstract Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractCompleteComponentRegistrationNotificationEventHandler</code>
+ * The abstract Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.event_handlers.AbstractCompleteComponentRegistrationNotificationEventHandler</code>
  * contains all the basic functionality of a CompleteComponentRegistrationNotificationEventHandler.
  *
  * The method <code>handleCompleteComponentConnectionRequestNotificationEvent</code> can be override to modify its behavior.

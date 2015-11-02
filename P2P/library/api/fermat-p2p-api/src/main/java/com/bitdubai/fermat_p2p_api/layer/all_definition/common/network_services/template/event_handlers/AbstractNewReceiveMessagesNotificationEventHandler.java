@@ -1,15 +1,16 @@
-package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.event_handlers;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.exceptions.UnexpectedEventException;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 
 /**
- * The abstract Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNewReceiveMessagesNotificationEventHandler</code>
+ * The abstract Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.event_handlers.AbstractNewReceiveMessagesNotificationEventHandler</code>
  * contains all the basic functionality of a NewReceiveMessagesNotificationEventHandler.
  *
  * The method <code>handleNewMessages</code> can be override to modify its behavior.
