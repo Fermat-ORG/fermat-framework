@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
@@ -18,11 +19,14 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.exceptions.CantDeleteCustomerBrokerPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseContractDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.structure.CustomerBrokerPurchaseInformation;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -147,6 +151,30 @@ public class CustomerBrokerPurchaseContractDao {
                 throw new CantDeleteCustomerBrokerPurchaseException("An exception happened",e,"","");
             }
     
+        }
+
+        public List<CustomerBrokerPurchase> getAllCustomerBrokerPurchaseFromCurrentDeviceUser() throws CantGetListCustomerBrokerPurchaseException {
+            DatabaseTable identityTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_TABLE_NAME);
+            try {
+                identityTable.loadToMemory();
+            } catch (CantLoadTableToMemoryException e) {
+                throw new CantGetListCustomerBrokerPurchaseException(CantGetListCustomerBrokerPurchaseException.DEFAULT_MESSAGE,e,"","");
+            }
+    
+            List<DatabaseTableRecord> records = identityTable.getRecords();
+            identityTable.clearAllFilters();
+    
+            List<CustomerBrokerPurchase> PurchaseContracts = new ArrayList<>();
+    
+            for (DatabaseTableRecord record : records) {
+                try {
+                    PurchaseContracts.add(constructCustomerBrokerPurchaseContractFromRecord(record));
+                } catch (InvalidParameterException e) {
+                    throw new CantGetListCustomerBrokerPurchaseException(CantGetListCustomerBrokerPurchaseException.DEFAULT_MESSAGE,e,"","");
+                }
+            }
+    
+            return PurchaseContracts;
         }
 
     /*
