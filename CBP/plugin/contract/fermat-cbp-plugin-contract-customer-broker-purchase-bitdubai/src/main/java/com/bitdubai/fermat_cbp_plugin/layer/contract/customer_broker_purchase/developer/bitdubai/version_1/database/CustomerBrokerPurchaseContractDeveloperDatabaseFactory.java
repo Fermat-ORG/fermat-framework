@@ -115,27 +115,27 @@ public class CustomerBrokerPurchaseContractDeveloperDatabaseFactory implements D
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
         /**
-         * Table Contract columns.
+         * Table Contract Purchase columns.
          */
-        List<String> contractColumns = new ArrayList<String>();
+        List<String> contractPurchaseColumns = new ArrayList<String>();
 
-        contractColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_CONTRACT_ID_COLUMN_NAME);
-        contractColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
-        contractColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_BROKER_USER_PUBLIC_KEY_COLUMN_NAME);
-        contractColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PAYMENT_CURRENCY_COLUMN_NAME);
-        contractColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_MERCHANDISE_CURRENCY_COLUMN_NAME);
-        contractColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_REFERENCE_PRICE_COLUMN_NAME);
-        contractColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_REFERENCE_CURRENCY_COLUMN_NAME);
-        contractColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PAYMENT_AMOUNT_COLUMN_NAME);
-        contractColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_MERCHANDISE_AMOUNT_COLUMN_NAME);
-        contractColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PAYMENT_EXPIRATION_DATE_COLUMN_NAME);
-        contractColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_MERCHANDISE_DELIVERY_EXPIRATION_DATE_COLUMN_NAME);
-        contractColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_STATUS_COLUMN_NAME);
+        contractPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME);
+        contractPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
+        contractPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_BROKER_USER_PUBLIC_KEY_COLUMN_NAME);
+        contractPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_PAYMENT_CURRENCY_COLUMN_NAME);
+        contractPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_MERCHANDISE_CURRENCY_COLUMN_NAME);
+        contractPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_REFERENCE_PRICE_COLUMN_NAME);
+        contractPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_REFERENCE_CURRENCY_COLUMN_NAME);
+        contractPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_PAYMENT_AMOUNT_COLUMN_NAME);
+        contractPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_MERCHANDISE_AMOUNT_COLUMN_NAME);
+        contractPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_PAYMENT_EXPIRATION_DATE_COLUMN_NAME);
+        contractPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_MERCHANDISE_DELIVERY_EXPIRATION_DATE_COLUMN_NAME);
+        contractPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_STATUS_COLUMN_NAME);
         /**
-         * Table Contract addition.
+         * Table Contract Purchase addition.
          */
-        DeveloperDatabaseTable contractTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_TABLE_NAME, contractColumns);
-        tables.add(contractTable);
+        DeveloperDatabaseTable contractPurchaseTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_TABLE_NAME, contractPurchaseColumns);
+        tables.add(contractPurchaseTable);
 
 
 
