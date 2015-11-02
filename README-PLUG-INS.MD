@@ -17,6 +17,7 @@ Several new concepts are introduced...
 
 <br>
 ### Subsystem Class
+
 * Is where we define and identify the plugin, we have to assign a Plugin Reference to it.
 * Here we will register all the Developers who've made a version of the plugin.
 
@@ -28,6 +29,11 @@ Several new concepts are introduced...
 
 <br>
 ### Plug-in Root
+
+The Plug-in root is the starting point of a Plug-in. It is the pint of contact between the Framework and the Plug-in. It main purpose is to imlpement the interfaces needed to be able to be started and stopped by the Framework, and other interfaces that are required in order to receive the references to other plugins so as to be able to consume their services.
+
+Additional notes:
+
 * Is the main Class of each Version of the plug-in. This Class must implements AbstractPlugin of fermat-api.
 * A plug-in haves two particular behaviors:
  * It's a Service, and with this, we're saying that it can be managed like one, for this haves four basic methods, start, stop, pause or resume, and to keep the status we have a **ServiceStatus** [CREATED-STARTED-STOPPED-PAUSED].
@@ -38,6 +44,11 @@ Several new concepts are introduced...
 
 <br>
 ### Plug-in Public Interfaces
+
+Each Plug-in give services to other Plug-ins. They do it through public interfaces published either of Fermat-api, or on the Platfom's API where the Plug-in belongs. Some clases of it's internal structure implements these public interfaces.
+
+Additional notes:
+
 * The must of the plug-ins can be consumed. For this we'll define in the api of the platform where the plug-in belongs the public interfaces of the same.
 * If any method of the interface throws an exception, enums or any other, this exception must be public too, and must be created in the api too. 
 * We've a structure for this:
@@ -50,10 +61,17 @@ Several new concepts are introduced...
 
 <br>
 ### Internal Structure
-* We tend to repeat the same conventions in each part of the fermat, with this we're trying to say that, like in the interfaces defini
+
+Each Plug-in is free to create adopt a class model it best suit it's needs to handle it's responsability towards the rest of the system. This class model we call it the Internal Structure. Usually is a hiearchy where one of it classes ir the root and the one that often implements the public interface of the Plug-in.
+
+Additional notes:
+
+* We tend to repeat the same conventions in each part of the Fermat, with this we're trying to say that, like in the interfaces defini...
 
 <br>
 ### Event Handler
+
+An Envent Hander is a type of Class that is called by the Event Manager whenever and event the Plug-in is suscribed to is triggered. A single Plug-in can have as meny Event Handlers as needed. Somewhere within the Internal Structure the Plug-in subscribes itself to different type of events.
 
 <br>
 ### Database
