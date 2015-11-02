@@ -40,7 +40,8 @@ public abstract class AbstractNewReceiveMessagesNotificationEventHandler impleme
             if (fermatEvent instanceof NewNetworkServiceMessageReceivedNotificationEvent) {
                 NewNetworkServiceMessageReceivedNotificationEvent newNetworkServiceMessageSentNotificationEvent = (NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent;
 
-                this.handleNewMessages((FermatMessage) newNetworkServiceMessageSentNotificationEvent.getData());
+                if(newNetworkServiceMessageSentNotificationEvent.getNetworkServiceTypeApplicant() == networkService.getPlatformComponentProfilePluginRoot().getNetworkServiceType())
+                    this.handleNewMessages((FermatMessage) newNetworkServiceMessageSentNotificationEvent.getData());
 
             } else {
                 P2pEventType eventExpected = P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION;
