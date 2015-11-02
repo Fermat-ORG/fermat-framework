@@ -88,9 +88,13 @@ Even having a hiriarchy of identities, end users have a root identity. At that l
 Many componets have their identities for a variety of purposes:
 
 a. Plug-ins to indentify themselves to Add-ons in order to get access to identity-specific resources as Databases or areas of the File System.
+
 b. Network Services to encrypt the communications between each other.
+
 c. Clients to encrypt the communication with nodes.
+
 d. Nodes to recognize each other even when their IP, location or other profile information changes.
+
 
 <br>
 ### Workflows
@@ -110,12 +114,9 @@ Part of the solution is to make each Plug-in assume a responsability while they 
  
 #### Monetary Transactions
 
+We handle monetary transactions dividing the accounting from the value. Usually transactions start on speciallized Plug-ins which are in charge of coordinating the whole transaction. These Plug-ins usually interact with wallets-Plug-ins debiting or crediting the accounts involved. The accounting of the currency or asset involved are keeped by these wallets-Plug-ins. Later the transactional workflow splits between moving the value (crypto currency) and moving the meta-data associated to the transaction.
 
-
-
-
-
-
+Through two different paths, the value and the meta-data arrives to the recipient's device and they are combined together by the remote counter-party transaction component which in turn interacts with the remote wallet-Plu-ins to record the accounting as appropiate.
 
 ### Syncronization
 
