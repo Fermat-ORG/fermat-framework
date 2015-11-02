@@ -592,6 +592,10 @@ project(':fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai').projectDi
 include ':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai'
 project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai').projectDir = new File('BCH/plugin/crypto_vault/fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
 
+include ':fermat-bch-plugin-middleware-crypto-addresses-bitdubai'
+project(':fermat-bch-plugin-middleware-crypto-addresses-bitdubai').projectDir = new File('BCH/plugin/middleware/fermat-bch-plugin-middleware-crypto-addresses-bitdubai')
+
+
 // WPD Projects
 
 //actor

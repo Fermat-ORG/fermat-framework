@@ -23,12 +23,15 @@ import java.util.List;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/10/2015.
  */
-public class FermatPluginManager {
+public final class FermatPluginManager {
 
     private final FermatSystemContext systemContext;
+    private final FermatAddonManager  addonManager ;
 
-    public FermatPluginManager(final FermatSystemContext systemContext) {
+    public FermatPluginManager(final FermatSystemContext systemContext,
+                               final FermatAddonManager  addonManager ) {
 
+        this.addonManager  = addonManager ;
         this.systemContext = systemContext;
     }
 
@@ -45,8 +48,6 @@ public class FermatPluginManager {
                                                                                                                     VersionNotFoundException {
 
         try {
-
-            final FermatAddonManager addonManager = new FermatAddonManager(systemContext);
 
             final AbstractPlugin abstractPlugin = systemContext.getPluginVersion(addonVersionReference);
 

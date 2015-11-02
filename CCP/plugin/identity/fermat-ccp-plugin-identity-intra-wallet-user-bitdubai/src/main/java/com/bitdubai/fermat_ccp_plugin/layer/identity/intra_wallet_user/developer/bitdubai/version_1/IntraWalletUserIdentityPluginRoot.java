@@ -4,8 +4,6 @@ package com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.develope
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -15,14 +13,12 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.DealsWithIntraUsersNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 
@@ -40,11 +36,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDao;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressRequestEventException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingAddressExchangeRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.event_handlers.CryptoAddressRequestedEventHandler;
@@ -104,52 +99,76 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
                    IntraWalletUserManager,
                    LogManagerForDevelopers {
 
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
-    private ErrorManager errorManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
-    private EventManager eventManager;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.PLUGIN_FILE_SYSTEM    )
-    private PluginFileSystem pluginFileSystem;
-
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CRYPTO_ADDRESSES   )
-    private CryptoAddressesManager cryptoAddressesManager;
-
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS             , layer = Layers.CRYPTO_MODULE  , plugin = Plugins.CRYPTO_ADDRESS_BOOK)
-    private CryptoAddressBookManager cryptoAddressBookManager;
-
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS             , layer = Layers.CRYPTO_VAULT   , plugin = Plugins.BITCOIN_VAULT      )
-    private CryptoVaultManager cryptoVaultManager;
-
-    @NeededPluginReference(platform = Platforms.PLUG_INS_PLATFORM       , layer = Layers.USER           , plugin = Plugins.DEVICE_USER        )
-    private DeviceUserManager deviceUserManager;
-
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.INTRA_WALLET_USER  )
-    private IntraUserManager intraActorManager;
-
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE     , plugin = Plugins.WALLET_MANAGER     )
-    private WalletManagerManager walletManagerManager;
-
+    public IntraWalletUserIdentityPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
 
     private IntraWalletUserIdentityDao intraWalletUserIdentityDao;
 
+    /**
+     * DealsWithCryptoAddressesNetworkService Interface member variables.
+     */
+    private CryptoAddressesManager cryptoAddressesManager;
+
+    /**
+     * DealsWithCryptoAddressBook Interface member variables.
+     */
+    private CryptoAddressBookManager cryptoAddressBookManager;
+
+    /**
+     * DealsWithCryptoVault Interface member variables.
+     */
+    private CryptoVaultManager cryptoVaultManager;
+
+    /**
+     * DealsWithDeviceUsers Interface member variables.
+     */
+    private DeviceUserManager deviceUserManager;
+
+    /**
+     * DealsWithErrors Interface member variables.
+     */
+    private ErrorManager errorManager;
+
+    /**
+     * DealsWithEvents Interface member variables.
+     */
+    private EventManager eventManager;
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
+
+    // DealsWithPluginDatabaseSystem Interface member variables.
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    /**
+     * FileSystem Interface member variables.
+     */
+    private PluginFileSystem pluginFileSystem;
+
+
+    /**
+     * DealsWithPluginIdentity Interface member variables.
+     */
+    private UUID pluginId;
+
+    /**
+     * DealsWithCCPWalletManager Interface member variables.
+     */
+    private WalletManagerManager walletManagerManager;
+
+
+    /**
+     * Service Interface member variables.
+     */
+    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
+
 
     private static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     public static final String INTRA_WALLET_USERS_PROFILE_IMAGE_FILE_NAME = "intraWalletUserIdentityProfileImage";
     public static final String INTRA_WALLET_USERS_PRIVATE_KEYS_FILE_NAME = "intraWalletUserIdentityPrivateKey";
 
-    public IntraWalletUserIdentityPluginRoot() {
-        super(new PluginVersionReference(new Version()));
-    }
 
-
+    private IntraUserManager intraActorManager;
 
 
     /**
@@ -298,17 +317,28 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
 
     private void executePendingAddressExchangeRequests(IntraWalletUserIdentityCryptoAddressGenerationService cryptoAddressGenerationService) {
         try {
-            List<AddressExchangeRequest> addressExchangeRequestList = cryptoAddressesManager.listPendingRequests(
+            List<CryptoAddressRequest> cryptoAddressRequestList = cryptoAddressesManager.listPendingCryptoAddressRequests(
                     IntraWalletUserIdentityCryptoAddressGenerationService.actorType
             );
 
-            for (AddressExchangeRequest request : addressExchangeRequestList) {
+            for (CryptoAddressRequest request : cryptoAddressRequestList) {
                 cryptoAddressGenerationService.handleCryptoAddressRequestedEvent(request);
             }
 
-        } catch (CantListPendingAddressExchangeRequestsException | CantHandleCryptoAddressRequestEventException e) {
+        } catch (CantListPendingCryptoAddressRequestsException | CantHandleCryptoAddressRequestEventException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
+    }
+
+
+    @Override
+    public void pause() {
+        this.serviceStatus = ServiceStatus.PAUSED;
+    }
+
+    @Override
+    public void resume() {
+        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
@@ -456,6 +486,14 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
+    }
+
+    /**
+     * PlugIn Interface implementation.
+     */
+    @Override
+    public void setId(UUID pluginId) {
+        this.pluginId = pluginId;
     }
 
     @Override

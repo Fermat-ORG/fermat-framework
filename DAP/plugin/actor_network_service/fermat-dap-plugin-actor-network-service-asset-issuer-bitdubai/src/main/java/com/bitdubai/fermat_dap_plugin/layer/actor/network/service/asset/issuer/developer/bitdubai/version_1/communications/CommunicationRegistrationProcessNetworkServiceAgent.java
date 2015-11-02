@@ -67,7 +67,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     /*
                      * Register me
                      */
-                    communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+                    communicationsClientConnection.registerComponentForCommunication(assetIssuerActorNetworkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
 
                     /*
                      * Configure my new profile

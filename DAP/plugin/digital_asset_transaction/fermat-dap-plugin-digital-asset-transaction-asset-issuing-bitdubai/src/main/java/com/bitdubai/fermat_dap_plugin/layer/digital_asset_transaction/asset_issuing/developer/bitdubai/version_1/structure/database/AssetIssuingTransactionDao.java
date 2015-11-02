@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
@@ -254,6 +255,7 @@ public class AssetIssuingTransactionDao {
             record.setIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_GENERATED_COLUMN_NAME, INITIAL_DIGITAL_ASSET_GENERATED_AMOUNT);
             record.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode());
             record.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublickey);
+            record.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ISSUING_STATUS_COLUMN_NAME, IssuingStatus.ISSUING.getCode());
             databaseTable.insertRecord(record);
             this.database.closeDatabase();
         } catch (CantExecuteDatabaseOperationException exception) {
@@ -417,6 +419,40 @@ public class AssetIssuingTransactionDao {
             throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception),"Getting pending digital assets transactions to issue","Unexpected exception");
         }
 
+    }
+
+    public String getIssuingStatusByPublicKey(String publicKey) throws CantCheckAssetIssuingProgressException {
+        try{
+            this.database.openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME);
+            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            DatabaseTableRecord databaseTableRecord;
+            List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
+            if (databaseTableRecords.size() > 1){
+                this.database.closeDatabase();
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.",  "Public key:" + publicKey);
+            }
+            else {
+                databaseTableRecord = databaseTableRecords.get(0);
+            }
+            String issuingStatus=databaseTableRecord.getStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ISSUING_STATUS_COLUMN_NAME);
+            this.database.closeDatabase();
+            return issuingStatus;
+
+        } catch (DatabaseNotFoundException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception,"Getting the number of Digital Assets generated","Cannot found the Asset Issuing database");
+        } catch (CantOpenDatabaseException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception,"Getting the number of Digital Assets generated","Cannot open the Asset Issuing database");
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception,"Getting the number of Digital Assets generated","Cannot load the Asset Issuing database");
+        } catch (Exception exception){
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception),"Getting the number of Digital Assets generated","Unexpected exception");
+        }
     }
 
     public int getNumberOfIssuedAssets(String publicKey) throws CantCheckAssetIssuingProgressException {
@@ -1057,18 +1093,53 @@ public class AssetIssuingTransactionDao {
                 databaseTableRecord = databaseTableRecords.get(0);
             }
             int assetsGenerated=databaseTableRecord.getIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_GENERATED_COLUMN_NAME);
-            databaseTableRecord.setIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_GENERATED_COLUMN_NAME, assetsGenerated+1);
+            int assetsToGenerate=databaseTableRecord.getIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_TO_GENERATE_COLUMN_NAME);
+            assetsGenerated=assetsGenerated+1;
+            if(assetsToGenerate==assetsGenerated){
+                databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ISSUING_STATUS_COLUMN_NAME, IssuingStatus.ISSUED.getCode());
+            }
+            databaseTableRecord.setIntegerValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ASSETS_GENERATED_COLUMN_NAME, assetsGenerated);
             databaseTable.updateRecord(databaseTableRecord);
             this.database.closeDatabase();
         } catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(exception, "Updating Transaction Status.", "Cannot open or find the Asset Issuing database");
+            throw new CantCheckAssetIssuingProgressException(exception, "Updating Digital Asset Counter.", "Cannot open or find the Asset Issuing database");
         } catch (CantLoadTableToMemoryException exception) {
             this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(exception, "Updating Transaction Status ", "Cannot load the table into memory");
+            throw new CantCheckAssetIssuingProgressException(exception, "Updating Digital Asset Counter", "Cannot load the table into memory");
         } catch(Exception exception){
             this.database.closeDatabase();
-            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Updating Transaction Status.", "Unexpected exception - Digital Asset public key:" + assetPublicKey);
+            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Updating Digital Asset Counter.", "Unexpected exception - Digital Asset public key:" + assetPublicKey);
+        }
+    }
+
+    public void updateDigitalAssetIssuingStatus(String assetPublicKey, IssuingStatus issuingStatus) throws CantCheckAssetIssuingProgressException {
+        try{
+            this.database=openDatabase();
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_TABLE_NAME);
+            databaseTable.setStringFilter(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
+            DatabaseTableRecord databaseTableRecord;
+            if (databaseTableRecords.size() > 1){
+                this.database.closeDatabase();
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.",  "Digital Asset public key:" + assetPublicKey);
+            } else {
+                databaseTableRecord = databaseTableRecords.get(0);
+            }
+            databaseTableRecord.setStringValue(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DIGITAL_ASSET_ISSUING_STATUS_COLUMN_NAME, issuingStatus.getCode());
+            databaseTable.updateRecord(databaseTableRecord);
+            this.database.closeDatabase();
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception, "Updating Issuing Status.", "Cannot open or find the Asset Issuing database");
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(exception, "Updating Issuing Status ", "Cannot load the table into memory");
+        } catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantCheckAssetIssuingProgressException(FermatException.wrapException(exception), "Updating Issuing Status.", "Unexpected exception - Digital Asset public key:" + assetPublicKey);
         }
     }
 

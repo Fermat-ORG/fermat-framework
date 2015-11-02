@@ -75,7 +75,7 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -96,7 +96,7 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
                   /*
                    * We create the new database
                    */
-                database = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                database = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -200,6 +200,7 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
          */
         DeveloperDatabaseTable incomingNotificationsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TABLE_NAME, incomingNotificationsColumns);
         tables.add(incomingNotificationsTable);
+
 
 
         return tables;

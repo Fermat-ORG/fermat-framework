@@ -9,6 +9,7 @@ import com.bitdubai.fermat_bch_core.layer.crypto_module.CryptoModuleLayer;
 import com.bitdubai.fermat_bch_core.layer.crypto_network.CryptoNetworkLayer;
 import com.bitdubai.fermat_bch_core.layer.crypto_router.CryptoRouterLayer;
 import com.bitdubai.fermat_bch_core.layer.crypto_vault.CryptoVaultLayer;
+import com.bitdubai.fermat_bch_core.layer.middleware.MiddlewareLayer;
 
 /**
  * The class <code>com.bitdubai.fermat_bch_core.BCHPlatform</code>
@@ -31,6 +32,7 @@ public class BCHPlatform extends AbstractPlatform {
             registerLayer(new CryptoNetworkLayer());
             registerLayer(new CryptoRouterLayer() );
             registerLayer(new CryptoVaultLayer()  );
+            registerLayer(new MiddlewareLayer()   );
 
         } catch (CantRegisterLayerException e) {
 

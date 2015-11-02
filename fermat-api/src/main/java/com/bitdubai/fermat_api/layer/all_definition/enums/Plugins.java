@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 
 /**
  * Created by ciencias on 2/13/15.
- * 
+ *
  */
 public enum Plugins implements FermatEnum {
 
@@ -53,6 +53,7 @@ public enum Plugins implements FermatEnum {
     BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION("BINEXUT"),
     BITDUBAI_INCOMING_CRYPTO_TRANSACTION("BINCRYT"),
     BITDUBAI_USER_DEVICE_USER("BUDEVU"),
+    BITDUBAI_USER_REDEMPTION_TRANSACTION("BURT"),
     BITDUBAI_ACTOR_EXTRA_USER("BAEXU"),
     BITDUBAI_USER_INTRA_USER("BUINU"),
     BITDUBAI_COINBASE_WORLD("BCOINW"),
@@ -171,6 +172,10 @@ public enum Plugins implements FermatEnum {
     WALLET_CONTACTS          ("WC"  ),
     WALLET_MANAGER           ("WM"),
 
+
+    // todo temporal
+
+    CRYPTO_ADDRESSES__MIDDLEWARE_TEMP ("cryptoaddmidtemp") ,
     // End  new Plugins
 
     ;
@@ -272,6 +277,8 @@ public enum Plugins implements FermatEnum {
                 return BITDUBAI_INCOMING_CRYPTO_TRANSACTION;
             case "BUDEVU":
                 return BITDUBAI_USER_DEVICE_USER;
+            case "BURT":
+                return BITDUBAI_USER_REDEMPTION_TRANSACTION;
             case "BAEXU":
                 return BITDUBAI_ACTOR_EXTRA_USER;
             case "BUINU":
@@ -412,11 +419,16 @@ public enum Plugins implements FermatEnum {
             case "WC":   return WALLET_CONTACTS         ;
             case "WM":   return WALLET_MANAGER          ;
 
+
+            // temporal
+            case "cryptoaddmidtemp": return CRYPTO_ADDRESSES__MIDDLEWARE_TEMP;
+
+
             // End  new Plugins
 
             default:
                 throw new InvalidParameterException(
-                        "Code Received: " + code, 
+                        "Code Received: " + code,
                         "This Code Is Not Valid for the Plugins enum"
                 );
         }

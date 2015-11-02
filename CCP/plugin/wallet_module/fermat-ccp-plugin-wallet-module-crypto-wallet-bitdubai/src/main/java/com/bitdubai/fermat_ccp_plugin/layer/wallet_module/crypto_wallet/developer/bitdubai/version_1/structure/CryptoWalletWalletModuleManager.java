@@ -24,6 +24,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionTy
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIdentityIntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
@@ -411,16 +412,7 @@ public class CryptoWalletWalletModuleManager implements
                                                                  BlockchainNetworkType blockchainNetworkType) throws CantCreateWalletContactException, ContactNameAlreadyExistsException{
         try{
 
-         //get to Crypto Address NS the intra user actor address
-            cryptoAddressesNSManager.sendAddressExchangeRequest(walletPublicKey,
-                                                                walletCryptoCurrency ,
-                                                                actorWalletType,
-                                                                actorConnectedType ,
-                                                                identityWalletPublicKey,
-                                                                actorConnectedPublicKey,
-                                                                blockchainNetworkType );
-
-            try {
+             try {
                 walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorAlias, walletPublicKey);
                 throw new ContactNameAlreadyExistsException(ContactNameAlreadyExistsException.DEFAULT_MESSAGE, null, null, null);
 
@@ -436,7 +428,20 @@ public class CryptoWalletWalletModuleManager implements
                         actorConnectedType,
                         walletPublicKey
                 );
-                return new CryptoWalletWalletModuleWalletContact(walletContactRecord, actorPhoto);
+
+                 //get to Crypto Address NS the intra user actor address
+                 cryptoAddressesNSManager.sendAddressExchangeRequest(walletPublicKey,
+                         walletCryptoCurrency ,
+                         actorWalletType,
+                         actorConnectedType ,
+                         identityWalletPublicKey,
+                         actorPublicKey,
+			 CryptoAddressDealers.CRYPTO_WALLET,
+                         blockchainNetworkType );
+
+
+
+                 return new CryptoWalletWalletModuleWalletContact(walletContactRecord, actorPhoto);
             }
 
         } catch (ContactNameAlreadyExistsException e) {
