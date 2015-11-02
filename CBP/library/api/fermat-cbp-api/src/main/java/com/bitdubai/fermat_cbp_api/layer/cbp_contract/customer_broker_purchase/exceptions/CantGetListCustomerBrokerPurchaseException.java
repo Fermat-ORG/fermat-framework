@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantGetListCustomerBrokerPurchaseException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T GET LIST OF CONTRACT CUSTOMER BROKER BANK MONEY PURCHASE";
+    public static final String DEFAULT_MESSAGE = "CAN'T GET LIST OF CONTRACT CUSTOMER BROKER PURCHASE";
 
     /**
      * This is the constructor that every inherited FermatException must implement
