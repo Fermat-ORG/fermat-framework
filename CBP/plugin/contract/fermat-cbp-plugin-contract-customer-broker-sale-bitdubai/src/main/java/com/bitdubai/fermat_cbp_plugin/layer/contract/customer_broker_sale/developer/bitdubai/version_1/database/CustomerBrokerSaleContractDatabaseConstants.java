@@ -19,7 +19,7 @@ public class CustomerBrokerSaleContractDatabaseConstants {
 
     static final String CONTRACT_SALE_CONTRACT_ID_COLUMN_NAME = "contract_id";
     static final String CONTRACT_SALE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME = "customer_public_key";
-    static final String CONTRACT_SALE_BROKER_USER_PUBLIC_KEY_COLUMN_NAME = "broker_user_public_key";
+    static final String CONTRACT_SALE_BROKER_PUBLIC_KEY_COLUMN_NAME = "broker_public_key";
     static final String CONTRACT_SALE_PAYMENT_CURRENCY_COLUMN_NAME = "payment_currency";
     static final String CONTRACT_SALE_MERCHANDISE_CURRENCY_COLUMN_NAME = "merchandise_currency";
     static final String CONTRACT_SALE_REFERENCE_PRICE_COLUMN_NAME = "reference_price";
