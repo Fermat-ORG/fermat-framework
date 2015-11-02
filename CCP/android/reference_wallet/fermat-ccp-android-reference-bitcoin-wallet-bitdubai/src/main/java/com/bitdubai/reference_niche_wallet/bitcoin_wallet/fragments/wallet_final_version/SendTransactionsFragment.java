@@ -274,7 +274,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                             cryptoWallet.convertConnectionToContact(walletContact.name,
                                     Actors.INTRA_USER,
                                     walletContact.actorPublicKey,
-                                    new byte[0],
+                                    walletContact.profileImage,
                                     Actors.INTRA_USER,
                                     intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),
                                     "reference_wallet"/*referenceWalletSession.getWalletSessionType().getWalletPublicKey()*/ ,
@@ -679,7 +679,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                 String contactAddress = "";
                 if(wcr.getReceivedCryptoAddress().size() > 0)
                     contactAddress = wcr.getReceivedCryptoAddress().get(0).getAddress();
-                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress,wcr.isConnection()));
+                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress,wcr.isConnection(),wcr.getProfilePicture()));
             }
         }
         catch (CantGetAllWalletContactsException e) {
