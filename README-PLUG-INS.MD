@@ -21,7 +21,7 @@ Several new concepts are introduced at a Plug-in level. In this section the most
 
 There are a few classes that every Plug-in have.
 
-<br>
+
 #### Developer Class
 
 Each Plug-in has a Developer Class. The reason is that there might be more than one version of the Plug-in at the same time. To deal with this, the Framework instead of instantiating the _Plugin Root_ directly, it calls the Developer Class that is somehow representing the Plug-ins developer. 
@@ -37,7 +37,6 @@ The Plug-in root is the starting point of a Plug-in. It is the point of contact 
 ### Class Groups
 -------------------
 
-<br>
 #### Public Interfaces
 
 Each Plug-in gives services to other Plug-ins. They do it through public interfaces published either on Fermat-api, or on the Platfom's API where the Plug-in belongs. Some clases of it's internal structure implements these public interfaces.
@@ -73,7 +72,6 @@ We define Agents as objects which at runtime will create a new thread of execiti
 ### Othe Elements
 -------------------
 
-<br>
 #### Databases
 
 Plug-ins may have one or more Databases for storing their data. Usually one Database is enought, but in some cases different instances of the same data model are required.
@@ -95,7 +93,6 @@ This section will help you undestand the workflow needed to be followed in order
 ### Getting Organized
 ---------------------
 
-<br>
 #### Issues
 
 It is mandatory that you create an initial set of github issues before you proceed further on the workflow. This will show the rest of the temas that someone is working in this functionality and avoid conflicting work early on. It will also hook the team leader into your workflow and allow him to guide and advise you when needed.
