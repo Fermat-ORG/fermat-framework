@@ -95,10 +95,22 @@ public class AddonVersionReference {
     }
 
     @Override
-    public final String toString() {
+    public String toString() {
         return "AddonVersionReference{" +
                 "addonDeveloperReference=" + addonDeveloperReference +
                 ", version=" + version +
                 '}';
     }
+
+    public final String toString2() {
+        return "AddonVersionReference{" +
+                "operativeSystem=" + addonDeveloperReference.getAddonReference().getLayerReference().getPlatformReference().getOperativeSystem() +
+                ", platform=" + addonDeveloperReference.getAddonReference().getLayerReference().getPlatformReference().getPlatform() +
+                ", layer=" + addonDeveloperReference.getAddonReference().getLayerReference().getLayer() +
+                ", addon=" + addonDeveloperReference.getAddonReference().getAddon()+
+                ", developer=" + addonDeveloperReference.getDeveloper()+
+                ", version=" + version +
+                '}';
+    }
+
 }

@@ -1,14 +1,14 @@
-package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.exceptions;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The exception <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.network_service.exceptions.CantDeleteRecordDataBaseException</code>
+ * The exception <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantDeleteRecordDataBaseException</code>
  * is thrown when there is an error trying to delete a record from database.
  * <p>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 06/10/2015.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 02/11/2015.
  */
-public class CantDeleteRecordDataBaseException extends FermatException {
+public final class CantDeleteRecordDataBaseException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T DELETE RECORD IN DATABASE EXCEPTION";
 
@@ -18,6 +18,10 @@ public class CantDeleteRecordDataBaseException extends FermatException {
 
     public CantDeleteRecordDataBaseException(Exception cause, String context, String possibleReason) {
         this(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
+
+    public CantDeleteRecordDataBaseException(String context, String possibleReason) {
+        this(DEFAULT_MESSAGE, null, context, possibleReason);
     }
 
 }
