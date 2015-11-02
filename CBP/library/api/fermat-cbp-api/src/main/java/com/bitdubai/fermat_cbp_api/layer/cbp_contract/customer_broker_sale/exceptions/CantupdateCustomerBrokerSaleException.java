@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantupdateCustomerBrokerSaleException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T UPDATE THE CONTRACT CUSTOMER BROKER Sale";
+    public static final String DEFAULT_MESSAGE = "CAN'T UPDATE THE CONTRACT CUSTOMER BROKER SALE";
 
     /**
      * This is the constructor that every inherited FermatException must implement
