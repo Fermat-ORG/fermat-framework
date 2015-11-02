@@ -96,6 +96,11 @@ public class CustomerBrokerPurchaseContractDao {
     
         }
 
+        public DatabaseTableRecord getCustomerBrokerPurchaseContractTable(){
+            DatabaseTable PurchaseContractTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_TABLE_NAME);
+            return PurchaseContractTable.getEmptyRecord();
+        }
+
     /*
         Methods Private
      */
