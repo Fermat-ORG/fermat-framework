@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.Stock;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockTransaction;
@@ -19,10 +20,12 @@ import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdu
 public class CryptoBrokerStock implements Stock {
 
     private final FermatEnum stockType;
+    private KeyPair walletKeys;
     private final CryptoBrokerWalletDatabaseDao databaseDao;
 
-    public CryptoBrokerStock(final FermatEnum stockType, final CryptoBrokerWalletDatabaseDao databaseDao){
+    public CryptoBrokerStock(final FermatEnum stockType, final KeyPair walletKeys, final CryptoBrokerWalletDatabaseDao databaseDao){
         this.stockType = stockType;
+        this.walletKeys = walletKeys;
         this.databaseDao = databaseDao;
     }
 
