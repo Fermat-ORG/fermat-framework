@@ -4,9 +4,9 @@
 
 ## Introduction
 
-Plug-ins are one of the three basic components that can be added into the Fermat Framework. The two others are Addons, and GUI components. Each Plug-in has a well defined responsability within the system at usually collaborate from within one or more workflows in which it participates.  
+Plug-ins are one of the three basic components that can be added into the Fermat Framework. The two others are Addons, and GUI components. Each Plug-in has a well defined responsability within the system. Usually a Plug-in performs a task on one or more workflows.  
 
-To accomplish it's mission, a Plug-in may have have it's own database and files to persist it's state. It also has an internal structure of classes designed specifically to fullfill it's goals. Some of these classes have public interfaces which exposes the Plug-in public services to other Fermat components.
+To accomplish it's mission, a Plug-in may have it's own database and files to persist it's state. It also has an internal structure of classes designed specifically to fullfill it's goals. Some of these classes implement public interfaces which in turn, exposes the Plug-in public services to other Fermat components.
 
 
 <br>
@@ -16,83 +16,41 @@ To accomplish it's mission, a Plug-in may have have it's own database and files 
 Several new concepts are introduced...
 
 <br>
-### Subsystem Class
-
-* Is where we define and identify the plugin, we have to assign a Plugin Reference to it.
-* Here we will register all the Developers who've made a version of the plugin.
-
-<br>
 ### Developer Class
-* Each developer of a plugin must have his own Developer Class and define it in a specific package with his name.
-* Here we can register all the Versions of the Plugin created by the Developer.
-* (Plugin Licensor? Explanation?)
+
+Each Plug-in has a Developer Class. The reason is that there might be more than one version of the Plug-in at the same time. To deal with this, the Framework instead of instantiating the _Plugin Root_ directly, it calls the Developer Class that is somehow representing the Plug-ins developer. 
+
+In this way this class is able to choose which version of the Plug-in to run, and if it detects that a data migration must be done from version 1 to version 2, it coordinates that process too.
 
 <br>
 ### Plug-in Root
 
-The Plug-in root is the starting point of a Plug-in. It is the pint of contact between the Framework and the Plug-in. It main purpose is to imlpement the interfaces needed to be able to be started and stopped by the Framework, and other interfaces that are required in order to receive the references to other plugins so as to be able to consume their services.
-
-Additional notes:
-
-* Is the main Class of each Version of the plug-in. This Class must implements AbstractPlugin of fermat-api.
-* A plug-in haves two particular behaviors:
- * It's a Service, and with this, we're saying that it can be managed like one, for this haves four basic methods, start, stop, pause or resume, and to keep the status we have a **ServiceStatus** [CREATED-STARTED-STOPPED-PAUSED].
- * if its necessary to do something during the start-up of the plugin, you must override services methdos.
- * It haves an identity, given by the fermat-core. We may use this **pluginId** to add security in our plug-in. Throw it we should encrypt and decrypt the databases, files, etc. that the plug-in manages. 
-* It can be referenced, for this it haves a PluginVersionReference.
-* It can ask for dependences to the core, in the original core we specify the dependences throw the implementation of DealsWithOtherPluginOrAddon Interface, now we've two annotations to ask for this dependences: @NeededAddonReference @NeededPluginReference
+The Plug-in root is the starting point of a Plug-in. It is the point of contact between the Framework and the Plug-in. It main purpose is to implement the interfaces that transforms itself into a service that can be started and stopped by the Framework, and other interfaces that are required in order to receive the references to other plugins so as to be able to consume their services.
 
 <br>
 ### Plug-in Public Interfaces
 
-Each Plug-in give services to other Plug-ins. They do it through public interfaces published either of Fermat-api, or on the Platfom's API where the Plug-in belongs. Some clases of it's internal structure implements these public interfaces.
-
-Additional notes:
-
-* The must of the plug-ins can be consumed. For this we'll define in the api of the platform where the plug-in belongs the public interfaces of the same.
-* If any method of the interface throws an exception, enums or any other, this exception must be public too, and must be created in the api too. 
-* We've a structure for this:
- * Interfaces:  Layer -> PluginName -> Interfaces
- * Exceptions:  Layer -> PluginName -> Exceptions
- * Enums:       Layer -> PluginName -> Enums
- * Events:      Layer -> PluginName -> Events
- * Annotations: Layer -> PluginName -> Annotations
- * Utils:       Layer -> PluginName -> Utils
+Each Plug-in gives services to other Plug-ins. They do it through public interfaces published either on Fermat-api, or on the Platfom's API where the Plug-in belongs. Some clases of it's internal structure implements these public interfaces.
 
 <br>
 ### Internal Structure
 
-Each Plug-in is free to create adopt a class model it best suit it's needs to handle it's responsability towards the rest of the system. This class model we call it the Internal Structure. Usually is a hiearchy where one of it classes ir the root and the one that often implements the public interface of the Plug-in.
-
-Additional notes:
-
-* We tend to repeat the same conventions in each part of the Fermat, with this we're trying to say that, like in the interfaces defini...
+Each Plug-in has an internal class model. Usually it is a hiearchy where one of it classes is the root. Some of them implements the public interface of the Plug-in defined within this Plug-in.
 
 <br>
 ### Event Handler
 
-An Envent Hander is a type of Class that is called by the Event Manager whenever and event the Plug-in is suscribed to is triggered. A single Plug-in can have as meny Event Handlers as needed. Somewhere within the Internal Structure the Plug-in subscribes itself to different type of events.
+An Envent Hander is a type of Class that is called by the Framework's Event Manager whenever and event the Plug-in is suscribed to is triggered. A single Plug-in can have as meny Event Handlers as needed. Somewhere within the Internal Structure the Plug-in subscribes itself to different type of events, declaring at that point which Event Handler class must be called.
 
 <br>
 ### Database
 
+Plug-ins may have one or more Databases for storing their data. Usually one Database is enought, but in some cases different instances of the same data model are required.
+
 <br>
 ### Agents
 
-Agents are objects like any other, except that they are created to execute tasks or background processes, also known as demons processes are used when required to perform a repetitive activity to completion and that it does not interfere with the main run Plug-in.
-
-As the basic purpose of an agent is to run a parallel process or simultaneous to the main run of Plug-in, usually in order to achieve this we need to create classes that extend the Thread class, and rewrite the main "run (method) "which is to be run primarily when starting a new thread or process which represent this agent.
-
-We must consider that we should not create indiscriminate agents, we always use as there is no better alternative for carrying out the task or process to be performed, as using excessively Agents they may compromise the stability and system speed.
-
-Whenever you choose this solution for the activity or task required by our plug-in, we should take into account the following points:
-
-* The name must begin plugin your activity and ending with the word "Agent" followed.
-Example: TemplateNetworkServiceRegistrationProcessAgent.
-
-* The agent should be smart enough to auto stop when contemplating your task.
-
-* Consider and calculate the timeout (sleeping time) between each run, the process performed by the agent, since very straight executions can reduce application performance considerably.
+We define Agents as objects which at runtime will create a new thread of execition. We have developed this pattern in order to standarize and simplify the handling of processes that need to run from time to time and perform certain tasks. 
 
 
 <br>
@@ -331,6 +289,18 @@ While you are analizing the public interfaces you might wanto to do it by writin
 #### Developer Class
 
 #### Plug-in Root
+
+Implementation notes:
+
+* Is the main Class of each Version of the plug-in. This Class must implements AbstractPlugin of fermat-api.
+* A plug-in haves two particular behaviors:
+ * It's a Service, and with this, we're saying that it can be managed like one, for this haves four basic methods, start, stop, pause or resume, and to keep the status we have a **ServiceStatus** [CREATED-STARTED-STOPPED-PAUSED].
+ * if its necessary to do something during the start-up of the plugin, you must override services methdos.
+ * It haves an identity, given by the fermat-core. We may use this **pluginId** to add security in our plug-in. Throw it we should encrypt and decrypt the databases, files, etc. that the plug-in manages. 
+* It can be referenced, for this it haves a PluginVersionReference.
+* It can ask for dependences to the core, in the original core we specify the dependences throw the implementation of DealsWithOtherPluginOrAddon Interface, now we've two annotations to ask for this dependences: @NeededAddonReference @NeededPluginReference
+
+
 The Plugin Root class is that by which initiate the plug-in functions in the application, this must instantiate all 'other name DealsWith-plug-in' to achieve the exchange of information between plugins interfaces. As a minimum requirement this kind should include the implementation of the following interfaces:
 * LogManagerForDevelopers.
 * Plugin.
@@ -339,6 +309,23 @@ The Plugin Root class is that by which initiate the plug-in functions in the app
 
 These implementations ensure that the entire class structure of the plug-in to be recognized as a plug-in for the core of the platform and to establish its status as a service operation.
 If the plug-in has implemented the use of a database **DealsWithPluginDatabaseSystem** implementing the recommended interface, which lays the foundation for the creation and use of the database in the plug-in. For this particular case, the implementation of the **DatabaseManagerForDevelopers** interface is also recommended, which allows the visualization of the information in the database plug-in at runtime.
+
+#### Public Interfaces
+
+
+Additional notes:
+
+* The must of the plug-ins can be consumed. For this we'll define in the api of the platform where the plug-in belongs the public interfaces of the same.
+* If any method of the interface throws an exception, enums or any other, this exception must be public too, and must be created in the api too. 
+* We've a structure for this:
+ * Interfaces:  Layer -> PluginName -> Interfaces
+ * Exceptions:  Layer -> PluginName -> Exceptions
+ * Enums:       Layer -> PluginName -> Enums
+ * Events:      Layer -> PluginName -> Events
+ * Annotations: Layer -> PluginName -> Annotations
+ * Utils:       Layer -> PluginName -> Utils
+
+
 
 #### Database
 
@@ -358,6 +345,23 @@ Here are some examples:
 Additionally, if required that information the database can be displayed through the SubApp Develop, present at runtime on the App Fermat, the implementation of the class' name plug-in'DeveloperDatabaseFactory is required. This class will be instantiated by the PluginRooit class Plug-in par achieve the aforementioned display.
 
 To facilitate the work of creating these classes, Fermat has developed a script in Groovy, which automates the creation of these classes, following the established design, this plugin is available at: https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/database/database_classes_generator/documentation_en.md and https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/database/database_classes_generator/script.groovy
+
+
+#### Agents
+
+As the basic purpose of an agent is to run a parallel process or simultaneous to the main run of Plug-in, usually in order to achieve this we need to create classes that extend the Thread class, and rewrite the main "run (method) "which is to be run primarily when starting a new thread or process which represent this agent.
+
+We must consider that we should not create indiscriminate agents, we always use as there is no better alternative for carrying out the task or process to be performed, as using excessively Agents they may compromise the stability and system speed.
+
+Whenever you choose this solution for the activity or task required by our plug-in, we should take into account the following points:
+
+* The name must begin plugin your activity and ending with the word "Agent" followed.
+Example: TemplateNetworkServiceRegistrationProcessAgent.
+
+* The agent should be smart enough to auto stop when contemplating your task.
+
+* Consider and calculate the timeout (sleeping time) between each run, the process performed by the agent, since very straight executions can reduce application performance considerably.
+
 
 #### Structure
 
