@@ -154,7 +154,6 @@ release.properties
 
 
 ### Gradle ###
-.gradle
 build/
 
 # Ignore Gradle GUI config
@@ -191,10 +190,6 @@ src_managed/
 project/boot/
 .history
 .cache
-
-
-### Java ###
-*.class
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
