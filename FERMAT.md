@@ -36,21 +36,27 @@ Wallets are higher level abstractions and have their own set of Plug-ins for kee
 
 ### Fermat Network
 
-The network is intended for two main things: 
+The network is intended for two main purposes: 
 
 a. clients finding other clients
+
 b. clients calling other clients.  
 
 Every Node has a copy of a distributed geo-localized inventory of all network nodes. They run a protocol that allows them to keep their copy syncronized. 
 
-To be able to be found, a client registers itself and some inner componets and identities with the geographically closest node. When it needs to find another client it runs a protocol based on the approximate location of the client it is willing to connect to.
-
-
-
-
-
+To be able to be found, a client registers itself and some inner componets and identities with the geographically closest node. When it needs to find other clients it runs a protocol based on the approximate location of the client it is willing to connect to.
 
 ### Incentive
+
+a. to developers
+
+Plug-ins developers declare a micro-use-license for each plug-in they add to the Framework. Wallet or Financial Apps developers declare a micro-use-license for their components. End users install the Apps (wallets) of their choice and the license paid is the sumatory of the App's micro-use-license plus all the micro-use-licenses of the plug-ins used by that App. 
+
+The Framework assumes the responsability to enforce the agreements, charge the end user and distribute the payments to all developers involved.
+
+b. to network nodes
+
+Clients stablishes a home node where they register themselves and their network services and identities in order to be found by other clients. They will pay a subscription fee to their home node for it's services. Finding and calling other clients through other nodes is free as those node's income is comming from the clients for which they are the home node.
 
 ### Transactions
 
