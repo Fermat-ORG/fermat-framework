@@ -1,9 +1,9 @@
-package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.exceptions;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The exception <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.exceptions.CantDeleteRecordDataBaseException</code>
+ * The exception <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.exceptions.CantDeleteRecordDataBaseException</code>
  * is thrown when there is an error trying to delete a record from database.
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 02/11/2015.

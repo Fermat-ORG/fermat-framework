@@ -1,7 +1,7 @@
-package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.database;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants</code>
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.database.CommunicationNetworkServiceDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  *
  * Created by lnacosta (laion.cj91@gmail.com) on 02/11/2015.
