@@ -327,6 +327,41 @@ public class DesktopRuntimeEnginePluginRoot implements Service, DesktopRuntimeMa
              * End Desktop CCP
              */
 
+
+            /**
+             * Desktop WPD
+             */
+
+            runtimeDesktopObject = new RuntimeDesktopObject();
+            runtimeDesktopObject.setType("WPD");
+            lstDesktops.add(runtimeDesktopObject);
+            runtimeDesktopObject.setStartActivity(Activities.WPD_DESKTOP);
+
+            activity = new Activity();
+            /**
+             * set type home
+             */
+            //activity.setType(Activities.CWP_WALLET_MANAGER_MAIN);
+            //activity.setType(Activities.dmp_DESKTOP_HOME);
+            activity.setActivityType("WPD");
+            fragment = new Fragment();
+
+            /**
+             * Add home subApps fragment
+             */
+
+            fragment = new Fragment();
+            // dmp_SUB_APP_MANAGER_FRAGMENT
+            fragment.setType("CCPSAMF");
+            activity.addFragment("CCPSAMF", fragment);
+
+
+
+            /**
+             * End Desktop WPD
+             */
+
+
             /**
              * Desktop DAP
              */
