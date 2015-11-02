@@ -85,7 +85,7 @@ public class WalletDesktopFragment extends Fragment {
                 new ArrayList<InstalledLanguage>(),
                 "crypto_customer",
                 "crypto customer",
-                "crypto_customer",
+                "crypto_customer_wallet",
                 "wallet_crypto_customer_platform_identifier",
                 new Version(1,0,0));
         lstInstalledWallet.add(installedWallet);

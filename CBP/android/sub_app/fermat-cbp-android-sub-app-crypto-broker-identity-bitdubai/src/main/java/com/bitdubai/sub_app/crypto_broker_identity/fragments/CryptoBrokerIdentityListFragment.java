@@ -147,7 +147,6 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         return R.layout.fragment_crypto_broker_identity_list;
     }
 
-
     @Override
     protected int getRecyclerLayoutId() {
         return R.id.crypto_broker_identity_recycler_view;
@@ -157,8 +156,6 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     protected int getSwipeRefreshLayoutId() {
         return R.id.swipe_refresh;
     }
-
-
 
     @Override
     public List<CryptoBrokerIdentityInformation> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {

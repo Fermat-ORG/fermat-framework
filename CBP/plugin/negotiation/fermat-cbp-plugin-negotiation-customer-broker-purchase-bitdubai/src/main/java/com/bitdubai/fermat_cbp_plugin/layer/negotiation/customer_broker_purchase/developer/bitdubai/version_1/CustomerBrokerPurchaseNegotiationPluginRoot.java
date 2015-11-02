@@ -137,11 +137,33 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot implements CustomerBrok
     @Override
     public void closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation){
         try {
+            //TODO validar que todas las clausulas esten en modo AGREED segun el tipo de negociacion
+            //TODO evaluar clausulas del cambio
+            //TODO evaluar clausulas del metodo de ejecucion
+            //TODO evaluar clausulas del metodo de pago
+
+            //TODO si las clausulas no estan agreed hay que lanzar una excepcion
+
             customerBrokerPurchaseNegotiationDao.closeNegotiation(negotiation);
         } catch (CantUpdateCustomerBrokerPurchaseException e){
             new CantUpdateCustomerBrokerPurchaseException(CantUpdateCustomerBrokerPurchaseException.DEFAULT_MESSAGE, e, "", "");
         }
     }
+
+    @Override
+    public CustomerBrokerPurchaseNegotiation sendToCustomer(CustomerBrokerPurchaseNegotiation negotiation) {
+        //TODO modifica el status de la negociacion a SENT_TO_CUSTOMER
+        //TODO modifica las clausulas de AGREED o DRAFT a SENT_TO_CUSTOMER
+        return null;
+    }
+
+    @Override
+    public CustomerBrokerPurchaseNegotiation waitForCustomer(CustomerBrokerPurchaseNegotiation negotiation) {
+        //TODO modifica el status de la negociacion a WAITING_FOR_CUSTOMER
+        //TODO modifica las clausulas de SENT_TO_CUSTOMER a WAITING_FOR_CUSTOMER
+        return null;
+    }
+
 
     @Override
     public Collection<CustomerBrokerPurchaseNegotiation> getNegotiations() throws CantListPurchaseNegotianionsException{

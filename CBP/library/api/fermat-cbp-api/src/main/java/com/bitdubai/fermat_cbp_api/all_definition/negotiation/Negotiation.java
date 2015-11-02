@@ -28,5 +28,7 @@ public interface Negotiation {
     Clause modifyClause(Clause clause, String value) throws CantUpdateClausesException;
     Clause modifyClauseStatus(Clause clause, ClauseStatus status) throws CantUpdateClausesException;
 
+    public void rejectClauseByType(ClauseType type) throws CantUpdateClausesException;
+
     ClauseType getNextClauseType() throws CantGetNextClauseTypeException;
 }

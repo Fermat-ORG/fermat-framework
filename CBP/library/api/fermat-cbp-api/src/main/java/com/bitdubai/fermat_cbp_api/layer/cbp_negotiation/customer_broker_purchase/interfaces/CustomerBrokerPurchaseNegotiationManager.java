@@ -15,6 +15,8 @@ public interface CustomerBrokerPurchaseNegotiationManager {
     CustomerBrokerPurchaseNegotiation createCustomerBrokerPurchaseNegotiation(String publicKeyCustomer, String publicKeyBroker) throws CantCreateCustomerBrokerPurchaseNegotiationException;
     void cancelNegotiation(CustomerBrokerPurchaseNegotiation negotiation);
     void closeNegotiation(CustomerBrokerPurchaseNegotiation negotiation);
+    CustomerBrokerPurchaseNegotiation sendToCustomer(CustomerBrokerPurchaseNegotiation negotiation);
+    CustomerBrokerPurchaseNegotiation waitForCustomer(CustomerBrokerPurchaseNegotiation negotiation);
 
     Collection<CustomerBrokerPurchaseNegotiation> getNegotiations() throws CantListPurchaseNegotianionsException;
     Collection<CustomerBrokerPurchaseNegotiation> getNegotiations(NegotiationStatus status) throws CantListPurchaseNegotianionsException;

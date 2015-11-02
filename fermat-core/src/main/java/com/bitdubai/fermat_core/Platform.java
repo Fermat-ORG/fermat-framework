@@ -43,6 +43,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.DealsWithCryptoPayment;
 import com.bitdubai.fermat_bch_core.BCHPlatform;
+import com.bitdubai.fermat_ccp_core.CCPPlatform;
 import com.bitdubai.fermat_core.layer.cbp.identity.CBPIdentityLayer;
 import com.bitdubai.fermat_core.layer.cbp.sub_app_module.CBPSubAppModuleLayer;
 import com.bitdubai.fermat_core.layer.ccm.actor.CCMActorLayer;
@@ -763,7 +764,7 @@ public class Platform implements Serializable {
             boolean BCH = true;
             boolean BNK = true;
             boolean BNP = true;
-            boolean CBP = false;
+            boolean CBP = true;
             boolean CCM = false;
             boolean CCP = true;
             boolean CRY = true;
@@ -903,7 +904,7 @@ public class Platform implements Serializable {
 
                 try {
 
-                    AbstractPlatform ccpPlatform = new BCHPlatform();
+                    AbstractPlatform ccpPlatform = new CCPPlatform();
                     ccpPlatform.start();
 
                     PlatformReference platformReference = new PlatformReference(Platforms.CRYPTO_CURRENCY_PLATFORM);
@@ -1411,7 +1412,7 @@ public class Platform implements Serializable {
 
 
             /*
-             * Plugin Blockchain Info World
+             * Plugin Blockchain Info Index
              * -----------------------------
              */
             // Plugin blockchainInfoWorld = ((WorldLayer)  mWorldLayer).getBlockchainInfo();
@@ -1419,7 +1420,7 @@ public class Platform implements Serializable {
             // injectPluginReferencesAndStart(blockchainInfoWorld, Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD);
 
             /*
-             * Plugin Shape Shift World
+             * Plugin Shape Shift Index
              * -----------------------------
              */
             // Plugin shapeShiftWorld = ((WorldLayer)  mWorldLayer).getShapeShift();
@@ -1427,7 +1428,7 @@ public class Platform implements Serializable {
             // injectPluginReferencesAndStart(shapeShiftWorld, Plugins.BITDUBAI_SHAPE_SHIFT_WORLD);
 
             /*
-             * Plugin Coinapult World
+             * Plugin Coinapult Index
              * -----------------------------
              */
             // Plugin coinapultWorld = ((WorldLayer)  mWorldLayer).getCoinapult();
@@ -1435,7 +1436,7 @@ public class Platform implements Serializable {
             // injectPluginReferencesAndStart(coinapultWorld, Plugins.BITDUBAI_COINAPULT_WORLD);
 
             /*
-             * Plugin Coinbase World
+             * Plugin Coinbase Index
              * -----------------------------
              */
             // Plugin coinbaseWorld = ((WorldLayer)  mWorldLayer).getCoinbase();
@@ -1443,7 +1444,7 @@ public class Platform implements Serializable {
             // injectPluginReferencesAndStart(coinbaseWorld, Plugins.BITDUBAI_COINBASE_WORLD);
 
             /*
-             * Plugin Location World
+             * Plugin Location Index
              * -----------------------------
              */
             // Plugin locationWorld = ((WorldLayer)  mWorldLayer).getLocation();
@@ -1451,7 +1452,7 @@ public class Platform implements Serializable {
             // injectPluginReferencesAndStart(locationWorld, Plugins.BITDUBAI_LOCATION_WORLD);
 
             /*
-             * Plugin Crypto Index World
+             * Plugin Crypto Index Index
              * -----------------------------
              */
             // Plugin cryptoIndexWorld = ((WorldLayer)  mWorldLayer).getCryptoIndex();
@@ -1555,7 +1556,7 @@ public class Platform implements Serializable {
                 layer.getLayer(),
                 fermatPluginsEnum,
                 Developers.BITDUBAI,
-                new Version("1.0.0")
+                new Version()
         );
     }
 

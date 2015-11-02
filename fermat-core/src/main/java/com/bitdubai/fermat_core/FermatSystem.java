@@ -1,13 +1,17 @@
 package com.bitdubai.fermat_core;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.OperativeSystems;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPlatformException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartSystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ModuleManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
@@ -30,11 +34,15 @@ import java.util.List;
 public final class FermatSystem {
 
     private final FermatSystemContext fermatSystemContext;
+    private final FermatAddonManager  fermatAddonManager ;
+    private final FermatPluginManager fermatPluginManager;
 
     public FermatSystem(final Object           osContext      ,
                         final OperativeSystems operativeSystem) {
 
         this.fermatSystemContext = new FermatSystemContext(osContext, operativeSystem);
+        this.fermatAddonManager  = new FermatAddonManager(fermatSystemContext);
+        this.fermatPluginManager = new FermatPluginManager(fermatSystemContext, fermatAddonManager);
     }
 
     /**
@@ -93,11 +101,12 @@ public final class FermatSystem {
      * @throws ModuleManagerNotFoundException  if we can't find the requested module manager.
      */
     public final ModuleManager getModuleManager(final PluginVersionReference pluginVersionReference) throws CantGetModuleManagerException  ,
+
                                                                                                             ModuleManagerNotFoundException {
 
         try {
 
-            AbstractPlugin moduleManager = fermatSystemContext.getPluginVersion(pluginVersionReference);
+            AbstractPlugin moduleManager = fermatPluginManager.startPluginAndReferences(pluginVersionReference);
 
             if (moduleManager instanceof ModuleManager)
                 return (ModuleManager) moduleManager;
@@ -110,6 +119,32 @@ public final class FermatSystem {
         } catch (Exception e) {
 
             throw new CantGetModuleManagerException(e, pluginVersionReference.toString(), "Unhandled error.");
+        }
+    }
+
+    /**
+     * Throw the method <code>getAddon</code> the graphic interface can access to the addons of fermat
+     *
+     * @param addonVersionReference addon version reference data.
+     *
+     * @return an instance of the requested module manager.
+     *
+     * @throws CantGetAddonException      if something goes wrong.
+     * @throws VersionNotFoundException   if we can't find the requested addon.
+     */
+    public final AbstractAddon getAddon(final AddonVersionReference addonVersionReference) throws VersionNotFoundException,
+                                                                                                  CantGetAddonException   {
+
+        try {
+
+            return fermatAddonManager.startAddonAndReferences(addonVersionReference);
+
+        } catch(CantStartAddonException e) {
+
+            throw new CantGetAddonException(e, addonVersionReference.toString(), "The addon cannot be started.");
+        } catch (Exception e) {
+
+            throw new CantGetAddonException(e, addonVersionReference.toString(), "Unhandled error.");
         }
     }
 

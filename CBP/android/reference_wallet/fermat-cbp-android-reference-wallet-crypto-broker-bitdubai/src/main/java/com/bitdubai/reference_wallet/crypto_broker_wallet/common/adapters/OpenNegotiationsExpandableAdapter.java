@@ -6,17 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.NegotiationBasicInformation;
+import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.GrouperViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.NegotiationViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.NegotiationInformationViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItem;
 
 import java.util.List;
 
 
 public class OpenNegotiationsExpandableAdapter
-        extends ExpandableRecyclerAdapter<GrouperViewHolder, NegotiationViewHolder, GrouperItem, NegotiationBasicInformation> {
+        extends ExpandableRecyclerAdapter<GrouperViewHolder, NegotiationInformationViewHolder, GrouperItem, CustomerBrokerNegotiationInformation> {
 
     private LayoutInflater mInflater;
 
@@ -26,7 +26,7 @@ public class OpenNegotiationsExpandableAdapter
      * @param context        the activity context where the RecyclerView is going to be displayed
      * @param parentItemList the list of parent items to be displayed in the RecyclerView
      */
-    public OpenNegotiationsExpandableAdapter(Context context, List<GrouperItem<NegotiationBasicInformation>> parentItemList) {
+    public OpenNegotiationsExpandableAdapter(Context context, List<GrouperItem> parentItemList) {
         super(parentItemList);
         mInflater = LayoutInflater.from(context);
     }
@@ -52,9 +52,9 @@ public class OpenNegotiationsExpandableAdapter
      * @return the user's custom parent ViewHolder that must extend ParentViewHolder
      */
     @Override
-    public NegotiationViewHolder onCreateChildViewHolder(ViewGroup parent) {
+    public NegotiationInformationViewHolder onCreateChildViewHolder(ViewGroup parent) {
         View view = mInflater.inflate(R.layout.cbw_negotiation_list_item, parent, false);
-        return new NegotiationViewHolder(view);
+        return new NegotiationInformationViewHolder(view);
     }
 
     /**
@@ -81,7 +81,7 @@ public class OpenNegotiationsExpandableAdapter
      * @param position        the position in the RecyclerView of the item
      */
     @Override
-    public void onBindChildViewHolder(NegotiationViewHolder childViewHolder, int position, NegotiationBasicInformation childListItem) {
+    public void onBindChildViewHolder(NegotiationInformationViewHolder childViewHolder, int position, CustomerBrokerNegotiationInformation childListItem) {
         childViewHolder.bind(childListItem);
     }
 }

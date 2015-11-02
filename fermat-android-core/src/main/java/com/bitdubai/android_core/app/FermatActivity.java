@@ -1441,7 +1441,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
     @Override
     public void changeNavigationDrawerAdapter(ListAdapter listAdapter) {
-        //navigationDrawerFragment.changeNavigationDrawerAdapter(listAdapter);
+        navigationDrawerFragment.changeNavigationDrawerAdapter(listAdapter);
     }
 
 

@@ -1,8 +1,10 @@
 package com.bitdubai.android_core.app.common.version_1.navigation_drawer;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_api.layer.identity.common.IdentityUserInformation;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -28,9 +31,12 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
     private TextView userName;
     private ImageView imageView_intra_users;
 
+    private IntraUserInformation activeIntraUser;
 
-    public NavigationDrawerArrayAdapter(Context context, List<String> values) {
+
+    public NavigationDrawerArrayAdapter(Context context, List<String> values,IntraUserInformation activeIntraUser) {
         super(context, R.layout.wallet_framework_activity_main_navigation_drawer_row_layout_empty, values);
+        this.activeIntraUser = activeIntraUser;
         try {
 
             this.context = context;
@@ -67,27 +73,22 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
                 imageView_intra_users = (ImageView) rowView.findViewById(R.id.icon_change_profile);
 
-                Picasso.with(context).load(R.drawable.profile_image).into(imageView_intra_users);
+
+                if(activeIntraUser!=null) {
+                    if (activeIntraUser.getProfileImage() != null) {
+                        Bitmap bitmapDrawable = BitmapFactory.decodeByteArray(activeIntraUser.getProfileImage(), 0, activeIntraUser.getProfileImage().length);
+                        icon.setImageBitmap(bitmapDrawable);
+                    } else
+                        Picasso.with(context).load(R.drawable.profile_image).into(imageView_intra_users);
 
 
+                    TextView txtView_description = (TextView) rowView.findViewById(R.id.txtView_description);
+                    if (txtView_description != null) {
 
-                /*switch (ApplicationSession.getActivityId())
-                {
-                    case "DesktopActivity":
-                        rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_navigation_drawer_first_row, parent, false);
-                        break;
-                      default:
-                        rowView = inflater.inflate(R.layout.wallet_manager_main_activity_navigation_drawer_first_row_empty, parent, false);
-                          break;
+                        txtView_description.setTypeface(tf, 1);
 
-                }*/
-                TextView txtView_description = (TextView) rowView.findViewById(R.id.txtView_description);
-                if(txtView_description != null){
-
-                    txtView_description.setTypeface(tf, 1);
-
-                    //ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-                    txtView_description.setText("Tessa Crankston");
+                        txtView_description.setText(activeIntraUser.getName());
+                    }
                 }
 
 
@@ -100,35 +101,20 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
                     }
                 });
-
             }
             else {
                 LayoutInflater inflater = (LayoutInflater) context
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-               // rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
 
-
-                //test mati
                 rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_framework_navigation_drawer_row_layout, parent, false);
-                /*switch (ApplicationSession.getActivityId()) {
-                    case "DesktopActivity":
-                        rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_framework_navigation_drawer_row_layout, parent, false);
-                        break;
-                      default:
-                        rowView = inflater.inflate(R.layout.wallet_framework_activity_main_navigation_drawer_row_layout_empty, parent, false);
-                        break;
 
-                }
-                */
                 ImageView imageView = null;
                 imageView = (ImageView) rowView.findViewById(R.id.icon);
 
-                if(rowView.findViewById(R.id.label) != null)
-                {
+                if(rowView.findViewById(R.id.label) != null) {
                     TextView textView = (TextView) rowView.findViewById(R.id.label);
                     textView.setTypeface(tf, 1);
-
-                    textView.setText(values.get(position));
+                    textView.setText(values.get(position-1));
                 }
 
 
