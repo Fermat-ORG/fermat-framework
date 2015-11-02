@@ -251,54 +251,34 @@ This is the Production root. It is closed whenever the Plug-in reaches productio
 It is expected to have here child issues in the form  '_Plugin Name_' Production - Bug Fix n, where n is both the number and the bug name.
 
 
-<br>
-### Analisys
-
-#### Pulic Interfaces
-
-#### Database Model
-
-#### Internal Structure Class Model
-
-<br>
-### Implementation
-
-#### Developer Class
-
-#### Plug-in Root
-
-#### Database
-
-#### Structure
-
-##### Structure Root
-
-##### Structure Clasess
-
-##### Agents
-
-#### Event Handlers
-
 
 <br>
 
-## Parte III: How to do it
+## Part III: How to do it
 
 <br>
 ### Analisys
+------------
 
 #### Pulic Interfaces
 
-##### How do we define the public interfaces?
+##### Are there any mandatory public interfaces?
+
+Yes, we have two of them and are the following:
+
+** The Manager Interface ** : This one is usually implemented by the Plug-in Root and its purpose is to allow the caller to have access to other functionality usually implemented on classes of the Internal Structure. 
+
+** The Deals With Interface ** : This interface is intended to be implemented by the Plug-ins consuming the service of a certain Plug-in. By implementing it, they signal the Framework to deliver them a reference of the Plug-in they need to call.
+
+##### where do we define the public interfaces?
+
+Public interfaces are defined at the API library of the Platform were the Plug-in belongs.
 
 ##### How many interfaces can a Plug-in have?
 
-By convention platform, plug-ins must have at least three public intefaces, an interface that takes the name of the plug-in, the interface 'DealsWith-name plug-in' and interface 'name of the plug-in Manager'. The other interfaces depend on the previous design of the plug-in and the needs of the platform.
+There is no limit regarding the interfaces a Plug-in may have. Having said that, it is highly recommended no to expose the internal structure of the Plug-in creating a Public Interface for each of the internal classes. 
 
-##### Where do public interfaces must be loceted?
-
-While you are analizing the public interfaces you might wanto to do it by writing it's code. Then your next question may be where to do it.
-
+<br>
 #### Database Model
 
 ##### How do we think about the Database Model of the Plug-in?
