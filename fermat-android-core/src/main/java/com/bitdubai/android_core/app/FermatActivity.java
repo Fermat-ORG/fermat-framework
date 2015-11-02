@@ -1028,8 +1028,10 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                         }
                         break;
                     case "WPD":
-                        SubAppDesktopFragment subAppDesktopFragment = SubAppDesktopFragment.newInstance(0);
-                        fragments.add(subAppDesktopFragment);
+                        if(activePlatforms.contains(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION)) {
+                            SubAppDesktopFragment subAppDesktopFragment = SubAppDesktopFragment.newInstance(0);
+                            fragments.add(subAppDesktopFragment);
+                        }
                         break;
                     case "DDAP":
                         if(activePlatforms.contains(Platforms.DIGITAL_ASSET_PLATFORM)) {
