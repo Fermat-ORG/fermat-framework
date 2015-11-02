@@ -158,7 +158,7 @@ public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
         returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseConstants");
         returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinNetworkConfiguration");
         returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.TransactionConfidenceCalculator");
-         /**
+        /**
          * I return the values.
          */
         return returnedClasses;
@@ -331,66 +331,66 @@ public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
             }
         }
 
+        /**
+         * I will start the loading creation of the wallet from the user Id
+         */
+        try {
+            vault = new BitcoinCryptoVault(userPublicKey);
+            vault.setLogManager(logManager);
+            vault.setErrorManager(errorManager);
+            vault.setPluginDatabaseSystem(pluginDatabaseSystem);
+            vault.setDatabase(this.database);
+            vault.setPluginFileSystem(this.pluginFileSystem);
+            vault.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
+            vault.setPluginId(pluginId);
+            vault.setEventManager(eventManager);
+
+            vault.loadOrCreateVault();
+
+
             /**
-             * I will start the loading creation of the wallet from the user Id
+             * Once the vault is loaded or created, I will connect it to Bitcoin network to recieve pending transactions
              */
+
             try {
-                vault = new BitcoinCryptoVault(userPublicKey);
-                vault.setLogManager(logManager);
-                vault.setErrorManager(errorManager);
-                vault.setPluginDatabaseSystem(pluginDatabaseSystem);
-                vault.setDatabase(this.database);
-                vault.setPluginFileSystem(this.pluginFileSystem);
-                vault.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
-                vault.setPluginId(pluginId);
-                vault.setEventManager(eventManager);
+                vault.connectVault();
+            } catch (CantConnectToBitcoinNetwork cantConnectToBitcoinNetwork) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantConnectToBitcoinNetwork);
+                throw new CantStartPluginException("Error trying to start CryptoVault plugin.", cantConnectToBitcoinNetwork, null, "I couldn't connect to the Bitcoin network.");
 
-                vault.loadOrCreateVault();
-
-
-                /**
-                 * Once the vault is loaded or created, I will connect it to Bitcoin network to recieve pending transactions
-                 */
-
-                try {
-                    vault.connectVault();
-                } catch (CantConnectToBitcoinNetwork cantConnectToBitcoinNetwork) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantConnectToBitcoinNetwork);
-                    throw new CantStartPluginException("Error trying to start CryptoVault plugin.", cantConnectToBitcoinNetwork, null, "I couldn't connect to the Bitcoin network.");
-
-                }
-
-
-            } catch (CantCreateCryptoWalletException cantCreateCryptoWalletException ) {
-                /**
-                 * If I couldnt create the Vault, I cant go on.
-                 */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateCryptoWalletException );
-                throw new CantStartPluginException("Error trying to start CryptoVault plugin.", cantCreateCryptoWalletException, null, "Probably not enought space available to save the vault.");
             }
 
 
+        } catch (CantCreateCryptoWalletException cantCreateCryptoWalletException ) {
             /**
-             * now I will start the TransactionNotificationAgent to monitor
+             * If I couldnt create the Vault, I cant go on.
              */
-            transactionNotificationAgent = new TransactionNotificationAgent(eventManager, errorManager, logManager, database);
-            try {
-                transactionNotificationAgent.start();
-            } catch (CantStartAgentException cantStartAgentException ) {
-                /**
-                 * If I couldn't start the agent, I still will continue with the vault
-                 */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantStartAgentException );
-            }
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateCryptoWalletException );
+            throw new CantStartPluginException("Error trying to start CryptoVault plugin.", cantCreateCryptoWalletException, null, "Probably not enought space available to save the vault.");
+        }
 
-            // test method
-            //sendTestBitcoins();
 
+        /**
+         * now I will start the TransactionNotificationAgent to monitor
+         */
+        transactionNotificationAgent = new TransactionNotificationAgent(eventManager, errorManager, logManager, database);
+        try {
+            transactionNotificationAgent.start();
+        } catch (CantStartAgentException cantStartAgentException ) {
             /**
-             * the service is started.
+             * If I couldn't start the agent, I still will continue with the vault
              */
-            this.serviceStatus = ServiceStatus.STARTED;
-            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault started.", null, null);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantStartAgentException );
+        }
+
+        // test method
+        //sendTestBitcoins();
+
+        /**
+         * the service is started.
+         */
+        this.serviceStatus = ServiceStatus.STARTED;
+        logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault started.", null, null);
     }
 
     /**

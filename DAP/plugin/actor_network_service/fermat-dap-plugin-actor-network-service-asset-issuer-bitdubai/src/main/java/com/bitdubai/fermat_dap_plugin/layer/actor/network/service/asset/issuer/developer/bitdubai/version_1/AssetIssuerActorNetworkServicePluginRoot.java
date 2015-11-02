@@ -543,7 +543,9 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
         }
     }
 
-
+    public boolean isRegister() {
+        return register;
+    }
 
     /**
      * Get the IdentityPublicKey
@@ -697,15 +699,6 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
          * request the list to the server
          */
         requestRemoteNetworkServicesRegisteredList(discoveryQueryParametersAssetIssuer);
-    }
-
-    /**
-     * Get is Register
-     * @return boolean
-     */
-    @Override
-    public boolean isRegister() {
-        return register;
     }
 
     @Override

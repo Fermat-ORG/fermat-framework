@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -37,6 +38,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
     private final OutgoingMessageDao             outgoingMessageDao            ;
     private final ECCKeyPair                     identity                      ;
     private final EventSource                    eventSource                   ;
+    private final PluginVersionReference         pluginVersionReference        ;
 
     /**
      * Holds all references to the communication network service locals
@@ -57,7 +59,8 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
                                                         final Database                       dataBase                      ,
                                                         final ErrorManager                   errorManager                  ,
                                                         final EventManager                   eventManager                  ,
-                                                        final EventSource                    eventSource                   ) {
+                                                        final EventSource                    eventSource                   ,
+                                                        final PluginVersionReference         pluginVersionReference        ) {
 
         super();
         this.platformComponentProfile       = platformComponentProfile      ;
@@ -66,6 +69,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
         this.errorManager                   = errorManager                  ;
         this.eventManager                   = eventManager                  ;
         this.eventSource                    = eventSource                   ;
+        this.pluginVersionReference         = pluginVersionReference        ;
 
         this.incomingMessageDao = new IncomingMessageDao(dataBase);
         this.outgoingMessageDao = new OutgoingMessageDao(dataBase);
@@ -91,7 +95,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
         }
 
     }
@@ -101,7 +105,21 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * @see NetworkServiceConnectionManager#connectTo(PlatformComponentProfile, PlatformComponentProfile, PlatformComponentProfile)
      */
     @Override
-    public void connectTo(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant) throws CantEstablishConnectionException {
+    public void connectTo(final PlatformComponentProfile applicantParticipant   ,
+                          final PlatformComponentProfile applicantNetworkService,
+                          final PlatformComponentProfile remoteParticipant      ) throws CantEstablishConnectionException {
+
+        System.out.println("********");
+        System.out.println("********");
+        System.out.println("********");
+        System.out.println("******** Crypto Addressess -> ConnectTo  -> ");
+        System.out.println("********");
+        System.out.println("******** applicantParticipant   : "+applicantParticipant);
+        System.out.println("******** applicantNetworkService: "+applicantNetworkService);
+        System.out.println("******** remoteParticipant      : "+remoteParticipant);
+        System.out.println("********");
+        System.out.println("********");
+        System.out.println("********");
 
             /*
              * ask to the communicationLayerManager to connect to other network service
@@ -110,19 +128,15 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
     }
 
-
-    //TODO: COPIAR ESTO A TODOS LOS OTROS NETWORK SERVICES;  XXOO. te quiero robert xD
-
     /**
      * (non-javadoc)
      * @see NetworkServiceConnectionManager#closeConnection(String)
      */
     @Override
-    public void closeConnection(String remoteNetworkServicePublicKey) {
+    public void closeConnection(final String remoteNetworkServicePublicKey) {
         //Remove the instance and stop his threads
         if(communicationNetworkServiceLocalsCache.containsKey(remoteNetworkServicePublicKey))
-        communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
-
+            communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
     }
 
     /**
@@ -130,9 +144,9 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * @see NetworkServiceConnectionManager#closeAllConnection()
      */
     @Override
-    public void closeAllConnection() {
+    public final void closeAllConnection() {
 
-        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
+        for (final String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
 
             //Remove the instance and stop his threads
             communicationNetworkServiceRemoteAgentsCache.remove(key).stop();
@@ -189,7 +203,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
         } catch (Exception e) {
             e.printStackTrace();
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not get connection"));
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not get connection"));
         }
     }
 

@@ -17,7 +17,7 @@ import com.bitdubai.fermat_osa_android_core.layer.android.AndroidLayer;
 public final class OSAPlatform extends AbstractPlatform {
 
     public OSAPlatform() {
-        super(new PlatformReference(Platforms.OPERATIVE_SYSTEM_API));
+        super(new PlatformReference(OperativeSystems.ANDROID, Platforms.OPERATIVE_SYSTEM_API));
     }
 
     @Override

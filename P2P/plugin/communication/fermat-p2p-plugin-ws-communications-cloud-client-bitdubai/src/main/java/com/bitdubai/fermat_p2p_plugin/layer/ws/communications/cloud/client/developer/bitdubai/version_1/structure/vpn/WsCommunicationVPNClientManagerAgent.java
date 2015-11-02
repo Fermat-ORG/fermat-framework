@@ -133,7 +133,6 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
 
                 //If empty
                 if (vpnClientActiveCache.isEmpty()){
-                    System.out.println(" WsCommunicationVPNClientManagerAgent - Auto stop ");
                     //Auto stop
                     isRunning = Boolean.FALSE;
                 }
@@ -142,42 +141,23 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
 
                     for (String remote : vpnClientActiveCache.get(networkServiceType).keySet()) {
 
-                       System.out.println(" WsCommunicationVPNClientManagerAgent - vpnClientActiveCache.get("+networkServiceType+").size() = "+vpnClientActiveCache.get(networkServiceType).size());
+                        System.out.println(" WsCommunicationVPNClientManagerAgent - networkServiceType.size() "+vpnClientActiveCache.get(networkServiceType).size());
 
-                       WsCommunicationVPNClient wsCommunicationVPNClient = vpnClientActiveCache.get(networkServiceType).get(remote);
+                       /* WsCommunicationVPNClient wsCommunicationVPNServer = vpnClientActiveCache.get(networkServiceType).get(remote);
 
-                        //Verified if this vpn connection is open
-                        if (!wsCommunicationVPNClient.getConnection().isOpen()){
+                        //Verified is this vpn is active
+                        if (!wsCommunicationVPNServer.isActive()){
 
-                            try {
+                            wsCommunicationVPNServer.getConnection().close();
+                            vpnClientActiveCache.remove(wsCommunicationVPNServer);
 
-                                /*
-                                 * Verified if a pong message respond pending
-                                 */
-                                if (wsCommunicationVPNClient.isPongMessagePending()){
-                                    throw new RuntimeException("Connection maybe not active");
-                                }
-
-                                wsCommunicationVPNClient.sendPingMessage();
-
-                            }catch (Exception e){
-                                System.out.println(" WsCommunicationVPNClientManagerAgent - Error occurred sending ping to the vpn node, closing the connection to remote node");
-                                wsCommunicationVPNClient.close();
-                                vpnClientActiveCache.get(networkServiceType).remove(wsCommunicationVPNClient);
-                                if (vpnClientActiveCache.get(networkServiceType).isEmpty()){
-                                    vpnClientActiveCache.remove(networkServiceType);
-                                }
-                            }
-
-                        }
+                        } */
 
                     }
 
                 }
 
-                if (!this.isInterrupted()){
-                    sleep(WsCommunicationVPNClientManagerAgent.SLEEP_TIME);
-                }
+                sleep(WsCommunicationVPNClientManagerAgent.SLEEP_TIME);
 
             }
 

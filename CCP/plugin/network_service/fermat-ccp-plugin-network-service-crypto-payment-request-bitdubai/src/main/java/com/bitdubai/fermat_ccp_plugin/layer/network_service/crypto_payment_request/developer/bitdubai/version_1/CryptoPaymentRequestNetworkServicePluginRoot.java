@@ -128,6 +128,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
      */
     private Database dataBase;
 
+    private ECCKeyPair identity;
+
     /**
      * Represent the registrationProcessNetworkServiceAgent
      */
@@ -595,6 +597,11 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         register = Boolean.FALSE;
 
         this.serviceStatus = ServiceStatus.STOPPED;
+    }
+
+    @Override
+    public String getIdentityPublicKey() {
+        return this.identity.getPublicKey();
     }
 
     /**

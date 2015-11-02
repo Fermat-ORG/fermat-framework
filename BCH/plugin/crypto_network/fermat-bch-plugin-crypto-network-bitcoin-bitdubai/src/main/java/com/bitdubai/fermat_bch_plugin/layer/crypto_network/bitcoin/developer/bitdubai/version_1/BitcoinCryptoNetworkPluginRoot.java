@@ -174,7 +174,7 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      */
     @Override
     public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx) throws CantBroadcastTransactionException {
-       bitcoinCryptoNetworkManager.broadcastTransaction(blockchainNetworkType, tx);
+        bitcoinCryptoNetworkManager.broadcastTransaction(blockchainNetworkType, tx);
     }
 
     /**

@@ -108,12 +108,10 @@ public class WsCommunicationsCloudClientAgent extends Thread {
                 /**
                  * Sleep for the next try connection
                  */
-                if(!isInterrupted()){
-                    try {
-                        sleep(SLEEP_TIME);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    sleep(new Long(10000).longValue());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
 
             }
