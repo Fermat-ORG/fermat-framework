@@ -4,9 +4,9 @@
 
 ## Introduction
 
-Plug-ins are one of the three basic components that can be added into the Fermat Framework. The two others are Addons, and GUI components. Enach Plug-in has a well defined responsability within the system at usually collaborate from within one or more workflows in which it participates.  
+GUI Components are one of the three basic components that can be added into the Fermat Framework. The two others are Addons, and Plugins. Enach GUI component has a well defined responsability within the system at usually collaborate from within one or more workflows in which it participates.  
 
-To accomplish it's mission, a Plug-in may havey have it's own database and files to persist it's state. It also has an internal structure of classes designed specifically to fullfil it's goals. Some of these classes have public interfaces which exposes the Plug-in public services to other Fermat components.
+To accomplish it's mission, a GUI component must have a wireframe.
 
 
 <br>
@@ -83,100 +83,26 @@ The mandatory initial structure is the following: (note: the word ISSUE it is no
 This is the root of your issue structure and must be labeled as _SUPER ISSUE_. It is closed only when all of it's children and grand children are closed.
 
 <br>
-##### ISSUE: '_Plugin Name_' - Analisys
+##### ISSUE: '_Plugin Name_' - Analisys - Super issue
 
 This is the Analisys root. It is closed whenever all analisys is done. This issue must be linked to the root of the issue structure.
 
 <br>
-##### ISSUE: '_Plugin Name_' - Implementation
+1 - ISSUE: '_Plugin Name_' - Module - prototype**
 
-This is the Implementation root. It is closed whenever all implementation is done. This issue must be linked to the root of the issue structure.
-
-<br>
-1 - ISSUE: **'_Plugin Name_' - Implementation - Developer Class** 
- 
-This issue is closed when this class if fully implemented. 
+This is the hardcoded module. Used for make the GUI prototype without use the fermat platform. This issue must be linked to the root of the issue structure.
 
 <br>
-2 - ISSUE: **'_Plugin Name_' - Implementation - Plug-in Root** 
+2 - ISSUE: **'_Plugin Name_' - Module - connection**
 
-This issue is closed when this class if fully implemented. 
-
-<br>
-3 - ISSUE: **'_Plugin Name_' - Implementation - Database** 
- 
-This issue is closed when all database classes are fully implemented. 
-
-* ISSUE: '_Plugin Name_' - Implementation - Database - Database Factory Class
-
-This issue is closed when this class if fully implemented. 
-
-* ISSUE: '_Plugin Name_' - Implementation - Database - Database Constants Class
-
-This issue is closed when this class if fully implemented.
-
-* ISSUE: '_Plugin Name_' - Implementation - Database - Developer Database Factory Class
-
-This issue is closed when this class if fully implemented.
-
-* ISSUE: '_Plugin Name_' - Implementation - Database - Database Factory Exceptions Class
-
-This issue is closed when this class if fully implemented.
-
-* ISSUE: '_Plugin Name_' - Implementation - Database - DAO Class 
-
-This issue is closed when this class if fully implemented.
+This is the module connectad with fermat platform. Used for make the GUI using the fermat platform. This issue must be linked to the root of the issue structure.
 
 <br>
-4 - ISSUE: **'_Plugin Name_' - Implementation - Public Interfaces**
+3 - ISSUE: **'_Plugin Name_' - GUI - screen - <screen_name>
 
-This issue is closed when all public interface's code is written.  Note that the 1, 2, n must be replaced with the actual interfase names.
-
-* ISSUE: '_Plugin Name_' - Implementation - Public Interfaces - Interface 1
-
-This issue is closed when the first public interface is written.
-
-* ISSUE: '_Plugin Name_' - Implementation - Public Interfaces - Interface 2
-
-This issue is closed when the second public interface is written.
-
-* ISSUE: '_Plugin Name_' Implementation - Public Interfaces - Interface n
-
-This issue is closed when the n public interfaces are written.
+This issue is for a specific wireframe of a screen.
 
 <br>
-5 - ISSUE: **'_Plugin Name_' - Implementation - Internal Structure**
-
-This issue is closed when all interna structure's code is written.  Note that the 1, 2, n must be replaced with the actual class names.
-
-* ISSUE: '_Plugin Name_' - Implementation - Internal Structure - Class 1
-  
-This issue is closed when this class if fully implemented.
-
-* ISSUE: '_Plugin Name_' - Implementation - Internal Structure - Class 2
-  
-This issue is closed when this class if fully implemented.
-
-* ISSUE: '_Plugin Name_' - Implementation - Internal Structure - Class n
-  
-This issue is closed when this class if fully implemented.
-
-<br>
-6 - ISSUE: **'_Plugin Name_' - Implementation - Event Handling**
-
-This issue is closed when all event handler classes are written. Note that the 1, 2, n must be replaced with the actual class names.
-
-* ISSUE: '_Plugin Name_' - Implementation - Event Handling - Event Handler 1
-
-This issue is closed when this Event Hndler class if fully implemented.
-
-* ISSUE: '_Plugin Name_' - Implementation - Event Handling - Event Handler 2
-
-This issue is closed when this Event Hndler class if fully implemented.
-
-* ISSUE: '_Plugin Name_' - Implementation - Event Handling - Event Handler n
-
-This issue is closed when this Event Hndler class if fully implemented.
 
 <br>
 ##### ISSUE: '_Plugin Name_' - Testing
