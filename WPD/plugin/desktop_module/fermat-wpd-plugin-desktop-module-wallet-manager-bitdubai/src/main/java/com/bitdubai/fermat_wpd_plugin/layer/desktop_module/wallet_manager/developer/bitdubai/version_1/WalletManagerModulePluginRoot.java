@@ -565,8 +565,8 @@ public class WalletManagerModulePluginRoot implements DealsWithBitcoinWallet, De
 //            InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(wallet.getWalletCategory(),wallet.getWalletType(),
 //                    wallet.getSkinsId(),
 //                    wallet.getLanguagesId(),
-//                    wallet.getWalletIcon(),
-//                    wallet.getWalletName(),
+//                    wallet.getIcon(),
+//                    wallet.getName(),
 //                    wallet.getWalletPublicKey(),
 //                    wallet.getWalletPlatformIdentifier(),
 //                    wallet.getWalletVersion());
