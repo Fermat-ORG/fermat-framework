@@ -128,8 +128,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
      */
     private Database dataBase;
 
-    private ECCKeyPair identity;
-
     /**
      * Represent the registrationProcessNetworkServiceAgent
      */
@@ -412,7 +410,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
      * Service Interface implementation
      */
     @Override
-    public void start() throws CantStartPluginException {
+    public void startNetworkService() throws CantStartPluginException {
 
         /*
          * Validate required resources
@@ -462,8 +460,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             addCryptoPaymentRequestListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION           , new CompleteComponentRegistrationNotificationEventHandler(this));
             addCryptoPaymentRequestListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION, new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
             addCryptoPaymentRequestListener(P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION     , new CompleteComponentConnectionRequestNotificationEventHandler(this));
-
-            this.serviceStatus = ServiceStatus.STARTED;
 
         } catch (CantInitializeNetworkServiceDatabaseException exception) {
 

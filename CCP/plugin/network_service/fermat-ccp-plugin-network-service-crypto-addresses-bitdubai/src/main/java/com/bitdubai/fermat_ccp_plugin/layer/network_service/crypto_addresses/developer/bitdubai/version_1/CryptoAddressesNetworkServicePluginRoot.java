@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
@@ -23,7 +24,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -107,7 +107,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
@@ -154,9 +154,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      */
     private Database dataBase;
 
-    private ECCKeyPair identity;
-
-
     /**
      * Represent the registrationProcessNetworkServiceAgent
      */
@@ -187,7 +184,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      * Service Interface implementation
      */
     @Override
-    public void start() throws CantStartPluginException {
+    public void startNetworkService() throws CantStartPluginException {
 
         System.out.println("********* Crypto Addresses: Starting. ");
 
@@ -213,11 +210,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         }
 
         try {
-
-            /*
-             * Create a new key pair for this execution
-             */
-            identity = new ECCKeyPair();
 
             /*
              * Initialize the data base
@@ -735,16 +727,16 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                                                                          final NetworkServiceType       fromOtherNetworkServiceType   ) {
 
         return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(
-                platformComponentType         ,
-                networkServiceType            ,
-                alias                         ,
-                identityPublicKey             ,
-                location                      ,
-                distance                      ,
-                name                          ,
-                extraData                     ,
-                firstRecord                   ,
-                numRegister                   ,
+                platformComponentType,
+                networkServiceType,
+                alias,
+                identityPublicKey,
+                location,
+                distance,
+                name,
+                extraData,
+                firstRecord,
+                numRegister,
                 fromOtherPlatformComponentType,
                 fromOtherNetworkServiceType
         );
@@ -906,17 +898,17 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
             RequestAction action        = RequestAction.REQUEST           ;
 
             cryptoAddressesNetworkServiceDao.createAddressExchangeRequest(
-                    requestMessage.getRequestId()                  ,
-                    null                                           ,
-                    requestMessage.getCryptoCurrency()             ,
-                    requestMessage.getIdentityTypeRequesting()     ,
-                    requestMessage.getIdentityTypeResponding()     ,
+                    requestMessage.getRequestId(),
+                    null,
+                    requestMessage.getCryptoCurrency(),
+                    requestMessage.getIdentityTypeRequesting(),
+                    requestMessage.getIdentityTypeResponding(),
                     requestMessage.getIdentityPublicKeyRequesting(),
                     requestMessage.getIdentityPublicKeyResponding(),
-                    protocolState                                  ,
-                    type                                           ,
-                    action                                         ,
-                    requestMessage.getCryptoAddressDealer()        ,
+                    protocolState,
+                    type,
+                    action,
+                    requestMessage.getCryptoAddressDealer(),
                     requestMessage.getBlockchainNetworkType()
             );
 
@@ -1018,14 +1010,4 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     public void setPluginDatabaseSystem(final PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
-
-    /**
-     * DealsWithPluginIdentity methods implementation.
-     */
-    @Override
-    public void setId(final UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-
 }
