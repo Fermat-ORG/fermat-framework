@@ -697,7 +697,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 dataBase,
                 errorManager,
                 eventManager,
-                this.getEventSource()
+                this.getEventSource(),
+                getPluginVersionReference()
         );
     }
 
