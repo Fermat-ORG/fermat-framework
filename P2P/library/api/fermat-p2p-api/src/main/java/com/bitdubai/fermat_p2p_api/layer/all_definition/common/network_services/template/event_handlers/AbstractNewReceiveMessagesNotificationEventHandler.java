@@ -20,7 +20,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AbstractNewReceiveMessagesNotificationEventHandler implements FermatEventHandler {
+public abstract class AbstractNewReceiveMessagesNotificationEventHandler implements FermatEventHandler {
 
     protected final AbstractNetworkService networkService;
 

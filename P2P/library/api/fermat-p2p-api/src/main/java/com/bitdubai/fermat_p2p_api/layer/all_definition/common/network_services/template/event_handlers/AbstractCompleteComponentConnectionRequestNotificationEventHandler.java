@@ -20,7 +20,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AbstractCompleteComponentConnectionRequestNotificationEventHandler implements FermatEventHandler {
+public abstract class AbstractCompleteComponentConnectionRequestNotificationEventHandler implements FermatEventHandler {
 
     protected final AbstractNetworkService networkService;
 
