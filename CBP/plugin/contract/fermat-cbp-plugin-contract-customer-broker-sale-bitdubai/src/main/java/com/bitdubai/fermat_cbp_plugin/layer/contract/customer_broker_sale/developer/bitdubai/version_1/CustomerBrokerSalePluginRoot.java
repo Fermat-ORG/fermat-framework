@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_Sale.developer.bitdubai.version_1;
+package com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
@@ -14,14 +14,14 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_Sale.exceptions.CantCreateCustomerBrokerSaleException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_Sale.exceptions.CantDeleteCustomerBrokerSaleException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_Sale.exceptions.CantGetListCustomerBrokerSaleException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_Sale.exceptions.CantupdateCustomerBrokerSaleException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_Sale.interfaces.CustomerBrokerSale;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_Sale.interfaces.CustomerBrokerSaleManager;
-import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_Sale.developer.bitdubai.version_1.database.CustomerBrokerSaleContractDao;
-import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_Sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleContractDatabaseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_sale.exceptions.CantDeleteCustomerBrokerSaleException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerSaleException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_sale.exceptions.CantupdateCustomerBrokerSaleException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_sale.interfaces.CustomerBrokerSale;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_sale.interfaces.CustomerBrokerSaleManager;
+import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleContractDao;
+import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleContractDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
@@ -55,11 +55,11 @@ public class CustomerBrokerSalePluginRoot implements CustomerBrokerSaleManager, 
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_Sale.developer.bitdubai.version_1.CustomerBrokerSalePluginRoot");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_Sale.developer.bitdubai.version_1.structure.CustomerBrokerSaleContract");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_Sale.developer.bitdubai.version_1.database.CustomerBrokerSaleContractDao");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_Sale.developer.bitdubai.version_1.database.CustomerBrokerSaleContractDatabaseFactory");
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_Sale.developer.bitdubai.version_1.database.CustomerBrokerSaleContractDatabaseConstants");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.CustomerBrokerSalePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.structure.CustomerBrokerSaleInformation");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleContractDao");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleContractDatabaseFactory");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleContractDatabaseConstants");
         return returnedClasses;
     }
 
@@ -114,44 +114,44 @@ public class CustomerBrokerSalePluginRoot implements CustomerBrokerSaleManager, 
     *   Methods of Menager
     * */
 
-    @Override
-    public List<CustomerBrokerSale> getAllCustomerBrokerSaleFromCurrentDeviceUser() throws CantGetListCustomerBrokerSaleException {
-        return this.customerBrokerSaleContractDao.getAllCustomerBrokerSaleFromCurrentDeviceUser();
-    }
+        @Override
+        public List<CustomerBrokerSale> getAllCustomerBrokerSaleFromCurrentDeviceUser() throws CantGetListCustomerBrokerSaleException {
+            return this.customerBrokerSaleContractDao.getAllCustomerBrokerSaleFromCurrentDeviceUser();
+        }
 
-    @Override
-    public CustomerBrokerSale getCustomerBrokerSaleForContractId(UUID ContractId) throws CantGetListCustomerBrokerSaleException {
-        return this.customerBrokerSaleContractDao.getCustomerBrokerSaleForContractId(ContractId);
-    }
+        @Override
+        public CustomerBrokerSale getCustomerBrokerSaleForContractId(UUID ContractId) throws CantGetListCustomerBrokerSaleException {
+            return this.customerBrokerSaleContractDao.getCustomerBrokerSaleForContractId(ContractId);
+        }
 
-    @Override
-    public DatabaseTableRecord getCustomerBrokerSaleContractTable() {
-        return this.customerBrokerSaleContractDao.getCustomerBrokerSaleContractTable();
-    }
+        @Override
+        public DatabaseTableRecord getCustomerBrokerSaleContractTable() {
+            return this.customerBrokerSaleContractDao.getCustomerBrokerSaleContractTable();
+        }
 
-    @Override
-    public CustomerBrokerSale createCustomerBrokerSale(String publicKeyCustomer, String publicKeyBroker, Float merchandiseAmount, CurrencyType merchandiseCurrency, Float referencePrice, ReferenceCurrency referenceCurrency, Float paymentAmount, CurrencyType paymentCurrency, long paymentExpirationDate, long merchandiseDeliveryExpirationDate) throws CantCreateCustomerBrokerSaleException {
-        return this.customerBrokerSaleContractDao.createCustomerBrokerSale(
-                publicKeyCustomer,
-                publicKeyBroker,
-                merchandiseAmount,
-                merchandiseCurrency,
-                referencePrice,
-                referenceCurrency,
-                paymentAmount,
-                paymentCurrency,
-                paymentExpirationDate,
-                merchandiseDeliveryExpirationDate
-        );
-    }
+        @Override
+        public CustomerBrokerSale createCustomerBrokerSale(String publicKeyCustomer, String publicKeyBroker, Float merchandiseAmount, CurrencyType merchandiseCurrency, Float referencePrice, ReferenceCurrency referenceCurrency, Float paymentAmount, CurrencyType paymentCurrency, long paymentExpirationDate, long merchandiseDeliveryExpirationDate) throws CantCreateCustomerBrokerSaleException {
+            return this.customerBrokerSaleContractDao.createCustomerBrokerSale(
+                    publicKeyCustomer,
+                    publicKeyBroker,
+                    merchandiseAmount,
+                    merchandiseCurrency,
+                    referencePrice,
+                    referenceCurrency,
+                    paymentAmount,
+                    paymentCurrency,
+                    paymentExpirationDate,
+                    merchandiseDeliveryExpirationDate
+            );
+        }
 
-    @Override
-    public void updateCustomerBrokerSale(UUID contractId, ContractStatus status) throws CantupdateCustomerBrokerSaleException {
-        this.customerBrokerSaleContractDao.updateCustomerBrokerSale(contractId, status);
-    }
+        @Override
+        public void updateCustomerBrokerSale(UUID contractId, ContractStatus status) throws CantupdateCustomerBrokerSaleException {
+            this.customerBrokerSaleContractDao.updateCustomerBrokerSale(contractId, status);
+        }
 
-    @Override
-    public void deleteCustomerBrokerSale(UUID contractID) throws CantDeleteCustomerBrokerSaleException {
-        this.customerBrokerSaleContractDao.deleteCustomerBrokerSale(contractID);
-    }
+        @Override
+        public void deleteCustomerBrokerSale(UUID contractID) throws CantDeleteCustomerBrokerSaleException {
+            this.customerBrokerSaleContractDao.deleteCustomerBrokerSale(contractID);
+        }
 }
