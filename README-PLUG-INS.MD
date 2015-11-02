@@ -289,6 +289,8 @@ It is expected to have here child issues in the form  '_Plugin Name_' Production
 
 ##### How many interfaces can a Plug-in have?
 
+By convention platform, plug-ins must have at least three public intefaces, an interface that takes the name of the plug-in, the interface 'DealsWith-name plug-in' and interface 'name of the plug-in Manager'. The other interfaces depend on the previous design of the plug-in and the needs of the platform.
+
 ##### Where do public interfaces must be loceted?
 
 While you are analizing the public interfaces you might wanto to do it by writing it's code. Then your next question may be where to do it.
@@ -314,6 +316,14 @@ While you are analizing the public interfaces you might wanto to do it by writin
 #### Developer Class
 
 #### Plug-in Root
+The Plugin Root class is that by which initiate the plug-in functions in the application, this must instantiate all 'other name DealsWith-plug-in' to achieve the exchange of information between plugins interfaces. As a minimum requirement this kind should include the implementation of the following interfaces:
+* LogManagerForDevelopers.
+* Plugin.
+* Service.
+* Interface plug-in manager.
+
+These implementations ensure that the entire class structure of the plug-in to be recognized as a plug-in for the core of the platform and to establish its status as a service operation.
+If the plug-in has implemented the use of a database **DealsWithPluginDatabaseSystem** implementing the recommended interface, which lays the foundation for the creation and use of the database in the plug-in. For this particular case, the implementation of the **DatabaseManagerForDevelopers** interface is also recommended, which allows the visualization of the information in the database plug-in at runtime.
 
 #### Database
 
