@@ -87,12 +87,12 @@ We must consider that we should not create indiscriminate agents, we always use 
 
 Whenever you choose this solution for the activity or task required by our plug-in, we should take into account the following points:
 
-As for the name: the name must begin plugin your activity and ending with the word Agent followed.
- Example: TemplateNetworkServiceRegistrationProcessAgent.
+* As for the name: the name must begin plugin your activity and ending with the word "Agent" followed.
+Example: TemplateNetworkServiceRegistrationProcessAgent.
 
-The agent should be smart enough to auto stop when contemplating your task.
+* The agent should be smart enough to auto stop when contemplating your task.
 
-Consider and calculate the timeout (sleeping time) between each run, the process performed by the agent, since very straight executions can reduce application performance considerably.
+* Consider and calculate the timeout (sleeping time) between each run, the process performed by the agent, since very straight executions can reduce application performance considerably.
 
 
 <br>
