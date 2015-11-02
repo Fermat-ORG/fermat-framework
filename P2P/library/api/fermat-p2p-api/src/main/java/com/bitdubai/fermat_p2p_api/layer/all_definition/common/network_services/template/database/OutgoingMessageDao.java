@@ -279,14 +279,10 @@ public final class OutgoingMessageDao {
 
             final List<DatabaseTableRecord> records = table.getRecords();
 
-            if (!records.isEmpty()) {
-
-                // TODO make the setters for the fields.
-
-                table.updateRecord(records.get(0));
-            } else {
+            if (!records.isEmpty())
+                table.updateRecord(constructFrom(entity));
+            else
                 throw new RecordNotFoundException("id: " + entity.getId(), "Cannot find an outgoing message with that id.");
-            }
 
         } catch (final CantUpdateRecordException e) {
 
