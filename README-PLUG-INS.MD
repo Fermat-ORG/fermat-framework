@@ -52,6 +52,7 @@ An Envent Hander is a type of Class that is called by the Framework's Event Mana
 Each Plugin can raise two types of exceptions: 
 
 a. **Internal** : These are exceptions that are thrown and handled within the same Plug-in.
+
 b. **External** : These are exceptions that are thrown within the Plug-in and are expected to be catched by it's caller. 
 
 | NOTE | It is not allowd for an exception that is thrown in Plug-in A go through Plug-in B unhandled and reach Plug-in C. |
