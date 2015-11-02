@@ -49,8 +49,6 @@ Fork the *username*/fermat repo, and submit a pull request there when done.
 It is very easy to contribute to the book, just edit the desired file and at the end you will find the "Propose file change" button. Please do it at the editos' fork. You can find it [here](https://github.com/gustl-arg/fermat/tree/master/fermat-book).
 
 
-
-
 <br>
 ## Part II: Expanding Fermat Functionality
 
@@ -69,6 +67,7 @@ It is very easy to contribute to the book, just edit the desired file and at the
 <br>
 ### Adding a New Plugin
 
+For the details o this process, you can check the [Adding a New Plugin to Fermat](AddingNewPlugin.md) document.
 
 <br>
 ### Adding a New Reference Wallet

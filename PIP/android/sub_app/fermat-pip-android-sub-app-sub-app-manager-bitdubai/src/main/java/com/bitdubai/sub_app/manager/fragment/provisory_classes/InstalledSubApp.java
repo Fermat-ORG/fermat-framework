@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
+import com.bitdubai.fermat_api.layer.interface_objects.FermatInterfaceObject;
+import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
 
 import java.util.List;
 
@@ -11,7 +13,7 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.08.19..
  */
 
-public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp {
+public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp,FermatInterfaceObject {
 
     private SubApps subApps;
     private List<InstalledSkin> skinsId;
@@ -117,5 +119,18 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     }
 
 
+    @Override
+    public InterfaceType getType() {
+        return InterfaceType.SUB_APP;
+    }
 
+    @Override
+    public String getName() {
+        return walletName;
+    }
+
+    @Override
+    public String getIcon() {
+        return walletIcon;
+    }
 }

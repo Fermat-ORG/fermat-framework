@@ -14,33 +14,24 @@ dependencies {
     compile project(':fermat-dap-api')
     compile project(':fermat-p2p-api')
     compile project(':fermat-wpd-api')
-
     // Init CCP Projects (Plugins)
     compile project(':fermat-ccp-api')
     compile project(':fermat-ccp-core')
     // End  CCP Projects (Plugins)
-
     // Init PIP Projects (Plugins)
     compile project(':fermat-pip-api')
     compile project(':fermat-pip-core')
     // End  PIP Projects (Plugins)
-
-
     //BCH projects
     compile project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
     //compile project(':fermat-osa-addon-android-database-system-bitdubai')
-
     //BNP Projects
     compile project(':fermat-bnp-plugin-network-service-bank-notes-bitdubai')
-
     // Init CCM Projects
     compile project(':fermat-ccm-plugin-actor-intra-wallet-user-bitdubai')
     compile project(':fermat-ccm-plugin-network-service-money-transmission-bitdubai')
     compile project(':fermat-ccm-plugin-network-service-money-request-bitdubai')
-
     // End  CCM Projects
-
-
     // CCP Projects (Plugins)
     compile project(':fermat-dmp-plugin-identity-designer-bitdubai')
     compile project(':fermat-dmp-plugin-identity-translator-bitdubai')
@@ -60,8 +51,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-middleware-wallet-skin-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-wallet-navigation-structure-bitdubai')
     compile project(':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai')
-
-
     // DMP Projects (Addons)
     compile project(':fermat-dmp-addon-license-wallet-bitdubai')
     //DAP Projects (Plugins)
@@ -74,6 +63,8 @@ dependencies {
     compile project(':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai')
     compile project(':fermat-dap-plugin-digital-asset-transaction-asset-distribution-bitdubai')
     compile project(':fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai')
+    compile project(':fermat-dap-plugin-digital-asset-transaction-issuer-redemption-bitdubai')
+    compile project(':fermat-dap-plugin-digital-asset-transaction-user-redemption-bitdubai')
     compile project(':fermat-dap-plugin-middleware-asset-factory-bitdubai')
     compile project(':fermat-dap-plugin-sub-app-module-asset-factory-bitdubai')
     compile project(':fermat-dap-plugin-sub-app-module-asset-issuer-community-bitdubai')
@@ -92,7 +83,6 @@ dependencies {
     compile project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
     compile project(':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai')
     // OSA Projects   --- Hace falta esto aca??
-
     // PIP Projects
     compile project(':fermat-pip-addon-platform-service-event-manager-bitdubai')
     compile project(':fermat-pip-addon-platform-service-error-manager-bitdubai')
@@ -108,8 +98,8 @@ dependencies {
     compile project(':fermat-pip-plugin-module-notification-bitdubai')
     compile project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai')
     // P2P Projects
-//    compile project(':fermat-p2p-plugin-communication-cloud-client-bitdubai')
-//    compile project(':fermat-p2p-plugin-communication-cloud-server-bitdubai')
+    //    compile project(':fermat-p2p-plugin-communication-cloud-client-bitdubai')
+    //    compile project(':fermat-p2p-plugin-communication-cloud-server-bitdubai')
     compile project(':fermat-p2p-plugin-ws-communications-cloud-client-bitdubai')
     compile project(':fermat-p2p-plugin-ws-communications-cloud-server-bitdubai')
     //WPD Projects (Plugins)
@@ -130,25 +120,23 @@ dependencies {
     compile project(':fermat-wpd-plugin-sub-app-module-wallet-publisher-bitdubai')
     compile project(':fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai')
     compile project(':fermat-bch-plugin-crypto-network-bitcoin-bitdubai')
+    compile project(':fermat-bch-plugin-middleware-crypto-addresses-bitdubai')
     compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
     compile project(':fermat-dap-plugin-wallet-module-asset-user-bitdubai')
     compile project(':fermat-dap-plugin-wallet-module-redeem-point-bitdubai')
-
-//    compile project(':fermat-dap-android-sub-app-asset-issuer-community-bitdubai')
-//    compile project(':fermat-dap-android-sub-app-asset-user-community-bitdubai')
-//    compile project(':fermat-dap-android-sub-app-redeem-point-community-bitdubai')
-
-
+    //    compile project(':fermat-dap-android-sub-app-asset-issuer-community-bitdubai')
+    //    compile project(':fermat-dap-android-sub-app-asset-user-community-bitdubai')
+    //    compile project(':fermat-dap-android-sub-app-redeem-point-community-bitdubai')
     //CBP Projects
     compile project(':fermat-cbp-plugin-identity-crypto-broker-bitdubai')
     compile project(':fermat-cbp-plugin-identity-crypto-customer-bitdubai')
     compile project(':fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai')
     compile project(':fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai')
-
-    testCompile group: 'junit', name: 'junit', version: '4.11'
-    testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
-    testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.easytesting:fest-assert-core:2.0M10'
+    testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
     testCompile 'info.cukes:cucumber-java:1.2.4'
     testCompile 'info.cukes:cucumber-junit:1.2.4'
+    compile project(':fermat-bch-core')
 }
 

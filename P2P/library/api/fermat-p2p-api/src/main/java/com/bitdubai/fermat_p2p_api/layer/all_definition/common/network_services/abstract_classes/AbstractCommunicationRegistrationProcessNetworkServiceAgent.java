@@ -87,7 +87,7 @@ public class AbstractCommunicationRegistrationProcessNetworkServiceAgent extends
                              networkServicePluginRoot.getExtraData());
 
                     // Register me
-                    communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+                    communicationsClientConnection.registerComponentForCommunication(networkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
 
                     // Configure my new profile
                     networkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
