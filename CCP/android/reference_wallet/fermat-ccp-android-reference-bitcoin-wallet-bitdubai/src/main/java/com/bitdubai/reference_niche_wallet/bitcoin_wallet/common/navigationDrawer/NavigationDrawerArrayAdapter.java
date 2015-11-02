@@ -13,6 +13,8 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.identity.common.IdentityUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+
 import java.util.List;
 
 
@@ -25,10 +27,10 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
     private TextView userName;
     private ImageView imageView_intra_users;
 
-    private IntraUserInformation activeIntraUser;
+    private IntraUserLoginIdentity activeIntraUser;
 
 
-    public NavigationDrawerArrayAdapter(Context context, List<String> values,IntraUserInformation activeIntraUser) {
+    public NavigationDrawerArrayAdapter(Context context, List<String> values,IntraUserLoginIdentity activeIntraUser) {
         super(context, R.layout.navigation_drawer_base, values);
         this.activeIntraUser = activeIntraUser;
         try {
@@ -63,7 +65,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
                 if(userName != null){
                     userName.setTypeface(tf, 1);
-                    userName.setText(activeIntraUser.getName());
+                    userName.setText(activeIntraUser.getAlias());
                 }
 
                 if(activeIntraUser.getProfileImage()!=null){
@@ -101,20 +103,20 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
                 switch (position) {
                     case 1:
-                        imageView.setImageResource(R.drawable.ic_action_store);
+                        imageView.setImageResource(R.drawable.btn_drawer_home_normal);
                         break;
                     case 2:
-                        imageView.setImageResource(R.drawable.ic_action_wallet);
+                        imageView.setImageResource(R.drawable.btn_drawer_profile_normal);
                         break;
                     case 3:
-                        imageView.setImageResource(R.drawable.ic_action_factory);
+                        imageView.setImageResource(R.drawable.btn_drawer_settings_normal);
                         break;
                     case 4:
-                        imageView.setImageResource(R.drawable.ic_action_exit);
+                        imageView.setImageResource(R.drawable.btn_send_adduser_normal);
 
                         break;
                     case 5:
-                        imageView.setImageResource(R.drawable.ic_action_wallet);
+                        imageView.setImageResource(R.drawable.btn_drawer_logout_normal);
                         break;
 
                     case 6:
