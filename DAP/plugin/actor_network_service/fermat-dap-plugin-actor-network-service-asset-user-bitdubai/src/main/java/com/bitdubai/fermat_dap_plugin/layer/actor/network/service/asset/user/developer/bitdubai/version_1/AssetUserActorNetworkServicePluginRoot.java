@@ -1094,11 +1094,8 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
         /*
          * If is a actor registered
          */
-        System.out.println("Actor Asset User: IF para saber si hay Actor Registrado");
-
         if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.ACTOR_ASSET_USER &&
                 platformComponentProfileRegistered.getNetworkServiceType() == NetworkServiceType.UNDEFINED) {
-
 
             System.out.println("Actor Asset User Registered: "+platformComponentProfileRegistered.getIdentityPublicKey());
             System.out.println("Actor Asset User Alias: "+platformComponentProfileRegistered.getAlias());

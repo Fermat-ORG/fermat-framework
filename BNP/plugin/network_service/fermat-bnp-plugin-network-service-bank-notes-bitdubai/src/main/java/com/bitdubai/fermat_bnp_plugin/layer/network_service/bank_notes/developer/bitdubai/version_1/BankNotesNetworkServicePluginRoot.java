@@ -172,6 +172,11 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
 
     }
 
+    @Override
+    public boolean isRegister() {
+        return false;
+    }
+
     /**
      * UsesFileSystem Interface implementation.
      */

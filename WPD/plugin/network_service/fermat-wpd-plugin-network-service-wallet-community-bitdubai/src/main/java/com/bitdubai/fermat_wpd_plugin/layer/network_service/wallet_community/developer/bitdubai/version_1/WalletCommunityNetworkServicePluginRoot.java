@@ -189,6 +189,11 @@ public class WalletCommunityNetworkServicePluginRoot implements Service, Network
 
     }
 
+    @Override
+    public boolean isRegister() {
+        return false;
+    }
+
     /**
      * UsesFileSystem Interface implementation.
      */

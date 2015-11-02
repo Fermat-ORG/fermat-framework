@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -33,6 +34,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdu
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerWalletDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantListCryptoBrokerWalletTransactionException;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -50,7 +52,7 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 19.10.15.
  */
-public class CryptoBrokerWalletPluginRoot implements CryptoBrokerWalletManager,
+public class CryptoBrokerWalletPluginRoot implements    CryptoBrokerWalletManager,
                                                         DatabaseManagerForDevelopers,
                                                         DealsWithPluginDatabaseSystem,
                                                         LogManagerForDevelopers,
@@ -86,47 +88,18 @@ public class CryptoBrokerWalletPluginRoot implements CryptoBrokerWalletManager,
 
     public static final String CRYPTO_BROKER_PRIVATE_KEYS_CUSTOMER_FILE_NAME = "cryptoBrokerWalletPrivateKeyCustomer";
 
-    /*CryptoBrokerWallet Interface Implementation*/
-    public double getBookBalance() throws CantTransactionCryptoBrokerException{
-        try{
-            return cryptoBrokerWalletDatabaseDao.getCalculateBookBalance();
-        } catch (CantCalculateBalanceException e) {
-            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET BOOKED BALANCE", e, "", "");
-        } catch (Exception e) {
-            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET BOOKED BALANCE", FermatException.wrapException(e), "", "");
-        }
-    }
+    /*CryptoBrokerMAnager Interface Implementation*/
+    @Override
+    public CryptoBrokerWallet createNewCryptoBrokerWallet(String cryptoBroker) throws CantCreateCryptoBrokerWalletException {
+        CryptoBrokerWalletImpl cbw = new CryptoBrokerWalletImpl(AsymmetricCryptography.generateECCKeyPair(), cryptoBroker, cryptoBrokerWalletDatabaseDao);
 
-    public double getAvailableBalance() throws CantTransactionCryptoBrokerException{
-        try{
-            return cryptoBrokerWalletDatabaseDao.getCalculateAvailableBalance();
-        } catch (CantCalculateBalanceException e) {
-            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET AVAILABLE BALANCE", e, "", "");
-        } catch (Exception e) {
-            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET AVAILABLE BALANCE", FermatException.wrapException(e), "", "");
-        }
-    }
-
-    public List<CryptoBrokerStockTransactionRecord> getTransactions(BalanceType balanceType, int max, int offset)throws CantTransactionCryptoBrokerException{
-        try {
-            List<CryptoBrokerStockTransactionRecord> cryptoBrokerTransactionList = new ArrayList<CryptoBrokerStockTransactionRecord>();
-            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            cryptoBrokerTransactionList = cryptoBrokerWalletDatabaseDao.getTransactionsList(loggedUser);
-            return cryptoBrokerTransactionList;
-        } catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET TRANSACTION", e, "Error get logged user device", "");
-        } catch (CantListCryptoBrokerWalletTransactionException e) {
-            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET TRANSACTION", e, "", "");
-        } catch (Exception e) {
-            throw new CantTransactionCryptoBrokerException("CAN'T GET CRYPTO BROKER WALLET TRANSACTION", FermatException.wrapException(e), "", "");
-        }
-    }
-
-    public CryptoBrokerTransactionSummary getBrokerTransactionSummary(BalanceType balanceType) throws CantTransactionCryptoBrokerException{
         return null;
     }
 
-
+    @Override
+    public CryptoBrokerWallet getCryptoBrokerWallet(String cryptoBroker) throws CryptoBrokerWalletNotFoundException {
+        return null;
+    }
 
     /*DatabaseManagerForDevelopers Interface Implementation.*/
     @Override
@@ -244,17 +217,5 @@ public class CryptoBrokerWalletPluginRoot implements CryptoBrokerWalletManager,
     }
 
     @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }
-
-    @Override
-    public CryptoBrokerWallet createNewCryptoBrokerWallet(ActorIdentity cryptoBroker) throws CantCreateCryptoBrokerWalletException {
-        return null;
-    }
-
-    @Override
-    public CryptoBrokerWallet getCryptoBrokerWallet(ActorIdentity cryptoBroker) throws CryptoBrokerWalletNotFoundException {
-        return null;
-    }
+    public ServiceStatus getStatus() { return serviceStatus; }
 }

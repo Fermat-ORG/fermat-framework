@@ -378,17 +378,17 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 
 
     @Override
-    public Actor createActor(String walletPublicKey, String actorPublicKey, String actorName, byte[] photo) throws CantCreateIntraUserException{
+    public Actor createActor(String walletPublicKey, String actorName, byte[] photo) throws CantCreateIntraUserException{
 
         ECCKeyPair keyPair = new ECCKeyPair();
-        String publicKey = keyPair.getPublicKey();
+       String publicKey = keyPair.getPublicKey();
         String privateKey = keyPair.getPrivateKey();
 
         try {
 
-            persistPrivateKey(privateKey, actorPublicKey);
+            persistPrivateKey(privateKey, publicKey);
 
-            intraWalletUserActorDao.createActorIntraWalletUser(walletPublicKey, actorName, actorPublicKey, photo, ConnectionState.CONNECTED);
+            intraWalletUserActorDao.createActorIntraWalletUser(walletPublicKey, actorName, publicKey, photo, ConnectionState.CONNECTED);
         }
         catch (CantCreateIntraWalletUserException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

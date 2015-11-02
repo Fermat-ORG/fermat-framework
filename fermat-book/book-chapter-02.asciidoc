@@ -1,0 +1,78 @@
+:numbered:
+== Fermat: a Platform Stack Framework
+*Fermat* is, technically speaking, an Open Source P2P (Peer-to-Peer) Platform Stack Framework built on a Plug-ins Architecture running on end-user's devices. 
+
+[horizontal]
+Open Source :: the code can be reviewed and audited by anyone.
+P2P network and decentralized :: censorship resistent and difficult to be attacked.
+Platform Stack :: functionalities are wrapped in categories easy to grasp
+Plug-in Architecture :: reuse of componentes and open to the participation of any developer.
+Ir runs on end users' devices :: users control on their money without the need to trust a third party.
+
+=== What is Fermat made of ?
+
+* *libraries*: structural components of the core of the system (low level layers)  
+* *desktops*: applications that run on an specific Operating System and present the GUI (graphic user interface)
+* *plug-ins*: components which encapsulates a very specific sets of functions, consum services from other components and offer a public interface for the services they provide to other components. They are open to be developed by the general developers community.
+* *add-ons*: plug-ins in the low level layers that provide the most sensitive functionalities to the system, and therefore are developed by trusted developers.
+
+[[architecture]]
+=== Fermat's architecture 
+
+:numbered!:
+
+Fermat as a system is built on several overlapping architectural paradigms: 
+
+. At a higher level, it is a *Peer to Peer system with asymetric nodes*, meaning that each node even having all the code base, it specializes itself according to the profile of the end user or the way it was configured.
+
+. Inside each node Fermat features a *Multi-OS architecture* meaning that the lowest level OS-dependent components are wrapped in a way that can be easily replaced when running on a different OS without affecting the rest of the components consuming services from them. The upmost components, the ones facing the end user (GUI) are also OS-dependent. Everything in between is *not*.
+
+. At the same time it features a plugins architecture inserted into a *multi-layered structure*. These layers are ocasionally grouped into *Superlayers*. 
+
+. These *plug-ins* are subdivided into a hierarchy of *Platforms*. Those *Platforms* shares a common set of layers, and each one adds *Actors* and *Products* to the overall functionallity of the Fermat system. Inside each Plugin, you might find a specialized structure and in many cases a database or files belonging to that plugin.
+
+. At a system level, Fermat uses speciallized crawlers to collect or sometimes inject information into nodes in order to recreate a system level conciousness prepeared to resist attacks or other relevant issues.
+
+==== p2p architecture
+Fermat is a _distributed system_, it runs on end user's devices, so it needs to stablish a connection between every actor and every device using it. This is done by creating a *P2P network* between them, based on the services provided by _Fermat P2P Network and Communication Superlayer_. +
+
+==== multi OS architecture
+Fermat is *code-base portable*, meaning that the components are written in code that runs in different operating systems. 
+So, through _Fermat Operating Systems API Superlayer_, the components that are specific to a given Operating System connect to the rest of Fermat that is OS independent.
+
+[[multilayer]]
+==== multilayer architecture
+Fermat needs to be adaptable, to provide highly component reutilisation, and to offer a scalability that match the complexity of the services that are running on it. Therefore the components are set in *layers* stacking one over the other. Each layer groups components that provide a similar functionality, eg. communications layer is designed to provide a way to connect one device to another building a "communications channel" using different available tecnologies ( cloud servers, wifi, NFT, etc), and in performing this task, it let other components from other layers do their specific task consumming services of this communication layer in a transparent way (without any concern on how the communication is actually being stablished). +
+There are certain *Layers* that provide services at a system-wide scale (see *superlayers*), but other layers are defined within one *platform* and serve to provide its set of specific functionalities.
+
+==== plug-ins architecture
+*Plug-ins* have an outstanding feature: as long as theier INTERFACE (i.e. the shape of the interconnection) is known and public, the plug-in can interact with others, consuming and offering services, INDEPENDENTLY of its inner structure and how it is built. As long as they conserve this INTERFACE, they can safely evolve to more efficient functioning WITHOUT altering a single service that has been built upon it ! 
+Inside Fermat, each plug-in is given certain specific responsability within the whole, it lives in a certain layer, and it is allowed to consume services of components on _lower layers_ and to provide services to components of _upper layers_. Plug-ins participate in high level processes and they are programmed in a way to live in an uncontrolled environment (end user devices) and to co-exist with untrusted third party plug-ins as well. 
+Through this, Fermat is able to connect and reuse most of the infrastructure deployed by the industry.
+
+==== platform architecture
+A *platform* consists of a group of components living in different *layers* interconnected to offer a specific set of services for a discovered niche. For example, if we address to cryptocurrency users, we will need a _crytocurrency wallet_ for each cryptocurrency available running on _Fermat Crypto Currency Platform_. This wallet would operate on the selected cryptonetwork by means of a connection to it provided by the _Block Chain Platform_, and will interact with the user by means of an *desktop* living in the OS specific layers. 
+
+=== Following the Master Plan
+Having all the components described, to implement the Phase I of the master plan, we will explore in the next chapters the platforms that implement the foundations.
+
+- *Fermat Core Platform* 
+- *Fermat Operating Systems Superlayer*
+- *Fermat BlockChain Superlayer*
+- *Fermat P2P Network and Communication Superlayer*
+- *Fermat Plug-ins Platform*
+
+
+For a cool visualization of Fermat and its constant growing number of platforms and superlayers visit http://fermat.org
+
+Are you interested in unveiling Fermat's foundations blueprint ? Please jump into next chapter.
+
+:numbered!:
+  
+=== Continue Reading
+link:book-chapter-03.asciidoc[Next Chapter]
+
+link:book-chapter-01.asciidoc[Previous Chapter]
+
+
+

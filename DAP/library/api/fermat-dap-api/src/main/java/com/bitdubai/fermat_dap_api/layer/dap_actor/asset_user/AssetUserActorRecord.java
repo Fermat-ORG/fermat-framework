@@ -13,20 +13,19 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
  */
 public class AssetUserActorRecord implements ActorAssetUser {
 
-    private String publicLinkedIdentity;
-    private String publicKey;
-    private String name;
-    private String age;
-    private Genders genders;
-    private ConnectionState connectionState;
-    private Location location;
-    private Double locationLatitude;
-    private Double locationLongitude;
-    private long registrationDate;
-    private long lastConnectionDate;
-    private CryptoAddress cryptoAddress;
-
-    private byte[] profileImage;
+    private String          publicLinkedIdentity    ;
+    private String          publicKey               ;
+    private String          name                    ;
+    private String          age                     ;
+    private Genders         genders                 ;
+    private ConnectionState connectionState         ;
+    private Location        location                ;
+    private Double          locationLatitude        ;
+    private Double          locationLongitude       ;
+    private long            registrationDate        ;
+    private long            lastConnectionDate      ;
+    private CryptoAddress   cryptoAddress           ;
+    private byte[]          profileImage            ;
 
     /**
      * Constructor
@@ -34,113 +33,112 @@ public class AssetUserActorRecord implements ActorAssetUser {
     public AssetUserActorRecord(){
 
     }
-//TODO Posible a reemplazar
-    public AssetUserActorRecord(String publicKey, String name, byte[] profileImage, Location location) {
-
-        this.name = name;
-        this.publicKey = publicKey;
-        this.profileImage = profileImage.clone();
-
-        if (location != null) {
-            this.locationLatitude = location.getLatitude();
-            this.locationLongitude = location.getLongitude();
-        }else{
-            this.locationLatitude = Double.valueOf(0);
-            this.locationLongitude = Double.valueOf(0);
-        }
-
-        this.genders = Genders.INDEFINITE;
-//        this.age = age;
-//        this.cryptoAddress = cryptoAddress;
-        this.connectionState = ConnectionState.CONNECTED;
-
-    }
-
-//TODO Sustituto
-    public AssetUserActorRecord(String publicKey, String name, byte[] profileImage, Location location, ConnectionState connectionState) {
-
-        this.name = name;
-        this.publicKey = publicKey;
-        this.profileImage = profileImage.clone();
-
-        if (location != null) {
-            this.locationLatitude = location.getLatitude();
-            this.locationLongitude = location.getLongitude();
-        }else{
-            this.locationLatitude = Double.valueOf(0);
-            this.locationLongitude = Double.valueOf(0);
-        }
-
-        this.genders = Genders.INDEFINITE;
-//        this.age = age;
-        this.connectionState = connectionState;
-    }
 
     /**
-    *  Constructor Register in Actor Network Service
-    * @param publicKey
-    * @param name
-    * @param profileImage
-    * @param locationA
-    * @param locationL
-    */
-    public AssetUserActorRecord(String publicKey, String name, byte[] profileImage, Double locationA, Double locationL) {
+     *  Constructor Register in Actor Network Service
+     * @param publicKey
+     * @param name
+     * @param profileImage
+     * @param location
+     */
 
-        this.name = name;
-        this.publicKey = publicKey;
-        this.profileImage = profileImage.clone();
+    public AssetUserActorRecord(String publicKey,
+                                String name,
+                                byte[] profileImage,
+                                Location location) {
+
+        this.name                   = name                      ;
+        this.publicKey              = publicKey                 ;
+        this.profileImage           = profileImage.clone()      ;
+
+        if (location != null) {
+            this.locationLatitude   = location.getLatitude()    ;
+            this.locationLongitude  = location.getLongitude()   ;
+        }else{
+            this.locationLatitude   = (double) 0                ;
+            this.locationLongitude  = (double) 0                ;
+        }
+
+        this.genders                = Genders.INDEFINITE        ;
+//        if(!age.isEmpty())
+//            this.age = age;
+        this.connectionState        = ConnectionState.CONNECTED ;
+
+    }
+
+
+    public AssetUserActorRecord(String publicKey,
+                                String name,
+                                byte[] profileImage,
+                                Double locationA,
+                                Double locationL) {
+
+        this.name                   = name                          ;
+        this.publicKey              = publicKey                     ;
+        this.profileImage           = profileImage.clone()          ;
 
         if (locationA != null)
-            this.locationLatitude = locationA;
+            this.locationLatitude   = locationA                     ;
         if(locationL != null)
-            this.locationLongitude = locationL;
+            this.locationLongitude  = locationL                     ;
 
-        this.genders = Genders.INDEFINITE;
+        this.genders                = Genders.INDEFINITE            ;
 //        this.age = age;
 //        this.cryptoAddress = cryptoAddress;
-        this.connectionState = ConnectionState.CONNECTED;
+        this.connectionState        = ConnectionState.CONNECTED     ;
 
     }
 
-    public AssetUserActorRecord(String publicKey, String name, String age, Genders genders,
-                                ConnectionState connectionState, Double locationLatitude,
-                                Double locationLongitude, CryptoAddress cryptoAddress,
-                                Long registrationDate, Long lastConnectionDate,
+    public AssetUserActorRecord(String publicKey,
+                                String name,
+                                String age,
+                                Genders genders,
+                                ConnectionState connectionState,
+                                Double locationLatitude,
+                                Double locationLongitude,
+                                CryptoAddress cryptoAddress,
+                                Long registrationDate,
+                                Long lastConnectionDate,
                                 byte[] profileImage){
 
-        this.publicKey = publicKey;
-        this.name = name;
-        this.age = age;
-        this.genders = genders;
-        this.connectionState = connectionState;
+        this.publicKey              = publicKey             ;
+        this.name                   = name                  ;
+        this.age                    = age                   ;
+        this.genders                = genders               ;
+        this.connectionState        = connectionState       ;
 
         if(cryptoAddress != null)
-            this.cryptoAddress = cryptoAddress;
+            this.cryptoAddress      = cryptoAddress         ;
 
-        this.locationLatitude = locationLatitude;
-        this.locationLongitude = locationLongitude;
-        this.registrationDate = registrationDate;
-        this.lastConnectionDate = lastConnectionDate;
-        this.profileImage = profileImage.clone();
+        this.locationLatitude       = locationLatitude      ;
+        this.locationLongitude      = locationLongitude     ;
+        this.registrationDate       = registrationDate      ;
+        this.lastConnectionDate     = lastConnectionDate    ;
+        this.profileImage           = profileImage.clone()  ;
 
     }
 
-    public AssetUserActorRecord(String publicKey, String name, String age, Genders genders,
-                                ConnectionState connectionState, Double locationLatitude,
-                                Double locationLongitude,
-                                Long registrationDate, Long lastConnectionDate,
-                                byte[] profileImage){
+    public AssetUserActorRecord(final String publicKey,
+                                final String name,
+                                final String age,
+                                final Genders genders,
+                                final ConnectionState connectionState,
+                                final Double locationLatitude,
+                                final Double locationLongitude,
+                                final Long registrationDate,
+                                final Long lastConnectionDate,
+                                final byte[] profileImage) {
 
-        this.publicKey = publicKey;
-        this.name = name;
-        this.age = age;
-        this.genders = genders;
-        this.connectionState = connectionState;
-        this.locationLatitude = locationLatitude;
-        this.locationLongitude = locationLongitude;
-        this.registrationDate = registrationDate;
-        this.lastConnectionDate = lastConnectionDate;
-        this.profileImage = profileImage.clone();
+        this.publicKey          =       publicKey               ;
+        this.name               =       name                    ;
+        this.age                =       age                     ;
+        this.genders            =       genders                 ;
+        this.connectionState    =       connectionState         ;
+        this.locationLatitude   =       locationLatitude        ;
+        this.locationLongitude  =       locationLongitude       ;
+        this.registrationDate   =       registrationDate        ;
+        this.lastConnectionDate =       lastConnectionDate      ;
+        this.profileImage       =       profileImage.clone()    ;
 
     }
 
@@ -275,8 +273,8 @@ public class AssetUserActorRecord implements ActorAssetUser {
         if(location != null) {
             this.location = location;
         }else{
-            this.locationLatitude = Double.valueOf(0);
-            this.locationLongitude = Double.valueOf(0);
+            this.locationLatitude = (double) 0;
+            this.locationLongitude = (double) 0;
         }
     }
 
@@ -322,7 +320,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
         if(profileImage != null)
             this.profileImage = profileImage;
         else
-            this.profileImage = profileImage.clone();
+            this.profileImage = new byte[0];
     }
 
     /**

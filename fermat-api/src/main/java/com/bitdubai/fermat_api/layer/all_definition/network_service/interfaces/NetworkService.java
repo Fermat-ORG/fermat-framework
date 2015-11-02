@@ -105,4 +105,5 @@ public interface NetworkService {
     void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile);
 
 
+    boolean isRegister();
 }
