@@ -772,10 +772,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
             System.out.println("********* Crypto Addresses: Successful initialize and start of Executor Agent. ");
 
-            initializeMessagesListeners();
-
-            System.out.println("********* Crypto Addresses: Now listening NEW_NETWORK_SERVICE_MESSAGE_RECEIVED_NOTIFICATION. ");
-
         } catch(CantStartAgentException e) {
 
             CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto addresses dao.");
@@ -800,9 +796,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
             this.register = Boolean.TRUE;
 
             initializeAgent();
-
-            initializeMessagesListeners();
-
         }
 
     }
@@ -814,22 +807,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 "FAILED CONNECTION WITH "+remoteParticipant.getAlias()+"\n" +
                 "--------------------------------------------------------");
         cryptoAddressesExecutorAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
-
-    }
-
-    private void initializeMessagesListeners(){
-        /*
-         * Listen and handle Complete Request List Component Registered Notification Event
-         */
-
-//        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
-//        fermatEventListener.setEventHandler(new New(cryptoTransmissionAgent));
-//        eventManager.addListener(fermatEventListener);
-//        listenersAdded.add(fermatEventListener);
-
-        /**
-         *
-         */
 
     }
 
