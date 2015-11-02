@@ -53,6 +53,7 @@ public enum Plugins implements FermatEnum {
     BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION("BINEXUT"),
     BITDUBAI_INCOMING_CRYPTO_TRANSACTION("BINCRYT"),
     BITDUBAI_USER_DEVICE_USER("BUDEVU"),
+    BITDUBAI_USER_REDEMPTION_TRANSACTION("BURT"),
     BITDUBAI_ACTOR_EXTRA_USER("BAEXU"),
     BITDUBAI_USER_INTRA_USER("BUINU"),
     BITDUBAI_COINBASE_WORLD("BCOINW"),
@@ -276,6 +277,8 @@ public enum Plugins implements FermatEnum {
                 return BITDUBAI_INCOMING_CRYPTO_TRANSACTION;
             case "BUDEVU":
                 return BITDUBAI_USER_DEVICE_USER;
+            case "BURT":
+                return BITDUBAI_USER_REDEMPTION_TRANSACTION;
             case "BAEXU":
                 return BITDUBAI_ACTOR_EXTRA_USER;
             case "BUINU":
