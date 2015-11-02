@@ -19,6 +19,7 @@ import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interf
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingTransactionPluginRoot;
@@ -83,6 +84,9 @@ public class StartTest {
     AssetIssuerWalletManager assetIssuerWalletManager;
 
     @Mock
+    ActorAssetIssuerManager actorAssetIssuerManager;
+
+    @Mock
     CryptoVaultManager cryptoVaultManager;
 
     @Mock
@@ -123,8 +127,6 @@ public class StartTest {
 
     @Before
     public void setUp() throws Exception {
-        assetIssuingPluginRoot = new AssetIssuingTransactionPluginRoot();
-
         pluginId = UUID.randomUUID();
 
         assetIssuingPluginRoot = new AssetIssuingTransactionPluginRoot();
@@ -135,6 +137,7 @@ public class StartTest {
         assetIssuingPluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
         assetIssuingPluginRoot.setPluginFileSystem(pluginFileSystem);
         assetIssuingPluginRoot.setAssetIssuerManager(assetIssuerWalletManager);
+        assetIssuingPluginRoot.setActorAssetIssuerManager(actorAssetIssuerManager);
         assetIssuingPluginRoot.setCryptoVaultManager(cryptoVaultManager);
         assetIssuingPluginRoot.setBitcoinWalletManager(bitcoinWalletManager);
         assetIssuingPluginRoot.setAssetVaultManager(assetVaultManager);
@@ -205,6 +208,8 @@ public class StartTest {
                 .isInstanceOf(CantStartPluginException.class);
         assertThat(thrown.getCause()).isInstanceOf(CantSetObjectException.class);
         assertThat(assetIssuingPluginRoot.getStatus()).isEqualTo(ServiceStatus.STOPPED);
+
+        assetIssuingPluginRoot.setAssetIssuerManager(assetIssuerWalletManager);
     }
 
     @Test
