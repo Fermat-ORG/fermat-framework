@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
@@ -92,7 +93,16 @@ import java.util.logging.Logger;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDevelopers,DealsWithErrors,DealsWithEvents,DealsWithLogger,DealsWithWalletResources,DealsWithPluginDatabaseSystem,LogManagerForDevelopers, Plugin, Service, WalletManagerManager {
+public class WalletManagerMiddlewarePluginRoot implements
+        DatabaseManagerForDevelopers,
+        DealsWithErrors,
+        DealsWithEvents,
+        DealsWithLogger
+        ,DealsWithWalletResources,
+        DealsWithPluginDatabaseSystem,
+        LogManagerForDevelopers,
+        Plugin, Service,
+        WalletManagerManager {
 
     String walletPublicKey = "reference_wallet";
 
@@ -404,15 +414,15 @@ public class WalletManagerMiddlewarePluginRoot implements DatabaseManagerForDeve
         // Harcoded para testear el circuito más arriba
         InstalledWallet installedWallet= new WalletManagerMiddlewareInstalledWallet(
 
-                WalletCategory.REFERENCE_WALLET,
+                WalletCategory.REFERENCE_WALLET, // CATEGORY
                 new ArrayList<InstalledSkin>(),
                 new ArrayList<InstalledLanguage>(),
-                "reference_wallet_icon",
-                "bitDubai bitcoin Wallet",
-                "reference_wallet",
-                "wallet_platform_identifier",
-                new Version(1,0,0),
-                WalletType.REFERENCE,
+                "reference_wallet_icon", // ICOIN
+                "bitDubai bitcoin Wallet", // WALLET NAME
+                "reference_wallet", // PUBLIC KEY
+                "BWBW", //  WALLET PLATFORM IDENTIFIER
+                new Version(1,0,0), //VERSION
+                WalletType.REFERENCE, // WALLET TYPE
                 "medium",
                 "1.0.0",
                 null,

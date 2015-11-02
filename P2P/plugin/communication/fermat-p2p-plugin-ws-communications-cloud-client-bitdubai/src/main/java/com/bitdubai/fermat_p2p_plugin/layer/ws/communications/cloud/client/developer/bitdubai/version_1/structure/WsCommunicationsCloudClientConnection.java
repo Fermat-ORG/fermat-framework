@@ -138,8 +138,10 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
          */
         wsCommunicationsCloudClientAgent.start();
 
-
-        //wsCommunicationsCloudClientPingAgent.start();
+        /*
+         * Start the ping agent
+         */
+        wsCommunicationsCloudClientPingAgent.start();
 
     }
 
@@ -171,7 +173,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
                 location = locationManager.getLocation();
 
             }catch (CantGetDeviceLocationException e){
-                e.printStackTrace();
+                System.out.println("WsCommunicationsCloudClientConnection - Error getting the geolocation for this device ");
             }
 
             /*
@@ -246,10 +248,10 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
     /**
      * (non-javadoc)
-     * @see CommunicationsClientConnection#registerComponentForCommunication(PlatformComponentProfile)
+     * @see CommunicationsClientConnection#registerComponentForCommunication(NetworkServiceType, PlatformComponentProfile)
      */
     @Override
-    public void registerComponentForCommunication(PlatformComponentProfile platformComponentProfile) throws CantRegisterComponentException {
+    public void registerComponentForCommunication(NetworkServiceType networkServiceNetworkServiceTypeApplicant, PlatformComponentProfile platformComponentProfile) throws CantRegisterComponentException {
 
         try {
 
@@ -263,12 +265,17 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
                 throw new IllegalArgumentException("The platformComponentProfile is required, can not be null");
             }
 
+            Gson gson = new Gson();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceNetworkServiceTypeApplicant.toString());
+            jsonObject.addProperty(JsonAttNamesConstants.PROFILE_TO_REGISTER, platformComponentProfile.toJson());
+
              /*
              * Construct a fermat packet whit the PlatformComponentProfile
              */
             FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
                     wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
-                    platformComponentProfile.toJson(),                                       //Message Content
+                    gson.toJson(jsonObject),                                                 //Message Content
                     FermatPacketType.COMPONENT_REGISTRATION_REQUEST,                         //Packet type
                     wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
 
@@ -279,7 +286,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
 
         }catch (Exception e){
-
+            e.printStackTrace();
             CantRegisterComponentException pluginStartException = new CantRegisterComponentException(CantRegisterComponentException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), "Connection with server loose");
             throw pluginStartException;
 
@@ -346,6 +353,12 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
         try {
 
+            if(!isRegister() || !isConnected()){
+
+                CantRequestListException cantRequestListException = new CantRequestListException(CantRequestListException.DEFAULT_MESSAGE, null, "The communication client is no register", "Connection with server loose");
+                throw cantRequestListException;
+            }
+
             /*
              * Validate parameter
              */
@@ -379,6 +392,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
             String respondText = respond.getText();
             System.out.println("WsCommunicationsCloudClientConnection - Respond Text:" + respondText);
+            System.out.println("WsCommunicationsCloudClientConnection - Respond Text length:" + respondText.length());
 
             /*
              * if respond have the result list
@@ -588,4 +602,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
     public boolean isRegister() {
         return wsCommunicationsCloudClientChannel.isRegister();
     }
+
+
+
 }

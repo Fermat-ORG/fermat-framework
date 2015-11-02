@@ -2,12 +2,9 @@ package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.develope
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetFeatureForDevelopersException;
-import com.bitdubai.fermat_api.layer.all_definition.common.interfaces.FeatureForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.DevelopersUtilReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -15,7 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -32,10 +29,10 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestAction;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingAddressExchangeRequestsException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.database.WalletContactsMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.event_handlers.CryptoAddressDeniedEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.event_handlers.CryptoAddressReceivedEventHandler;
@@ -53,7 +50,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -86,37 +82,22 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
      */
     private CryptoAddressesManager cryptoAddressesManager;
 
-    /**
-     * DealWithErrors Interface member variables.
-     */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    /**
-     * DealsWithEvents Interface member variables.
-     */
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private EventManager eventManager;
-    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    /**
-     * Plugin Interface member variables.
-     */
-    private UUID pluginId;
-
-    /**
-     * DealsWithLogger interface member variable
-     */
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.LOG_MANAGER           )
     private LogManager logManager;
+
+
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     public static final Actors actorType = Actors.INTRA_USER;
 
@@ -184,11 +165,16 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
 
     private void executePendingAddressExchangeRequests(WalletContactsMiddlewareRegistry walletContactsRegistry) {
         try {
-            List<AddressExchangeRequest> addressExchangeRequestRespondedList = cryptoAddressesManager.listPendingRequests(
+            List<CryptoAddressRequest> cryptoAddressRequestRespondedList = cryptoAddressesManager.listPendingCryptoAddressRequests(
                     actorType
             );
 
-            for (AddressExchangeRequest request : addressExchangeRequestRespondedList) {
+            System.out.println("----------------------------\n" +
+                    "WALLET CONTACT MIDDLEWARE  : executePendingAddressExchangeRequests " +  cryptoAddressRequestRespondedList.size()
+                    + "\n-------------------------------------------------");
+
+
+            for (CryptoAddressRequest request : cryptoAddressRequestRespondedList) {
 
                 if (request.getAction().equals(RequestAction.ACCEPT))
                     walletContactsRegistry.handleCryptoAddressReceivedEvent(request);
@@ -198,22 +184,12 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
 
             }
 
-        } catch(CantListPendingAddressExchangeRequestsException |
+        } catch(CantListPendingCryptoAddressRequestsException |
                 CantHandleCryptoAddressDeniedEventException     |
                 CantHandleCryptoAddressReceivedEventException   e) {
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
-    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
@@ -225,15 +201,6 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
         listenersAdded.clear();
 
         this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    /**
-     * Plugin interface implementation
-     * @param pluginId identifying this plugin
-     */
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
     }
 
     /**

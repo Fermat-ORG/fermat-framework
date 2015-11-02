@@ -69,8 +69,8 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                      * Construct my profile and register me
                      */
                     PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(assetUserActorNetworkServicePluginRoot.getIdentityPublicKey(),
-                            (assetUserActorNetworkServicePluginRoot.getAlias().toLowerCase()+"_"+assetUserActorNetworkServicePluginRoot.getId().toString()),
-                            (assetUserActorNetworkServicePluginRoot.getName()+" ("+assetUserActorNetworkServicePluginRoot.getId()+")"),
+                            assetUserActorNetworkServicePluginRoot.getAlias().toLowerCase(),
+                            assetUserActorNetworkServicePluginRoot.getName(),
                             assetUserActorNetworkServicePluginRoot.getNetworkServiceType(),
                             assetUserActorNetworkServicePluginRoot.getPlatformComponentType(),
                             assetUserActorNetworkServicePluginRoot.getExtraData());
@@ -78,7 +78,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                     /*
                      * Register me
                      */
-                    communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+                    communicationsClientConnection.registerComponentForCommunication(assetUserActorNetworkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
 
                     /*
                      * Configure my new profile

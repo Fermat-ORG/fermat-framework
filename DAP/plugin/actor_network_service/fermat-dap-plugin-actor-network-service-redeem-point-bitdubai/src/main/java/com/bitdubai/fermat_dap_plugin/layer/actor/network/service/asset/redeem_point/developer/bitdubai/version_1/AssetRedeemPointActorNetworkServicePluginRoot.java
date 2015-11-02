@@ -565,6 +565,11 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
         }
     }
 
+    /**
+     * Get is Register
+     * @return boolean
+     */
+    @Override
     public boolean isRegister() {
         return register;
     }
@@ -653,7 +658,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
                 /*
                  * ask to the communication cloud client to register
                  */
-                communicationsClientConnection.registerComponentForCommunication(platformComponentProfileAssetRedeemPoint);
+                communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfileAssetRedeemPoint);
 
             }else{
 
@@ -739,11 +744,6 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
     }
 
     @Override
-    public UUID getId() {
-        return this.pluginId;
-    }
-
-    @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
@@ -818,7 +818,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
                      * ask to the communication cloud client to register
                      */
                     try {
-                        communicationsClientConnection.registerComponentForCommunication(platformComponentProfileAssetRedeemPoint);
+                        communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfileAssetRedeemPoint);
                     } catch (CantRegisterComponentException e) {
                         e.printStackTrace();
                     }

@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_core;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantGetPluginIdException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantStartPluginIdsManagerException;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetPluginIdException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginIdsManagerException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;

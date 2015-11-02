@@ -65,8 +65,8 @@ public class PaymentRequestPendingAdapter extends FermatAdapterNew<PaymentReques
         holder.getTxt_time().setTypeface(tf);
 
 
-//        holder.getWalletName().setText(data.getWalletName());
-//        holder.getWalletIcon().setImageBitmap(data.getWalletIcon());
+//        holder.getName().setText(data.getName());
+//        holder.getIcon().setImageBitmap(data.getIcon());
 //        holder.getWalletPublisherName().setText("Publisher Name");
 //
 //        InstallationStatus installStatus = data.getInstallationStatus();

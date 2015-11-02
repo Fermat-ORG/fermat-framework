@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -20,7 +21,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -34,6 +34,13 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.DealsWithAssetVault;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantAcceptAddressExchangeRequestException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantGetPendingAddressExchangeRequestException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantSendAddressExchangeRequestException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
@@ -49,7 +56,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorNetworkServiceAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestCryptoAddressException;
 
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantSendCryptoAddressException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
@@ -57,6 +63,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.in
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantGetGenesisAddressException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.developerUtils.AssetUserActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.AssetUserActorCompleteRegistrationNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.CryptoAddressRequestedEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.NewCryptoAddressReceiveAssetUserActorNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.NewCryptoAddressRequestAssetUserActorNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantAddPendingAssetUserException;
@@ -85,7 +92,7 @@ import java.util.UUID;
  * Created by Nerio on 09/09/15.
  */
 //TODO TERMINAR DE IMPLEMENTAR
-public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNetworkServiceAssetUser, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithCryptoAddressBook, DealsWithDeviceUser, DealsWithErrors, DealsWithEvents, DealsWithAssetUserActorNetworkServiceManager, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
+public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNetworkServiceAssetUser, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithCryptoAddressBook, DealsWithCryptoAddressesNetworkService, DealsWithDeviceUser, DealsWithErrors, DealsWithEvents, DealsWithAssetUserActorNetworkServiceManager, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable {
 
     private AssetUserActorDao assetUserActorDao;
     private AssetUserActorMonitorAgent assetUserActorMonitorAgent;
@@ -114,6 +121,12 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
      * DealsWithEvents Interface member variables.
      */
     EventManager eventManager;
+    CryptoAddressesManager cryptoAddressesNetworkServiceManager;
+
+
+    /**
+     * DealsWithCryptoAddressBook interface member variables
+     */
 
     List<FermatEventListener> listenersAdded = new ArrayList<>();
     /**
@@ -166,6 +179,15 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    /**
+     * DealsWithCryptoAddressesNetworkService interface implementation
+     * @param cryptoAddressesNetworkServiceManager
+     */
+    @Override
+    public void setCryptoAddressesManager(CryptoAddressesManager cryptoAddressesNetworkServiceManager) {
+        this.cryptoAddressesNetworkServiceManager = cryptoAddressesNetworkServiceManager;
     }
 
     /**
@@ -307,8 +329,10 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-
-
+        FermatEventListener cryptoAddressReceivedEventListener = eventManager.getNewListener(com.bitdubai.fermat_ccp_api.all_definition.enums.EventType.CRYPTO_ADDRESS_REQUESTED);
+        cryptoAddressReceivedEventListener.setEventHandler(new CryptoAddressRequestedEventHandler(this));
+        eventManager.addListener(cryptoAddressReceivedEventListener);
+        listenersAdded.add(cryptoAddressReceivedEventListener);
 
 
 //        fermatEventListener = eventManager.getNewListener(EventType.ACTOR_ASSET_USER_REQUEST_CRYPTO_ADDRESS_NOTIFICATION);
@@ -346,16 +370,30 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
     }
 
 
-    public CryptoAddress getGenesisAddress() throws CantGetGenesisAddressException {
+    public CryptoAddress getGenesisAddress(UUID requestId) throws CantGetGenesisAddressException {
         try {
+            CryptoAddressRequest request = cryptoAddressesNetworkServiceManager.getPendingRequest(requestId);
+
 //            System.out.println("La BlockChain es: " + blockchainNetworkType);
-            CryptoAddress genesisAddress = this.assetVaultManager.getNewAssetVaultCryptoAddress(this.blockchainNetworkType);
+            CryptoAddress genesisAddress = this.assetVaultManager.getNewAssetVaultCryptoAddress(request.getBlockchainNetworkType());
+
 //            System.out.println("========================================================================");
 //            System.out.println("Genesis Address Actor Asset User: " + genesisAddress.getAddress() + " Currency: " + genesisAddress.getCryptoCurrency());
-            return genesisAddress;
+            registerGenesisAddressInCryptoAddressBook(genesisAddress);
+            cryptoAddressesNetworkServiceManager.acceptAddressExchangeRequest(requestId, genesisAddress);
         } catch (GetNewCryptoAddressException exception) {
             throw new CantGetGenesisAddressException(exception, "Requesting a genesis address", "Cannot get a new crypto address from asset vault");
+        } catch (PendingRequestNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantGetPendingAddressExchangeRequestException e) {
+            e.printStackTrace();
+        } catch (CantRegisterCryptoAddressBookRecordException e) {
+            e.printStackTrace();
+        } catch (CantAcceptAddressExchangeRequestException e) {
+            e.printStackTrace();
         }
+
+        return null;
     }
 
     /**
@@ -407,8 +445,10 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
     public void handleRequestCryptoAddresFromRemoteAssetUserEvent(ActorAssetIssuer actorAssetIssuer, ActorAssetUser actorAssetUser) {
         try {
             System.out.println("=============Actor Asset Inicia  Peticion Crypto=========");
-            CryptoAddress genesisAddress = getGenesisAddress();
+            CryptoAddress genesisAddress = getGenesisAddress(UUID.randomUUID());
             registerGenesisAddressInCryptoAddressBook(genesisAddress);
+            System.out.println("=====Actor Asset Registrando Crypto Local y Enviando======");
+            this.assetUserActorDao.createNewAssetUser(actorAssetUser);
             this.assetUserActorNetworkServiceManager.sendCryptoAddress(actorAssetUser, actorAssetIssuer, genesisAddress);
             System.out.println("=============Actor Asset User envio Crypto================");
             System.out.println("Actor Asset User: " + actorAssetUser.getName());
@@ -419,6 +459,8 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         } catch (CantRegisterCryptoAddressBookRecordException e) {
             e.printStackTrace();
         } catch (CantSendCryptoAddressException e) {
+            e.printStackTrace();
+        } catch (CantAddPendingAssetUserException e) {
             e.printStackTrace();
         }
     }
@@ -587,12 +629,11 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
     @Override
     public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException {
         try {
-            //for (ActorAssetUser actorAssetUser : actorAssetUsers){
-            //    //todo Actualizar Estado en base de datos para este actorAssetUser ConnectionState = PENDING_REMOTELY_ACCEPTANCE
-            //    assetUserActorNetworkServiceManager.requestCryptoAddress(requester, actorAssetUser);
-            //}
-            assetUserActorNetworkServiceManager.requestCryptoAddress(requester, actorAssetUsers.get(1));
-        } catch (CantRequestCryptoAddressException e) {
+            for (ActorAssetUser actorAssetUser : actorAssetUsers){
+                //todo Actualizar Estado en base de datos para este actorAssetUser ConnectionState = PENDING_REMOTELY_ACCEPTANCE
+                cryptoAddressesNetworkServiceManager.sendAddressExchangeRequest(null, CryptoCurrency.BITCOIN, Actors.DAP_ASSET_ISSUER, Actors.DAP_ASSET_USER, requester.getPublicKey(), actorAssetUser.getPublicKey(), null, BlockchainNetworkType.DEFAULT);
+            }
+        } catch (CantSendAddressExchangeRequestException e) {
             e.printStackTrace();
         }
 
@@ -616,7 +657,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
                 ConnectionState connectionState = ConnectionState.CONNECTED;
                 Double locationLatitude = new Random().nextDouble();
                 Double locationLongitude = new Random().nextDouble();
-                AssetUserActorRecord record = new AssetUserActorRecord(assetUserActorPublicKey, "Thunder User_" + new Random().nextInt(10), age, genders,
+                AssetUserActorRecord record = new AssetUserActorRecord(assetUserActorPublicKey, "Thunder User_" + new Random().nextInt(90), age, genders,
                         connectionState, locationLatitude, locationLongitude,
                         System.currentTimeMillis(),
                         System.currentTimeMillis(), new byte[0]);
@@ -743,4 +784,10 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 //
 //        }
 //    }
+
+
+    @Override
+    public void setCryptoAddress(ActorAssetUser actorAssetUser) {
+
+    }
 }

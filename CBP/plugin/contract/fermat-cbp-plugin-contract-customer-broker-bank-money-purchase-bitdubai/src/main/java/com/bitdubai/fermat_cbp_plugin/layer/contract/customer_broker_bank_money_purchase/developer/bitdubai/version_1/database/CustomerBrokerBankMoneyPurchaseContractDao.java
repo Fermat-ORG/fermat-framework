@@ -18,6 +18,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantCreateCustomerBrokerBankMoneyPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantDeleteCustomerBrokerBankMoneyPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantGetListCustomerBrokerBankMoneyPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.exceptions.CantupdateCustomerBrokerBankMoneyPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_bank_money_purchase.interfaces.CustomerBrokerBankMoneyPurchase;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_bank_money_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerBankMoneyPurchaseContractDaoException;
@@ -110,7 +111,7 @@ public class CustomerBrokerBankMoneyPurchaseContractDao {
 
     public void updateCustomerBrokerBankMoneyPurchase(
             UUID contractId,
-            String status
+            ContractStatus status
     ) throws CantupdateCustomerBrokerBankMoneyPurchaseException {
 
         try {
@@ -118,7 +119,7 @@ public class CustomerBrokerBankMoneyPurchaseContractDao {
             BankMoneyPurchaseContractTable.setUUIDFilter(CustomerBrokerBankMoneyPurchaseContractDatabaseConstants.CONTRACT_CUSTOMER_BROKER_BANK_MONEY_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractId, DatabaseFilterType.EQUAL);
 
             DatabaseTableRecord recordToUpdate = BankMoneyPurchaseContractTable.getEmptyRecord();
-            recordToUpdate.setStringValue(CustomerBrokerBankMoneyPurchaseContractDatabaseConstants.CONTRACT_CUSTOMER_BROKER_BANK_MONEY_PURCHASE_STATUS_COLUMN_NAME, status);
+            recordToUpdate.setStringValue(CustomerBrokerBankMoneyPurchaseContractDatabaseConstants.CONTRACT_CUSTOMER_BROKER_BANK_MONEY_PURCHASE_STATUS_COLUMN_NAME, status.getCode());
 
             BankMoneyPurchaseContractTable.updateRecord(recordToUpdate);
         } catch (CantUpdateRecordException e) {
@@ -144,9 +145,13 @@ public class CustomerBrokerBankMoneyPurchaseContractDao {
 
     }
 
-    public List<CustomerBrokerBankMoneyPurchase> getAllCustomerBrokerBankMoneyPurchaseFromCurrentDeviceUser() throws CantLoadTableToMemoryException, InvalidParameterException {
+    public List<CustomerBrokerBankMoneyPurchase> getAllCustomerBrokerBankMoneyPurchaseFromCurrentDeviceUser() throws CantGetListCustomerBrokerBankMoneyPurchaseException {
         DatabaseTable identityTable = this.database.getTable(CustomerBrokerBankMoneyPurchaseContractDatabaseConstants.CONTRACT_CUSTOMER_BROKER_BANK_MONEY_PURCHASE_TABLE_NAME);
-        identityTable.loadToMemory();
+        try {
+            identityTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetListCustomerBrokerBankMoneyPurchaseException(CantGetListCustomerBrokerBankMoneyPurchaseException.DEFAULT_MESSAGE,e,"","");
+        }
 
         List<DatabaseTableRecord> records = identityTable.getRecords();
         identityTable.clearAllFilters();
@@ -154,16 +159,24 @@ public class CustomerBrokerBankMoneyPurchaseContractDao {
         List<CustomerBrokerBankMoneyPurchase> bankMoneyPurchaseContracts = new ArrayList<>();
 
         for (DatabaseTableRecord record : records) {
-            bankMoneyPurchaseContracts.add(constructCustomerBrokerBankMoneyPurchaseContractFromRecord(record));
+            try {
+                bankMoneyPurchaseContracts.add(constructCustomerBrokerBankMoneyPurchaseContractFromRecord(record));
+            } catch (InvalidParameterException e) {
+                throw new CantGetListCustomerBrokerBankMoneyPurchaseException(CantGetListCustomerBrokerBankMoneyPurchaseException.DEFAULT_MESSAGE,e,"","");
+            }
         }
 
         return bankMoneyPurchaseContracts;
     }
 
-    public CustomerBrokerBankMoneyPurchase getCustomerBrokerBankMoneyPurchaseForContractId(UUID ContractId) throws CantLoadTableToMemoryException, InvalidParameterException {
+    public CustomerBrokerBankMoneyPurchase getCustomerBrokerBankMoneyPurchaseForContractId(UUID ContractId) throws CantGetListCustomerBrokerBankMoneyPurchaseException {
         DatabaseTable identityTable = this.database.getTable(CustomerBrokerBankMoneyPurchaseContractDatabaseConstants.CONTRACT_CUSTOMER_BROKER_BANK_MONEY_PURCHASE_TABLE_NAME);
         identityTable.setUUIDFilter(CustomerBrokerBankMoneyPurchaseContractDatabaseConstants.CONTRACT_CUSTOMER_BROKER_BANK_MONEY_PURCHASE_CONTRACT_ID_COLUMN_NAME, ContractId, DatabaseFilterType.EQUAL);
-        identityTable.loadToMemory();
+        try {
+            identityTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetListCustomerBrokerBankMoneyPurchaseException(CantGetListCustomerBrokerBankMoneyPurchaseException.DEFAULT_MESSAGE,e,"","");
+        }
 
         List<DatabaseTableRecord> records = identityTable.getRecords();
         identityTable.clearAllFilters();
@@ -171,7 +184,11 @@ public class CustomerBrokerBankMoneyPurchaseContractDao {
         CustomerBrokerBankMoneyPurchase bankMoneyPurchaseContract = null;
 
         for (DatabaseTableRecord record : records) {
-            bankMoneyPurchaseContract = constructCustomerBrokerBankMoneyPurchaseContractFromRecord(record);
+            try {
+                bankMoneyPurchaseContract = constructCustomerBrokerBankMoneyPurchaseContractFromRecord(record);
+            } catch (InvalidParameterException e) {
+                throw new CantGetListCustomerBrokerBankMoneyPurchaseException(CantGetListCustomerBrokerBankMoneyPurchaseException.DEFAULT_MESSAGE,e,"","");
+            }
         }
 
         return bankMoneyPurchaseContract;
