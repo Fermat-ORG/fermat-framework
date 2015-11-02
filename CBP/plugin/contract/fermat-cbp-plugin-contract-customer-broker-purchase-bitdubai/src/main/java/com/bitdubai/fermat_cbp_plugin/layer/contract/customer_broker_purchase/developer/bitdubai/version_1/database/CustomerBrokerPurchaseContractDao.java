@@ -9,9 +9,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseContractDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.structure.CustomerBrokerPurchaseInformation;
 
 import java.util.UUID;
 
@@ -88,8 +93,10 @@ public class CustomerBrokerPurchaseContractDao {
                 );
     
                 PurchaseContractTable.insertRecord(recordToInsert);
-    
-                return null;
+
+                    return constructCustomerBrokerPurchaseContractFromRecord(recordToInsert);
+            } catch (InvalidParameterException e) {
+                throw new CantCreateCustomerBrokerPurchaseException("An exception happened",e,"","");
             } catch (CantInsertRecordException e) {
                 throw new CantCreateCustomerBrokerPurchaseException("An exception happened",e,"","");
             }
@@ -130,5 +137,37 @@ public class CustomerBrokerPurchaseContractDao {
             databaseTableRecord.setLongValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_PAYMENT_EXPIRATION_DATE_COLUMN_NAME, paymentExpirationDate);
             databaseTableRecord.setLongValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_MERCHANDISE_DELIVERY_EXPIRATION_DATE_COLUMN_NAME, merchandiseDeliveryExpirationDate);
 
+        }
+
+        private CustomerBrokerPurchase constructCustomerBrokerPurchaseContractFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
+    
+            UUID                contractId                              = record.getUUIDValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME);
+            String              customerPublicKey                       = record.getStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
+            String              brokerPublicKey                         = record.getStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_BROKER_PUBLIC_KEY_COLUMN_NAME);
+            CurrencyType        paymentCurrency                         = CurrencyType.getByCode(record.getStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_PAYMENT_CURRENCY_COLUMN_NAME));
+            CurrencyType        merchandiseCurrency                     = CurrencyType.getByCode(record.getStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_MERCHANDISE_CURRENCY_COLUMN_NAME));
+            float               referencePrice                          = record.getFloatValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_REFERENCE_PRICE_COLUMN_NAME);
+            ReferenceCurrency   referenceCurrency                       = ReferenceCurrency.getByCode(record.getStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_REFERENCE_CURRENCY_COLUMN_NAME));
+            float               paymentAmount                           = record.getFloatValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_PAYMENT_AMOUNT_COLUMN_NAME);
+            float               merchandiseAmount                       = record.getFloatValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_MERCHANDISE_AMOUNT_COLUMN_NAME);
+            long                paymentExpirationDate                   = record.getLongValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_PAYMENT_EXPIRATION_DATE_COLUMN_NAME);
+            long                merchandiseDeliveryExpirationDate       = record.getLongValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_MERCHANDISE_DELIVERY_EXPIRATION_DATE_COLUMN_NAME);
+            ContractStatus      status                                  = ContractStatus.getByCode(record.getStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_STATUS_COLUMN_NAME));
+    
+    
+            return new CustomerBrokerPurchaseInformation(
+                    contractId,
+                    customerPublicKey,
+                    brokerPublicKey,
+                    paymentCurrency,
+                    merchandiseCurrency,
+                    referencePrice,
+                    referenceCurrency,
+                    paymentAmount,
+                    merchandiseAmount,
+                    paymentExpirationDate,
+                    merchandiseDeliveryExpirationDate,
+                    status
+            );
         }
 }
