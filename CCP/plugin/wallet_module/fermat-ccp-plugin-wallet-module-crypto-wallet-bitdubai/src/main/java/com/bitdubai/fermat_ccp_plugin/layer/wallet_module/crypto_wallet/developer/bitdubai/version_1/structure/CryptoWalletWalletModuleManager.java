@@ -450,6 +450,7 @@ public class CryptoWalletWalletModuleManager implements
 
 
 
+
                  return new CryptoWalletWalletModuleWalletContact(walletContactRecord, actorPhoto);
             }
 
