@@ -20,7 +20,7 @@ import java.util.UUID;
  *  Created by angel on 19/10/15.
  */
 
-public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurchaseNegotiation {
+public class CustomerBrokerPurchaseNegotiationInformation implements CustomerBrokerPurchaseNegotiation {
 
     private final UUID   negotiationId;
     private final String publicKeyCustomer;
@@ -30,7 +30,7 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
 
     private CustomerBrokerPurchaseNegotiationDao customerBrokerPurchaseNegotiationDao;
 
-    public CustomerBrokerPurchaseNegotiationImpl(
+    public CustomerBrokerPurchaseNegotiationInformation(
             UUID   negotiationId,
             String publicKeyCustomer,
             String publicKeyBroker,
