@@ -47,6 +47,16 @@ Each Plug-in has an internal class model. Usually it is a hiearchy where one of 
 
 An Envent Hander is a type of Class that is called by the Framework's Event Manager whenever and event the Plug-in is suscribed to is triggered. A single Plug-in can have as meny Event Handlers as needed. Somewhere within the Internal Structure the Plug-in subscribes itself to different type of events, declaring at that point which Event Handler class must be called.
 
+#### Exceptions
+
+Each Plugin can raise two types of exceptions: 
+
+a. **Internal** : These are exceptions that are thrown and handled within the same Plug-in.
+b. **External** : These are exceptions that are thrown within the Plug-in and are expected to be catched by it's caller. 
+
+| NOTE | It is not allowd for an exception that is thrown in Plug-in A go through Plug-in B unhandled and reach Plug-in C. |
+| ------------- | :------------- |
+
 #### Agents
 
 We define Agents as objects which at runtime will create a new thread of execition. We have developed this pattern in order to standarize and simplify the handling of processes that need to run from time to time and perform certain tasks. 
@@ -55,9 +65,14 @@ We define Agents as objects which at runtime will create a new thread of execiti
 ### Othe Elements
 -------------------
 
-#### Database
+#### Databases
 
 Plug-ins may have one or more Databases for storing their data. Usually one Database is enought, but in some cases different instances of the same data model are required.
+
+#### Files
+
+A Plug-in may have one or more files.
+
 
 
 <br>
