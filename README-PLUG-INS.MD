@@ -31,6 +31,7 @@ Several new concepts are introduced...
 * Is the main Class of each Version of the plug-in. This Class must implements AbstractPlugin of fermat-api.
 * A plug-in haves two particular behaviors:
  * It's a Service, and with this, we're saying that it can be managed like one, for this haves four basic methods, start, stop, pause or resume, and to keep the status we have a **ServiceStatus** [CREATED-STARTED-STOPPED-PAUSED].
+ * if its necessary to do something during the start-up of the plugin, you must override services methdos.
  * It haves an identity, given by the fermat-core. We may use this **pluginId** to add security in our plug-in. Throw it we should encrypt and decrypt the databases, files, etc. that the plug-in manages. 
 * It can be referenced, for this it haves a PluginVersionReference.
 * It can ask for dependences to the core, in the original core we specify the dependences throw the implementation of DealsWithOtherPluginOrAddon Interface, now we've two annotations to ask for this dependences: @NeededAddonReference @NeededPluginReference
