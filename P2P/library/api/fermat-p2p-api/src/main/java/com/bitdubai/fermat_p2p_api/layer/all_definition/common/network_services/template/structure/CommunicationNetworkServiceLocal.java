@@ -22,7 +22,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal</code> represent
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceLocal</code> represent
  * the remote network services locally
  * <p/>
  * This class extend of the <code>java.util.Observer</code> class,  its used on the software design pattern called: The observer pattern,
@@ -35,7 +35,7 @@ import java.util.Observer;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AbstractCommunicationNetworkServiceLocal implements Observer, NetworkServiceLocal {
+public final class CommunicationNetworkServiceLocal implements Observer, NetworkServiceLocal {
 
     private final PlatformComponentProfile remoteNetworkServiceProfile ;
     private final NetworkServiceType       networkServiceTypePluginRoot;
@@ -52,12 +52,12 @@ public class AbstractCommunicationNetworkServiceLocal implements Observer, Netwo
     /**
      * Constructor with parameters.
      */
-    public AbstractCommunicationNetworkServiceLocal(final PlatformComponentProfile remoteNetworkServiceProfile,
-                                                    final ErrorManager errorManager,
-                                                    final EventManager eventManager,
-                                                    final OutgoingMessageDao outgoingMessageDao,
-                                                    final NetworkServiceType networkServiceTypePluginRoot,
-                                                    final EventSource eventSource) {
+    public CommunicationNetworkServiceLocal(final PlatformComponentProfile remoteNetworkServiceProfile,
+                                            final ErrorManager errorManager,
+                                            final EventManager eventManager,
+                                            final OutgoingMessageDao outgoingMessageDao,
+                                            final NetworkServiceType networkServiceTypePluginRoot,
+                                            final EventSource eventSource) {
 
         this.remoteNetworkServiceProfile  = remoteNetworkServiceProfile ;
         this.errorManager                 = errorManager                ;

@@ -23,6 +23,7 @@ import java.util.Map;
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 31/05/15.
+ * Modified by lnacosta (laion.cj91@gmail.com) on 02/11/2015.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -42,12 +43,12 @@ public abstract class AbstractCommunicationNetworkServiceConnectionManager imple
     /**
      * Holds all references to the communication network service locals
      */
-    private final Map<String, AbstractCommunicationNetworkServiceLocal> communicationNetworkServiceLocalsCache;
+    private final Map<String, CommunicationNetworkServiceLocal> communicationNetworkServiceLocalsCache;
 
     /**
      * Holds all references to the communication network service remote agents
      */
-    private final Map<String,AbstractCommunicationNetworkServiceRemoteAgent> communicationNetworkServiceRemoteAgentsCache;
+    private final Map<String,CommunicationNetworkServiceRemoteAgent> communicationNetworkServiceRemoteAgentsCache;
 
     /**
      * Constructor with parameters.
@@ -174,28 +175,28 @@ public abstract class AbstractCommunicationNetworkServiceConnectionManager imple
                  /*
                  * Instantiate the local reference
                  */
-                AbstractCommunicationNetworkServiceLocal abstractCommunicationNetworkServiceLocal = new AbstractCommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao,platformComponentProfile.getNetworkServiceType(), eventSource);
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao,platformComponentProfile.getNetworkServiceType(), eventSource);
 
                 /*
                  * Instantiate the remote reference
                  */
-                AbstractCommunicationNetworkServiceRemoteAgent abstractCommunicationNetworkServiceRemoteAgent = new AbstractCommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao, eventSource, pluginVersionReference);
+                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao, eventSource, pluginVersionReference);
 
                 /*
                  * Register the observer to the observable agent
                  */
-                abstractCommunicationNetworkServiceRemoteAgent.addObserver(abstractCommunicationNetworkServiceLocal);
+                communicationNetworkServiceRemoteAgent.addObserver(communicationNetworkServiceLocal);
 
                 /*
                  * Start the service thread
                  */
-                abstractCommunicationNetworkServiceRemoteAgent.start();
+                communicationNetworkServiceRemoteAgent.start();
 
                 /*
                  * Add to the cache
                  */
-                communicationNetworkServiceLocalsCache.put(remoteComponentProfile.getIdentityPublicKey(), abstractCommunicationNetworkServiceLocal);
-                communicationNetworkServiceRemoteAgentsCache.put(remoteComponentProfile.getIdentityPublicKey(), abstractCommunicationNetworkServiceRemoteAgent);
+                communicationNetworkServiceLocalsCache.put(remoteComponentProfile.getIdentityPublicKey(), communicationNetworkServiceLocal);
+                communicationNetworkServiceRemoteAgentsCache.put(remoteComponentProfile.getIdentityPublicKey(), communicationNetworkServiceRemoteAgent);
 
             }
 
@@ -209,7 +210,7 @@ public abstract class AbstractCommunicationNetworkServiceConnectionManager imple
      * @see NetworkServiceConnectionManager#getNetworkServiceLocalInstance(String)
      */
     @Override
-    public final AbstractCommunicationNetworkServiceLocal getNetworkServiceLocalInstance(final String remoteNetworkServicePublicKey) {
+    public final CommunicationNetworkServiceLocal getNetworkServiceLocalInstance(final String remoteNetworkServicePublicKey) {
 
         //return the instance
         return communicationNetworkServiceLocalsCache.get(remoteNetworkServicePublicKey);
