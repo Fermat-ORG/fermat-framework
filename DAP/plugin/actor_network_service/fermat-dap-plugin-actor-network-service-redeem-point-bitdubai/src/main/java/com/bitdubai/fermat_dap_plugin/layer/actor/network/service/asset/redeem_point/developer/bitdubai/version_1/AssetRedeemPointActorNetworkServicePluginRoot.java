@@ -658,7 +658,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
                 /*
                  * ask to the communication cloud client to register
                  */
-                communicationsClientConnection.registerComponentForCommunication(platformComponentProfileAssetRedeemPoint);
+                communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfileAssetRedeemPoint);
 
             }else{
 
@@ -818,7 +818,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
                      * ask to the communication cloud client to register
                      */
                     try {
-                        communicationsClientConnection.registerComponentForCommunication(platformComponentProfileAssetRedeemPoint);
+                        communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfileAssetRedeemPoint);
                     } catch (CantRegisterComponentException e) {
                         e.printStackTrace();
                     }

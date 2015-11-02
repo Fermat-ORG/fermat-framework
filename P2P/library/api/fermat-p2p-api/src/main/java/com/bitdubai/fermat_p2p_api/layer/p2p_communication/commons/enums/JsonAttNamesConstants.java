@@ -100,5 +100,10 @@ public class JsonAttNamesConstants {
      */
     public static final String FAILURE = "f";
 
+    /**
+     * Represent the value of PROFILE_TO_REGISTER
+     */
+    public static final String PROFILE_TO_REGISTER = "pr";
+
 
 }

@@ -1007,6 +1007,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             if(developMode){
                 activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
+                activePlatforms.add(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
                 activePlatforms.add(Platforms.DIGITAL_ASSET_PLATFORM);
                 activePlatforms.add(Platforms.CRYPTO_BROKER_PLATFORM);
             }
@@ -1024,11 +1025,11 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                             WalletManager manager = getWalletManager();
                             WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
                             fragments.add(walletDesktopFragment);
-
-                            SubAppDesktopFragment subAppDesktopFragment = SubAppDesktopFragment.newInstance(0);
-
-                            fragments.add(subAppDesktopFragment);
                         }
+                        break;
+                    case "WPD":
+                        SubAppDesktopFragment subAppDesktopFragment = SubAppDesktopFragment.newInstance(0);
+                        fragments.add(subAppDesktopFragment);
                         break;
                     case "DDAP":
                         if(activePlatforms.contains(Platforms.DIGITAL_ASSET_PLATFORM)) {
@@ -1441,7 +1442,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
     @Override
     public void changeNavigationDrawerAdapter(ListAdapter listAdapter) {
-        //navigationDrawerFragment.changeNavigationDrawerAdapter(listAdapter);
+        navigationDrawerFragment.changeNavigationDrawerAdapter(listAdapter);
     }
 
 
