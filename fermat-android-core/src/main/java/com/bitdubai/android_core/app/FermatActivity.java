@@ -2,6 +2,7 @@ package com.bitdubai.android_core.app;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.Notification;
@@ -906,8 +907,10 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 navigationDrawerFragment.onDetach();
                 navigationDrawerFragment = null;
                FragmentManager fragmentManager = getFragmentManager();
-                //fragmentManager.beginTransaction().
-                  //      remove(getFragmentManager().findFragmentById(R.id.navigation_drawer)).commit();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                Fragment fragment = getFragmentManager().findFragmentById(R.id.navigation_drawer);
+                if(fragment!=null)
+                fragmentTransaction.remove(fragment).commit();
                 fragmentManager.executePendingTransactions();
             }
 
