@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.d
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseContractDatabaseException;
@@ -16,28 +17,34 @@ public class CustomerBrokerPurchaseContractDao {
 
     private Database database;
     private PluginDatabaseSystem pluginDatabaseSystem;
+    private UUID pluginId;
 
     /*
         Builders
      */
 
-        public CustomerBrokerPurchaseContractDao(PluginDatabaseSystem pluginDatabaseSystem) {
+        public CustomerBrokerPurchaseContractDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
             this.pluginDatabaseSystem = pluginDatabaseSystem;
+            this.pluginId = pluginId;
         }
 
     /*
         Public methods
      */
 
-        public void initialize(UUID pluginId) throws CantInitializeCustomerBrokerPurchaseContractDatabaseException {
+        public void initializeDatabase() throws CantInitializeCustomerBrokerPurchaseContractDatabaseException {
             try {
-                this.database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_TABLE_NAME);
-            } catch (DatabaseNotFoundException e) {
-
+                database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
             } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-                throw new CantInitializeCustomerBrokerPurchaseContractDatabaseException("I couldn't open the database", cantOpenDatabaseException, "Database Name: " + CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_TABLE_NAME, "");
-            } catch (Exception exception) {
-                throw new CantInitializeCustomerBrokerPurchaseContractDatabaseException(CantInitializeCustomerBrokerPurchaseContractDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+                throw new CantInitializeCustomerBrokerPurchaseContractDatabaseException(cantOpenDatabaseException.getMessage());
+            } catch (DatabaseNotFoundException e) {
+                CustomerBrokerPurchaseContractDatabaseFactory customerBrokerPurchaseContractDatabaseFactory = new CustomerBrokerPurchaseContractDatabaseFactory(pluginDatabaseSystem);
+
+                try {
+                    database = customerBrokerPurchaseContractDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+                    throw new CantInitializeCustomerBrokerPurchaseContractDatabaseException(cantCreateDatabaseException.getMessage());
+                }
             }
         }
 }
