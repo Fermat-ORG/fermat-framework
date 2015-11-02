@@ -96,4 +96,34 @@ public class CustomerBrokerPurchaseContractDao {
     
         }
 
+    /*
+        Methods Private
+     */
+
+        private void loadRecordAsNew(DatabaseTableRecord databaseTableRecord,
+                                     UUID contractId,
+                                     String publicKeyCustomer,
+                                     String publicKeyBroker,
+                                     float merchandiseAmount,
+                                     CurrencyType merchandiseCurrency,
+                                     float referencePrice,
+                                     ReferenceCurrency referenceCurrency,
+                                     float paymentAmount,
+                                     CurrencyType paymentCurrency,
+                                     long paymentExpirationDate,
+                                     long merchandiseDeliveryExpirationDate) {
+
+            databaseTableRecord.setUUIDValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractId);
+            databaseTableRecord.setStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKeyCustomer);
+            databaseTableRecord.setStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKeyBroker);
+            databaseTableRecord.setFloatValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_MERCHANDISE_AMOUNT_COLUMN_NAME, merchandiseAmount);
+            databaseTableRecord.setStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_MERCHANDISE_CURRENCY_COLUMN_NAME, merchandiseCurrency.getCode());
+            databaseTableRecord.setFloatValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_REFERENCE_PRICE_COLUMN_NAME, referencePrice);
+            databaseTableRecord.setStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_REFERENCE_CURRENCY_COLUMN_NAME, referenceCurrency.getCode());
+            databaseTableRecord.setFloatValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_PAYMENT_AMOUNT_COLUMN_NAME, paymentAmount);
+            databaseTableRecord.setStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_PAYMENT_CURRENCY_COLUMN_NAME, paymentCurrency.getCode());
+            databaseTableRecord.setLongValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_PAYMENT_EXPIRATION_DATE_COLUMN_NAME, paymentExpirationDate);
+            databaseTableRecord.setLongValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_MERCHANDISE_DELIVERY_EXPIRATION_DATE_COLUMN_NAME, merchandiseDeliveryExpirationDate);
+
+        }
 }
