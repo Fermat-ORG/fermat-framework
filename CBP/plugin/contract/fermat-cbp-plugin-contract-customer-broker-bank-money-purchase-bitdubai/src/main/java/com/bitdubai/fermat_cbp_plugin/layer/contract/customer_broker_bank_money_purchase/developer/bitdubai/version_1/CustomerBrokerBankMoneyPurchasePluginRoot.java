@@ -110,6 +110,12 @@ public class CustomerBrokerBankMoneyPurchasePluginRoot implements CustomerBroker
         return serviceStatus;
     }
 
+
+
+
+
+
+
     @Override
     public List<CustomerBrokerBankMoneyPurchase> getAllCustomerBrokerBankMoneyPurchaseFromCurrentDeviceUser() throws CantGetListCustomerBrokerBankMoneyPurchaseException {
         return this.customerBrokerBankMoneyPurchaseContractDao.getAllCustomerBrokerBankMoneyPurchaseFromCurrentDeviceUser();
