@@ -1,13 +1,13 @@
-package com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_crypto_money_sale.exceptions;
+package com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by angel on 18/9/15.
+ * Created by Angel on 2015.09.16..
  */
-public class CantupdateCustomerBrokerCryptoMoneySaleException extends FermatException {
+public class CantCreateCustomerBrokerPurchaseException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T UPDATE THE CONTRACT CUSTOMER BROKER CRYPTO MONEY SALE";
+    public static final String DEFAULT_MESSAGE = "CAN'T CREATE THE CONTRACT CUSTOMER BROKER PURCHASE";
 
     /**
      * This is the constructor that every inherited FermatException must implement
@@ -17,8 +17,7 @@ public class CantupdateCustomerBrokerCryptoMoneySaleException extends FermatExce
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantupdateCustomerBrokerCryptoMoneySaleException(String message, Exception cause, String context, String possibleReason) {
+    public CantCreateCustomerBrokerPurchaseException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
-

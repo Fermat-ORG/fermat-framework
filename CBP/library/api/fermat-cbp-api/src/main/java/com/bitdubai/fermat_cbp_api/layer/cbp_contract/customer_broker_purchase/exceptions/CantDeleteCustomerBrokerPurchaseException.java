@@ -1,13 +1,13 @@
-package com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_crypto_money_sale.exceptions;
+package com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
  * Created by Angel on 2015.09.16..
  */
-public class CantDeleteCustomerBrokerCryptoMoneySaleException extends FermatException {
+public class CantDeleteCustomerBrokerPurchaseException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T DELETED THE CONTRACT CUSTOMER BROKER CRYPTO MONEY SALE";
+    public static final String DEFAULT_MESSAGE = "CAN'T DELETED THE CONTRACT CUSTOMER BROKER BANK MONEY PURCHASE";
 
     /**
      * This is the constructor that every inherited FermatException must implement
@@ -17,7 +17,7 @@ public class CantDeleteCustomerBrokerCryptoMoneySaleException extends FermatExce
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantDeleteCustomerBrokerCryptoMoneySaleException(String message, Exception cause, String context, String possibleReason) {
+    public CantDeleteCustomerBrokerPurchaseException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
