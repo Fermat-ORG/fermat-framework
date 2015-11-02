@@ -2,7 +2,7 @@
 
 
 <br>
-#Contributing Guide
+#Contributing Guide Agregado
 
 <br>
 ## Introduction
