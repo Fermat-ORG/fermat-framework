@@ -1,32 +1,45 @@
 package com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantSingMessageException;
 
 /**
  * Created by Nerio on 07/09/15.
  */
-public interface IdentityAssetIssuer {
+public interface IdentityAssetIssuer extends ActiveIdentity {
 
     /**
-     * Get the alias of the represented identity
+     * The method <code>getAlias</code> returns the alias of the represented intra user
      *
-     * @return String Alias
+     * @return the alias of the represented intra user
      */
-    public String getAlias();
+    String getAlias();
 
     /**
-     * Get the public key of the represented developer
-     *
-     * @return string pulic key
+     * The method <code>getPublicKey</code> returns the public key of the represented intra user
+     * @return the public key of the represented intra user
      */
-    public String getPublicKey();
+    String getPublicKey();
 
     /**
-     * Sign a message with translator private key
+     * The method <code>getProfileImage</code> gives us the profile image of the represented intra user
+     * @return the profile image of the represented intra user
+     */
+    byte[] getProfileImage();
+
+    /**
+     * The method <code>setNewProfileImage</code> let the user set a new profile image
      *
-     * @param mensage to sign
-     * @return string signed message
+     * @param newProfileImage the new profile image to set
+     * @throws com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantSetNewProfileImageException
+     */
+    void setNewProfileImage(byte[] newProfileImage);
+
+    /**
+     * This method let an intra user sign a message with his unique private key
+     * @param message the message to sign
+     * @return the signature
      * @throws CantSingMessageException
      */
-    public String createMessageSignature(String mensage) throws CantSingMessageException;
+    String createMessageSignature(String message);
 }
