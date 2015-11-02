@@ -154,6 +154,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      */
     private Database dataBase;
 
+    private ECCKeyPair identity;
+
 
     /**
      * Represent the registrationProcessNetworkServiceAgent
@@ -443,17 +445,17 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
             RequestAction action = RequestAction.REQUEST        ;
 
             cryptoAddressesNetworkServiceDao.createAddressExchangeRequest(
-                    newId                      ,
-                    walletPublicKey            ,
-                    cryptoCurrency             ,
-                    identityTypeRequesting     ,
-                    identityTypeResponding     ,
+                    newId,
+                    walletPublicKey,
+                    cryptoCurrency,
+                    identityTypeRequesting,
+                    identityTypeResponding,
                     identityPublicKeyRequesting,
                     identityPublicKeyResponding,
-                    state                      ,
-                    type                       ,
-                    action                     ,
-                    dealer                     ,
+                    state,
+                    type,
+                    action,
+                    dealer,
                     blockchainNetworkType
             );
 
@@ -706,6 +708,11 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     @Override
     public NetworkServiceConnectionManager getNetworkServiceConnectionManager() {
         return communicationNetworkServiceConnectionManager;
+    }
+
+    @Override
+    public String getIdentityPublicKey() {
+        return this.identity.getPublicKey();
     }
 
     /**

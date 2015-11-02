@@ -215,6 +215,9 @@ public abstract class AbstractAddon implements Addon, Service {
             if(refManager.isAssignableFrom(abstractAddon.getClass())) {
                 field.setAccessible(true);
                 field.set(this, refManager.cast(abstractAddon));
+
+                System.out.println("Processing Addon: " + this.addonVersionReference.toString2()+
+                                    " - >>> Assigned reference: "+avr.toString2());
             } else {
                 throw new IncompatibleReferenceException(
                         "classExpected: "+refManager.getName() + " --- classReceived: " + abstractAddon.getClass().getName(),

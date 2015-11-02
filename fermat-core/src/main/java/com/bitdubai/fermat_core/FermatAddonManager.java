@@ -49,7 +49,7 @@ public class FermatAddonManager {
 
             if (abstractAddon.isDealsWithOsContext())
                 abstractAddon.setOsContext(systemContext.getOsContext());
-            
+
             startAddon(abstractAddon);
 
             return abstractAddon;
