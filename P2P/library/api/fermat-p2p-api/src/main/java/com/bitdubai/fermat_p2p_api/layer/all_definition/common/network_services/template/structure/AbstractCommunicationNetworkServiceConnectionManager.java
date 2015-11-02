@@ -20,8 +20,12 @@ import java.util.Map;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager</code>
+ * The abstract Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.AbstractCommunicationNetworkServiceConnectionManager</code>
  * <p/>
+ *
+ * Methods <code>buildCommunicationNetworkServiceLocal</code> and <code>buildCommunicationNetworkServiceRemoteAgent</code>
+ * can ve override
+ *
  * Created by Roberto Requena - (rart3001@gmail.com) on 31/05/15.
  * Modified by lnacosta (laion.cj91@gmail.com) on 02/11/2015.
  *
@@ -175,12 +179,12 @@ public abstract class AbstractCommunicationNetworkServiceConnectionManager imple
                  /*
                  * Instantiate the local reference
                  */
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao,platformComponentProfile.getNetworkServiceType(), eventSource);
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = buildCommunicationNetworkServiceLocal(remoteComponentProfile);
 
                 /*
                  * Instantiate the remote reference
                  */
-                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao, eventSource, pluginVersionReference);
+                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = buildCommunicationNetworkServiceRemoteAgent(communicationsVPNConnection);
 
                 /*
                  * Register the observer to the observable agent
@@ -245,4 +249,15 @@ public abstract class AbstractCommunicationNetworkServiceConnectionManager imple
         }
 
     }
+
+    protected CommunicationNetworkServiceLocal buildCommunicationNetworkServiceLocal(final PlatformComponentProfile remoteComponentProfile) {
+
+        return new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao,platformComponentProfile.getNetworkServiceType(), eventSource);
+    }
+
+    protected CommunicationNetworkServiceRemoteAgent buildCommunicationNetworkServiceRemoteAgent(final CommunicationsVPNConnection communicationsVPNConnection) {
+
+        return new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao, eventSource, pluginVersionReference);
+    }
+
 }
