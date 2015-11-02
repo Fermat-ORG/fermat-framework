@@ -13,19 +13,26 @@ To accomplish it's mission, a Plug-in may have it's own database and files to pe
 
 ## Part I: Concepts
 
-Several new concepts are introduced...
+Several new concepts are introduced at a Plug-in level. In this section the most important of them are explained.
 
 <br>
-### Developer Class
+### Main Classes
+
+There are a few classes that every Plug-in have.
+
+#### Developer Class
 
 Each Plug-in has a Developer Class. The reason is that there might be more than one version of the Plug-in at the same time. To deal with this, the Framework instead of instantiating the _Plugin Root_ directly, it calls the Developer Class that is somehow representing the Plug-ins developer. 
 
 In this way this class is able to choose which version of the Plug-in to run, and if it detects that a data migration must be done from version 1 to version 2, it coordinates that process too.
 
-<br>
-### Plug-in Root
+#### Plug-in Root
 
 The Plug-in root is the starting point of a Plug-in. It is the point of contact between the Framework and the Plug-in. It main purpose is to implement the interfaces that transforms itself into a service that can be started and stopped by the Framework, and other interfaces that are required in order to receive the references to other plugins so as to be able to consume their services.
+
+<br>
+### Other Concepts
+
 
 <br>
 ### Plug-in Public Interfaces
