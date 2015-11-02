@@ -377,7 +377,7 @@ Updates the count of notifications in the ActionBar.
 
         try {
 
-            dataSet = moduleManager.getSuggestionsToContact(MAX,offset);
+            dataSet.addAll( moduleManager.getSuggestionsToContact(MAX,offset));
             offset = dataSet.size();
 
         } catch (CantGetIntraUsersListException e) {

@@ -164,6 +164,10 @@ public enum Plugins implements FermatEnum {
     OUTGOING_INTRA_ACTOR   ("OIA" ),
     WALLET_CONTACTS        ("WC"  ),
 
+
+    // todo temporal
+
+    CRYPTO_ADDRESSES__MIDDLEWARE_TEMP ("cryptoaddmidtemp") ,
     // End  new Plugins
 
     ;
@@ -400,6 +404,11 @@ public enum Plugins implements FermatEnum {
             case "OEU": return OUTGOING_EXTRA_USER   ;
             case "OIA": return OUTGOING_INTRA_ACTOR  ;
             case "WC":  return WALLET_CONTACTS       ;
+
+
+            // temporal
+            case "cryptoaddmidtemp": return CRYPTO_ADDRESSES__MIDDLEWARE_TEMP;
+
 
             // End  new Plugins
 

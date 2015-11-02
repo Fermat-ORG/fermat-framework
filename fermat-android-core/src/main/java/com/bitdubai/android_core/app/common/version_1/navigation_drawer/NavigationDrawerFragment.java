@@ -169,7 +169,8 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
 
                 adapter = new NavigationDrawerArrayAdapter(
                         getActivity(),
-                        menuOption);
+                        menuOption,
+                        null);
 
                 mDrawerListView.setAdapter(adapter);
 
@@ -232,7 +233,7 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
 
             mDrawerListView.setAdapter(new NavigationDrawerArrayAdapter(
                     getActivity(),
-                    menuOption));
+                    menuOption,null));
 
             mFragmentContainerView = getActivity().findViewById(fragmentId);
             mDrawerLayout = drawerLayout;
@@ -463,7 +464,9 @@ public class NavigationDrawerFragment extends Fragment implements AdapterView.On
 
     public void changeNavigationDrawerAdapter(ListAdapter adapter){
         mDrawerListView.setAdapter( adapter);
-        //mDrawerListView.deferNotifyDataSetChanged();
+        mDrawerListView.deferNotifyDataSetChanged();
+        //mDrawerListView.invalidate();
+        //
     };
 
 //    public boolean equals(navigationDrawerFragment navigationDrawer){

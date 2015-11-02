@@ -103,7 +103,7 @@ import java.util.UUID;
  * * * * * * *
  */
 
-public class SubAppResourcesInstallationNetworkServicePluginRoot implements Service, NetworkService, DealsWithPluginDatabaseSystem,DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, SubAppResourcesInstalationManager, SubAppResourcesProviderManager {
+public class SubAppResourcesInstallationNetworkServicePluginRoot implements Service, DealsWithPluginDatabaseSystem,DealsWithEvents, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, SubAppResourcesInstalationManager, SubAppResourcesProviderManager {
 
 
     /**
@@ -269,8 +269,6 @@ public class SubAppResourcesInstallationNetworkServicePluginRoot implements Serv
     /**
      * NetworkService Interface implementation.
      */
-
-    @Override
     public UUID getId() {
         return this.pluginId;
     }

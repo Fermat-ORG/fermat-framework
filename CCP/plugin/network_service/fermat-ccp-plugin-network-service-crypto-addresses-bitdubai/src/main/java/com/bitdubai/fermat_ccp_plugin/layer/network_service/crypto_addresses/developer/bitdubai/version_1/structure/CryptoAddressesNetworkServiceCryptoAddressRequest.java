@@ -4,15 +4,16 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.ProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestAction;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.structure.CryptoAddressesNetworkServiceAddressExchangeRequest</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.structure.CryptoAddressesNetworkServiceCryptoAddressRequest</code>
  * haves all the consumable methods to get the data of a Address Exchange Request.<p/>
  * <p/>
  *
@@ -21,7 +22,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoAddressesNetworkServiceAddressExchangeRequest implements AddressExchangeRequest {
+public class CryptoAddressesNetworkServiceCryptoAddressRequest implements CryptoAddressRequest {
 
     private final UUID                        requestId                  ;
     private final String                      walletPublicKey            ;
@@ -34,20 +35,22 @@ public class CryptoAddressesNetworkServiceAddressExchangeRequest implements Addr
     private final ProtocolState               state                      ;
     private final RequestType                 type                       ;
     private final RequestAction               action                     ;
+    private final CryptoAddressDealers        cryptoAddressDealer        ;
     private final BlockchainNetworkType       blockchainNetworkType      ;
 
-    public CryptoAddressesNetworkServiceAddressExchangeRequest(final UUID                        requestId                  ,
-                                                               final String                      walletPublicKey            ,
-                                                               final Actors                      identityTypeRequesting     ,
-                                                               final Actors                      identityTypeResponding     ,
-                                                               final String                      identityPublicKeyRequesting,
-                                                               final String                      identityPublicKeyResponding,
-                                                               final CryptoCurrency              cryptoCurrency             ,
-                                                               final CryptoAddress               cryptoAddress              ,
-                                                               final ProtocolState               state                      ,
-                                                               final RequestType                 type                       ,
-                                                               final RequestAction               action                     ,
-                                                               final BlockchainNetworkType       blockchainNetworkType      ) {
+    public CryptoAddressesNetworkServiceCryptoAddressRequest(final UUID                  requestId                  ,
+                                                             final String                walletPublicKey            ,
+                                                             final Actors                identityTypeRequesting     ,
+                                                             final Actors                identityTypeResponding     ,
+                                                             final String                identityPublicKeyRequesting,
+                                                             final String                identityPublicKeyResponding,
+                                                             final CryptoCurrency        cryptoCurrency             ,
+                                                             final CryptoAddress         cryptoAddress              ,
+                                                             final ProtocolState         state                      ,
+                                                             final RequestType           type                       ,
+                                                             final RequestAction         action                     ,
+                                                             final CryptoAddressDealers  cryptoAddressDealer        ,
+                                                             final BlockchainNetworkType blockchainNetworkType      ) {
 
         this.requestId                   = requestId                  ;
         this.walletPublicKey             = walletPublicKey            ;
@@ -60,6 +63,7 @@ public class CryptoAddressesNetworkServiceAddressExchangeRequest implements Addr
         this.state                       = state                      ;
         this.type                        = type                       ;
         this.action                      = action                     ;
+        this.cryptoAddressDealer         = cryptoAddressDealer        ;
         this.blockchainNetworkType       = blockchainNetworkType      ;
     }
 
@@ -112,8 +116,13 @@ public class CryptoAddressesNetworkServiceAddressExchangeRequest implements Addr
     }
 
     @Override
+    public CryptoAddressDealers getCryptoAddressDealer() {
+        return cryptoAddressDealer;
+    }
+
+    @Override
     public String toString() {
-        return "CryptoAddressesNetworkServiceAddressExchangeRequest{" +
+        return "CryptoAddressesNetworkServiceCryptoAddressRequest{" +
                 "requestId=" + requestId +
                 ", walletPublicKey='" + walletPublicKey + '\'' +
                 ", identityTypeRequesting=" + identityTypeRequesting +
@@ -125,6 +134,7 @@ public class CryptoAddressesNetworkServiceAddressExchangeRequest implements Addr
                 ", state=" + state +
                 ", type=" + type +
                 ", action=" + action +
+                ", cryptoAddressDealer=" + cryptoAddressDealer +
                 ", blockchainNetworkType=" + blockchainNetworkType +
                 '}';
     }
