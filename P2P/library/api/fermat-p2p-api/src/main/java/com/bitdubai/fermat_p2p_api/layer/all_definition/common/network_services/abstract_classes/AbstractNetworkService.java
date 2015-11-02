@@ -91,6 +91,4 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
     public abstract void initializeCommunicationNetworkServiceConnectionManager();
 
-    public abstract void handleNewMessages(FermatMessage message);
-
 }

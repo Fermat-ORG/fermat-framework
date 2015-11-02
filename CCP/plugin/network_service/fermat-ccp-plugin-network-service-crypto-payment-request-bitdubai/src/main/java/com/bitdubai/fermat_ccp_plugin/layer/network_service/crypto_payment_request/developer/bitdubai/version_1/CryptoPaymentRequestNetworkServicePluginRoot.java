@@ -693,7 +693,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                 dataBase,
                 errorManager,
                 eventManager,
-                this.getEventSource()
+                this.getEventSource(),
+                getPluginVersionReference()
         );
     }
 
@@ -725,7 +726,8 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                         eventManager,
                         pluginDatabaseSystem,
                         pluginId,
-                        wsCommunicationsCloudClientManager
+                        wsCommunicationsCloudClientManager,
+                        getPluginVersionReference()
                 );
 
                 cryptoPaymentRequestExecutorAgent.start();
