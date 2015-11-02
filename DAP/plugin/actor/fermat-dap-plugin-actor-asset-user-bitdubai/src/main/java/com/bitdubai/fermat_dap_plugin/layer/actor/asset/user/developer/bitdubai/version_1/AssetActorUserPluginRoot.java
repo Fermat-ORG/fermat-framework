@@ -469,7 +469,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         try {
             System.out.println("=============Actor Asset Inicia  Recepcion Crypto=========");
             //todo actualizar tabla de usuarios registrados con nueva crypto address.
-            this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(actorAssetUser);
+            this.assetUserActorDao.createNewAssetUserRegisterInNetworkService(actorAssetUser, ConnectionState.CONNECTED, cryptoAddress);
             System.out.println("=============Actor Asset User Recibida Crypto================");
             System.out.println("Actor Asset User: " + actorAssetUser.getName());
             System.out.println("Actor Asset Crypto Address: " + actorAssetUser.getCryptoAddress().getAddress());
