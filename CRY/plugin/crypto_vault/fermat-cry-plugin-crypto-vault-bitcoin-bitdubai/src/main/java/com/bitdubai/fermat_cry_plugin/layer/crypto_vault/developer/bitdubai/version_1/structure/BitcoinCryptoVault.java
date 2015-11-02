@@ -99,6 +99,7 @@ public class BitcoinCryptoVault implements
     File vaultFile;
     String vaultFileName;
     VaultEventListeners vaultEventListeners;
+    PeerGroup peerGroup;
 
 
     /**
@@ -346,7 +347,7 @@ public class BitcoinCryptoVault implements
 
             BlockStore blockStore = new MemoryBlockStore(this.networkParameters);
             BlockChain blockChain = new BlockChain(this.networkParameters,vault, blockStore);
-            PeerGroup peerGroup = new PeerGroup(this.networkParameters,blockChain);
+            peerGroup = new PeerGroup(this.networkParameters,blockChain);
             peerGroup.addWallet(vault);
             vault.addEventListener(this.vaultEventListeners);
 
@@ -461,8 +462,8 @@ public class BitcoinCryptoVault implements
             /**
              * If OP_return was specified then I will add an output to the transaction
              */
-            if (op_Return != null)
-                request.tx.addOutput(Coin.ZERO, new ScriptBuilder().op(ScriptOpCodes.OP_RETURN).data(op_Return.getBytes()).build());
+           // if (op_Return != null)
+            //    request.tx.addOutput(Coin.ZERO, new ScriptBuilder().op(ScriptOpCodes.OP_RETURN).data(op_Return.getBytes()).build());
 
 
             /**
@@ -476,7 +477,7 @@ public class BitcoinCryptoVault implements
             vault.commitTx(request.tx);
             vault.saveToFile(vaultFile);
 
-            bitcoinCryptoNetworkManager.broadcastTransaction(request.tx);
+            peerGroup.broadcastTransaction(request.tx).future().get();
 
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: bitcoin sent!!!", "Address to: " + addressTo.getAddress(), "Amount: " + amount);
 
@@ -492,10 +493,7 @@ public class BitcoinCryptoVault implements
         } catch (CantExecuteQueryException cantExecuteQueryException) {
 
             throw new CouldNotSendMoneyException("I coudln't persist the internal transaction Id.", cantExecuteQueryException, "Transaction ID: " + fermatTxId.toString(), "An error in the Database plugin..");
-        } catch (CantBroadcastTransactionException e) {
-            throw new CouldNotSendMoneyException("Can't broadcast the transaction.", e, "Transaction ID: " + fermatTxId.toString(), "Network error.");
         } catch(Exception exception){
-
             throw new CouldNotSendMoneyException("Fatal error sending bitcoins.", exception, "Address to:" + addressTo.getAddress() + ", transaction Id:" + fermatTxId.toString(), "Unkwnown.");
         }
     }
