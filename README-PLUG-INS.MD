@@ -21,12 +21,14 @@ Several new concepts are introduced at a Plug-in level. In this section the most
 
 There are a few classes that every Plug-in have.
 
+<br>
 #### Developer Class
 
 Each Plug-in has a Developer Class. The reason is that there might be more than one version of the Plug-in at the same time. To deal with this, the Framework instead of instantiating the _Plugin Root_ directly, it calls the Developer Class that is somehow representing the Plug-ins developer. 
 
 In this way this class is able to choose which version of the Plug-in to run, and if it detects that a data migration must be done from version 1 to version 2, it coordinates that process too.
 
+<br>
 #### Plug-in Root Class
 
 The Plug-in root is the starting point of a Plug-in. It is the point of contact between the Framework and the Plug-in. It main purpose is to implement the interfaces that transforms itself into a service that can be started and stopped by the Framework, and other interfaces that are required in order to receive the references to other plugins so as to be able to consume their services.
@@ -35,18 +37,22 @@ The Plug-in root is the starting point of a Plug-in. It is the point of contact 
 ### Class Groups
 -------------------
 
+<br>
 #### Public Interfaces
 
 Each Plug-in gives services to other Plug-ins. They do it through public interfaces published either on Fermat-api, or on the Platfom's API where the Plug-in belongs. Some clases of it's internal structure implements these public interfaces.
 
+<br>
 #### Internal Structure
 
 Each Plug-in has an internal class model. Usually it is a hiearchy where one of it classes is the root. Some of them implements the public interface of the Plug-in defined within this Plug-in.
 
+<br>
 #### Event Handlers
 
 An Envent Hander is a type of Class that is called by the Framework's Event Manager whenever and event the Plug-in is suscribed to is triggered. A single Plug-in can have as meny Event Handlers as needed. Somewhere within the Internal Structure the Plug-in subscribes itself to different type of events, declaring at that point which Event Handler class must be called.
 
+<br>
 #### Exceptions
 
 Each Plugin can raise two types of exceptions: 
@@ -58,6 +64,7 @@ b. **External** : These are exceptions that are thrown within a Plug-in and are 
 | NOTE | It is not allowd for an exception that is thrown in Plug-in A go through Plug-in B unhandled and reach Plug-in C. |
 | ------------- | :------------- |
 
+<br>
 #### Agents
 
 We define Agents as objects which at runtime will create a new thread of execition. We have developed this pattern in order to standarize and simplify the handling of processes that need to run from time to time and perform certain tasks. 
@@ -66,10 +73,12 @@ We define Agents as objects which at runtime will create a new thread of execiti
 ### Othe Elements
 -------------------
 
+<br>
 #### Databases
 
 Plug-ins may have one or more Databases for storing their data. Usually one Database is enought, but in some cases different instances of the same data model are required.
 
+<br>
 #### Files
 
 A Plug-in may have one or more files.
@@ -78,7 +87,7 @@ A Plug-in may have one or more files.
 
 <br>
 
-## Parte II: Workflow
+## Part II: Workflow
 
 This section will help you undestand the workflow needed to be followed in order to implement a Plugin in Fermat.
 
@@ -86,6 +95,7 @@ This section will help you undestand the workflow needed to be followed in order
 ### Getting Organized
 ---------------------
 
+<br>
 #### Issues
 
 It is mandatory that you create an initial set of github issues before you proceed further on the workflow. This will show the rest of the temas that someone is working in this functionality and avoid conflicting work early on. It will also hook the team leader into your workflow and allow him to guide and advise you when needed.
