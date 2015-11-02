@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -87,6 +88,9 @@ public final class IncomingMessageDao {
         } catch (final CantLoadTableToMemoryException e) {
 
             throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The data no exist");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "Invalid parameter found, maybe the enum is wrong.");
         }
     }
 
@@ -117,6 +121,9 @@ public final class IncomingMessageDao {
         } catch (final CantLoadTableToMemoryException e) {
 
             throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The data no exist");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "Invalid parameter found, maybe the enum is wrong.");
         }
     }
 
@@ -160,6 +167,9 @@ public final class IncomingMessageDao {
         } catch (final CantLoadTableToMemoryException e) {
 
             throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The data no exist");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "Invalid parameter found, maybe the enum is wrong.");
         }
 
     }
@@ -214,6 +224,9 @@ public final class IncomingMessageDao {
         } catch (final CantLoadTableToMemoryException e) {
 
             throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The data no exist");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "Invalid parameter found, maybe the enum is wrong.");
         }
     }
 
@@ -328,24 +341,21 @@ public final class IncomingMessageDao {
      * @param record with values from the table
      * @return FermatMessage setters the values from table
      */
-    private FermatMessage constructFrom(final DatabaseTableRecord record) {//throws InvalidParameterException {
+    private FermatMessage constructFrom(final DatabaseTableRecord record) throws InvalidParameterException {
 
 
         final FermatMessageCommunication incomingTemplateNetworkServiceMessage = new FermatMessageCommunication();
-        try {
-            incomingTemplateNetworkServiceMessage.setId(record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME));
-            incomingTemplateNetworkServiceMessage.setSender(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME));
-            incomingTemplateNetworkServiceMessage.setReceiver(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME));
-            incomingTemplateNetworkServiceMessage.setContent(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME));
-            incomingTemplateNetworkServiceMessage.setFermatMessageContentType(FermatMessageContentType.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME)));
-            incomingTemplateNetworkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME)));
-            incomingTemplateNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME)));
 
-            incomingTemplateNetworkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME)));
+        incomingTemplateNetworkServiceMessage.setId                      (record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME));
+        incomingTemplateNetworkServiceMessage.setSender                  (record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME));
+        incomingTemplateNetworkServiceMessage.setReceiver                (record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME));
+        incomingTemplateNetworkServiceMessage.setContent                 (record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME));
+        incomingTemplateNetworkServiceMessage.setFermatMessageContentType(FermatMessageContentType.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME)));
+        incomingTemplateNetworkServiceMessage.setShippingTimestamp       (new Timestamp(record.getLongValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME)));
+        incomingTemplateNetworkServiceMessage.setDeliveryTimestamp       (new Timestamp(record.getLongValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME)));
 
-        } catch(Exception e) {
+        incomingTemplateNetworkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME)));
 
-        }
         return incomingTemplateNetworkServiceMessage;
     }
 
@@ -374,13 +384,13 @@ public final class IncomingMessageDao {
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME        , incomingTemplateNetworkServiceMessage.getFermatMessageContentType().getCode());
 
         if (incomingTemplateNetworkServiceMessage.getShippingTimestamp() != null)
-            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getShippingTimestamp().getTime());
+            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getShippingTimestamp().getTime());
         else
-            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, 0);
+            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, 0);
 
 
         if (incomingTemplateNetworkServiceMessage.getDeliveryTimestamp() != null)
-            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getDeliveryTimestamp().getTime());
+            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getDeliveryTimestamp().getTime());
         else
             entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, 0);
 

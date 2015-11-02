@@ -1,9 +1,3 @@
-/*
- * @#OutgoingMessageDataAccessObject.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -13,13 +7,15 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterT
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
@@ -37,375 +33,224 @@ import java.util.UUID;
  * <p/>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 21/07/15.
+ * Modified by lnacosta (laion.cj91@gmail.com) on 01/11/2015.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
 public class OutgoingMessageDao {
 
-    /**
-     * Represent the dataBase
-     */
-    private Database dataBase;
+    private final Database dataBase;
 
-    /**
-     * Constructor with parameters
-     *
-     * @param dataBase
-     */
-    public OutgoingMessageDao(Database dataBase) {
-        super();
+    public OutgoingMessageDao(final Database dataBase) {
+
         this.dataBase = dataBase;
     }
 
-    /**
-     * Return the Database
-     *
-     * @return Database
-     */
-    Database getDataBase() {
+    private Database getDataBase() {
         return dataBase;
     }
 
-    /**
-     * Return the DatabaseTable
-     *
-     * @return DatabaseTable
-     */
-    DatabaseTable getDatabaseTable() {
+    private DatabaseTable getDatabaseTable() {
+
         return getDataBase().getTable(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
     }
 
     /**
      * Method that find an FermatMessage by id in the data base.
      *
-     * @param id Long id.
+     * @param id UUID id.
+     *
      * @return FermatMessage found.
-     * @throws CantReadRecordDataBaseException
+     *
+     * @throws CantReadRecordDataBaseException   if something goes wrong.
+     * @throws RecordNotFoundException           if i can't find the record.
      */
-    public FermatMessage findById(String id) throws CantReadRecordDataBaseException {
+    public final FermatMessage findById(final UUID id) throws CantReadRecordDataBaseException,
+            RecordNotFoundException        {
 
-        if (id == null) {
-            throw new IllegalArgumentException("The id is required, can not be null");
-        }
-
-        FermatMessage outgoingTemplateNetworkServiceMessage = null;
+        if (id == null)
+            throw new IllegalArgumentException("The id is required, can not be null.");
 
         try {
 
-            /*
-             * 1 - load the data base to memory with filter
-             */
-            DatabaseTable incomingMessageTable = getDatabaseTable();
-            incomingMessageTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
-            incomingMessageTable.loadToMemory();
+            final DatabaseTable outgoingMessageTable = getDatabaseTable();
+            outgoingMessageTable.setUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            outgoingMessageTable.loadToMemory();
 
-            /*
-             * 2 - read all records
-             */
-            List<DatabaseTableRecord> records = incomingMessageTable.getRecords();
+            List<DatabaseTableRecord> records = outgoingMessageTable.getRecords();
 
+            if(!records.isEmpty())
+                return constructFrom(records.get(0));
+            else
+                throw new RecordNotFoundException("id: " + id, "Cannot find an outgoing message with that id.");
 
-            /*
-             * 3 - Convert into FermatMessage objects
-             */
-            for (DatabaseTableRecord record : records) {
+        } catch (final CantLoadTableToMemoryException e) {
 
-                /*
-                 * 3.1 - Create and configure a  FermatMessage
-                 */
-                outgoingTemplateNetworkServiceMessage = constructFrom(record);
-            }
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The data no exist");
+        } catch (final InvalidParameterException e) {
 
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            // Register the failure.
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            throw cantReadRecordDataBaseException;
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "Invalid parameter found, maybe the enum is wrong.");
         }
-
-        return outgoingTemplateNetworkServiceMessage;
     }
-
-    ;
 
     /**
      * Method that list the all entities on the data base.
      *
      * @return All FermatMessage.
-     * @throws CantReadRecordDataBaseException
+     *
+     * @throws CantReadRecordDataBaseException if something goes wrong.
      */
-    public List<FermatMessage> findAll() throws CantReadRecordDataBaseException {
-
-
-        List<FermatMessage> list = null;
+    public final List<FermatMessage> findAll() throws CantReadRecordDataBaseException {
 
         try {
-
-            /*
-             * 1 - load the data base to memory
-             */
+            // load the data base to memory
             DatabaseTable networkIntraUserTable = getDatabaseTable();
             networkIntraUserTable.loadToMemory();
 
-            /*
-             * 2 - read all records
-             */
-            List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
+            final List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
 
-            /*
-             * 3 - Create a list of FermatMessage objects
-             */
-            list = new ArrayList<>();
-            list.clear();
+            final List<FermatMessage> list = new ArrayList<>();
 
-            /*
-             * 4 - Convert into FermatMessage objects
-             */
-            for (DatabaseTableRecord record : records) {
+            // Convert into FermatMessage objects and add to the list.
+            for (DatabaseTableRecord record : records)
+                list.add(constructFrom(record));
 
-                /*
-                 * 4.1 - Create and configure a  FermatMessage
-                 */
-                FermatMessage outgoingTemplateNetworkServiceMessage = constructFrom(record);
+            return list;
 
-                /*
-                 * 4.2 - Add to the list
-                 */
-                list.add(outgoingTemplateNetworkServiceMessage);
+        } catch (final CantLoadTableToMemoryException e) {
 
-            }
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The data no exist");
+        } catch (final InvalidParameterException e) {
 
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            throw cantReadRecordDataBaseException;
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "Invalid parameter found, maybe the enum is wrong.");
         }
-
-        /*
-         * return the list
-         */
-        return list;
     }
-
-    ;
-
 
     /**
      * Method that list the all entities on the data base. The valid value of
      * the column name are the att of the <code>CommunicationNetworkServiceDatabaseConstants</code>
      *
-     * @return All FermatMessage.
+     * @return All FermatMessage filtering by the parameter specified..
+     *
      * @throws CantReadRecordDataBaseException
+     *
      * @see CommunicationNetworkServiceDatabaseConstants
      */
-    public List<FermatMessage> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException {
+    public final List<FermatMessage> findAll(final String columnName ,
+                                             final String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
                 columnValue == null ||
-                columnValue.isEmpty()) {
-
-            throw new IllegalArgumentException("The filter are required, can not be null or empty");
-        }
-
-
-        List<FermatMessage> list = null;
+                columnValue.isEmpty())
+            throw new IllegalArgumentException("The filter are required, can not be null or empty.");
 
         try {
 
-            /*
-             * 1 - load the data base to memory with filters
-             */
-            DatabaseTable templateTable = getDatabaseTable();
-            templateTable.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
-            templateTable.loadToMemory();
+            // load the data base to memory with filters
+            final DatabaseTable networkIntraUserTable = getDatabaseTable();
 
-            /*
-             * 2 - read all records
-             */
-            List<DatabaseTableRecord> records = templateTable.getRecords();
+            networkIntraUserTable.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
+            networkIntraUserTable.loadToMemory();
 
-            /*
-             * 3 - Create a list of FermatMessage objects
-             */
-            list = new ArrayList<>();
-            list.clear();
+            final List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
 
-            /*
-             * 4 - Convert into FermatMessage objects
-             */
-            for (DatabaseTableRecord record : records) {
+            final List<FermatMessage> list = new ArrayList<>();
 
-                /*
-                 * 4.1 - Create and configure a  FermatMessage
-                 */
-                FermatMessage outGoingTemplateNetworkServiceMessage = constructFrom(record);
+            // Convert into FermatMessage objects and add to the list.
+            for (DatabaseTableRecord record : records)
+                list.add(constructFrom(record));
 
-                /*
-                 * 4.2 - Add to the list
-                 */
-                list.add(outGoingTemplateNetworkServiceMessage);
+            return list;
 
-            }
+        } catch (final CantLoadTableToMemoryException e) {
 
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The data no exist");
+        } catch (final InvalidParameterException e) {
 
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            throw cantReadRecordDataBaseException;
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "Invalid parameter found, maybe the enum is wrong.");
         }
 
-        /*
-         * return the list
-         */
-        return list;
     }
-
-    ;
-
 
     /**
      * Method that list the all entities on the data base. The valid value of
      * the key are the att of the <code>CommunicationNetworkServiceDatabaseConstants</code>
      *
-     * @param filters
-     * @return List<FermatMessage>
-     * @throws CantReadRecordDataBaseException
+     * @return All FermatMessage.
+     *
+     * @throws CantReadRecordDataBaseException if something goes wrong.
+     *
+     * @see CommunicationNetworkServiceDatabaseConstants
      */
-    public List<FermatMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public final List<FermatMessage> findAll(final Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
-        if (filters == null ||
-                filters.isEmpty()) {
-
-            throw new IllegalArgumentException("The filters are required, can not be null or empty");
-        }
-
-        List<FermatMessage> list = null;
-        List<DatabaseTableFilter> filtersTable = new ArrayList<>();
+        if (filters == null || filters.isEmpty())
+            throw new IllegalArgumentException("The filters are required, can not be null or empty.");
 
         try {
 
+            // Prepare the filters
+            final DatabaseTable networkIntraUserTable = getDatabaseTable();
 
-            /*
-             * 1- Prepare the filters
-             */
-            DatabaseTable templateTable = getDatabaseTable();
+            final List<DatabaseTableFilter> tableFilters = new ArrayList<>();
 
             for (String key : filters.keySet()) {
 
-                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+                DatabaseTableFilter newFilter = networkIntraUserTable.getEmptyTableFilter();
                 newFilter.setType(DatabaseFilterType.EQUAL);
                 newFilter.setColumn(key);
                 newFilter.setValue((String) filters.get(key));
 
-                filtersTable.add(newFilter);
+                tableFilters.add(newFilter);
             }
 
 
-            /*
-             * 2 - load the data base to memory with filters
-             */
-            templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
-            templateTable.loadToMemory();
+            // load the data base to memory with filters
+            networkIntraUserTable.setFilterGroup(tableFilters, null, DatabaseFilterOperator.OR);
+            networkIntraUserTable.loadToMemory();
 
-            /*
-             * 3 - read all records
-             */
-            List<DatabaseTableRecord> records = templateTable.getRecords();
+            final List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
 
-            /*
-             * 4 - Create a list of FermatMessage objects
-             */
-            list = new ArrayList<>();
-            list.clear();
+            final List<FermatMessage> list = new ArrayList<>();
 
-            /*
-             * 5 - Convert into FermatMessage objects
-             */
-            for (DatabaseTableRecord record : records) {
+            // Convert into FermatMessage objects and add to the list.
+            for (DatabaseTableRecord record : records)
+                list.add(constructFrom(record));
 
-                /*
-                 * 5.1 - Create and configure a  FermatMessage
-                 */
-                FermatMessage outgoingTemplateNetworkServiceMessage = constructFrom(record);
+            return list;
 
-                /*
-                 * 5.2 - Add to the list
-                 */
-                list.add(outgoingTemplateNetworkServiceMessage);
+        } catch (final CantLoadTableToMemoryException e) {
 
-            }
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The data no exist");
+        } catch (final InvalidParameterException e) {
 
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            throw cantReadRecordDataBaseException;
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "Invalid parameter found, maybe the enum is wrong.");
         }
-
-        /*
-         * return the list
-         */
-        return list;
     }
-
-    ;
 
     /**
      * Method that create a new entity in the data base.
      *
      * @param entity FermatMessage to create.
-     * @throws CantInsertRecordDataBaseException
+     *
+     * @throws CantInsertRecordDataBaseException if something goes wrong.
      */
-    public void create(FermatMessage entity) throws CantInsertRecordDataBaseException {
+    public final void create(final FermatMessage entity) throws CantInsertRecordDataBaseException {
 
-        if (entity == null) {
+        if (entity == null)
             throw new IllegalArgumentException("The entity is required, can not be null");
-        }
 
         try {
 
-            /*
-             * 1- Create the record to the entity
-             */
             DatabaseTableRecord entityRecord = constructFrom(entity);
 
-            /*
-             * 2.- Create a new transaction and execute
-             */
-            DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
-            getDataBase().executeTransaction(transaction);
+            getDatabaseTable().insertRecord(entityRecord);
 
-        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+        } catch (final CantInsertRecordException e) {
 
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
-            CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
-            throw cantInsertRecordDataBaseException;
-
+            throw new CantInsertRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The Template Database triggered an unexpected problem that wasn't able to solve by itself");
         }
 
     }
@@ -414,105 +259,102 @@ public class OutgoingMessageDao {
      * Method that update an entity in the data base.
      *
      * @param entity FermatMessage to update.
-     * @throws CantUpdateRecordDataBaseException
+     *
+     * @throws CantUpdateRecordDataBaseException  if something goes wrong.
+     * @throws RecordNotFoundException            if we can't find the record in db.
      */
-    public void update(FermatMessage entity) throws CantUpdateRecordDataBaseException {
+    public final void update(final FermatMessage entity) throws CantUpdateRecordDataBaseException,
+            RecordNotFoundException          {
 
-        if (entity == null) {
-            throw new IllegalArgumentException("The entity is required, can not be null");
-        }
+        if (entity == null)
+            throw new IllegalArgumentException("The entity is required, can not be null.");
 
         try {
 
-            /*
-             * 1- Create the record to the entity
-             */
-            DatabaseTableRecord entityRecord = constructFrom(entity);
+            final DatabaseTable table = this.getDatabaseTable();
 
-            /*
-             * 2.- Create a new transaction and execute
-             */
-            DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
-            getDataBase().executeTransaction(transaction);
+            table.setUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, entity.getId(), DatabaseFilterType.EQUAL);
 
-        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+            table.loadToMemory();
 
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            final List<DatabaseTableRecord> records = table.getRecords();
 
-            String context = contextBuffer.toString();
-            String possibleCause = "The record do not exist";
-            CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
-            throw cantUpdateRecordDataBaseException;
+            if (!records.isEmpty()) {
+
+                // TODO make the setters for the fields.
+
+                table.updateRecord(records.get(0));
+            } else {
+                throw new RecordNotFoundException("id: " + entity.getId(), "Cannot find an outgoing message with that id.");
+            }
+
+        } catch (final CantUpdateRecordException e) {
+
+            throw new CantUpdateRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The record do not exist");
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantUpdateRecordDataBaseException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
 
         }
-
     }
 
     /**
      * Method that delete a entity in the data base.
      *
-     * @param id Long id.
-     * @throws CantDeleteRecordDataBaseException
+     * @param id UUID id.
+     *
+     * @throws CantDeleteRecordDataBaseException  if something goes wrong.
+     * @throws RecordNotFoundException            if we can't find the record in db.
      */
-    public void delete(Long id) throws CantDeleteRecordDataBaseException {
+    public final void delete(final UUID id) throws CantDeleteRecordDataBaseException,
+            RecordNotFoundException          {
 
-        if (id == null) {
-            throw new IllegalArgumentException("The id is required can not be null");
-        }
+        if (id == null)
+            throw new CantDeleteRecordDataBaseException("id null", "The id is required, can not be null.");
 
         try {
 
-            /*
-             * Create a new transaction and execute
-             */
-            DatabaseTransaction transaction = getDataBase().newTransaction();
+            final DatabaseTable table = this.getDatabaseTable();
 
-            //falta configurar la llamada para borrar la entidad
+            table.setUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
 
-            getDataBase().executeTransaction(transaction);
+            table.loadToMemory();
 
-        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+            final List<DatabaseTableRecord> records = table.getRecords();
 
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            if (!records.isEmpty())
+                table.deleteRecord(records.get(0));
+            else
+                throw new RecordNotFoundException("id: "+id, "Cannot find an outgoing message with that id.");
 
-            String context = contextBuffer.toString();
-            String possibleCause = "The record do not exist";
-            CantDeleteRecordDataBaseException cantDeleteRecordDataBaseException = new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
-            throw cantDeleteRecordDataBaseException;
+        } catch (CantDeleteRecordException e) {
+
+            throw new CantDeleteRecordDataBaseException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantDeleteRecordDataBaseException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
 
         }
-
     }
-
 
     /**
      * @param record with values from the table
      * @return FermatMessage setters the values from table
      */
-    private FermatMessage constructFrom(DatabaseTableRecord record) {
+    private FermatMessage constructFrom(final DatabaseTableRecord record) throws InvalidParameterException {
 
-        FermatMessageCommunication outgoingTemplateNetworkServiceMessage = new FermatMessageCommunication();
 
-        try {
+        final FermatMessageCommunication outgoingTemplateNetworkServiceMessage = new FermatMessageCommunication();
 
-            outgoingTemplateNetworkServiceMessage.setId(UUID.fromString(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME)));
-            outgoingTemplateNetworkServiceMessage.setSender(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME));
-            outgoingTemplateNetworkServiceMessage.setReceiver(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME));
-            outgoingTemplateNetworkServiceMessage.setContent(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME));
-            outgoingTemplateNetworkServiceMessage.setFermatMessageContentType(FermatMessageContentType.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME)));
-            outgoingTemplateNetworkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME)));
-            outgoingTemplateNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME)));
-            outgoingTemplateNetworkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME)));
+        outgoingTemplateNetworkServiceMessage.setId                      (record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME));
+        outgoingTemplateNetworkServiceMessage.setSender                  (record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME));
+        outgoingTemplateNetworkServiceMessage.setReceiver                (record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME));
+        outgoingTemplateNetworkServiceMessage.setContent                 (record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME));
+        outgoingTemplateNetworkServiceMessage.setFermatMessageContentType(FermatMessageContentType.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME)));
+        outgoingTemplateNetworkServiceMessage.setShippingTimestamp       (new Timestamp(record.getLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME)));
+        outgoingTemplateNetworkServiceMessage.setDeliveryTimestamp       (new Timestamp(record.getLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME)));
 
-        } catch (InvalidParameterException e) {
-            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-            //this should not happen, but if it happens return null
-            e.printStackTrace();
-            return null;
-        }
+        outgoingTemplateNetworkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME)));
 
         return outgoingTemplateNetworkServiceMessage;
     }
@@ -521,44 +363,42 @@ public class OutgoingMessageDao {
      * Construct a DatabaseTableRecord whit the values of the a FermatMessage pass
      * by parameter
      *
-     * @param outGoingTemplateNetworkServiceMessage the contains the values
+     * @param outgoingTemplateNetworkServiceMessage the contains the values
+     *
      * @return DatabaseTableRecord whit the values
      */
-    private DatabaseTableRecord constructFrom(FermatMessage outGoingTemplateNetworkServiceMessage) {
+    private DatabaseTableRecord constructFrom(final FermatMessage outgoingTemplateNetworkServiceMessage) {
 
         /*
          * Create the record to the entity
          */
-        DatabaseTableRecord entityRecord = getDatabaseTable().getEmptyRecord();
+        final DatabaseTableRecord entityRecord = getDatabaseTable().getEmptyRecord();
 
         /*
          * Set the entity values
          */
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getId().toString());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getSender().toString());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getReceiver().toString());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getContent());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getFermatMessageContentType().getCode());
+        entityRecord.setUUIDValue  (CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME          , outgoingTemplateNetworkServiceMessage.getId());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME   , outgoingTemplateNetworkServiceMessage.getSender());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME , outgoingTemplateNetworkServiceMessage.getReceiver());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, outgoingTemplateNetworkServiceMessage.getContent());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME        , outgoingTemplateNetworkServiceMessage.getFermatMessageContentType().getCode());
 
-        if (outGoingTemplateNetworkServiceMessage.getShippingTimestamp() != null){
-            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getShippingTimestamp().getTime());
-        }else {
-            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, new Long(0));
-        }
+        if (outgoingTemplateNetworkServiceMessage.getShippingTimestamp() != null)
+            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, outgoingTemplateNetworkServiceMessage.getShippingTimestamp().getTime());
+        else
+            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, 0);
 
-        if (outGoingTemplateNetworkServiceMessage.getDeliveryTimestamp() != null){
-            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getDeliveryTimestamp().getTime());
-        }else {
-            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, new Long(0));
-        }
 
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getFermatMessagesStatus().getCode());
+        if (outgoingTemplateNetworkServiceMessage.getDeliveryTimestamp() != null)
+            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, outgoingTemplateNetworkServiceMessage.getDeliveryTimestamp().getTime());
+        else
+            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, 0);
+
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, outgoingTemplateNetworkServiceMessage.getFermatMessagesStatus().getCode());
 
         /*
          * return the new table record
          */
         return entityRecord;
-
     }
-
 }
