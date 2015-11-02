@@ -177,14 +177,14 @@ public class GetNumberOfIssuedAssetsTest {
 //        assertThat(n).isGreaterThan(0);
     }
 
-    @Test
-    public void test_Throws_CantExecuteDatabaseOperationException() throws Exception {
-        assetIssuingPluginRoot.start();
-        catchException(assetIssuingPluginRoot).getNumberOfIssuedAssets(null);
-        Exception thrown = caughtException();
-        assertThat(thrown)
-                .isNotNull()
-                .isInstanceOf(CantExecuteDatabaseOperationException.class);
-        assertThat(thrown.getCause()).isInstanceOf(CantCheckAssetIssuingProgressException.class);
-    }
+//    @Test
+//    public void test_Throws_CantExecuteDatabaseOperationException() throws Exception {
+//        assetIssuingPluginRoot.start();
+//        catchException(assetIssuingPluginRoot).getNumberOfIssuedAssets(null);
+//        Exception thrown = caughtException();
+//        assertThat(thrown)
+//                .isNotNull()
+//                .isInstanceOf(CantExecuteDatabaseOperationException.class);
+//        assertThat(thrown.getCause()).isInstanceOf(CantCheckAssetIssuingProgressException.class);
+//    }
 }
