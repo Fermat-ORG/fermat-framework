@@ -7,7 +7,7 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.exceptions.Ca
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.exceptions.CantGetPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_customer.interfaces.CryptoCustomerActor;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantListPurchaseNegotianionsException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 
 import java.util.Collection;
@@ -52,7 +52,7 @@ public class CryptoCustomerActorImpl implements CryptoCustomerActor {
                     return purchase;
             }
             throw new CantGetPurchaseNegotiationException(CantCreatePurchaseNegotiationException.DEFAULT_MESSAGE, null, "", "");
-        } catch (CantListPurchaseNegotianionsException e) {
+        } catch (CantGetListPurchaseNegotiationsException e) {
             throw new CantGetPurchaseNegotiationException(CantCreatePurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
         }
     }
@@ -63,7 +63,7 @@ public class CryptoCustomerActorImpl implements CryptoCustomerActor {
             HashSet<CustomerBrokerNegotiation> purchases = new HashSet<>();
             purchases.addAll(negotiationManager.getNegotiationsByCustomer(identity));
             return purchases;
-        } catch (CantListPurchaseNegotianionsException e) {
+        } catch (CantGetListPurchaseNegotiationsException e) {
             throw new CantGetPurchaseNegotiationException(CantCreatePurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
         }
     }
@@ -77,7 +77,7 @@ public class CryptoCustomerActorImpl implements CryptoCustomerActor {
                     purchases.add(purchase);
             }
             return purchases;
-        } catch (CantListPurchaseNegotianionsException e) {
+        } catch (CantGetListPurchaseNegotiationsException e) {
             throw new CantGetPurchaseNegotiationException(CantCreatePurchaseNegotiationException.DEFAULT_MESSAGE, e, "", "");
         }
     }
