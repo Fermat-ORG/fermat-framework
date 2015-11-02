@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantDeleteCustomerBrokerPurchaseException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T DELETED THE CONTRACT CUSTOMER BROKER BANK MONEY PURCHASE";
+    public static final String DEFAULT_MESSAGE = "CAN'T DELETED THE CONTRACT CUSTOMER BROKER PURCHASE";
 
     /**
      * This is the constructor that every inherited FermatException must implement
