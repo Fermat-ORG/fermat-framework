@@ -60,6 +60,9 @@ public class IdentityIssuerPluginRoot implements DealsWithErrors, DealsWithEvent
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
+    public static final String ASSET_ISSUER_PROFILE_IMAGE_FILE_NAME = "assetIssuerIdentityProfileImage";
+    public static final String ASSET_ISSUER_PRIVATE_KEYS_FILE_NAME = "assetIssuerIdentityPrivateKey";
+
     @Override
     public void setEventManager(EventManager DealsWithEvents) {
         this.eventManager = DealsWithEvents;
