@@ -17,6 +17,7 @@ Several new concepts are introduced at a Plug-in level. In this section the most
 
 <br>
 ### Main Classes
+----------------
 
 There are a few classes that every Plug-in have.
 
@@ -26,38 +27,37 @@ Each Plug-in has a Developer Class. The reason is that there might be more than 
 
 In this way this class is able to choose which version of the Plug-in to run, and if it detects that a data migration must be done from version 1 to version 2, it coordinates that process too.
 
-#### Plug-in Root
+#### Plug-in Root Class
 
 The Plug-in root is the starting point of a Plug-in. It is the point of contact between the Framework and the Plug-in. It main purpose is to implement the interfaces that transforms itself into a service that can be started and stopped by the Framework, and other interfaces that are required in order to receive the references to other plugins so as to be able to consume their services.
 
 <br>
-### Other Concepts
+### Class Groups
+-------------------
 
-
-<br>
-### Plug-in Public Interfaces
+#### Public Interfaces
 
 Each Plug-in gives services to other Plug-ins. They do it through public interfaces published either on Fermat-api, or on the Platfom's API where the Plug-in belongs. Some clases of it's internal structure implements these public interfaces.
 
-<br>
-### Internal Structure
+#### Internal Structure
 
 Each Plug-in has an internal class model. Usually it is a hiearchy where one of it classes is the root. Some of them implements the public interface of the Plug-in defined within this Plug-in.
 
-<br>
-### Event Handler
+#### Event Handlers
 
 An Envent Hander is a type of Class that is called by the Framework's Event Manager whenever and event the Plug-in is suscribed to is triggered. A single Plug-in can have as meny Event Handlers as needed. Somewhere within the Internal Structure the Plug-in subscribes itself to different type of events, declaring at that point which Event Handler class must be called.
 
-<br>
-### Database
-
-Plug-ins may have one or more Databases for storing their data. Usually one Database is enought, but in some cases different instances of the same data model are required.
-
-<br>
-### Agents
+#### Agents
 
 We define Agents as objects which at runtime will create a new thread of execition. We have developed this pattern in order to standarize and simplify the handling of processes that need to run from time to time and perform certain tasks. 
+
+<br>
+### Othe Elements
+-------------------
+
+#### Database
+
+Plug-ins may have one or more Databases for storing their data. Usually one Database is enought, but in some cases different instances of the same data model are required.
 
 
 <br>
