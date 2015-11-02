@@ -53,7 +53,7 @@ public final class OutgoingMessageDao {
 
     private DatabaseTable getDatabaseTable() {
 
-        return getDataBase().getTable(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
+        return getDataBase().getTable(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
     }
 
     /**
@@ -75,7 +75,7 @@ public final class OutgoingMessageDao {
         try {
 
             final DatabaseTable outgoingMessageTable = getDatabaseTable();
-            outgoingMessageTable.setUUIDFilter(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            outgoingMessageTable.setUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             outgoingMessageTable.loadToMemory();
 
             List<DatabaseTableRecord> records = outgoingMessageTable.getRecords();
@@ -87,10 +87,10 @@ public final class OutgoingMessageDao {
 
         } catch (final CantLoadTableToMemoryException e) {
 
-            throw new CantReadRecordDataBaseException(e, "Database Name: " + com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The data no exist");
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The data no exist");
         } catch (final InvalidParameterException e) {
 
-            throw new CantReadRecordDataBaseException(e, "Database Name: " + com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "Invalid parameter found, maybe the enum is wrong.");
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "Invalid parameter found, maybe the enum is wrong.");
         }
     }
 
@@ -120,10 +120,10 @@ public final class OutgoingMessageDao {
 
         } catch (final CantLoadTableToMemoryException e) {
 
-            throw new CantReadRecordDataBaseException(e, "Database Name: " + com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The data no exist");
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The data no exist");
         } catch (final InvalidParameterException e) {
 
-            throw new CantReadRecordDataBaseException(e, "Database Name: " + com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "Invalid parameter found, maybe the enum is wrong.");
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "Invalid parameter found, maybe the enum is wrong.");
         }
     }
 
@@ -135,7 +135,7 @@ public final class OutgoingMessageDao {
      *
      * @throws CantReadRecordDataBaseException
      *
-     * @see com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants
+     * @see CommunicationNetworkServiceDatabaseConstants
      */
     public final List<FermatMessage> findAll(final String columnName ,
                                              final String columnValue) throws CantReadRecordDataBaseException {
@@ -166,10 +166,10 @@ public final class OutgoingMessageDao {
 
         } catch (final CantLoadTableToMemoryException e) {
 
-            throw new CantReadRecordDataBaseException(e, "Database Name: " + com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The data no exist");
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The data no exist");
         } catch (final InvalidParameterException e) {
 
-            throw new CantReadRecordDataBaseException(e, "Database Name: " + com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "Invalid parameter found, maybe the enum is wrong.");
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "Invalid parameter found, maybe the enum is wrong.");
         }
 
     }
@@ -182,7 +182,7 @@ public final class OutgoingMessageDao {
      *
      * @throws CantReadRecordDataBaseException if something goes wrong.
      *
-     * @see com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants
+     * @see CommunicationNetworkServiceDatabaseConstants
      */
     public final List<FermatMessage> findAll(final Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
@@ -223,10 +223,10 @@ public final class OutgoingMessageDao {
 
         } catch (final CantLoadTableToMemoryException e) {
 
-            throw new CantReadRecordDataBaseException(e, "Database Name: " + com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The data no exist");
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The data no exist");
         } catch (final InvalidParameterException e) {
 
-            throw new CantReadRecordDataBaseException(e, "Database Name: " + com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "Invalid parameter found, maybe the enum is wrong.");
+            throw new CantReadRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "Invalid parameter found, maybe the enum is wrong.");
         }
     }
 
@@ -250,7 +250,7 @@ public final class OutgoingMessageDao {
 
         } catch (final CantInsertRecordException e) {
 
-            throw new CantInsertRecordDataBaseException(e, "Database Name: " + com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The Template Database triggered an unexpected problem that wasn't able to solve by itself");
+            throw new CantInsertRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The Template Database triggered an unexpected problem that wasn't able to solve by itself");
         }
 
     }
@@ -273,7 +273,7 @@ public final class OutgoingMessageDao {
 
             final DatabaseTable table = this.getDatabaseTable();
 
-            table.setUUIDFilter(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, entity.getId(), DatabaseFilterType.EQUAL);
+            table.setUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, entity.getId(), DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
@@ -290,7 +290,7 @@ public final class OutgoingMessageDao {
 
         } catch (final CantUpdateRecordException e) {
 
-            throw new CantUpdateRecordDataBaseException(e, "Database Name: " + com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The record do not exist");
+            throw new CantUpdateRecordDataBaseException(e, "Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, "The record do not exist");
         } catch (final CantLoadTableToMemoryException e) {
 
             throw new CantUpdateRecordDataBaseException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
@@ -316,7 +316,7 @@ public final class OutgoingMessageDao {
 
             final DatabaseTable table = this.getDatabaseTable();
 
-            table.setUUIDFilter(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            table.setUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
@@ -346,15 +346,15 @@ public final class OutgoingMessageDao {
 
         final FermatMessageCommunication outgoingTemplateNetworkServiceMessage = new FermatMessageCommunication();
 
-        outgoingTemplateNetworkServiceMessage.setId                      (record.getUUIDValue(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME));
-        outgoingTemplateNetworkServiceMessage.setSender                  (record.getStringValue(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME));
-        outgoingTemplateNetworkServiceMessage.setReceiver                (record.getStringValue(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME));
-        outgoingTemplateNetworkServiceMessage.setContent                 (record.getStringValue(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME));
-        outgoingTemplateNetworkServiceMessage.setFermatMessageContentType(FermatMessageContentType.getByCode(record.getStringValue(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME)));
-        outgoingTemplateNetworkServiceMessage.setShippingTimestamp       (new Timestamp(record.getLongValue(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME)));
-        outgoingTemplateNetworkServiceMessage.setDeliveryTimestamp       (new Timestamp(record.getLongValue(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME)));
+        outgoingTemplateNetworkServiceMessage.setId                      (record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME));
+        outgoingTemplateNetworkServiceMessage.setSender                  (record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME));
+        outgoingTemplateNetworkServiceMessage.setReceiver                (record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME));
+        outgoingTemplateNetworkServiceMessage.setContent                 (record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME));
+        outgoingTemplateNetworkServiceMessage.setFermatMessageContentType(FermatMessageContentType.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME)));
+        outgoingTemplateNetworkServiceMessage.setShippingTimestamp       (new Timestamp(record.getLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME)));
+        outgoingTemplateNetworkServiceMessage.setDeliveryTimestamp       (new Timestamp(record.getLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME)));
 
-        outgoingTemplateNetworkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.getByCode(record.getStringValue(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME)));
+        outgoingTemplateNetworkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME)));
 
         return outgoingTemplateNetworkServiceMessage;
     }
@@ -377,24 +377,24 @@ public final class OutgoingMessageDao {
         /*
          * Set the entity values
          */
-        entityRecord.setUUIDValue  (com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME          , outgoingTemplateNetworkServiceMessage.getId());
-        entityRecord.setStringValue(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME   , outgoingTemplateNetworkServiceMessage.getSender());
-        entityRecord.setStringValue(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME , outgoingTemplateNetworkServiceMessage.getReceiver());
-        entityRecord.setStringValue(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, outgoingTemplateNetworkServiceMessage.getContent());
-        entityRecord.setStringValue(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME        , outgoingTemplateNetworkServiceMessage.getFermatMessageContentType().getCode());
+        entityRecord.setUUIDValue  (CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME          , outgoingTemplateNetworkServiceMessage.getId());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME   , outgoingTemplateNetworkServiceMessage.getSender());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME , outgoingTemplateNetworkServiceMessage.getReceiver());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, outgoingTemplateNetworkServiceMessage.getContent());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME        , outgoingTemplateNetworkServiceMessage.getFermatMessageContentType().getCode());
 
         if (outgoingTemplateNetworkServiceMessage.getShippingTimestamp() != null)
-            entityRecord.setLongValue(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, outgoingTemplateNetworkServiceMessage.getShippingTimestamp().getTime());
+            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, outgoingTemplateNetworkServiceMessage.getShippingTimestamp().getTime());
         else
-            entityRecord.setLongValue(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, 0);
+            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, 0);
 
 
         if (outgoingTemplateNetworkServiceMessage.getDeliveryTimestamp() != null)
-            entityRecord.setLongValue(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, outgoingTemplateNetworkServiceMessage.getDeliveryTimestamp().getTime());
+            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, outgoingTemplateNetworkServiceMessage.getDeliveryTimestamp().getTime());
         else
-            entityRecord.setLongValue(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, 0);
+            entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, 0);
 
-        entityRecord.setStringValue(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, outgoingTemplateNetworkServiceMessage.getFermatMessagesStatus().getCode());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, outgoingTemplateNetworkServiceMessage.getFermatMessagesStatus().getCode());
 
         /*
          * return the new table record

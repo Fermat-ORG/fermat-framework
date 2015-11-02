@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- * The final Class <code>ccom.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseFactory</code>
+ * The final Class <code>cCommunicationNetworkServiceDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  * Created by lnacosta (laion.cj91@gmail.com) on 30/10/2015.
@@ -53,18 +53,18 @@ public final class CommunicationNetworkServiceDatabaseFactory {
             /*
              * Create incoming messages table.
              */
-            table = databaseFactory.newTableFactory(ownerId, com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME);
 
-            table.addColumn(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME                , DatabaseDataType.STRING,  36, Boolean.TRUE );
-            table.addColumn(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME         , DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME       , DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME      , DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME              , DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME            , DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME                , DatabaseDataType.STRING,  36, Boolean.TRUE );
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME         , DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME       , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME      , DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME              , DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME            , DatabaseDataType.STRING, 100, Boolean.FALSE);
 
-            table.addIndex(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_FIRST_KEY_COLUMN);
+            table.addIndex(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -76,18 +76,18 @@ public final class CommunicationNetworkServiceDatabaseFactory {
             /*
              * Create outgoing messages table.
              */
-            table = databaseFactory.newTableFactory(ownerId, com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
 
-            table.addColumn(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME                , DatabaseDataType.STRING,  36, Boolean.TRUE );
-            table.addColumn(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME         , DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME       , DatabaseDataType.STRING,  10, Boolean.FALSE);
-            table.addColumn(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME      , DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME              , DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME            , DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME                , DatabaseDataType.STRING,  36, Boolean.TRUE );
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME         , DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME       , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME      , DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME              , DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME            , DatabaseDataType.STRING, 100, Boolean.FALSE);
 
-            table.addIndex(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FIRST_KEY_COLUMN);
+            table.addIndex(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table

@@ -13,7 +13,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.exceptions.CantInitializeNetworkServiceDatabaseException;
 
 import java.util.ArrayList;
@@ -56,7 +55,7 @@ public final class CommunicationNetworkServiceDeveloperDatabaseFactory {
             throw new CantInitializeNetworkServiceDatabaseException(cantOpenDatabaseException);
         } catch (final DatabaseNotFoundException e) {
 
-            final com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            final CommunicationNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
             try {
 
@@ -73,7 +72,7 @@ public final class CommunicationNetworkServiceDeveloperDatabaseFactory {
 
         List<DeveloperDatabase> databases = new ArrayList<>();
 
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, this.pluginId.toString()));
 
         return databases;
     }
@@ -88,18 +87,18 @@ public final class CommunicationNetworkServiceDeveloperDatabaseFactory {
          */
         List<String> incomingMessagesColumns = new ArrayList<>();
 
-        incomingMessagesColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME);
-        incomingMessagesColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME);
-        incomingMessagesColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME);
-        incomingMessagesColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME);
-        incomingMessagesColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME);
-        incomingMessagesColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
-        incomingMessagesColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
-        incomingMessagesColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME);
+        incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME);
+        incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_ID_COLUMN_NAME);
+        incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_RECEIVER_ID_COLUMN_NAME);
+        incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TEXT_CONTENT_COLUMN_NAME);
+        incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TYPE_COLUMN_NAME);
+        incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
+        incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
+        incomingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME);
         /**
          * Table incoming messages addition.
          */
-        DeveloperDatabaseTable incomingMessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME, incomingMessagesColumns);
+        DeveloperDatabaseTable incomingMessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME, incomingMessagesColumns);
         tables.add(incomingMessagesTable);
 
         /**
@@ -107,14 +106,14 @@ public final class CommunicationNetworkServiceDeveloperDatabaseFactory {
          */
         List<String> outgoingMessagesColumns = new ArrayList<>();
 
-        outgoingMessagesColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME);
-        outgoingMessagesColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME);
-        outgoingMessagesColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME);
-        outgoingMessagesColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME);
-        outgoingMessagesColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME);
-        outgoingMessagesColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
-        outgoingMessagesColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
-        outgoingMessagesColumns.add(com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.common.database.CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME);
+        outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME);
+        outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME);
+        outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME);
+        outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME);
+        outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME);
+        outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
+        outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
+        outgoingMessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME);
         /**
          * Table outgoing messages addition.
          */
