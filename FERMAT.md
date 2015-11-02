@@ -6,7 +6,7 @@
 
 A trust-less financial application framework would allow standalone crypto wallets to evolve into any kind of trust-less financial applications. Crypto networks provide part of the solution, but the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallet files or keys, manage identities, interface crypto networks or the legacy financial system.
 
-We propose a Peer-to-Peer network for transporting meta-data and inter-connecting clients one to the other. A synchronization scheme complements it, transforming a standalone app into a distributed application across several devices still owned by the same user.
+We propose a Peer-to-Peer network for transporting meta-data and inter-connect clients one to the other. A synchronization scheme complements it, transforming a standalone app into a distributed application across several devices still owned by the same user.
 
 The framework replaces the standalone wallet and enables the development of trust-less financial applications that are both crypto-currency and digital-asset-enabled.
 
