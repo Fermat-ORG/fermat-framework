@@ -16,13 +16,13 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.exceptions.CantDeleteCustomerBrokerPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
-import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseContractDatabaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.structure.CustomerBrokerPurchaseInformation;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_sale.exceptions.CantDeleteCustomerBrokerSaleException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerSaleException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_sale.exceptions.CantupdateCustomerBrokerSaleException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_contract.customer_broker_sale.interfaces.CustomerBrokerSale;
+import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleContractDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.structure.CustomerBrokerSaleInformation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,23 +50,23 @@ public class CustomerBrokerSaleContractDao {
         Public methods
      */
 
-        public void initializeDatabase() throws CantInitializeCustomerBrokerPurchaseContractDatabaseException {
+        public void initializeDatabase() throws CantInitializeCustomerBrokerSaleContractDatabaseException {
             try {
                 database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
             } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-                throw new CantInitializeCustomerBrokerPurchaseContractDatabaseException(cantOpenDatabaseException.getMessage());
+                throw new CantInitializeCustomerBrokerSaleContractDatabaseException(cantOpenDatabaseException.getMessage());
             } catch (DatabaseNotFoundException e) {
-                CustomerBrokerPurchaseContractDatabaseFactory customerBrokerPurchaseContractDatabaseFactory = new CustomerBrokerPurchaseContractDatabaseFactory(pluginDatabaseSystem);
+                CustomerBrokerSaleContractDatabaseFactory customerBrokerSaleContractDatabaseFactory = new CustomerBrokerSaleContractDatabaseFactory(pluginDatabaseSystem);
 
                 try {
-                    database = customerBrokerPurchaseContractDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                    database = customerBrokerSaleContractDatabaseFactory.createDatabase(pluginId, pluginId.toString());
                 } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                    throw new CantInitializeCustomerBrokerPurchaseContractDatabaseException(cantCreateDatabaseException.getMessage());
+                    throw new CantInitializeCustomerBrokerSaleContractDatabaseException(cantCreateDatabaseException.getMessage());
                 }
             }
         }
 
-        public CustomerBrokerPurchase createCustomerBrokerPurchase(
+        public CustomerBrokerSale createCustomerBrokerSale(
                 String publicKeyCustomer,
                 String publicKeyBroker,
                 float merchandiseAmount,
@@ -77,10 +77,10 @@ public class CustomerBrokerSaleContractDao {
                 CurrencyType paymentCurrency,
                 long paymentExpirationDate,
                 long merchandiseDeliveryExpirationDate
-        ) throws CantCreateCustomerBrokerPurchaseException {
+        ) throws CantCreateCustomerBrokerSaleException {
     
             try {
-                DatabaseTable PurchaseContractTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_TABLE_NAME);
+                DatabaseTable PurchaseContractTable = this.database.getTable(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_TABLE_NAME);
                 DatabaseTableRecord recordToInsert   = PurchaseContractTable.getEmptyRecord();
     
                 UUID contractID = UUID.randomUUID();
@@ -102,99 +102,99 @@ public class CustomerBrokerSaleContractDao {
     
                 PurchaseContractTable.insertRecord(recordToInsert);
 
-                    return constructCustomerBrokerPurchaseContractFromRecord(recordToInsert);
+                    return constructCustomerBrokerSaleContractFromRecord(recordToInsert);
             } catch (InvalidParameterException e) {
-                throw new CantCreateCustomerBrokerPurchaseException("An exception happened",e,"","");
+                throw new CantCreateCustomerBrokerSaleException("An exception happened",e,"","");
             } catch (CantInsertRecordException e) {
-                throw new CantCreateCustomerBrokerPurchaseException("An exception happened",e,"","");
+                throw new CantCreateCustomerBrokerSaleException("An exception happened",e,"","");
             }
     
         }
 
-        public DatabaseTableRecord getCustomerBrokerPurchaseContractTable(){
-            DatabaseTable PurchaseContractTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_TABLE_NAME);
+        public DatabaseTableRecord getCustomerBrokerSaleContractTable(){
+            DatabaseTable PurchaseContractTable = this.database.getTable(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_TABLE_NAME);
             return PurchaseContractTable.getEmptyRecord();
         }
 
-        public void updateCustomerBrokerPurchase(
+        public void updateCustomerBrokerSale(
                 UUID contractId,
                 ContractStatus status
-        ) throws CantupdateCustomerBrokerPurchaseException {
+        ) throws CantupdateCustomerBrokerSaleException {
     
             try {
-                DatabaseTable PurchaseContractTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_TABLE_NAME);
-                PurchaseContractTable.setUUIDFilter(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractId, DatabaseFilterType.EQUAL);
+                DatabaseTable PurchaseContractTable = this.database.getTable(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_TABLE_NAME);
+                PurchaseContractTable.setUUIDFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_CONTRACT_ID_COLUMN_NAME, contractId, DatabaseFilterType.EQUAL);
     
                 DatabaseTableRecord recordToUpdate = PurchaseContractTable.getEmptyRecord();
-                recordToUpdate.setStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_STATUS_COLUMN_NAME, status.getCode());
+                recordToUpdate.setStringValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_STATUS_COLUMN_NAME, status.getCode());
     
                 PurchaseContractTable.updateRecord(recordToUpdate);
             } catch (CantUpdateRecordException e) {
-                throw new CantupdateCustomerBrokerPurchaseException("An exception happened",e,"","");
+                throw new CantupdateCustomerBrokerSaleException("An exception happened",e,"","");
             }
     
         }
 
-        public void deleteCustomerBrokerPurchase(
+        public void deleteCustomerBrokerSale(
                 UUID contractId
-        ) throws CantDeleteCustomerBrokerPurchaseException {
+        ) throws CantDeleteCustomerBrokerSaleException {
     
             try {
-                DatabaseTable PurchaseContractTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_TABLE_NAME);
+                DatabaseTable PurchaseContractTable = this.database.getTable(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_TABLE_NAME);
                 DatabaseTableRecord recordToDelete   = PurchaseContractTable.getEmptyRecord();
     
-                recordToDelete.setUUIDValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractId);
+                recordToDelete.setUUIDValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_CONTRACT_ID_COLUMN_NAME, contractId);
     
                 PurchaseContractTable.deleteRecord(recordToDelete);
             } catch (CantDeleteRecordException e) {
-                throw new CantDeleteCustomerBrokerPurchaseException("An exception happened",e,"","");
+                throw new CantDeleteCustomerBrokerSaleException("An exception happened",e,"","");
             }
     
         }
 
-        public List<CustomerBrokerPurchase> getAllCustomerBrokerPurchaseFromCurrentDeviceUser() throws CantGetListCustomerBrokerPurchaseException {
-            DatabaseTable identityTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_TABLE_NAME);
+        public List<CustomerBrokerSale> getAllCustomerBrokerSaleFromCurrentDeviceUser() throws CantGetListCustomerBrokerSaleException {
+            DatabaseTable identityTable = this.database.getTable(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_TABLE_NAME);
             try {
                 identityTable.loadToMemory();
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListCustomerBrokerPurchaseException(CantGetListCustomerBrokerPurchaseException.DEFAULT_MESSAGE,e,"","");
+                throw new CantGetListCustomerBrokerSaleException(CantGetListCustomerBrokerSaleException.DEFAULT_MESSAGE,e,"","");
             }
     
             List<DatabaseTableRecord> records = identityTable.getRecords();
             identityTable.clearAllFilters();
     
-            List<CustomerBrokerPurchase> PurchaseContracts = new ArrayList<>();
+            List<CustomerBrokerSale> PurchaseContracts = new ArrayList<>();
     
             for (DatabaseTableRecord record : records) {
                 try {
-                    PurchaseContracts.add(constructCustomerBrokerPurchaseContractFromRecord(record));
+                    PurchaseContracts.add(constructCustomerBrokerSaleContractFromRecord(record));
                 } catch (InvalidParameterException e) {
-                    throw new CantGetListCustomerBrokerPurchaseException(CantGetListCustomerBrokerPurchaseException.DEFAULT_MESSAGE,e,"","");
+                    throw new CantGetListCustomerBrokerSaleException(CantGetListCustomerBrokerSaleException.DEFAULT_MESSAGE,e,"","");
                 }
             }
     
             return PurchaseContracts;
         }
 
-        public CustomerBrokerPurchase getCustomerBrokerPurchaseForContractId(UUID ContractId) throws CantGetListCustomerBrokerPurchaseException {
-            DatabaseTable identityTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_TABLE_NAME);
-            identityTable.setUUIDFilter(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME, ContractId, DatabaseFilterType.EQUAL);
+        public CustomerBrokerSale getCustomerBrokerSaleForContractId(UUID ContractId) throws CantGetListCustomerBrokerSaleException {
+            DatabaseTable identityTable = this.database.getTable(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_TABLE_NAME);
+            identityTable.setUUIDFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_CONTRACT_ID_COLUMN_NAME, ContractId, DatabaseFilterType.EQUAL);
             try {
                 identityTable.loadToMemory();
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListCustomerBrokerPurchaseException(CantGetListCustomerBrokerPurchaseException.DEFAULT_MESSAGE,e,"","");
+                throw new CantGetListCustomerBrokerSaleException(CantGetListCustomerBrokerSaleException.DEFAULT_MESSAGE,e,"","");
             }
     
             List<DatabaseTableRecord> records = identityTable.getRecords();
             identityTable.clearAllFilters();
     
-            CustomerBrokerPurchase PurchaseContract = null;
+            CustomerBrokerSale PurchaseContract = null;
     
             for (DatabaseTableRecord record : records) {
                 try {
-                    PurchaseContract = constructCustomerBrokerPurchaseContractFromRecord(record);
+                    PurchaseContract = constructCustomerBrokerSaleContractFromRecord(record);
                 } catch (InvalidParameterException e) {
-                    throw new CantGetListCustomerBrokerPurchaseException(CantGetListCustomerBrokerPurchaseException.DEFAULT_MESSAGE,e,"","");
+                    throw new CantGetListCustomerBrokerSaleException(CantGetListCustomerBrokerSaleException.DEFAULT_MESSAGE,e,"","");
                 }
             }
     
@@ -218,37 +218,37 @@ public class CustomerBrokerSaleContractDao {
                                      long paymentExpirationDate,
                                      long merchandiseDeliveryExpirationDate) {
 
-            databaseTableRecord.setUUIDValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractId);
-            databaseTableRecord.setStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKeyCustomer);
-            databaseTableRecord.setStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKeyBroker);
-            databaseTableRecord.setFloatValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_MERCHANDISE_AMOUNT_COLUMN_NAME, merchandiseAmount);
-            databaseTableRecord.setStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_MERCHANDISE_CURRENCY_COLUMN_NAME, merchandiseCurrency.getCode());
-            databaseTableRecord.setFloatValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_REFERENCE_PRICE_COLUMN_NAME, referencePrice);
-            databaseTableRecord.setStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_REFERENCE_CURRENCY_COLUMN_NAME, referenceCurrency.getCode());
-            databaseTableRecord.setFloatValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_PAYMENT_AMOUNT_COLUMN_NAME, paymentAmount);
-            databaseTableRecord.setStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_PAYMENT_CURRENCY_COLUMN_NAME, paymentCurrency.getCode());
-            databaseTableRecord.setLongValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_PAYMENT_EXPIRATION_DATE_COLUMN_NAME, paymentExpirationDate);
-            databaseTableRecord.setLongValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_MERCHANDISE_DELIVERY_EXPIRATION_DATE_COLUMN_NAME, merchandiseDeliveryExpirationDate);
+            databaseTableRecord.setUUIDValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_CONTRACT_ID_COLUMN_NAME, contractId);
+            databaseTableRecord.setStringValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKeyCustomer);
+            databaseTableRecord.setStringValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKeyBroker);
+            databaseTableRecord.setFloatValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_MERCHANDISE_AMOUNT_COLUMN_NAME, merchandiseAmount);
+            databaseTableRecord.setStringValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_MERCHANDISE_CURRENCY_COLUMN_NAME, merchandiseCurrency.getCode());
+            databaseTableRecord.setFloatValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_REFERENCE_PRICE_COLUMN_NAME, referencePrice);
+            databaseTableRecord.setStringValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_REFERENCE_CURRENCY_COLUMN_NAME, referenceCurrency.getCode());
+            databaseTableRecord.setFloatValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_PAYMENT_AMOUNT_COLUMN_NAME, paymentAmount);
+            databaseTableRecord.setStringValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_PAYMENT_CURRENCY_COLUMN_NAME, paymentCurrency.getCode());
+            databaseTableRecord.setLongValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_PAYMENT_EXPIRATION_DATE_COLUMN_NAME, paymentExpirationDate);
+            databaseTableRecord.setLongValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_MERCHANDISE_DELIVERY_EXPIRATION_DATE_COLUMN_NAME, merchandiseDeliveryExpirationDate);
 
         }
 
-        private CustomerBrokerPurchase constructCustomerBrokerPurchaseContractFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
+        private CustomerBrokerSale constructCustomerBrokerSaleContractFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
     
-            UUID                contractId                              = record.getUUIDValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME);
-            String              customerPublicKey                       = record.getStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
-            String              brokerPublicKey                         = record.getStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_BROKER_PUBLIC_KEY_COLUMN_NAME);
-            CurrencyType        paymentCurrency                         = CurrencyType.getByCode(record.getStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_PAYMENT_CURRENCY_COLUMN_NAME));
-            CurrencyType        merchandiseCurrency                     = CurrencyType.getByCode(record.getStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_MERCHANDISE_CURRENCY_COLUMN_NAME));
-            float               referencePrice                          = record.getFloatValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_REFERENCE_PRICE_COLUMN_NAME);
-            ReferenceCurrency   referenceCurrency                       = ReferenceCurrency.getByCode(record.getStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_REFERENCE_CURRENCY_COLUMN_NAME));
-            float               paymentAmount                           = record.getFloatValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_PAYMENT_AMOUNT_COLUMN_NAME);
-            float               merchandiseAmount                       = record.getFloatValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_MERCHANDISE_AMOUNT_COLUMN_NAME);
-            long                paymentExpirationDate                   = record.getLongValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_PAYMENT_EXPIRATION_DATE_COLUMN_NAME);
-            long                merchandiseDeliveryExpirationDate       = record.getLongValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_MERCHANDISE_DELIVERY_EXPIRATION_DATE_COLUMN_NAME);
-            ContractStatus      status                                  = ContractStatus.getByCode(record.getStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_STATUS_COLUMN_NAME));
+            UUID                contractId                              = record.getUUIDValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_CONTRACT_ID_COLUMN_NAME);
+            String              customerPublicKey                       = record.getStringValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
+            String              brokerPublicKey                         = record.getStringValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_BROKER_PUBLIC_KEY_COLUMN_NAME);
+            CurrencyType        paymentCurrency                         = CurrencyType.getByCode(record.getStringValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_PAYMENT_CURRENCY_COLUMN_NAME));
+            CurrencyType        merchandiseCurrency                     = CurrencyType.getByCode(record.getStringValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_MERCHANDISE_CURRENCY_COLUMN_NAME));
+            float               referencePrice                          = record.getFloatValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_REFERENCE_PRICE_COLUMN_NAME);
+            ReferenceCurrency   referenceCurrency                       = ReferenceCurrency.getByCode(record.getStringValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_REFERENCE_CURRENCY_COLUMN_NAME));
+            float               paymentAmount                           = record.getFloatValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_PAYMENT_AMOUNT_COLUMN_NAME);
+            float               merchandiseAmount                       = record.getFloatValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_MERCHANDISE_AMOUNT_COLUMN_NAME);
+            long                paymentExpirationDate                   = record.getLongValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_PAYMENT_EXPIRATION_DATE_COLUMN_NAME);
+            long                merchandiseDeliveryExpirationDate       = record.getLongValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_MERCHANDISE_DELIVERY_EXPIRATION_DATE_COLUMN_NAME);
+            ContractStatus      status                                  = ContractStatus.getByCode(record.getStringValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACT_SALE_STATUS_COLUMN_NAME));
     
     
-            return new CustomerBrokerPurchaseInformation(
+            return new CustomerBrokerSaleInformation(
                     contractId,
                     customerPublicKey,
                     brokerPublicKey,
