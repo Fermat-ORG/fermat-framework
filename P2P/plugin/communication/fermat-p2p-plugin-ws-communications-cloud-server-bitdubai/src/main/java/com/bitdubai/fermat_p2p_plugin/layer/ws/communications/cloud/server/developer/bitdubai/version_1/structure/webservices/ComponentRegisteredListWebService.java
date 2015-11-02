@@ -122,6 +122,7 @@ public class ComponentRegisteredListWebService extends ServerResource {
         System.out.println("ComponentRegisteredListWebService - json response length ="+jsonString.length());
 
         return  new StringRepresentation(jsonString, MediaType.APPLICATION_JSON);
+        //return new org.restlet.engine.application.EncodeRepresentation(org.restlet.data.Encoding.ZIP, (new StringRepresentation(jsonString, MediaType.APPLICATION_JSON)));
     }
 
     /**

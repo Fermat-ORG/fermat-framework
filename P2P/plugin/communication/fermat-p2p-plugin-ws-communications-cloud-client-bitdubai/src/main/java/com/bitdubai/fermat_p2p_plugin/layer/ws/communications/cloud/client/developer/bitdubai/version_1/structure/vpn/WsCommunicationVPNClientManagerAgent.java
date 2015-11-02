@@ -34,11 +34,6 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
     private static long SLEEP_TIME = 60000;
 
     /**
-     * Represent the requestedVpnConnections
-     */
-    private Map<NetworkServiceType, Map<String, PlatformComponentProfile>> requestedVpnConnections;
-
-    /**
      * Represent the vpnClientActiveCache;
      */
     private Map<NetworkServiceType, Map<String, WsCommunicationVPNClient>> vpnClientActiveCache;
@@ -52,7 +47,6 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
      * Constructor
      */
     public WsCommunicationVPNClientManagerAgent(){
-       this.requestedVpnConnections = new ConcurrentHashMap<>();
        this.vpnClientActiveCache = new ConcurrentHashMap<>();
        this.isRunning = Boolean.FALSE;
     }
