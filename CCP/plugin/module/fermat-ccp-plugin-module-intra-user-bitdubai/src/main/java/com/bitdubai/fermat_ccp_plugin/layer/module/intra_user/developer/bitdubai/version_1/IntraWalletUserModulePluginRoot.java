@@ -7,14 +7,9 @@ import com.bitdubai.fermat_api.Service;
 
 import com.bitdubai.fermat_api.layer.all_definition.IntraUsers.IntraUserSettings;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -74,6 +69,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
+
+
 
 /**
  * This plug-in provides the methods for the Intra Users sub app.
@@ -87,6 +86,9 @@ import java.util.Map;
 
 public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements DealsWithErrors,DealsWithIntraUsersNetworkService, DealsWithCCPIdentityIntraWalletUser,DealsWithCCPIntraWalletUsers, DealsWithPluginFileSystem, LogManagerForDevelopers, IntraUserModuleManager, Plugin, Service  {
 
+    public IntraWalletUserModulePluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
 
     private static String INTRA_USER_LOGIN_FILE_NAME = "intraUsersLogin";
 
@@ -96,32 +98,38 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements D
 
     private IntraUserSettings intraUserSettings = new IntraUserSettings();
 
+    private XMLParser xmlParser = new XMLParser();
+    /**
+     * DealsWithErrors Interface member variables.
+     */
+    ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
-    private ErrorManager errorManager;
+    /**
+     * DealsWithPluginFileSystem Interface member variables.
+     */
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
-    private PluginFileSystem pluginFileSystem;
+    PluginFileSystem pluginFileSystem;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.INTRA_WALLET_USER  )
-    private IntraUserManager intraUserNertwokServiceManager;
+    /**
+     * DealsWithIntraUsersNetworkService interface member variable
+     */
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY       , plugin = Plugins.INTRA_WALLET_USER  )
-    private com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager intraWalletUserIdentityManager;
+    IntraUserManager intraUserNertwokServiceManager;
 
+    /**
+     * DealsWithCCPIdentityIntraWalletUser interface member variable
+     */
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR          , plugin = Plugins.INTRA_WALLET_USER  )
-    private IntraWalletUserManager intraWalletUserManager;
+    com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager intraWalletUserIdentityManager;
 
-    private com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser intraWalletUser;
-
-
-
+    com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser intraWalletUser;
 
 
-    public IntraWalletUserModulePluginRoot() {
-        super(new PluginVersionReference(new Version()));
-    }
+    /**
+     * DealsWithCCPIntraWalletUsers interface member variable
+     */
+    IntraWalletUserManager intraWalletUserManager;
+
 
 
     /**
@@ -130,6 +138,24 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements D
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
+
+
+
+    /**
+     * Plugin Interface member variables.
+     */
+    UUID pluginId;
+
+    /**
+     * Service Interface member variables.
+     */
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+
+
+
+    /**
+     *DealsWithErrors Interface implementation.
+     */
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
@@ -250,7 +276,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements D
              */
             intraUserSettings.setLoggedInPublicKey(this.intraUserLoggedPublicKey);
 
-            intraUserLoginXml.setContent(XMLParser.parseObject(intraUserSettings));
+            intraUserLoginXml.setContent(xmlParser.parseObject(intraUserSettings));
 
             /**
              * persist xml file
@@ -756,6 +782,34 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements D
 
     }
 
+    @Override
+    public void pause() {
+
+        this.serviceStatus = ServiceStatus.PAUSED;
+
+    }
+
+    @Override
+    public void resume() {
+
+        this.serviceStatus = ServiceStatus.STARTED;
+
+    }
+
+    @Override
+    public void stop() {
+
+        this.serviceStatus = ServiceStatus.STOPPED;
+
+    }
+
+    @Override
+    public void setId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
+
+
+
         /**
          * private methods
          */
@@ -779,7 +833,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements D
 
                 String xml = intraUserLoginXml.getContent();
 
-                intraUserSettings = (IntraUserSettings) XMLParser.parseXML(xml, intraUserSettings);
+                intraUserSettings = (IntraUserSettings) xmlParser.parseXML(xml, intraUserSettings);
 
 
             } catch (FileNotFoundException fileNotFoundException) {
@@ -806,7 +860,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements D
                      * make default xml structure
                      */
 
-                    intraUserLoginXml.setContent(XMLParser.parseObject(intraUserSettings));
+                    intraUserLoginXml.setContent(xmlParser.parseObject(intraUserSettings));
 
                     intraUserLoginXml.persistToMedia();
                 }

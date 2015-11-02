@@ -32,11 +32,6 @@ dependencies {
     compile project(':fermat-ccp-plugin-transaction-outgoing-intra-actor-bitdubai')
     compile project(':fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai')
 
-    // TODO create this plugins in this platform....
-
-    compile project(':fermat-wpd-plugin-middleware-wallet-manager-bitdubai')
-
-
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 

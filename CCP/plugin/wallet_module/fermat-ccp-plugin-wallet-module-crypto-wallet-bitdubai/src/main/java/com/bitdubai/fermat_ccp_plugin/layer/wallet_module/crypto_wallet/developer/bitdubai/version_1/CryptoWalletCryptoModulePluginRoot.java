@@ -2,15 +2,9 @@ package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.develop
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -71,54 +65,81 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
         DealsWithWalletContacts,//
         LogManagerForDevelopers {
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.BITCOIN_WALLET)
-    private BitcoinWalletManager bitcoinWalletManager;
-
-    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_VAULT   , plugin = Plugins.BITCOIN_VAULT)
-    private CryptoVaultManager cryptoVaultManager;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.LOG_MANAGER)
-    private LogManager logManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
-    private ErrorManager errorManager;
-
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR   , plugin = Plugins.EXTRA_WALLET_USER)
-    private ExtraUserManager extraUserManager;
-
-
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.REQUEST  , plugin = Plugins.CRYPTO_PAYMENT_REQUEST)
-    private CryptoPaymentManager cryptoPaymentManager;
-
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION   , plugin = Plugins.OUTGOING_INTRA_ACTOR)
-    private OutgoingIntraActorManager outgoingIntraActorManager;
-
-
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE   , plugin = Plugins.CRYPTO_ADDRESSES)
-    private CryptoAddressesManager cryptoAddressesNSManager;
-
-
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY   , plugin = Plugins.INTRA_WALLET_USER)
-    private IntraWalletUserManager intraWalletUserManager;
-
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION   , plugin = Plugins.OUTGOING_EXTRA_USER)
-    private OutgoingExtraUserManager outgoingExtraUserManager;
-
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.CRYPTO_MODULE   , plugin = Plugins.CRYPTO_ADDRESS_BOOK)
-    private CryptoAddressBookManager cryptoAddressBookManager;
-
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE   , plugin = Plugins.WALLET_CONTACTS)
-    private WalletContactsManager walletContactsManager;
-
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE   , plugin = Plugins.CRYPTO_TRANSMISSION)
-    private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
-
-
-    private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
-
     public CryptoWalletCryptoModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
+
+    /**
+     * DealsWithBitcoinWallet Interface member variables.
+     */
+    private BitcoinWalletManager bitcoinWalletManager;
+
+    /**
+     * DealsWithCryptoVault Interface member variables.
+     */
+    private CryptoVaultManager cryptoVaultManager;
+
+    /**
+     * DealsWithLogger interface member variable
+     */
+    private LogManager logManager;
+    private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+
+    /**
+     * DealsWithErrors Interface member variables.
+     */
+    private ErrorManager errorManager;
+
+    /**
+     * DealsWithExtraUsers Interface member variables.
+     */
+    private ExtraUserManager extraUserManager;
+
+    /**
+     * DealsWithCryptoPayment Interface member variable
+     */
+    private CryptoPaymentManager cryptoPaymentManager;
+
+
+    /**
+     * DealsWithOutgoingIntraActor Interface member variable
+     */
+
+    private OutgoingIntraActorManager outgoingIntraActorManager;
+
+    /**
+     * DealsWithIntraUsersActor Interface member variables.
+     */
+
+//    private ActorIntraUserManager intraUserManager;
+
+
+    /**
+     * DealsWithCryptoAddressesNetworkService Interface member variables
+     */
+    private CryptoAddressesManager cryptoAddressesNSManager;
+
+    /**
+     * DealsWithCCPIntraWalletUser Interface member variables.
+     */
+
+    private IntraWalletUserManager intraWalletUserManager;
+
+    /**
+     * DealsWithOutgoingExtraUser Interface member variables.
+     */
+    private OutgoingExtraUserManager outgoingExtraUserManager;
+
+    /**
+     * DealsWithCryptoAddressBook Interface member variables.
+     */
+    private CryptoAddressBookManager cryptoAddressBookManager;
+
+    /**
+     * DealsWithWalletContacts Interface member variables.
+     */
+    private WalletContactsManager walletContactsManager;
+    private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
 
     @Override
     public CryptoWallet getCryptoWallet() throws CantGetCryptoWalletException {

@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:padding="2dp"
             android:contentDescription="@string/identity_img"
-            tools:src="@drawable/profile_image" />
+            tools:src="@drawable/deniz_profile_picture" />
 
         <View
             android:layout_width="match_parent"

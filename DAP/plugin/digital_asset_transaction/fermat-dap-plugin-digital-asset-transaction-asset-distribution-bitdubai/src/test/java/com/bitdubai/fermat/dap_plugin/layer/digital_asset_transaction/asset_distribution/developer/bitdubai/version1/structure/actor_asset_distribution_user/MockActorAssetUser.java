@@ -17,15 +17,19 @@ public class MockActorAssetUser implements ActorAssetUser {
     }
 
     @Override
+    public String getPublicLinkedIdentity() {
+        return "publicLinkedIdentity";
+    }
+
+    @Override
     public String getName() {
         return "testName";
     }
 
     @Override
-    public long getContactRegistrationDate() {
+    public long getRegistrationDate() {
         return 0;
     }
-
     @Override
     public byte[] getProfileImage() {
         return new byte[0];
@@ -36,6 +40,10 @@ public class MockActorAssetUser implements ActorAssetUser {
         return null;
     }
 
+    @Override
+    public long getLastConnectionDate() {
+        return 1000;
+    }
     //Fix for compilation
     @Override
     public Double getLocationLatitude() {
@@ -47,9 +55,10 @@ public class MockActorAssetUser implements ActorAssetUser {
         return null;
     }
 
-
     @Override
-    public Genders getGender() {
+    public Location getLocation() {return null;}
+    @Override
+    public Genders getGenders() {
         return null;
     }
 

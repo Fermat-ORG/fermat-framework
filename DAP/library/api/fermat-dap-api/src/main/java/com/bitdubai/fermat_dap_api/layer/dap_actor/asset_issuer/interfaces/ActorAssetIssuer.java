@@ -48,7 +48,7 @@ public interface ActorAssetIssuer {
 
     /**
      * Método {@code getDescription}
-     * Este método retorna la descripción o información personal que el Issuer haya configurado
+     * The Method return a description about Issuer
      * acerca de él mismo.
      *
      * @return {@link String} con la descripción del {@link ActorAssetIssuer}

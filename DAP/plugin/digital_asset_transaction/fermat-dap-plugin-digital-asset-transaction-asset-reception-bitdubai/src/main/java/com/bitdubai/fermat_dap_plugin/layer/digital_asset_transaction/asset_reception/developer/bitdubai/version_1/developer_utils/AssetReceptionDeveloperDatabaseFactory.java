@@ -144,15 +144,15 @@ public class AssetReceptionDeveloperDatabaseFactory implements DealsWithPluginDa
         /**
          * Asset Reception table
          */
-        List<String> assetDeliveringColumns = new ArrayList<String>();
+        List<String> assetReceivingColumns = new ArrayList<String>();
 
-        assetDeliveringColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_MESSAGE_ID_COLUMN_NAME);
-        assetDeliveringColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_GENESIS_TRANSACTION_COLUMN_NAME);
-        assetDeliveringColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_MESSAGE_TYPE_COLUMN_NAME);
-        assetDeliveringColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_TIMESTAMP_COLUMN_NAME);
-        assetDeliveringColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_EVENT_ID_COLUMN_NAME);
+        assetReceivingColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_MESSAGE_ID_COLUMN_NAME);
+        assetReceivingColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_GENESIS_TRANSACTION_COLUMN_NAME);
+        assetReceivingColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_MESSAGE_TYPE_COLUMN_NAME);
+        assetReceivingColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_TIMESTAMP_COLUMN_NAME);
+        assetReceivingColumns.add(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_EVENT_ID_COLUMN_NAME);
 
-        DeveloperDatabaseTable assetDeliveringTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_TABLE_NAME, assetDeliveringColumns);
+        DeveloperDatabaseTable assetDeliveringTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetReceptionDatabaseConstants.ASSET_RECEPTION_RECEIVING_TABLE_NAME, assetReceivingColumns);
         tables.add(assetDeliveringTable);
 
         return tables;
