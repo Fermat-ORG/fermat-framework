@@ -6,7 +6,7 @@
 
 Plug-ins are one of the three basic components that can be added into the Fermat Framework. The two others are Addons, and GUI components. Enach Plug-in has a well defined responsability within the system at usually collaborate from within one or more workflows in which it participates.  
 
-To accomplish it's mission, a Plug-in may havey have it's own database and files to persist it's state. It also has an internal structure of classes designed specifically to fullfil it's goals. Some of these classes have public interfaces which exposes the Plug-in public services to other Fermat components.
+To accomplish it's mission, a Plug-in may have have it's own database and files to persist it's state. It also has an internal structure of classes designed specifically to fullfill it's goals. Some of these classes have public interfaces which exposes the Plug-in public services to other Fermat components.
 
 
 <br>
@@ -16,16 +16,40 @@ To accomplish it's mission, a Plug-in may havey have it's own database and files
 Several new concepts are introduced...
 
 <br>
+### Subsystem Class
+* Is where we define and identify the plugin, we have to assign a Plugin Reference to it.
+* Here we will register all the Developers who've made a version of the plugin.
+
+<br>
 ### Developer Class
+* Each developer of a plugin must have his own Developer Class and define it in a specific package with his name.
+* Here we can register all the Versions of the Plugin created by the Developer.
+* (Plugin Licensor? Explanation?)
 
 <br>
 ### Plug-in Root
+* Is the main Class of each Version of the plug-in. This Class must implements AbstractPlugin of fermat-api.
+* A plug-in haves two particular behaviors:
+ * It's a Service, and with this, we're saying that it can be managed like one, for this haves four basic methods, start, stop, pause or resume, and to keep the status we have a **ServiceStatus** [CREATED-STARTED-STOPPED-PAUSED].
+ * It haves an identity, given by the fermat-core. We may use this **pluginId** to add security in our plug-in. Throw it we should encrypt and decrypt the databases, files, etc. that the plug-in manages. 
+* It can be referenced, for this it haves a PluginVersionReference.
+* It can ask for dependences to the core, in the original core we specify the dependences throw the implementation of DealsWithOtherPluginOrAddon Interface, now we've two annotations to ask for this dependences: @NeededAddonReference @NeededPluginReference
 
 <br>
-### Plug-in Public Interface
+### Plug-in Public Interfaces
+* The must of the plug-ins can be consumed. For this we'll define in the api of the platform where the plug-in belongs the public interfaces of the same.
+* If any method of the interface throws an exception, enums or any other, this exception must be public too, and must be created in the api too. 
+* We've a structure for this:
+ * Interfaces:  Layer -> PluginName -> Interfaces
+ * Exceptions:  Layer -> PluginName -> Exceptions
+ * Enums:       Layer -> PluginName -> Enums
+ * Events:      Layer -> PluginName -> Events
+ * Annotations: Layer -> PluginName -> Annotations
+ * Utils:       Layer -> PluginName -> Utils
 
 <br>
 ### Internal Structure
+* We tend to repeat the same conventions in each part of the fermat, with this we're trying to say that, like in the interfaces defini
 
 <br>
 ### Event Handler
