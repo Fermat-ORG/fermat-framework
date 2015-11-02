@@ -177,6 +177,31 @@ public class CustomerBrokerPurchaseContractDao {
             return PurchaseContracts;
         }
 
+        public CustomerBrokerPurchase getCustomerBrokerPurchaseForContractId(UUID ContractId) throws CantGetListCustomerBrokerPurchaseException {
+            DatabaseTable identityTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_TABLE_NAME);
+            identityTable.setUUIDFilter(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACT_PURCHASE_CONTRACT_ID_COLUMN_NAME, ContractId, DatabaseFilterType.EQUAL);
+            try {
+                identityTable.loadToMemory();
+            } catch (CantLoadTableToMemoryException e) {
+                throw new CantGetListCustomerBrokerPurchaseException(CantGetListCustomerBrokerPurchaseException.DEFAULT_MESSAGE,e,"","");
+            }
+    
+            List<DatabaseTableRecord> records = identityTable.getRecords();
+            identityTable.clearAllFilters();
+    
+            CustomerBrokerPurchase PurchaseContract = null;
+    
+            for (DatabaseTableRecord record : records) {
+                try {
+                    PurchaseContract = constructCustomerBrokerPurchaseContractFromRecord(record);
+                } catch (InvalidParameterException e) {
+                    throw new CantGetListCustomerBrokerPurchaseException(CantGetListCustomerBrokerPurchaseException.DEFAULT_MESSAGE,e,"","");
+                }
+            }
+    
+            return PurchaseContract;
+        }
+
     /*
         Methods Private
      */
