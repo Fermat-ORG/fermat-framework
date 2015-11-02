@@ -327,6 +327,23 @@ If the plug-in has implemented the use of a database **DealsWithPluginDatabaseSy
 
 #### Database
 
+To implement a database on a plug-in should follow a predetermined structure design, which basically consists in the creation of three classes:
+* 'Name of the plug-in' Dao. This class must contain all methods that enable plug-in classes open the database plug-in, insert, update, query, and delete records from the database.
+* 'Name of the plug-in' Constants This class must include the names of each of the tables and columns of the database plugin. The nomenclature used must follow these rules:
+ - You must use public static String objects.
+ - The name of this object must be uppercase
+ - You must specify what information claramante stores this column.
+ - You must assign a String object before mentioned with a brief description of the content of this column, you should use lowercase and avoid special characters and use as a word separator character '_'.
+Here are some examples:
+  1. Name of the database, PLUGIN_NAME_DATABASE public static final String = "plugin_database" .;
+  2. The name of a table, PLUGIN_TABLE_NAME public static final String = "plugin_table";
+  3. PLUGIN_TABLE_COLUMN_NAME public static final String = "any_column_name";
+* 'Name of the plug-in' DatabaseFactory. This class is responsible for creating the tables in the database Where it is to keep the information.
+
+Additionally, if required that information the database can be displayed through the SubApp Develop, present at runtime on the App Fermat, the implementation of the class' name plug-in'DeveloperDatabaseFactory is required. This class will be instantiated by the PluginRooit class Plug-in par achieve the aforementioned display.
+
+To facilitate the work of creating these classes, Fermat has developed a script in Groovy, which automates the creation of these classes, following the established design, this plugin is available at: https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/database/database_classes_generator/documentation_en.md and https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/database/database_classes_generator/script.groovy
+
 #### Structure
 
 ##### Structure Root
