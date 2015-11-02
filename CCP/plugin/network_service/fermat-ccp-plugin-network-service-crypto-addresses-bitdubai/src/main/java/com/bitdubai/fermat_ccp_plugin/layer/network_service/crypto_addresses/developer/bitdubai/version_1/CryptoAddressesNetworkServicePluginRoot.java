@@ -57,7 +57,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.dev
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.FailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.NewReceiveMessagesNotificationEventHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.AbstractCommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantCreateRequestException;
@@ -126,7 +126,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     /**
      * Represent the cryptoPaymentRequestNetworkServiceConnectionManager
      */
-    private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
+    private AbstractCommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
@@ -690,7 +690,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      */
     @Override
     public void initializeCommunicationNetworkServiceConnectionManager() {
-        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
+        this.communicationNetworkServiceConnectionManager = new AbstractCommunicationNetworkServiceConnectionManager(
                 this.getPlatformComponentProfilePluginRoot(),
                 identity,
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),

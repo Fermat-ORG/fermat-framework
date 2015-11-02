@@ -20,7 +20,7 @@ import java.util.Map;
 
 
 /**
- * The abstract Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.AbstractCommunicationNetworkServiceConnectionManager</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager</code>
  * <p/>
  *
  * Methods <code>buildCommunicationNetworkServiceLocal</code> and <code>buildCommunicationNetworkServiceRemoteAgent</code>
