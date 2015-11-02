@@ -30,6 +30,9 @@ project(':fermat-p2p-api').projectDir = new File('P2P/library/api/fermat-p2p-api
 include ':fermat-bch-api'
 project(':fermat-bch-api').projectDir = new File('BCH/library/api/fermat-bch-api')
 
+include ':fermat-bch-core'
+project(':fermat-bch-core').projectDir = new File('BCH/library/core/fermat-bch-core')
+
 include ':fermat-wpd-api'
 project(':fermat-wpd-api').projectDir = new File('WPD/library/api/fermat-wpd-api')
 //BNP Projects
