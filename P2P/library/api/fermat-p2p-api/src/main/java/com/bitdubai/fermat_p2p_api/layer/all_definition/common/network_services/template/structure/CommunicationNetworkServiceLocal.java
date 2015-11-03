@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -6,8 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.CryptoAddressesNetworkServicePluginRoot;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.database.OutgoingMessageDao;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
@@ -23,7 +22,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal</code> represent
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceLocal</code> represent
  * the remote network services locally
  * <p/>
  * This class extend of the <code>java.util.Observer</code> class,  its used on the software design pattern called: The observer pattern,
@@ -31,11 +30,12 @@ import java.util.Observer;
  * <p/>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 21/07/15.
+ * Modified by lnacosta (laion.cj91@gmail.com) on 02/11/2015.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CommunicationNetworkServiceLocal implements Observer, NetworkServiceLocal {
+public final class CommunicationNetworkServiceLocal implements Observer, NetworkServiceLocal {
 
     private final PlatformComponentProfile remoteNetworkServiceProfile ;
     private final NetworkServiceType       networkServiceTypePluginRoot;
@@ -50,18 +50,14 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
     private FermatMessage lastMessageReceived;
 
     /**
-     * Constructor with parameters
-     *
-     * @param remoteNetworkServiceProfile
-     * @param errorManager                  instance
-     * @param outgoingMessageDao            instance
+     * Constructor with parameters.
      */
-    public CommunicationNetworkServiceLocal(final PlatformComponentProfile remoteNetworkServiceProfile ,
-                                            final ErrorManager             errorManager                ,
-                                            final EventManager             eventManager                ,
-                                            final OutgoingMessageDao       outgoingMessageDao          ,
-                                            final NetworkServiceType       networkServiceTypePluginRoot,
-                                            final EventSource              eventSource                 ) {
+    public CommunicationNetworkServiceLocal(final PlatformComponentProfile remoteNetworkServiceProfile,
+                                            final ErrorManager errorManager,
+                                            final EventManager eventManager,
+                                            final OutgoingMessageDao outgoingMessageDao,
+                                            final NetworkServiceType networkServiceTypePluginRoot,
+                                            final EventSource eventSource) {
 
         this.remoteNetworkServiceProfile  = remoteNetworkServiceProfile ;
         this.errorManager                 = errorManager                ;
