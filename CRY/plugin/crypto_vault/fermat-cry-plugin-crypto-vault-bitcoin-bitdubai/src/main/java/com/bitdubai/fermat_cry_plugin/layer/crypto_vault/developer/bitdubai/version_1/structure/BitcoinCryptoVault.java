@@ -462,8 +462,8 @@ public class BitcoinCryptoVault implements
             /**
              * If OP_return was specified then I will add an output to the transaction
              */
-           // if (op_Return != null)
-            //    request.tx.addOutput(Coin.ZERO, new ScriptBuilder().op(ScriptOpCodes.OP_RETURN).data(op_Return.getBytes()).build());
+            if (op_Return != null)
+                request.tx.addOutput(Coin.ZERO, new ScriptBuilder().op(ScriptOpCodes.OP_RETURN).data(op_Return.getBytes()).build());
 
 
             /**
