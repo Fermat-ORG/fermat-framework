@@ -33,6 +33,7 @@ public class EqualsAndHashTest {
     private AndroidPlatformTextFile testFile2;
 
     private Context testContext;
+    private String testContextPath;
     private String testDirectory;
     private String testFileName;
     private FilePrivacy testPrivacyLevel;
@@ -42,6 +43,7 @@ public class EqualsAndHashTest {
     public void setUpValues(){
         Activity mockActivity = Robolectric.setupActivity(Activity.class);
         testContext = shadowOf(mockActivity).getApplicationContext();
+        testContextPath = shadowOf(mockActivity).getApplicationContext().getFilesDir().getPath();
         testDirectory = "ROBOLECTRICTEST";
         testFileName = "TESTFILE.txt";
         testPrivacyLevel = FilePrivacy.PUBLIC;
@@ -79,7 +81,7 @@ public class EqualsAndHashTest {
     }
 
     private AndroidPlatformTextFile constructAndroidPlatformTextFile(final Context context, final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan){
-        return new AndroidPlatformTextFile(context, directoryName, fileName, privacyLevel, lifeSpan);
+        return new AndroidPlatformTextFile(testContextPath, directoryName, fileName, privacyLevel, lifeSpan);
     }
 
 }
