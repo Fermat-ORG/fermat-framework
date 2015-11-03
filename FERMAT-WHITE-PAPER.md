@@ -142,6 +142,8 @@ We have proposed a Framework developing and running Trust-less Financial Applica
 
 With a Framework we not only solve the problem for a single wallet application, but also to any kind of financial application that could benefit from being crypto and digital asset enabled and trust-less at the same time.
 
+<br>
+### References
 
-
-
+[1] Satoshi Nakamoto, "Bitcoin: A Peer-to-Peer Electronic Cash System", https://bitcoin.org/bitcoin.pdf, 2008 
+ 
