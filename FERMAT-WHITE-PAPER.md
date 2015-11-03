@@ -32,9 +32,9 @@ The Framework core is in charge of initializing Add-ons and Plug-ins and managin
 <br>
 ### Crypto Networks
 
-A set of Plug-ins is needed for each crypto network that want to be supported. One for interfacing the network and being able to push outgoing transactions and monitor incoming transactions. Another couple being the digital vaults where the crypto currency value and digital assets are stored.
+A set of Plug-ins is needed for each crypto network to be supported. One for interfacing the network, pushing outgoing transactions and monitoring incoming transactions. Another couple being the digital vaults where the crypto currency value and digital assets are stored.
 
-Wallets are higher level abstractions and have their own set of Plug-ins for keeping the accounting of each kind of them. This means that the we split the accounting from the value having components at different layers to handle each of them.
+Wallets are higher level abstractions and have their own set of Plug-ins for keeping the accounting of each kind of them. This means that the we split the accounting from the handling the value having components at different layers to handle each ativity.
 
 <br>
 ### Fermat Network
@@ -47,14 +47,14 @@ b. clients calling other clients.
 
 Every Node has a copy of a distributed geo-localized inventory of all network nodes. They run a protocol that allows them to keep their copy synchronized. 
 
-To be able to be found, a client registers itself and some inner components and identities with the geographically closest node. When it needs to find other clients it runs a protocol based on the approximate location of the client it is willing to connect to.
+To be able to be found, a client registers itself and some inner components and identities with the geographically closest node, which we call the _home node_. When it needs to find other clients it follows a protocol that considers the approximate location of the client it is willing to connect to.
 
 <br>
 ### Incentive
 
 #### To developers
 
-Plug-ins developers declare a micro-use-license for each plug-in they add to the Framework. Wallet or Financial Apps developers declare a micro-use-license for their components. End users install the Apps (wallets) of their choice and the license paid is the summary of the App's micro-use-license plus all the micro-use-licenses of the plug-ins used by that App. 
+Plug-ins developers declare a **Micro-Use-License** for each plug-in they add to the Framework. Wallet or Financial Apps developers declare a **Micro-Use-License** for their components. End users install the Apps (wallets) of their choice and the license paid is the summary of the App's micro-use-license plus all the micro-use-licenses of the plug-ins used by that App. 
 
 The Framework assumes the responsibility to enforce the agreements, charge the end user and distribute the payments to all developers involved.
 
