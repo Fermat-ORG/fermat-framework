@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CallToGetByCodeOnNONEException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantGetInstalledWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.DefaultWalletNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
@@ -52,81 +53,81 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
         this.walletManagerManager     = walletManagerManager;
     }
 
-//    public void handleCryptoAddressRequestedEvent(final UUID requestId) throws CantHandleCryptoAddressRequestEventException {
-//
-//        try {
-//            AddressExchangeRequest request = cryptoAddressesManager.getPendingRequest(requestId);
-//            handleCryptoAddressRequestedEvent(request);
-//        } catch (CantGetPendingAddressExchangeRequestException | PendingRequestNotFoundException e) {
-//
-//            throw new CantHandleCryptoAddressRequestEventException(e, "RequestId: "+requestId);
-//        }
-//    }
-//
-//    public void handleCryptoAddressRequestedEvent(final AddressExchangeRequest request) throws CantHandleCryptoAddressRequestEventException {
-//
-//        try {
-//
-//            try {
-//                InstalledWallet wallet = walletManagerManager.getDefaultWallet(
-//                        request.getCryptoCurrency(),
-//                        actorType,
-//                        request.getBlockchainNetworkType()
-//                );
-//
-//                CryptoCurrencyVault cryptoCurrencyVault = CryptoCurrencyVault.getByCryptoCurrency(request.getCryptoCurrency());
-//
-//                CryptoVaultManager vault = vaultAdministrator.getVault(cryptoCurrencyVault);
-//
-//                CryptoAddress cryptoAddress = vault.getAddress();
-//
-//                ReferenceWallet referenceWallet = ReferenceWallet.getByCategoryAndIdentifier(wallet.getWalletCategory(), wallet.getWalletPlatformIdentifier());
-//
-//                System.out.println("************ Crypto Addresses -> updating ok.");
-//
-//                cryptoAddressBookManager.registerCryptoAddress(
-//                        cryptoAddress,
-//                        request.getIdentityPublicKeyResponding(),
-//                        request.getIdentityTypeResponding(),
-//                        request.getIdentityPublicKeyRequesting(),
-//                        request.getIdentityTypeRequesting(),
-//                        wallet.getPlatform(),
-//                        cryptoCurrencyVault.getVaultType(),
-//                        cryptoCurrencyVault.getCode(),
-//                        wallet.getWalletPublicKey(),
-//                        referenceWallet
-//                );
-//
-//                System.out.println("************ Crypto Addresses ->registered crypto address.");
-//
-//                System.out.println("************ Crypto Addresses -> i will accept the address exchange request.");
-//
-//                cryptoAddressesManager.acceptAddressExchangeRequest(
-//                        request.getRequestId(),
-//                        cryptoAddress
-//                );
-//
-//                System.out.println("************ Crypto Addresses -> i already accept the address exchange request.");
-//
-//            } catch(DefaultWalletNotFoundException z) {
-//
-//                cryptoAddressesManager.denyAddressExchangeRequest(request.getRequestId());
-//            }
-//
-//        } catch (PendingRequestNotFoundException              |
-//                 CantDenyAddressExchangeRequestException      |
-//                 CantAcceptAddressExchangeRequestException    |
-//                 CantRegisterCryptoAddressBookRecordException |
-//                 CallToGetByCodeOnNONEException               |
-//                 InvalidParameterException e                  ) {
-//
-//            throw new CantHandleCryptoAddressRequestEventException(e);
-//        } catch (CantIdentifyVaultException e) {
-//
-//            throw new CantHandleCryptoAddressRequestEventException(e, "Can't identify a vault to work with.");
-//        } catch (CantGetInstalledWalletException e) {
-//
-//            throw new CantHandleCryptoAddressRequestEventException(e, "Can't get an Installed Wallet to work with.");
-//        }
-//    }
+    public void handleCryptoAddressRequestedEvent(final UUID requestId) throws CantHandleCryptoAddressRequestEventException {
+
+        try {
+            CryptoAddressRequest request = cryptoAddressesManager.getPendingRequest(requestId);
+           handleCryptoAddressRequestedEvent(request);
+       } catch (CantGetPendingAddressExchangeRequestException | PendingRequestNotFoundException e) {
+
+            throw new CantHandleCryptoAddressRequestEventException(e, "RequestId: "+requestId);
+        }
+    }
+
+    public void handleCryptoAddressRequestedEvent(final CryptoAddressRequest request) throws CantHandleCryptoAddressRequestEventException {
+
+        try {
+
+            try {
+                InstalledWallet wallet = walletManagerManager.getDefaultWallet(
+                        request.getCryptoCurrency(),
+                        actorType,
+                        request.getBlockchainNetworkType()
+                );
+
+                CryptoCurrencyVault cryptoCurrencyVault = CryptoCurrencyVault.getByCryptoCurrency(request.getCryptoCurrency());
+
+                CryptoVaultManager vault = vaultAdministrator.getVault(cryptoCurrencyVault);
+
+                CryptoAddress cryptoAddress = vault.getAddress();
+
+                ReferenceWallet referenceWallet = ReferenceWallet.getByCategoryAndIdentifier(wallet.getWalletCategory(), wallet.getWalletPlatformIdentifier());
+
+                System.out.println("************ Crypto Addresses -> updating ok.");
+
+                cryptoAddressBookManager.registerCryptoAddress(
+                        cryptoAddress,
+                        request.getIdentityPublicKeyResponding(),
+                        request.getIdentityTypeResponding(),
+                        request.getIdentityPublicKeyRequesting(),
+                        request.getIdentityTypeRequesting(),
+                        wallet.getPlatform(),
+                        cryptoCurrencyVault.getVaultType(),
+                        cryptoCurrencyVault.getCode(),
+                        wallet.getWalletPublicKey(),
+                        referenceWallet
+                );
+
+                System.out.println("************ Crypto Addresses ->registered crypto address.");
+
+                System.out.println("************ Crypto Addresses -> i will accept the address exchange request.");
+
+                cryptoAddressesManager.acceptAddressExchangeRequest(
+                        request.getRequestId(),
+                        cryptoAddress
+                );
+
+                System.out.println("************ Crypto Addresses -> i already accept the address exchange request.");
+
+            } catch(DefaultWalletNotFoundException z) {
+
+                cryptoAddressesManager.denyAddressExchangeRequest(request.getRequestId());
+            }
+
+        } catch (PendingRequestNotFoundException              |
+                CantDenyAddressExchangeRequestException      |
+                CantAcceptAddressExchangeRequestException    |
+                CantRegisterCryptoAddressBookRecordException |
+                CallToGetByCodeOnNONEException               |
+                InvalidParameterException e                  ) {
+
+            throw new CantHandleCryptoAddressRequestEventException(e);
+        } catch (CantIdentifyVaultException e) {
+
+            throw new CantHandleCryptoAddressRequestEventException(e, "Can't identify a vault to work with.");
+        } catch (CantGetInstalledWalletException e) {
+
+            throw new CantHandleCryptoAddressRequestEventException(e, "Can't get an Installed Wallet to work with.");
+        }
+    }
 }
