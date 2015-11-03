@@ -261,7 +261,7 @@ public class CryptoWalletWalletModuleManager implements
     }
 
     @Override
-    public List<CryptoWalletWalletContact> listAllActorContactsAndConnections(String walletPublicKey,String intraUserPublicKey) throws CantGetAllWalletContactsException {
+    public List<CryptoWalletWalletContact> listAllActorContactsAndConnections(String walletPublicKey,String intraUserLoggedInPublicKey) throws CantGetAllWalletContactsException {
         try {
             Map<String, CryptoWalletWalletContact> contactMap = new HashMap<>();
 
@@ -271,12 +271,12 @@ public class CryptoWalletWalletModuleManager implements
 
             for(WalletContactRecord r : walletContactsSearch.getResult()){
                // System.out.println("wallet contact: "+r);
-                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(),r.getWalletPublicKey());
+                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(),intraUserLoggedInPublicKey);
                 contactMap.put(r.getActorPublicKey(), new CryptoWalletWalletModuleWalletContact(r, image));
             }
 
             // get intra user connections
-            List<IntraWalletUser> intraUserList = intraUserManager.getConnectedIntraWalletUsers(intraUserPublicKey);
+            List<IntraWalletUser> intraUserList = intraUserManager.getConnectedIntraWalletUsers(intraUserLoggedInPublicKey);
 
             for(IntraWalletUser intraUser : intraUserList) {
                // System.out.println("intra user: " + intraUser);
@@ -305,7 +305,7 @@ public class CryptoWalletWalletModuleManager implements
     }
 
     private byte[] getImageByActorType(final Actors actorType     ,
-                                       final String actorPublicKey, final String walletPublicKey) throws CantGetAllWalletContactsException,
+                                       final String actorPublicKey, final String intraUserLoggedInPublicKey) throws CantGetAllWalletContactsException,
                                                                            ExtraUserNotFoundException       ,
                                                                            CantGetExtraUserException        {
         Actor actor;
@@ -315,7 +315,7 @@ public class CryptoWalletWalletModuleManager implements
                return actor.getPhoto();
             case INTRA_USER:
                 try {
-                    actor = intraUserManager.getActorByPublicKey(walletPublicKey,actorPublicKey);
+                    actor = intraUserManager.getActorByPublicKey(intraUserLoggedInPublicKey,actorPublicKey);
                     return actor.getPhoto();
 
                 }
