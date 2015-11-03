@@ -341,11 +341,11 @@ public class WalletDesktopFragment extends Fragment implements Thread.UncaughtEx
                         holder.imageView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-
                                 //set the next fragment and params
                                 ((FermatScreenSwapper) getActivity()).selectSubApp((InstalledSubApp)item.getInterfaceObject());
                             }
                         });
+                        break;
 
                     case "intra_user_community_sub_app":
                         holder.imageView.setImageResource(R.drawable.intra_user);
@@ -362,6 +362,7 @@ public class WalletDesktopFragment extends Fragment implements Thread.UncaughtEx
                                 }
                             }
                         });
+                        break;
                 }
 
             }
