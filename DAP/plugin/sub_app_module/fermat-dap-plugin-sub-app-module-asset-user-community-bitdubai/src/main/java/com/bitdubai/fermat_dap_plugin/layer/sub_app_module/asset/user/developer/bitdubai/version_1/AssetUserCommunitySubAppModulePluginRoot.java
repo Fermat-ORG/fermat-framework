@@ -135,7 +135,7 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
         }
     }
 
-    List<ActorAssetUser> actorAssetList;// = new ArrayList<>();
+    List<ActorAssetUser> actorAssetList;
 
     @Override
     public List<ActorAssetUser> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException {
@@ -155,11 +155,11 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
 
     @Override
     public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException{
-        //todo SE DEBE CONOCER QUIEN ES EL ISSUER SOLICITANTE Y QUIEN EL USER SOLICITADO
+        //todo SE DEBE CONOCER QUIEN ES EL REQUESTER SOLICITANTE Y QUIEN EL SOLICITADO
 
         ActorAssetIssuer actorAssetIssuer;
         //TODO Para Realizacion de TEST se tomara el ISSUER de la BD LOCAL
-        //TODO Se necesita PASAR el ActorAssetUser seleccionado en la Community
+        //TODO Se necesita PASAR el Actor seleccionado en la Community
         try {
             actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
             actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetUsers);
