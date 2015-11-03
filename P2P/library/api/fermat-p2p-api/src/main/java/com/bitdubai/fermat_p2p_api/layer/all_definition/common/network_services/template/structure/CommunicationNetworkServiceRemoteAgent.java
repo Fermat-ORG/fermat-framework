@@ -1,16 +1,17 @@
-package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.database.CommunicationNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.database.IncomingMessageDao;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.database.OutgoingMessageDao;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.exceptions.CantInsertRecordDataBaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.IncomingMessageDao;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.OutgoingMessageDao;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent;
@@ -28,7 +29,7 @@ import java.util.Map;
 import java.util.Observable;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceRemoteAgent</code>
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceRemoteAgent</code>
  * is the service toRead that maintaining the communication channel, read and wait for new message.
  *
  * This class extend of the <code>java.util.Observable</code> class,  its used on the software design pattern called: The observer pattern,
@@ -37,21 +38,24 @@ import java.util.Observable;
  * <p/>
  *
  * Created by Roberto Requena - (rart3001@gmail.com) on 13/06/15.
+ * Modified by lnacosta (laion.cj91@gmail.com) on 02/11/2015.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CommunicationNetworkServiceRemoteAgent extends Observable {
+public final class CommunicationNetworkServiceRemoteAgent extends Observable {
 
     // Represent the sleep time for the read or send (2000 milliseconds)
     private static final long SLEEP_TIME = 2000;
 
+    private final ECCKeyPair eccKeyPair;
     private final CommunicationsVPNConnection communicationsVPNConnection;
     private final ErrorManager                errorManager               ;
     private final EventManager                eventManager               ;
     private final IncomingMessageDao          incomingMessageDao         ;
     private final OutgoingMessageDao          outgoingMessageDao         ;
     private final EventSource                 eventSource                ;
+    private final PluginVersionReference      pluginVersionReference     ;
 
     /**
      * Represent is the tread is running
@@ -66,23 +70,19 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
     /**
      * Represent the eccKeyPair
      */
-    private ECCKeyPair eccKeyPair;
+
 
     /**
-     * Constructor with parameters
-     *
-     * @param eccKeyPair           from the plugin root
-     * @param errorManager         instance
-     * @param incomingMessageDao   instance
-     * @param outgoingMessageDao   instance
+     * Constructor with parameters.
      */
-    public CommunicationNetworkServiceRemoteAgent(final ECCKeyPair                  eccKeyPair                 ,
+    public CommunicationNetworkServiceRemoteAgent(final ECCKeyPair eccKeyPair,
                                                   final CommunicationsVPNConnection communicationsVPNConnection,
-                                                  final ErrorManager                errorManager               ,
-                                                  final EventManager                eventManager               ,
-                                                  final IncomingMessageDao          incomingMessageDao         ,
-                                                  final OutgoingMessageDao          outgoingMessageDao         ,
-                                                  final EventSource                 eventSource                ) {
+                                                  final ErrorManager errorManager,
+                                                  final EventManager eventManager,
+                                                  final IncomingMessageDao incomingMessageDao,
+                                                  final OutgoingMessageDao outgoingMessageDao,
+                                                  final EventSource eventSource,
+                                                  final PluginVersionReference pluginVersionReference) {
 
         super();
         this.eccKeyPair                  = eccKeyPair                 ;
@@ -93,6 +93,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
         this.outgoingMessageDao          = outgoingMessageDao         ;
         this.communicationsVPNConnection = communicationsVPNConnection;
         this.eventSource                 = eventSource                ;
+        this.pluginVersionReference      = pluginVersionReference     ;
 
 
         //Create a thread to receive the messages
@@ -226,13 +227,13 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
             if(!toReceive.isInterrupted()){
                 //Sleep for a time
-                toReceive.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+                Thread.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
             }
 
         } catch (InterruptedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
         } catch (CantInsertRecordDataBaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
         }
 
     }
@@ -297,20 +298,21 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                         }
                     }
 
-                } catch (CantUpdateRecordDataBaseException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: "+e.getMessage()));
-                } catch (CantReadRecordDataBaseException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: " + e.getMessage()));
+                } catch(CantUpdateRecordDataBaseException |
+                        CantReadRecordDataBaseException   |
+                        RecordNotFoundException           e) {
+
+                    errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
 
 
             if(!toSend.isInterrupted()){
                 //Sleep for a time
-                toSend.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+                Thread.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
             }
 
         } catch (InterruptedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
 
     }
