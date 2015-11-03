@@ -1,13 +1,11 @@
 package unit.com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.asset_issuing_transaction_dao;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
 
@@ -24,14 +22,13 @@ import java.util.UUID;
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by frank on 31/10/15.
+ * Created by frank on 02/11/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class PersistGenesisTransactionTest {
+public class IsReceivedDigitalAssetsTest {
     AssetIssuingTransactionDao assetIssuingTransactionDao;
     UUID pluginId;
 
@@ -47,9 +44,8 @@ public class PersistGenesisTransactionTest {
     @Mock
     DatabaseTableRecord databaseTableRecord;
 
-    String outgoingTransactionID = "outgoingTransactionID";
-    String genesisTransaction = "genesisTransaction";
     List<DatabaseTableRecord> records;
+    boolean receivedDigitalAssetsExpected = true;
 
     @Before
     public void setUp() throws Exception {
@@ -71,17 +67,20 @@ public class PersistGenesisTransactionTest {
 
     @Test
     public void test_OK() throws Exception {
-        assetIssuingTransactionDao.persistGenesisTransaction(outgoingTransactionID, genesisTransaction);
+        boolean receivedDigitalAssets = assetIssuingTransactionDao.isReceivedDigitalAssets();
+        assertThat(receivedDigitalAssets).isEqualTo(receivedDigitalAssetsExpected);
     }
 
     @Test
-    public void test_Throws_CantPersistsGenesisTransactionException() throws Exception {
-        doThrow(new CantUpdateRecordException("error")).when(databaseTable).updateRecord(databaseTableRecord);
-        catchException(assetIssuingTransactionDao).persistGenesisTransaction(outgoingTransactionID, genesisTransaction);
+    public void test_Throws_CantExecuteQueryException() throws Exception {
+        when(databaseTable.getRecords()).thenReturn(null);
+        catchException(assetIssuingTransactionDao).isReceivedDigitalAssets();
         Exception thrown = caughtException();
         assertThat(thrown)
                 .isNotNull()
-                .isInstanceOf(CantPersistsGenesisTransactionException.class);
-        assertThat(thrown.getCause()).isInstanceOf(CantUpdateRecordException.class);
+                .isInstanceOf(CantExecuteQueryException.class);
+        assertThat(thrown.getCause())
+                .isNotNull()
+                .isInstanceOf(FermatException.class);
     }
 }
