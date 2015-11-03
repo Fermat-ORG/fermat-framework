@@ -198,11 +198,11 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
 
             this.serviceStatus = ServiceStatus.STARTED;
 
-            createAndRegisterActorAssetRedeemPointTest();
-
-            initializeListener();
-
-            startMonitorAgent();
+//            createAndRegisterActorAssetRedeemPointTest();
+//
+//            initializeListener();
+//
+//            startMonitorAgent();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -355,7 +355,6 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
         try {
             //TODO Cambiar luego por la publicKey Linked proveniente de Identity
             this.redeemPointActorDao.updateRedeemPointConnectionState(actorAssetRedeemPoint.getPublicKey(),
-                    actorAssetRedeemPoint.getPublicKey(),
                     ConnectionState.CONNECTED);
         } catch (CantUpdateRedeemPointException e) {
             e.printStackTrace();
@@ -398,7 +397,13 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
 //                record.setCryptoAddress(cryptoAddress);
 //                record.setHoursOfOperation("08:00 am a 05:30pm");
 //                record.setContactInformation("marsvicam@gmail.com");
-                redeemPointActorDao.createNewRedeemPoint(redeemPointActorPublicKey, record);
+                redeemPointActorDao.createNewRedeemPoint(record);
+                actorAssetRedeemPoint = this.redeemPointActorDao.getActorAssetRedeemPoint();
+
+                System.out.println("*********************Actor Asset Redeem Point************************");
+                System.out.println("Actor Asset PublicKey: " + actorAssetRedeemPoint.getPublicKey());
+                System.out.println("Actor Asset Name: " + actorAssetRedeemPoint.getName());
+                System.out.println("***************************************************************");
 //                    redeemPointActorDao.createNewRedeemPointRegisterInNetworkService(record);
             }
         } catch (CantAddPendingRedeemPointException e) {
@@ -413,7 +418,7 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
      */
     private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantStartAgentException {
         if (this.actorAssetRedeemPointMonitorAgent == null) {
-            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+//            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
             this.actorAssetRedeemPointMonitorAgent = new ActorAssetRedeemPointMonitorAgent(this.eventManager,
                     this.pluginDatabaseSystem,
                     this.errorManager,

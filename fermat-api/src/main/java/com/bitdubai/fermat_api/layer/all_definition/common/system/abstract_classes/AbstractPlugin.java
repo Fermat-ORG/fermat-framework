@@ -233,6 +233,9 @@ public abstract class AbstractPlugin implements Plugin, Service {
             if(refManager.isAssignableFrom(abstractAddon.getClass())) {
                 field.setAccessible(true);
                 field.set(this, refManager.cast(abstractAddon));
+
+                System.out.println("Processing Plugin: " + this.pluginVersionReference.toString2() +
+                        "\n                   - >>> Assigned addon reference: " + avr.toString2());
             } else {
                 throw new IncompatibleReferenceException(
                         "classExpected: "+refManager.getName() + " --- classReceived: " + abstractAddon.getClass().getName(),
@@ -270,6 +273,9 @@ public abstract class AbstractPlugin implements Plugin, Service {
             if(refManager.isAssignableFrom(abstractPlugin.getClass())) {
                 field.setAccessible(true);
                 field.set(this, refManager.cast(abstractPlugin));
+
+                System.out.println("Processing Plugin: " + this.pluginVersionReference.toString2() +
+                        "\n                   - >>> Assigned plugin reference: " + pvr.toString2());
             } else {
                 throw new IncompatibleReferenceException(
                         "classExpected: "+refManager.getName() + " --- classReceived: " + abstractPlugin.getClass().getName(),

@@ -124,25 +124,21 @@ public class RedeemPointActorDao implements Serializable {
         }
     }
 
-    public void createNewRedeemPoint(String redeemPointLoggedInPublicKey, ActorAssetRedeemPoint redeemPoint) throws CantAddPendingRedeemPointException {
-
+    public void createNewRedeemPoint(ActorAssetRedeemPoint redeemPoint) throws CantAddPendingRedeemPointException {
         try {
             /**
              * if Redeem Point exist on table
              * change status
              */
             if (redeemPointExists(redeemPoint.getPublicKey())) {
-
-                this.updateRedeemPointConnectionState(redeemPointLoggedInPublicKey, redeemPoint.getPublicKey(), redeemPoint.getConnectionState());
-
+                this.updateRedeemPointConnectionState(redeemPoint.getPublicKey(), redeemPoint.getConnectionState());
             } else {
-
                 DatabaseTable table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_TABLE_NAME);
                 DatabaseTableRecord record = table.getEmptyRecord();
 
-                record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
-                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, redeemPointLoggedInPublicKey);
                 record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, redeemPoint.getPublicKey());
+                record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
+//                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, redeemPointLoggedInPublicKey);
 
                 setValuesToRecord(record, redeemPoint);
 
@@ -243,7 +239,7 @@ public class RedeemPointActorDao implements Serializable {
         }
     }
 
-    public void updateRedeemPointConnectionState(String redeemPointLoggedInPublicKey, String redeemPointToAddPublicKey, ConnectionState connectionState) throws CantUpdateRedeemPointException {
+    public void updateRedeemPointConnectionState(String redeemPointToAddPublicKey, ConnectionState connectionState) throws CantUpdateRedeemPointException {
 
         DatabaseTable table;
 
@@ -262,7 +258,7 @@ public class RedeemPointActorDao implements Serializable {
 
             // 2) Find the Redeem Point , filter by keys.
             table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, redeemPointToAddPublicKey, DatabaseFilterType.EQUAL);
-            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, redeemPointLoggedInPublicKey, DatabaseFilterType.EQUAL);
+//            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, redeemPointLoggedInPublicKey, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
 
@@ -577,7 +573,7 @@ public class RedeemPointActorDao implements Serializable {
 
     public ActorAssetRedeemPoint getActorAssetRedeemPoint() throws CantGetRedeemPointsListException {
 
-        ActorAssetRedeemPoint actorAssetRedeemPoint = new RedeemPointActorRecord();
+        ActorAssetRedeemPoint actorAssetRedeemPoint = null;//new RedeemPointActorRecord();
         DatabaseTable table;
 
         // Get Asset Users identities list.
@@ -804,21 +800,29 @@ public class RedeemPointActorDao implements Serializable {
         record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CONNECTION_STATE_COLUMN_NAME, redeemPoint.getConnectionState().getCode());
         record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
         //LOCATION
-//        record.setDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOCATION_LONGITUDE_COLUMN_NAME, redeemPoint.getLocation().getLongitude());
-//        record.setDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOCATION_LATITUDE_COLUMN_NAME, redeemPoint.getLocation().getLatitude());
+        record.setDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOCATION_LONGITUDE_COLUMN_NAME, redeemPoint.getLocation().getLongitude());
+        record.setDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOCATION_LATITUDE_COLUMN_NAME, redeemPoint.getLocation().getLatitude());
         //ADDRESS
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_COUNTRY_NAME_COLUMN_NAME, redeemPoint.getAddress().getCountryName());
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_STREET_NAME_COLUMN_NAME, redeemPoint.getAddress().getStreetName());
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_PROVINCE_NAME_COLUMN_NAME, redeemPoint.getAddress().getProvinceName());
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_CITY_NAME_COLUMN_NAME, redeemPoint.getAddress().getCityName());
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_POSTAL_CODE_COLUMN_NAME, redeemPoint.getAddress().getPostalCode());
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_HOUSE_NUMBER_COLUMN_NAME, redeemPoint.getAddress().getHouseNumber());
+        if(redeemPoint.getAddress() != null) {
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_COUNTRY_NAME_COLUMN_NAME, redeemPoint.getAddress().getCountryName());
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_STREET_NAME_COLUMN_NAME, redeemPoint.getAddress().getStreetName());
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_PROVINCE_NAME_COLUMN_NAME, redeemPoint.getAddress().getProvinceName());
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_CITY_NAME_COLUMN_NAME, redeemPoint.getAddress().getCityName());
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_POSTAL_CODE_COLUMN_NAME, redeemPoint.getAddress().getPostalCode());
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_HOUSE_NUMBER_COLUMN_NAME, redeemPoint.getAddress().getHouseNumber());
+        }
         //CRYPTOADDRESS
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_CURRENCY_COLUMN_NAME, redeemPoint.getCryptoAddress().getCryptoCurrency().getCode());
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME, redeemPoint.getCryptoAddress().getAddress());
+        if(redeemPoint.getCryptoAddress() != null) {
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_CURRENCY_COLUMN_NAME, redeemPoint.getCryptoAddress().getCryptoCurrency().getCode());
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME, redeemPoint.getCryptoAddress().getAddress());
+        }
 
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CONTACT_INFORMATION_COLUMN_NAME, redeemPoint.getContactInformation());
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_HOURS_OF_OPERATION_COLUMN_NAME, redeemPoint.getHoursOfOperation());
+        if(redeemPoint.getContactInformation() != null)
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CONTACT_INFORMATION_COLUMN_NAME, redeemPoint.getContactInformation());
+
+        if(redeemPoint.getHoursOfOperation()!= null)
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_HOURS_OF_OPERATION_COLUMN_NAME, redeemPoint.getHoursOfOperation());
+
     }
 
 
@@ -829,19 +833,29 @@ public class RedeemPointActorDao implements Serializable {
         //LOCATION
 //        record.setDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME, redeemPoint.getLocation().getLongitude());
 //        record.setDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME, redeemPoint.getLocation().getLatitude());
-        //ADDRESS
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ADDRESS_COUNTRY_NAME_COLUMN_NAME, redeemPoint.getAddress().getCountryName());
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ADDRESS_STREET_NAME_COLUMN_NAME, redeemPoint.getAddress().getStreetName());
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ADDRESS_PROVINCE_NAME_COLUMN_NAME, redeemPoint.getAddress().getProvinceName());
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ADDRESS_CITY_NAME_COLUMN_NAME, redeemPoint.getAddress().getCityName());
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ADDRESS_POSTAL_CODE_COLUMN_NAME, redeemPoint.getAddress().getPostalCode());
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ADDRESS_HOUSE_NUMBER_COLUMN_NAME, redeemPoint.getAddress().getHouseNumber());
-        //CRYPTOADDRESS
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, redeemPoint.getCryptoAddress().getCryptoCurrency().getCode());
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, redeemPoint.getCryptoAddress().getAddress());
 
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONTACT_INFORMATION_COLUMN_NAME, redeemPoint.getContactInformation());
-        record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_HOURS_OF_OPERATION_COLUMN_NAME, redeemPoint.getHoursOfOperation());
+        //ADDRESS
+        if(redeemPoint.getAddress() != null) {
+
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ADDRESS_COUNTRY_NAME_COLUMN_NAME, redeemPoint.getAddress().getCountryName());
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ADDRESS_STREET_NAME_COLUMN_NAME, redeemPoint.getAddress().getStreetName());
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ADDRESS_PROVINCE_NAME_COLUMN_NAME, redeemPoint.getAddress().getProvinceName());
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ADDRESS_CITY_NAME_COLUMN_NAME, redeemPoint.getAddress().getCityName());
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ADDRESS_POSTAL_CODE_COLUMN_NAME, redeemPoint.getAddress().getPostalCode());
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ADDRESS_HOUSE_NUMBER_COLUMN_NAME, redeemPoint.getAddress().getHouseNumber());
+        }
+
+        //CRYPTOADDRESS
+        if(redeemPoint.getCryptoAddress() != null) {
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, redeemPoint.getCryptoAddress().getCryptoCurrency().getCode());
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, redeemPoint.getCryptoAddress().getAddress());
+        }
+
+        if(redeemPoint.getContactInformation() != null)
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONTACT_INFORMATION_COLUMN_NAME, redeemPoint.getContactInformation());
+
+        if(redeemPoint.getHoursOfOperation() != null)
+            record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_HOURS_OF_OPERATION_COLUMN_NAME, redeemPoint.getHoursOfOperation());
     }
 
     private byte[] getRedeemPointProfileImagePrivateKey(String publicKey) throws CantGetRedeemPointActorProfileImageException {

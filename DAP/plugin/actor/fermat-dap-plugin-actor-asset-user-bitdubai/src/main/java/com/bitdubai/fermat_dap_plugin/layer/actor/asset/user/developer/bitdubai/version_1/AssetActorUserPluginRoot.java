@@ -643,7 +643,7 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
      */
     private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantStartAgentException {
         if (this.assetUserActorMonitorAgent == null) {
-            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+//            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
             this.assetUserActorMonitorAgent = new AssetUserActorMonitorAgent(this.eventManager,
                     this.pluginDatabaseSystem,
                     this.errorManager,

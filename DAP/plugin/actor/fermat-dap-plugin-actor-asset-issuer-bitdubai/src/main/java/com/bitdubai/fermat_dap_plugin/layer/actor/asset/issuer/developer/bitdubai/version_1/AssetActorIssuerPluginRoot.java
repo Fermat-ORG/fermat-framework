@@ -429,7 +429,7 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Data
      */
     private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantStartAgentException {
         if (this.actorAssetIssuerMonitorAgent == null) {
-            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
+//            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
             this.actorAssetIssuerMonitorAgent = new ActorAssetIssuerMonitorAgent(this.eventManager,
                     this.pluginDatabaseSystem,
                     this.errorManager,
