@@ -525,8 +525,15 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                 String genesisTransaction=outgoingIntraActorManager.getTransactionManager().getSendCryptoTransactionHash(transactionUUID);
                 System.out.println("ASSET ISSUING Outgoing returns "+genesisTransaction);
                 if(genesisTransaction==null){
+                    System.out.println("ASSET ISSUING is null - continue asking");
                     continue;
                 }
+                if(genesisTransaction.isEmpty()){
+                    System.out.println("ASSET ISSUING is empty - continue asking");
+                    continue;
+                }
+                System.out.println("ASSET ISSUING Persisting in database Outgoing Id: "+outgoingId);
+                System.out.println("ASSET ISSUING Persisting in database genesis transaction: "+genesisTransaction);
                 assetIssuingTransactionDao.persistGenesisTransaction(outgoingId, genesisTransaction);
                 String internalId=assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                 digitalAssetIssuingVault.setGenesisTransaction(internalId, genesisTransaction);
@@ -637,6 +644,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     return cryptoTransaction;
                 }
             }
+            System.out.println("ASSET ISSUING there was an undetected error looking the crypto status by crypto status.");
             return null;
             //return transactionList;
         }
