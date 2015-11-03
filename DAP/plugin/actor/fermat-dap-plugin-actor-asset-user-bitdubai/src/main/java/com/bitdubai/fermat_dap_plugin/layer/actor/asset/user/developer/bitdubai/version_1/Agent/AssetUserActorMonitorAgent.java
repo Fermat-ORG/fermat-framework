@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.monitorAgent;
+package com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.Agent;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
@@ -139,15 +139,14 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
             try {
 //                test_RegisterActorNetworkService();
 
-                listByActorNetworkServiceUser();
+                listByActorAssetUserNetworkService();
 
             } catch (CantCreateAssetUserActorException e) {
                 throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
             }
         }
 
-        private void listByActorNetworkServiceUser() throws CantCreateAssetUserActorException {
-//                Procedimiento para Obtener lista de Actores del Actor Network Service User
+        private void listByActorAssetUserNetworkService() throws CantCreateAssetUserActorException {
             try {
                 List<ActorAssetUser> list = assetUserActorNetworkServiceManager.getListActorAssetUserRegistered();
 

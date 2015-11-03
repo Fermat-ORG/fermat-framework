@@ -37,13 +37,8 @@ public class AssetUserActorRecord implements ActorAssetUser {
     }
 
     /**
-     *  Constructor Register in Actor Network Service
-     * @param publicKey
-     * @param name
-     * @param profileImage
-     * @param location
+     *  Method for Set Actor in Actor Network Service User
      */
-
     public AssetUserActorRecord(String publicKey,
                                 String name,
                                 byte[] profileImage,
