@@ -2,25 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#77000000"
+    android:background="#FFF"
     >
 
 
 
     <ImageView
-        android:id="@+id/icon"
+        android:id="@+id/imageView_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:paddingLeft="14dp"
         android:paddingRight="14dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_action_bluetooth_searching"
-
+        android:src="@drawable/btn_drawer_home_normal"
+        android:background="#FFF"
         />
 
     <TextView
-        android:id="@+id/label"
+        android:id="@+id/textView_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="14dip"
@@ -28,10 +28,10 @@
         android:paddingLeft="8dip"
         android:paddingRight="8dip"
         android:paddingTop="14dip"
-        android:text="@+id/label"
-        android:textColor="#DDDDDDDD"
+        android:text="Home"
+        android:textColor="#4a4a4a"
         android:textSize="16sp"
-
+        android:background="#FFF"
         >
     </TextView>
 
