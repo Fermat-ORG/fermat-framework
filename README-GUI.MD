@@ -183,6 +183,30 @@ Donde: **cbp** es la plataforma, **android** es el dispositivo, **sub-app** es e
 
 <br>
 
+### Navigation structure
+----------------------
+
+### Android api
+----------------------
+
+### Fragments
+----------------------
+
+### Fragment factory
+----------------------
+
+### Sessions
+----------------------
+
+#### Wallet session
+----------------------
+
+#### Sub app session
+----------------------
+
+#### Settings
+----------------------
+
 ## Part IV: References
 
 <br>
