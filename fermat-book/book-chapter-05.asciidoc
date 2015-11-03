@@ -8,7 +8,7 @@ There is one component for each cryptocurrency: *Bitcoin*, *Litecoin*, *Ripple*,
 The main _responsibility_ for each component is to handle every outgoing/incoming request to/from the corresponding cryptonetwork.
 More specifically, the component connects to a *full node* of the corresponding cryptonetwork and explores the transactions included in the blockchain to find where a *Fermat public cryptoaddress* is mentioned. When a match is found, the component races en event broadcasted in Fermat environment, which in turn triggers some action in another component which _responsability_ is linked to the event. The addresses to match are those listed in the _Cryptoaddress Book_ component (see _Crypto components layer_ ). +
  
-=== _Crypto Vaults layers_
+=== _Crypto Vaults layer_
 As well as in a traditional *funds management* of a Bank, the entire money that a Banks posseses is store in one _main vault_, and the _user's account managing system_ acknowledges how much money corresponds to every one, in Fermat, all transactions corresponding to Fermat's users are held in a *vault component*,  corresponding to the currency associated to the transaction. Then is task of every Fermat *wallet* to manage the amount of cryptocurrency owned by each *actor*, in the way wallets do: they track every *unspent transaction output* in the _blockchain public ledger_ and they display the information (transaction history, transaction report, balance, etc) according to their built-in functionalities.
 
 NOTE: It might be useful to recall in this section a basic concept in blockchain technology about Hierarchical Deterministics Wallets.
@@ -18,9 +18,8 @@ So, each *vault component* uses its _master key_ in the way of a HD wallet, to i
  
  
 Bitcoin Vault :: it stores the entire system's children keys that let all Fermat Bitcoin Wallets *unlock* the funds owned by their users, so it can be thinked that this vault "stores" the available _Bitcoin_ funds of the entire system. (*value storage*). 
-Assets over Bitcoin :: it "stores" (in the sense above mentioned) each little amount of_Bitcoin_ used to validate a *Digital Asset* ( called assets _proof of existence_ ). It is more a *metada storage* of what is represented by the *asset* than a a storage of *value*.  (See full explanation in the section about <<DigitalAssets>>)
-Bitcoin Watch Only Vault :: it stores "receive only" type of Bitcoin transactions, what means that the transaction is showed in the ledger, but there is no _privat key_ available to claim the Bitcoins transfered. This type of *addresses* are used in the _Digital Asset Platform_ to allow *redeem points* wallet to work, showing they have received an Asset to be redeem by the *Assets Issuer*. (See full explanation in the section about <<DigitalAssets>>) +
-
+Assets over Bitcoin :: it "stores" (in the sense above mentioned) each little amount of_Bitcoin_ used to validate a *Digital Asset* ( called assets _proof of existence_ ). It is more a *metada storage* of what is represented by the *asset* than a a storage of *value*. +
+Bitcoin Watch Only Vault :: it stores "receive only" type of Bitcoin transactions, what means that the transaction is showed in the ledger, but there is no _privat key_ available to claim the Bitcoins transfered. This type of *addresses* are used in the _Digital Asset Platform_ to allow *redeem points* wallet to work, showing they have received an Asset to be redeem by the *Assets Issuer*. +
 === _Crypto components layer_
 Crypto Address Book :: it keeps a list of every cryptoaddress requested by any component of Fermat, recording who originated the request, from which platform, and any other necessary information to identify the address when consumed from any plugin. It is the _authority_ to recognize every address belonging to Fermat from the rest of addresses available in the blockchain ledger.
 

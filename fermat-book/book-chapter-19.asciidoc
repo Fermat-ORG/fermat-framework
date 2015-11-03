@@ -1,6 +1,7 @@
 [[DigitalAssets]]
-== FERMAT Digital Asset Platform. Blockchain beyond currency 
+== Fermat Digital Asset Platform. Blockchain beyond currency 
 
+//// 
 === _Network Service layer_
 
 Asset Transmission :: +
@@ -67,3 +68,12 @@ Redeem Point Community ::+
 Asset Issuer :: 
 Asset User ::
 Redeem Point :: +
+
+////
+
+=== Continue Reading
+link:book-chapter-12.asciidoc[Fermat Digital Assets Management]
+
+link:book-chapter-20.asciidoc[Next Chapter]
+
+link:book-chapter-21.asciidoc[Previous Chapter]

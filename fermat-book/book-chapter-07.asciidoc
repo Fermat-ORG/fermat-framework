@@ -7,6 +7,8 @@ We have already explored in the previous sections the main role of the *Core Pla
 Now, let us explore the next *_layers_* following on top, which are almost present in every *_Fermat platform_* which follows. +
 *Layers* are built with a considerable atomicity in its components (i.e. each component deals with a very specific and constrained set of events) what really renders the whole Fermat system with a strong, structured and solid foundation and at the same time a large flexibility and adaptability for further development and evolution. +
 
+:numbered:
+
 === _Platform Services layer_
 The modules in this layer handle the very basic tasks that allow plugins interact safely in and uncontrolled environment, taking care of a careful transmission of responsability from one component to another and specially the management of exceptions and track of all system's *events*.
 
@@ -93,6 +95,7 @@ Similar to the _Sub App  Module layer_ but applied to _Wallets_, i.e. "sub apps"
 NOTE: Until now, the _layers_ presented are written in *JAVA*. +
 The next layers are NOT *code portable*, i.e. they depend on the Operating Systems where they run, and therefore are written in each OS's specific language.
 
+:numbered:
 [[desktopLayer]]
 === *_Desktop layer_*
 In this layer live the part of the *desktop application* responsible of the GUI (Graphic User Interface) which has a *one-on-one* relationship to the component of the same name in the _Desktop Module Layer_
