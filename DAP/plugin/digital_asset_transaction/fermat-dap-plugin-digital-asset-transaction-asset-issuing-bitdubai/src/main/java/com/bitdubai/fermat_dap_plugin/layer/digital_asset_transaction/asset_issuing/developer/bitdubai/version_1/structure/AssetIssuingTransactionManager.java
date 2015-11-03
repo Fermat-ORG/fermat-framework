@@ -17,6 +17,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.inter
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
@@ -55,6 +56,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     DigitalAssetIssuingVault digitalAssetIssuingVault;
     LogManager logManager;
     BitcoinNetworkManager bitcoinNetworkManager;
+    //ActorAssetIssuerManager actorAssetIssuerManager;
 
     public AssetIssuingTransactionManager(UUID pluginId,
                                           CryptoVaultManager cryptoVaultManager,
@@ -113,6 +115,14 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         }
         this.bitcoinNetworkManager = bitcoinNetworkManager;
     }
+
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException{
+        if(actorAssetIssuerManager==null){
+            throw new CantSetObjectException("actorAssetIssuerManager is null");
+        }
+        this.digitalAssetCryptoTransactionFactory.setActorAssetIssuerManager(actorAssetIssuerManager);
+    }
+
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the asset issuing plugin
      * @throws CantGetLoggedInDeviceUserException

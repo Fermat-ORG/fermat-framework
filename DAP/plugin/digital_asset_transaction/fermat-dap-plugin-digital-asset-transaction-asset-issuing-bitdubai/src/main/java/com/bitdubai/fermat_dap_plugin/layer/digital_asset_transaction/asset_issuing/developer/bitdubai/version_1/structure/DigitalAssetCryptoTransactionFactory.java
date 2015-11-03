@@ -187,6 +187,9 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
         try {
             this.actorToPublicKey=actorAssetIssuerManager.getActorAssetIssuer().getPublicKey();
+            if(this.actorToPublicKey==null){
+                this.actorToPublicKey="actorPublicKeyNotFound";
+            }
             System.out.println("ASSET ISSUING Actor Asset Issuer public key "+actorToPublicKey);
         } catch (CantGetAssetIssuerActorsException exception) {
             throw new CantSetObjectException(exception, "Setting the actor asset issuer manager","Cannot get the actor asset issuer manager");

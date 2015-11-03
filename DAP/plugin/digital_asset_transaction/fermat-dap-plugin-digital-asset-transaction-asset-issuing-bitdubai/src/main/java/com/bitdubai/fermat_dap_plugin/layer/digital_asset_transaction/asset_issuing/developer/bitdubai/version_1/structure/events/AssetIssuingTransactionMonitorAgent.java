@@ -387,7 +387,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     if(eventType.equals(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER.getCode())){
                         if (isTransactionToBeNotified(CryptoStatus.PENDING_SUBMIT)){
                             genesisTransactionList=assetIssuingTransactionDao.getGenesisTransactionsByCryptoStatus(CryptoStatus.PENDING_SUBMIT);
-                            System.out.println("ASSET ISSUING found "+genesisTransactionList.size()+" genesis transactions in pending submit");
+                            System.out.println("ASSET ISSUING found " + genesisTransactionList.size() + " genesis transactions in pending submit");
                             for(String genesisTransaction: genesisTransactionList){
                                 System.out.println("ASSET ISSUING checking status On Crypto Network genesis transaction: "+genesisTransaction);
                                 CryptoTransaction cryptoGenesisTransaction=getCryptoTransactionByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK, genesisTransaction);
@@ -402,7 +402,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                                 assetIssuingTransactionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
 
                             }
-                            assetIssuingTransactionDao.updateEventStatus(eventId);
+
                         }
                     }
                     if(eventType.equals(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER.getCode())){
@@ -436,6 +436,9 @@ public class AssetIssuingTransactionMonitorAgent implements Agent,DealsWithLogge
                     if(eventType.equals(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER)){
                         //TODO: to handle
                     }
+
+                    assetIssuingTransactionDao.updateEventStatus(eventId);
+
                 }
             }
 
