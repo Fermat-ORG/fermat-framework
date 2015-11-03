@@ -168,7 +168,10 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 
          walletContactRecords = new ArrayList<>();
         try {
-            walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
+            walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getWalletSessionType().getWalletPublicKey(),referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
+
+          //  cryptoWallet.deleteWalletContact(walletContactRecords.get(0).getContactId());
+
         }
         catch (CantGetAllWalletContactsException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

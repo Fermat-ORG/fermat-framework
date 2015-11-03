@@ -331,11 +331,15 @@ public class SendFragment extends FermatWalletFragment {
     private List<WalletContact> getWalletContactList() {
         List<WalletContact> contacts = new ArrayList<>();
         try {
-            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listWalletContacts(walletPublicKey);
+            List<CryptoWalletWalletContact> walletContactRecords = cryptoWallet.listWalletContacts(walletPublicKey,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
             for (CryptoWalletWalletContact wcr : walletContactRecords) {
                 contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), wcr.getReceivedCryptoAddress().get(0).getAddress(),wcr.isConnection(),wcr.getProfilePicture()));
             }
         } catch (CantGetAllWalletContactsException e) {
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
+        }
+        catch (Exception e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
         }

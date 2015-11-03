@@ -239,7 +239,7 @@ public class CryptoWalletWalletModuleManager implements
     }
 
     @Override
-    public List<CryptoWalletWalletContact> listWalletContacts(String walletPublicKey) throws CantGetAllWalletContactsException {
+    public List<CryptoWalletWalletContact> listWalletContacts(String walletPublicKey,String intraUserLoggedInPublicKey) throws CantGetAllWalletContactsException {
         try {
 
 
@@ -248,7 +248,7 @@ public class CryptoWalletWalletModuleManager implements
             WalletContactsSearch walletContactsSearch = walletContactsRegistry.searchWalletContact(walletPublicKey);
             for(WalletContactRecord r : walletContactsSearch.getResult()){
 
-                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(),r.getWalletPublicKey());
+                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(),intraUserLoggedInPublicKey);
 
                 finalRecordList.add(new CryptoWalletWalletModuleWalletContact(r, image));
             }
