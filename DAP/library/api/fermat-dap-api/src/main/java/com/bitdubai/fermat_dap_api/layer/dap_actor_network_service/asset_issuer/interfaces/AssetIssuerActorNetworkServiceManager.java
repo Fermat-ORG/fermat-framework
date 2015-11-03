@@ -4,7 +4,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRequestListActorAssetIssuerRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantSendMessageException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.RequestedListNotReadyRecevivedException;
 
 import java.util.List;
 
@@ -43,6 +42,6 @@ public interface AssetIssuerActorNetworkServiceManager {
      *
      * @return List<ActorAssetUser>
      */
-    public List<ActorAssetIssuer> getListActorAssetIssuerRegistered() throws RequestedListNotReadyRecevivedException;
+    public List<ActorAssetIssuer> getListActorAssetIssuerRegistered() throws CantRequestListActorAssetIssuerRegisteredException;
 
 }

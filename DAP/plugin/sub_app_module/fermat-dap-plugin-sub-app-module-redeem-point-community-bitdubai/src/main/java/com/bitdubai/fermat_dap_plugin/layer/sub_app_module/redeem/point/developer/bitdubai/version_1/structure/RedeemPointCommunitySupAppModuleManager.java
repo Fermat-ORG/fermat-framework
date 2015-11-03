@@ -20,6 +20,6 @@ public class RedeemPointCommunitySupAppModuleManager {
     }
 
     public List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointRegistered() throws CantGetAssetRedeemPointActorsException, CantAssetRedeemPointActorNotFoundException {
-        return actorAssetRedeemPointManager.getAllAssetRedeemPointActorRegistered();
+        return actorAssetRedeemPointManager.getAllAssetRedeemPointActorInTableRegistered();
     }
 }

@@ -30,7 +30,7 @@ public class ConstructionTest {
     private AndroidPluginTextFile testTextFile;
 
     private UUID testId;
-    private Context testContext;
+    private String testContext;
     private String testDirectory;
     private String testFileName;
     private FilePrivacy testPrivacyLevel;
@@ -40,7 +40,8 @@ public class ConstructionTest {
     public void setUpValues(){
         testId = UUID.randomUUID();
         Activity mockActivity = Robolectric.setupActivity(Activity.class);
-        testContext = shadowOf(mockActivity).getApplicationContext();
+        testContext = shadowOf(mockActivity).getApplicationContext().getFilesDir().getPath();
+
         testDirectory = "ROBOLECTRICTEST";
         testFileName = "TESTFILE.txt";
         testPrivacyLevel = FilePrivacy.PUBLIC;
@@ -57,7 +58,6 @@ public class ConstructionTest {
     public void Constructor_ValidValues_ValuesCanBeGet() {
         testTextFile = new AndroidPluginTextFile(testId, testContext, testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         assertThat(testTextFile.getOwnerId()).isEqualTo(testId);
-        assertThat(testTextFile.getContext()).isEqualTo(testContext);
         assertThat(testTextFile.getDirectoryName()).isEqualTo(testDirectory);
         assertThat(testTextFile.getFileName()).isEqualTo(testFileName);
         assertThat(testTextFile.getPrivacyLevel()).isEqualTo(testPrivacyLevel);

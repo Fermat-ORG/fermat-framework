@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -26,7 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.TransactionTypes;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.CryptoVaults;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCryptoNetworkDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData;
@@ -665,7 +664,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @return
      * @throws CantExecuteDatabaseOperationException
      */
-    public Set<String> getStoredStransactionsHash () throws CantExecuteDatabaseOperationException{
+    public Set<String> getStoredTransactionHash () throws CantExecuteDatabaseOperationException{
         Set<String> transactionsSet = new HashSet<>();
 
         /**
@@ -770,5 +769,16 @@ public class BitcoinCryptoNetworkDatabaseDao {
     private void throwLoadToMemoryException(Exception e, String tableName) throws CantExecuteDatabaseOperationException{
         String outputMessage = "There was an error loading into memory table " + tableName + ".";
         throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, outputMessage, "Database error.");
+    }
+
+    /**
+     * Will set the passed protocol status to the given transaction. If the transaction doesn't exists
+     * I will throw an error
+     * @param transactionId     the internal transactionId
+     * @param protocolStatus    the new protocol status to update
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public void setTransactionProtocolStatus(UUID transactionId, ProtocolStatus protocolStatus) throws CantExecuteDatabaseOperationException{
+
     }
 }
