@@ -17,14 +17,13 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.N
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.exceptions.CantLoadKeyPairException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 
 import java.util.regex.Pattern;
 
@@ -118,6 +117,12 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         try {
             loadKeyPair();
 
+            System.out.println("***************** public y private key cargando" + getPluginVersionReference());
+            System.out.println(identity);
+            System.out.println(identity.getPublicKey());
+            System.out.println(identity.getPrivateKey());
+            System.out.println("***************** public y private key finshing cargeishon"+getPluginVersionReference());
+
             startNetworkService();
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantLoadKeyPairException e) {
@@ -129,58 +134,69 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
     public abstract void initializeCommunicationNetworkServiceConnectionManager();
 
+
+    private static final String PLUGIN_IDS_DIRECTORY_NAME = "Platform"  ;
+    private static final String PLUGIN_IDS_FILE_NAME      = "walletsIds" ;
+    private static final String PAIR_SEPARATOR            = ";"         ;
+
     private void loadKeyPair() throws CantLoadKeyPairException {
 
-        final String PLUGIN_IDS_DIRECTORY_NAME = "security";
-        final String PLUGIN_IDS_FILE_NAME      = "keyPair";
-        final String PAIR_SEPARATOR            = "|";
-
-        this.identity = new ECCKeyPair();
-
         try {
-            try {
+            final PluginTextFile identityFile = getNetworkServiceIdentityFile();
 
-                PluginTextFile identityFile = pluginFileSystem.getTextFile(
-                        pluginId,
-                        PLUGIN_IDS_DIRECTORY_NAME,
-                        PLUGIN_IDS_FILE_NAME,
-                        FilePrivacy.PRIVATE,
-                        FileLifeSpan.PERMANENT
-                );
+            final String identityFileContent = identityFile.getContent();
 
-                final String identityKeyPairString = identityFile.getContent();
-                final String[] identityKeyPairSplit = identityKeyPairString.split(Pattern.quote(PAIR_SEPARATOR));
+            if (identityFileContent != null && !identityFileContent.equals("")) {
+
+                final String[] identityKeyPairSplit = identityFileContent.split(PAIR_SEPARATOR);
 
                 if (identityKeyPairSplit.length == 2)
                     this.identity = new ECCKeyPair(identityKeyPairSplit[0], identityKeyPairSplit[1]);
                 else
-                    throw new CantLoadKeyPairException("identityKeyPairSplit: "+identityKeyPairString, "ErrorTrying to load the key pair, the string is not valid.");
+                    throw new CantLoadKeyPairException("identityKeyPairSplit: " + identityFileContent, "ErrorTrying to load the key pair, the string is not valid.");
+            } else {
+                try {
 
-            } catch(final CantCreateFileException e) {
+                    final ECCKeyPair eccKeyPair = new ECCKeyPair();
 
-                throw new CantLoadKeyPairException(e, "", "Problem with network service identity file.");
+                    String fileContent = eccKeyPair.getPrivateKey() + PAIR_SEPARATOR + eccKeyPair.getPublicKey();
+
+                    identityFile.setContent(fileContent);
+                    identityFile.persistToMedia();
+
+                    this.identity = eccKeyPair;
+
+                } catch (final CantPersistFileException e) {
+
+                    throw new CantLoadKeyPairException(e, "", "Problem with network service identity file.");
+                }
             }
-        } catch (final FileNotFoundException fileNotFoundException) {
+        } catch (CantCreateFileException e) {
+
+            throw new CantLoadKeyPairException(e, "", "Cant create ns identity file exception.");
+        } catch( FileNotFoundException e) {
 
             try {
+                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, PLUGIN_IDS_DIRECTORY_NAME, PLUGIN_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                this.identity = new ECCKeyPair();
+                savePluginIdsFile(pluginTextFile);
 
-                final ECCKeyPair eccKeyPair = new ECCKeyPair();
-
-                final PluginTextFile platformTextFile = pluginFileSystem.createTextFile(pluginId, PLUGIN_IDS_DIRECTORY_NAME, PLUGIN_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-
-                String fileContent = eccKeyPair.getPrivateKey() + PAIR_SEPARATOR + eccKeyPair.getPublicKey();
-
-                platformTextFile.setContent(fileContent);
-                platformTextFile.persistToMedia();
-
-                this.identity = eccKeyPair;
-
-            } catch (final CantCreateFileException  |
-                    CantPersistFileException e) {
-
-                throw new CantLoadKeyPairException(e, "", "Problem with network service identity file.");
+            } catch (CantCreateFileException | CantPersistFileException z) {
+                throw new CantLoadKeyPairException(z, "", "I don't know really what happened.");
             }
         }
+    }
+
+    private PluginTextFile getNetworkServiceIdentityFile() throws CantCreateFileException, FileNotFoundException {
+
+        return pluginFileSystem.getTextFile(pluginId, PLUGIN_IDS_DIRECTORY_NAME, PLUGIN_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+    }
+
+    private void savePluginIdsFile(PluginTextFile pluginTextFile) throws CantCreateFileException, CantPersistFileException {
+        String fileContent = this.identity.getPrivateKey() + PAIR_SEPARATOR + this.identity.getPublicKey();
+
+        pluginTextFile.setContent(fileContent);
+        pluginTextFile.persistToMedia();
     }
 
 // todo delete
