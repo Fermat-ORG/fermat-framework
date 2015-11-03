@@ -4,7 +4,7 @@ Contributing to Fermat
 ------------------------
 
 <br>
-### Fermat Development Environment Installation and Configuration - Linux
+### Fermat Development Environment Installation and Configuration - Linux - Preferably ubuntu
 
 You are going to need the following tools in order to develop in Fermat
 
@@ -14,7 +14,7 @@ You are going to need the following tools in order to develop in Fermat
 * **Android SDK Tools**
 * **Android Development Studio or IntelliJ IDEA**
 
-Although there are many ways to configure these tools, we'll provide you with a recommended configuration for your development environment
+Although there are many ways to configure these tools, we'll provide you with a recommended configuration for your development environment.
 
 <br>
 ### Installing Git
