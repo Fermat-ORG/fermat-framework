@@ -72,6 +72,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanne
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.custom_anim.Fx;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigationDrawer.NavigationDrawerArrayAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.CreateContactFragmentDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -185,6 +186,19 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
         start = new AtomicBoolean(false);
 
+
+//        List<String> list = new ArrayList<>();
+//
+//        list.add("Mauri");
+//
+//        list.add("Mati");
+//
+//        list.add("juan");
+//
+//        list.add("juan");
+//
+//        getPaintActivtyFeactures().changeNavigationDrawerAdapter(new NavigationDrawerArrayAdapter(getActivity(),list));
+
         try {
             cryptoWallet = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
 
@@ -257,7 +271,8 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                     try
                     {
                         if(walletContact.isConnection)
-                            cryptoWallet.convertConnectionToContact(walletContact.name,
+                            cryptoWallet.convertConnectionToContact(
+                                    walletContact.name,
                                     Actors.INTRA_USER,
                                     walletContact.actorPublicKey,
                                     new byte[0],

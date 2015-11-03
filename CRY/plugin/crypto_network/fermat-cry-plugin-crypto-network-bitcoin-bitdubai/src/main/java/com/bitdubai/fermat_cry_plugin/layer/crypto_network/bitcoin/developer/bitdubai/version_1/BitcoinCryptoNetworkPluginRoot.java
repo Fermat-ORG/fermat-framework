@@ -4,10 +4,18 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
@@ -49,7 +57,27 @@ import java.util.regex.Pattern;
  * * * * * * * *
  */
 
-public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManager, DealsWithErrors, DealsWithPluginFileSystem, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
+        BitcoinCryptoNetworkManager,
+        DealsWithErrors,
+        DealsWithPluginFileSystem,
+        DealsWithLogger,
+        LogManagerForDevelopers {
+
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.PLUGIN_FILE_SYSTEM    )
+    private PluginFileSystem pluginFileSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.LOG_MANAGER           )
+    private LogManager logManager;
+
+
+    public BitcoinCryptoNetworkPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
 
     /**
      * BitcoinCryptoNetworkManager interface member variables
@@ -57,20 +85,8 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
     CryptoVault cryptoVault;
     BitcoinCryptoNetworkMonitoringAgent bitcoinCryptoNetworkMonitoringAgent;
 
-    /**
-     * DealsWithErrors interface member variables
-     */
-    ErrorManager errorManager;
 
-    /**
-     * DealsWithPluginIdentity interface member variable
-     */
-    UUID pluginId;
 
-    /**
-     * DealsWithLogManager interface member variable
-     */
-    LogManager logManager;
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
 
@@ -112,17 +128,6 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
     }
 
     /**
-     * DealswithPluginFileSystem interface member variable
-     */
-    PluginFileSystem pluginFileSystem;
-
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
-
-    /**
      * DealsWithError interface implementation
      *
      * @param errorManager
@@ -158,36 +163,6 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
-    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }
-
-    /**
-     * Plugin interface implementation
-     *
-     * @param uuid
-     */
-    @Override
-    public void setId(UUID uuid) {
-        this.pluginId = uuid;
     }
 
     @Override

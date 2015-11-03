@@ -613,7 +613,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                 /*
                  * ask to the communication cloud client to register
                  */
-                communicationsClientConnection.registerComponentForCommunication(platformComponentProfileAssetUser);
+                communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfileAssetUser);
 
             }else {
                 System.out.println("Actor Asset User en A.N.S USER CONTRUCCION de Profile");
@@ -1079,7 +1079,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
                      * ask to the communication cloud client to register
                      */
                     try {
-                        communicationsClientConnection.registerComponentForCommunication(platformComponentProfileAssetUser);
+                        communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfileAssetUser);
                     } catch (CantRegisterComponentException e) {
                         e.printStackTrace();
                     }

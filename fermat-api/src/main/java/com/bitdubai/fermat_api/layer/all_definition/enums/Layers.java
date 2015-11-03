@@ -17,6 +17,10 @@ public enum Layers implements FermatEnum {
     ANDROID         ("AND"),
     BASIC_WALLET    ("BSW"),
     COMMUNICATION   ("COM"),
+    CRYPTO_MODULE   ("CRM"),
+    CRYPTO_NETWORK  ("CRN"),
+    CRYPTO_ROUTER   ("CRR"),
+    CRYPTO_VAULT    ("CRV"),
     DEFINITION      ("DEF"),
     ENGINE          ("ENG"),
     HARDWARE        ("HAR"),
@@ -27,6 +31,7 @@ public enum Layers implements FermatEnum {
     REQUEST         ("REQ"),
     SUB_APP_MODULE  ("SAM"),
     TRANSACTION     ("TRA"),
+    USER            ("USR"),
     WALLET_MODULE   ("WAM"),
     WORLD           ("WRL"),
     ;
@@ -39,26 +44,31 @@ public enum Layers implements FermatEnum {
 
     public static Layers getByCode(String code) throws InvalidParameterException {
 
-            switch (code) {
+        switch (code) {
 
-                case "ACT":  return ACTOR;
-                case "AND":  return ANDROID;
-                case "BSW":  return BASIC_WALLET;
-                case "COM":  return COMMUNICATION;
-                case "DEF":  return DEFINITION;
-                case "ENG":  return ENGINE;
-                case "HAR":  return HARDWARE;
-                case "IDT":  return IDENTITY;
-                case "MID":  return MIDDLEWARE;
-                case "NTS":  return NETWORK_SERVICE;
-                case "PMS":  return PLATFORM_SERVICE;
-                case "REQ":  return REQUEST;
-                case "SAM":  return SUB_APP_MODULE;
-                case "TRA":  return TRANSACTION;
-                case "WAM":  return WALLET_MODULE;
-                case "WRL":  return WORLD;
+            case "ACT":  return ACTOR;
+            case "AND":  return ANDROID;
+            case "BSW":  return BASIC_WALLET;
+            case "COM":  return COMMUNICATION;
+            case "CRM":  return CRYPTO_MODULE;
+            case "CRN":  return CRYPTO_NETWORK;
+            case "CRR":  return CRYPTO_ROUTER;
+            case "CRV":  return CRYPTO_VAULT;
+            case "DEF":  return DEFINITION;
+            case "ENG":  return ENGINE;
+            case "HAR":  return HARDWARE;
+            case "IDT":  return IDENTITY;
+            case "MID":  return MIDDLEWARE;
+            case "NTS":  return NETWORK_SERVICE;
+            case "PMS":  return PLATFORM_SERVICE;
+            case "REQ":  return REQUEST;
+            case "SAM":  return SUB_APP_MODULE;
+            case "TRA":  return TRANSACTION;
+            case "USR":  return USER;
+            case "WAM":  return WALLET_MODULE;
+            case "WRL":  return WORLD;
 
-                default:
+            default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,
                         "The received code is not valid for the Layers enum"

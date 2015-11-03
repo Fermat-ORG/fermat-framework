@@ -44,8 +44,8 @@ public class CryptoAddressRequestedEventHandler implements FermatEventHandler {
             if (fermatEvent instanceof CryptoAddressRequestedEvent) {
                 CryptoAddressRequestedEvent cryptoAddressRequestedEvent = (CryptoAddressRequestedEvent) fermatEvent;
 
-                if (cryptoAddressRequestedEvent.getActorType().equals(Actors.INTRA_USER))
-                    cryptoAddressGenerationService.handleCryptoAddressRequestedEvent(cryptoAddressRequestedEvent.getRequestId());
+                //if (cryptoAddressRequestedEvent.getActorType().equals(Actors.INTRA_USER))
+                    //cryptoAddressGenerationService.handleCryptoAddressRequestedEvent(cryptoAddressRequestedEvent.getRequestId());
 
             } else {
                 EventType eventExpected = EventType.CRYPTO_ADDRESS_REQUESTED;

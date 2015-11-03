@@ -11,14 +11,19 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantListSaleNegotianionsException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.exceptions.CantUpdateCustomerBrokerSaleException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleNegotiationDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleNegotiationDaoException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
@@ -120,69 +125,149 @@ public class CustomerBrokerSaleNegotiationPluginRoot implements CustomerBrokerSa
     }
 
     @Override
-    public CustomerBrokerSaleNegotiation createNegotiation(String publicKeyCustomer, String publicKeyBroker, Collection<Clause> clauses) throws CantCreateCustomerBrokerSaleNegotiationException {
-        return null;
+    public CustomerBrokerSaleNegotiation createNegotiation(String publicKeyCustomer, String publicKeyBroker) throws CantCreateCustomerBrokerSaleNegotiationException {
+        return customerBrokerSaleNegotiationDao.createCustomerBrokerSaleNegotiation(publicKeyCustomer, publicKeyBroker);
     }
 
     @Override
-    public void cancelNegotiation(CustomerBrokerSaleNegotiation negotiation) {
-        
+    public void cancelNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+        try {
+            customerBrokerSaleNegotiationDao.cancelNegotiation(negotiation);
+        } catch (CantUpdateCustomerBrokerSaleException e) {
+            throw new CantUpdateCustomerBrokerSaleException(CantUpdateCustomerBrokerSaleException.DEFAULT_MESSAGE, e, "", "");
+        }
     }
 
     @Override
-    public void closeNegotiation(CustomerBrokerSaleNegotiation negotiation) {
+    public void closeNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+        try {
 
+            if(verifyStatusClause(customerBrokerSaleNegotiationDao.getClauses(negotiation.getNegotiationId()))){
+                customerBrokerSaleNegotiationDao.closeNegotiation(negotiation);
+            }else{
+                throw new CantUpdateCustomerBrokerSaleException();
+            }
+
+        } catch (CantGetListClauseException e) {
+            throw new CantUpdateCustomerBrokerSaleException(CantUpdateCustomerBrokerSaleException.DEFAULT_MESSAGE, e, "", "");
+        } catch (CantUpdateCustomerBrokerSaleException e){
+            throw new CantUpdateCustomerBrokerSaleException(CantUpdateCustomerBrokerSaleException.DEFAULT_MESSAGE, e, "", "");
+        }
+    }
+
+    private boolean verifyStatusClause(Collection<Clause> clausules) throws CantUpdateCustomerBrokerSaleException {
+        Map<ClauseType, String> clausesAgreed = new HashMap<ClauseType, String>();
+
+        for(Clause clause : clausules) {
+            if(clause.getStatus() == ClauseStatus.AGREED){
+                clausesAgreed.put(clause.getType(), clause.getValue());
+            }
+        }
+
+        if(
+                ( !clausesAgreed.containsKey(ClauseType.BROKER_CURRENCY) ) &&
+                ( !clausesAgreed.containsKey(ClauseType.EXCHANGE_RATE) ) &&
+                ( !clausesAgreed.containsKey(ClauseType.BROKER_CURRENCY_QUANTITY) ) &&
+                ( !clausesAgreed.containsKey(ClauseType.BROKER_PAYMENT_METHOD) )
+        ){
+            return false;
+        }
+
+        if( clausesAgreed.containsValue(CurrencyType.CRYPTO_MONEY.getCode()) ){
+            if( !clausesAgreed.containsKey(ClauseType.BROKER_CRYPTO_ADDRESS) ){
+                return false;
+            }
+        }
+
+        if( clausesAgreed.containsValue(CurrencyType.BANK_MONEY.getCode()) ){
+            if(
+                    ( !clausesAgreed.containsKey(ClauseType.BROKER_BANK) ) &&
+                    ( !clausesAgreed.containsKey(ClauseType.BROKER_BANK_ACCOUNT) )
+            ){
+                return false;
+            }
+        }
+
+        if( clausesAgreed.containsValue(CurrencyType.CASH_ON_HAND_MONEY.getCode()) ){
+            if(
+                    ( !clausesAgreed.containsKey(ClauseType.PLACE_TO_MEET) ) &&
+                    ( !clausesAgreed.containsKey(ClauseType.DATE_TIME_TO_MEET) )
+             ){
+                return false;
+            }
+        }
+
+        if( clausesAgreed.containsValue(CurrencyType.CASH_DELIVERY_MONEY.getCode()) ){
+            if(
+                    ( !clausesAgreed.containsKey(ClauseType.BROKER_PLACE_TO_DELIVER) ) &&
+                    ( !clausesAgreed.containsKey(ClauseType.BROKER_DATE_TIME_TO_DELIVER) )
+            ){
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override
-    public Collection<CustomerBrokerSaleNegotiation> getNegotiations() throws CantListSaleNegotianionsException {
+    public CustomerBrokerSaleNegotiation sendToCustomer(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+        return customerBrokerSaleNegotiationDao.sendToCustomer(negotiation);
+    }
+
+    @Override
+    public CustomerBrokerSaleNegotiation waitForCustomer(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+        return customerBrokerSaleNegotiationDao.waitForCustomer(negotiation);
+    }
+
+    @Override
+    public Collection<CustomerBrokerSaleNegotiation> getNegotiations() throws CantGetListSaleNegotiationsException {
         try {
             Collection<CustomerBrokerSaleNegotiation> negotiations = new ArrayList<CustomerBrokerSaleNegotiation>();
             negotiations = customerBrokerSaleNegotiationDao.getNegotiations();
             return negotiations;
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantListSaleNegotianionsException(CantListSaleNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantGetListSaleNegotiationsException(CantGetListSaleNegotiationsException.DEFAULT_MESSAGE, e, "", "");
         } catch (InvalidParameterException e) {
-            throw new CantListSaleNegotianionsException(CantListSaleNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantGetListSaleNegotiationsException(CantGetListSaleNegotiationsException.DEFAULT_MESSAGE, e, "", "");
         }
     }
 
     @Override
-    public Collection<CustomerBrokerSaleNegotiation> getNegotiations(NegotiationStatus status) throws CantListSaleNegotianionsException {
+    public Collection<CustomerBrokerSaleNegotiation> getNegotiations(NegotiationStatus status) throws CantGetListSaleNegotiationsException {
         try {
             Collection<CustomerBrokerSaleNegotiation> negotiations = new ArrayList<CustomerBrokerSaleNegotiation>();
             negotiations = customerBrokerSaleNegotiationDao.getNegotiations(status);
             return negotiations;
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantListSaleNegotianionsException(CantListSaleNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantGetListSaleNegotiationsException(CantGetListSaleNegotiationsException.DEFAULT_MESSAGE, e, "", "");
         } catch (InvalidParameterException e) {
-            throw new CantListSaleNegotianionsException(CantListSaleNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantGetListSaleNegotiationsException(CantGetListSaleNegotiationsException.DEFAULT_MESSAGE, e, "", "");
         }
     }
 
     @Override
-    public Collection<CustomerBrokerSaleNegotiation> getNegotiationsByCustomer(ActorIdentity customer) throws CantListSaleNegotianionsException {
+    public Collection<CustomerBrokerSaleNegotiation> getNegotiationsByCustomer(ActorIdentity customer) throws CantGetListSaleNegotiationsException {
         try {
             Collection<CustomerBrokerSaleNegotiation> negotiations = new ArrayList<CustomerBrokerSaleNegotiation>();
             negotiations = customerBrokerSaleNegotiationDao.getNegotiationsByCustomer(customer);
             return negotiations;
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantListSaleNegotianionsException(CantListSaleNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantGetListSaleNegotiationsException(CantGetListSaleNegotiationsException.DEFAULT_MESSAGE, e, "", "");
         } catch (InvalidParameterException e) {
-            throw new CantListSaleNegotianionsException(CantListSaleNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantGetListSaleNegotiationsException(CantGetListSaleNegotiationsException.DEFAULT_MESSAGE, e, "", "");
         }
     }
 
     @Override
-    public Collection<CustomerBrokerSaleNegotiation> getNegotiationsByBroker(ActorIdentity broker) throws CantListSaleNegotianionsException {
+    public Collection<CustomerBrokerSaleNegotiation> getNegotiationsByBroker(ActorIdentity broker) throws CantGetListSaleNegotiationsException {
         try {
             Collection<CustomerBrokerSaleNegotiation> negotiations = new ArrayList<CustomerBrokerSaleNegotiation>();
             negotiations = customerBrokerSaleNegotiationDao.getNegotiationsByBroker(broker);
             return negotiations;
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantListSaleNegotianionsException(CantListSaleNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantGetListSaleNegotiationsException(CantGetListSaleNegotiationsException.DEFAULT_MESSAGE, e, "", "");
         } catch (InvalidParameterException e) {
-            throw new CantListSaleNegotianionsException(CantListSaleNegotianionsException.DEFAULT_MESSAGE, e, "", "");
+            throw new CantGetListSaleNegotiationsException(CantGetListSaleNegotiationsException.DEFAULT_MESSAGE, e, "", "");
         }
     }
 }
