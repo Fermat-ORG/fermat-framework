@@ -28,6 +28,8 @@ Each Plug-in has a Developer Class. The reason is that there might be more than 
 
 In this way this class is able to choose which version of the Plug-in to run, and if it detects that a data migration must be done from version 1 to version 2, it coordinates that process too.
 
+An extra purpose of this class is related to the licensing Developers declares for their Plug-in. 
+
 <br>
 #### Plug-in Root Class
 
@@ -302,13 +304,15 @@ There is no limit regarding the interfaces a Plug-in may have. Having said that,
 
 Currently there are two types of implementations for this class:
 
-**version 1** : It just instantiates the Plug-in Root and returns it to the Framework.
+a. **version 1** : It just instantiates the Plug-in Root and returns it to the Framework.
 
-**version 2** : It registers each version of the Plugin root into the Framework.
+b. **version 2** : It registers each version of the Plugin root into the Framework.
 
 To be able to use **version 2** you must verify if the Platform your Plug-in belongs to already have it's own speciallized core-api or instead it is started by the Framework wide Fermat-core library.
 
 ##### Code Samples
+
+Note in the following samples that the information regarding the licensing of the Plug-in is hard-coded and always the same. This is because the licensing infraestructure it is not yet in place.
 
 **version 1**
 
@@ -364,7 +368,66 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
 
 ```
 
+**version 2**
 
+```bash
+
+package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai;
+
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
+import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
+import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.BitcoinWalletBasicWalletPluginRoot;
+
+/**
+ * Created by loui on 30/04/15.
+ * Modified by lnacosta (laion.cj91@gmail.com) on 23/10/2015.
+ */
+public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
+
+    public DeveloperBitDubai () {
+        super(new PluginDeveloperReference(Developers.BITDUBAI));
+    }
+
+    @Override
+    public void start() throws CantStartPluginDeveloperException {
+        try {
+
+            this.registerVersion(new BitcoinWalletBasicWalletPluginRoot());
+
+        } catch (CantRegisterVersionException e) {
+
+            throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
+        }
+    }
+
+    @Override
+    public int getAmountToPay() {
+        return 100;
+    }
+
+    @Override
+    public CryptoCurrency getCryptoCurrency() {
+        return CryptoCurrency.BITCOIN;
+    }
+
+    @Override
+    public String getAddress() {
+        return "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv";
+    }
+
+    @Override
+    public TimeFrequency getTimePeriod() {
+        return TimeFrequency.MONTHLY;
+    }
+}
+
+```
 
 <br>
 #### Plug-in Root
