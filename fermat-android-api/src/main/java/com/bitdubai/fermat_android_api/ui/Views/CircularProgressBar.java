@@ -15,7 +15,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
-
 import com.bitdubai.android_api.R;
 
 import java.util.List;
@@ -23,7 +22,7 @@ import java.util.List;
 
 public class CircularProgressBar extends View {
     private static final int BACKGROUND_COLOR = Color.LTGRAY;
-    private static float STROKE_WIDTH = 20.0f;
+    private static float STROKE_WIDTH = 15.0f;
     private RectF mCircleBounds = new RectF();
     private RectF mCircleProgressBounds = new RectF();
 
