@@ -984,7 +984,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      * Get is Register
      * @return boolean
      */
-    @Override
     public boolean isRegister() {
         return register;
     }

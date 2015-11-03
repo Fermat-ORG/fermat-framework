@@ -66,11 +66,6 @@ public class WalletCommunityNetworkServicePluginRoot implements Service, Network
      */
     UUID pluginId;
 
-    /**
-     * Represent the register
-     */
-    private boolean register;
-
 
 
     /**
@@ -194,13 +189,9 @@ public class WalletCommunityNetworkServicePluginRoot implements Service, Network
 
     }
 
-    /**
-     * Get is Register
-     * @return boolean
-     */
     @Override
     public boolean isRegister() {
-        return register;
+        return false;
     }
 
     /**

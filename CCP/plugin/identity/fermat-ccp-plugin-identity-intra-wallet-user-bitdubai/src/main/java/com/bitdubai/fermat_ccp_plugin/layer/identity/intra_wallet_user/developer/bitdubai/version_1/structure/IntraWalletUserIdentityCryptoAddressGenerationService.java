@@ -13,7 +13,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantAcceptAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantDenyAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantGetPendingAddressExchangeRequestException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressRequestEventException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantIdentifyVaultException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
@@ -56,7 +56,7 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
     public void handleCryptoAddressRequestedEvent(final UUID requestId) throws CantHandleCryptoAddressRequestEventException {
 
         try {
-            AddressExchangeRequest request = cryptoAddressesManager.getPendingRequest(requestId);
+            CryptoAddressRequest request = cryptoAddressesManager.getPendingRequest(requestId);
             handleCryptoAddressRequestedEvent(request);
         } catch (CantGetPendingAddressExchangeRequestException | PendingRequestNotFoundException e) {
 
@@ -64,7 +64,7 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
         }
     }
 
-    public void handleCryptoAddressRequestedEvent(final AddressExchangeRequest request) throws CantHandleCryptoAddressRequestEventException {
+    public void handleCryptoAddressRequestedEvent(final CryptoAddressRequest request) throws CantHandleCryptoAddressRequestEventException {
 
         try {
 

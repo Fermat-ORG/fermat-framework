@@ -59,11 +59,6 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
      */
     UUID pluginId;
 
-    /**
-     * Represent the register
-     */
-    private boolean register;
-
 
     /**
      * Service Interface implementation.
@@ -177,13 +172,9 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
 
     }
 
-    /**
-     * Get is Register
-     * @return boolean
-     */
     @Override
     public boolean isRegister() {
-        return register;
+        return false;
     }
 
     /**

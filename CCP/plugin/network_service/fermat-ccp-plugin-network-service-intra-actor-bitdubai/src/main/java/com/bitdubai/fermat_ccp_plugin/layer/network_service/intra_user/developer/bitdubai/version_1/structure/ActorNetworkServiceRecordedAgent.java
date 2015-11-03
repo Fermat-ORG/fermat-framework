@@ -18,6 +18,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.C
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -52,17 +53,15 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
 
     private final CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
-    private final com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot actorNetworkServicePluginRoot;
+    private final IntraActorNetworkServicePluginRoot actorNetworkServicePluginRoot;
     private final ErrorManager errorManager                                ;
     private final EventManager eventManager                                ;
     private final WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager          ;
-    private PluginFileSystem pluginFileSystem;
 
     public ActorNetworkServiceRecordedAgent(final CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager,
-                                             final com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot ActorNetworkServicePluginRoot,
+                                             final IntraActorNetworkServicePluginRoot ActorNetworkServicePluginRoot,
                                              final ErrorManager                                 errorManager                                ,
                                              final EventManager                                 eventManager                                ,
-                                             final PluginFileSystem                             pluginFileSystem                            ,
                                              final WsCommunicationsCloudClientManager           wsCommunicationsCloudClientManager) {
 
         this.actorNetworkServicePluginRoot = ActorNetworkServicePluginRoot;
@@ -70,8 +69,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
         this.errorManager                                 = errorManager                                ;
         this.eventManager                                 = eventManager                                ;
         this.wsCommunicationsCloudClientManager           = wsCommunicationsCloudClientManager          ;
-        this.pluginFileSystem                             = pluginFileSystem                            ;
-
         this.status                                       = AgentStatus.CREATED                         ;
 
         waitingPlatformComponentProfile   = new HashMap<>();
@@ -201,21 +198,13 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     }
 
     public void processReceive(){
-
-
        try {
-
-            // process notifications
             List<ActorNetworkServiceRecord> lstActorRecord = actorNetworkServicePluginRoot.getIncomingNotificationsDao().listRequestsByProtocolStateAndType(
                     ActorProtocolState.PROCESSING_RECEIVE
             );
-
-
             for(ActorNetworkServiceRecord cpr : lstActorRecord) {
                 switch (cpr.getNotificationDescriptor()) {
-
                     case ASKFORACCEPTANCE:
-
                         System.out.println("----------------------------\n" +
                                 "MENSAJE PROCESANDOSE:" + cpr
                                 + "\n-------------------------------------------------");
@@ -223,9 +212,7 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         lauchNotification();
 
                         try {
-
                             actorNetworkServicePluginRoot.getIncomingNotificationsDao().changeProtocolState(cpr.getId(),ActorProtocolState.PENDING_ACTION);
-
                         } catch (CantUpdateRecordDataBaseException e) {
                             e.printStackTrace();
                         } catch (CantUpdateRecordException e) {
@@ -233,7 +220,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         } catch (RequestNotFoundException e) {
                             e.printStackTrace();
                         }
-
 
 //                        Gson gson = new Gson();
 //
@@ -251,8 +237,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 //                        System.out.print("-----------------------\n" +
 //                                "ENVIANDO RESPUESTA !!!!! -----------------------\n" +
 //                                "-----------------------\n NOTIFICATION: " + cpr);
-
-
                         break;
                     case ACCEPTED:
 
@@ -275,18 +259,12 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         }
 
                         break;
-
-
                     case DISCONNECTED:
                     case RECEIVED:
-
                         sendMessageToActor(cpr);
 
-
                             //toWaitingResponse(cpr.getId(),actorNetworkServicePluginRoot.getIncomingNotificationsDao());
-
                         break;
-
                 }
             }
 
@@ -297,17 +275,11 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
     }
 
     private void sendMessageToActor(ActorNetworkServiceRecord actorNetworkServiceRecord) {
-
         try {
             if (!poolConnectionsWaitingForResponse.containsKey(actorNetworkServiceRecord.getActorDestinationPublicKey())) {
-
                 if (communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey()) == null) {
-
-
                     if (wsCommunicationsCloudClientManager != null) {
-
                         if (actorNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot() != null) {
-
 
                             PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
                                     .constructBasicPlatformComponentProfileFactory(
@@ -372,17 +344,13 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
 
                         actorNetworkServicePluginRoot.getOutgoingNotificationDao().changeProtocolState(actorNetworkServiceRecord.getId(), ActorProtocolState.SENT);
 
-
                     } catch (Exception e) {
 
                         reportUnexpectedError(FermatException.wrapException(e));
                     }
                 }
             }
-
-
         } catch (Exception z) {
-
             reportUnexpectedError(FermatException.wrapException(z));
         }
     }

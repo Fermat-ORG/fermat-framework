@@ -125,7 +125,7 @@ public interface IntraWalletUserManager {
      * @throws CantCreateIntraUserException
      */
 
-    Actor createActor(String walletPublicKey, String actorPublicKey, String actorName, byte[] photo) throws CantCreateIntraUserException;
+    Actor createActor(String walletPublicKey, String actorName, byte[] photo) throws CantCreateIntraUserException;
 
 
     /**

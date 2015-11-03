@@ -9,7 +9,6 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.holders.IntraUserInformationHolder;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -51,6 +50,45 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, IntraUse
                 options.inPurgeable = true;
                 Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length, options);
                 holder.thumbnail.setImageBitmap(bitmap);
+            } else {
+                    //holder.thumbnail.setImageResource(R.drawable.piper_profile_picture);
+                    switch (position) {
+                        case 0:
+                            holder.thumbnail.setImageResource(R.drawable.piper_profile_picture);
+                            break;
+                        case 1:
+                            holder.thumbnail.setImageResource(R.drawable.luis_profile_picture);
+                            break;
+                        case 2:
+                            holder.thumbnail.setImageResource(R.drawable.brant_profile_picture);
+                            break;
+                        case 3:
+                            holder.thumbnail.setImageResource(R.drawable.louis_profile_picture);
+                            break;
+                        case 4:
+                            holder.thumbnail.setImageResource(R.drawable.madaleine_profile_picture);
+                            break;
+                        case 5:
+                            holder.thumbnail.setImageResource(R.drawable.adrian_profile_picture);
+                            break;
+                        case 6:
+                            holder.thumbnail.setImageResource(R.drawable.deniz_profile_picture);
+                            break;
+                        case 7:
+                            holder.thumbnail.setImageResource(R.drawable.dea_profile_picture);
+                            break;
+                        case 8:
+                            holder.thumbnail.setImageResource(R.drawable.florence_profile_picture);
+                            break;
+                        case 9:
+                            holder.thumbnail.setImageResource(R.drawable.alexandra_profile_picture);
+                            break;
+                        default:
+                            holder.thumbnail.setImageResource(R.drawable.robert_profile_picture);
+                            break;
+                    }
+
+                
             }
         }
 

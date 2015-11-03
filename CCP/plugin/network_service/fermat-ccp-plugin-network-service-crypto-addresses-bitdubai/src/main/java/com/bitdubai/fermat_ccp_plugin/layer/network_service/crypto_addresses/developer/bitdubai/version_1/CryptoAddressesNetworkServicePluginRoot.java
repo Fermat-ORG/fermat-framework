@@ -3,11 +3,20 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.de
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -38,9 +47,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantDenyAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantGetPendingAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantSendAddressExchangeRequestException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingAddressExchangeRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -97,6 +104,30 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         NetworkService,
         DatabaseManagerForDevelopers {
 
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private EventManager eventManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION         , plugin = Plugins.CLOUD_CLIENT)
+    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
+
+    private List<FermatEventListener> listenersAdded;
+
+    /**
+     *  Represent the remoteNetworkServicesRegisteredList
+     */
+    private CopyOnWriteArrayList<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
+
+    /**
+     * Represent the cryptoPaymentRequestNetworkServiceConnectionManager
+     */
+    private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
+
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
@@ -117,36 +148,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
             return new ArrayList<>();
         }
     }
-    /**
-     * DealWithEvents Interface member variables.
-     */
-    private ErrorManager errorManager;
-
-    /**
-     * DealWithEvents Interface member variables.
-     */
-    private EventManager eventManager;
-    private List<FermatEventListener> listenersAdded;
-
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * Represent the wsCommunicationsCloudClientManager
-     */
-    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
-
-    /**
-     *  Represent the remoteNetworkServicesRegisteredList
-     */
-    private CopyOnWriteArrayList<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
-
-    /**
-     * Represent the cryptoPaymentRequestNetworkServiceConnectionManager
-     */
-    private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
 
     /**
      * Represent the dataBase
@@ -299,6 +300,14 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
+
+        /**
+         * new message
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
     }
 
 
@@ -420,6 +429,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                                            final Actors                identityTypeResponding     ,
                                            final String                identityPublicKeyRequesting,
                                            final String                identityPublicKeyResponding,
+                                           final CryptoAddressDealers  dealer                     ,
                                            final BlockchainNetworkType blockchainNetworkType      ) throws CantSendAddressExchangeRequestException {
 
         try {
@@ -433,16 +443,17 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
             RequestAction action = RequestAction.REQUEST        ;
 
             cryptoAddressesNetworkServiceDao.createAddressExchangeRequest(
-                    newId,
-                    walletPublicKey,
-                    cryptoCurrency,
-                    identityTypeRequesting,
-                    identityTypeResponding,
+                    newId                      ,
+                    walletPublicKey            ,
+                    cryptoCurrency             ,
+                    identityTypeRequesting     ,
+                    identityTypeResponding     ,
                     identityPublicKeyRequesting,
                     identityPublicKeyResponding,
-                    state,
-                    type,
-                    action,
+                    state                      ,
+                    type                       ,
+                    action                     ,
+                    dealer                     ,
                     blockchainNetworkType
             );
 
@@ -495,28 +506,54 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      *
      * @param actorType  type of actor asking for pending requests
      *
-     * @throws CantListPendingAddressExchangeRequestsException      if something goes wrong.
+     * @throws CantListPendingCryptoAddressRequestsException      if something goes wrong.
      */
     @Override
-    public List<AddressExchangeRequest> listPendingRequests(Actors actorType) throws CantListPendingAddressExchangeRequestsException {
+    public List<CryptoAddressRequest> listPendingCryptoAddressRequests(Actors actorType) throws CantListPendingCryptoAddressRequestsException {
 
         try {
 
             return cryptoAddressesNetworkServiceDao.listPendingRequestsByActorType(actorType);
 
-        } catch (CantListPendingAddressExchangeRequestsException e){
+        } catch (CantListPendingCryptoAddressRequestsException e){
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (Exception e){
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantListPendingAddressExchangeRequestsException(FermatException.wrapException(e), null, "Unhandled Exception.");
+            throw new CantListPendingCryptoAddressRequestsException(FermatException.wrapException(e), null, "Unhandled Exception.");
         }
     }
 
+    /**
+     * we'll return to the crypto addresses all the pending requests pending a local action.
+     * State : PENDING_ACTION.
+     * Action: REQUEST.
+     *
+     * @throws CantListPendingCryptoAddressRequestsException      if something goes wrong.
+     */
     @Override
-    public AddressExchangeRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException,
+    public List<CryptoAddressRequest> listPendingCryptoAddressRequests() throws CantListPendingCryptoAddressRequestsException {
+
+        try {
+
+            return cryptoAddressesNetworkServiceDao.listPendingRequestsByProtocolStateAndAction(ProtocolState.PENDING_ACTION, RequestAction.REQUEST);
+
+        } catch (CantListPendingCryptoAddressRequestsException e){
+
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListPendingCryptoAddressRequestsException(FermatException.wrapException(e), null, "Unhandled Exception.");
+        }
+    }
+
+
+    @Override
+    public CryptoAddressRequest getPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException,
                                                                            PendingRequestNotFoundException              {
 
         try {
@@ -785,10 +822,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
         /**
          *
          */
-        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
-        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
+
     }
 
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile){
@@ -897,6 +931,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                     protocolState                                  ,
                     type                                           ,
                     action                                         ,
+                    requestMessage.getCryptoAddressDealer()        ,
                     requestMessage.getBlockchainNetworkType()
             );
 

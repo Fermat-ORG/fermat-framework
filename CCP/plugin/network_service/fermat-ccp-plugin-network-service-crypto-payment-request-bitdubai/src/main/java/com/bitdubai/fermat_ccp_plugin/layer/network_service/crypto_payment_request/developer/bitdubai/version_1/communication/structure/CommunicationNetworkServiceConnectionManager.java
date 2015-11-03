@@ -3,14 +3,13 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_requ
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.database.IncomingMessageDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.database.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -18,11 +17,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager</code>
+ * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager</code>
  * <p/>
- * Created by Roberto Requena - (rart3001@gmail.com) on 31/05/15.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 06/10/2015.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -30,48 +28,46 @@ import java.util.Map;
 public class CommunicationNetworkServiceConnectionManager implements NetworkServiceConnectionManager {
 
     private final CommunicationsClientConnection communicationsClientConnection;
-    private final PlatformComponentProfile       platformComponentProfile      ;
     private final ErrorManager                   errorManager                  ;
     private final EventManager                   eventManager                  ;
+
+    private final PlatformComponentProfile       platformComponentProfile      ;
+    private final ECCKeyPair                     identity                      ;
+
     private final IncomingMessageDao             incomingMessageDao            ;
     private final OutgoingMessageDao             outgoingMessageDao            ;
-    private final ECCKeyPair                     identity                      ;
-    private final EventSource                    eventSource                   ;
 
     /**
      * Holds all references to the communication network service locals
      */
-    private final Map<String, CommunicationNetworkServiceLocal> communicationNetworkServiceLocalsCache;
+    private Map<String, CommunicationNetworkServiceLocal> communicationNetworkServiceLocalsCache;
 
     /**
      * Holds all references to the communication network service remote agents
      */
-    private final Map<String,CommunicationNetworkServiceRemoteAgent> communicationNetworkServiceRemoteAgentsCache;
+    private Map<String, CommunicationNetworkServiceRemoteAgent> communicationNetworkServiceRemoteAgentsCache;
 
     /**
-     * Constructor with parameters.
+     * Constructor of Connection Manager.
      */
     public CommunicationNetworkServiceConnectionManager(final PlatformComponentProfile       platformComponentProfile      ,
                                                         final ECCKeyPair                     identity                      ,
                                                         final CommunicationsClientConnection communicationsClientConnection,
                                                         final Database                       dataBase                      ,
                                                         final ErrorManager                   errorManager                  ,
-                                                        final EventManager                   eventManager                  ,
-                                                        final EventSource                    eventSource                   ) {
+                                                        final EventManager                   eventManager                  ) {
 
         super();
-        this.platformComponentProfile       = platformComponentProfile      ;
-        this.identity                       = identity                      ;
-        this.communicationsClientConnection = communicationsClientConnection;
-        this.errorManager                   = errorManager                  ;
-        this.eventManager                   = eventManager                  ;
-        this.eventSource                    = eventSource                   ;
 
-        this.incomingMessageDao = new IncomingMessageDao(dataBase);
-        this.outgoingMessageDao = new OutgoingMessageDao(dataBase);
-
-        this.communicationNetworkServiceLocalsCache       = new HashMap<>();
-        this.communicationNetworkServiceRemoteAgentsCache = new HashMap<>();
+        this.platformComponentProfile                     = platformComponentProfile        ;
+        this.identity                                     = identity                        ;
+        this.communicationsClientConnection               = communicationsClientConnection  ;
+        this.errorManager                                 = errorManager                    ;
+        this.eventManager                                 = eventManager                    ;
+        this.incomingMessageDao                           = new IncomingMessageDao(dataBase);
+        this.outgoingMessageDao                           = new OutgoingMessageDao(dataBase);
+        this.communicationNetworkServiceLocalsCache       = new HashMap<>()                 ;
+        this.communicationNetworkServiceRemoteAgentsCache = new HashMap<>()                 ;
     }
 
 
@@ -79,7 +75,6 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * (non-javadoc)
      * @see NetworkServiceConnectionManager# connectTo(PlatformComponentProfile)
      */
-    @Override
     public void connectTo(PlatformComponentProfile remotePlatformComponentProfile) {
 
         try {
@@ -101,26 +96,28 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * @see NetworkServiceConnectionManager#connectTo(PlatformComponentProfile, PlatformComponentProfile, PlatformComponentProfile)
      */
     @Override
-    public void connectTo(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant) throws CantEstablishConnectionException {
+    public void connectTo(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant) {
+
+        try {
 
             /*
              * ask to the communicationLayerManager to connect to other network service
              */
             communicationsClientConnection.requestDiscoveryVpnConnection(applicantParticipant, applicantNetworkService, remoteParticipant);
 
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
+        }
     }
-
-
-    //TODO: COPIAR ESTO A TODOS LOS OTROS NETWORK SERVICES;  XXOO. te quiero robert xD
 
     /**
      * (non-javadoc)
-     * @see NetworkServiceConnectionManager#closeConnection(String)
+     * @see NetworkServiceConnectionManager# closeConnection(PlatformComponentProfile)
      */
-    @Override
     public void closeConnection(String remoteNetworkServicePublicKey) {
+
         //Remove the instance and stop his threads
-        if(communicationNetworkServiceLocalsCache.containsKey(remoteNetworkServicePublicKey))
         communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
 
     }
@@ -129,7 +126,6 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * (non-javadoc)
      * @see NetworkServiceConnectionManager#closeAllConnection()
      */
-    @Override
     public void closeAllConnection() {
 
         for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
@@ -153,7 +149,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
             /*
              * Get the active connection
              */
-            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(platformComponentProfile.getNetworkServiceType(), remoteComponentProfile);
+            CommunicationsVPNConnection communicationsVPNConnection = communicationsClientConnection.getCommunicationsVPNConnectionStablished(NetworkServiceType.CRYPTO_PAYMENT_REQUEST, remoteComponentProfile);
 
             //Validate the connection
             if (communicationsVPNConnection != null &&
@@ -162,12 +158,12 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
                  /*
                  * Instantiate the local reference
                  */
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao,platformComponentProfile.getNetworkServiceType(), eventSource);
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao);
 
                 /*
                  * Instantiate the remote reference
                  */
-                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao, eventSource);
+                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, remoteComponentProfile.getIdentityPublicKey(), errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
 
                 /*
                  * Register the observer to the observable agent
@@ -197,7 +193,6 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * (non-javadoc)
      * @see NetworkServiceConnectionManager#getNetworkServiceLocalInstance(String)
      */
-    @Override
     public CommunicationNetworkServiceLocal getNetworkServiceLocalInstance(String remoteNetworkServicePublicKey) {
 
         //return the instance
@@ -217,10 +212,6 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
     }
 
-    public ECCKeyPair getIdentity() {
-        return identity;
-    }
-
     /**
      * Resume the manager
      */
@@ -232,5 +223,25 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
             communicationNetworkServiceRemoteAgentsCache.get(key).resume();
         }
 
+    }
+
+    /**
+     * Get the OutgoingMessageDao
+     * @return OutgoingMessageDao
+     */
+    public OutgoingMessageDao getOutgoingMessageDao() {
+        return outgoingMessageDao;
+    }
+
+    /**
+     * Get the IncomingMessageDao
+     * @return IncomingMessageDao
+     */
+    public IncomingMessageDao getIncomingMessageDao() {
+        return incomingMessageDao;
+    }
+
+    public ECCKeyPair getIdentity() {
+        return identity;
     }
 }

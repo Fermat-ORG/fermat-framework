@@ -123,7 +123,7 @@ public interface CryptoPaymentRequestManager {
                                                                RequestNotFoundException;
 
     /**
-     * Throw the method <code>listPendingRequests</code> you can list all the pending crypto payment requests.
+     * Throw the method <code>listPendingCryptoAddressRequests</code> you can list all the pending crypto payment requests.
      *
      * @return a list of instance of Crypto Payment Requests.
      *

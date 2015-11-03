@@ -10,17 +10,17 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.Actor
  */
 public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
-    private String name;
-    private String description;
-    private String publicKey;
-    private byte[] profileImage ;
-    private long registrationDate;
-    private ConnectionState connectionState;
-    private Location location;
-    private Double locationLatitude;
-    private Double locationLongitude;
-
-    private CryptoAddress cryptoAddress;
+    private String          publicLinkedIdentity    ;
+    private String          name                    ;
+    private String          description             ;
+    private String          publicKey               ;
+    private long            registrationDate        ;
+    private ConnectionState connectionState         ;
+    private Location        location                ;
+    private Double          locationLatitude        ;
+    private Double          locationLongitude       ;
+    private CryptoAddress   cryptoAddress           ;
+    private byte[]          profileImage            ;
 
     /**
      * Constructor
@@ -30,32 +30,41 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
     }
 
-    public AssetIssuerActorRecord(String name, String publicKey) {
-        this.name = name;
-        this.publicKey = publicKey;
+    public AssetIssuerActorRecord(String name,
+                                  String publicKey) {
+        this.name       = name      ;
+        this.publicKey  = publicKey ;
     }
 
-    public AssetIssuerActorRecord(String name, String publicKey, byte[] profileImage, long registrationDate) {
+    public AssetIssuerActorRecord(String name,
+                                  String publicKey,
+                                  byte[] profileImage,
+                                  long registrationDate) {
 
-        this.name = name;
-        this.publicKey = publicKey;
-        this.profileImage = profileImage.clone();
-        this.registrationDate = registrationDate;
-        this.connectionState = ConnectionState.CONNECTED;
-
+        this.name               = name                          ;
+        this.publicKey          = publicKey                     ;
+        this.profileImage       = profileImage.clone()          ;
+        this.registrationDate   = registrationDate              ;
+        this.connectionState    = ConnectionState.CONNECTED     ;
     }
 
-    public AssetIssuerActorRecord(String publicKey, String name, ConnectionState connectionState,
-                                  double locationLatitude, double locationLongitude, long registrationDate,
-                                  byte[] profileImage, String description) {
-        this.publicKey = publicKey;
-        this.name = name;
-        this.connectionState = connectionState;
-        this.locationLatitude = locationLatitude;
-        this.locationLongitude = locationLongitude;
-        this.registrationDate = registrationDate;
-        this.profileImage = profileImage.clone();
-        this.description = description;
+    public AssetIssuerActorRecord(String publicKey,
+                                  String name,
+                                  ConnectionState connectionState,
+                                  double locationLatitude,
+                                  double locationLongitude,
+                                  long registrationDate,
+                                  byte[] profileImage,
+                                  String description) {
+
+        this.publicKey          = publicKey             ;
+        this.name               = name                  ;
+        this.connectionState    = connectionState       ;
+        this.locationLatitude   = locationLatitude      ;
+        this.locationLongitude  = locationLongitude     ;
+        this.registrationDate   = registrationDate      ;
+        this.profileImage       = profileImage.clone()  ;
+        this.description        = description           ;
     }
 
 
@@ -69,6 +78,10 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         return this.publicKey;
     }
 
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
+
     /**
      * The method <code>getName</code> gives us the name of the represented Asset Issuer
      *
@@ -77,6 +90,10 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -90,6 +107,10 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         return this.registrationDate;
     }
 
+    public void setRegistrationDate(long registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
     /**
      * The method <coda>getProfileImage</coda> gives us the profile image of the represented Asset Issuer
      *
@@ -100,14 +121,22 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         return this.profileImage.clone();
     }
 
+    public void setProfileImage(byte[] profileImage) {
+        this.profileImage = profileImage;
+    }
+
     /**
-     * The method <code>getContactState</code> gives us the contact state of the represented Asset Issuer
+     * The method <code>getConnectionState</code> gives us the Coonection state of the represented Asset Issuer
      *
-     * @return the contact state
+     * @return the Coonection state
      */
     @Override
     public ConnectionState getConnectionState() {
         return this.connectionState;
+    }
+
+    public void setContactState(ConnectionState connectionState) {
+        this.connectionState = connectionState;
     }
 
     /**
@@ -119,9 +148,18 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public Location getLocation() {
         return location;
+    }
+
+    public void setLocation(Location location) {
+        if(location != null)
+            this.location = location;
     }
 
     @Override
@@ -139,35 +177,8 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         return cryptoAddress;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setPublicKey(String publicKey) {
-        this.publicKey = publicKey;
-    }
-
-    public void setProfileImage(byte[] profileImage) {
-        this.profileImage = profileImage;
-    }
-
-    public void setRegistrationDate(long registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
-    public void setContactState(ConnectionState connectionState) {
-        this.connectionState = connectionState;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
     public void setCryptoAddress(CryptoAddress cryptoAddress) {
-        this.cryptoAddress = cryptoAddress;
+        if(cryptoAddress != null)
+            this.cryptoAddress = cryptoAddress;
     }
 }

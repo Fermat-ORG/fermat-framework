@@ -16,7 +16,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgent extends FermatAgent {
+public class AbstractCommunicationRegistrationProcessNetworkServiceAgent extends FermatAgent {
 
     /*
      * Represent the sleep time for the read or send (5000 milliseconds)
@@ -62,7 +62,7 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
     }
 
     @Override
-    public final void stop() {
+    public void stop() {
 
         this.agentThread.interrupt();
 
@@ -87,7 +87,7 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
                              networkServicePluginRoot.getExtraData());
 
                     // Register me
-                    communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+                    communicationsClientConnection.registerComponentForCommunication(networkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
 
                     // Configure my new profile
                     networkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);

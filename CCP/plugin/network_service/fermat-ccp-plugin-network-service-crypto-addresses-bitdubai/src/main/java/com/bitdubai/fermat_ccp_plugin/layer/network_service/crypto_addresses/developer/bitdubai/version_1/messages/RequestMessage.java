@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.de
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.ProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestAction;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestType;
@@ -24,6 +25,7 @@ public class RequestMessage extends NetworkServiceMessage {
     private final Actors                identityTypeResponding     ;
     private final String                identityPublicKeyRequesting;
     private final String                identityPublicKeyResponding;
+    private final CryptoAddressDealers  cryptoAddressDealer        ;
     private final BlockchainNetworkType blockchainNetworkType      ;
 
     public RequestMessage(final UUID                  requestId                  ,
@@ -32,6 +34,7 @@ public class RequestMessage extends NetworkServiceMessage {
                           final Actors                identityTypeResponding     ,
                           final String                identityPublicKeyRequesting,
                           final String                identityPublicKeyResponding,
+                          final CryptoAddressDealers  cryptoAddressDealer        ,
                           final BlockchainNetworkType blockchainNetworkType      ) {
 
         super(MessageTypes.REQUEST);
@@ -42,6 +45,7 @@ public class RequestMessage extends NetworkServiceMessage {
         this.identityTypeResponding      = identityTypeResponding     ;
         this.identityPublicKeyRequesting = identityPublicKeyRequesting;
         this.identityPublicKeyResponding = identityPublicKeyResponding;
+        this.cryptoAddressDealer         = cryptoAddressDealer        ;
         this.blockchainNetworkType       = blockchainNetworkType      ;
     }
 
@@ -69,6 +73,10 @@ public class RequestMessage extends NetworkServiceMessage {
         return identityPublicKeyResponding;
     }
 
+    public CryptoAddressDealers getCryptoAddressDealer() {
+        return cryptoAddressDealer;
+    }
+
     public BlockchainNetworkType getBlockchainNetworkType() {
         return blockchainNetworkType;
     }
@@ -82,6 +90,7 @@ public class RequestMessage extends NetworkServiceMessage {
                 ", identityTypeResponding=" + identityTypeResponding +
                 ", identityPublicKeyRequesting='" + identityPublicKeyRequesting + '\'' +
                 ", identityPublicKeyResponding='" + identityPublicKeyResponding + '\'' +
+                ", cryptoAddressDealer=" + cryptoAddressDealer +
                 ", blockchainNetworkType=" + blockchainNetworkType +
                 '}';
     }

@@ -53,8 +53,9 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.database.CryptoPaymentRequestNetworkServiceDao;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.NewReceiveMessagesNotificationEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.event_handlers.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantCreateCryptoPaymentRequestException;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantListRequestsException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantTakeActionException;
@@ -84,12 +85,13 @@ import java.util.UUID;
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 01/10/2015.
  */
-public final class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractNetworkService implements
+public class CryptoPaymentRequestNetworkServicePluginRoot extends AbstractNetworkService implements
         CryptoPaymentRequestManager,
         DealsWithWsCommunicationsCloudClientManager,
         DealsWithErrors,
         DealsWithEvents,
-        DealsWithPluginDatabaseSystem {
+        DealsWithPluginDatabaseSystem,
+        NetworkService {
 
        /**
      * DealsWithErrors Interface member variables.
@@ -100,12 +102,23 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
      * DealsWithEvents Interface member variables
      */
     private EventManager eventManager;
-    private List<FermatEventListener> listenersAdded;;
+    private List<FermatEventListener> listenersAdded;
+    public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST;
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
+
+    /**
+     * Plugin Interface member variables.
+     */
+    private UUID pluginId;
+
+    /**
+     * Service Interface member variables.
+     */
+    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     /**
      * Represent the wsCommunicationsCloudClientManager
@@ -126,6 +139,21 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
      * Represent the dataBase
      */
     private Database dataBase;
+
+    /**
+     * Represent the identity
+     */
+    private ECCKeyPair identity;
+
+    /**
+     * Represent the platformComponentProfile
+     */
+    private PlatformComponentProfile platformComponentProfile;
+
+    /**
+     * Represent the register
+     */
+    private boolean register;
 
     /**
      * Represent the registrationProcessNetworkServiceAgent
@@ -160,16 +188,16 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
      * - Type          : SENT.
      */
     @Override
-    public final void sendCryptoPaymentRequest(final UUID                  requestId        ,
-                                               final String                identityPublicKey,
-                                               final Actors                identityType     ,
-                                               final String                actorPublicKey   ,
-                                               final Actors                actorType        ,
-                                               final CryptoAddress         cryptoAddress    ,
-                                               final String                description      ,
-                                               final long                  amount           ,
-                                               final long                  startTimeStamp   ,
-                                               final BlockchainNetworkType networkType      ) throws CantSendRequestException {
+    public void sendCryptoPaymentRequest(UUID                  requestId        ,
+                                         String                identityPublicKey,
+                                         Actors                identityType     ,
+                                         String                actorPublicKey   ,
+                                         Actors                actorType        ,
+                                         CryptoAddress         cryptoAddress    ,
+                                         String                description      ,
+                                         long                  amount           ,
+                                         long                  startTimeStamp   ,
+                                         BlockchainNetworkType networkType      ) throws CantSendRequestException {
 
         try {
 
@@ -426,7 +454,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         } catch(CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException e) {
 
             CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto payment request dao.");
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
 
@@ -459,6 +487,9 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             addCryptoPaymentRequestListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION, new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
             addCryptoPaymentRequestListener(P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION     , new CompleteComponentConnectionRequestNotificationEventHandler(this));
 
+
+            addCryptoPaymentRequestListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION          , new NewReceiveMessagesNotificationEventHandler(null));
+
             this.serviceStatus = ServiceStatus.STARTED;
 
         } catch (CantInitializeNetworkServiceDatabaseException exception) {
@@ -470,7 +501,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
 
@@ -500,7 +531,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeNetworkServiceDatabaseException(cantOpenDatabaseException);
 
         } catch (DatabaseNotFoundException e) {
@@ -513,7 +544,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
 
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateDatabaseException);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantInitializeNetworkServiceDatabaseException(cantCreateDatabaseException);
 
             }
@@ -548,7 +579,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             String possibleCause = "No all required resource are injected";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
 
         }
@@ -614,7 +645,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             /*
              * Request the list of component registers
              */
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(this.getPlatformComponentProfilePluginRoot(), discoveryQueryParameters);
+            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(platformComponentProfile, discoveryQueryParameters);
 
         } catch (CantRequestListException e) {
 
@@ -688,14 +719,18 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
      */
     public void initializeCommunicationNetworkServiceConnectionManager(){
         this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
-                this.getPlatformComponentProfilePluginRoot(),
+                platformComponentProfile,
                 identity,
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
                 dataBase,
                 errorManager,
-                eventManager,
-                this.getEventSource()
+                eventManager
         );
+    }
+
+
+    public void setPlatformComponentProfile(final PlatformComponentProfile platformComponentProfile) {
+        this.platformComponentProfile = platformComponentProfile;
     }
 
     /**
@@ -721,24 +756,25 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             try {
 
                 cryptoPaymentRequestExecutorAgent = new CryptoPaymentRequestExecutorAgent(
+                        communicationNetworkServiceConnectionManager,
                         this,
                         errorManager,
                         eventManager,
                         pluginDatabaseSystem,
                         pluginId,
-                        wsCommunicationsCloudClientManager
+                        null
                 );
 
                 cryptoPaymentRequestExecutorAgent.start();
 
-                addCryptoPaymentRequestListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION, new NewReceiveMessagesNotificationEventHandler(this));
+                addCryptoPaymentRequestListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION, new NewReceiveMessagesNotificationEventHandler(this));
 
                 System.out.println(" Crypto Payment Request Network Service Executor Agent is now running and listening New Receive Messages Notification Events.");
 
             } catch(CantStartAgentException e) {
 
                 CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto payment request dao.");
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             }
 
         }
@@ -790,7 +826,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     }
 
 
-    public void handleNewMessages(FermatMessage fermatMessage) {
+    public void handleNewMessages(FermatMessage fermatMessage) throws CantHandleNewMessagesException {
 
         try {
 
@@ -835,18 +871,18 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             RequestType          direction     = RequestType         .RECEIVED          ;
 
             cryptoPaymentRequestNetworkServiceDao.createCryptoPaymentRequest(
-                    requestMessage.getRequestId(),
-                    requestMessage.getActorPublicKey(), // the actor receiving, is the identity now.
-                    requestMessage.getActorType(), // the actor receiving, is the identity now.
+                    requestMessage.getRequestId()        ,
+                    requestMessage.getActorPublicKey()   , // the actor receiving, is the identity now.
+                    requestMessage.getActorType()        , // the actor receiving, is the identity now.
                     requestMessage.getIdentityPublicKey(), // the identity who sent the request, is the actor now.
-                    requestMessage.getIdentityType(), // the identity who sent the request, is the actor now.
-                    requestMessage.getCryptoAddress(),
-                    requestMessage.getDescription(),
-                    requestMessage.getAmount(),
-                    requestMessage.getStartTimeStamp(),
-                    direction,
-                    action,
-                    protocolState,
+                    requestMessage.getIdentityType()     , // the identity who sent the request, is the actor now.
+                    requestMessage.getCryptoAddress()    ,
+                    requestMessage.getDescription()      ,
+                    requestMessage.getAmount()           ,
+                    requestMessage.getStartTimeStamp()   ,
+                    direction                            ,
+                    action                               ,
+                    protocolState                        ,
                     requestMessage.getNetworkType()
             );
 
@@ -883,7 +919,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     }
 
     private void reportUnexpectedException(final Exception e) {
-        this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+        this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
     }
 
     @Override
@@ -904,6 +940,11 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     @Override
     public void setPluginDatabaseSystem(final PluginDatabaseSystem pluginDatabaseSystemManager) {
         this.pluginDatabaseSystem = pluginDatabaseSystemManager;
+    }
+
+    @Override
+    public void setId(final UUID pluginId) {
+        this.pluginId = pluginId;
     }
 
 }

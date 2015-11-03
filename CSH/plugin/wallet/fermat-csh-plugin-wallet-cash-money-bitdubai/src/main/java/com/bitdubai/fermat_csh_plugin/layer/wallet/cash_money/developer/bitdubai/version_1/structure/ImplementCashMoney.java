@@ -16,7 +16,9 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.cash_money.interfaces.CashMo
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.database.CashMoneyWalletDao;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddCreditException;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantAddDebitException;
+import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetBalancesRecord;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetCashMoneyListException;
+import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantGetCurrentBalanceException;
 
 import java.util.List;
 
@@ -29,20 +31,47 @@ public class ImplementCashMoney implements CashMoney, CashMoneyBalance {
     private Database database;
     CashMoneyWalletDao cashMoneyWalletDao = new CashMoneyWalletDao(pluginDatabaseSystem);
 
-
+    /**
+     *
+     * @param balanceType
+     * @return
+     * @throws CantTransactionCashMoneyException
+     */
     @Override
     public double getBookBalance(BalanceType balanceType) throws CantTransactionCashMoneyException {
-        return 0;
+        try {
+            return getCurrentBalance(balanceType);
+        } catch (CantGetCurrentBalanceException e) {
+           throw new CantTransactionCashMoneyException(CantTransactionCashMoneyException.DEFAULT_MESSAGE,e,"Cant TransactionCashMoney CashMoney Exception","Cant Get CurrentBalance Exception");
+        }
     }
 
+    /**
+     *
+     * @param balanceType
+     * @return
+     * @throws CantTransactionCashMoneyException
+     */
     @Override
     public double getAvailableBalance(BalanceType balanceType) throws CantTransactionCashMoneyException {
-        return 0;
+        try {
+            return getCurrentBalance(balanceType);
+        } catch (CantGetCurrentBalanceException e) {
+           throw new CantTransactionCashMoneyException(CantTransactionCashMoneyException.DEFAULT_MESSAGE,e,"Cant TransactionCashMoney CashMoney Exception","Cant Get Current Balance Exception");
+        }
     }
 
+    /**
+     *
+     * @param balanceType
+     * @param max
+     * @param offset
+     * @return
+     * @throws CantTransactionCashMoneyException
+     */
     @Override
     public List<CashMoneyTransaction> getTransactions(BalanceType balanceType, int max, int offset) throws CantTransactionCashMoneyException {
-        return null;
+        return cashMoneyWalletDao.getTransactions(balanceType,max,offset);
     }
 
     @Override
@@ -50,6 +79,11 @@ public class ImplementCashMoney implements CashMoney, CashMoneyBalance {
         return null;
     }
 
+    /**
+     *
+     * @return
+     * @throws CantCalculateBalanceException
+     */
     @Override
     public double getBalance() throws CantCalculateBalanceException {
         double balanceAmount = 0;
@@ -61,6 +95,12 @@ public class ImplementCashMoney implements CashMoney, CashMoneyBalance {
         return balanceAmount;
     }
 
+    /**
+     *
+     * @param cashMoneyBalanceRecord
+     * @param balanceType
+     * @throws CantRegisterDebitException
+     */
     @Override
     public void debit(CashMoneyBalanceRecord cashMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterDebitException {
         try {
@@ -70,12 +110,35 @@ public class ImplementCashMoney implements CashMoney, CashMoneyBalance {
         }
     }
 
+    /**
+     *
+     * @param cashMoneyBalanceRecord
+     * @param balanceType
+     * @throws CantRegisterCreditException
+     */
     @Override
     public void credit(CashMoneyBalanceRecord cashMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterCreditException {
         try {
             cashMoneyWalletDao.addCredit(cashMoneyBalanceRecord,balanceType);
         } catch (CantAddCreditException e) {
            throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE,e,"Cant Register Credit Exception","Cant Add Credit Exception");
+        }
+    }
+
+    /**
+     *
+     * @param balanceType
+     * @return
+     * @throws CantGetCurrentBalanceException
+     */
+    private double getCurrentBalance(BalanceType balanceType) throws CantGetCurrentBalanceException{
+
+        try {
+            return cashMoneyWalletDao.getCurrentBalance(balanceType);
+        } catch (CantGetCurrentBalanceException e) {
+            throw new CantGetCurrentBalanceException(CantGetCurrentBalanceException.DEFAULT_MESSAGE,e,"Cant Get Current Balance Exception","Cant Get Current Balance Exception");
+        } catch (CantGetBalancesRecord cantGetBalancesRecord) {
+            throw new CantGetCurrentBalanceException(CantGetCurrentBalanceException.DEFAULT_MESSAGE,cantGetBalancesRecord,"","");
         }
     }
 }

@@ -623,7 +623,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
                     this,
                     errorManager,
                     eventManager,
-                    pluginFileSystem,
                     wsCommunicationsCloudClientManager);
 
 
@@ -679,7 +678,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 for(PlatformComponentProfile platformComponentProfile : actorsToRegisterCache){
 
-                    communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+                    communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
 
                     System.out.print("-----------------------\n" +
                             "INTENTANDO REGISTRAR ACTOR  -----------------------\n" +
@@ -869,7 +868,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
         communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorNetworkServiceRecord.getActorDestinationPublicKey())
                 .sendMessage(
                         actorNetworkServiceRecord.getActorSenderPublicKey(),
-                        actorNetworkServiceRecord.getActorSenderAlias(),
+                        actorNetworkServiceRecord.getActorDestinationPublicKey(),
                         actorNetworkServiceRecord.toJson());
     }
 
@@ -939,7 +938,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
      * Get is Register
      * @return boolean
      */
-    @Override
     public boolean isRegister() {
         return register;
     }
@@ -1189,6 +1187,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToAddPublicKey);
             actorNetworkServiceRecord.setActorSenderPublicKey(intraUserLoggedInPublicKey);
 
+            actorNetworkServiceRecord.setActorSenderAlias(null);
+
             actorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.ACCEPTED);
 
             actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_SEND);
@@ -1348,7 +1348,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
                 if (register) {
                     try {
-                        communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+                        communicationsClientConnection.registerComponentForCommunication(this.networkServiceType, platformComponentProfile);
 
                     } catch (CantRegisterComponentException e) {
                         e.printStackTrace();
