@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantPersistsGenesisTransactionException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDatabaseConstants;
@@ -28,10 +28,10 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by frank on 31/10/15.
+ * Created by frank on 02/11/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class PersistGenesisTransactionTest {
+public class SaveNewEventTest {
     AssetIssuingTransactionDao assetIssuingTransactionDao;
     UUID pluginId;
 
@@ -47,9 +47,8 @@ public class PersistGenesisTransactionTest {
     @Mock
     DatabaseTableRecord databaseTableRecord;
 
-    String outgoingTransactionID = "outgoingTransactionID";
-    String genesisTransaction = "genesisTransaction";
-    List<DatabaseTableRecord> records;
+    String eventType = "eventType";
+    String eventSource = "eventSource";
 
     @Before
     public void setUp() throws Exception {
@@ -58,30 +57,27 @@ public class PersistGenesisTransactionTest {
         when(pluginDatabaseSystem.openDatabase(pluginId, AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_DATABASE)).thenReturn(database);
         assetIssuingTransactionDao = new AssetIssuingTransactionDao(pluginDatabaseSystem, pluginId);
 
-        records = new LinkedList<>();
-        records.add(databaseTableRecord);
-
         mockitoRules();
     }
 
     private void mockitoRules() throws Exception {
-        when(database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_ASSET_ISSUING_TABLE_NAME)).thenReturn(databaseTable);
-        when(databaseTable.getRecords()).thenReturn(records);
+        when(database.getTable(AssetIssuingTransactionDatabaseConstants.DIGITAL_ASSET_TRANSACTION_EVENTS_RECORDED_TABLE_NAME)).thenReturn(databaseTable);
+        when(databaseTable.getEmptyRecord()).thenReturn(databaseTableRecord);
     }
 
     @Test
     public void test_OK() throws Exception {
-        assetIssuingTransactionDao.persistGenesisTransaction(outgoingTransactionID, genesisTransaction);
+        assetIssuingTransactionDao.saveNewEvent(eventType, eventSource);
     }
 
     @Test
-    public void test_Throws_CantPersistsGenesisTransactionException() throws Exception {
-        doThrow(new CantUpdateRecordException("error")).when(databaseTable).updateRecord(databaseTableRecord);
-        catchException(assetIssuingTransactionDao).persistGenesisTransaction(outgoingTransactionID, genesisTransaction);
+    public void test_Throws_CantSaveEventException() throws Exception {
+        doThrow(new CantInsertRecordException("error")).when(databaseTable).insertRecord(databaseTableRecord);
+        catchException(assetIssuingTransactionDao).saveNewEvent(eventType, eventSource);
         Exception thrown = caughtException();
         assertThat(thrown)
                 .isNotNull()
-                .isInstanceOf(CantPersistsGenesisTransactionException.class);
-        assertThat(thrown.getCause()).isInstanceOf(CantUpdateRecordException.class);
+                .isInstanceOf(CantSaveEventException.class);
+        assertThat(thrown.getCause()).isInstanceOf(CantInsertRecordException.class);
     }
 }
