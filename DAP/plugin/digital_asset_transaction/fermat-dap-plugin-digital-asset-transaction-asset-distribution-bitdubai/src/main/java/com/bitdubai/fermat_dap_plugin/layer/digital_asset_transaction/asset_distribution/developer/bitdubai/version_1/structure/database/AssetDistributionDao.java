@@ -143,10 +143,10 @@ public class AssetDistributionDao {
             this.database.closeDatabase();
         }  catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
-            throw new CantSaveEventException(exception, "Saving new event.", "Cannot open or find the Asset Issuing database");
+            throw new CantSaveEventException(exception, "Saving new event.", "Cannot open or find the Asset Distribution database");
         } catch (CantInsertRecordException exception) {
             this.database.closeDatabase();
-            throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Issuing database");
+            throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Distribution database");
         } catch(Exception exception){
             this.database.closeDatabase();
             throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
