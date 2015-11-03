@@ -1,11 +1,11 @@
-:numbered:
+:numbered!:
 [[layersExplanation]]
 == Fermat layers explanation
 
-The *_multilayer architecture_* reveals useful when grouping the plugins according to their common functionalities, which on one hand gives a certain order and structure to the system and lets identify common challenges to solve when writing code, but on the other hand, the conceptual strength of using _layers_ stimulate the creation of future plugins that reveal to be necessary when decomposing the big task in smaller steps to solve and implement. What's more, plugins originally conceived to serve a certain function, afterwards appear to be reusable for new developments. +
+The *_multilayer architecture_* reveals useful when grouping the plugins according to their common functionalities. This gives , on one hand, a certain order and structure to the system and lets identify common challenges to solve when writing code. On the other hand, the conceptual strength of using _layers_ stimulate the creation of future plugins that are revealed as necessary when decomposing a big task in smaller steps to solve and implement. What's more, plugins that are originally conceived to serve a certain function, afterwards appear to be reusable for new developments beyond their initial purpose. +
 We have already explored in the previous sections the main role of the *Core Platform* to deploy the whole system structure, and the first available services provided by the system-wide *_superlayers_* . +
-Now, let us explore the next *_layers_* following on top, which are similar in every following *_Fermat platforms_*. +
-*Layers* are built with a considerable atomicity in its components (i.e. each component deals with a very specific and contrained kind of events) what really renders the whole Fermat system with a strong, structured and solid foundation and at the same time a large flexibility and adaptability for further development and evolution. +
+Now, let us explore the next *_layers_* following on top, which are almost present in every *_Fermat platform_* which follows. +
+*Layers* are built with a considerable atomicity in its components (i.e. each component deals with a very specific and constrained set of events) what really renders the whole Fermat system with a strong, structured and solid foundation and at the same time a large flexibility and adaptability for further development and evolution. +
 
 === _Platform Services layer_
 The modules in this layer handle the very basic tasks that allow plugins interact safely in and uncontrolled environment, taking care of a careful transmission of responsability from one component to another and specially the management of exceptions and track of all system's *events*.
@@ -24,24 +24,21 @@ Plugin :: +
 
 === _Network Service layer_
 Each time that a certain system function must perform any operation *outside* the device where Fermat is running, a _network service_ is required to follow the execution in other devices until is completed. +
-Network services' modules need to have a *communication channel* stablished and maintained between the parties involved, what is done by the *P2P networks and communication superlayer* ( see the explanation at the previous section <<communicationLayer>> ) +
+Network services' modules need to have a *communication channel* stablished and maintained between the parties involved, what is done by the *Fermat network*  +
 Each *network service module* running on a _local device_ stablishes communication EXCLUSIVELY to its _counterpart_ running in the _remote device_. +
 The module handles a table of request and responses to communicate with the counterpart and so perform the required task. +
 
 === _Actor Network Service layer_
-As we have already introduced the concept of system *actors* to guide the functionalities to match the specific needs of Fermats users, in this layer live the modules that provide *network services* specifically to interconnect the *actors* intervining in the operations held by a specific platform within Fermat, by "mapping" the *actor identity* with the *user identity* on which it depends. + 
+This layer provides specific *network services* to interconnect the *actors identity* of an actor of a specific Fermat platform to the *user identity* on which it depends. + 
 
 === _Identity layer_
-This layer holds the plugins to manage all the necessary information about the actors *identity* within Fermat. This *identity* is a pair of privat/public key that act like a credential to access to certain functionalities in Fermat specific for the user, for example, to access to his own *wallets*. +
-To interact with third parties, another "credential" is used to represent the *user*, that is what in Fermat we call *actor identity*, and it is defined in the <<actorLayer>>. 
+Plug-ins in this layer manage the necessary information about the end user's *identity* within Fermat. Every *identity* in Fermat is a pair of privat/public key that acts like a credential to access to certain functionalities for specific to the * identity's owner For example, it allows the *end user* to have access to his own *wallets*. +
 
 === _World layer_
 In this layer the components consult certain specific information from the world "outside"of Fermat, usually checking indexes on webpages, or gathering any kind of information offered in the web, to make this available to Fermats plugins to consume the collected data.
 
 === _Wallet layer_
-*Wallets* are essentially programs that manage money, in this case, money whose value is stored in a *blockchain ledger*. +
-*Wallets* in Fermat require several services provided by different plugins in different _layers_, and there are plugins related to the *storage of value* (those belonging to the _Block Chain Superlayer_, the *vaults*) and others that do the registration of the *transaction information (metadata)* and the necesary functions to display the result in the way required by the *wallet*. +
-The modules in this layer do all the *accountancy operations* related to the wallets.
+The components in this layer do all the *accountancy operations* related to the wallets.
 
 === _Transaction layers_
 [horizontal]
@@ -73,7 +70,7 @@ Every plugin that cover any other functionality required and that is not include
 
 [[actorLayer]]
 === _Actor layer_
-This is the layer where the different *actor identities* are held to be presented to third party *actors* interacting with a specific *user* who is "playing a specific role" within Fermat. For example, an user "John Smith", who has his *identity* within Fermat, decides to _act_ as *crypto broker*, so he opens a *crypto broker wallet* in the _Cryto Borker Platform_, he defines his alias to operate with it, and therefore this becomes the name of his *actor identity* as *cryptobroker*, so he does not need to reveal his *user* identity to run his business as cryptobroker.
+This is the layer where the business logic of a specific *actor* is defined. *Actor identities* are derived in a hierarchical way from the end user's *root identity*, and let him create and control how many identities he wants to play different roles within Fermat's platforms.
 
 === _Agent layer_
 High level plugins (near to the *end user*) that by means of a certain kind of _Artificial Intelligence (AI)_ can take decisions on the *user's* behalf, to simplify the management of wallets  with high abstraction levels. For example, when the user wants to make a payment, an agent could choose where to withdraw the fund from to be more profitable financially to the user.

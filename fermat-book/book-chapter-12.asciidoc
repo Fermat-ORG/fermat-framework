@@ -1,16 +1,17 @@
 == FERMAT Crypto Currency Platform
-This platform provides all the interconnectivity necessary to interact with existent cryptonetworks (Bitcoin, Litecoin, etc) and also to develop plug-ins for new cryptocurrencies invented in the future. + 
-It contains the specific modules needed to run a Crypto Currency Wallet on FERMAT, whose functions depend on consuming the services provided by other modules in lower layers.
-For a *niche wallet* to run, we need to count on modules offering:
+This platform provides the niche wallets to manage existing crypto currencies - Bitcoin, Litecoin, etc - and also the resources to develop wallets of new cryptocurrencies invented in the future. + 
+For a *niche wallet* to run, we need reference wallets and underlying plug-ins to grant:
 
-* 1 user identification 
-* 2 device identification
-* 3 cryptonetwork services to allow connection to existing cryptocurrencies networks ( *value transport* )
-* 4 cyptoaddress management (addressbook)
-* 5 network services ( to allow processing of events occurring outside the running device ) ( *information transport* )
-* 6 world services ( to allow access to information provided from services living in the web like exchange rates,...)
-* 7 transaction layer ( to allow the broadcasting of transaction created in a wallet)
+. user identification 
+. device identification
+. cryptonetwork services to allow connection to existing cryptocurrencies networks for *transporting value*
+. cyptoaddress management (addressbook)
+. network services for *transportin meta-data* 
+. world services ( to allow access to information provided from services living in the web like exchange rates,...)
+. transaction layer ( to allow the broadcasting of transaction created in a wallet)
 
+The essential user identity introduced in this platform is the *device user* 
+The main actor identity is the *plug-in developer*. +
 
 === Bitcoin Wallet
 This wallet is one of FERMAT's basic building block to allow interaction with the
