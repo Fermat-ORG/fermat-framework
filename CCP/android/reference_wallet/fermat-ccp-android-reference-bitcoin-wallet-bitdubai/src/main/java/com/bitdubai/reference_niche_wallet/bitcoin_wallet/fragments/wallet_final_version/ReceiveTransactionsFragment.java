@@ -172,6 +172,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
         super.onCreate(savedInstanceState);
 
+
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
 
         referenceWalletSession = (ReferenceWalletSession)walletSession;
@@ -216,15 +217,11 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
         try {
 
             rootView = super.onCreateView(inflater, container, savedInstanceState);
-//
+
             start.set(true);
 
             setUp(inflater);
-            //container_header_balance.invalidate();
 
-            //((PaintActivtyFeactures)getActivity()).invalidate();
-
-            //rootView    = inflater.inflate(R.layout.receive_button, container, false);
 
 
             linear_layout_receive_form = (LinearLayout) rootView.findViewById(R.id.receive_form);
@@ -262,8 +259,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
                     //add connection like a wallet contact
                     if(walletContact.isConnection)
                     {
-                        try
-                        {
+                        try {
 
                         cryptoWallet.convertConnectionToContact(walletContact.name,
                                                                         Actors.INTRA_USER,
@@ -271,7 +267,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
                                                                         new byte[0],
                                                                         Actors.INTRA_USER,
                                                                         intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),
-                                                                        "reference_wallet"/*referenceWalletSession.getWalletSessionType().getWalletPublicKey()*/ ,
+                                                                        referenceWalletSession.getWalletSessionType().getWalletPublicKey(),
                                                                         CryptoCurrency.BITCOIN,
                                                                         BlockchainNetworkType.TEST);
 

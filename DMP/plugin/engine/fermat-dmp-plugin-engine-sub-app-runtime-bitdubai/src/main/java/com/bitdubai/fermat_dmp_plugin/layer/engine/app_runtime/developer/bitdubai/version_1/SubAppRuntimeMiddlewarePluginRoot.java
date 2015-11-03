@@ -1329,7 +1329,7 @@ public class SubAppRuntimeMiddlewarePluginRoot implements Service, SubAppRuntime
             runtimeSubApp.setStartActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Crypto Customer Identity");
+            runtimeTitleBar.setLabel("Intra user Identity");
             runtimeTitleBar.setColor("#FFFFFF");
             runtimeTitleBar.setLabelSize(16);
             runtimeActivity.setTitleBar(runtimeTitleBar);

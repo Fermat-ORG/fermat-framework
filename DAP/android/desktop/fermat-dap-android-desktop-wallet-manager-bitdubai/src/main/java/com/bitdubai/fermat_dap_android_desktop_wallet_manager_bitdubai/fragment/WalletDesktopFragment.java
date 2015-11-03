@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
@@ -187,14 +186,14 @@ public class WalletDesktopFragment extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.companyTextView.setText(installedWallet.getWalletName());
+            holder.companyTextView.setText(installedWallet.getName());
             holder.companyTextView.setTypeface(tf, Typeface.BOLD);
 
 
             LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.wallet_3);
 
             //Hardcodeado hasta que esté el wallet resources
-            switch (installedWallet.getWalletIcon()) {
+            switch (installedWallet.getIcon()) {
 
                 case "asset_issuer":
                     holder.imageView.setImageResource(R.drawable.wallet_1);

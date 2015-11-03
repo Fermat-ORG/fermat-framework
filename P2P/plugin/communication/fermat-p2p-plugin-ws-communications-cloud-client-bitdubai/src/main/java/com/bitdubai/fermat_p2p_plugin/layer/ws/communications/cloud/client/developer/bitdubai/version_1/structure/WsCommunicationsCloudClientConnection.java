@@ -171,7 +171,7 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
                 location = locationManager.getLocation();
 
             }catch (CantGetDeviceLocationException e){
-                e.printStackTrace();
+                System.out.println("WsCommunicationsCloudClientConnection - Error getting the geolocation for this device ");
             }
 
             /*
@@ -246,10 +246,10 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
 
     /**
      * (non-javadoc)
-     * @see CommunicationsClientConnection#registerComponentForCommunication(PlatformComponentProfile)
+     * @see CommunicationsClientConnection#registerComponentForCommunication(NetworkServiceType, PlatformComponentProfile)
      */
     @Override
-    public void registerComponentForCommunication(PlatformComponentProfile platformComponentProfile) throws CantRegisterComponentException {
+    public void registerComponentForCommunication(NetworkServiceType networkServiceNetworkServiceTypeApplicant, PlatformComponentProfile platformComponentProfile) throws CantRegisterComponentException {
 
         try {
 
@@ -263,12 +263,17 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
                 throw new IllegalArgumentException("The platformComponentProfile is required, can not be null");
             }
 
+            Gson gson = new Gson();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceNetworkServiceTypeApplicant.toString());
+            jsonObject.addProperty(JsonAttNamesConstants.PROFILE_TO_REGISTER, platformComponentProfile.toJson());
+
              /*
              * Construct a fermat packet whit the PlatformComponentProfile
              */
             FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsCloudClientChannel.getServerIdentity(),                  //Destination
                     wsCommunicationsCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
-                    platformComponentProfile.toJson(),                                       //Message Content
+                    gson.toJson(jsonObject),                                                 //Message Content
                     FermatPacketType.COMPONENT_REGISTRATION_REQUEST,                         //Packet type
                     wsCommunicationsCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
 

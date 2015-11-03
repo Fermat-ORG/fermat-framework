@@ -72,6 +72,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanne
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.custom_anim.Fx;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigationDrawer.NavigationDrawerArrayAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.CreateContactFragmentDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -185,13 +186,16 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
         start = new AtomicBoolean(false);
 
+        setNavigatitDrawer();
+
         try {
             cryptoWallet = referenceWalletSession.getCryptoWalletManager().getCryptoWallet();
 
 
             updateTransactions();
         } catch (CantGetCryptoWalletException e) {
-            e.printStackTrace();
+            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
         }
     }
 
@@ -199,6 +203,21 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
     public void onAttach(Activity activity) {
         super.onAttach(getActivity());
 
+    }
+
+    private void setNavigatitDrawer(){
+        List<String> list = new ArrayList<>();
+        list.add("Home");
+        list.add("Contacts");
+        list.add("Payment request");
+        list.add("Settings");
+        list.add("Logout");
+        try {
+            getPaintActivtyFeactures().changeNavigationDrawerAdapter(new NavigationDrawerArrayAdapter(getActivity(),list,intraUserModuleManager.getActiveIntraUserIdentity()));
+        } catch (CantGetActiveLoginIdentityException e) {
+            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            showMessage(getActivity(), "CantGetActiveLoginIdentityException- " + e.getMessage());
+        }
     }
 
 
@@ -257,7 +276,8 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                     try
                     {
                         if(walletContact.isConnection)
-                            cryptoWallet.convertConnectionToContact(walletContact.name,
+                            cryptoWallet.convertConnectionToContact(
+                                    walletContact.name,
                                     Actors.INTRA_USER,
                                     walletContact.actorPublicKey,
                                     new byte[0],

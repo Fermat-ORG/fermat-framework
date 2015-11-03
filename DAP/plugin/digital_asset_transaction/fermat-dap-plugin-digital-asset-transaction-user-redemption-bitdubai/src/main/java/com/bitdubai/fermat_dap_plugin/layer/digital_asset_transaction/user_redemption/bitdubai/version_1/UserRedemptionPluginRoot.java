@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -27,6 +28,8 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.DealsWithActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.issuer_redemption.interfaces.IssuerRedemptionManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.DealsWithAssetUserWallet;
@@ -35,6 +38,8 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redem
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDao;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.events.UserRedemptionRecorderService;
+import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
@@ -64,7 +69,6 @@ public class UserRedemptionPluginRoot implements IssuerRedemptionManager, Databa
     PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
-    UserRedemptionDao userRedemptionDao;
     ServiceStatus serviceStatus= ServiceStatus.CREATED;
 
     private void createAssetDistributionTransactionDatabase() throws CantCreateDatabaseException {
@@ -106,7 +110,7 @@ public class UserRedemptionPluginRoot implements IssuerRedemptionManager, Databa
         // If we are here the database could not be opened, so we return an empty list
         return new ArrayList<>();
     }
-
+    
     @Override
     public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
         this.deviceUserManager=deviceUserManager;
@@ -164,6 +168,7 @@ public class UserRedemptionPluginRoot implements IssuerRedemptionManager, Databa
                     throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Asset User Redemption plugin - "+this.pluginId, "Cannot open or create the plugin database");
                 }
             }
+            UserRedemptionDao userRedemptionDao=new UserRedemptionDao(pluginDatabaseSystem,pluginId);
             this.digitalAssetUserRedemptionVault=new DigitalAssetUserRedemptionVault(
                     this.pluginId,
                     this.pluginFileSystem,
@@ -172,8 +177,22 @@ public class UserRedemptionPluginRoot implements IssuerRedemptionManager, Databa
             this.digitalAssetUserRedemptionVault.setAssetUserWalletManager(this.assetUserWalletManager);
             this.digitalAssetUserRedemptionVault.setErrorManager(this.errorManager);
             this.digitalAssetUserRedemptionVault.setActorAssetUserManager(this.actorAssetUserManager);
+            //Starting Event Recorder
+            UserRedemptionRecorderService userRedemptionRecorderService =new UserRedemptionRecorderService(userRedemptionDao, eventManager);
+            try{
+                userRedemptionRecorderService.start();
+            } catch(CantStartServiceException exception){
+                //This plugin must be stopped if this happens.
+                this.serviceStatus = ServiceStatus.STOPPED;
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                throw new CantStartPluginException("User redemption Event Recorded could not be started", exception, Plugins.BITDUBAI_USER_REDEMPTION_TRANSACTION.getKey(), "The plugin event recorder is not started");
+            }
         } catch (CantSetObjectException exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset User Redemption plugin", "Cannot set an object, probably is null");
+        } catch (CantExecuteDatabaseOperationException exception) {
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset User Redemption plugin", "Cannot execute a database operation");
+        } catch (CantStartServiceException exception) {
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset User Redemption plugin", "Cannot start User redemption Event Recorded");
         }
         this.serviceStatus = ServiceStatus.STARTED;
     }

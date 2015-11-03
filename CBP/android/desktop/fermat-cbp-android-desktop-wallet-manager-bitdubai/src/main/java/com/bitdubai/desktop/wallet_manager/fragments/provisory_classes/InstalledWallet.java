@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
+import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
 
 import java.util.List;
 
@@ -86,7 +87,7 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
      * @return the name of the said icon
      */
     @Override
-    public String getWalletIcon() {
+    public String getIcon() {
         return walletIcon;
     }
 
@@ -101,13 +102,18 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
         return publicKey;
     }
 
+    @Override
+    public InterfaceType getType() {
+        return InterfaceType.WALLET;
+    }
+
     /**
      * This method gives us the wallet name
      *
      * @return the name of the wallet
      */
     @Override
-    public String getWalletName() {
+    public String getName() {
         return walletName;
     }
 

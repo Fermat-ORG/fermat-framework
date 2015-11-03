@@ -253,6 +253,7 @@ public class WsCommunicationsCloudClientChannel extends WebSocketClient {
         /*
          * Start the agent to try the reconnect
          */
+        setIsRegister(Boolean.FALSE);
         wsCommunicationsCloudClientAgent.setIsConnected(Boolean.FALSE);
         wsCommunicationsCloudClientAgent.run();
     }

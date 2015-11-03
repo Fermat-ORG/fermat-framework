@@ -24,6 +24,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionTy
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIdentityIntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
@@ -411,36 +412,47 @@ public class CryptoWalletWalletModuleManager implements
                                                                  BlockchainNetworkType blockchainNetworkType) throws CantCreateWalletContactException, ContactNameAlreadyExistsException{
         try{
 
-         //get to Crypto Address NS the intra user actor address
-            cryptoAddressesNSManager.sendAddressExchangeRequest(walletPublicKey,
-                                                                walletCryptoCurrency ,
-                                                                actorWalletType,
-                                                                actorConnectedType ,
-                                                                identityWalletPublicKey,
-                                                                actorConnectedPublicKey,
-                                                                blockchainNetworkType );
+             try {
+                WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorAlias, walletPublicKey);
 
-            try {
-                walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorAlias, walletPublicKey);
-                throw new ContactNameAlreadyExistsException(ContactNameAlreadyExistsException.DEFAULT_MESSAGE, null, null, null);
+                 //get to Crypto Address NS the intra user actor address
+                 cryptoAddressesNSManager.sendAddressExchangeRequest(walletPublicKey,
+                         walletCryptoCurrency,
+                         actorWalletType,
+                         actorConnectedType,
+                         identityWalletPublicKey,
+                         actorConnectedPublicKey,
+                         CryptoAddressDealers.CRYPTO_WALLET,
+                         blockchainNetworkType);
+
+                 return new CryptoWalletWalletModuleWalletContact(walletContactRecord);
 
             } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
-                String actorPublicKey = createActor(walletPublicKey,actorConnectedPublicKey,actorAlias, actorConnectedType, actorPhoto);
-
 
                 WalletContactRecord walletContactRecord = walletContactsRegistry.createWalletContact(
-                        actorPublicKey,
+                        actorConnectedPublicKey,
                         actorAlias,
                         "",
                         "",
                         actorConnectedType,
                         walletPublicKey
                 );
-                return new CryptoWalletWalletModuleWalletContact(walletContactRecord, actorPhoto);
-            }
 
-        } catch (ContactNameAlreadyExistsException e) {
-            throw new ContactNameAlreadyExistsException(ContactNameAlreadyExistsException.DEFAULT_MESSAGE, e,"Contact Name already exist","");
+                 //get to Crypto Address NS the intra user actor address
+                 cryptoAddressesNSManager.sendAddressExchangeRequest(walletPublicKey,
+                         walletCryptoCurrency ,
+                         actorWalletType,
+                         actorConnectedType ,
+                         identityWalletPublicKey,
+                         actorConnectedPublicKey,
+			 CryptoAddressDealers.CRYPTO_WALLET,
+                         blockchainNetworkType );
+
+
+
+
+                 return new CryptoWalletWalletModuleWalletContact(walletContactRecord, actorPhoto);
+            }
 
         } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactException e) {
             throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e);
@@ -467,7 +479,7 @@ public class CryptoWalletWalletModuleManager implements
                 throw new ContactNameAlreadyExistsException(ContactNameAlreadyExistsException.DEFAULT_MESSAGE, null, null, null);
 
             } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
-                String actorPublicKey = createActor("","",actorAlias, actorType, photo);
+                String actorPublicKey = createActor(actorAlias, actorType, photo);
                 List<CryptoAddress> cryptoAddresses = new ArrayList<>();
                 cryptoAddresses.add(receivedCryptoAddress);
                 WalletContactRecord walletContactRecord = walletContactsRegistry.createWalletContact(
@@ -1016,7 +1028,7 @@ public class CryptoWalletWalletModuleManager implements
     }
 
 
-    private String createActor(String walletPublicKey, String actorPublicKey,String actorName, Actors actorType, byte[] photo) throws CantCreateOrRegisterActorException {
+    private String createActor(String actorName, Actors actorType, byte[] photo) throws CantCreateOrRegisterActorException {
         switch (actorType){
             case EXTRA_USER:
                 try {
@@ -1026,12 +1038,7 @@ public class CryptoWalletWalletModuleManager implements
                     throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");
                 }
             case INTRA_USER:
-                try {
-                    Actor actor = intraUserManager.createActor(walletPublicKey,actorName, photo);
-                    return actor.getActorPublicKey();
-                } catch (CantCreateIntraUserException e) {
-                    throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");
-                }
+                // THERE'S NO NEED TO CREATE A NEW INTRA ACTOR. PLEASE DONT ADD ANYTHING HERE
 
             default:
                 throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, null, "", "ActorType is not Compatible.");

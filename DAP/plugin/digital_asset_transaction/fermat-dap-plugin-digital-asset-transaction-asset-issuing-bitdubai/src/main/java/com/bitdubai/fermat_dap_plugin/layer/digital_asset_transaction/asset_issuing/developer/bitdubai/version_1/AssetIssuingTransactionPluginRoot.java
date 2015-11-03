@@ -229,6 +229,7 @@ public class AssetIssuingTransactionPluginRoot implements AssetIssuingManager, D
             this.assetIssuingTransactionManager.setEventManager(this.eventManager);
             this.assetIssuingTransactionManager.setLogManager(this.logManager);
             this.assetIssuingTransactionManager.setBitcoinNetworkManager(this.bitcoinNetworkManager);
+            this.assetIssuingTransactionManager.setActorAssetIssuerManager(this.actorAssetIssuerManager);
             try{
                 //printSomething("Event manager:"+this.eventManager);
                 this.assetIssuingEventRecorderService.start();

@@ -183,7 +183,7 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
              */
             serverIdentityByClientCache.put(clientConnection.hashCode(), serverIdentity);
 
-            /**
+            /*
              * Add to the cache of client identity for his client connection
              */
             clientIdentityByClientConnectionCache.put(clientConnection.hashCode(), temporalClientIdentity);
@@ -334,12 +334,16 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
            Integer clientConnectionHashCode  = clientConnection.hashCode();
            System.out.println(" WsCommunicationCloudServer - clientConnectionHashCode = " + clientConnectionHashCode);
            String clientIdentity = clientIdentityByClientConnectionCache.get(clientConnectionHashCode);
+
            System.out.println(" WsCommunicationCloudServer - clientIdentity           = " + clientIdentity);
 
-           removeNetworkServiceRegisteredByClientIdentity(clientIdentity);
-           removeOtherPlatformComponentRegisteredByClientIdentity(clientIdentity);
-           pendingRegisterClientConnectionsCache.remove(clientIdentity);
-           registeredClientConnectionsCache.remove(clientIdentity);
+           if(clientIdentity != null && clientIdentity != ""){
+               removeNetworkServiceRegisteredByClientIdentity(clientIdentity);
+               removeOtherPlatformComponentRegisteredByClientIdentity(clientIdentity);
+               pendingRegisterClientConnectionsCache.remove(clientIdentity);
+               registeredClientConnectionsCache.remove(clientIdentity);
+           }
+
            serverIdentityByClientCache.remove(clientConnectionHashCode);
            clientIdentityByClientConnectionCache.remove(clientConnectionHashCode);
            registeredCommunicationsCloudServerCache.remove(clientConnectionHashCode);

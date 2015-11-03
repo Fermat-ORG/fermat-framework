@@ -1,16 +1,16 @@
 :numbered:
 [[superlayers]]
-== FERMAT Operating Systems Superlayer
+== Fermat Operating Systems Superlayer
 
-NOTE: We call in FERMAT *Superlayer* to a group of layers whose modules offer services to be consumed system-wide, i.e. offering an infrastructure that hold the different *platforms* running over FERMAT. (it is like a "common ground" where different "towers" (the platforms) are built, sharing basics level services - like water, electricity and gas supply for a real world building-. )
+NOTE: We call in Fermat *Superlayer* to a group of layers whose modules offer services to be consumed system-wide, i.e. offering an infrastructure that hold the different *platforms* running over Fermat. (it is like a "common ground" where different "towers" (the platforms) are built, sharing basic level services )
 
-This superlayer allow the connectivity of OS dependant modules to the rest of FERMAT multiplatform (_OS independent_). The modules offer the necessary functions to interact with the corresponding OS. The specific layers will be added as long as FERMAT's releases include new OS.
+This superlayer allows the connectivity of OS dependant modules to the rest of Fermat multiplatform that is _OS independent_. The modules offer the necessary functions to interact with the corresponding OS, like storing and retrieving information, managing files, managing user log-on, checking the device status, location, etc + 
+Specific layers will be added as long as Fermat's releases include new OS. +
+This low level layer allows to build on top in sucesive layers the modules necessary to implement the *Desktop Applications* offered to Fermat  end users.
 
 === _Android layer_
-In this layer, we find the different modules to allow FERMAT function on a device running Android. The usual requirements of storing and retrieving information, managing files, managing user log-on, checking the device status, location, etc are taken by each specific modules.
-This modules are written in a _android language_.
-This low level layer allows to build in sucesive layer the modules to implement the *Applications* and Subapplications running on Android.
-
+In this layer, we find the different modules to allow Fermat function on a device running Android. They are written in _android language_.
+[horizontal]
 File System :: it allows creation of files in a reserved memory area for each plug-in (it functions as a "private folder")
 Database System :: it allows creation of a database only readable for the plugin who owns it.  
 Logger :: acces to the OS activity log.
@@ -21,15 +21,22 @@ Device Contacts ::
 Device Hardware:: information about the hardware of the device running the platform +
 
 === _Multi OS layer_
-In this layer there are components that run in more than one OS at the time (Linux / MacOs / Windows)
+In this layer there are components that run in more than one OS at the time (Linux / MacOs / Windows). +
 The modules are similar to the other _OS layers_.
-This low level layer allows to build in sucesive layer the modules to implement the *Desktop Applications* running on either of the OS mentioned. 
-
+////
 File System :: access to the file system
 Database System :: access to plugin propietary databases +
 
 === _I-OS_ layer
 (for further development) ...
+////
+
+:numbered!:
+  
+=== Continue Reading
+link:book-chapter-05.asciidoc[Next Chapter]
+
+link:book-chapter-03.asciidoc[Previous Chapter]
 
 
 
