@@ -1,6 +1,5 @@
 package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version1.structure.asset_distribution_dao;
 
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantCheckAssetDistributionProgressException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
 
@@ -18,7 +17,7 @@ import static org.mockito.Mockito.mock;
  * Created by Luis Campo (campusprize@gmail.com) on 03/10/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GetPendingCryptoRouterEvents {
+public class GetGenesisTransactionByAssetAcceptedStatusTest {
     private AssetDistributionDao mockAssetDistributionDao;
 
     @Before
@@ -26,10 +25,9 @@ public class GetPendingCryptoRouterEvents {
         mockAssetDistributionDao = mock(AssetDistributionDao.class);
     }
 
-
     @Test
-    public void getPendingCryptoRouterEventsTest () throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
-        List<String> list = mockAssetDistributionDao.getPendingCryptoRouterEvents();
+    public void getEventTypeByIdTest () throws CantCheckAssetDistributionProgressException {
+        List<String> list = mockAssetDistributionDao.getGenesisTransactionByAssetAcceptedStatus();
         assertThat(list).isNotNull();
     }
 }

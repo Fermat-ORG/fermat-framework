@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
  * Created by Luis Campo (campusprize@gmail.com) on 03/10/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GetEventTypeById {
+public class GetEventTypeByIdTest {
     private AssetDistributionDao mockAssetDistributionDao;
 
     @Before

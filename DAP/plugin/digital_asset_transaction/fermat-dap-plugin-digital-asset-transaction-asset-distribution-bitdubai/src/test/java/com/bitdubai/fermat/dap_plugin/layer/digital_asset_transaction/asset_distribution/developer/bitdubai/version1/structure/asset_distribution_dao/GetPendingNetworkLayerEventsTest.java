@@ -18,7 +18,7 @@ import static org.mockito.Mockito.mock;
  * Created by Luis Campo (campusprize@gmail.com) on 02/10/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GetPendingNetworkLayerEvents {
+public class GetPendingNetworkLayerEventsTest {
     private AssetDistributionDao mockAssetDistributionDao;
 
     @Before
