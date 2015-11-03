@@ -157,14 +157,20 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
                             }catch (Exception e){
                                 System.out.println(" WsCommunicationVPNClientManagerAgent - Error occurred sending ping to the vpn node, closing the connection to remote node");
                                 wsCommunicationVPNClient.close();
-                                vpnClientActiveCache.get(networkServiceType).remove(wsCommunicationVPNClient);
-                                if (vpnClientActiveCache.get(networkServiceType).isEmpty()){
-                                    vpnClientActiveCache.remove(networkServiceType);
-                                }
+                                vpnClientActiveCache.get(networkServiceType).remove(remote);
                             }
 
+                        }else{
+                            //If the connection is no open
+                            wsCommunicationVPNClient.close();
+                            vpnClientActiveCache.get(networkServiceType).remove(remote);
                         }
 
+                    }
+
+                    //Validate if the cache list is empty
+                    if (vpnClientActiveCache.get(networkServiceType).isEmpty()){
+                        vpnClientActiveCache.remove(networkServiceType);
                     }
 
                 }

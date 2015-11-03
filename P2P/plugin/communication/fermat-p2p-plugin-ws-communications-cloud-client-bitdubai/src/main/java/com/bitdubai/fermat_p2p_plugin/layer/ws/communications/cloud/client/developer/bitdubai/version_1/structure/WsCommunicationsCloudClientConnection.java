@@ -43,6 +43,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.java_websocket.drafts.Draft_17;
 import org.restlet.data.MediaType;
+import org.restlet.engine.application.Decoder;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
@@ -389,8 +390,9 @@ public class WsCommunicationsCloudClientConnection implements CommunicationsClie
              * Do the request via post and obtain the result
              */
             Representation respond = requestResource.post(parameters);
+            Decoder decoder = new Decoder(requestResource.getContext());
 
-            String respondText = respond.getText();
+            String respondText = decoder.decode(respond).getText();
             System.out.println("WsCommunicationsCloudClientConnection - Respond Text:" + respondText);
             System.out.println("WsCommunicationsCloudClientConnection - Respond Text length:" + respondText.length());
 
