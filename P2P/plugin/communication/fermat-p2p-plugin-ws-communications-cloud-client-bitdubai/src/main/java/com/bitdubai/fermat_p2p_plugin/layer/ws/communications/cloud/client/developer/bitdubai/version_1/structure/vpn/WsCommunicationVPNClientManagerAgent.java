@@ -130,6 +130,7 @@ public class WsCommunicationVPNClientManagerAgent extends Thread{
                     System.out.println(" WsCommunicationVPNClientManagerAgent - Auto stop ");
                     //Auto stop
                     isRunning = Boolean.FALSE;
+                    this.interrupt();
                 }
 
                 for (NetworkServiceType networkServiceType : vpnClientActiveCache.keySet()) {
