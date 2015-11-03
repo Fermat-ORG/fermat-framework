@@ -440,7 +440,7 @@ public class AssetReceptionMonitorAgent implements Agent,DealsWithLogger,DealsWi
         }
 
         private ActorAssetIssuer getActorAssetIssuer(String senderId) throws CantGetAssetIssuerActorsException {
-            List<ActorAssetIssuer> actorAssetIssuerList=actorAssetIssuerManager.getAllAssetIssuerActorRegistered();
+            List<ActorAssetIssuer> actorAssetIssuerList=actorAssetIssuerManager.getAllAssetIssuerActorInTableRegistered();
             for(ActorAssetIssuer actorAssetIssuer : actorAssetIssuerList){
                 if(actorAssetIssuer.getPublicKey().equals(senderId)){
                     return actorAssetIssuer;

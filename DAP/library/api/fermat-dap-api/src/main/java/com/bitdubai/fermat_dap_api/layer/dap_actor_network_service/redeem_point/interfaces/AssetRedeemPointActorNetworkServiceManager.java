@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point
 
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRequestListActorAssetRedeemPointRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.RequestedListNotReadyRecevivedException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
@@ -44,7 +45,7 @@ public interface AssetRedeemPointActorNetworkServiceManager {
      *
      * @return List<ActorAssetRedeemPoint>
      */
-    public List<ActorAssetRedeemPoint> getListActorAssetRedeemPointRegistered() throws RequestedListNotReadyRecevivedException;
+    public List<ActorAssetRedeemPoint> getListActorAssetRedeemPointRegistered() throws CantRequestListActorAssetRedeemPointRegisteredException;
 
 
 }

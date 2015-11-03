@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces;
 
 
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 
@@ -26,7 +26,7 @@ public interface ActorAssetRedeemPointManager {
      *
      * @throws CantGetAssetRedeemPointActorsException
      */
-    List<ActorAssetRedeemPoint> getAllAssetRedeemPointActorRegistered() throws CantGetAssetRedeemPointActorsException;
+    List<ActorAssetRedeemPoint> getAllAssetRedeemPointActorInTableRegistered() throws CantGetAssetRedeemPointActorsException;
 
     /**
      * The method <code>getAllAssetIssuerActorConnected</code> receives All Actors with have CryptoAddress in BD
@@ -35,11 +35,28 @@ public interface ActorAssetRedeemPointManager {
      */
     List<ActorAssetRedeemPoint> getAllRedeemPointActorConnected() throws CantGetAssetRedeemPointActorsException;
 
+
+    /**
+     * The method <code>registerActorInActorNetowrkSerice</code> Register or Add Actor a Lst in
+     * Actor Network Service
+     *
+     * @throws CantCreateActorRedeemPointException
+     */
+    void registerActorInActorNetowrkSerice() throws CantCreateActorRedeemPointException;
+
+    /**
+     * The method <code>connectToActorAssetUser</code> Stablish Connection
+     * with Issuer (Requester) and Lists Users for get a CryptoAdress (Delivered)
+     *
+     * @throws CantConnectToActorAssetRedeemPointException
+     */
+    void connectToActorAssetRedeemPoint(ActorAssetUser requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantConnectToActorAssetRedeemPointException;
+
     /**
      * The method <code>createActorAssetUserFactory</code> create Actor in Actor Network Service
      *
      * @throws CantCreateActorRedeemPointException
      */
-    ActorAssetRedeemPoint createActorAssetRedeemPointFactory(String assetRedeemPointActorPublicKey, String assetRedeemPointActorName, byte[] assetRedeemPointActorprofileImage, Location assetRedeemPointActorlocation) throws CantCreateActorRedeemPointException;
+//    ActorAssetRedeemPoint createActorAssetRedeemPointFactory(String assetRedeemPointActorPublicKey, String assetRedeemPointActorName, byte[] assetRedeemPointActorprofileImage, Location assetRedeemPointActorlocation) throws CantCreateActorRedeemPointException;
 
 }
