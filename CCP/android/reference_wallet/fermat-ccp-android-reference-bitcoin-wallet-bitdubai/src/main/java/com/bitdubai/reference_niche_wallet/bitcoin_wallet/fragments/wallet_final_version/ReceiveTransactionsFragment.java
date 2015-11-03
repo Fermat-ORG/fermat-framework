@@ -172,6 +172,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
         super.onCreate(savedInstanceState);
 
+
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
 
         referenceWalletSession = (ReferenceWalletSession)walletSession;

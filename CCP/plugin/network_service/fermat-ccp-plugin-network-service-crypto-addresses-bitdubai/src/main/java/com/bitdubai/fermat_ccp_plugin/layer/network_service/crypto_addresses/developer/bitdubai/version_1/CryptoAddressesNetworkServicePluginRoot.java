@@ -52,15 +52,12 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interf
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.database.CommunicationNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.database.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.FailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.NewReceiveMessagesNotificationEventHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.exceptions.CantInitializeNetworkServiceDatabaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.AbstractCommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantCreateRequestException;
@@ -74,6 +71,9 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.dev
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.NetworkServiceMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.structure.CryptoAddressesExecutorAgent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.database.CommunicationNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInitializeNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithWsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -126,7 +126,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     /**
      * Represent the cryptoPaymentRequestNetworkServiceConnectionManager
      */
-    private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
+    private AbstractCommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
@@ -690,7 +690,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      */
     @Override
     public void initializeCommunicationNetworkServiceConnectionManager() {
-        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
+        this.communicationNetworkServiceConnectionManager = new AbstractCommunicationNetworkServiceConnectionManager(
                 this.getPlatformComponentProfilePluginRoot(),
                 identity,
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
@@ -772,10 +772,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
             System.out.println("********* Crypto Addresses: Successful initialize and start of Executor Agent. ");
 
-            initializeMessagesListeners();
-
-            System.out.println("********* Crypto Addresses: Now listening NEW_NETWORK_SERVICE_MESSAGE_RECEIVED_NOTIFICATION. ");
-
         } catch(CantStartAgentException e) {
 
             CantStartPluginException pluginStartException = new CantStartPluginException(e, "", "Problem initializing crypto addresses dao.");
@@ -800,9 +796,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
             this.register = Boolean.TRUE;
 
             initializeAgent();
-
-            initializeMessagesListeners();
-
         }
 
     }
@@ -814,22 +807,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                 "FAILED CONNECTION WITH "+remoteParticipant.getAlias()+"\n" +
                 "--------------------------------------------------------");
         cryptoAddressesExecutorAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
-
-    }
-
-    private void initializeMessagesListeners(){
-        /*
-         * Listen and handle Complete Request List Component Registered Notification Event
-         */
-
-//        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
-//        fermatEventListener.setEventHandler(new New(cryptoTransmissionAgent));
-//        eventManager.addListener(fermatEventListener);
-//        listenersAdded.add(fermatEventListener);
-
-        /**
-         *
-         */
 
     }
 
