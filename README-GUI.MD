@@ -184,18 +184,33 @@ Donde: **cbp** es la plataforma, **android** es el dispositivo, **sub-app** es e
 <br>
 
 ### Navigation structure
+ 
+- Hay que explicarlo con ejemplos.
+
 ----------------------
 
 ### Android api
+
+- Hay que mostrar el framework que estamos creando..
+
 ----------------------
 
 ### Fragments
+
+- Hay que mostrar la forma en la cual se crean los fragmentos y que todos extienden de FermatFragment.
+
 ----------------------
 
 ### Fragment factory
+
+- Hay que explicar el fragment factory, para que sirve y como se usa.
+
 ----------------------
 
 ### Sessions
+
+- Hay que darle una brebe explicación de las sesiones.
+
 ----------------------
 
 #### Wallet session
@@ -205,6 +220,9 @@ Donde: **cbp** es la plataforma, **android** es el dispositivo, **sub-app** es e
 ----------------------
 
 #### Settings
+
+- Brebe explicación de los settings con ejemplos
+- 
 ----------------------
 
 ## Part IV: References
