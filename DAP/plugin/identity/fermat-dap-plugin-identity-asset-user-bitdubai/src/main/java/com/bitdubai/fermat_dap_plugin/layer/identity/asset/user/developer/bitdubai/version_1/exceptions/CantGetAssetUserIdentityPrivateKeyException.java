@@ -5,10 +5,12 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by franklin on 02/11/15.
  */
-public class CantListAssetUserdentitiesException extends FermatException {
+public class CantGetAssetUserIdentityPrivateKeyException extends FermatException {
 
 
-    public CantListAssetUserdentitiesException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantGetAssetUserIdentityPrivateKeyException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
+
 }
