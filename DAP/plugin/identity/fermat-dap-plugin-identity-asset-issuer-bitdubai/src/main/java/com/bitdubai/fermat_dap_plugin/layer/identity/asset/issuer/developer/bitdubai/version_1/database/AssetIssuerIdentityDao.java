@@ -85,8 +85,8 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
-            database.closeDatabase();
+
+            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DB_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
