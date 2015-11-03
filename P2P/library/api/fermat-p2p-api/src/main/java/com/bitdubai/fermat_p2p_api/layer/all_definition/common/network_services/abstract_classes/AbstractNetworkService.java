@@ -143,10 +143,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
             final String[] identityKeyPairSplit = identityFileContent.split(PAIR_SEPARATOR);
 
-            System.out.println("\n\n***************** vieja identidad --"+ getPluginVersionReference().getPluginDeveloperReference().getPluginReference().getPlugin().name());
-            System.out.println(identityFileContent);
-            System.out.println("***************** vieja identidad --"+ getPluginVersionReference().getPluginDeveloperReference().getPluginReference().getPlugin().name()+"\n\n");
-
             if (identityKeyPairSplit.length == 2)
                 this.identity = new ECCKeyPair(identityKeyPairSplit[0], identityKeyPairSplit[1]);
             else
@@ -169,11 +165,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
                 pluginTextFile.persistToMedia();
 
                 this.identity = identity;
-
-                System.out.println("\n\n***************** nueva identidad --"+ getPluginVersionReference().getPluginDeveloperReference().getPluginReference().getPlugin().name());
-                System.out.println(identity.getPublicKey());
-                System.out.println(identity.getPrivateKey());
-                System.out.println("***************** nueva identidad --"+ getPluginVersionReference().getPluginDeveloperReference().getPluginReference().getPlugin().name()+"\n\n");
 
             } catch (CantCreateFileException | CantPersistFileException z) {
 
