@@ -29,6 +29,9 @@ public class RedeemPointRedemptionEventHandler implements FermatEventHandler {
         if (fermatEvent == null)
             throw new CantSaveEventException(null, "Handling the ReceivedNewDigitalAssetMetadataNotificationEvent", "Illegal Argument, this method takes an ReceivedNewDigitalAssetMetadataNotificationEvent and was passed an null");
 
+        System.out.println("VAMM: RECEIVED A NEW EVENT!");
+        System.out.println("VAMM: Type: " + fermatEvent.getEventType() + " - Source: " + fermatEvent.getSource());
+
         if (recorderService.getStatus() != ServiceStatus.STARTED) {
             throw new TransactionServiceNotStartedException();
         }

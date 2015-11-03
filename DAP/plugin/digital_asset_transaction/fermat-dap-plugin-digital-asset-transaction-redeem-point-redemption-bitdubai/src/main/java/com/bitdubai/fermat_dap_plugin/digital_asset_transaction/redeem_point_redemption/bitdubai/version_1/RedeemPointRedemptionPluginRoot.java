@@ -5,12 +5,23 @@ import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
@@ -23,18 +34,25 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.DealsWithActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DealsWithAssetTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_redemption.interfaces.RedeemPointRedemptionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.DealsWithAssetRedeemPointWallet;
+import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.developer_utils.AssetRedeemPointRedemptionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.database.AssetRedeemPointRedemptionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.database.AssetRedeemPointRedemptionDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.events.RedeemPointRedemptionMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.events.RedeemPointRedemptionRecorderService;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +62,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 18/10/15.
  */
-public class RedeemPointRedemptionPluginRoot implements Plugin, Service, DealsWithErrors, LogManagerForDevelopers, DealsWithPluginIdentity, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, DealsWithLogger, DealsWithActorAssetRedeemPoint, DealsWithAssetTransmissionNetworkServiceManager, DealsWithAssetRedeemPointWallet, DealsWithEvents, DealsWithActorAssetUser {
+public class RedeemPointRedemptionPluginRoot implements RedeemPointRedemptionManager, Plugin, Service, DealsWithErrors, LogManagerForDevelopers, DealsWithPluginIdentity, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, DealsWithLogger, DealsWithActorAssetRedeemPoint, DealsWithAssetTransmissionNetworkServiceManager, DealsWithAssetRedeemPointWallet, DealsWithEvents, DealsWithActorAssetUser, DatabaseManagerForDevelopers {
 
     //VARIABLE DECLARATION
     private static Map<String, LogLevel> newLoggingLevel;
@@ -85,7 +103,7 @@ public class RedeemPointRedemptionPluginRoot implements Plugin, Service, DealsWi
     //PUBLIC METHODS
     @Override
     public void start() throws CantStartPluginException {
-        System.out.println("PLUGIN REDEEMPOINT REDEMPTION INICIADO!!");
+        System.out.println("VAMM: PLUGIN REDEEMPOINT REDEMPTION INICIADO!!");
 
         String context = "pluginId : " + pluginId + "\n" +
                 "ErrorManager : " + errorManager + "\n" +
@@ -107,6 +125,7 @@ public class RedeemPointRedemptionPluginRoot implements Plugin, Service, DealsWi
             monitorAgent.start();
             recorderService = createNewRecorderService();
             recorderService.start();
+            test();
         } catch (CantSetObjectException e) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, context, "There was a null reference, check the context.");
         } catch (CantCreateDatabaseException e) {
@@ -117,6 +136,8 @@ public class RedeemPointRedemptionPluginRoot implements Plugin, Service, DealsWi
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, context, "");
         } catch (Exception e) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), context, "");
+        } finally {
+            this.status = ServiceStatus.STOPPED;
         }
         this.status = ServiceStatus.STARTED;
     }
@@ -156,6 +177,13 @@ public class RedeemPointRedemptionPluginRoot implements Plugin, Service, DealsWi
     private RedeemPointRedemptionRecorderService createNewRecorderService() throws CantSetObjectException {
         RedeemPointRedemptionRecorderService recorderService = new RedeemPointRedemptionRecorderService(eventManager, pluginDatabaseSystem, pluginId);
         return recorderService;
+    }
+
+    private void test() {
+        //RAISE EVENT
+        FermatEvent eventToRaise = eventManager.getNewEvent(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
+        eventToRaise.setSource(EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION);
+        eventManager.raiseEvent(eventToRaise);
     }
 
     //GETTER AND SETTERS
@@ -270,6 +298,40 @@ public class RedeemPointRedemptionPluginRoot implements Plugin, Service, DealsWi
     @Override
     public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
         this.actorAssetUserManager = actorAssetUserManager;
+    }
+
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        AssetRedeemPointRedemptionDeveloperDatabaseFactory factory = new AssetRedeemPointRedemptionDeveloperDatabaseFactory(this.pluginId, this.pluginDatabaseSystem);
+        return factory.getDatabaseList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        return AssetRedeemPointRedemptionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        Database database;
+        try {
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_DATABASE);
+            return AssetRedeemPointRedemptionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+            /**
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            FermatException e = new CantDeliverDatabaseException("Cannot open the database", cantOpenDatabaseException, "DeveloperDatabase: " + developerDatabase.getName(), "");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (DatabaseNotFoundException databaseNotFoundException) {
+            FermatException e = new CantDeliverDatabaseException("Database does not exists", databaseNotFoundException, "DeveloperDatabase: " + developerDatabase.getName(), "");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (Exception exception) {
+            FermatException e = new CantDeliverDatabaseException("Unexpected Exception", exception, "DeveloperDatabase: " + developerDatabase.getName(), "");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+        // If we are here the database could not be opened, so we return an empty list
+        return Collections.EMPTY_LIST;
     }
     //INNER CLASSES
 }

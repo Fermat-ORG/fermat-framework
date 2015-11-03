@@ -109,7 +109,7 @@ public class AssetRedeemPointRedemptionDeveloperDatabaseFactory implements Deals
         metadataColumns.add(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TIMESTAMP_COLUMN_NAME);
 
         DeveloperDatabaseTable metadataTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME, metadataColumns);
-        tables.add(eventsRecorderTable);
+        tables.add(metadataTable);
 
 
         return tables;

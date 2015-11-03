@@ -79,6 +79,10 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
         return getPendingEventsBySource(EventSource.NETWORK_SERVICE_ACTOR_ASSET_USER);
     }
 
+    public List<String> getPendingAssetTransmissionEvents() throws CantLoadAssetRedemptionEventListException {
+        return getPendingEventsBySource(EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION);
+    }
+
     public EventType getEventTypeById(String id) throws CantLoadAssetRedemptionEventListException, InvalidParameterException, RecordsNotFoundException {
         return EventType.getByCode(getStringFieldByEventId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
     }
@@ -313,7 +317,7 @@ public class AssetRedeemPointRedemptionDAO implements AutoCloseable {
 
             DatabaseTableFilter statusFilter = eventsRecordedTable.getEmptyTableFilter();
             statusFilter.setColumn(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_STATUS_COLUMN_NAME);
-            statusFilter.setValue(EventStatus.PENDING.toString());
+            statusFilter.setValue(EventStatus.PENDING.getCode());
             statusFilter.setType(DatabaseFilterType.EQUAL);
 
             DatabaseTableFilter sourceFilter = eventsRecordedTable.getEmptyTableFilter();
