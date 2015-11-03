@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
  * Created by Luis Campo (campusprize@gmail.com) on 02/11/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class HandleEventTest {
+public class OnBlockChainHandleEventTest {
     @Mock
     private EventManager eventManager;
     @Mock
