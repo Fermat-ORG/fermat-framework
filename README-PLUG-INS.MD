@@ -113,7 +113,7 @@ All of them seprated by " - ".
 
 Issues that needs to be linked to it's parent must have their first line starting with "Parent: " + http link to parent issue. 
 
-##### Tagging the team leader
+##### Tagging the Team Leader
 
 Team leaders are tagged in the second line in order to ask them to assign the issue to you and at the same time suscribe to any issue update. This helps team leaders to follow the issue events and provide assistance or guidance is they see something wrong. The suggested format is:
 
@@ -270,18 +270,18 @@ Yes, we have two of them and are the following:
 
 ** The Deals With Interface ** : This interface is intended to be implemented by the Plug-ins consuming the service of a certain Plug-in. By implementing it, they signal the Framework to deliver them a reference of the Plug-in they need to call.
 
-##### where do we define the public interfaces?
+##### Where do we define the public interfaces?
 
 Public interfaces are defined at the API library of the Platform were the Plug-in belongs.
 
-##### How many interfaces can a Plug-in have?
+##### How many public interfaces can a Plug-in have?
 
 There is no limit regarding the interfaces a Plug-in may have. Having said that, it is highly recommended no to expose the internal structure of the Plug-in creating a Public Interface for each of the internal classes. 
 
 <br>
 #### Database Model
 
-##### How do we think about the Database Model of the Plug-in?
+##### How do we analize the Database Model of the Plug-in?
 
 ##### How do we choose between a Database or a File?
 
@@ -291,14 +291,17 @@ There is no limit regarding the interfaces a Plug-in may have. Having said that,
 
 #### Internal Structure Class Model
 
-##### How free Am I to choose a class model for the internal structure?
+##### How free are you to choose a class model for the internal structure?
 
 
 <br>
 ### Implementation
+------------------
 
+<br>
 #### Developer Class
 
+<br>
 #### Plug-in Root
 
 Implementation notes:
@@ -321,6 +324,7 @@ The Plugin Root class is that by which initiate the plug-in functions in the app
 These implementations ensure that the entire class structure of the plug-in to be recognized as a plug-in for the core of the platform and to establish its status as a service operation.
 If the plug-in has implemented the use of a database **DealsWithPluginDatabaseSystem** implementing the recommended interface, which lays the foundation for the creation and use of the database in the plug-in. For this particular case, the implementation of the **DatabaseManagerForDevelopers** interface is also recommended, which allows the visualization of the information in the database plug-in at runtime.
 
+<br>
 #### Public Interfaces
 
 
@@ -337,7 +341,7 @@ Additional notes:
  * Utils:       Layer -> PluginName -> Utils
 
 
-
+<br>
 #### Database
 
 To implement a database on a plug-in should follow a predetermined structure design, which basically consists in the creation of three classes:
@@ -357,7 +361,7 @@ Additionally, if required that information the database can be displayed through
 
 To facilitate the work of creating these classes, Fermat has developed a script in Groovy, which automates the creation of these classes, following the established design, this plugin is available at: https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/database/database_classes_generator/documentation_en.md and https://github.com/bitDubai/fermat/blob/master/fermat-documentation/scripts/database/database_classes_generator/script.groovy
 
-
+<br>
 #### Agents
 
 As the basic purpose of an agent is to run a parallel process or simultaneous to the main run of Plug-in, usually in order to achieve this we need to create classes that extend the Thread class, and rewrite the main "run (method) "which is to be run primarily when starting a new thread or process which represent this agent.
@@ -373,8 +377,8 @@ Example: TemplateNetworkServiceRegistrationProcessAgent.
 
 * Consider and calculate the timeout (sleeping time) between each run, the process performed by the agent, since very straight executions can reduce application performance considerably.
 
-
-#### Structure
+<br>
+#### Internal Structure
 
 ##### Structure Root
 
@@ -382,12 +386,13 @@ Example: TemplateNetworkServiceRegistrationProcessAgent.
 
 ##### Agents
 
+<br>
 #### Event Handlers
 
 
 <br>
 
-## Parte IV: References
+## Part IV: References
 
 <br>
 
