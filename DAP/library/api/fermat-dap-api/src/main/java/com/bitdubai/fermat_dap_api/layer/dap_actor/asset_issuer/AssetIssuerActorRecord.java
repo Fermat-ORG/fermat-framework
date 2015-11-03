@@ -38,6 +38,26 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         this.publicKey  = publicKey ;
     }
 
+    /**
+     *  Method for Set Actor in Actor Network Service Issuer
+     */
+    public AssetIssuerActorRecord(String name,
+                                  String publicKey,
+                                  byte[] profileImage,
+                                  Location location) {
+
+        this.name                   = name                      ;
+        this.publicKey              = publicKey                 ;
+        this.profileImage           = profileImage.clone()      ;
+        if (location != null) {
+            this.locationLatitude   = location.getLatitude()    ;
+            this.locationLongitude  = location.getLongitude()   ;
+        }else{
+            this.locationLatitude   = (double) 0                ;
+            this.locationLongitude  = (double) 0                ;
+        }
+    }
+
     public AssetIssuerActorRecord(String name,
                                   String publicKey,
                                   byte[] profileImage,
@@ -174,10 +194,10 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         return locationLongitude;
     }
 
-    @Override
-    public CryptoAddress getCryptoAddress() {
-        return cryptoAddress;
-    }
+//    @Override
+//    public CryptoAddress getCryptoAddress() {
+//        return cryptoAddress;
+//    }
 
     public void setCryptoAddress(CryptoAddress cryptoAddress) {
         if(cryptoAddress != null)
