@@ -1,12 +1,13 @@
-package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure;
 
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractCommunicationRegistrationProcessNetworkServiceAgent</code>
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.AbstractCommunicationRegistrationProcessNetworkServiceAgent</code>
  * contains all the basic functionality of a CommunicationRegistrationProcessNetworkServiceAgent.
  *
  * The method <code>registrationProcess</code> can be override to modify its behavior.
@@ -16,7 +17,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AbstractCommunicationRegistrationProcessNetworkServiceAgent extends FermatAgent {
+public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgent extends FermatAgent {
 
     /*
      * Represent the sleep time for the read or send (5000 milliseconds)
@@ -26,7 +27,7 @@ public class AbstractCommunicationRegistrationProcessNetworkServiceAgent extends
 
     private final Thread agentThread;
 
-    private final AbstractNetworkService         networkServicePluginRoot      ;
+    private final AbstractNetworkService networkServicePluginRoot      ;
     private final CommunicationsClientConnection communicationsClientConnection;
 
     /**
@@ -62,7 +63,7 @@ public class AbstractCommunicationRegistrationProcessNetworkServiceAgent extends
     }
 
     @Override
-    public void stop() {
+    public final void stop() {
 
         this.agentThread.interrupt();
 
