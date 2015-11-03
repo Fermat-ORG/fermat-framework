@@ -46,6 +46,6 @@ public interface IdentityAssetIssuerManager extends ModuleManager {
      * @return
      * @throws CantListAssetIssuersException
      */
-    boolean  hasAssetUserIdentity() throws CantListAssetIssuersException;
+    boolean  hasAssetUserIdentity() throws CantListAssetIssuersException ;
 
 }
