@@ -1,6 +1,4 @@
-# Fermat
-
-## A Trust-less Financial Application Framework
+## Fermat: A Trust-less Financial Application Framework
 
 <br>
 ### Abstract
