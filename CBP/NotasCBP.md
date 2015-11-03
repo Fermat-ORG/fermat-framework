@@ -11,7 +11,7 @@
 **Crypto Broker**
 - estado de venta
 - precio de mercaderia
-- fecha de vencimiento del pagoOOO
+- fecha de vencimiento del pagoOOO1111
 - lugar de pago
 - fecha de entrega de mercaderia
 
