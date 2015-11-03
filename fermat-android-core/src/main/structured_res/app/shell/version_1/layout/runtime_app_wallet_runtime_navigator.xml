@@ -39,40 +39,45 @@
          space available using match_parent in both dimensions. -->
 
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:id="@+id/container_header_balance"
-            android:layout_alignParentTop="true">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:id="@+id/container_header_balance"
+                app:layout_scrollFlags="scroll|enterAlways"
+                >
 
-        </RelativeLayout>
-
-
-        <com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="48dip"
-            android:background="@drawable/background_tabs"
-            android:layout_below="@+id/container_header_balance"
-            />
+            </RelativeLayout>
 
 
 
+            <com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="48dip"
+                android:background="@drawable/background_tabs"
+                android:layout_below="@+id/container_header_balance"
+                />
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tabs"
-             />
 
-        <RelativeLayout
-            android:id="@+id/only_fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
 
-        </RelativeLayout>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tabs"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                 />
+
+            <RelativeLayout
+                android:id="@+id/only_fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+            </RelativeLayout>
+
+
 
 
     </RelativeLayout>
