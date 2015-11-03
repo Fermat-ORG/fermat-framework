@@ -25,7 +25,7 @@ A built-in wallet-factory allows developers to reuse the highest level component
 
 The solution we propose begins with a Framework that must be portable into different OS. On a multi-layered format, the bottom most layer is interfacing the OS and must be built with replaceable components implementing the same set of public interfaces (polymorphism) in order to build on top of it a single set of OS-independent components. At the same time, the upper most layers are again OS-dependent, providing a native GUI on each device.
 
-We identify 3 different kind of components that we arbitrary call **Add-ons**, **Plug-in**, and **GUI** components. We define Add-ons as low level components that do not need to identify themselves to consume services from other components. They have broad access to the file system and databases. Plug-ins have their own identity and must identify themselves to other components to consume their services which in turn restrict the scope of their services based on the caller's identity (for example the filesystem addon would only give access to a Plug-in's own folder structure, the database system addon would only give access to a plugin's own databases, and so on). The problem of running Plug-ins from untrusted sources in handled in this way.
+We identify 3 different kind of components that we arbitrary call **Add-ons**, **Plug-ins**, and **GUI** components. We define Add-ons as low level components that do not need to identify themselves to consume services from other components. They have broad access to the file system and databases. Plug-ins have their own identity and must identify themselves to other components to consume their services which in turn restrict the scope of their services based on the caller's identity (for example the filesystem addon would only give access to a Plug-in's own folder structure, the database system addon would only give access to a plugin's own databases, and so on). The problem of running Plug-ins from untrusted sources in handled in this way.
 
 The Framework core is in charge of initializing Add-ons and Plug-ins and managing Plug-ins identities. An internal API library defines the public interfaces that each component exposes to the rest of the components within the same device in order to allow then to consume their services locally. This provides a strong encapsulation of each component's business logic allowing them to freely define their internal structure and data model.
 
@@ -54,7 +54,7 @@ To be able to be found, a client registers itself and some inner components and 
 
 #### To developers
 
-Plug-ins developers declare a **Micro-Use-License** for each plug-in they add to the Framework. Wallet or Financial Apps developers declare a **Micro-Use-License** for their components. End users install the Apps (wallets) of their choice and the license paid is the summary of the App's micro-use-license plus all the micro-use-licenses of the plug-ins used by that App. 
+Plug-ins developers declare a _Micro-Use-License_ for each plug-in they add to the Framework. Wallet or Financial Apps developers declare a _Micro-Use-License_ for their components. End users install the Apps (wallets) of their choice and the license paid is the summary of the App's micro-use-license plus all the micro-use-licenses of the plug-ins used by that App. 
 
 The Framework assumes the responsibility to enforce the agreements, charge the end user and distribute the payments to all developers involved.
 
