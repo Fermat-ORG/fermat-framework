@@ -59,7 +59,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     /**
      * Represents the value of ENABLE_CLIENT
      */
-    public static final Boolean ENABLE_CLIENT = Boolean.FALSE;
+    public static final Boolean ENABLE_CLIENT = Boolean.TRUE;
 
     /**
      * Represent the WS_PROTOCOL
