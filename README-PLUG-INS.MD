@@ -298,8 +298,22 @@ There is no limit regarding the interfaces a Plug-in may have. Having said that,
 ### Implementation
 ------------------
 
-<br>
 #### Developer Class
+
+Currently there are two types of implementations for this class:
+
+** version 1 ** : It just instantiates the Plug-in Root and returns it to the Framework.
+
+** version 2 ** : It registers each version of the Plugin root into the Framework.
+
+To be able to use ** version 2 ** you must verify if the Platform your Plug-in belongs to already have it's own speciallized core-api or instead it is started by the Framework wide Fermat-core library.
+
+##### Code Samples
+
+** Version 1**
+
+
+
 
 <br>
 #### Plug-in Root
