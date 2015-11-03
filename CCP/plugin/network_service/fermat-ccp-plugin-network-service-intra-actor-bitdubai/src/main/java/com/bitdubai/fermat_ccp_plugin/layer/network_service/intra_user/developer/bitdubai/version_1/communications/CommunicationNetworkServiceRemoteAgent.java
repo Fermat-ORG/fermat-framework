@@ -251,7 +251,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
             if(!toReceive.isInterrupted()){
                 //Sleep for a time
-                toReceive.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+                Thread.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
             }
 
         } catch (InterruptedException e) {
@@ -331,7 +331,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
 
             if(!toSend.isInterrupted()){
                 //Sleep for a time
-                toSend.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
+                Thread.sleep(CommunicationNetworkServiceRemoteAgent.SLEEP_TIME);
             }
 
         } catch (InterruptedException e) {

@@ -24,7 +24,7 @@ public class AndroidPowerManager  implements PowerManager {
     @Override
     public int getLevel(){
 
-       BatteryManager man = new BatteryManager ();
+       //BatteryManager man = new BatteryManager ();
 
         android.os.PowerManager power =  (android.os.PowerManager)context.getSystemService(Context.POWER_SERVICE);
 
