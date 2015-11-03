@@ -212,6 +212,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
         list.add("Payment request");
         list.add("Settings");
         list.add("Logout");
+        list.add("Logout");
         try {
             getPaintActivtyFeactures().changeNavigationDrawerAdapter(new NavigationDrawerArrayAdapter(getActivity(),list,intraUserModuleManager.getActiveIntraUserIdentity()));
         } catch (CantGetActiveLoginIdentityException e) {
