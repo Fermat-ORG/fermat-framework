@@ -24,7 +24,7 @@ public interface ActorAssetRedeemPoint {
     String getName();
 
     /**
-     * The method <code>getContactRegistrationDate</code> gives us the date when both Redeem Points
+     * The method <code>getRegistrationDate</code> gives us the date when both Redeem Points
      * exchanged their information and accepted each other as contacts.
      *
      * @return the date
@@ -38,35 +38,35 @@ public interface ActorAssetRedeemPoint {
      */
     byte[] getProfileImage();
 
-
     /**
-     * Método {@code getCryptoAddress()}:
+     * The method <code>getConnectionState</code> gives us the connection state of the represented
+     * Asset Issuer
      *
-     * @return {@link CryptoAddress} con la información criptográfica del Redeem Point.
-     */
-    CryptoAddress getCryptoAddress();
-
-
-    /**
-     * Método {@code getConnectionState()}
-     * Representa el estado de conexión en el que se encuentra este Redeem Point actualmente.
-     *
-     * @return instancia de {@link ConnectionState} asociada al Redeem Point.
+     * @return the Connection state
      */
     ConnectionState getConnectionState();
-
-
     /**
-     * Metodo {@code getLocation()}:
-     * devuelve la ubicacion geografica del RedeemPoint.
+     * The method <code>getLocation</code> gives us the Location of the represented
+     * Redeem Point
      *
-     * @return un objeto {@link com.bitdubai.fermat_api.layer.osa_android.location_system.Location}
-     * que contiene las coordenadas y demas valores para ubicar al RedeemPoint en el mapa.
+     * @return the Location
      */
     Location getLocation();
 
+    /**
+     * The method <code>getLocationLatitude</code> gives us the Location of the represented
+     * Redeem Point
+     *
+     * @return the Location Latitude
+     */
     Double getLocationLatitude();
 
+    /**
+     * The method <code>getLocationLongitude</code> gives us the Location of the represented
+     * Redeem Point
+     *
+     * @return the Location Longitude
+     */
     Double getLocationLongitude();
     /**
      * Metodo {@code getAddress()}:
@@ -107,5 +107,12 @@ public interface ActorAssetRedeemPoint {
      * Redeem Point.
      */
     String getHoursOfOperation();
+
+    /**
+     * returns the crypto address to which it belongs
+     *
+     * @return CryptoAddress instance.
+     */
+    CryptoAddress getCryptoAddress();
 
 }

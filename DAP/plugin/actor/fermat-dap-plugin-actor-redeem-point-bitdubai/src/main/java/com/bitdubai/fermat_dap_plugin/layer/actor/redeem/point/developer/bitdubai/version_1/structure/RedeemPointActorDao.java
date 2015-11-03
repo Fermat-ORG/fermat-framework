@@ -124,22 +124,6 @@ public class RedeemPointActorDao implements Serializable {
         }
     }
 
-
-    /**
-     * Método createNewRedeemPoint.
-     * Crea un nuevo RedeemPoint y lo registra en la base de datos. Si ya existía un RedeemPoint
-     * creado con el PublicKey suministrado entonces a éste se le actualiza su {@link ConnectionState}
-     * al suministrado.
-     *
-     * @param redeemPoint                  Alguna implementación de {@link ActorAssetRedeemPoint} con los valores ya
-     *                                     seteados que se insetarán en la base de datos.
-     * @param redeemPointLoggedInPublicKey El PublicKey del usuario logeado.
-     * @throws CantAddPendingRedeemPointException las razones para que se arroje esta excepción son las
-     *                                            siguientes: -{@link CantInsertRecordException}
-     *                                            -{@link CantUpdateRedeemPointException} en caso de que ya existiese el RedeemPoint y no
-     *                                            se haya podido actualizar.
-     *                                            O en caso de que haya sucedido alguna excepción no prevista.
-     */
     public void createNewRedeemPoint(String redeemPointLoggedInPublicKey, ActorAssetRedeemPoint redeemPoint) throws CantAddPendingRedeemPointException {
 
         try {
@@ -217,33 +201,6 @@ public class RedeemPointActorDao implements Serializable {
         }
     }
 
-    /**
-     * Método updateRedeemPoint:
-     * este método actualiza todas las propiedades del , ActorAssetRedeemPoint incluyendo su imagen
-     * de perfil, por motivos de eficiencia el único campo que se revisa si no ha sido cambiado
-     * es la imagen de perfil, el resto simplemente se sobreescribe. El criterio para buscar al
-     * redeemPoint a actualizar es simplemente su llave primaria: "publicKey".
-     * <p></p>
-     * this method updates all the properties of the ActorAssetRedeemPoint, including its profile image,
-     * because of performance reasons the only field which check if it has been changed is the
-     * profile image, all the other fields just get overwrite. The filter for search the specific
-     * redeemPoint is its primary key: "publicKey".
-     *
-     * @param redeemPoint
-     * @throws RedeemPointNotFoundException            Si se provee un ActorAssetRedeemPoint cuya publicKey no esté
-     *                                                 registrada simplemente no se encontrarán registros, para esto se usa esta excepción para
-     *                                                 notificar al consumidor de la API que esa publicKey no se encuentra registrada.
-     *                                                 <p></p>
-     *                                                 If an ActorAssetRedeemPoint which public key is not registered in the database is provided then no
-     *                                                 records would be found thus no update would be made. I need to notify the consumer about that.
-     * @throws CantUpdateRedeemPointException          En caso de que haya un error con la base de datos.
-     *                                                 <p></p>
-     *                                                 If there's an error with the database.
-     * @throws CantGetUserDeveloperIdentitiesException Unchecked Exception.
-     *                                                 En caso de que no se consiga la tabla del ActorAssetRedeemPoint.
-     *                                                 <p></p>
-     *                                                 If the ActorAssetRedeemPoint database table can't be found.
-     */
     public void updateRedeemPoint(ActorAssetRedeemPoint redeemPoint) throws CantUpdateRedeemPointException, RedeemPointNotFoundException {
 
         DatabaseTable table;
@@ -286,20 +243,6 @@ public class RedeemPointActorDao implements Serializable {
         }
     }
 
-    /**
-     * Método updateRedeemPointConnectionState.
-     * Este método busca los registros por los PublicKey suministrados
-     * y luego actualiza su estado al suministrado.
-     *
-     * @param redeemPointLoggedInPublicKey
-     * @param redeemPointToAddPublicKey
-     * @param connectionState
-     * @throws CantUpdateRedeemPointException esta excepción es arrojada por
-     *                                        los siguientes motivos:
-     *                                        - {@link CantGetUserDeveloperIdentitiesException} en caso de que la tabla no exista.
-     *                                        - {@link CantLoadTableToMemoryException} en caso de que no se pueda cargar la tabla de la memoria.
-     *                                        - {@link CantUpdateRecordException} cuando sucede algún error durante la actualización del registro
-     */
     public void updateRedeemPointConnectionState(String redeemPointLoggedInPublicKey, String redeemPointToAddPublicKey, ConnectionState connectionState) throws CantUpdateRedeemPointException {
 
         DatabaseTable table;
@@ -327,7 +270,7 @@ public class RedeemPointActorDao implements Serializable {
             // 3) Get Redeem Point record and update state.
             for (DatabaseTableRecord record : table.getRecords()) {
                 record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode());
-                record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME, System.currentTimeMillis());
+                record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 table.updateRecord(record);
             }
         } catch (CantLoadTableToMemoryException e) {
@@ -367,7 +310,7 @@ public class RedeemPointActorDao implements Serializable {
             // 3) Get Redeem Point record and update state.
             for (DatabaseTableRecord record : table.getRecords()) {
                 record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode());
-                record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_MODIFIED_DATE_COLUMN_NAME, System.currentTimeMillis());
+                record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 table.updateRecord(record);
             }
         } catch (CantLoadTableToMemoryException e) {
@@ -381,22 +324,167 @@ public class RedeemPointActorDao implements Serializable {
         }
     }
 
-    /**
-     * Método getAllARedeemPoints.
-     * Devuelve una {@link List} de {@link ActorAssetRedeemPoint} que
-     * contiene todos los {@code ActorAssetRedeemPoint} para el Public Key
-     * del usuario que se suministra.
-     *
-     * @param redeemPointLoggedInPublicKey El PublicKey del usuario logeado.
-     * @param max                          Cantidad máxima de resultados
-     * @param offset                       Cantidad de paginación del query.
-     * @return Una lista con todos los récords encontrados, o una lista vacía si no se encontró ninguno.
-     * @throws CantGetRedeemPointsListException las razones para que se arroje esta excepción son:
-     *                                          - {@link CantLoadTableToMemoryException}
-     *                                          - {@link CantGetRedeemPointActorProfileImageException}
-     *                                          o que alguna excepción no prevista haya sucedido. Antes de arrojar esta excepción siempre se
-     *                                          cierra la base de datos en la que se está trabajando.
-     */
+    public int createNewAssetRedeemPointRegisterInNetworkServiceByList(List<ActorAssetRedeemPoint> actorAssetIssuerRecord) throws CantAddPendingRedeemPointException {
+        int recordInsert = 0;
+        try {
+            /**
+             * if Asset User exist on table
+             * change status
+             */
+
+            for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetIssuerRecord) {
+                if (redeemPointRegisteredExists(actorAssetRedeemPoint.getPublicKey())) {
+                    this.updateAssetRedeemPointConnectionStateActorNetworService(actorAssetRedeemPoint.getPublicKey(), actorAssetRedeemPoint.getConnectionState());
+                } else {
+                    /**
+                     * Get actual date
+                     */
+//                Date d = new Date();
+//                long milliseconds = d.getTime();
+//                String locationLatitude, locationLongitude;
+//                if (location.getLatitude() == null || location.getLongitude() == null) {
+//                    locationLatitude = "-";
+//                    locationLongitude = "-";
+//                } else {
+//                    locationLatitude = location.getLatitude().toString();
+//                    locationLongitude = location.getLongitude().toString();
+//                }
+
+                    DatabaseTable table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
+                    DatabaseTableRecord record = table.getEmptyRecord();
+
+                    record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, "-");
+                    record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorAssetRedeemPoint.getPublicKey());
+                    record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_NAME_COLUMN_NAME, actorAssetRedeemPoint.getName());
+
+                    System.out.println("Actor Asset User AÑADIDO a tabla REGISTER: " + actorAssetRedeemPoint.getName());
+                    System.out.println("Actor Asset User AÑADIDO a tabla REGISTER: " + ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
+
+                    //TODO se le coloca estado PENDING_LOCALLY_ACCEPTANCE indicando registro local  "Visible en Community".
+                    record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, ConnectionState.PENDING_LOCALLY_ACCEPTANCE.getCode());//actorAssetUser.getConnectionState().getCode());
+
+                    if (actorAssetRedeemPoint.getLocationLatitude() != null) {
+                        record.setDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME, actorAssetRedeemPoint.getLocationLatitude());
+                    }
+                    if (actorAssetRedeemPoint.getLocationLongitude() != null) {
+                        record.setDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME, actorAssetRedeemPoint.getLocationLongitude());
+                    }
+
+//                        if (actorAssetIssuer.getCryptoAddress() != null) {
+//                            record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, actorAssetUser.getCryptoAddress().getAddress());
+//                            record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, actorAssetUser.getCryptoAddress().getCryptoCurrency().getCode());
+//                        }
+
+                    record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, actorAssetRedeemPoint.getRegistrationDate());
+                    record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
+
+                    table.insertRecord(record);
+                    recordInsert = recordInsert + 1;
+                    /**
+                     * Persist profile image on a file
+                     */
+                    persistNewRedeemPointProfileImage(actorAssetRedeemPoint.getPublicKey(), actorAssetRedeemPoint.getProfileImage());
+                }
+            }
+            if(actorAssetIssuerRecord.isEmpty()){
+                this.updateAssetRedeemPointConnectionStateActorNetworService(ConnectionState.DISCONNECTED_REMOTELY);
+            }
+
+            database.closeDatabase();
+        } catch (CantInsertRecordException e) {
+            throw new CantAddPendingRedeemPointException("CAN'T INSERT REDEEM POINT REGISTERED IN ACTOR NETWORK SERVICE", e, "", "Cant create new ASSET ISSUER REGISTERED IN ACTOR NETWORK SERVICE, insert database problems.");
+        } catch (CantUpdateRedeemPointException e) {
+            throw new CantAddPendingRedeemPointException("CAN'T INSERT REDEEM POINT REGISTERED IN ACTOR NETWORK SERVICE", FermatException.wrapException(e), "", "Cant update exist ASSET USER REGISTERED IN ACTOR NETWORK SERVICE state, unknown failure.");
+        } catch (Exception e) {
+            throw new CantAddPendingRedeemPointException("CAN'T INSERT REDEEM POINT", FermatException.wrapException(e), "", "Cant create new ASSET USER, unknown failure.");
+        } finally {
+            database.closeDatabase();
+        }
+        return recordInsert;
+    }
+
+    public void updateAssetRedeemPointConnectionStateActorNetworService(ConnectionState connectionState) throws CantUpdateRedeemPointException {
+        DatabaseTable table;
+
+        try {
+            table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
+
+            if (table == null) {
+                throw new CantGetUserDeveloperIdentitiesException("Cant get Actor Asset Redeem Point Registered list, table not found.", "Asset Issuer Actor", "");
+            }
+
+            // 2) Find the Asset User , filter by keys.
+//            table.setStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, assetUserPublicKey, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            if(table.getRecords().size() > 0) {
+                // 3) Get Asset User record and update state.
+                for (DatabaseTableRecord record : table.getRecords()) {
+                    System.out.println("Actor Asset Redeem Point Actualizando tabla REGISTER - Desde lista VACIA: "+record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_NAME_COLUMN_NAME));
+                    System.out.println("Actor Asset Redeem Point Actualizando tabla REGISTER - Desde lista VACIA: "+ ConnectionState.DISCONNECTED_REMOTELY);
+
+                    record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode());
+
+//                if(cryptoAddress != null) {
+//                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
+//                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode());
+//                }
+
+                    record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
+                    table.updateRecord(record);
+                }
+            }
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantUpdateRedeemPointException(e.getMessage(), e, "Actor Asset Redeem Point Registered", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME + " table in memory.");
+        } catch (CantUpdateRecordException e) {
+            throw new CantUpdateRedeemPointException(e.getMessage(), e, "Actor Asset Redeem Point Registered", "Cant Update " + RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantUpdateRedeemPointException(e.getMessage(), FermatException.wrapException(e), "Asset User REGISTERED Actor", "Cant get developer identity list, unknown failure.");
+        } finally {
+            database.closeDatabase();
+        }
+    }
+
+    public void updateAssetRedeemPointConnectionStateActorNetworService(String assetIssuerToAddPublicKey, ConnectionState connectionState) throws CantUpdateRedeemPointException {
+
+        DatabaseTable table;
+
+        try {
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get Actor Asset Redeem Point Registered list, table not found.", "Asset Issuer Actor", "");
+            }
+
+            // 2) Find the Asset Issuer , filter by keys.
+            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, assetIssuerToAddPublicKey, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            // 3) Get Asset Issuer record and update state.
+            for (DatabaseTableRecord record : table.getRecords()) {
+                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode());
+                record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
+                table.updateRecord(record);
+            }
+
+        } catch (CantLoadTableToMemoryException | CantUpdateRecordException e) {
+            throw new CantUpdateRedeemPointException(e.getMessage(), e, "Actor Asset Redeem Point Registered", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantUpdateRedeemPointException(e.getMessage(), FermatException.wrapException(e), "asset issuer Actor", "Cant get developer identity list, unknown failure.");
+        } finally {
+            database.closeDatabase();
+        }
+    }
+
     public List<ActorAssetRedeemPoint> getAllARedeemPoints(String redeemPointLoggedInPublicKey, int max, int offset) throws CantGetRedeemPointsListException {
 
         // Setup method.
@@ -442,23 +530,6 @@ public class RedeemPointActorDao implements Serializable {
         return list;
     }
 
-    /**
-     * Método getRedeemPoints.
-     * Devuelve una {@link List} de {@code ActorAssetRedeemPoint}
-     * que es construida haciendo un query con los parámetros de búsqueda
-     * suministrados.
-     *
-     * @param redeemPointLoggedInPublicKey El PublicKey del usuario logeado.
-     * @param connectionState              El estado de conexión del RedeemPoint.
-     * @param max                          Cantidad máxima de resultados
-     * @param offset                       Cantidad de paginación del query.
-     * @return Una lista con todos los récords encontrados, o una lista vacía si no se encontró ninguno.
-     * @throws CantGetRedeemPointsListException las razones para que se arroje esta excepción son:
-     *                                          - {@link CantLoadTableToMemoryException}
-     *                                          - {@link CantGetRedeemPointActorProfileImageException}
-     *                                          o que alguna excepción no prevista haya sucedido. Antes de arrojar esta excepción siempre se
-     *                                          cierra la base de datos en la que se está trabajando.
-     */
     public List<ActorAssetRedeemPoint> getRedeemPoints(String redeemPointLoggedInPublicKey, ConnectionState connectionState, int max, int offset) throws CantGetRedeemPointsListException {
 
         // Setup method.
@@ -602,6 +673,8 @@ public class RedeemPointActorDao implements Serializable {
                  */
                 throw new CantGetUserDeveloperIdentitiesException("Cant get asset Issuer identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
             }
+            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_CONNECTION_STATE_COLUMN_NAME, ConnectionState.CONNECTED.getCode(), DatabaseFilterType.EQUAL);
+
 
             table.loadToMemory();
 
@@ -729,7 +802,7 @@ public class RedeemPointActorDao implements Serializable {
     private void setValuesToRecord(DatabaseTableRecord record, ActorAssetRedeemPoint redeemPoint) {
         record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_NAME_COLUMN_NAME, redeemPoint.getName());
         record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CONNECTION_STATE_COLUMN_NAME, redeemPoint.getConnectionState().getCode());
-        record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME, System.currentTimeMillis());
+        record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
         //LOCATION
 //        record.setDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOCATION_LONGITUDE_COLUMN_NAME, redeemPoint.getLocation().getLongitude());
 //        record.setDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOCATION_LATITUDE_COLUMN_NAME, redeemPoint.getLocation().getLatitude());
@@ -752,7 +825,7 @@ public class RedeemPointActorDao implements Serializable {
     private void setValuesToRecordRegistered(DatabaseTableRecord record, ActorAssetRedeemPoint redeemPoint) {
         record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_NAME_COLUMN_NAME, redeemPoint.getName());
         record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, redeemPoint.getConnectionState().getCode());
-        record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_MODIFIED_DATE_COLUMN_NAME, System.currentTimeMillis());
+        record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
         //LOCATION
 //        record.setDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME, redeemPoint.getLocation().getLongitude());
 //        record.setDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME, redeemPoint.getLocation().getLatitude());
@@ -796,13 +869,6 @@ public class RedeemPointActorDao implements Serializable {
         return profileImage;
     }
 
-    /**
-     * <p>Method that check if Redeem Point public key exists.
-     *
-     * @param redeemPointToAddPublicKey
-     * @return boolean exists
-     * @throws CantCreateNewDeveloperException
-     */
     private boolean redeemPointExists(String redeemPointToAddPublicKey) throws CantCreateNewDeveloperException {
 
         DatabaseTable table;
@@ -827,6 +893,32 @@ public class RedeemPointActorDao implements Serializable {
 
         } catch (Exception e) {
             throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Actor", "Cant check if alias exists, unknown failure.");
+        }
+    }
+
+    private boolean redeemPointRegisteredExists(String assetRedeemPointAddPublicKey) throws CantCreateNewDeveloperException {
+
+        DatabaseTable table;
+        /**
+         * Get developers identities list.
+         * I select records on table
+         */
+        try {
+            table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_TABLE_NAME);
+
+            if (table == null) {
+                throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists, table not  found.", "Actor Redeem Point", "Cant check if alias exists, table not found.");
+            }
+            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, assetRedeemPointAddPublicKey, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            return table.getRecords().size() > 0;
+
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantCreateNewDeveloperException(em.getMessage(), em, "Actor Redeem Point", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_TABLE_NAME + " table in memory.");
+
+        } catch (Exception e) {
+            throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Actor Redeem Point", "Cant check if alias exists, unknown failure.");
         }
     }
 

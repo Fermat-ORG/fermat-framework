@@ -35,17 +35,25 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
     }
 
+    /**
+     *  Method for Set Actor in Actor Network Service Redeem Point
+     */
     public RedeemPointActorRecord(String name,
                                   String publicKey,
                                   byte[] profileImage,
-                                  long registrationDate,
-                                  ConnectionState contactState) {
+                                  Location location) {
 
-        this.name               = name                  ;
-        this.publicKey          = publicKey             ;
-        this.profileImage       = profileImage.clone()  ;
-        this.registrationDate   = registrationDate      ;
-        this.connectionState    = contactState          ;
+        this.name                   = name                      ;
+        this.publicKey              = publicKey                 ;
+        this.profileImage           = profileImage.clone()      ;
+
+        if (location != null) {
+            this.locationLatitude   = location.getLatitude()    ;
+            this.locationLongitude  = location.getLongitude()   ;
+        }else{
+            this.locationLatitude   = (double) 0                ;
+            this.locationLongitude  = (double) 0                ;
+        }
     }
 
     public RedeemPointActorRecord(String name,
