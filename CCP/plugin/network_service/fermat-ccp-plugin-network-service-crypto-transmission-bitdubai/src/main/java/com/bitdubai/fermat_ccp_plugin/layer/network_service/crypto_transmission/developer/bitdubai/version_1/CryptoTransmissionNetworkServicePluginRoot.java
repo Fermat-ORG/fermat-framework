@@ -122,6 +122,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         DatabaseManagerForDevelopers {
 
 
+    private PlatformComponentProfile platformComponentProfilePluginRoot;
+
     @Override
     public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
         return null;
@@ -1232,7 +1234,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         Map<String, Object> filters = new HashMap<>();
         filters.put(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_FIRST_KEY_COLUMN, MessagesStatus.NEW_RECEIVED.getCode());
 
-        return communicationNetworkServiceConnectionManager.getIncomingMessageDao().findAll(filters);
+        return null;//communicationNetworkServiceConnectionManager.getIncomingMessageDao().findAll(filters);
     }
 
     /**
@@ -1242,10 +1244,18 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     public void markAsRead(FermatMessage fermatMessage) throws CantUpdateRecordDataBaseException {
 
         ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-        communicationNetworkServiceConnectionManager.getIncomingMessageDao().update(fermatMessage);
+        //communicationNetworkServiceConnectionManager.getIncomingMessageDao().update(fermatMessage);
     }
 
     public PlatformComponentProfile isRegisteredConnectionForActorPK(String actorPublicKey){
         return cacheConnections.get(actorPublicKey);
+    }
+
+    public void handleNewMessages(FermatMessage data) {
+
+    }
+
+    public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfilePluginRoot) {
+        this.platformComponentProfilePluginRoot = platformComponentProfilePluginRoot;
     }
 }
