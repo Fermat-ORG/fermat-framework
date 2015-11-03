@@ -1,5 +1,6 @@
+# Fermat
 
-##Fermat: A Trust-less Financial Application Framework
+## A Trust-less Financial Application Framework
 
 <br>
 ### Abstract
@@ -120,9 +121,23 @@ Through two different paths, the value and the meta-data arrives to the recipien
 
 ### Syncronization
 
+We define a Private Device Network as a network of devices owned by the same end user. Using the Fermat Network, the Framework syncronizes the information on all nodes of this Privete Network. In this way all the information and system wide indentities belonging to the End User are available at any device.
 
+Crypto funds are kept into a Multi-Sig vault and there is a shared Petty-Cash-Vault accesible from all nodes even when they are off-line from this Private Network. An automated process monitors the Petty-Cash-Vault and tops it up when needed. Several nodes must sign the top up transaction in order to proceed. In this way if a device is lost or stolen, only the Petty-Cash fund is at risk. End users can eject stolen devices from it's Private Network and if they act quickly they might be on time to re-create the Petty-Cash fund under the new configuration and saving those funds.
 
+### Privacy
 
+The proposed system complements the privacy properties of crypto networks, extending them to the full stack needed to run different kind of financial applications. By using it's own P2P network with point to point encryption for transporting meta-data both value and information are under similar privacy standard.
+
+Identities are public keys related to private keys kept by the End User and not shared to anyone in any way. 
+
+Even the collection of system information for visualization and statistics uses hashes of public keys to protect End User's privacy and at the same time preserve the relationships between them.
+
+### Conclusion
+
+We have proposed a Framework developing and running Trust-less Financial Applications. Bitcoin provided part of the solution but standalone wallts fell short to show the way of how to keep the End User away from trusting third parties at a higher level. Whitout solving obvious problems like how to exchange meta-data in a trust-less way, and how to prevent the lost of private keys (funds and identities) the industry evolved introducing trust again into the system.
+
+With a Framework we not only solve the problem for a single wallet application, but also to any kind of financial application that could benefit from being crypto and digital asset enabled and trust-less at the same time.
 
 
 
