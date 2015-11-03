@@ -20,8 +20,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantConfirmAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantGetPendingAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.database.WalletContactsMiddlewareDao;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressDeniedEventException;
@@ -353,7 +353,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
         }
     }
 
-    public void handleCryptoAddressReceivedEvent(UUID requestId) throws CantHandleCryptoAddressReceivedEventException {
+    public void handleCryptoAddressReceivedEvent(final UUID requestId) throws CantHandleCryptoAddressReceivedEventException {
 
         try {
 
@@ -370,7 +370,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
         }
     }
 
-    public void handleCryptoAddressDeniedEvent(UUID requestId) throws CantHandleCryptoAddressDeniedEventException {
+    public void handleCryptoAddressDeniedEvent(final UUID requestId) throws CantHandleCryptoAddressDeniedEventException {
 
         try {
             System.out.println("----------------------------\n" +
@@ -386,7 +386,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
         }
     }
 
-    public void handleCryptoAddressReceivedEvent(CryptoAddressRequest request) throws CantHandleCryptoAddressReceivedEventException {
+    public void handleCryptoAddressReceivedEvent(final CryptoAddressRequest request) throws CantHandleCryptoAddressReceivedEventException {
 
         try {
             try {
@@ -437,7 +437,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
         }
     }
 
-    public void handleCryptoAddressDeniedEvent(CryptoAddressRequest request) throws CantHandleCryptoAddressDeniedEventException {
+    public void handleCryptoAddressDeniedEvent(final CryptoAddressRequest request) throws CantHandleCryptoAddressDeniedEventException {
 
         try {
             try {

@@ -120,7 +120,6 @@ dependencies {
     compile project(':fermat-wpd-plugin-sub-app-module-wallet-publisher-bitdubai')
     compile project(':fermat-wpd-plugin-sub-app-module-wallet-store-bitdubai')
     compile project(':fermat-bch-plugin-crypto-network-bitcoin-bitdubai')
-    compile project(':fermat-bch-plugin-middleware-crypto-addresses-bitdubai')
     compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
     compile project(':fermat-dap-plugin-wallet-module-asset-user-bitdubai')
     compile project(':fermat-dap-plugin-wallet-module-redeem-point-bitdubai')
