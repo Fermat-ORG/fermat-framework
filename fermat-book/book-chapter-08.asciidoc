@@ -2,20 +2,14 @@
 == Fermat Plug-ins Platform
 
 This platform encapsulates all the components that provide the basic services that build the back end infrastructure of Fermat framework. +
-Fermat recognizes different levels of *identities*:
-[horizontal]
-plug-in identity :: unique key pair (privat/public) that identifies to a specific plug-in within the whole system
-user identity :: the key that identifies the subject of the basic functionalities within a platform
-actor identity :: the key that identifies the *role* that a certain *system user* plays within a platform.
+An essential identity introduced in this platform is the *device user identity*, which is only valid within a specific device, and its public part is never revealed. + 
+There is also an *actor identity* introduced: the *plug-in developer identity* what is essential to this platform because it puts together  the basic functionalities that let Fermat function as a whole system, although it is made of distinct and separate components even created by different developers. +
 
-The essential user identity introduced in this platform is the *device user* 
-The main actor identity is the *plug-in developer*. +
-
-Plug-ins are arranged in the corresponding layers described, starting from _Platform Services layer_ at the bottom up to _Subapp layer_. 
+Plug-ins are arranged in the corresponding layers described in the previous chapter, starting from _Platform Services layer_ at the bottom up to _Subapp layer_ at the top. 
 
 ////
 === _Platform Services layer_
-In this platform, modules in this layer handle exceptions and events: 
+In this platform, components in this layer handle exceptions and events: 
 
 Event Manager :: it keeps track of the _events_ occurring alongside the entire platform to let plugins listen to the events that correspond to its function to trigger the corresponding plugin activity. 
 
@@ -25,7 +19,7 @@ Power Subsystem ::
 Platform Info :: + 
 
 === _Hardware layer_
-As Fermat runs distributed in different devices, this layer has the modules necessary to identify each of this devices _independently_ of the user that is logged in, and also to provide all the device's information that is needed for the system to run.+
+As Fermat runs distributed in different devices, this layer has the components necessary to identify each of this devices _independently_ of the user that is logged in, and also to provide all the device's information that is needed for the system to run.+
 
 Local Device ::
 Device Network :: +
@@ -34,7 +28,7 @@ Device Network :: +
 === _Users layer_
 Fermat is a multiuser and multidevice system. Therefore, depending on how the user interacts with Fermat, users are divided into certain _users categories_ which allow to properly handle the user's activity within Fermat. +
  
-Device User :: + this module handles transactions that take place inside the same device, an the user is identified in Fermat as a *Device User*
+Device User :: + this component handles transactions that take place inside the same device, an the user is identified in Fermat as a *Device User*
 
 
 === _Plugin layer_
@@ -43,7 +37,7 @@ Dependency :: +
 
 
 === _License layer_
-Fermat system ensures a _microlicense_ system to let the developer of a certain plug-in or certain wallet or any other module to charge a *fee* for the use of the component, and the revenue is enforced programmatically by Fermat to reach the license owner.    
+Fermat system ensures a _microlicense_ system to let the developer of a certain plug-in or certain wallet or any other component to charge a *fee* for the use of the component, and the revenue is enforced programmatically by Fermat to reach the license owner.    
 Plugin :: +
 
 
@@ -62,7 +56,7 @@ Developer:: +
 
 
 === _Identity layer_
-Developer :: gathers information about developers of modules of Fermat, not only to identify his products, but also to give technical support.
+Developer :: gathers information about developers of components of Fermat, not only to identify his products, but also to give technical support.
 Designer :: +
 
 
