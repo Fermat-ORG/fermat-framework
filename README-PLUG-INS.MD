@@ -304,17 +304,17 @@ There is no limit regarding the interfaces a Plug-in may have. Having said that,
 
 Currently there are two types of implementations for this class:
 
-a. **version 1** : It just instantiates the Plug-in Root and returns it to the Framework.
+a. **Version 1** : It just instantiates the Plug-in Root and returns it to the Framework.
 
-b. **version 2** : It registers each version of the Plugin root into the Framework.
+b. **Version 2** : It registers each version of the Plugin root into the Framework.
 
-To be able to use **version 2** you must verify if the Platform your Plug-in belongs to already have it's own speciallized core-api or instead it is started by the Framework wide Fermat-core library.
+To be able to use **Version 2** you must verify if the Platform your Plug-in belongs to already have it's own speciallized core-api or instead it is started by the Framework wide Fermat-core library.
 
-##### Code Samples
+##### Code Examples
 
 Note in the following samples that the information regarding the licensing of the Plug-in is hard-coded and always the same. This is because the licensing infraestructure it is not yet in place.
 
-**version 1**
+**Version 1**
 
 ```bash
 
@@ -368,7 +368,7 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
 
 ```
 
-**version 2**
+**Version 2**
 
 ```bash
 
@@ -432,25 +432,56 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
 <br>
 #### Plug-in Root
 
-Implementation notes:
+Currently there are two types of implementations for this class:
 
-* Is the main Class of each Version of the plug-in. This Class must implements AbstractPlugin of fermat-api.
-* A plug-in haves two particular behaviors:
- * It's a Service, and with this, we're saying that it can be managed like one, for this haves four basic methods, start, stop, pause or resume, and to keep the status we have a **ServiceStatus** [CREATED-STARTED-STOPPED-PAUSED].
- * if its necessary to do something during the start-up of the plugin, you must override services methdos.
- * It haves an identity, given by the fermat-core. We may use this **pluginId** to add security in our plug-in. Throw it we should encrypt and decrypt the databases, files, etc. that the plug-in manages. 
-* It can be referenced, for this it haves a PluginVersionReference.
-* It can ask for dependences to the core, in the original core we specify the dependences throw the implementation of DealsWithOtherPluginOrAddon Interface, now we've two annotations to ask for this dependences: @NeededAddonReference @NeededPluginReference
+a. **Version 1** : Get references of Components it depends on by implementing _Deal With_ interfaces.
+
+b. **Version 2** : Get the references by asking the Framework to provide them.
+
+To be able to use **Version 2** you must verify if the Platform your Plug-in belongs to already have it's own speciallized core-api or instead it is started by the Framework wide Fermat-core library.
+
+##### Version 1
+
+In this case this class implements many interfaces, Most of them to obtain references to other Components. Please note that intentionally interfaces are declared on alphabetical order and implemented in this order as well. Only the **Service** and **Plugin** interfaces are mandatory.
+
+a. **DealsWithErrors** : Means that the Plug-in needs a reference to the _Error Manager_ in order to report _Unhandled Exceptions_.
+
+b. **DealsWithEvents** : Means that the Plug-in needs a reference to the _Event Manager_ to either raise events or listen to other Components's events.
+
+c. **DealsWithPluginDatabaseSystem** : Means that the Plug-in needs a reference to the _Database Manager_ in order to have it own databases.
+
+d. **DealsWithPluginFileSystem** : Means that the Plug-in needs a reference to the _File System_ in order to report be able to create, write and read files.
+
+e. **LogManagerForDevelopers** : Means that the Plug-in agrees that it databases can be exprored by _Developers_ from outside the Plug-in for debbuggin purposes.
+
+f. **Plugin** : Declares the current component as a Plug-in and allows it to receive it's identity from the Framework. This identity allows Plug-ins to, for instance, have their own set of _Files_ and _Databases_ . Also to ask the Framework for references to other Components (in **Version 2**).
+
+g. **Service** : Enables the Framework to start, pause and stop the Plug-in.
+
+h. **Serializable** : When present, enables the Plug-in to serialize it's current state.
+
+##### Version 2
+
+In this version the Plug-in Root class extends from AbstractPlugin which does the implementationof **Plugin** and **Service** by itself.
+
+Regarding the rest of the interfaces of Version 1, in this case they don't need to be implemented as the procedure to obtain the needed references was changed in order to obtain the references like in this example.
 
 
-The Plugin Root class is that by which initiate the plug-in functions in the application, this must instantiate all 'other name DealsWith-plug-in' to achieve the exchange of information between plugins interfaces. As a minimum requirement this kind should include the implementation of the following interfaces:
-* LogManagerForDevelopers.
-* Plugin.
-* Service.
-* Interface plug-in manager.
+```bash
 
-These implementations ensure that the entire class structure of the plug-in to be recognized as a plug-in for the core of the platform and to establish its status as a service operation.
-If the plug-in has implemented the use of a database **DealsWithPluginDatabaseSystem** implementing the recommended interface, which lays the foundation for the creation and use of the database in the plug-in. For this particular case, the implementation of the **DatabaseManagerForDevelopers** interface is also recommended, which allows the visualization of the information in the database plug-in at runtime.
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID, addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
+
+```
+
+As each Plug-in is a _Service_ that can be started, paused and stopped by the Framework, if you need to do something when this is happening, you can override the services methods from AbstractPlugin.
+
 
 <br>
 #### Public Interfaces
