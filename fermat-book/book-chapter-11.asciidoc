@@ -1,6 +1,14 @@
-:numbered:
+:numbered!:
 
-== FERMAT between money and digital assets 2
+== Fermat Digital Assets Management
+
 === What is a Digital Asset ?
 
 
+
+=== Continue Reading
+link:book-chapter-19.asciidoc[Digital Assets Platform]
+
+link:book-chapter-12.asciidoc[Next Chapter]
+
+link:book-chapter-10.asciidoc[Previous Chapter]
