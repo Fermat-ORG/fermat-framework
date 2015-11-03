@@ -2,6 +2,7 @@ package com.bitdubai.android_core.app;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.Notification;
@@ -906,8 +907,10 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 navigationDrawerFragment.onDetach();
                 navigationDrawerFragment = null;
                FragmentManager fragmentManager = getFragmentManager();
-                //fragmentManager.beginTransaction().
-                  //      remove(getFragmentManager().findFragmentById(R.id.navigation_drawer)).commit();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                Fragment fragment = getFragmentManager().findFragmentById(R.id.navigation_drawer);
+                if(fragment!=null)
+                fragmentTransaction.remove(fragment).commit();
                 fragmentManager.executePendingTransactions();
             }
 
@@ -1007,6 +1010,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
             if(developMode){
                 activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
+                activePlatforms.add(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
                 activePlatforms.add(Platforms.DIGITAL_ASSET_PLATFORM);
                 activePlatforms.add(Platforms.CRYPTO_BROKER_PLATFORM);
             }
@@ -1024,9 +1028,11 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                             WalletManager manager = getWalletManager();
                             WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
                             fragments.add(walletDesktopFragment);
-
+                        }
+                        break;
+                    case "WPD":
+                        if(activePlatforms.contains(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION)) {
                             SubAppDesktopFragment subAppDesktopFragment = SubAppDesktopFragment.newInstance(0);
-
                             fragments.add(subAppDesktopFragment);
                         }
                         break;

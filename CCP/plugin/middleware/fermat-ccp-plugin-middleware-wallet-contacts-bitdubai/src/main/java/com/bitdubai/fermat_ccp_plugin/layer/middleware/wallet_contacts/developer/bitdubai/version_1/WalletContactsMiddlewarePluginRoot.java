@@ -29,10 +29,10 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestAction;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingAddressExchangeRequestsException;
+
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
+
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.database.WalletContactsMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.event_handlers.CryptoAddressDeniedEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.event_handlers.CryptoAddressReceivedEventHandler;
@@ -165,32 +165,32 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
     }
 
     private void executePendingAddressExchangeRequests(WalletContactsMiddlewareRegistry walletContactsRegistry) {
-        try {
-            List<AddressExchangeRequest> addressExchangeRequestRespondedList = cryptoAddressesManager.listPendingRequests(
-                    actorType
-            );
-
-            System.out.println("----------------------------\n" +
-                    "WALLET CONTACT MIDDLEWARE  : executePendingAddressExchangeRequests " +  addressExchangeRequestRespondedList.size()
-                    + "\n-------------------------------------------------");
-
-
-            for (AddressExchangeRequest request : addressExchangeRequestRespondedList) {
-
-                if (request.getAction().equals(RequestAction.ACCEPT))
-                    walletContactsRegistry.handleCryptoAddressReceivedEvent(request);
-
-                if (request.getAction().equals(RequestAction.DENY))
-                    walletContactsRegistry.handleCryptoAddressDeniedEvent(request);
-
-            }
-
-        } catch(CantListPendingAddressExchangeRequestsException |
-                CantHandleCryptoAddressDeniedEventException     |
-                CantHandleCryptoAddressReceivedEventException   e) {
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        }
+//        try {
+//            List<AddressExchangeRequest> addressExchangeRequestRespondedList = cryptoAddressesManager.listPendingRequests(
+//                    actorType
+//            );
+//
+//            System.out.println("----------------------------\n" +
+//                    "WALLET CONTACT MIDDLEWARE  : executePendingAddressExchangeRequests " +  addressExchangeRequestRespondedList.size()
+//                    + "\n-------------------------------------------------");
+//
+//
+//            for (AddressExchangeRequest request : addressExchangeRequestRespondedList) {
+//
+//                if (request.getAction().equals(RequestAction.ACCEPT))
+//                    walletContactsRegistry.handleCryptoAddressReceivedEvent(request);
+//
+//                if (request.getAction().equals(RequestAction.DENY))
+//                    walletContactsRegistry.handleCryptoAddressDeniedEvent(request);
+//
+//            }
+//
+//        } catch(CantListPendingAddressExchangeRequestsException |
+//                CantHandleCryptoAddressDeniedEventException     |
+//                CantHandleCryptoAddressReceivedEventException   e) {
+//
+//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//        }
     }
 
     @Override

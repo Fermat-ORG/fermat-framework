@@ -126,7 +126,10 @@ public enum Activities {
     // CCP Identity
     CCP_SUB_APP_INTRA_USER_IDENTITY("CCPSAISI"),
     CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY("CCPSAIICI"),
-    DEVELOP_MODE("develop_mode");
+    DEVELOP_MODE("develop_mode"),
+
+
+    WPD_DESKTOP("WPD");
 
     private String code;
 
@@ -326,6 +329,8 @@ public enum Activities {
                 return CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS;
             case "develop_mode":
                 return DEVELOP_MODE;
+            case "WPD":
+                return WPD_DESKTOP;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Plugins enum");
         }

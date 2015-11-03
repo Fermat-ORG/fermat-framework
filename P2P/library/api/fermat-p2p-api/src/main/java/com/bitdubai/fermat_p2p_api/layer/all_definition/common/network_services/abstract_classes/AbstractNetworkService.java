@@ -1,11 +1,9 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes;
 
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
@@ -29,8 +27,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     private final String                   extraData               ;
 
     private final EventSource              eventSource             ;
-
-    protected     ECCKeyPair               identity                ;
 
     private       PlatformComponentProfile platformComponentProfile;
 
@@ -59,9 +55,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         return register;
     }
 
-    public final String getIdentityPublicKey() {
-        return this.identity.getPublicKey();
-    }
+    public abstract String getIdentityPublicKey();
 
     public final String getName() {
         return name;

@@ -15,6 +15,7 @@ dependencies {
     compile project(':fermat-api')
     compile project(':fermat-bch-api')
 
+    compile project(':fermat-bch-plugin-middleware-crypto-addresses-bitdubai')
     compile project(':fermat-bch-plugin-crypto-vault-assets-over-bitcoin-bitdubai')
     compile project(':fermat-bch-plugin-crypto-network-bitcoin-bitdubai')
 

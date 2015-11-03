@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer.cry_crypto_router.incoming_crypto;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.CantStartSubsystemException;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.CryptoRouterSubsystem;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.DeveloperBitDubaiOld;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by loui on 18/03/15.
@@ -25,8 +25,8 @@ public class IncomingCryptoSubsysten implements CryptoRouterSubsystem {
          */
 
         try {
-            DeveloperBitDubaiOld developerBitDubaiOld = new DeveloperBitDubaiOld();
-            plugin = developerBitDubaiOld.getPlugin();
+            DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
+            plugin = developerBitDubai.getPlugin();
         }
         catch (Exception e)
         {

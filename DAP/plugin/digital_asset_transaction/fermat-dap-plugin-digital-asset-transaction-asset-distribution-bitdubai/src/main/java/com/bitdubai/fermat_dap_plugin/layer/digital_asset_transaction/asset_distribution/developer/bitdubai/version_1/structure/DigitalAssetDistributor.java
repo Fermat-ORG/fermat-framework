@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dis
 
 import com.bitdubai.fermat_api.layer.DAPException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -129,10 +130,13 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
     private void deliverDigitalAssetToRemoteDevice(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser actorAssetUser) throws CantDeliverDigitalAssetException {
         try{
             //First, I going to persist in database the basic information about digitalAssetMetadata
+            System.out.println("ASSET DISTRIBUTION begins for "+actorAssetUser.getPublicKey());
             persistDigitalAsset(digitalAssetMetadata, actorAssetUser);
+            System.out.println("ASSET DISTRIBUTION begins for persisted");
             //Now, I'll check is Hash wasn't modified
             //checkDigitalAssetMetadata(digitalAssetMetadata);
             DigitalAsset digitalAsset=digitalAssetMetadata.getDigitalAsset();
+            System.out.println("ASSET DISTRIBUTION Digital Asset genesis address: "+digitalAsset.getGenesisAddress());
             String genesisTransaction=digitalAssetMetadata.getGenesisTransaction();
             System.out.println("ASSET DISTRIBUTION Genesis transaction:"+genesisTransaction);
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CHECKING_AVAILABLE_BALANCE,genesisTransaction);
@@ -142,6 +146,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
             }
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.AVAILABLE_BALANCE_CHECKED,genesisTransaction);
             DigitalAssetContract digitalAssetContract=digitalAsset.getContract();
+            System.out.println("ASSET DISTRIBUTION Digital Asset contract: "+digitalAssetContract);
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.CHECKING_CONTRACT,genesisTransaction);
             if(!isValidContract(digitalAssetContract)){
                 System.out.println("ASSET DISTRIBUTION The contract is not valid");
@@ -202,13 +207,23 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
     }
 
     public void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser actorAssetUser) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException {
+        System.out.println("ASSET DISTRIBUTION Persist DAM: " + digitalAssetMetadata.getGenesisTransaction());
         setDigitalAssetLocalFilePath(digitalAssetMetadata);
+        CryptoAddress cryptoAddress=actorAssetUser.getCryptoAddress();
+        String actorAddress;
+        if(cryptoAddress==null){
+            actorAddress="UNDEFINED";
+            System.out.println("ASSET DISTRIBUTION Harcoding Actor address because is null" );
+        }else{
+            actorAddress=cryptoAddress.getAddress();
+        }
         this.assetDistributionDao.persistDigitalAsset(
                 digitalAssetMetadata.getGenesisTransaction(),
                 this.digitalAssetFileStoragePath,
                 digitalAssetMetadata.getDigitalAssetHash(),
                 actorAssetUser.getPublicKey(),
-                actorAssetUser.getCryptoAddress().getAddress());
+                actorAddress);
+        System.out.println("ASSET DISTRIBUTION registered in database");
         persistInLocalStorage(digitalAssetMetadata);
     }
 
@@ -224,6 +239,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
         //TODO: create an UUID for this asset and persists in database
         try{
             UUID distributionId=UUID.randomUUID();
+            System.out.println("ASSET DISTRIBUTION Internal Id: "+distributionId);
             this.assetDistributionDao.persistDistributionId(digitalAssetMetadata.getGenesisTransaction(),distributionId);
             this.digitalAssetDistributionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, distributionId.toString());
         } catch (CantPersistsTransactionUUIDException exception) {

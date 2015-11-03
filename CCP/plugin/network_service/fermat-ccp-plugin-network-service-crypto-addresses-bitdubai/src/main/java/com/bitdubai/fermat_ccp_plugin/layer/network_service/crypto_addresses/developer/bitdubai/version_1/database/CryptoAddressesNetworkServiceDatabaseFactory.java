@@ -59,6 +59,7 @@ public class CryptoAddressesNetworkServiceDatabaseFactory  {
             table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME                         , DatabaseDataType.STRING,  10, Boolean.FALSE);
             table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TYPE_COLUMN_NAME                          , DatabaseDataType.STRING,  10, Boolean.FALSE);
             table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_ACTION_COLUMN_NAME                        , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_DEALER_COLUMN_NAME                        , DatabaseDataType.STRING,  10, Boolean.FALSE);
             table.addColumn(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME       , DatabaseDataType.STRING,  10, Boolean.FALSE);
 
             table.addIndex(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_FIRST_KEY_COLUMN);

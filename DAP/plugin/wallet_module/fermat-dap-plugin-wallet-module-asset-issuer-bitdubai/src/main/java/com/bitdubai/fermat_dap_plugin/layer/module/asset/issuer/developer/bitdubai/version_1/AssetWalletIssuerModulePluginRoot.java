@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
@@ -18,8 +20,11 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.DealsWithActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.DealsWithAssetDistribution;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.DealsWithAssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
@@ -37,7 +42,7 @@ import java.util.UUID;
 /**
  * Created by Franklin on 07/09/15.
  */
-public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithActorAssetUser, DealsWithAssetIssuerWallet, Service, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, AssetIssuerWalletSupAppModuleManager {
+public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithActorAssetUser, DealsWithAssetIssuerWallet, DealsWithAssetDistribution, Service, DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, AssetIssuerWalletSupAppModuleManager, DealsWithPluginFileSystem {
     /**
      * DealsWithAssetIssuerWallet interface member variable
      */
@@ -63,9 +68,19 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithActor
     LogManager logManager;
 
     /**
+     * DealsWithAssetDistribution interface member variable
+     */
+    AssetDistributionManager assetDistributionManager;
+
+    /**
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
+
+    /**
+     * DealsWithPluginFileSystem interface member variable
+     */
+    PluginFileSystem pluginFileSystem;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -82,17 +97,14 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithActor
     @Override
     public void start() throws CantStartPluginException {
         try {
-            assetIssuerWalletModuleManager = new AssetIssuerWalletModuleManager(assetIssuerWalletManager, actorAssetUserManager);
+            assetIssuerWalletModuleManager = new AssetIssuerWalletModuleManager(assetIssuerWalletManager, actorAssetUserManager, assetDistributionManager, pluginId, pluginFileSystem);
+            getTransactionsAssetAll("", "");
             System.out.println("******* Asset Issuer Wallet Module Init ******");
-//            for (ActorAssetUser actorAssetUser : getAllAssetUserActorConnected())
-//            {
-//                System.out.println("Actor Public Key: " + actorAssetUser.getPublicKey());
-//                System.out.println("Actor Name      : " + actorAssetUser.getName());
-//            }
+
             this.serviceStatus = ServiceStatus.STARTED;
         }catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            throw exception;
+            //throw exception;
         }
     }
 
@@ -124,6 +136,11 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithActor
     @Override
     public void setAssetIssuerManager(AssetIssuerWalletManager assetIssuerWalletManager) {
         this.assetIssuerWalletManager = assetIssuerWalletManager;
+    }
+
+    @Override
+    public void setAssetDistributionManager(AssetDistributionManager assetIssuingManager) throws CantSetObjectException {
+        this.assetDistributionManager = assetIssuingManager;
     }
 
     @Override
@@ -167,6 +184,11 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithActor
     }
 
     @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
+
+    @Override
     public List<AssetIssuerWalletList> getAssetIssuerWalletBalancesAvailable(String publicKey) throws CantLoadWalletException {
         return assetIssuerWalletModuleManager.getAssetIssuerWalletBalancesAvailable(publicKey);
     }
@@ -181,7 +203,15 @@ public class AssetWalletIssuerModulePluginRoot implements Plugin, DealsWithActor
         assetIssuerWalletModuleManager.distributionAssets(assetPublicKey, walletPublicKey, actorAssetUsers);
     }
 
+    @Override
     public List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUserActorsException{
         return assetIssuerWalletModuleManager.getAllAssetUserActorConnected();
     }
+
+    @Override
+    public List<AssetIssuerWalletTransaction> getTransactionsAssetAll(String walletPublicKey,String assetPublicKey) throws CantGetTransactionsException {
+        return assetIssuerWalletModuleManager.getTransactionsAssetAll(walletPublicKey, assetPublicKey);
+    }
+
+
 }

@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressDeniedEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressReceivedEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressRequestedEvent;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressesNewsEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestApprovedEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestConfirmedReceptionEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestDeniedEvent;
@@ -41,6 +42,9 @@ public enum EventType implements FermatEventEnum {
     CRYPTO_ADDRESS_REQUESTED("CRYAREQ") {
         public FermatEvent getNewEvent() { return new CryptoAddressRequestedEvent(this); }
     },
+    CRYPTO_ADDRESSES_NEWS("CRYADDN") {
+        public FermatEvent getNewEvent() { return new CryptoAddressesNewsEvent(this); }
+    },
     CRYPTO_PAYMENT_REQUEST_APPROVED("CRYPAAP") {
         public FermatEvent getNewEvent() { return new CryptoPaymentRequestApprovedEvent(this); }
     },
@@ -59,8 +63,6 @@ public enum EventType implements FermatEventEnum {
     ACTOR_NETWORK_SERVICE_COMPLETE("ACTORNSC") {
         public FermatEvent getNewEvent() { return new ActorNetworkServiceCompleteRegistration(this); }
     };
-
-
 
     private final String code;
 
@@ -82,6 +84,7 @@ public enum EventType implements FermatEventEnum {
             case "CRYAden": return CRYPTO_ADDRESS_DENIED                     ;
             case "CRYARVD": return CRYPTO_ADDRESS_RECEIVED                   ;
             case "CRYAREQ": return CRYPTO_ADDRESS_REQUESTED                  ;
+            case "CRYADDN": return CRYPTO_ADDRESSES_NEWS                     ;
             case "CRYPAAP": return CRYPTO_PAYMENT_REQUEST_APPROVED           ;
             case "CRYPACR": return CRYPTO_PAYMENT_REQUEST_CONFIRMED_RECEPTION;
             case "CRYPADE": return CRYPTO_PAYMENT_REQUEST_DENIED             ;
@@ -90,8 +93,6 @@ public enum EventType implements FermatEventEnum {
 
             default:
                 throw new InvalidParameterException(
-                        InvalidParameterException.DEFAULT_MESSAGE,
-                        null,
                         "Code Received: " + code,
                         "This code isn't valid for the CCP EventType Enum"
                 );

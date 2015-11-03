@@ -565,11 +565,6 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
         }
     }
 
-    /**
-     * Get is Register
-     * @return boolean
-     */
-    @Override
     public boolean isRegister() {
         return register;
     }

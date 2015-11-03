@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.ModuleManager;
 import com.bitdubai.fermat_bch_core.BCHPlatform;
+import com.bitdubai.fermat_ccp_core.CCPPlatform;
 import com.bitdubai.fermat_pip_core.PIPPlatform;
 
 import java.util.List;
@@ -55,8 +56,9 @@ public final class FermatSystem {
         try {
 
             fermatSystemContext.registerPlatform(new BCHPlatform());
+            fermatSystemContext.registerPlatform(new CCPPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform());
-
+/*
             final List<PluginVersionReference> referenceList = new FermatPluginReferencesCalculator(fermatSystemContext).listReferencesByInstantiationOrder(
                 new PluginVersionReference(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.WALLET_MODULE, Plugins.CRYPTO_WALLET, Developers.BITDUBAI, new Version())
             );
@@ -65,7 +67,7 @@ public final class FermatSystem {
             for (PluginVersionReference pvr : referenceList)
                 System.out.println(pvr);
 
-            System.out.println("\nFin de la lista de instanciación.\n\n");
+            System.out.println("\nFin de la lista de instanciación.\n\n");*/
 
         } catch(CantRegisterPlatformException e) {
 
@@ -146,6 +148,12 @@ public final class FermatSystem {
 
             throw new CantGetAddonException(e, addonVersionReference.toString(), "Unhandled error.");
         }
+    }
+
+    // TODO TEMPORAL METHOD
+    public final AbstractPlugin getPluginVersion(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException {
+
+        return fermatSystemContext.getPluginVersion(pluginVersionReference);
     }
 
 }

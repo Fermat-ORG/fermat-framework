@@ -8,7 +8,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransactionRecord;
 
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 06/10/15.
@@ -81,9 +80,6 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
         this.amount = cryptoGenesisTransaction.getCryptoAmount();
         this.digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
-        //this.transactionId = UUID.fromString(cryptoGenesisTransaction.getTransactionHash());
-        //TODO: for testing Franklin
-        //this.transactionId=UUID.randomUUID();
         Date date= new Date();
         this.timeStamp = date.getTime();
         this.memo = "Digital Asset delivered at"+this.timeStamp;

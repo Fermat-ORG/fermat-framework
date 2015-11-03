@@ -54,7 +54,7 @@ Through this, Fermat is able to connect and reuse most of the infrastructure de
 A *platform* consists of a group of components living in different *layers* interconnected to offer a specific set of services for a discovered niche. For example, if we address to cryptocurrency users, we will need a _crytocurrency wallet_ for each cryptocurrency available running on _Fermat Crypto Currency Platform_. This wallet would operate on the selected cryptonetwork by means of a connection to it provided by the _Block Chain Platform_, and will interact with the user by means of an *desktop* living in the OS specific layers. 
 
 === Following the Master Plan
-Having all the components described, to implement the Phase I of the master plan, we will explore in the next chapters the platforms that implement the foundations.
+Once we have described Fermat's components and the architechture, we will explore in the next chapters the platforms that implement the foundations (Phase I) of the master plan:
 
 - *Fermat Core Platform* 
 - *Fermat Operating Systems Superlayer*
@@ -64,8 +64,9 @@ Having all the components described, to implement the Phase I of the master plan
 
 
 For a cool visualization of Fermat and its constant growing number of platforms and superlayers visit http://fermat.org
+We will cover the platforms and superlayers from bottom to top and from left to right, as they are presented in the visualization.
 
-Are you interested in unveiling Fermat's foundations blueprint ? Please jump into next chapter.
+So, let us enter the "building site" and explore the foundations.
 
 :numbered!:
   
