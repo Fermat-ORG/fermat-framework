@@ -173,14 +173,14 @@ public class WalletDesktopFragment extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.companyTextView.setText(installedWallet.getWalletName());
+            holder.companyTextView.setText(installedWallet.getName());
             holder.companyTextView.setTypeface(tf, Typeface.BOLD);
 
 
             LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R.id.wallet_3);
 
             //Hardcodeado hasta que esté el wallet resources
-            switch (installedWallet.getWalletIcon()) {
+            switch (installedWallet.getIcon()) {
 
                 case "crypto_broker":
                     holder.imageView.setImageResource(R.drawable.wallet_1);

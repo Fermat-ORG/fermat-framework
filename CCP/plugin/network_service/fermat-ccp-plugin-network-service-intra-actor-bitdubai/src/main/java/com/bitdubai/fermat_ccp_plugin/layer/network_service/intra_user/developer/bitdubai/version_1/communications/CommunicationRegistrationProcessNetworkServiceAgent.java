@@ -28,9 +28,9 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
     private static final long MAX_SLEEP_TIME = 20000;
 
     /**
-     * Represent the templateNetworkServicePluginRoot
+     * Represent the networkService
      */
-    private IntraActorNetworkServicePluginRoot templateNetworkServicePluginRoot;
+    private IntraActorNetworkServicePluginRoot networkService;
 
     /**
      * Represent the communicationsClientConnection
@@ -44,11 +44,11 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
 
     /**
      * Constructor with parameters
-     * @param templateNetworkServicePluginRoot
+     * @param networkService
      * @param communicationsClientConnection
      */
-    public CommunicationRegistrationProcessNetworkServiceAgent(IntraActorNetworkServicePluginRoot templateNetworkServicePluginRoot, CommunicationsClientConnection communicationsClientConnection) {
-        this.templateNetworkServicePluginRoot = templateNetworkServicePluginRoot;
+    public CommunicationRegistrationProcessNetworkServiceAgent(IntraActorNetworkServicePluginRoot networkService, CommunicationsClientConnection communicationsClientConnection) {
+        this.networkService = networkService;
         this.communicationsClientConnection = communicationsClientConnection;
         this.active = Boolean.FALSE;
     }
@@ -63,39 +63,39 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
         while (active){
             try{
 
-                if (communicationsClientConnection.isRegister() && !templateNetworkServicePluginRoot.isRegister()){
+                if (communicationsClientConnection.isRegister() && !networkService.isRegister()){
 
                     /*
                      * Construct my profile and register me
                      */
-                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(templateNetworkServicePluginRoot.getIdentityPublicKey(),
-                                                                                                                                                templateNetworkServicePluginRoot.getAlias().toLowerCase(),
-                                                                                                                                                templateNetworkServicePluginRoot.getName(),
-                                                                                                                                                 templateNetworkServicePluginRoot.getNetworkServiceType(),
-                                                                                                                                                 templateNetworkServicePluginRoot.getPlatformComponentType(),
-                                                                                                                                                 templateNetworkServicePluginRoot.getExtraData());
+                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(networkService.getIdentityPublicKey(),
+                                                                                                                                                 networkService.getAlias().toLowerCase(),
+                                                                                                                                                 networkService.getName(),
+                                                                                                                                                 networkService.getNetworkServiceType(),
+                                                                                                                                                 networkService.getPlatformComponentType(),
+                                                                                                                                                 networkService.getExtraData());
 
                     /*
                      * Register me
                      */
-                    communicationsClientConnection.registerComponentForCommunication(platformComponentProfile);
+                    communicationsClientConnection.registerComponentForCommunication(networkService.getNetworkServiceType(), platformComponentProfile);
 
                     /*
                      * Configure my new profile
                      */
-                    templateNetworkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
+                    networkService.setPlatformComponentProfilePluginRoot(platformComponentProfile);
 
                     /*
                      * Initialize the connection manager
                      */
-                    templateNetworkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
+                    networkService.initializeCommunicationNetworkServiceConnectionManager();
 
                     /*
                      * Stop the agent
                      */
                     active = Boolean.FALSE;
 
-                }else if (!templateNetworkServicePluginRoot.isRegister()){
+                }else if (!networkService.isRegister()){
 
                     try {
                         sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
@@ -104,7 +104,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent extends Thread 
                         active = Boolean.FALSE;
                     }
 
-                }else if (!templateNetworkServicePluginRoot.isRegister()){
+                }else if (!networkService.isRegister()){
                     active = Boolean.FALSE;
                 }
 

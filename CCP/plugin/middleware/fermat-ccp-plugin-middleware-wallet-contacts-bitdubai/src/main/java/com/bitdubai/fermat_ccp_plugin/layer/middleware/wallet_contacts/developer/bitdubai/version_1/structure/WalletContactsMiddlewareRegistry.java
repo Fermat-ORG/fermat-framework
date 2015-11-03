@@ -21,7 +21,6 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantGetPendingAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.database.WalletContactsMiddlewareDao;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressDeniedEventException;
@@ -355,132 +354,132 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
 
     public void handleCryptoAddressReceivedEvent(UUID requestId) throws CantHandleCryptoAddressReceivedEventException {
 
-        try {
-
-            System.out.println("----------------------------\n" +
-                    "LLEGO ADDRESS PARA EL REQUEST :" + requestId
-                    + "\n-------------------------------------------------");
-
-
-            AddressExchangeRequest request = cryptoAddressesManager.getPendingRequest(requestId);
-            handleCryptoAddressReceivedEvent(request);
-        } catch (CantGetPendingAddressExchangeRequestException | PendingRequestNotFoundException e) {
-
-            throw new CantHandleCryptoAddressReceivedEventException(e, "RequestId: "+requestId);
-        }
+//        try {
+//
+//            System.out.println("----------------------------\n" +
+//                    "LLEGO ADDRESS PARA EL REQUEST :" + requestId
+//                    + "\n-------------------------------------------------");
+//
+//
+//            AddressExchangeRequest request = cryptoAddressesManager.getPendingRequest(requestId);
+//            handleCryptoAddressReceivedEvent(request);
+//        } catch (CantGetPendingAddressExchangeRequestException | PendingRequestNotFoundException e) {
+//
+//            throw new CantHandleCryptoAddressReceivedEventException(e, "RequestId: "+requestId);
+//        }
     }
 
     public void handleCryptoAddressDeniedEvent(UUID requestId) throws CantHandleCryptoAddressDeniedEventException {
 
-        try {
-            System.out.println("----------------------------\n" +
-                    " ADDRESS DENIED PARA EL REQUEST :" + requestId
-                    + "\n-------------------------------------------------");
-
-
-            AddressExchangeRequest request = cryptoAddressesManager.getPendingRequest(requestId);
-            handleCryptoAddressDeniedEvent(request);
-        } catch (CantGetPendingAddressExchangeRequestException | PendingRequestNotFoundException e) {
-
-            throw new CantHandleCryptoAddressDeniedEventException(e, "RequestId: "+requestId);
-        }
+//        try {
+//            System.out.println("----------------------------\n" +
+//                    " ADDRESS DENIED PARA EL REQUEST :" + requestId
+//                    + "\n-------------------------------------------------");
+//
+//
+//            AddressExchangeRequest request = cryptoAddressesManager.getPendingRequest(requestId);
+//            handleCryptoAddressDeniedEvent(request);
+//        } catch (CantGetPendingAddressExchangeRequestException | PendingRequestNotFoundException e) {
+//
+//            throw new CantHandleCryptoAddressDeniedEventException(e, "RequestId: "+requestId);
+//        }
     }
 
-    public void handleCryptoAddressReceivedEvent(AddressExchangeRequest request) throws CantHandleCryptoAddressReceivedEventException {
+//    public void handleCryptoAddressReceivedEvent(AddressExchangeRequest request) throws CantHandleCryptoAddressReceivedEventException {
+//
+//        try {
+//            try {
+//                // search wallet contact
+//                // if i can't find it (WalletContactNotFound) i confirm the request ....
+//                // else i add the crypto address received.
+//                WalletContactRecord walletContactRecord = this.getWalletContactByActorAndWalletPublicKey(
+//                        request.getIdentityPublicKeyResponding(),
+//                        request.getWalletPublicKey()
+//                );
+//
+//                this.addCryptoAddressToWalletContact(
+//                    walletContactRecord.getContactId(),
+//                    request.getCryptoAddress()
+//                );
+//
+//                System.out.println("----------------------------\n" +
+//                        "ACTUALIZO ADDRESS PARA EL CONTACTO :" +  walletContactRecord.getContactId()
+//                        + "\n-------------------------------------------------");
+//
+//                walletContactsMiddlewareDao.updateCompatibility(
+//                    walletContactRecord.getContactId(),
+//                    Compatibility.COMPATIBLE
+//                );
+//
+//                cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());
+//
+//            } catch (WalletContactNotFoundException e) {
+//
+//                // TODO IF I DON'T FIND A WALLET CONTACT, I DELETE THE REQUEST ???
+//                cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());
+//            } catch (CantAddCryptoAddressException e) {
+//
+//                throw new CantHandleCryptoAddressReceivedEventException(e, "Can't add the crypto address to the existent wallet contact.");
+//            } catch (CantGetWalletContactException e) {
+//
+//                throw new CantHandleCryptoAddressReceivedEventException(e, "Can't get wallet contact.");
+//            }
+//        } catch (PendingRequestNotFoundException e) {
+//            // TODO what to do here?
+//            throw new CantHandleCryptoAddressReceivedEventException(e, "Can't find the pending request when confirming.");
+//        } catch (CantConfirmAddressExchangeRequestException e) {
+//
+//            throw new CantHandleCryptoAddressReceivedEventException(e, "Can't confirm address exchange request.");
+//        } catch (CantUpdateWalletContactException e) {
+//
+//            throw new CantHandleCryptoAddressReceivedEventException(e, "Can't update wallet contact.");
+//        }
+//    }
 
-        try {
-            try {
-                // search wallet contact
-                // if i can't find it (WalletContactNotFound) i confirm the request ....
-                // else i add the crypto address received.
-                WalletContactRecord walletContactRecord = this.getWalletContactByActorAndWalletPublicKey(
-                        request.getIdentityPublicKeyResponding(),
-                        request.getWalletPublicKey()
-                );
-
-                this.addCryptoAddressToWalletContact(
-                    walletContactRecord.getContactId(),
-                    request.getCryptoAddress()
-                );
-
-                System.out.println("----------------------------\n" +
-                        "ACTUALIZO ADDRESS PARA EL CONTACTO :" +  walletContactRecord.getContactId()
-                        + "\n-------------------------------------------------");
-
-                walletContactsMiddlewareDao.updateCompatibility(
-                    walletContactRecord.getContactId(),
-                    Compatibility.COMPATIBLE
-                );
-
-                cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());
-
-            } catch (WalletContactNotFoundException e) {
-
-                // TODO IF I DON'T FIND A WALLET CONTACT, I DELETE THE REQUEST ???
-                cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());
-            } catch (CantAddCryptoAddressException e) {
-
-                throw new CantHandleCryptoAddressReceivedEventException(e, "Can't add the crypto address to the existent wallet contact.");
-            } catch (CantGetWalletContactException e) {
-
-                throw new CantHandleCryptoAddressReceivedEventException(e, "Can't get wallet contact.");
-            }
-        } catch (PendingRequestNotFoundException e) {
-            // TODO what to do here?
-            throw new CantHandleCryptoAddressReceivedEventException(e, "Can't find the pending request when confirming.");
-        } catch (CantConfirmAddressExchangeRequestException e) {
-
-            throw new CantHandleCryptoAddressReceivedEventException(e, "Can't confirm address exchange request.");
-        } catch (CantUpdateWalletContactException e) {
-
-            throw new CantHandleCryptoAddressReceivedEventException(e, "Can't update wallet contact.");
-        }
-    }
-
-    public void handleCryptoAddressDeniedEvent(AddressExchangeRequest request) throws CantHandleCryptoAddressDeniedEventException {
-
-        try {
-            try {
-                // search wallet contact
-                // if i can't find it (WalletContactNotFound) i confirm the request ....
-                // else i add the crypto address received.
-                WalletContactRecord walletContactRecord = this.getWalletContactByActorAndWalletPublicKey(
-                        request.getIdentityPublicKeyRequesting(),
-                        request.getWalletPublicKey()
-                );
-
-                this.addCryptoAddressToWalletContact(
-                        walletContactRecord.getContactId(),
-                        request.getCryptoAddress()
-                );
-
-                walletContactsMiddlewareDao.updateCompatibility(
-                        walletContactRecord.getContactId(),
-                        Compatibility.INCOMPATIBLE
-                );
-
-                cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());
-
-            } catch (WalletContactNotFoundException e) {
-
-                // TODO IF I DON'T FIND A WALLET CONTACT, I DELETE THE REQUEST ???
-                cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());
-            } catch (CantAddCryptoAddressException e) {
-
-                throw new CantHandleCryptoAddressDeniedEventException(e, "Can't add the crypto address to the existent wallet contact.");
-            } catch (CantGetWalletContactException e) {
-
-                throw new CantHandleCryptoAddressDeniedEventException(e, "Can't get wallet contact.");
-            }
-        } catch (PendingRequestNotFoundException e) {
-            // TODO what to do here?
-            throw new CantHandleCryptoAddressDeniedEventException(e, "Can't find the pending request when confirming.");
-        } catch (CantConfirmAddressExchangeRequestException e) {
-
-            throw new CantHandleCryptoAddressDeniedEventException(e, "Can't confirm address exchange request.");
-        } catch (CantUpdateWalletContactException e) {
-
-            throw new CantHandleCryptoAddressDeniedEventException(e, "Can't update wallet contact.");
-        }
-    }
+//    public void handleCryptoAddressDeniedEvent(AddressExchangeRequest request) throws CantHandleCryptoAddressDeniedEventException {
+//
+//        try {
+//            try {
+//                // search wallet contact
+//                // if i can't find it (WalletContactNotFound) i confirm the request ....
+//                // else i add the crypto address received.
+//                WalletContactRecord walletContactRecord = this.getWalletContactByActorAndWalletPublicKey(
+//                        request.getIdentityPublicKeyRequesting(),
+//                        request.getWalletPublicKey()
+//                );
+//
+//                this.addCryptoAddressToWalletContact(
+//                        walletContactRecord.getContactId(),
+//                        request.getCryptoAddress()
+//                );
+//
+//                walletContactsMiddlewareDao.updateCompatibility(
+//                        walletContactRecord.getContactId(),
+//                        Compatibility.INCOMPATIBLE
+//                );
+//
+//                cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());
+//
+//            } catch (WalletContactNotFoundException e) {
+//
+//                // TODO IF I DON'T FIND A WALLET CONTACT, I DELETE THE REQUEST ???
+//                cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());
+//            } catch (CantAddCryptoAddressException e) {
+//
+//                throw new CantHandleCryptoAddressDeniedEventException(e, "Can't add the crypto address to the existent wallet contact.");
+//            } catch (CantGetWalletContactException e) {
+//
+//                throw new CantHandleCryptoAddressDeniedEventException(e, "Can't get wallet contact.");
+//            }
+//        } catch (PendingRequestNotFoundException e) {
+//            // TODO what to do here?
+//            throw new CantHandleCryptoAddressDeniedEventException(e, "Can't find the pending request when confirming.");
+//        } catch (CantConfirmAddressExchangeRequestException e) {
+//
+//            throw new CantHandleCryptoAddressDeniedEventException(e, "Can't confirm address exchange request.");
+//        } catch (CantUpdateWalletContactException e) {
+//
+//            throw new CantHandleCryptoAddressDeniedEventException(e, "Can't update wallet contact.");
+//        }
+//    }
 }
