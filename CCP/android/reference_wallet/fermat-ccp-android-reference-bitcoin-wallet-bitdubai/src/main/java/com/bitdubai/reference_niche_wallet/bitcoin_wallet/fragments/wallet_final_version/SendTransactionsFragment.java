@@ -209,6 +209,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
         List<String> list = new ArrayList<>();
         list.add("Home");
         list.add("Contacts");
+        list.add("Payment request");
         list.add("Settings");
         list.add("Logout");
         try {

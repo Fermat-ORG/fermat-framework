@@ -9,11 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.identity.common.IdentityUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -49,14 +50,16 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
     public View getView(int position, View convertView, ViewGroup parent) {
         Typeface tf=Typeface.createFromAsset(context.getAssets(), "fonts/roboto.ttf");
         View rowView = convertView;
-        try
-        {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        try {
             if (position == 0) {
-                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-                rowView = inflater.inflate(R.layout.navigation_drawer_first_row, parent, false);
 
-                icon = (ImageView) rowView.findViewById(R.id.icon);
+                rowView = inflater.inflate(R.layout.navigation_drawer_row_first, parent, false);
+
+                icon = (ImageView) rowView.findViewById(R.id.imageView_profile);
+
+
 
                 userName = (TextView) rowView.findViewById(R.id.label);
 
@@ -70,30 +73,21 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
                 if(activeIntraUser.getProfileImage()!=null){
                     icon.setImageBitmap(BitmapFactory.decodeByteArray(activeIntraUser.getProfileImage(),0,activeIntraUser.getProfileImage().length));
+                }else{
+                    Picasso.with(context).load(R.drawable.tessa_profile_picture).into(icon);
                 }
 
 
-                ImageView iconEdit = (ImageView) rowView.findViewById(R.id.imageView_change_user);
-                iconEdit.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(context,"cambiando de ususario proximamente",Toast.LENGTH_SHORT).show();
-
-                    }
-                });
 
             }
             else {
-                LayoutInflater inflater = (LayoutInflater) context
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-                rowView = inflater.inflate(R.layout.navigation_drawer_row, parent, false);
+                rowView = inflater.inflate(R.layout.navigation_row, parent, false);
 
                 ImageView imageView = null;
-                imageView = (ImageView) rowView.findViewById(R.id.icon);
-                if(rowView.findViewById(R.id.label) != null) {
-                    TextView textView = (TextView) rowView.findViewById(R.id.label);
+                imageView = (ImageView) rowView.findViewById(R.id.imageView_icon);
+                TextView textView = (TextView) rowView.findViewById(R.id.textView_label);
+                if(textView != null) {
                     textView.setTypeface(tf, 1);
                     textView.setText(values.get(position-1));
                 }
@@ -109,10 +103,10 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                         imageView.setImageResource(R.drawable.btn_drawer_profile_normal);
                         break;
                     case 3:
-                        imageView.setImageResource(R.drawable.btn_drawer_settings_normal);
+                        imageView.setImageResource(R.drawable.btn_drawer_request_normal);
                         break;
                     case 4:
-                        imageView.setImageResource(R.drawable.btn_send_adduser_normal);
+                        imageView.setImageResource(R.drawable.btn_drawer_settings_normal);
 
                         break;
                     case 5:
