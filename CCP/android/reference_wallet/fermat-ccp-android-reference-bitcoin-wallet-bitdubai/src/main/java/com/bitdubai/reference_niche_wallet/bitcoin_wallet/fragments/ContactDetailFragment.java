@@ -113,26 +113,31 @@ public class ContactDetailFragment extends FermatWalletFragment implements View.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        referenceWalletSession = (ReferenceWalletSession) walletSession;
-
-
-
-        CryptoWalletWalletContact cryptoWalletWalletContact = referenceWalletSession.getLastContactSelected();
-
-        walletContact = new WalletContact(cryptoWalletWalletContact.getContactId(),cryptoWalletWalletContact.getActorPublicKey(),cryptoWalletWalletContact.getActorName(),cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress(),cryptoWalletWalletContact.isConnection(),cryptoWalletWalletContact.getProfilePicture());
-
-        typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
-        cryptoWalletManager = referenceWalletSession.getCryptoWalletManager();
-        errorManager = walletSession.getErrorManager();
         try {
-            cryptoWallet = cryptoWalletManager.getCryptoWallet();
-        } catch (CantGetCryptoWalletException e) {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
-        }
+            referenceWalletSession = (ReferenceWalletSession) walletSession;
 
-        try {
+
+
+            CryptoWalletWalletContact cryptoWalletWalletContact = referenceWalletSession.getLastContactSelected();
+
+            String contactAddress = "";
+
+            if(cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0 )
+             contactAddress = cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress();
+
+            walletContact = new WalletContact(cryptoWalletWalletContact.getContactId(),cryptoWalletWalletContact.getActorPublicKey(),cryptoWalletWalletContact.getActorName(),contactAddress,cryptoWalletWalletContact.isConnection(),cryptoWalletWalletContact.getProfilePicture());
+
+            typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+            cryptoWalletManager = referenceWalletSession.getCryptoWalletManager();
+            errorManager = walletSession.getErrorManager();
+            try {
+                cryptoWallet = cryptoWalletManager.getCryptoWallet();
+            } catch (CantGetCryptoWalletException e) {
+                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
+            }
+
+
             List<CryptoWalletWalletContact> lst = cryptoWallet.listWalletContacts(wallet_id,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
 
         } catch (CantGetAllWalletContactsException e) {
