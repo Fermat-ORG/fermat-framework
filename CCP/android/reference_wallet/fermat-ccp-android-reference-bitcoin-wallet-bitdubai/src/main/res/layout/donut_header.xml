@@ -23,7 +23,8 @@
         android:orientation="vertical"
         android:layout_gravity="center_vertical"
         android:gravity="center"
-        android:paddingLeft="30dp">
+        android:paddingLeft="20dp"
+        android:paddingBottom="30dp">
 
 
         <RelativeLayout
