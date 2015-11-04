@@ -187,6 +187,9 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
         try {
             this.actorToPublicKey=actorAssetIssuerManager.getActorAssetIssuer().getPublicKey();
+            if(this.actorToPublicKey==null){
+                this.actorToPublicKey="actorPublicKeyNotFound";
+            }
             System.out.println("ASSET ISSUING Actor Asset Issuer public key "+actorToPublicKey);
         } catch (CantGetAssetIssuerActorsException exception) {
             throw new CantSetObjectException(exception, "Setting the actor asset issuer manager","Cannot get the actor asset issuer manager");
@@ -769,7 +772,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
         DigitalAssetMetadata digitalAssetMetadata=null;
         try{
-            //Asign internal UUID
+            //Assign internal UUID
             UUID transactionUUID=generateTransactionUUID();
             String transactionId=transactionUUID.toString();
             //Check the available balance
@@ -800,9 +803,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                 //We kept the DigitalAssetMetadata in DAMVault
                 saveDigitalAssetMetadataInVault(digitalAssetMetadata, transactionId);
             }
-
-
-
         } catch (CantPersistsGenesisAddressException exception) {
             throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot persists the Digital Asset genesis Address in database");
         } catch (CantExecuteQueryException |UnexpectedResultReturnedFromDatabaseException exception) {

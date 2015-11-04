@@ -203,6 +203,12 @@ First read
 [CONTRIBUTING.md](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md),
 then learn how to pull the repo and hack on Fermat.
 
+Then say hi at our [IRC DEV Channel](http://irc.lc/freenode/fermat-dev/) 
+
+You can also find us on [Facebook](https://www.facebook.com/FermatOrg/) 
+
+
+
 ![alt text](https://raw.githubusercontent.com/bitDubai/fermat-graphic-design/301890ab07afcf498a62aaa5725bd4a39d6f6753/3D%20Design/Modelo%20moneda%20Fermat-Bitcoin/Renders%20finales/Bitcoin.jpg?token=ANBHS6g9HaLfCDqFgBJSn10nBfkoq-bhks5WOSmzwA%3D%3D "Fermat Coin")
 
 

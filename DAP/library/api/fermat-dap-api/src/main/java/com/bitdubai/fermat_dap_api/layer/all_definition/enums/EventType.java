@@ -6,8 +6,12 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetIssuerCompleteRegistrationNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetRedeemPointCompleteRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetUserCompleteRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetIssuerCompleteRegistrationNotificationEventListener;
+import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetRedeemPointCompleteRegistrationNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetUserCompleteRegistrationNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetUserRequestListRegisteredNetworksNotificationEventListener;
 
@@ -44,7 +48,17 @@ public enum EventType implements FermatEventEnum {
         public FermatEvent getNewEvent() {
             return new ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent(this);
         }
-    },//;
+    },
+
+    COMPLETE_ASSET_ISSUER_REGISTRATION_NOTIFICATION("CL_CAIRN") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new ActorAssetIssuerCompleteRegistrationNotificationEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new ActorAssetIssuerCompleteRegistrationNotificationEvent(this);
+        }
+    },
 
     COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION("CL_CAURN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
@@ -53,6 +67,16 @@ public enum EventType implements FermatEventEnum {
 
         public FermatEvent getNewEvent() {
             return new ActorAssetUserCompleteRegistrationNotificationEvent(this);
+        }
+    },
+
+    COMPLETE_ASSET_REDEEM_POINT_REGISTRATION_NOTIFICATION("CL_CARPRN") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new ActorAssetRedeemPointCompleteRegistrationNotificationEventListener(this, fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new ActorAssetRedeemPointCompleteRegistrationNotificationEvent(this);
         }
     };
 

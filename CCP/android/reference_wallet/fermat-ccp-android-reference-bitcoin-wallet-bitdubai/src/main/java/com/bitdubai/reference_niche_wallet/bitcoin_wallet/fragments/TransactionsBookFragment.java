@@ -514,7 +514,7 @@ public class TransactionsBookFragment extends Fragment{
     private String getActorNameProvisorio(CryptoWalletTransaction cryptoWalletTransaction) {
         if (cryptoWalletTransaction.getContactId() != null) {
             try {
-                CryptoWalletWalletContact walletContactRecord = cryptoWallet.findWalletContactById(cryptoWalletTransaction.getContactId());
+                CryptoWalletWalletContact walletContactRecord = cryptoWallet.findWalletContactById(cryptoWalletTransaction.getContactId(),walletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
                 return walletContactRecord.getActorName();
             } catch (Exception e) {
                 System.out.println("esta es para vos mati.");
