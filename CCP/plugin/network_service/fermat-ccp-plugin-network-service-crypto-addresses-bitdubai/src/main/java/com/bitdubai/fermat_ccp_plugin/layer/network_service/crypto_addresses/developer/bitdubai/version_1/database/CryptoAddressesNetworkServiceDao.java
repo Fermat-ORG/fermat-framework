@@ -222,6 +222,29 @@ public class CryptoAddressesNetworkServiceDao {
         }
     }
 
+    public boolean isPendingRequestByProtocolState(ProtocolState protocolState) throws CantListPendingCryptoAddressRequestsException {
+
+        if (protocolState == null)
+            throw new CantListPendingCryptoAddressRequestsException(null, "", "actorType, can not be null");
+
+        try {
+
+            DatabaseTable table = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
+
+            table.setStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
+
+            table.setFilterTop("1");
+
+            table.loadToMemory();
+
+            return (!table.getRecords().isEmpty());
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantListPendingCryptoAddressRequestsException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        }
+    }
+
     /**
      * we'll return to the actor all the request in a specific protocol state
      *
