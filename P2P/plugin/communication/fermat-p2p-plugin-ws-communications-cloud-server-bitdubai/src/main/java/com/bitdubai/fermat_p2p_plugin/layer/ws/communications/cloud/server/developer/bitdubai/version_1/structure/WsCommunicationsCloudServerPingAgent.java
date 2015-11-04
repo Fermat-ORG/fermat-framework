@@ -9,6 +9,8 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.deve
 
 import org.java_websocket.WebSocket;
 
+import java.util.Iterator;
+
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationsCloudServerPingAgent</code>
  * is responsible to verify the connections status, its validate if is this connection are alive using a ping message<p/>
@@ -51,7 +53,11 @@ public class WsCommunicationsCloudServerPingAgent extends Thread {
 
             try {
 
-                for (WebSocket connection : wsCommunicationCloudServer.connections()) {
+                Iterator<WebSocket> iterator = wsCommunicationCloudServer.connections().iterator();
+
+                while (iterator.hasNext()){
+
+                    WebSocket connection = iterator.next();
 
                     System.out.println(" WsCommunicationsCloudServerPingAgent - running");
 
@@ -64,28 +70,29 @@ public class WsCommunicationsCloudServerPingAgent extends Thread {
                                 throw new RuntimeException("Connection maybe not active");
                             }
 
-                        /*
-                         * Send the ping message
-                         */
+                            /*
+                             * Send the ping message
+                             */
                             wsCommunicationCloudServer.sendPingMessage(connection);
 
-                        }catch (Exception ex){
+                        }catch (RuntimeException ex){
 
                             System.out.println(" WsCommunicationsCloudServerPingAgent - Error occurred sending ping to the node, or pending pong message not received");
                             wsCommunicationCloudServer.onClose(connection, 1000, " - Connection no alive", true);
                             wsCommunicationCloudServer.getPendingPongMessageByConnection().remove(connection.hashCode());
-                            wsCommunicationCloudServer.connections().remove(connection);
+                            iterator.remove();
                         }
 
                     }
 
                 }
 
+
                 if (!this.isInterrupted()){
                     sleep(SLEEP_TIME);
                 }
 
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
