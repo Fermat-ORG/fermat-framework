@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.FiatCurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.world.Index;
 import com.bitdubai.fermat_cbp_api.layer.cbp_world.cbp_fiat_index.exceptions.CantGetIndexException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_world.cbp_fiat_index.interfaces.FiatIndexManager;
@@ -173,27 +174,27 @@ public class FiatIndexPluginRoot implements FiatIndexManager,DealsWithErrors, De
 
 
     @Override
-    public FermatEnum getReferenceCurrency() {
+    public FiatCurrencyType getReferenceCurrency() {
         return null;
     }
 
     @Override
-    public Collection<FermatEnum> getSupportedCurrencies() {
+    public Collection<FiatCurrencyType> getSupportedCurrencies() {
         return null;
     }
 
     @Override
-    public Index getCurrentIndex(FermatEnum currency) throws CantGetIndexException {
+    public Index getCurrentIndex(FiatCurrencyType currency) throws CantGetIndexException {
         return null;
     }
 
     @Override
-    public Index getIndexInDate(FermatEnum currency, long timestamp) throws CantGetIndexException {
+    public Index getIndexInDate(FiatCurrencyType currency, long timestamp) throws CantGetIndexException {
         return null;
     }
 
     @Override
-    public Collection<Index> getQueriedIndexHistory(FermatEnum currency) {
+    public Collection<Index> getQueriedIndexHistory(FiatCurrencyType currency) {
         return null;
     }
 }
