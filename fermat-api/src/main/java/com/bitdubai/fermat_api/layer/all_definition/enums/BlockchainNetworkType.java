@@ -32,4 +32,5 @@ public enum BlockchainNetworkType implements FermatEnum {
             default:      return BlockchainNetworkType.DEFAULT;
         }
     }
+
 }

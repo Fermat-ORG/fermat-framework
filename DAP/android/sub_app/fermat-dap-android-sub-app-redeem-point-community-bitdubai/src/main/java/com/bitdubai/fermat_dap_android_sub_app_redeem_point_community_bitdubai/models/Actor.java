@@ -15,6 +15,7 @@ public class Actor implements ActorAssetRedeemPoint {
     private String name;
     private long contactRegistrationDate;
     private byte[] profileImage;
+    private Location location;
     private Double latitude;
     private Double longitude;
     private Address address;
@@ -60,7 +61,7 @@ public class Actor implements ActorAssetRedeemPoint {
     }
 
     @Override
-    public long getContactRegistrationDate() {
+    public long getRegistrationDate() {
         return contactRegistrationDate;
     }
 
@@ -80,6 +81,18 @@ public class Actor implements ActorAssetRedeemPoint {
     @Override
     public ConnectionState getConnectionState() {
         return state;
+    }
+
+    /**
+     * Metodo {@code getLocation()}:
+     * devuelve la ubicacion geografica del RedeemPoint.
+     *
+     * @return un objeto {@link Location}
+     * que contiene las coordenadas y demas valores para ubicar al RedeemPoint en el mapa.
+     */
+    @Override
+    public Location getLocation() {
+        return location;
     }
 
     @Override

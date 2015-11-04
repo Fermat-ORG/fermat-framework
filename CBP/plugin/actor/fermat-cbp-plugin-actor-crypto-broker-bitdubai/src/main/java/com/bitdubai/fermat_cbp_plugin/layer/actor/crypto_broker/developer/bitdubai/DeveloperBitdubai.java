@@ -10,11 +10,11 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdub
 /**
  * Created by jorge on 30-10-2015.
  */
-public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
+public class DeveloperBitdubai implements PluginDeveloper, PluginLicensor {
 
     private final Plugin plugin;
 
-    public DeveloperBitDubai(){
+    public DeveloperBitdubai(){
         plugin = new CryptoBrokerActorPluginRoot();
     }
 

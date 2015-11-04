@@ -17,7 +17,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission
  */
 public class CommunicationNetworkServiceDatabaseConstants {
 
-    public static final String DATA_BASE_NAME  = "communication_network_service_data_base";
+    public static final String DATA_BASE_NAME  = "template_network_service_data_base";
 
     /**
      * incoming messages database table definition.
