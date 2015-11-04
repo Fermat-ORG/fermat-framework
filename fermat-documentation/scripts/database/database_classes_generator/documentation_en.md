@@ -20,7 +20,7 @@ String developerName = "Leon Acosta" // your name
 String developerMail = "laion.cj91@gmail.com" // your mail
 String pluginName = "Wallet Factory" // name of the plugin
 String layerName = "Middleware" // name of the layer to which the plugin belongs
-String packageRoot = "com.bitdubai.fermat_dmp_plugin" // package root of the platform to which the plugin belongs
+String packageRoot = "com.bitdubai.fermat_ccp_plugin" // package root of the platform to which the plugin belongs
 String jdkVersion = "1.7" // jdk version used
 
 

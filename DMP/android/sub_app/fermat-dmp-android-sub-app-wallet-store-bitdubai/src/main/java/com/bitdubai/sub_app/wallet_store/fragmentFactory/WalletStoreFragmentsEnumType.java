@@ -8,25 +8,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 
 public enum WalletStoreFragmentsEnumType implements FermatFragmentsEnumType<WalletStoreFragmentsEnumType> {
 
-    CWP_WALLET_STORE_MAIN_ACTIVITY("CWSMA"),
-    CWP_WALLET_STORE_DETAIL_ACTIVITY("CWSDA"),
-    CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY("CWSMDA"),
-
-    /**
-     * Va a ser eliminado. Usando momentaneamente para probar {@link com.bitdubai.sub_app.wallet_store.fragments.MainActivityFragment}
-     */
-    @Deprecated
-    CWP_WALLET_STORE_ALL_FRAGMENT("CWSAF"),
-    /**
-     * Va a ser eliminado. Usando momentaneamente para probar {@link com.bitdubai.sub_app.wallet_store.fragments.DetailsActivityFragment}
-     */
-    @Deprecated
-    CWP_WALLET_STORE_FREE_FRAGMENT("CWSFF"),
-    /**
-     * Va a ser eliminado. Usando momentaneamente para probar {@link com.bitdubai.sub_app.wallet_store.fragments.MoreDetailsActivityFragment}
-     */
-    @Deprecated
-    CWP_WALLET_STORE_PAID_FRAGMENT("CWSPF")
+    CWP_WALLET_STORE_MAIN_ACTIVITY("CWPWSMA"),
+    CWP_WALLET_STORE_DETAIL_ACTIVITY("CWPWSDA"),
+    CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY("CWPWSMDA")
     ;
 
 

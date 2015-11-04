@@ -37,6 +37,7 @@ public enum WalletPublisherFragmentsEnumType implements FermatFragmentsEnumType<
         }
         // throw an IllegalArgumentException or return null
         // throw new IllegalArgumentException("the given number doesn't match any Status.");
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 }

@@ -3,7 +3,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.develo
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.CryptoIndexManager;
 import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.DealsWithCryptoIndex;
@@ -22,7 +22,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.develop
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.discount_wallet.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 
@@ -32,8 +32,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.WalletCreatedEvent;
 
@@ -95,7 +95,7 @@ public class DiscountWalletBasicWalletPluginRoot implements DealsWithCryptoIndex
      * Service Interface member variables.
      */
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    private List<EventListener> listenersAdded = new ArrayList<>();
+    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * Service Interface implementation.
@@ -206,15 +206,15 @@ public class DiscountWalletBasicWalletPluginRoot implements DealsWithCryptoIndex
          * I will initialize the handling of the platform events.
          */
 
-        EventListener eventListener;
-        EventHandler eventHandler;
+        FermatEventListener fermatEventListener;
+        FermatEventHandler fermatEventHandler;
 
-        eventListener = eventManager.getNewListener(EventType.WALLET_CREATED);
-        eventHandler = new WalletCreatedEventHandler();
-        ((WalletCreatedEventHandler) eventHandler).setWalletmanager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        fermatEventListener = eventManager.getNewListener(EventType.WALLET_CREATED);
+        fermatEventHandler = new WalletCreatedEventHandler();
+        ((WalletCreatedEventHandler) fermatEventHandler).setWalletmanager(this);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -240,8 +240,8 @@ public class DiscountWalletBasicWalletPluginRoot implements DealsWithCryptoIndex
          * I will remove all the event listeners registered with the event manager.
          */
 
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
 
         listenersAdded.clear();
@@ -335,10 +335,10 @@ public class DiscountWalletBasicWalletPluginRoot implements DealsWithCryptoIndex
         /**
          * Finally I fire the event announcing the new wallet was created.
          */
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_CREATED);
-        ((WalletCreatedEvent) platformEvent).setWalletId(walletId);
-        platformEvent.setSource(EventSource.DISCOUNT_WALLET_BASIC_WALLET_PLUGIN);
-        eventManager.raiseEvent(platformEvent);
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.WALLET_CREATED);
+        ((WalletCreatedEvent) fermatEvent).setWalletId(walletId);
+        fermatEvent.setSource(EventSource.DISCOUNT_WALLET_BASIC_WALLET_PLUGIN);
+        eventManager.raiseEvent(fermatEvent);
     }
 
     @Override

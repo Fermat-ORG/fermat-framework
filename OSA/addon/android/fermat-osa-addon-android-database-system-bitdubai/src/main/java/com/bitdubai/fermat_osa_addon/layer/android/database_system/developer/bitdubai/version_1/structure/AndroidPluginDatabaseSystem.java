@@ -18,6 +18,7 @@ import java.util.UUID;
 
 /**
  * Created by ciencias on 20.01.15.
+ *
  */
 
 /**
@@ -31,8 +32,11 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
     /**
      * PluginDatabaseSystem Interface member variables.
      */
-    private Context Context;
+    private String path;
 
+    public AndroidPluginDatabaseSystem(String path) {
+        this.path = path;
+    }
 
     /**
      * PluginDatabaseSystem Interface implementation.
@@ -51,7 +55,7 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
     public Database openDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
         try{
             String hasDBName = hashDataBaseName(databaseName);
-            AndroidDatabase database = new AndroidDatabase(this.Context, ownerId, hasDBName);
+            AndroidDatabase database = new AndroidDatabase(path, ownerId, hasDBName);
             database.openDatabase();
             return database;
         } catch (NoSuchAlgorithmException e) {
@@ -81,7 +85,7 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
     public void deleteDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
         try{
             String hasDBName = hashDataBaseName(databaseName);
-            AndroidDatabase database = new AndroidDatabase(this.Context, ownerId, hasDBName);
+            AndroidDatabase database = new AndroidDatabase(path, ownerId, hasDBName);
             database.deleteDatabase();
         } catch (NoSuchAlgorithmException e){
             String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
@@ -109,7 +113,7 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
     public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         try{
             String hasDBName = hashDataBaseName(databaseName);
-            AndroidDatabase database = new AndroidDatabase(this.Context, ownerId, hasDBName);
+            AndroidDatabase database = new AndroidDatabase(path, ownerId, hasDBName);
             database.createDatabase(hasDBName);
             return database;
         }
@@ -126,18 +130,6 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
 
     }
 
-
-    /**
-     *<p> This method set the context object
-     *
-     * @param context Android Context object
-     */
-    @Override
-    public void setContext(Object context) {
-        this.Context = (Context) context;
-    }
-
-
     /**
      * <p> This method hash the database file name using the algorithm SHA 256
      *
@@ -146,7 +138,7 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
      * @throws NoSuchAlgorithmException
      */
     private String hashDataBaseName(String databaseName) throws NoSuchAlgorithmException {
-        String encryptedString = databaseName;
+        String encryptedString;
         try{
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(databaseName.getBytes(Charset.forName("UTF-8")));
@@ -164,10 +156,7 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
             throw e;
         }
         encryptedString = encryptedString.replace("/","");
-
-        // TODO COMMENTED FOR DATABASE LEAKS CHECK
-        //return encryptedString.replace("\n","");
-        return databaseName;
+        return encryptedString.replace("\n","");
     }
 
 }

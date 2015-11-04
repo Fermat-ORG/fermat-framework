@@ -1,126 +1,127 @@
 package com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEventMonitor;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventMonitor;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer.bitdubai.version_1.structure.EventManagerPlatformServiceEventMonitor;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by ciencias on 23.01.15.
- * Updated by Leon Acosta (laion.cj91@gmail.com) on 22-08-2015.
+ * This addon is the responsible to manage all the events in fermat platform.
+ *
+ * Created by by Leon Acosta (laion.cj91@gmail.com) on 22-08-2015.
  */
-public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager, DealsWithEventMonitor, Service,Serializable {
+public class EventManagerPlatformServiceAddonRoot extends AbstractAddon implements EventManager {
 
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    private ErrorManager errorManager;
 
-    /**
-     * DealsWithEventMonitor member variables
-     */
-    private EventMonitor eventMonitor;
+    private FermatEventMonitor fermatEventMonitor;
+
+    @Override
+    public final void start() throws CantStartPluginException {
+
+        System.out.println("if i'm not null i will show you something: "+errorManager);
+
+        this.fermatEventMonitor = new EventManagerPlatformServiceEventMonitor(this.errorManager);
+
+        this.serviceStatus = ServiceStatus.STARTED;
+
+    }
 
     /**
      * EventManager Interface member variables.
      */
-    Map<EventType, List<EventListener>> listenersMap = new HashMap<>();
+    private final ConcurrentHashMap<String, List<FermatEventListener>> listenersMap;
+
+    public EventManagerPlatformServiceAddonRoot() {
+        super(new AddonVersionReference(new Version()));
+
+        listenersMap = new ConcurrentHashMap<>();
+    }
 
     /**
      * EventManager Interface implementation.
      */
     @Override
-    public EventListener getNewListener(EventType eventType) {
-        return eventType.getListener(eventMonitor);
+    public FermatEventListener getNewListener(final FermatEventEnum eventType) {
+        return eventType.getNewListener(fermatEventMonitor);
     }
 
     @Override
-    public PlatformEvent getNewEvent(EventType eventType) {
-        return eventType.getEvent();
+    public FermatEvent getNewEvent(final FermatEventEnum eventType) {
+        return eventType.getNewEvent();
     }
 
     @Override
-    public void addListener(EventListener listener) {
+    public void addListener(final FermatEventListener listener) {
 
-        List<EventListener> listenersList = listenersMap.get(listener.getEventType());
+        String eventKey = buildMapKey(listener.getEventType());
+
+        List<FermatEventListener> listenersList = listenersMap.get(eventKey);
 
         if (listenersList == null)
             listenersList = new ArrayList<>();
 
         listenersList.add(listener);
 
-        listenersMap.put(listener.getEventType(), listenersList);
+        listenersMap.put(eventKey, listenersList);
     }
 
     @Override
-    public void removeListener(EventListener listener) {
+    public void removeListener(final FermatEventListener listener) {
 
-        List<EventListener> listenersList = listenersMap.get(listener.getEventType());
+        String eventKey = buildMapKey(listener.getEventType());
+
+        List<FermatEventListener> listenersList = listenersMap.get(eventKey);
 
         listenersList.remove(listener);
 
-        listenersMap.put(listener.getEventType(), listenersList);
+        listenersMap.put(eventKey, listenersList);
 
         listener.setEventHandler(null);
 
     }
 
     @Override
-    public void raiseEvent(PlatformEvent platformEvent) {
-        List<EventListener> listenersList = listenersMap.get(platformEvent.getEventType());
+    public void raiseEvent(final FermatEvent fermatEvent) {
+
+        String eventKey = buildMapKey(fermatEvent.getEventType());
+
+        List<FermatEventListener> listenersList = listenersMap.get(eventKey);
 
         if (listenersList != null) {
-            for (EventListener eventListener : listenersList) {
-                eventListener.raiseEvent(platformEvent);
+            for (FermatEventListener fermatEventListener : listenersList) {
+                fermatEventListener.raiseEvent(fermatEvent);
             }
         }
     }
 
-    /**
-     * Service Interface implementation.
-     */
-    @Override
-    public void start() {
-        this.serviceStatus = ServiceStatus.STARTED;
+    private String buildMapKey(final FermatEventEnum fermatEnum) {
+
+        final StringBuilder builder = new StringBuilder();
+
+        if (fermatEnum.getPlatform() != null)
+            builder.append(fermatEnum.getPlatform().getCode());
+
+        builder.append(fermatEnum.getCode());
+
+        return builder.toString();
     }
 
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }
-
-
-    /**
-     * DealsWithEventMonitor interface implementation.
-     */
-    @Override
-    public void setEventMonitor(EventMonitor eventMonitor) {
-        this.eventMonitor = eventMonitor;
-    }
 }

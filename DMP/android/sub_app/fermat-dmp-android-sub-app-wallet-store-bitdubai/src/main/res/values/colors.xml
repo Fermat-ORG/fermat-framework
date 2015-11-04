@@ -10,6 +10,7 @@
     <color name="wallet_uninstall_background_button">#89c3c1ce</color>
     <color name="wallet_uninstall_text_button">#181818</color>
     <color name="wallet_name_black">#66000000</color>
-    <color name="wallet_store_activities_background">#fbf7ed</color>
+    <color name="wallet_store_activities_background">#f4f4f4</color>
+    <color name="whats_new_background">#e39affab</color>
 
 </resources>

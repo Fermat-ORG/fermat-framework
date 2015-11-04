@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,8 +18,16 @@ import java.util.Map;
 public class Activity implements com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatActivity {
     /**
      * Activity class member variables
+     *
+     * TODO:  se debe cambiar y empezar a usar el String de activity type de abajo cuando esté hecho el activity factory
      */
+    @Deprecated
     Activities type;
+
+    /**
+     *  Activity type in String format
+     */
+    String activityType;
 
     /**
      *  the String is the fragments enum value corresponding to each plugin
@@ -45,6 +54,8 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     Map<WizardTypes, Wizard> wizards;
 
     Activities backActivity;
+
+    Header header;
 
     public Activity() {
     }
@@ -140,6 +151,11 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         return this.backActivity;
     }
 
+    @Override
+    public FermatHeader getHeader() {
+        return header;
+    }
+
     // TODO VER COMO HACER ESTO
     @Override
     public Map<String, Fragment> getFragments() {
@@ -165,6 +181,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
                 return subApp;
             }
         }
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
@@ -187,6 +204,14 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
      */
     public Map<WizardTypes, Wizard> getWizards() {
         return wizards;
+    }
+
+    public String getActivityType() {
+        return activityType;
+    }
+
+    public void setActivityType(String activityType) {
+        this.activityType = activityType;
     }
 }
 

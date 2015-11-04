@@ -2,6 +2,7 @@
 <resources>
 
     <string name="action_settings">Settings</string>
+    <string name="action_clone">Clone</string>
     <string name="action_help">Help</string>
     <string name="action_share">Share</string>
     <string name="action_view_type">View Type</string>
@@ -91,6 +92,7 @@
     <string name="title_activity_balance_available">BalanceAvailableActivity</string>
     <string name="title_activity_wallet">Wallet Activity</string>
 
+
     <string-array name="account_name">
         <item>Saving account: My savings</item>
         <item>Current account: Pocket money</item>
@@ -99,5 +101,9 @@
 
     <string name="title_activity_requests_received">Requests Received</string>
     <string name="title_activity_activity_main">Main Activity</string>
+    <string name="main_factory_project_type_wallet">Wallet</string>
+    <string name="main_factory_project_type_language">Language</string>
+    <string name="main_factory_project_type_skin">Skin</string>
+    <string name="main_menu_factory_publish">Publish</string>
 
 </resources>

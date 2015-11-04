@@ -54,9 +54,9 @@ public class CorePlatformContext implements PlatformContext,Serializable {
     public CorePlatformContext(){
         super();
 
-        this.addons = new HashMap<Addons, Addon>();
-        this.plugins = new HashMap<Plugins, Plugin>();
-        this.platformLayers = new HashMap<PlatformLayers, PlatformLayer>();
+        this.addons = new HashMap<>();
+        this.plugins = new HashMap<>();
+        this.platformLayers = new HashMap<>();
     }
 
     /**
@@ -74,7 +74,7 @@ public class CorePlatformContext implements PlatformContext,Serializable {
      * @see PlatformContext#getAddon(Addons)
      */
     public Addon getAddon (Addons key){
-        return (Addon) addons.get(key);
+        return addons.get(key);
     }
 
     /**
@@ -92,7 +92,7 @@ public class CorePlatformContext implements PlatformContext,Serializable {
      * @see PlatformContext#getPlugin(Plugins)
      */
     public Plugin getPlugin (Plugins key){
-        return (Plugin) plugins.get(key);
+        return plugins.get(key);
     }
 
     /**
@@ -160,9 +160,9 @@ public class CorePlatformContext implements PlatformContext,Serializable {
     /**
      * (non-Javadoc)
      *
-     * @see PlatformContext#isRegister(PlatformLayer)
+     * @see PlatformContext#isRegister(PlatformLayers)
      */
-    public boolean isRegister(PlatformLayer key){
+    public boolean isRegister(PlatformLayers key){
         return platformLayers.containsKey(key);
     }
 

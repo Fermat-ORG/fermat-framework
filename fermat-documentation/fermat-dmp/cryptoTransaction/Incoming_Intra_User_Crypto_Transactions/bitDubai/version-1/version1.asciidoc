@@ -1,0 +1,71 @@
+= Incoming Intra User
+
+== Notas
+
+Se asume que el lector ha leido la documentación escrita aquí:
+
+~/fermat/fermat-documentation/fermat_dmp/crypto_transaction/protocols/transactionTransferenceProtocol-v2.asciidoc
+
+o tiene un conocimiento del protocolo de traspaso de transacciones del sistema.
+
+Este plugin tratará sólo las transacciones de crypto currency.
+
+== Documentación
+
+Al recibir un pago desde un intra user tenemos que coordinar la información que llega a través de la
+red crypto con la metadata de la transacción. El Crypto Router nos envía la información de las
+transacciones crypto. Por otro lado, diversos network services especializados nos enviarán la
+información de la metadata. +
+Para este plugin, esta metadata será de crypto (se da cuando un Intra User nos envía
+una transacción crypto). La metadata tiene adjunta el hash de la transacción que viaja por la red
+crypto asociada a ella. Usaremos este hash para detectar desde el lado del receptor que ambas
+piezas de información han llegado a destino. +
+
+Si detectamos la llegada de una transacción por la red crypto pero no tenemos la metadata entonces no
+podemos aplicar la transacción dado que el plugin de la wallet de la capa basic wallet espera la metadata
+para registrar sus datos. Nace aquí el problema de que tenemos que hacer un seguimiento del ciclo de
+vida de la transacción de la red crypto (vista por la red, reversiones antes y después de entrar a un
+bloque, etc.), detectar la metadata y actualizar los balances (book y available) de manera adecuada. +
+Esto lleva a que, si bien podemos tomar parte de la estructura del Incoming Intra User para guiar este
+plugin, debemos cambiar la lógica de funcionamiento del mismo. Comencemos estudiando la estructura de
+agentes que podemos darle a este plugin. +
+
+Tomando como base al Incoming Extra User necesitamos agregar un monitor agent para la metadata, llamémoslo
+CryptoMonitorAgent, para que traiga la metadata de las transacciones crypto del network servic Crypto
+Transmission. +
+La información contenida en la metadata que trae cada transacción se almacenará en una tabla diferente
+a la usada para la información que trae la transacción desde la red crypto. Es decir, en nuestra base
+de datos tendremos una tabla para guardar la metadata de las transacciones crypto, y las tablas de
+eventos y de transacciones de la red crypto que ya teníamos. +
+
+Para cada monitor agent deberá haber un método que consulte la tabla de eventos trayendo el siguiente
+evento pendiente para el agente particular que consulta; es decir que si consulta el CryptoMonitorAgent
+entonces se le debe dar un evento con source Crypto Transmission Network Service; si consulta el
+MonitorAgent entonces se le debe dar un evento con source Incoming Crypto.
+
+Para administrar el ciclo de vida de la transacción sólo requerimos de la información que nos da la
+red crypto a través del Incoming Crypto, la espera de la metadata es necesaria para poder aplicar las
+actualizaciones del balance. +
+Lo que haremos será que el método que llama el relay agent que consulta las transacciones en estado
+(RESPONSIBLE, TO_BE_APPLIED), es decir el método getResponsibleTBATransactions, retornará sólo las
+transacciones en ese estado que además tengan la metadata sincronizada. De esta manera el problema
+queda reducido al problema que hemos resuelto en la lógica del Incoming Extra User. +
+
+NOTE: Un posible defecto de esta estrategia nace si la comunicación entre network services requiere
+que ambos usuarios esten conectados para intercambiar un mensaje. En principio asumiremos que no
+tenemos este problema; pero si nuestro sistema de comunicación no nos garantiza que podamos enviar
+un mensaje a un usuario desconectado para poder desentendernos de la responsabilidad de envío del
+mismo entonces tendremos que analizar esta estrategia.
+Dicho en otras palabras, nos basamos en que si un usuario A envía un mensaje a otro usuario B a través
+de un network service N cuando B está desconectado, entonces si A se desconecta y luego B se conecta,
+el mensaje enviado le llegará sin que A deba realizar ningún tipo de reenvío.
+
+Como un agregado, este plugin deberá llamar a los métodos `informTransactionSeenByVault` e
+`informTransactionCreditedInWallet` del network service Crypto Transmission. +
+Se deben llamar en el momento adecuado, cuando procesemos una transacción en crypto estado
+ON_CRYPTO_NETWORK llamaremos al método `informTransactionSeenByVault` y cuando procesemos una
+en crypto estado ON_BLOCKCHAIN y actualicemos el Available Balance de la wallet llamaremos al
+método `informTransactionCreditedInWallet`. Con procesar una transacción nos referimos al aplicar
+cambios en los balances cuando esta tiene su metadata sincronizada. +
+
+

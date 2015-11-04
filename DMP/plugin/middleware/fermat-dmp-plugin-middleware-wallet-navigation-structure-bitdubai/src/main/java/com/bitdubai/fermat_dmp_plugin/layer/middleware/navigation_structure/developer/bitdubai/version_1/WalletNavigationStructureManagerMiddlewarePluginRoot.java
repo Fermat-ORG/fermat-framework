@@ -13,9 +13,9 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_navigation_structure.interfaces.WalletNavigationStructureManager;
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesInstalationManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesInstalationManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -26,11 +26,11 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.deve
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.database.WalletNavigationStructureMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.exceptions.CantInitializeWalletNavigationStructureMiddlewareDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
@@ -43,19 +43,18 @@ import java.util.UUID;
  * That plugin manages the navigation structure of Wallets .
  * Keep track of the resources found in the device and its relationship with the wallets .
  * Serves the WalletFactory for creating and modifying Wallets .
- *
+ * <p/>
  * Created by Natalia on 07/08/2015
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletNavigationStructureManagerMiddlewarePluginRoot implements DatabaseManagerForDevelopers,DealsWithErrors,DealsWithEvents,DealsWithLogger,DealsWithPluginDatabaseSystem,LogManagerForDevelopers, Plugin, Service, WalletNavigationStructureManager {
+public class WalletNavigationStructureManagerMiddlewarePluginRoot implements DatabaseManagerForDevelopers, DealsWithErrors, DealsWithEvents, DealsWithLogger, DealsWithPluginDatabaseSystem, LogManagerForDevelopers, Plugin, Service, WalletNavigationStructureManager {
 
     /**
      * DealsWithDeviceUser member variables
      */
     DeviceUserManager deviceUserManager;
-
 
     /**
      * WalletManagerMiddlewarePluginRoot member variables
@@ -63,7 +62,6 @@ public class WalletNavigationStructureManagerMiddlewarePluginRoot implements Dat
     Database database;
 
     private List<InstalledWallet> installedWallets = null;
-
 
     /**
      * DealsWithErrors Interface member variables.
@@ -150,12 +148,12 @@ public class WalletNavigationStructureManagerMiddlewarePluginRoot implements Dat
 
         } catch (CantInitializeWalletNavigationStructureMiddlewareDatabaseException exception) {
 
-            FermatException e = new CantInitializeWalletNavigationStructureMiddlewareDatabaseException(CantInitializeWalletNavigationStructureMiddlewareDatabaseException.DEFAULT_MESSAGE,exception,"WalletId: " + developerDatabase.getName(),"Check the cause");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_NAVIGATION_STRUCTURE_MIDDLEWARE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            FermatException e = new CantInitializeWalletNavigationStructureMiddlewareDatabaseException(CantInitializeWalletNavigationStructureMiddlewareDatabaseException.DEFAULT_MESSAGE, exception, "WalletId: " + developerDatabase.getName(), "Check the cause");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_NAVIGATION_STRUCTURE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
-        }catch (Exception exception) {
+        } catch (Exception exception) {
 
-            FermatException fermatException=new CantDeliverDatabaseException(CantDeliverDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "WalletId: " + pluginId.toString(),"Check the cause");
+            FermatException fermatException = new CantDeliverDatabaseException(CantDeliverDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "WalletId: " + pluginId.toString(), "Check the cause");
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_NAVIGATION_STRUCTURE_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, fermatException);
 
         }
@@ -169,10 +167,8 @@ public class WalletNavigationStructureManagerMiddlewarePluginRoot implements Dat
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
 
-
     @Override
     public void start() throws CantStartPluginException {
-
         this.serviceStatus = ServiceStatus.STARTED;
         walletNavigationStructureMiddlewareDao = new WalletNavigationStructureMiddlewareDao(pluginDatabaseSystem);
         try {
@@ -181,20 +177,20 @@ public class WalletNavigationStructureManagerMiddlewarePluginRoot implements Dat
             this.serviceStatus = ServiceStatus.STOPPED;
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "", "");
         }
-
     }
+
     @Override
-    public void pause(){
+    public void pause() {
         this.serviceStatus = ServiceStatus.PAUSED;
     }
 
     @Override
-    public void resume(){
+    public void resume() {
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
-    public void stop(){
+    public void stop() {
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
@@ -203,9 +199,8 @@ public class WalletNavigationStructureManagerMiddlewarePluginRoot implements Dat
         return this.serviceStatus;
     }
 
-
     /**
-     * DealWithErrors Interface implementation. 
+     * DealWithErrors Interface implementation.
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
@@ -219,9 +214,6 @@ public class WalletNavigationStructureManagerMiddlewarePluginRoot implements Dat
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
-
-
-
 
     /**
      * DealsWithLogger Interface implementation.
@@ -243,18 +235,16 @@ public class WalletNavigationStructureManagerMiddlewarePluginRoot implements Dat
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.middleware.navigation_structure.developer.bitdubai.version_1.structure.WalletNavigationStructureMiddleware");
 
         /**
-        * I return the values.
-        */
+         * I return the values.
+         */
         return returnedClasses;
     }
-
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
         /**
          * I will check the current values and update the LogLevel in those which is different
          */
-
         for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
             /**
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
@@ -266,9 +256,7 @@ public class WalletNavigationStructureManagerMiddlewarePluginRoot implements Dat
                 WalletNavigationStructureManagerMiddlewarePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
-
     }
-
 
     /*
      * DealsWithPluginDatabaseSystem interface methods implementation
@@ -285,7 +273,7 @@ public class WalletNavigationStructureManagerMiddlewarePluginRoot implements Dat
 
     @Override
     public void setEventManager(EventManager eventManager) {
-        this.eventManager=eventManager;
+        this.eventManager = eventManager;
     }
 
 }

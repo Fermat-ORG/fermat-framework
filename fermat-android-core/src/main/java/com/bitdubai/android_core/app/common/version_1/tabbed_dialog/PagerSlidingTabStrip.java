@@ -68,7 +68,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     private int underlineColor = 0x1A000000;
     private int dividerColor = 0x1A000000;
 
-    private boolean shouldExpand = false;
+    private boolean shouldExpand = true;
     private boolean textAllCaps = true;
 
     private int scrollOffset = 52;
@@ -161,7 +161,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         dividerPaint.setStrokeWidth(dividerWidth);
 
         defaultTabLayoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
-        expandedTabLayoutParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1.0f);
+        expandedTabLayoutParams = new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1);
 
         if (locale == null) {
             locale = getResources().getConfiguration().locale;
@@ -269,8 +269,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             addTab(position, tab);
 
         }
-        catch (Exception e)
-            {
+        catch (Exception e) {
                 throw e;
             }
 
@@ -278,6 +277,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
     private void addTab(final int position, View tab) {
         try {
+
             tab.setFocusable(true);
             tab.setOnClickListener(new OnClickListener() {
                 @Override
@@ -287,7 +287,10 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             });
 
             tab.setPadding(tabPadding, 0, tabPadding, 0);
-            tabsContainer.addView(tab, position, shouldExpand ? expandedTabLayoutParams : defaultTabLayoutParams);
+            //tabsContainer.addView(tab, position, shouldExpand ? expandedTabLayoutParams : defaultTabLayoutParams);
+            expandedTabLayoutParams.weight=1;
+            tabsContainer.addView(tab, position, expandedTabLayoutParams);
+
         }
          catch (Exception e)
             {
@@ -323,8 +326,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
                 }
             }
         }
-    catch (Exception e)
-    {
+    catch (Exception e) {
         throw e;
     }
 

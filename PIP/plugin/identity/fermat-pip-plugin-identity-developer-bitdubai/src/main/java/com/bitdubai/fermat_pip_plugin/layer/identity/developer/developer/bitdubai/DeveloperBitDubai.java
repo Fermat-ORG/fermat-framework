@@ -31,21 +31,21 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
 
     @Override
     public int getAmountToPay() {
-        return 0;
+        return 100;
     }
 
     @Override
     public CryptoCurrency getCryptoCurrency() {
-        return null;
+        return CryptoCurrency.BITCOIN;
     }
 
     @Override
     public String getAddress() {
-        return null;
+        return "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv";
     }
 
     @Override
     public TimeFrequency getTimePeriod() {
-        return null;
+        return TimeFrequency.MONTHLY;
     }
 }

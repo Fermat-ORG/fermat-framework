@@ -1,0 +1,41 @@
+= Fermat-DAP System Layers
+(SECCION PARA SER COMPLETADA POR EL EQUIPO DE DAP+ NOTA DE FERMAT-BOOK-MANAGER (book@fermat.org) 27-9-2015)
+
+:leveloffset: 1
+include::actor/actor.asciidoc[]
+
+:leveloffset: 1
+include::asset_factory/bitDubai/version-1/version1.asciidoc[]
+
+:leveloffset: 1
+include::best_practices/best_practices.asciidoc[]
+
+:leveloffset: 1
+include::digital_asset_transaction/digital_asset_transaction.asciidoc[]
+
+:leveloffset: 1
+include::flujo_general/version1.asciidoc[]
+
+:leveloffset: 1
+include::identity/identity.asciidoc[]
+
+:leveloffset: 1
+include::network_service/network_service.asciidoc[]
+
+:leveloffset: 1
+include::reference_wallet/reference_wallet.asciidoc[]
+
+:leveloffset: 1
+include::sub_app/sub_app.asciidoc[]
+
+:leveloffset: 1
+include::sub_app_module/sub_app_module.asciidoc[]
+
+:leveloffset: 1
+include::wallet/wallet.asciidoc[]
+
+:leveloffset: 1
+include::wallet_module/wallet_module.asciidoc[]
+
+
+

@@ -1,0 +1,43 @@
+[[wallet-asset-issuer-BitDubai-V1]]
+== Version 1
+El componente asset issuer wallet registrara todas las transacciones contables que ocurran en la Reference Asset Issuer Wallet, y almacenara dicha transacción en la base de datos,
+de esa manera el componente podra emitir todo los movimientos registrados en el Asset Issuer Wallet.
+ Todas las transacciones deberan de pasar por el componente "Transacction" que sera en el que determine si la operacion debera ser persitida en la base de datos del componente asset
+ issuer wallet.
+
+
+== Plug-in Description
+Se solicita a la Asset Vault una dirección bitcoin que será la GenesisAddress. Esta dirección solicitada queda registrada en el Address Book como solicitada por el Issue Actor,
+la plataforma DAP y la vault de donde sale la dirección.
+Definir en que momento quedara como disponible.
+
+== Plug-in Structure
+
+    fermat-dap-api===>layer===>dap_wallet===>asset_issuer_wallet
+
+== Events
+
+== Implementation Details
+
+    Se crearan las siguientes Interfaces:
+      assetissuerwallet:
+         Implementara todo el objeto que manipulara la información de la Asset.
+            *Metodos sugeridos:*
+
+            String getWalletPublicKey();
+            String getDigitalAssetPublicKey();
+            long getBalance()  throws CantCalculateBalanceException;
+            void debit(); //Debemos de definir la estructura de la transaccion
+            void credit(); //Debemos de definir la estructura de la transaccion
+
+      assetissuerwalletmanager:
+         Implementara la interfaz publica hacia los otros pluggins.
+
+      dealswithassetissuerwallet:
+         Implementara la Interfaz BitCoinWalletAssetManager para la interconexion hacia los otros pluggins.
+
+      assetissuerwallettransaction:
+         Implementara la interfaz para el registro de la transacción involucrada.
+
+      assetissuerwalletsubsystem:
+         Implementara la interfaz para el comportamiento del modulo.

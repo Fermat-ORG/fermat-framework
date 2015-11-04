@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Crypto Customer Identity</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_settings">Settings</string>
+    <string name="customer_name">Customer name</string>
+    <string name="create">CREATE</string>
+    <string name="identity_img">customer_img</string>
+    <string name="update">UPDATE</string>
+    <string name="camera_option_context_menu">Camera</string>
+    <string name="gallery_option_context_menu">Gallery</string>
+    <string name="title_photo_context_menu">Choose mode</string>
+    <string name="description_search">Search</string>
+    <string name="empty_identity_list_msg">The List is empty</string>
+    <string name="no_matches">No Matches</string>
+</resources>

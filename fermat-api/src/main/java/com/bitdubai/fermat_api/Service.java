@@ -7,14 +7,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
  */
 public interface Service {
 
-    public void start() throws CantStartPluginException;
+    void start() throws CantStartPluginException;
 
-    public void pause();
+    void pause();
     
-    public void resume();
+    void resume();
 
-    public void stop();
+    void stop();
 
-    public ServiceStatus getStatus();
+    ServiceStatus getStatus();
 
 }

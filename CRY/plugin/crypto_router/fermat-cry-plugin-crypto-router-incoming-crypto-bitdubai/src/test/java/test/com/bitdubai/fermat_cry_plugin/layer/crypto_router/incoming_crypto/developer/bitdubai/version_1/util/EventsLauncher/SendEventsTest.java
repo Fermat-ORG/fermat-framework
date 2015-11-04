@@ -2,10 +2,10 @@ package test.com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.
 
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.SpecialistAndCryptoStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.SpecialistNotRegisteredException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.EventsLauncher;
 
@@ -17,7 +17,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,7 +36,7 @@ public class SendEventsTest extends TestCase {
     EventManager eventManager;
 
     @Mock
-    PlatformEvent platformEvent;
+    FermatEvent fermatEvent;
 
     Set<SpecialistAndCryptoStatus> specialistEnumSet;
 
@@ -48,7 +47,7 @@ public class SendEventsTest extends TestCase {
     public void setUp() throws Exception {
         eventsLauncher = new EventsLauncher();
         eventsLauncher.setEventManager(eventManager);
-        doReturn(platformEvent).when(eventManager).getNewEvent(any(EventType.class));
+        doReturn(fermatEvent).when(eventManager).getNewEvent(any(EventType.class));
         specialistEnumSet = new HashSet<>();
     }
 

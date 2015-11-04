@@ -6,12 +6,15 @@
  */
 package com.bitdubai.sub_app.wallet_publisher.fragment;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
 
@@ -20,20 +23,18 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
-import com.bitdubai.fermat_api.layer.dmp_identity.publisher.interfaces.PublisherIdentity;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.FactoryProjectType;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.enums.WalletFactoryProjectState;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_factory.interfaces.WalletFactoryProject;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.exceptions.CantGetPublishedComponentInformationException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.InformationPublishedComponent;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.enums.FactoryProjectType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFactoryProjectState;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.interfaces.WalletFactoryProject;
+import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_publisher.interfaces.WalletPublisherModuleManager;
 import com.bitdubai.sub_app.wallet_publisher.R;
-import com.bitdubai.sub_app.wallet_publisher.adapters.InformationPublishedComponentAdapter;
 import com.bitdubai.sub_app.wallet_publisher.adapters.WalletFactoryProjectsAdapter;
 import com.bitdubai.sub_app.wallet_publisher.interfaces.PopupMenu;
 import com.bitdubai.sub_app.wallet_publisher.session.WalletPublisherSubAppSession;
@@ -55,7 +56,7 @@ import java.util.List;
  * @since Java JDK 1.7
  */
 public class MainFragment extends FermatListFragment<WalletFactoryProject>
-        implements FermatListItemListeners<WalletFactoryProject>, OnMenuItemClickListener {
+        implements FermatListItemListeners<WalletFactoryProject>, OnMenuItemClickListener, FermatWorkerCallBack {
 
     /**
      * Represent the TAG
@@ -72,6 +73,12 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
      */
     private ArrayList<WalletFactoryProject> projects;
     private WalletFactoryProject project;
+
+    /**
+     * UI
+     */
+    private LinearLayout empty;
+    private ProgressDialog dialog;
 
     /**
      * Factory instance method
@@ -97,14 +104,38 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
              */
             walletPublisherModuleManager = ((WalletPublisherSubAppSession) subAppsSession).getWalletPublisherManager();
             /*Getting WFP */
-            projects = (ArrayList<WalletFactoryProject>) walletPublisherModuleManager.getProjectsReadyToPublish();
+            //projects = (ArrayList<WalletFactoryProject>) walletPublisherModuleManager.getProjectsReadyToPublish();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
         //// TODO: 01/09/15  remove this block
+        /*
         if (projects == null || projects.size() == 0)
             projects = getFakesProjects();
+            */
         CommonLogger.debug(TAG, String.format("Initial Projects ready to publish %d", projects != null ? projects.size() : 0));
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (dialog != null)
+            dialog.dismiss();
+        dialog = null;
+        //dialog = new ProgressDialog(getActivity());
+        //dialog.setTitle("Loading Projects Available to Publish");
+        //dialog.setMessage("Please wait...");
+        //dialog.show();
+        onRefresh();
+        showView(false, empty);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isAttached) {
+            onRefresh();
+        }
     }
 
     /**
@@ -116,6 +147,8 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
     protected void initViews(View layout) {
         super.initViews(layout);
         CommonLogger.info(TAG, "Setting up other views");
+        empty = (LinearLayout) layout.findViewById(R.id.empty);
+        empty.setVisibility(View.GONE);
     }
 
     @Override
@@ -169,7 +202,9 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
     public boolean onMenuItemClick(MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.action_more
                 && project != null) {
-            Toast.makeText(getActivity(), "Starting wizard to publish wallet: " + project.getName(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "Starting wizard to publish wallet: " + project.getName(), Toast.LENGTH_SHORT).show();
+            /* Starting Wizard to Publish this Project */
+            startWizard(WizardTypes.CWP_WALLET_PUBLISHER_PUBLISH_PROJECT, subAppsSession, subAppSettings, subAppResourcesProviderManager, project);
             return true;
         }
         Toast.makeText(getActivity(), "Starting wizard to publish...", Toast.LENGTH_SHORT).show();
@@ -203,34 +238,44 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
     @Override
     public void onPostExecute(Object... result) {
         isRefreshing = false;
-        if (isAttached) { // -> this mean that this fragment is attached to he activity and it still active on the UI Thread
-            swipeRefreshLayout.setRefreshing(false);
-            if (result != null && result.length > 0) {
-                //informationPublishedComponentList = (ArrayList) result[0];
-                if (adapter != null) {
-                    //adapter.changeDataSet((ArrayList) informationPublishedComponentList);
-                }
+        if (isAttached) {
+            if (swipeRefreshLayout != null)
+                swipeRefreshLayout.setRefreshing(false);
+            if (dialog != null && dialog.isShowing())
+                dialog.dismiss();
+            dialog = null;
+            if (adapter != null) {
+                projects = (ArrayList<WalletFactoryProject>) result[0];
+                adapter.changeDataSet(projects);
             }
+            showEmpty();
         }
     }
 
-    /**
-     * @param ex Throwable object
-     */
     @Override
     public void onErrorOccurred(Exception ex) {
         isRefreshing = false;
-        if (isAttached) {// -> this mean that this fragment is attached to he activity and it still active on the UI Thread
-            swipeRefreshLayout.setRefreshing(false);
-            //todo: alert to the user that error was thrown and need to try again...
+        if (isAttached) {
+            if (swipeRefreshLayout != null)
+                swipeRefreshLayout.setRefreshing(false);
+            if (dialog != null && dialog.isShowing())
+                dialog.dismiss();
+            dialog = null;
+            Toast.makeText(getActivity(), "Some Error Occurred: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+            showEmpty();
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public ArrayList<WalletFactoryProject> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        ArrayList<WalletFactoryProject> items = null;
-
-        return items; //todo: implement paging with refresh types and pos(values: 0 if the request is NEW and Last Item size if the request is OLD)
+        ArrayList<WalletFactoryProject> projects = null;
+        try {
+            projects = (ArrayList) walletPublisherModuleManager.getProjectsReadyToPublish();
+        } catch (Exception ex) {
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+        }
+        return projects;
     }
 
     ArrayList<WalletFactoryProject> getFakesProjects() {
@@ -240,11 +285,12 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
             WalletFactoryProject tmp = new WalletFactoryProject() {
                 @Override
                 public String getProjectPublicKey() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
                 @Override
-                public void setProjectPublickKey(String publickKey) {
+                public void setProjectPublicKey(String publickKey) {
 
                 }
 
@@ -270,16 +316,18 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public WalletType getWalletType() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
                 @Override
                 public void setWalletType(WalletType walletType) {
-
+                    //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                 }
 
                 @Override
                 public WalletCategory getWalletCategory() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
@@ -300,6 +348,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public WalletFactoryProjectState getProjectState() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
@@ -310,6 +359,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public Timestamp getCreationTimestamp() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
@@ -320,6 +370,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public Timestamp getLastModificationTimestamp() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
@@ -340,6 +391,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public Skin getDefaultSkin() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
@@ -350,6 +402,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public List<Skin> getSkins() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
@@ -361,6 +414,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public Language getDefaultLanguage() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
@@ -371,6 +425,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public List<Language> getLanguages() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
@@ -382,6 +437,7 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
                 @Override
                 public WalletNavigationStructure getNavigationStructure() {
+                    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
@@ -395,6 +451,41 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
         return items;
     }
 
+
+    /**
+     * Show or hide empty view if needed
+     */
+    public void showEmpty() {
+        if (!isAttached || empty == null)
+            return;
+        if (projects == null || projects.isEmpty()) {
+            if (empty.getVisibility() == View.GONE || empty.getVisibility() == View.INVISIBLE) {
+                empty.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.abc_fade_in));
+                empty.setVisibility(View.VISIBLE);
+            }
+        } else if (empty.getVisibility() == View.VISIBLE) {
+            empty.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.abc_fade_out));
+            empty.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * Show or Hide any view
+     *
+     * @param show true if you want to show the view, otherwise false
+     * @param view View object to show or hide
+     */
+    public void showView(boolean show, View view) {
+        if (view == null)
+            return;
+        view.setAnimation(AnimationUtils
+                .loadAnimation(getActivity(), show ? R.anim.abc_fade_in : R.anim.abc_fade_out));
+        if (show && (view.getVisibility() == View.GONE || view.getVisibility() == View.INVISIBLE)) {
+            view.setVisibility(View.VISIBLE);
+        } else if (!show && view.getVisibility() == View.VISIBLE) {
+            view.setVisibility(View.GONE);
+        }
+    }
 
 }
 // Publisher Identity

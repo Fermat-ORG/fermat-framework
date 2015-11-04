@@ -62,7 +62,6 @@ public enum Features {
      *
      *  <p>Method that indicate if the same name.
      *
-     *  @param otherName The name to check.
      *  @return Indicate if is the same name.
      * */
     public String toString () {

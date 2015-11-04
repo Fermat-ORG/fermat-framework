@@ -8,7 +8,10 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import java.util.List;
 
 /**
- * Created by francisco on 05/08/15.
+ * WizardPageAdapter
+ *
+ * @author Francisco Vasquez
+ * @version 1.0
  */
 public class WizardPageAdapter extends FragmentStatePagerAdapter {
 

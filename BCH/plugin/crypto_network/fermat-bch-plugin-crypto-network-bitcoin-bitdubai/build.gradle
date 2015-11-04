@@ -1,0 +1,15 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.7
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile('org.bitcoinj:bitcoinj-core:0.13.3') {
+        exclude module: 'scrypt'
+    }
+    testCompile 'junit:junit:4.12'
+    compile project(':fermat-api')
+    compile project(':fermat-bch-api')
+    compile project(':fermat-pip-api')
+    compile project(':fermat-cry-api')
+}

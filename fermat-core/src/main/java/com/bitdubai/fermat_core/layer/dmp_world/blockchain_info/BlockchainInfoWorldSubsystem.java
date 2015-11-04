@@ -30,7 +30,7 @@ public class BlockchainInfoWorldSubsystem implements WorldSubsystem {
         }
         catch (Exception e)
         {
-            System.err.println("Exception: " + e.getMessage());
+            System.err.println("Exception: " + e.getMessageContent());
             throw new CantStartSubsystemException();
         }
 */

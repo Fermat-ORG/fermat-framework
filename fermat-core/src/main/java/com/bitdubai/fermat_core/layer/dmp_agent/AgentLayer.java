@@ -35,7 +35,7 @@ public class AgentLayer implements PlatformLayer {
             mLicenseAgent = ((AgentSubsystem) licenseSubsystem).getAIAgent();
 
         } catch (CantStartSubsystemException e) {
-            System.err.println("CantStartSubsystemException: " + e.getMessage());
+            System.err.println("CantStartSubsystemException: " + e.getMessageContent());
 */
             /**
              * The license agent is vital for the com.bitdubai.platform to work. Without it starting there is no way to use the

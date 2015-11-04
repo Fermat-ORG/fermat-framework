@@ -1,11 +1,11 @@
 package test.com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoEventRecorderService;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoEventRecorderService;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoRegistry;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import static org.fest.assertions.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -24,7 +24,7 @@ public class StartTest {
     @Mock
     private EventManager mockEventManager;
     @Mock
-    private EventListener mockEventListener;
+    private FermatEventListener mockFermatEventListener;
 
     @Mock
     private IncomingCryptoRegistry mockRegistry;
@@ -33,7 +33,7 @@ public class StartTest {
 
     @Test
     public void Start_EventManagerSetWithValidEventListener_ServiceStarted() throws Exception{
-        when(mockEventManager.getNewListener(any(EventType.class))).thenReturn(mockEventListener);
+        when(mockEventManager.getNewListener(any(EventType.class))).thenReturn(mockFermatEventListener);
         mockRegistry = new IncomingCryptoRegistry();
 
         testIncomingCryptoEventRecorderService = new IncomingCryptoEventRecorderService();

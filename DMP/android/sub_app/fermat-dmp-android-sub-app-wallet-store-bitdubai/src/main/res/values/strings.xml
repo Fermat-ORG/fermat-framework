@@ -1,7 +1,5 @@
 <resources>
-    <string name="app_name">fermat-dmp-android-wallet-store-bitdubai</string>
-
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">Wallet Store</string>
     <string name="action_settings">Settings</string>
     <string name="description_search">Search</string>
     <string name="wallet_icon">wallet icon</string>
@@ -16,5 +14,19 @@
     <string name="menu_item_install_wallet">Install</string>
     <string name="menu_item_detail_wallet">Details</string>
     <string name="menu_item_open_wallet">Open</string>
-    <string name="cannot_collect_wallet_details">No se pudieron obtener los detalles de la wallet seleccionada</string>
+    <string name="cannot_collect_wallet_details_message">Sorry, the selected wallet details could not be got</string>
+    <string name="wallet_installed_message">"The wallet has been installed"</string>
+    <string name="wallet_not_installed_message">"Sorry, the wallet could not be installed"</string>
+    <string name="whats_new_text">WHAT\'S NEW</string>
+    <string name="version">Version</string>
+    <string name="installs">Installs</string>
+    <string name="publisher">Publisher</string>
+    <string name="developer_address">Developer Address</string>
+    <string name="update_on">Updated on</string>
+    <string name="size">Size</string>
+    <string name="developer_email">Developer e-mail</string>
+    <string name="whats_new_icon">whats_new_icon</string>
+    <string name="installing_message">Installing&#8230;</string>
+    <string name="uninstalling_message">Uninstalling&#8230;</string>
+    <string name="wait_please_message">Wait please&#8230;</string>
 </resources>

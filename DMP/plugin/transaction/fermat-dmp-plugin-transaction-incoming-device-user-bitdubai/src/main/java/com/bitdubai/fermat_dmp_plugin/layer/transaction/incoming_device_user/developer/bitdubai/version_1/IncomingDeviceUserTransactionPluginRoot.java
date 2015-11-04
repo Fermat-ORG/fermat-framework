@@ -2,15 +2,15 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_device_user.de
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_api.layer.dmp_transaction.incoming_device_user.IncomingDeviceUserManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
@@ -50,7 +50,7 @@ public class IncomingDeviceUserTransactionPluginRoot implements Service, Incomin
      * PlatformService Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
      * UsesFileSystem Interface member variables.
@@ -78,38 +78,38 @@ public class IncomingDeviceUserTransactionPluginRoot implements Service, Incomin
          * I will initialize the handling of platform events.
          */
 
-        EventListener eventListener;
-        EventHandler eventHandler;
+        FermatEventListener fermatEventListener;
+        FermatEventHandler fermatEventHandler;
 
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_DEVICE_USER);
-        eventHandler = new IncomingCryptoIdentifiedFromDeviceUserEventHandler();
-        ((IncomingCryptoIdentifiedFromDeviceUserEventHandler) eventHandler).setIncomingDeviceUserManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
-
-
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_RECEIVED_FROM_DEVICE_USER);
-        eventHandler = new IncomingCryptoReceivedFromDeviceUserEventHandler();
-        ((IncomingCryptoReceivedFromDeviceUserEventHandler) eventHandler).setIncomingDeviceUserManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        fermatEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_DEVICE_USER);
+        fermatEventHandler = new IncomingCryptoIdentifiedFromDeviceUserEventHandler();
+        ((IncomingCryptoIdentifiedFromDeviceUserEventHandler) fermatEventHandler).setIncomingDeviceUserManager(this);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
 
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_DEVICE_USER);
-        eventHandler = new IncomingCryptoReceptionConfirmedFromDeviceUserEventHandler();
-        ((IncomingCryptoReceptionConfirmedFromDeviceUserEventHandler) eventHandler).setIncomingDeviceUserManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        fermatEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_RECEIVED_FROM_DEVICE_USER);
+        fermatEventHandler = new IncomingCryptoReceivedFromDeviceUserEventHandler();
+        ((IncomingCryptoReceivedFromDeviceUserEventHandler) fermatEventHandler).setIncomingDeviceUserManager(this);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER);
-        eventHandler = new IncomingCryptoReversedFromDeviceUserEventHandler();
-        ((IncomingCryptoReversedFromDeviceUserEventHandler) eventHandler).setIncomingDeviceUserManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+
+        fermatEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_DEVICE_USER);
+        fermatEventHandler = new IncomingCryptoReceptionConfirmedFromDeviceUserEventHandler();
+        ((IncomingCryptoReceptionConfirmedFromDeviceUserEventHandler) fermatEventHandler).setIncomingDeviceUserManager(this);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        fermatEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER);
+        fermatEventHandler = new IncomingCryptoReversedFromDeviceUserEventHandler();
+        ((IncomingCryptoReversedFromDeviceUserEventHandler) fermatEventHandler).setIncomingDeviceUserManager(this);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -134,8 +134,8 @@ public class IncomingDeviceUserTransactionPluginRoot implements Service, Incomin
          * I will remove all the event listeners registered with the event manager.
          */
 
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
 
         listenersAdded.clear();

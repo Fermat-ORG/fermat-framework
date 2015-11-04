@@ -1,127 +1,95 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoOnCryptoNetworkEvent;
+import com.bitdubai.fermat_cry_api.layer.definition.enums.EventType;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.utils.TransactionTypeAndCryptoStatus;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.events.IncomingCryptoOnCryptoNetworkEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 
-import org.bitcoinj.core.Wallet;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by rodrigo on 2015.06.17..
+ * Modified by lnacosta (laion.cj91@gmail.com) on 15/10/2015.
  */
-public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErrors{
-    /**
-     * CryptoVaultDatabaseActions  member variables
-     */
-    Database database;
-    Wallet vault;
+public class CryptoVaultDatabaseActions {
+
+    private final Database     database    ;
+    private final EventManager eventManager;
 
     /**
-     * DealsWithEvents interface member variables
+     * Constructor with final params.
      */
-    EventManager eventManager;
+    public CryptoVaultDatabaseActions(final Database     database    ,
+                                      final EventManager eventManager){
 
-    /**
-     * DealsWithErrors interface member variables
-     */
-    ErrorManager errorManager;
-
-
-    /**
-     * DealsWithErrors interface implementation
-     * @param errorManager
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
+        this.database     = database    ;
         this.eventManager = eventManager;
     }
 
-
-    /**
-     * Constructor
-     * @param database
-     */
-    public CryptoVaultDatabaseActions(Database database, ErrorManager errorManager, EventManager eventManager){
-        this.database = database;
-        this.eventManager = eventManager;
-        this.errorManager = errorManager;
-    }
-
-    public void setVault(Wallet vault){
-        this.vault = vault;
-    }
-
-
-    public void saveIncomingTransaction(UUID txId, String txHash) throws CantExecuteQueryException, CantLoadTableToMemoryException {
+    public void saveIncomingTransaction(final UUID   txId  ,
+                                        final String txHash) throws CantExecuteQueryException      ,
+                                                                    CantLoadTableToMemoryException {
         /**
          * I need to validate that this is not a transaction I already saved because it might be from a transaction
          * generated by our wallet.
          */
         try {
-            DatabaseTable cryptoTxTable;
-            cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+
+            DatabaseTable cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+
             cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
             cryptoTxTable.loadToMemory();
+
             if (cryptoTxTable.getRecords().isEmpty()){
                 /**
                  * If this is not a transaction that we previously generated, then I will identify it as a new transaction.
                  */
+                DatabaseTableRecord incomingTxRecord =  cryptoTxTable.getEmptyRecord();
 
-                    DatabaseTransaction dbTx = this.database.newTransaction();
-                    cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
-                    DatabaseTableRecord incomingTxRecord =  cryptoTxTable.getEmptyRecord();
+                incomingTxRecord.setUUIDValue  (CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME          , txId                                    );
+                incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME        , txHash                                  );
+                incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME    , ProtocolStatus.TO_BE_NOTIFIED.getCode() );
+                incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME , CryptoStatus.ON_CRYPTO_NETWORK.getCode());
+                incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_TYPE_COLUMN_NAME, CryptoTransactionType.INCOMING.getCode());
 
-                    incomingTxRecord.setUUIDValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId);
-                    incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash);
-                    incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.toString());
-                    incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, CryptoStatus.ON_CRYPTO_NETWORK.toString());
+                cryptoTxTable.insertRecord(incomingTxRecord);
 
-                    dbTx.addRecordToInsert(cryptoTxTable, incomingTxRecord);
-
-                        this.database.executeTransaction(dbTx);
-
-                    /**
-                     * after I save the transaction in the database and the vault, I'll raise the incoming transaction.
-                     *
-                     */
-
-                    PlatformEvent event = new IncomingCryptoOnCryptoNetworkEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
-                    event.setSource(EventSource.CRYPTO_VAULT);
-                    eventManager.raiseEvent(event);
-
-
+                // after I save the transaction in the database and the vault, I'll raise the incoming transaction.
+                FermatEvent event = new IncomingCryptoOnCryptoNetworkEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
+                event.setSource(EventSource.CRYPTO_VAULT);
+                eventManager.raiseEvent(event);
             }
-        //
-        } catch (DatabaseTransactionFailedException e) {
-            throw new CantExecuteQueryException("Error in saveIncomingTransaction method.", e, "Transaction Hash:" + txHash, "Error in database plugin.");
-        }catch(Exception exception){
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+
+        } catch (CantInsertRecordException e) {
+
+            throw new CantExecuteQueryException("Error trying to persist in saveIncomingTransaction method.", e, "Transaction Hash:" + txHash, "Error in database plugin.");
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantExecuteQueryException("Error trying to bring data in saveIncomingTransaction method.", e, "Transaction Hash:" + txHash, "Error in database plugin.");
+        } catch(Exception exception){
+
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
         }
     }
 
@@ -130,83 +98,116 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
      * @param txId the ID of the transaction
      * @return
      */
-    public boolean isNewFermatTransaction(UUID txId) throws CantExecuteQueryException {
+    public boolean isNewFermatTransaction(final UUID txId) throws CantExecuteQueryException {
+
         try {
-            DatabaseTable fermatTxTable;
+            DatabaseTable fermatTxTable = database.getTable(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_NAME);
 
-            fermatTxTable = database.getTable(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_NAME);
-            fermatTxTable.setStringFilter(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId.toString(), DatabaseFilterType.EQUAL);
+            fermatTxTable.setUUIDFilter(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId, DatabaseFilterType.EQUAL);
 
-                fermatTxTable.loadToMemory();
-            /**
-             * If I couldnt find any record with this transaction id, then it is a new transactions.
-             */
-            if (fermatTxTable.getRecords().isEmpty())
-                return true;
-            else
-                return false;
+            fermatTxTable.loadToMemory();
+
+            // If we couldn't find a record with this transaction id, then we consider it like a new transaction.
+            return fermatTxTable.getRecords().isEmpty();
+
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+
             throw new CantExecuteQueryException("Error validating transaction in DB.", cantLoadTableToMemory, "Transaction Id:" + txId, "Error in database plugin.");
-        }catch(Exception exception){
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        } catch(Exception exception){
+
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
         }
     }
 
+    // returns type of transaction having i count if already exists, if not by default returns incoming
+    public CryptoTransactionType calculateTransactionType(final String txHash) throws CantExecuteQueryException {
+
+        try {
+            DatabaseTable fermatTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+
+            fermatTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
+
+            fermatTxTable.loadToMemory();
+
+            // if i don't find records, i think is a new incoming transaction, if i find, y return the type of transaction it is.
+            if (fermatTxTable.getRecords().isEmpty())
+                return CryptoTransactionType.INCOMING;
+            else
+                return CryptoTransactionType.getByCode(fermatTxTable.getRecords().get(0).getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_TYPE_COLUMN_NAME));
+
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+
+            throw new CantExecuteQueryException("Error validating transaction in DB.", cantLoadTableToMemory, "Transaction HASH:" + txHash, "Error in database plugin.");
+        } catch (InvalidParameterException invalidParameterException) {
+
+            throw new CantExecuteQueryException("Error with transaction type code.", invalidParameterException, "Transaction HASH:" + txHash, "Error in database plugin.");
+        } catch(Exception exception){
+
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
+        }
+    }
 
     /**
-     * I will persist a new crypto transaction generated by our wallet.
+     * Throw this methods we can persist a new crypto transaction generated by our wallet.
+     * By default in an outgoing transaction we assign the following values:
+     * type           : OUTGOING           - outgoing transaction (generated by our wallet).
+     * crypto status  : ON_CRYPTO_NETWORK  - we generate the transaction directly in ON_CRYPTO_NETWORK status.
+     * protocol status: NO_ACTION_REQUIRED - because the transaction is generated by our wallet we don't need to inform it.
      */
-    public  void persistNewTransaction(String txId, String txHash) throws CantExecuteQueryException {
+    public  void persistNewTransaction(final String txId  ,
+                                       final String txHash) throws CantExecuteQueryException {
+
         try {
-            DatabaseTable cryptoTxTable;
-            DatabaseTransaction dbTx = this.database.newTransaction();
-            cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+
+            DatabaseTable cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+
             DatabaseTableRecord incomingTxRecord =  cryptoTxTable.getEmptyRecord();
-            incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId.toString());
-            incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash);
 
-            /**
-             * since the wallet generated this transaction, we dont need to inform it.
-             */
-            incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, ProtocolStatus.NO_ACTION_REQUIRED.toString());
+            ProtocolStatus        protocolStatus  = ProtocolStatus       .NO_ACTION_REQUIRED;
+            CryptoStatus          cryptoStatus    = CryptoStatus         .ON_CRYPTO_NETWORK ;
+            CryptoTransactionType transactionType = CryptoTransactionType.OUTGOING          ;
 
+            incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME          , txId                     );
+            incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME        , txHash                   );
+            incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, protocolStatus.getCode());
+            incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, cryptoStatus.getCode());
+            incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_TYPE_COLUMN_NAME, transactionType.getCode());
 
-            /**
-             * The transaction was just generated by us, si it will be saved in PENDING_SUBMIT just in case we are not connected to the network.
-             * Then the confidence level will be updated if we were able to send it to the network
-             */
-            incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, CryptoStatus.ON_CRYPTO_NETWORK.toString());
+            cryptoTxTable.insertRecord(incomingTxRecord);
 
-            dbTx.addRecordToInsert(cryptoTxTable, incomingTxRecord);
+        } catch (CantInsertRecordException e) {
 
-            database.executeTransaction(dbTx);
-
-        } catch (DatabaseTransactionFailedException e) {
             throw new CantExecuteQueryException("Error persisting in DB.", e, "Transaction Hash:" + txHash, "Error in database plugin.");
-        }catch(Exception exception){
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        } catch(Exception exception){
+
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
         }
     }
 
     /**
-     * Will retrieve all the transactions that are in status pending ProtocolStatus = TO_BE_NOTIFIED
-     * @return
+     * Throw this methods we get all the transactions that with ProtocolStatus = TO_BE_NOTIFIED and by
+     * parameters we pass the type of transaction that we need.
+     *
+     * This methods now it's only used with INCOMING transactions, but in the near future maybe we will need
+     * to bring OUTGOING transactions too.
+     *
+     * @return a hashMap string-string in where the key is the transaction id and the value the transaction hash,
      */
-    public HashMap<String, String> getPendingTransactionsHeaders() throws CantExecuteQueryException {
-        /**
-         * I need to obtain all the transactions ids with protocol status SENDING_NOTIFIED y TO_BE_NOTIFIED
-         */
+    public HashMap<String, String> getPendingTransactionsHeadersByTransactionType(CryptoTransactionType type) throws CantExecuteQueryException {
+
         try {
             DatabaseTable cryptoTxTable;
-            HashMap<String, String> transactionsIds = new HashMap<String, String>();
+            HashMap<String, String> transactionsIds = new HashMap<>();
+
             cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
 
-            /**
-             * I get the transaction IDs and Hashes for the TO_BE_NOTIFIED
-             */
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.toString(), DatabaseFilterType.EQUAL);
+            ProtocolStatus protocolStatus = ProtocolStatus.TO_BE_NOTIFIED;
+
+            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, protocolStatus.getCode(), DatabaseFilterType.EQUAL);
+            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_TYPE_COLUMN_NAME, type.getCode(), DatabaseFilterType.EQUAL);
 
             cryptoTxTable.loadToMemory();
+
              for (DatabaseTableRecord record : cryptoTxTable.getRecords()){
                 transactionsIds.put(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME), record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME));
              }
@@ -214,45 +215,11 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
             return transactionsIds;
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+
             throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, null, "Error in database plugin.");
-        }catch(Exception exception){
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-        }
-    }
-
-    /**
-     * will update the transaction to the new state
-     * @param txHash
-     * @param newState
-     */
-    public void updateCryptoTransactionStatus(String txId, String txHash, CryptoStatus newState) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
-        try {
-            DatabaseTable cryptoTxTable;
-            cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
-            DatabaseTableRecord toUpdate=null;
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId, DatabaseFilterType.EQUAL);
-
-            cryptoTxTable.loadToMemory();
-            if (cryptoTxTable.getRecords().size() > 1)
-                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", null, "TxHash:" + txHash + " CryptoStatus:" + newState.toString(), "duplicated Transaction Hash.");
-            else
-                toUpdate = cryptoTxTable.getRecords().get(0);
-
-            /**
-             * I set the Protocol status to the new value
-             */
-            DatabaseTransaction dbTrx = this.database.newTransaction();
-            toUpdate.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, newState.toString());
-            dbTrx.addRecordToUpdate(cryptoTxTable, toUpdate);
-            database.executeTransaction(dbTrx);
-
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, null, "Error in database plugin.");
-        } catch (IndexOutOfBoundsException e){
-            // I will ignore this because at this point the transaction might not yet be persisted in db.
         } catch(Exception exception){
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
         }
     }
 
@@ -261,16 +228,21 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
      * @param txId
      * @param newStatus
      */
-    public void updateTransactionProtocolStatus(UUID  txId, ProtocolStatus newStatus) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
+    public void updateTransactionProtocolStatus(final UUID           txId     ,
+                                                final ProtocolStatus newStatus) throws CantExecuteQueryException                     ,
+                                                                                       UnexpectedResultReturnedFromDatabaseException {
+
         try {
+
             DatabaseTable cryptoTxTable;
             cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId.toString(), DatabaseFilterType.EQUAL);
+
+            cryptoTxTable.setUUIDFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId, DatabaseFilterType.EQUAL);
 
             cryptoTxTable.loadToMemory();
 
-            DatabaseTransaction dbTrx = this.database.newTransaction();
-            DatabaseTableRecord toUpdate=null;
+            DatabaseTableRecord toUpdate;
+
             if (cryptoTxTable.getRecords().size() > 1)
                 throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", null, "Txid:" + txId+ " Protocol Status:" + newStatus.toString(), "duplicated Transaction Id.");
             else {
@@ -280,119 +252,146 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
             /**
              * I set the Protocol status to the new value
              */
-            toUpdate.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, newStatus.toString());
-            dbTrx.addRecordToUpdate(cryptoTxTable, toUpdate);
-            try {
-                database.executeTransaction(dbTrx);
-            } catch (DatabaseTransactionFailedException e) {
-                throw new CantExecuteQueryException("Error executing query in DB.", e, "TxId " + txId, "Error in database plugin.");
+            toUpdate.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, newStatus.getCode());
+            cryptoTxTable.updateRecord(toUpdate);
+
+        } catch (CantUpdateRecordException cantUpdateRecord) {
+
+            throw new CantExecuteQueryException("Error trying yo update a record in DB.", cantUpdateRecord, "TxId " + txId, "Error in database plugin.");
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+
+            throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, "TxId " + txId, "Error in database plugin.");
+        } catch(Exception exception){
+
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
+        }
+    }
+
+    /**
+     * Gets from database the current CryptoStatus of a specific transaction by fermat transaction id.
+     *
+     * @param txId fermat transaction id
+     *
+     * @return an element of the crypto status enum representing the status of the transaction.
+     *
+     * @throws CantExecuteQueryException                       if something goes wrong.
+     * @throws UnexpectedResultReturnedFromDatabaseException   if the transaction doesn't exists or is duplicated in database.
+     */
+    public CryptoStatus getCryptoStatus (final String txId) throws CantExecuteQueryException                     ,
+                                                                   UnexpectedResultReturnedFromDatabaseException {
+
+        try {
+            DatabaseTable cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+
+            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId, DatabaseFilterType.EQUAL);
+
+            cryptoTxTable.loadToMemory();
+
+            // will make sure I only get one result.
+            if (cryptoTxTable.getRecords().size() > 1)
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", null, "TxId:" + txId, "duplicated Transaction Id.");
+            else if (cryptoTxTable.getRecords().isEmpty())
+                throw new UnexpectedResultReturnedFromDatabaseException("No values returned when trying to get CryptoStatus from transaction in database.", null, "TxId:" + txId, "transaction not yet persisted in database.");
+            else
+                return CryptoStatus.getByCode(cryptoTxTable.getRecords().get(0).getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME));
+
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+
+            throw e;
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+
+            throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, "TxId " + txId, "Error in database plugin.");
+        } catch(Exception exception){
+
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
+        }
+    }
+
+    //We will ask if exists pending transactions to be notified with the passed cryptoStatus and type passed by parameter.
+    public boolean isPendingTransactions(final CryptoStatus          cryptoStatus,
+                                         final CryptoTransactionType type        ) throws CantExecuteQueryException {
+
+        try {
+            DatabaseTable cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+
+            ProtocolStatus protocolStatus = ProtocolStatus.TO_BE_NOTIFIED;
+
+            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME    , protocolStatus.getCode() , DatabaseFilterType.EQUAL);
+            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
+            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_TYPE_COLUMN_NAME, type          .getCode() , DatabaseFilterType.EQUAL);
+
+            cryptoTxTable.loadToMemory();
+
+            return !cryptoTxTable.getRecords().isEmpty();
+
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+
+            throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, null, "Error in database plugin.");
+        }catch(Exception exception){
+
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
+        }
+    }
+
+    //We will ask if exists pending transactions to be notified
+    public List<TransactionTypeAndCryptoStatus> listTransactionTypeAndCryptoStatusToBeNotified( ) throws CantExecuteQueryException {
+
+        try {
+            DatabaseTable cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+
+            ProtocolStatus protocolStatus = ProtocolStatus.TO_BE_NOTIFIED;
+
+            String query = "SELECT "+
+                    CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_TYPE_COLUMN_NAME +
+                    ", " +
+                    CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME +
+                    " FROM " +
+                    CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME +
+                    " WHERE " +
+                    CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME +
+                    " = '" +
+                    protocolStatus.getCode() +
+                    "' GROUP BY " +
+                    CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_TYPE_COLUMN_NAME +
+                    ", " +
+                    CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME;
+
+            List<DatabaseTableRecord> records = cryptoTxTable.customQuery(query, true);
+
+            if(!records.isEmpty()) {
+                List<TransactionTypeAndCryptoStatus> list = new ArrayList<>();
+
+                for (DatabaseTableRecord record : records) {
+
+                    CryptoTransactionType transactionType = CryptoTransactionType.getByCode(record.getStringValue("Column0"));
+                    CryptoStatus          cryptoStatus    = CryptoStatus         .getByCode(record.getStringValue("Column1"));
+
+                    list.add(new TransactionTypeAndCryptoStatus(transactionType, cryptoStatus));
+                }
+
+                return list;
+            } else {
+                return new ArrayList<>();
             }
+
+        } catch (InvalidParameterException e) {
+
+            throw new CantExecuteQueryException(e, null, "Error in the data of the records.");
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, "TxId " + txId, "Error in database plugin.");
-        }catch(Exception exception){
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-        }
-    }
 
-    /**
-     * returns the current protocol status of this transaction
-     * @param txId
-     * @return
-     */
-    public ProtocolStatus getCurrentTransactionProtocolStatus(UUID txId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
-        try {
-            DatabaseTable cryptoTxTable;
-            cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId.toString(), DatabaseFilterType.EQUAL);
-
-            cryptoTxTable.loadToMemory();
-
-            DatabaseTableRecord currentStatus = null;
-            /**
-             * I will make sure I only get one result.
-             */
-            if (cryptoTxTable.getRecords().size() > 1)
-                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", null, "TxId:" + txId.toString(), "duplicated Transaction Hash.");
-            else
-                currentStatus = cryptoTxTable.getRecords().get(0);
-
-            return ProtocolStatus.valueOf(currentStatus.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME));
-
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, "TxId " + txId, "Error in database plugin.");
-        }catch(Exception exception){
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-        }
-    }
-
-
-    /**
-     * Gets from database the current CryptoStatus of a transaction.
-     * @param txId
-     * @return
-     * @throws CantExecuteQueryException
-     * @throws UnexpectedResultReturnedFromDatabaseException
-     */
-    public CryptoStatus getCryptoStatus (String txId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
-        try {
-            DatabaseTable cryptoTxTable;
-            cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId.toString(), DatabaseFilterType.EQUAL);
-
-            cryptoTxTable.loadToMemory();
-
-            DatabaseTableRecord currentRecord = null;
-            /**
-             * I will make sure I only get one result.
-             */
-            if (cryptoTxTable.getRecords().size() > 1)
-                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", null, "TxId:" + txId.toString(), "duplicated Transaction Hash.");
-            else if (cryptoTxTable.getRecords().size() == 0)
-                throw new UnexpectedResultReturnedFromDatabaseException("No values returned when trying to get CryptoStatus from transaction in database.", null, "TxId:" + txId.toString(), "transaction not yet persisted in database.");
-            else
-                currentRecord = cryptoTxTable.getRecords().get(0);
-
-            CryptoStatus cryptoStatus = CryptoStatus.valueOf(currentRecord.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME));
-            return cryptoStatus;
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, "TxId " + txId, "Error in database plugin.");
-        } catch(Exception exception){
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-        }
-    }
-    /**
-     * will return true if there are transactions in TO_BE_NOTIFIED status
-     * @return
-     */
-    @Deprecated
-    public boolean isPendingTransactions() throws CantExecuteQueryException {
-        try {
-            DatabaseTable cryptoTxTable;
-            cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME,ProtocolStatus.TO_BE_NOTIFIED.toString() ,DatabaseFilterType.EQUAL);
-            cryptoTxTable.loadToMemory();
-
-            return !cryptoTxTable.getRecords().isEmpty();
-
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, null, "Error in database plugin.");
         } catch(Exception exception){
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
         }
     }
 
-    /**
-     * Will search for pending transactions to be notified with the passed crypto:_Status
-     * @param cryptoStatus
-     * @return
-     * @throws CantExecuteQueryException
-     */
-    public boolean isPendingTransactions(CryptoStatus cryptoStatus) throws CantExecuteQueryException {
+    public boolean transactionExists(String txHash, CryptoStatus cryptoStatus) throws CantExecuteQueryException {
         try {
-            DatabaseTable cryptoTxTable;
-            cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME,ProtocolStatus.TO_BE_NOTIFIED.toString() ,DatabaseFilterType.EQUAL);
-            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME,cryptoStatus.toString() ,DatabaseFilterType.EQUAL);
+            DatabaseTable cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+
+            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME       , txHash                 , DatabaseFilterType.EQUAL);
+            cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, cryptoStatus.getCode() , DatabaseFilterType.EQUAL);
 
             cryptoTxTable.loadToMemory();
 
@@ -401,7 +400,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, null, "Error in database plugin.");
         }catch(Exception exception){
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
         }
     }
 
@@ -414,25 +413,23 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
      */
     public int updateTransactionProtocolStatus(boolean newOcurrence) throws CantExecuteQueryException {
         try {
-            DatabaseTable transactionProtocolStatusTable;
-            transactionProtocolStatusTable = database.getTable(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_NAME);
+            DatabaseTable transactionProtocolStatusTable = database.getTable(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_NAME);
 
             transactionProtocolStatusTable.loadToMemory();
 
             List<DatabaseTableRecord> records = transactionProtocolStatusTable.getRecords();
+
             if (records.isEmpty()) {
                 /**
                  * there are no records, I will insert the first one that will be always updated
                  */
                 long timestamp = System.currentTimeMillis() / 1000L;
                 DatabaseTableRecord emptyRecord = transactionProtocolStatusTable.getEmptyRecord();
+
                 emptyRecord.setLongValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_TIMESTAMP_COLUMN_NAME, timestamp);
                 emptyRecord.setIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_OCURRENCES_COLUMN_NAME, 0);
 
-                DatabaseTransaction transaction = database.newTransaction();
-                transaction.addRecordToInsert(transactionProtocolStatusTable, emptyRecord);
-
-               database.executeTransaction(transaction);
+                transactionProtocolStatusTable.insertRecord(emptyRecord);
 
                 /**
                  * returns 1
@@ -441,7 +438,6 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
             }
 
             DatabaseTableRecord record = records.get(0);
-            DatabaseTransaction dbTx = database.newTransaction();
 
             if (newOcurrence) {
                 /**
@@ -450,9 +446,8 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
                 int ocurrence = record.getIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_OCURRENCES_COLUMN_NAME);
                 ocurrence++;
                 record.setIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_OCURRENCES_COLUMN_NAME, ocurrence);
-                dbTx.addRecordToUpdate(transactionProtocolStatusTable, record);
 
-                database.executeTransaction(dbTx);
+                transactionProtocolStatusTable.updateRecord(record);
 
                 return ocurrence;
 
@@ -461,20 +456,24 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
                  * I need to reset the counter to 0
                  */
                 record.setIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_OCURRENCES_COLUMN_NAME, 0);
-                dbTx.addRecordToUpdate(transactionProtocolStatusTable, record);
-
-                database.executeTransaction(dbTx);
+                transactionProtocolStatusTable.updateRecord(record);
 
                 return 0;
 
             }
             //
-        } catch (DatabaseTransactionFailedException e) {
-            throw new CantExecuteQueryException("Error executing query in DB.", e, null, "Error in database plugin.");
+        } catch (CantInsertRecordException e) {
+
+            throw new CantExecuteQueryException("Error trying to insert in DB.", e, null, "Error in database plugin.");
+        } catch (CantUpdateRecordException e) {
+
+            throw new CantExecuteQueryException("Error trying to update in DB.", e, null, "Error in database plugin.");
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+
             throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, null, "Error in database plugin.");
         } catch(Exception exception){
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
         }
     }
 
@@ -483,56 +482,84 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
      * @param txId
      * @throws CantExecuteQueryException
      */
-    public void persistnewFermatTransaction(String txId) throws CantExecuteQueryException {
+    public void persistnewFermatTransaction(final String txId) throws CantExecuteQueryException {
+
         try {
             DatabaseTable fermatTable;
             fermatTable = database.getTable(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_NAME);
+
             DatabaseTableRecord insert = fermatTable.getEmptyRecord();
+
             insert.setStringValue(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId);
-            DatabaseTransaction dbTx = database.newTransaction();
-            dbTx.addRecordToInsert(fermatTable, insert);
-            database.executeTransaction(dbTx);
-        } catch (DatabaseTransactionFailedException e) {
+
+            fermatTable.insertRecord(insert);
+
+        } catch (CantInsertRecordException e) {
+
             throw new CantExecuteQueryException("Error executing query in DB.", e, "TxId: " + txId, "Error in database plugin.");
         } catch(Exception exception){
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+
+            throw new CantExecuteQueryException(FermatException.wrapException(exception));
+        }
+    }
+
+    public CryptoStatus getLastCryptoStatus(final String txHash) throws CantLoadTableToMemoryException, InvalidParameterException {
+
+        DatabaseTable cryptoTransactionsTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+
+        cryptoTransactionsTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
+        cryptoTransactionsTable.loadToMemory();
+
+        List<DatabaseTableRecord> databaseTableRecordList = cryptoTransactionsTable.getRecords();
+        if (databaseTableRecordList.isEmpty()) {
+            return null;
+        } else {
+            CryptoStatus lastCryptoStatus = null;
+            for (DatabaseTableRecord record : databaseTableRecordList) {
+                CryptoStatus cryptoStatus = CryptoStatus.getByCode(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME));
+                if (lastCryptoStatus == null)
+                    lastCryptoStatus = cryptoStatus;
+                else if (lastCryptoStatus.getOrder() < cryptoStatus.getOrder())
+                    lastCryptoStatus = cryptoStatus;
+            }
+            return lastCryptoStatus;
         }
     }
 
     /**
-     * Insert a new transaction with the confidence level or update an outgoing cryptostatus of an existing transaction.
-     * @param hashAsString
-     * @param cryptoStatus
-     * @throws CantExecuteQueryException
+     * Insert a new transaction with the confidence level or update the cryptoStatus of an existing transaction.
      */
-    public void insertNewTransactionWithNewConfidence(String hashAsString, CryptoStatus cryptoStatus) throws CantExecuteQueryException {
+    public void insertNewTransactionWithNewConfidence(final String                hashAsString,
+                                                      final CryptoStatus          cryptoStatus,
+                                                      final CryptoTransactionType type        ) throws CantExecuteQueryException {
 
-        /**
-         *  I will insert a new one.
-         */
+
         try {
-                DatabaseTable cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
-                DatabaseTableRecord record = cryptoTxTable.getEmptyRecord();
-                /**
-                 * I generate a new transaction Id
-                 */
-                record.setStringValue(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, UUID.randomUUID().toString());
-                /**
-                 * I use the same transaction hash
-                 */
-                record.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, hashAsString);
-                record.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.toString());
-                record.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, cryptoStatus.toString());
 
-                DatabaseTransaction dbTran = database.newTransaction();
-                dbTran.addRecordToInsert(cryptoTxTable, record);
+            DatabaseTable cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+            DatabaseTableRecord record = cryptoTxTable.getEmptyRecord();
 
-                database.executeTransaction(dbTran);
+            // new values to assign
+            UUID           newFermatId    = UUID.randomUUID()            ;
+            ProtocolStatus protocolStatus = ProtocolStatus.TO_BE_NOTIFIED;
+
+            record.setUUIDValue  (CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME          , newFermatId             );
+            record.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME        , hashAsString            );
+            record.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME    , protocolStatus.getCode());
+            record.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME , cryptoStatus  .getCode());
+            record.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_TYPE_COLUMN_NAME, type          .getCode());
+
+            DatabaseTransaction dbTran = database.newTransaction();
+            dbTran.addRecordToInsert(cryptoTxTable, record);
+
+            database.executeTransaction(dbTran);
 
         } catch (DatabaseTransactionFailedException e) {
-            throw new CantExecuteQueryException("Error inserting new transaction because of transaction confidence changed.", e, "Transaction Hash:" + hashAsString + " CryptoStatus:" + cryptoStatus.toString(), "Error in database plugin.");
+
+            throw new CantExecuteQueryException(e, "Transaction Hash:" + hashAsString + " CryptoStatus:" + cryptoStatus.toString(), "Error in database plugin inserting new transaction when the transaction confidence changed.");
         } catch(Exception exception){
-            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+
+            throw new CantExecuteQueryException(exception);
         }
     }
 }

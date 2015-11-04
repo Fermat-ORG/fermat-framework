@@ -37,7 +37,7 @@ que guardar la información en tablas diferentes. Es decir, en nuestra base de d
 para guardar la metadata de las transacciones crypto y otra para la metadata de las transacciones fiat.
 A estas dos tablas se le suman la de eventos y la de transacciones de la red crypto. +
 Para cada monitor agent deberá haber un método que consulte la tabla de eventos trayendo el siguiente
-evento pendiente para el agente particular que consulta; es decir que si consulta el CryptoMonitorAgent
+evento pendientepoo para el agente particular que consulta; es decir que si consulta el CryptoMonitorAgent
 entonces se le debe dar un evento con source Crypto Transmission Network Service; si consulta el
 FiatMonitorAgent entonces se le debe dar un evento con source Money Transmission Network Service; y
 si consulta el MonitorAgent entonces se le debe dar un evento con source Incoming Crypto.
@@ -61,7 +61,7 @@ el mensaje enviado le llegará sin que A deba realizar ningún tipo de reenvío.
 
 Para obtener la información eficientemente podemos colocar una tabla que relaciona la tabla que almacena
 las transacciones crypto con el tipo de metadata que se detectó asociada a esa transacción. Visto con
-más detalle, cuando llega un mensaje con metadata de un transacción fiat registramos en esta tabla el
+más detalle, cuando llega un mensaje con metadata de una transacción fiat registramos en esta tabla el
 campo (hash de la transacción crypto asociada, FIAT_TRANSACTION) y si llega una la metainformación de lo
 que sería una transacción crypto entre intra users colocaremos un registro (hash de la transacción crypto
 asociada, CRYPTO_TRANSACTION). Definiremos un enum TransactionType para representar estos valores. +

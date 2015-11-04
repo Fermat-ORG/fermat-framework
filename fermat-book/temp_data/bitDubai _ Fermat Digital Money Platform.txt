@@ -1,0 +1,469 @@
+﻿
+
+ 
+bitDubai
+Fermat Digital Money Platform
+Home
+Introduction 
+Intro Video 
+Fermat PIP 
+Fermat P2P 
+Fermat DMP 
+Prototype 
+Fermat 
+Get Involved 
+The Team 
+Contact 
+MENU CLOSE back   
+
+
+
+Introduction
+bitDubai is the main contributor and maintainer of the Fermat Open Source Project.
+The Project
+At bitDubai we believe the crypto community collectively has more talent than any of us individually. We believe it is important to build on top of services that others took time and effort to build. We believe in decentralization. We believe legacy financial institutions are not a problem but part of the solution as long as they embrace crypto currencies. We believe that people around the world are different from each other, not only do they speak different languages, but also they have different cultural and educational backgrounds. Interests, expectations, tolerance to changes, needs, political views, ages, professions, etc, are all different; and a strong segmentation with different levels of abstraction is needed to reach every kind of people around the world.
+While thinking about how to contribute to the development of the crypto currency industry we tried to answer the following questions:
+How can we isolate ordinary people from the perceived complexity? How can we use the collective intelligence of the community? How can we reuse the entire current infrastructure already in place? How do we integrate legacy financial institutions in a way they feel comfortable? How do we integrate merchants, retailers and brands of all sizes in a clever way?
+The answers to each of these questions are addressed within our system.
+
+
+
+Open source
+The code can be reviewed and audited by anyone.
+Decentralized
+It runs on end users’ devices.
+Public
+Anybody can connect to the Fermat P2P network and use its services. Anybody can write plug-ins for the platform.
+Open
+Anybody can participate and innovate without requiring permission.
+Inclusive
+Any existing crypto service running outside the Fermat network / platform can be integrated and consumed from within the network.
+Open standard
+Can be freely adopted, implemented and extended.
+Video Intro
+
+Platform Stack
+Fermat enables a stack of platforms to run on top of its base infrastructure. Each platform may reuse functionality from the previous one forming a rich ecosystem of reusable components.
+
+== Fermat P2P
+
+Fermat P2P network provides connectivity between devices.
+Fermat P2P is a dumb network connecting platform network services to each other irrespective of what these services are doing.
+Fermat P2P provides the communication channels and on top of its connectivity layer network services interact with each other across different devices. Anybody can provide new network services as plug-ins.
+This ensures a rich set of abstractions for wallet applications running on top of the platform. For example in a transaction between users of any of Fermat DMP’s wallets, crypto networks are used for transporting value, while Fermat P2P is used for transporting the information associated with the transaction. That information can be the amount of fiat currency sent or received, confirmations, attached messages, etc.
+This means that wallets can easily isolate users from today’s tedious and complex tasks such as exchanging crypto addresses, payment requests, etc. It also enables abstractions like digital fiat currency over crypto currency, hiding from the end users’ eyes the low level negotiations between the local and the remote wallets. Finally it increases the interoperability between different wallet providers.
+
+== FERMAT PIP
+
+Fermat PIP is an open source platform running on end users’ devices. It features a plug-ins architecture that allows third party developers to extend the platform functionality thereby enabling quick adaption to a rapidly evolving environment.
+A micro licensing system allows plug-ins and segment specific wallet developers to profit from their investment and motivates any member of the community to participate in the project bringing in even more knowledge and ideas in a quick, efficient and profitable way.
+Through its plug-ins the platform connects to and reuses most of the infrastructure deployed by the industry.   At the same time it adds the necessary layers of abstraction on top of those services. In this way it amplifies their reach to every possible niche by allowing any of the segment specific wallets to consume those existing services directly or indirectly if they rely on the platform or its plug-ins to provide the necessary abstraction.
+Legacy financial institutions are also integrated in the platform allowing end users to access traditional financial products and financial institutions to extend their reach into segments and markets not currently served.
+
+== FERMAT DMP 
+It is a set of plug-ins and APPs running on top of Fermat PIP on end users’ devices and it allows third party developers to create segment specific wallets on top of the different layers of abstraction provided by Fermat DMP.
+The key functionality of the platform includes a decentralized wallet factory that allows marketers to re-brand any of the already existing segment specific wallets in a few steps without the need to deal with the source code of the base wallet selected, and  also a decentralized built-in wallet store where end users can download their favorite bank’s, brand’s and retailer’s wallets.
+A specialized functionality allows brands and retailers to manage the relationship with the user base of their wallet and  also with shops accepting the scrip (coupons, vouchers and discounts) they issue and distribute to the users of their wallet.
+
+== Why Fermat?
+=== The story
+Pythagoras had to pay his first student to convince him to study with him. He gave him three oboli (about a penny) per lesson until one day he said there was no more money. The student replied that he preferred to pay, provided that they continued with the lessons. The rumor ran through the Greek islands and so the Pythagorean School, also known as the Secret Brotherhood, a philosophical / religious monastic order counting 300 members, was formed. By then counting and calculating had been widely practiced by the Babylonians and Egyptians but the Pythagoreans went far beyond that. “All is Number” was their motto attesting to their conviction that numbers were the key to life itself. Pythagoras strongly believed that relationships between numbers could reveal, through logical demonstration, all the secrets of the universe, hence he started producing his theorems. The Brotherhood walked briskly with his theorems but did nothing to share the secrets of the universe arousing the ire of the people who one day set the school on fire.
+Despite the desperate attempt of his students to save him Pythagoras himself died in the fire. The Brotherhood was dispersed until Alexander the Great founded Alexandria and in order to attract scholars to the new city he took the advice of his general, Ptolemy: “Gather the great books; great minds will follow.”
+Hence the Library of Alexandria was established with the overall aim of collecting every book ever written. Each traveler had their books confiscated upon arrival to Alexandria. They would be handed over to scribes, who made a copy for the owner and sent the original to the library. The extensive collection comprising 500,000 volumes made Alexandria the intellectual capital of the ancient world and as Ptolemy had envisaged attracted the most famous scholars of the era.
+Euclid was put in charge of the math section and by inventing the “reductio ad absurdum” that is the proof by contradiction he took the findings of Pythagoras one step further. Anything that would defy logic seemed abominable to Pythagoras and as such was dismissed.
+Though the Pythagoreans had discovered irrational numbers (pi, or the square root of two) such was their fear of the “unutterable” numbers that their study was immediately forbidden and the disciple who came up with the concept of the “square root of two” was executed. Euclid announced to everyone that Pythagoras was abominable and advocated that irrational numbers would open a new door for mathematics and as such encouraged them to think about them without fear.
+The first peer to peer network
+Julius Caesar’s attack on Alexandria marked the demise of the Royal Library as it was burnt down in a devastating fire and the invaluable collection of scrolls was reduced to ashes. In an attempt to win Cleopatra’s heart Mark Antony bought the entire Library of Pergamos, which had been second only to the Great Library of Alexandria, and presented the 200,000 volumes to Cleopatra. By having done so, Alexandria continued to boast the greatest library in the world until its eradication by Islamic troops entering the city in the 7th century under the leadership of Caliph Omar. The Caliph ordered the destruction of all books on account of either opposing the Koran, which was considered to be heresy or for being superfluous. For years the water of the public baths of Alexandria was heated using those books to feed the fire. Mathematicians learned their lesson: in order not to disappear the Brotherhood expanded to everywhere without having a center but its members continued keeping in close contact with each other. This marked the beginning of the mathematical tradition of sharing every doubt, every finding and every gossip with the near and distant colleagues (they tell feedback). Should we call it the first and oldest peer to peer network?
+Soon two separate branches of mathematics i.e., applied mathematics and number theory began to evolve dividing the mathematician community. Those more intrigued by the practical application formed working groups whereas those merely interested in numbers preferred to work alone. Newton accused the representatives of the latter branch of being vulgar ego jugglers, who had been wasting their time teasing each other with riddles which lacked concrete utility. An ardent supporter of that school was a judge in Toulouse called Pierre de Fermat, whose greatest pleasure in life was to play with numbers and then to send little notes about his findings to Descartes and Pascal. When it came to mental calculations such were his skills that Fermat had no inclination to spend time putting them in writing claiming that it would halt his reasoning and hated being asked about the intermediate steps. He was solution -rather than demonstration- oriented and found it appealing to be compared to big names.
+One day he took the famous theorem of Pythagoras (the square of the hypotenuse equals the sum of the squares of the legs) and concluded that the equation has no integer solutions for powers greater than two.
+“It is impossible for a cube to be the sum of two cubes, a fourth power to be the sum of two fourth powers, or in general for any number that is a power greater than the second to be the sum of two like powers. I have discovered a truly marvelous demonstration of this proposition that this margin is too narrow to contain.” he scribbled in the margin of his copy of the ancient Greek text Arithmetica by Diophantus thereby creating one of the most notable puzzles in mathematics driving many mathematicians to insanity until proven three hundred and fifty years later.
+The prize
+In the first two hundred and fifty years it was a puzzle merely for young mathematicians who immediately abandoned it as soon as they had arrived to the conclusion, previously drawn by Gauss, that solving this puzzle would not contribute to the progress of mathematics. It was toward the end of the nineteenth century that a German amateur mathematician Paul Wolfskehl struck by love sickness was on the verge of committing suicide.
+While waiting for the stroke of midnight to shoot himself in the head he passed the time reading about the latest progress in solving Fermat’s Last Theorem. Touched by a flash of inspiration he began working on the solution and so lost he became in it that morning found him in his library. Even though his approach failed at last the intricate beauty of number theory once again awakened his desire for life.
+The young Wolfskehl turned out to have more talent for business than for pure numbers and over the years he had become a millionaire, however, he never forgot that night. In order to repay the debt he rewrote his will bequeathing 100,000 Marks to the first person who could solve the puzzle. Following his death in 1906 the Wolfskehl Prize was announced fueling public desire to prove Fermat’s Last Theorem, which greatly contributed to the progress of number theory.
+The solution
+A mountain of failed attempts to win the prize had been accumulating in the basement of the University of Göttingen, 621 proofs, all flawed had been sent just within the first year of Wolfskehl’s death. By 1993 no serious mathematician would engage in trying to solve the longstanding riddle of Fermat’s Last Theorem, only fans, mostly inmates and lunatics, persisted.
+Then in 1993 it was at the Isaac Newton Institute in Cambridge, the heart of the world of mathematics (a building created with the intention of bringing together the greatest mathematicians for a week each year, a building with not a single private corner, with offices having no doors and with blackboards even in bathrooms and in the elevator) that a freckled Englishman announced to his illustrious peers that working fully alone for ten years without the aid of a computer he had solved Fermat’s Theorem.
+Returning from his classes at Princeton University he would sat alone at the table, sometimes even twelve hours, a piece of paper lying in front of him every so often scribbling a formula like the old Fermat did. However, unlike Fermat he diligently noted down not only each and every formula but their endless development also.
+Mathematicians say their specialty is an archipelago of small certainties scattered in a sea of ignorance. The real advances in mathematics are made when the bridges connecting these islands are built. In his dissertation Andrew Wiles established so many bridges that the entire history of mathematics could be reconstructed based on that, and that is exactly what the Hindu Simon Singh did by writing his beautiful book entitled Fermat’s Last Theorem.
+All representatives of number theory are enumerated in that book, however, the most remarkable of all is an unnamed colleague, who when facing Wiles as he was triumphantly leaving the stage addressed him with undisguised obfuscation: “And now that you have taken away the problem, what are you going to give us in return?”.
+The new problem
+The secret of Fermat’s Last Theorem had been deciphered at last, however, even as of today the world is abundant in puzzles, which despite the tremendous advances in technology, are still waiting to be solved. All my adult life I seem to have been attracted to problems the complexity of which would deter even the most enthusiastic experts of the field. Inspired by the difficulty of the task I have always managed to rise to the challenge and sparing no time and energy succeeded in unraveling the mystery surrounding it.
+After having designed mission critical systems for banks for more than a decade, I found myself in the United Arab Emirates establishing a techno-artistic startup called Nomad Inception boasting a technology which besides having enabled the automated creation of non repetitive Islamic geometric patterns on a scale never seen before also paved the way for new original non repetitive patterns for the first time in five hundred years.
+ Being Argentinean I have absolutely no relation to the Arabic culture, however, my fascination with the amazing intricacy and sophistication of Islamic geometric patterns helped me grasp the secrets of a traditional art form mastered by a handful of artisans only. Solving a thousand-year-old historical puzzle and thereby potentially contributing to the preservation of our cultural heritage is a vastly rewarding experience worth all the effort invested in it.
+It was in Dubai, where I was setting up my company, that I first learned about bitcoin and having spotted the excellent opportunity my new mission conceived. This era has witnessed the digitalization of music and images. By solving the “problem of double spending” i.e., preventing a digital item to be sent to multiple people more than once, the last obstacle to the digitalization of money was eliminated.
+It was in 2008 that crypto-currencies were first introduced, however, while the CD player and the digital camera have already conquered the world by enabling the wide-spread use of the inventions which called them to life, the technology equivalent to these designed to facilitate the mass conversion of users of paper money to users of digital money is yet to be created. Creation of such a technology is the new problem to solve.  The problem is as complex as it can be, as 6 years have passed and some hundreds of millions of dollars of venture capital has been poured into start-ups working in this space since the solution for the double spending problem was found. 
+We suspect the solution involves finding the islands not yet discovered and building bridges to connect them both with each other and with the entire current archipelago. 
+Divine sign
+I delved into studying the problem with newfound enthusiasm, however, my commitments at Nomad Inception prevented me from devoting all my attention to finding the solution until a business meeting changed my life forever.
+I am anything but superstitious, however, it goes without saying that the question a potential business partner asked me upon receipt of my business card, on which the word “inception” in Arabic appeared as company logo, could only be interpreted as a divine sign compelling me to leave Nomad Inception without further delay and turn all my attention to find the solution for this modern day Fermat’s problem. You may wonder what the life-changing question was…
+“Have you been aware that the word ‘inception’ in Arabic used as your logo would read ‘bitcoin’ just by adding one dot to it?”
+Luis Fernando Molina
+Lead Developer
+
+Get involved!
+We believe in the power of the community and are convinced that anyone can make a useful contribution. There are many possible ways you can support us. We cordially invite you to participate in our project choosing the way which best suits you.
+Do you like the project?
+
+Share our story within your networks.
+
+Help other people get to know what we are building. If you are intrigued with the project and would like to go further with its promotion, send us an email so that we can discuss your ideas.
+
+Are you a developer?
+
+Join the developers’ team.
+
+Even though the project is technically very challenging we believe that anyone can make a useful contribution. Send us an email and we will discuss the details.
+
+Are you a software development company?
+
+Assign some resources to work on this project.
+
+Your organization will benefit by learning at an early stage how to live with the opportunity this technology offers. Send us an email to discuss the details.
+
+Do you know something we don’t?
+
+Contribute your knowledge.
+
+We have already received input from a diverse range of professionals including economists, systems architects, designers, lawyers, etc. We appreciate contributions from experts on different fields. You can offer your expertise by sending us an email.
+
+Do you have complementary ideas?
+
+Share your ideas with us.
+
+Dozens of original ideas, not covered by this site, have already been implemented in the platform. We are keen to learn how you would improve it. Please send your ideas to this email.
+
+Do you have money but only limited time?
+
+Help us hire more developers.
+
+Even if you are short on time you can still be of help by contributing money to hire developers.
+
+Send us an email and we will discuss the details together.
+
+Would you prefer to contribute anonymously?
+
+Send bitcoins to this address:
+
+
+
+18DTmmN17EyWPdLXxJ5GVkTszR8RhQWMy1
+
+[note: the address changes periodically to enhance privacy]
+
+We respect your desire to contribute anonymously. Your contribution will be used to hire developers.
+
+Are you an angel?
+
+Even though Fermat P2P and Fermat PIP are public good projects, we have the intention of setting up a company around Fermat DMP. In order to be contacted when we move on to that phase please send us an email.
+
+Would you like to try the platform?
+
+Request an invite for an early trial.
+
+Request an invite at this email and we will allow you to try the platform as soon as it is ready.
+
+Support the project.
+
+Express your or your company’s support to the project. No money needed. Just write a support message and send it to this email so that we can show it to the community.
+
+Are you a graphic / UI designer?
+
+Get the design guidelines.
+
+You can start designing your own theme for a wallet that a segmented wallet developer can then turn into a functional wallet. Remember you can profit from your design by adding a micro use license to it. To get the design guidelines please send us an email.
+
+Become a segmented wallet developer.
+
+If you are a mobile application developer in less than a week you can easily develop your own wallet without any crypto currency specific knowledge at all. Just spot a niche you would like to target with your wallet. The platform with its plug-ins will do all the heavy lifting for you. By adding a micro use license to your wallet you can profit from the time invested in developing it.
+
+If you use an already existing UI package you will save yourself even more time and still your wallet will have a professional look and feel. As an additional advantage your wallet might be re-branded amplifying the reach of the micro use license you define.
+
+Send us an email and we will help you with your wallet.
+
+Become a Plug-in developer.
+
+If you find that some functionality is missing write it as a plug-in and let all the wallets running on the platform use it. Remember that by adding a micro use license you can profit from your work when wallets or other plug-ins consume your service. Send us an email and we will help you develop your plug-in.
+
+Are you a project manager?
+
+Help with the project management.
+
+The project is challenging not only at the technical level but also when it comes to managing all the activities happening at the same time. If you would like to help organize and manage the project send us an email.
+
+Are you a retailer / brand?
+
+Request your branded wallet.
+
+If you are a retailer or a brand of any size soon you can have your own branded wallet enabling you to send coupons, vouchers, discounts, etc., to your wallets’ user base. All you need to do is send us an email.
+
+Are you a marketer / marketing agency?
+
+Learn how to re-brand wallets for your customers.
+
+If you are a marketer or a marketing agency and would like to learn how to re-brand wallets for your customers, send us an email. We might already have brands interested in having their branded wallets in which case we can give the task of re-branding to you.
+
+Do you have a crypto service running?
+
+Integrate your crypto service into Fermat PIP as a plug-in.
+
+In this way it will be accessible to all the wallets that run on top of it. Please note that by having a plug-in in the platform you can specify a use micro license thereby profiting from your service. In order to learn how to integrate it into the platform please send us an email.
+
+Are you from the press / media?
+
+Write about us.
+
+If you are from the media and would like to cover our story, please send us an email.
+
+Do you already have a crypto wallet?
+
+Write a version of your wallet for Fermat PIP.
+
+There are several reasons to have a version of your existing wallet on the platform.
+
+The main one would be that the business logic of your wallet would run as a platform plug-in, meaning that it can be reused by any of the segment specific wallets running on top of the platform. In the case of most of these wallets end users are unaware of the underlaying wallet engine used to manage their crypto currencies. It is a plug-in built for this purpose that decides on behalf of end users and if your engine is well reputed chances are that at least part of the end users’ funds will be managed by your wallet engine.
+
+Segmented wallet developers can explicitly decide which wallet engine they use and thus you could have multiple segmented wallets using your wallet engine. Each segmented wallet could have different user interfaces and functionality. Those segmented wallets could be developed either by you or by third parties that appreciate and trust your brand and therefore choose to rely on your wallet engine instead of others.
+
+A second good reason is that any segmented wallet that relies on your wallet engine can be re-branded by any marketer that would give it to brands, retailers, etc., thereby amplifying the reach of your technology.
+
+Please get it contact with us to learn more about this by sending us an email.
+
+Are you a bank / financial institution?
+
+Sign up for a pilot test.
+
+By integrating Fermat into your systems you will extend the reach of your traditional products and services globally. In addition to that you will be able to offer new crypto products to your current customers.
+
+You may wonder why you should use Fermat instead of developing your own wallet. The main reasons include:
+
+* Multiple UI: Even if a stand alone crypto wallet could extend the reach of your products worldwide, it would still have only one set of functionality and one user interface. As opposed to that with Fermat PIP you can easily have dozens of different sets of functionality and user interfaces that fit every possible niche of the worldwide market.
+
+* Freelance developers: You can have independent wallet developers adding even more niche wallet interfaces pointing to your wallet engine. (Provided that you and your regulators approve it.)
+
+* Re-branding: Any of your wallets can be re-branded by retailers and local brands all over the world still using your wallet engine connected to your bank amplifying the reach of your products and services with little to no efforts. (Provided that you and your regulators approve it.)
+
+Send us an email to learn more about this.
+
+Are you an event organizer?
+
+Invite us to your event.
+
+If you would like to invite us to present Fermat at your event we are more than happy to present our technology there. Please send us an email.
+
+The Team
+This is the current team at bitDubai.
+
+Luis Fernando Molina
+bitDubai - FOUNDER
+I know the future not because of being a futurist but because I am going to build it.
+E-mailTwitterLinkedinGithub
+
+Guillermo Villanueva
+bitDubai - FOUNDER
+Ex-Microsoft executive with over twenty seven years of professional experience focused on leading world-class IT Services organizations, having been responsible for developing and overseeing implementation of effective sales, marketing and delivery strategies on multi-countries operations.
+Linkedin
+
+Gastón Utrera
+CONTRIBUTOR
+Economist, book author, lecturer, university teacher and business man; in 2012 voted one of the 50 most influential people of his state, Córdoba, Argentina.
+Personal blog / websiteTwitterLinkedin
+
+Rodrigo Acosta
+bitDubai CO-FOUNDER & Fermat CORE DEVELOPER
+Experienced in database administration, Big Data and programming.
+Many years working in technical and management roles delivering software solutions to clients worldwide.
+Entrepreneur and founder of BySailors.com
+E-mailFacebookTwitterLinkedin
+
+Ezequiel Postan
+bitDubai CO-FOUNDER & Fermat CORE DEVELOPER
+Always learning
+Personal blog / website
+
+Jorge Gonzalez
+bitDubai CO-FOUNDER & Fermat CORE DEVELOPER
+Enthusiast of Software Craftsmanship and Avant-grade Software Engineering
+Personal blog / websiteE-mailTwitterGoogle+Linkedin
+
+León Acosta
+bitDubai CO-FOUNDER & Fermat CORE DEVELOPER
+Imagination is our own fountain of courage, just think big and keep it simple
+Facebook
+
+Matias Furszyfer
+bitDubai CO-FOUNDER & Fermat CORE DEVELOPER
+Do what you want but do it well.
+Personal blog / websiteFacebookLinkedin
+
+Roberto Requena
+bitDubai CO-FOUNDER & Fermat DEVELOPER
+Technology enthusiast and Java Web developer. "Life should be lived full of dreams and goals to achieve"
+ 
+E-mailTwitter
+
+Natalia Cortez
+bitDubai CO-FOUNDER & Fermat DEVELOPER
+E-mailFacebookTwitter
+
+Manuel Pérez
+bitDubai CO-FOUNDER & Fermat DEVELOPER
+Open source enthusiast, Java developer and professor.
+Personal blog / websiteE-mailTwitterGoogle+Linkedin
+
+Nerio Indriago
+bitDubai CO-FOUNDER & Fermat DEVELOPER
+"Keep moving forward, opening up new doors and doing new things, be curious because curiosity keeps leading us down new paths." - Walt Disney
+E-mailFacebookTwitterGoogle+LinkedinInstagram
+
+Francisco Arce
+bitDubai CO-FOUNDER & Fermat DEVELOPER
+"I'm convinced that about half of what separates the successful entrepreneurs from the non-successful ones is pure perseverance"
+Steve Jobs
+E-mailFacebookLinkedin
+
+Franklin Marcano
+bitDubai CO-FOUNDER & Fermat DEVELOPER
+Passionate about technology and developer by Virtue.
+"Intelligence is not just knowledge but also the ability to apply knowledge in practice."
+Aristotels
+Google+Linkedin
+
+Francisco Vasquez
+bitDubai CO-FOUNDER & Fermat DEVELOPER
+FacebookTwitterLinkedin
+
+Miguel Angel Celedon Petrella
+Fermat.org DEVELOPER
+Passionate and curious about technology and creating 3D universes. Always learning and working hard to see the world become what it deserves to be.
+E-mailFacebookTwitterLinkedin
+
+Dayana Matos
+GRAPHIC DESIGNER
+Graphic Designer. Literature, art and technology enthusiast. Part-time photographer.
+Google+LinkedinDeviantartInstagramBehance
+
+Arnaldo Santamaria
+GRAPHIC DESIGNER
+Graphic Designer - BTL Activation - 3D Modeling
+Personal blog / websiteE-mailFacebook
+
+Jonathan Borges
+3D Artist
+3D Artist. Design, animation and rendering.
+Personal blog / websiteE-mailFacebookInstagram
+
+Jacqueline Gomez
+Technical Writer
+E-mailInstagram
+
+Loui Molina
+Fermat CODE MANTAINER
+
+Enikő Jókai
+CONTRIBUTOR
+E-mail
+
+Raul Geomar Peña
+DEVELOPER
+"The only rules that really matter are these: what a man can do and what a man can’t do..." - Jack Sparrow
+FacebookTwitterGoogle+
+
+Arturo Vallone
+DEVELOPER
+E-mailTwitterGoogle+LinkedinGithub
+
+Rodrigo Gerez
+DEVELOPER
+Java and Python web developer.
+E-mail
+
+Pablo Rigoni Kobayashi
+CONTRIBUTOR
+Digital Director at Grupo BDM, Agencia de Comunicación 360º
+Personal blog / websiteE-mail
+
+Matias Lorefice
+CONTRIBUTOR
+Creative Director at Grupo BDM, Agencia de Comunicación 360º
+Personal blog / websiteE-mail
+
+Javier de Vértiz
+CONTRIBUTOR
+General Manager and Media at Grupo BDM,  Agencia de Comunicación 360º
+Personal blog / websiteE-mail
+
+Sebastian de Vértiz
+CONTRIBUTOR
+General Manager and Finances at Grupo BDM,  Agencia de Comunicación 360º
+Personal blog / websiteE-mail
+
+Ignacio de Vértiz
+CONTRIBUTOR
+Activations Coordinator and MKT at Grupo BDM, Agencia de Comunicación 360º
+Personal blog / websiteE-mail
+
+Pedro Perrotta
+CONTRIBUTOR
+Co Founder Grupo Sabra
+E-mail
+
+Hernán Calabrese
+CONTRIBUTOR
+E-mail
+
+Jim Harper
+MINOR CONTRIBUTOR
+Jim Harper is a senior fellow at the Cato Institute, working to adapt law and policy to the information age in areas such as privacy, cybersecurity, telecommunications, intellectual property, counterterrorism, government transparency, and digital currency. A former counsel to committees in both the U.S. House and the U.S. Senate, he went on to represent companies such as PayPal, ICO-Teledesic, DigitalGlobe, and Verisign, and in 2014 he served as Global Policy Counsel for the Bitcoin Foundation.
+Personal blog / websiteTwitter
+Damien Calvignac
+MINOR CONTRIBUTOR
+Hector Rizik
+MINOR CONTRIBUTOR
+Get in touch!
+Use this form to send us a message. If you are interested in participating in the project, please send us a message and we will come back to you shortly.
+Contact info
+Address:
+Dubai, United Arab Emirates 
+Phone numbers:
++971 55 336 9557 
++36 70 405 3230  
+Email:
+web at bitDubai.com 
+We are open:
+Monday – Friday 8 AM – 8 PM 
+Social links:
+FacebookTwitter
+Send us a message
+Name * E-mail * Telephone 
+Message * 
+Send messageclear
+We are here
+ 
+
+
+
+bitDubai
+ambitious projects
+
+Fermat Digital Money Platform
+a decentralized digital wallet production line
+
+Fermat Plug-Ins Platform
+an open source platform running on end users' devices
+
+Fermat P2P Network
+an open standard application level P2P network
+
+Segmented Wallets
+any developer can create a segment specific wallet in a few days
+
+Built-in Wallet Store
+people can download new wallets from the decentalized wallet store
+
+Digital Fiat over Crypto
+allows people to hold digital fiat currency over crypto
+
+Banking Wallets
+enable access to traditional financial products through banking wallets
+

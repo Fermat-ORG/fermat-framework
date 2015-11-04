@@ -1,6 +1,5 @@
 package com.bitdubai.sub_app.developer.fragment;
 
-import android.app.Fragment;
 import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -9,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -20,13 +20,12 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetDataBaseToolException;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DatabaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -49,17 +48,14 @@ import java.util.List;
 public class DatabaseToolsFragment extends FermatFragment {
 
 
-    private static final String CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES = Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS_DATABASES.getKey();
     private ErrorManager errorManager;
 
     /**
      * SubApp session
      */
 
-    DeveloperSubAppSession developerSubAppSession;
+    public  DeveloperSubAppSession developerSubAppSession;
 
-    private static final String ARG_POSITION = "position";
-    private static final int TAG_FRAGMENT_DATABASE = 1;
     View rootView;
 
     private DatabaseTool databaseTools;
@@ -69,12 +65,8 @@ public class DatabaseToolsFragment extends FermatFragment {
 
     private GridView gridView;
 
-    public static DatabaseToolsFragment newInstance(int position) {
-        DatabaseToolsFragment f = new DatabaseToolsFragment();
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
-        return f;
+    public static DatabaseToolsFragment newInstance() {
+        return new DatabaseToolsFragment();
     }
 
 
@@ -145,6 +137,19 @@ public class DatabaseToolsFragment extends FermatFragment {
             AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item, mlist);
             adapter.notifyDataSetChanged();
             gridView.setAdapter(adapter);
+
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View v,
+                                        int position, long id) {
+
+                    Resource item=(Resource) gridView.getItemAtPosition(position);
+                    developerSubAppSession.setData("resource",item);
+                    ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(),R.id.startContainer,null);
+
+
+                }
+            });
+
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -152,12 +157,6 @@ public class DatabaseToolsFragment extends FermatFragment {
         }
 
         return rootView;
-    }
-
-
-
-    public void setDeveloperSubAppSession(DeveloperSubAppSession developerSubAppSession) {
-        this.developerSubAppSession = developerSubAppSession;
     }
 
 
@@ -171,7 +170,8 @@ public class DatabaseToolsFragment extends FermatFragment {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
 
-            Resource item = getItem(position);
+           final Resource item = getItem(position);
+
 
             ViewHolder holder;
             if (convertView == null) {
@@ -183,19 +183,22 @@ public class DatabaseToolsFragment extends FermatFragment {
 
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
 
-                holder.imageView.setOnClickListener(new View.OnClickListener() {
+                //no hago el click listener en este punto porque la position no es correcta cuando va a la segunda pagina
+               /* holder.imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
-                        Resource item=(Resource) gridView.getItemAtPosition(position);
+                      //  Resource item=(Resource) gridView.getItemAtPosition(position);
 
                         //set the next fragment and params
-                        Object[] params = new Object[1];
-                        params[0] = item;
-                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(),params);
+                      //  Object[] params = new Object[1];
+                       // params[0] = item;
+
+                        developerSubAppSession.setData("resource",view.getTag(position));
+                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(),null);
 
                     }
-                });
+                });*/
 
                 TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
                 Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
@@ -230,6 +233,8 @@ public class DatabaseToolsFragment extends FermatFragment {
 
             return convertView;
         }
+
+
 
     }
     /**

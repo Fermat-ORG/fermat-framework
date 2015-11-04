@@ -1,0 +1,113 @@
+== FERMAT Crypto Broker Platform
+In this platform the actors involved are the *cryptobroker* and his customers (*cryptocustomers*). A *cryptobroker* is a person or small organization whose business logic is to buy and sell cryptocurrency for fiat money in his local market, obtaining his profits from the difference in the buy/sell price. We distinguish also two common level of *cryptobrokers*, those acting as *cryptobrokers wholesalers* adn those who deal with final users/customers.   
+=== FERMAT Cryptobroker Wallet
+This Wallet is designed with the theoretical assumption that the broker always has available stock of cryptocurrency and fiat money and that his activity is to be constantly selling this two kind of products obtaining profit. The functionalities offered should help him to run the business in a simple way, taking the responsability of the basic management of the broker's fund (in cryptocurrency and fiat money, in cash and in bank accounts), the management of the contact list of his customers, and a balance of the profits generated. +
+Key functionalities are:
+
+* *Funds replenishment*:
+** Crypto Currency 
+** Cash Money (Fiat money in cash)
+** Bank Money (Fiat money in a bank account)
+* *Incoming/Outgoing money*: 
+** Cash on Hand 
+** Delivered Cash
+** Money Bank Deposit 
+* *Special functions* for _associated crypto brokers network_ (*agreement* between colleagues to be able to manage joint operations when needed) :
+** keep track of *Broker-to-Broker contract*
+
+
+
+=== FERMAT Cryptobroker Customer Wallet
+
+
+=== _Actor Network Service layer_
+Crypto Broker :: 
+Crypto Customer :: +
+
+=== _Identity layer_
+Crypto Broker :: 
+Crypto Customer :: +
+
+=== _World layer_
+Fiat Index :: +
+
+=== _Wallet layer_
+Crypto Broker :: +
+
+=== _Contract layer_
+Customer Broker Crypto Money Purchase ::
+Customer Broker Cash Money Purchase ::
+Customer Broker Bank Money Purchase ::
+Customer Broker Crypto Money Sale ::
+Customer Broker Cash Money Sale ::
+Customer Broker Bank Money Sale ::
+Broker to Broker ::
+Broker to Wholesaler :: +
+
+=== _Business Transaction layer_
+Crypto Money Stock Replenishment ::
+Cash Money Stock Replenishment ::
+Bank Money Stock Replenishment ::
+Customer Broker Crypto Sale ::
+Customer Broker Cash Sale ::
+Customer Broker Bank Sale ::
+Customer Broker Crypto Purchase ::
+Customer Broker Cash Purchase ::
+Customer Broker Bank Purchase ::
+Wholesaler Crypto Sale ::
+Wholesaler Fiat Sale :: +
+
+=== _Request layer_
+Customer Broker Purchase ::
+Customer Broker Sale :: +
+
+=== _Middleware layer_
+Customers ::
+Wholesalers ::
+Crypto Broker Wallet Identity ::
+Wallet Manager ::
+Sub App Manager :: +
+
+=== _Actor layer_
+Crypto Broker :: 
+Crypto Customer :: +
+
+=== _Agent layer_
+Crypto Broker :: +
+
+=== _Desktop Module layer_
+Sub App Manager :: 
+Wallet Manager :: +
+
+=== _Subapp Module layer_
+Crypto Broker Identity ::
+Crypto Broker Community :: 
+Crypto User Identity ::
+Crypto User Community :: 
+Customers ::
+Suppliers :: +
+
+=== _Wallet Module layer_
+Crypto Broker :: 
+Crypto Customer :: +
+
+=== _Desktop layer_
+Sub App Manager :: 
+Wallet Manager :: +
+
+=== _Sub App layer_
+Crypto Broker Identity ::
+Crypto Broker Community :: 
+Crypto User Identity ::
+Crypto User Community :: 
+Customers ::
+Suppliers :: +
+
+=== _Reference Wallet layer_
+Crypto Broker :: 
+Crypto Customer :: +
+
+
+
+
+

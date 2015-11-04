@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 
 
 /**
- * Created by rodrigo on 2015.07.17..
+ * Created by Matias Furszyfer on 2015.07.17..
  */
 public class MenuItem implements FermatMenuItem {
 

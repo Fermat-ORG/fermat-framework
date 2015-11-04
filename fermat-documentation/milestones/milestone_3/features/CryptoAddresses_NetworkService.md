@@ -119,7 +119,7 @@
 
 * List Contact Requests
  * The network service is called throw method <code>listContactRequests</code> and receive by parameter the next information:
-   * intraUserLoggedInPublicKey - is the intra-user identity public key of the logged in intra-user
+   * intraUserLoggedInPublicKey - is the intra-user identityPublicKey public key of the logged in intra-user
    * walletPublicKey - is the public Key of the wallet where the user is working in
    * contactRequestState - is the State of the contact requests that you want to list.
  * The network service will return the contact requests that match with that state, if the state is null, the method returns everything.

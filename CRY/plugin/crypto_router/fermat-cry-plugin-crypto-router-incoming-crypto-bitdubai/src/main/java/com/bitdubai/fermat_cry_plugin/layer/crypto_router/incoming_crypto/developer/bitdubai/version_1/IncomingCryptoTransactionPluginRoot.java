@@ -22,14 +22,16 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.DealsWithBitcoinNetwork;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.DealsWithActorAddressBook;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.DealsWithCryptoAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
@@ -58,12 +60,12 @@ import java.util.regex.Pattern;
  * Created by loui on 18/03/15.
  * Modified by Arturo Vallone 25/04/2015
  */
-public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManager, DatabaseManagerForDevelopers, DealsWithActorAddressBook, DealsWithCryptoVault, DealsWithErrors, DealsWithEvents, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, Plugin, Service {
+public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManager, DatabaseManagerForDevelopers, DealsWithCryptoAddressBook, DealsWithCryptoVault, DealsWithErrors, DealsWithBitcoinNetwork, DealsWithEvents, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginDatabaseSystem, Plugin, Service {
 
     /*
-     * DealsWithActorAddressBook member variables
+     * DealsWithCryptoAddressBook member variables
      */
-    private ActorAddressBookManager actorAddressBook;
+    private CryptoAddressBookManager cryptoAddressBookManager;
 
     /*
      * DealsWithCryptoVault member variables
@@ -74,6 +76,11 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
      * DealsWithErrors Interface member variables.
      */
     private ErrorManager errorManager;
+
+    /**
+     * DealsWithBitcoinNetwork interface member variable
+     */
+    BitcoinNetworkManager bitcoinNetworkManager;
 
     /**
      * DealsWithEvents Interface member variables.
@@ -133,7 +140,6 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
         Database database;
         try {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_DATABASE);
-            database.closeDatabase();
             return IncomingCryptoDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             /**
@@ -153,13 +159,12 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
 
 
     /*
-     * DealsWithActorAddressBook Interface implementation.
+     * DealsWithCryptoAddressBook Interface implementation.
      */
     @Override
-    public void setActorAddressBookManager(ActorAddressBookManager actorAddressBook) {
-        this.actorAddressBook = actorAddressBook;
+    public void setCryptoAddressBookManager(CryptoAddressBookManager cryptoAddressBookManager) {
+        this.cryptoAddressBookManager = cryptoAddressBookManager;
     }
-
 
     /**
      * DealsWithCryptoVault Interface implementation.
@@ -177,6 +182,13 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
         this.errorManager = errorManager;
     }
 
+    /**
+     * DealsWithBitcoinNetwork interface implementatin
+     */
+    @Override
+    public void setBitcoinNetworkManager(BitcoinNetworkManager bitcoinNetworkManager) {
+        this.bitcoinNetworkManager = bitcoinNetworkManager;
+    }
 
     /**
      * DealsWithLogger interface implementation
@@ -192,7 +204,7 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
      */
     @Override
     public List<String> getClassesFullPath() {
-        List<String> returnedClasses = new ArrayList<String>();
+        List<String> returnedClasses = new ArrayList<>();
 
         returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.SourceAdministrator");
         returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.EventsLauncher");
@@ -246,8 +258,8 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
     /**
      * Static method to get the logging level from any class under root.
      *
-     * @param className
-     * @return
+     * @param className which we are trying to get the level of logging
+     * @return logLevel
      */
     public static LogLevel getLogLevelByClass(String className) {
         try {
@@ -348,7 +360,7 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
         this.relay = new IncomingCryptoRelayAgent();
 
         try {
-            ((DealsWithActorAddressBook) this.relay).setActorAddressBookManager(this.actorAddressBook);
+            ((DealsWithCryptoAddressBook) this.relay).setCryptoAddressBookManager(this.cryptoAddressBookManager);
             ((DealsWithErrors) this.relay).setErrorManager(this.errorManager);
             ((DealsWithEvents) this.relay).setEventManager(this.eventManager);
             ((DealsWithRegistry) this.relay).setRegistry(this.registry);
@@ -375,6 +387,7 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
         this.monitor = new IncomingCryptoMonitorAgent();
         try {
             ((DealsWithCryptoVault) this.monitor).setCryptoVaultManager(this.cryptoVaultManager);
+            ((DealsWithBitcoinNetwork) this.monitor).setBitcoinNetworkManager(this.bitcoinNetworkManager);
             ((DealsWithErrors) this.monitor).setErrorManager(this.errorManager);
             ((DealsWithRegistry) this.monitor).setRegistry(this.registry);
             this.monitor.start();

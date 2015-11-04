@@ -144,4 +144,6 @@ The final initialization sequence is therefore:
   
  Platform -> Layer -> Subsysyem -> Developer -> Plug-in
 
+==== (END OF /fermat-documentations/platfomr/platformDescription.asciidoc)
+
 

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="swype_refresh">Swype down to refresh</string>
+    <string name="search_contacts_hint">Search contacts...</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_help">Help</string>
+    <string name="action_share">Share</string>
+    <string name="action_view_type">View Type</string>
+    <string name="action_uninstall">Uninstall</string>
+    <string name="action_disable">Disable / Enable</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_wallet_store">Wallet Store</string>
+    <string name="title_section1">Luis Fernando Molina</string>
+    <string name="title_section2">Contacts</string>
+    <string name="title_section3">Accounts</string>
+    <string name="title_section4">Banks</string>
+    <string name="title_section5">Coupons</string>
+    <string name="title_section6">Discounts</string>
+    <string name="title_section7">Vouchers</string>
+    <string name="title_section8">Gift cards</string>
+    <string name="title_section9">Clones</string>
+    <string name="title_section10">Childs</string>
+    <string name="title_section11">Exit</string>
+    <string name="title_section12">Personal Wallets</string>
+    <string name="title_section13">Shops</string>
+    <string name="title_section14">Commercial wallets</string>
+    <string name="title_section15">Factory Projects</string>
+    <string name="title_section16">Published Wallets</string>
+    <string name="title_section17">Shops</string>
+    <string name="app_name">Fermat Bitcoin Wallet</string>
+    <string name="button_send">Send</string>
+    <string name="title_activity_main">Young Wallet</string>
+    <string name="action_search">Buscar</string>
+    <string name="kid_wallet">Kids</string>
+    <string name="young_wallet">Young</string>
+    <string name="professional_wallet">Professional</string>
+    <string name="bank_wallet">Bank</string>
+    <string name="store_wallet">Store</string>
+    <string name="corporate_wallet">Corporate</string>
+    <string name="trade_crypto_wallet">Traders</string>
+    <string name="send_remittance_wallet">Send</string>
+    <string name="receive_remittance_wallet">Receive</string>
+    <string name="remittance">Remittances</string>
+    <string name="wallets">Wallets</string>
+    <string name="institutional_wallets">Institutional wallets</string>
+
+    <string-array name="sports_array">
+        <item>Shuttle Badminton</item>
+        <item>Tennis</item>
+        <item>FootBall</item>
+        <item>Basket Ball</item>
+        <item>Table Tennis</item>
+        <item>Chess</item>
+        <item>Hockey</item>
+    </string-array>
+
+    <string name="action_contact">Wallets</string>
+    <string name="title_activity_app_desktop">AppDesktop</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_navegation_drawler">Smart Wallets</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="title_activity_blank">Wallet Manager</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="icono1">Carrefour</string>
+    <string name="icono2">Banco Itau</string>
+    <string name="icono3">Banco Popular</string>
+    <string name="icono4">Boca Juniors</string>
+    <string name="icono5">Barcelona</string>
+    <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_contacts">Contacts Activity</string>
+    <string name="title_activity_requests_sent">Requests Sent Activity</string>
+    <string name="title_activity_sent_detail">Sent Detail Activity</string>
+    <string name="title_activity_account_detail">Account Detail Activity</string>
+    <string name="title_activity_store">Store Activity</string>
+    <string name="title_activity_refill_point">Refill Point Activity</string>
+    <string name="title_activity_daily_discounts">Daily Discounts Activity</string>
+    <string name="title_activity_weekly_discount">Weekly Discount Activity</string>
+    <string name="title_activity_monthly_discounts">Monthly Discounts Activity</string>
+    <string name="title_activity_accounts">Accounts Activity</string>
+    <string name="title_activity_edit_personal_profile">Edit Personal Profile Activity</string>
+    <string name="title_activity_pay_to_contact">Pay To Contact</string>
+    <string name="title_activity_pay_to_new_contact">Pay To New Contact Activity</string>
+    <string name="title_activity_received_detail">ReceivedDetailActivity</string>
+    <string name="title_activity_receive_from_new_contact">ReceiveFromNewContactActivity</string>
+    <string name="title_activity_receive_from_contact">Receive From Contact Activity</string>
+    <string name="title_activity_chat_over_trx">Chat Over Trx Activity</string>
+    <string name="title_activity_blank_activity_with_fragment">BlankActivityWithFragment</string>
+    <string name="title_activity_balance_available">BalanceAvailableActivity</string>
+    <string name="title_activity_wallet">Wallet Activity</string>
+
+    <string-array name="account_name">
+        <item>Saving account: My savings</item>
+        <item>Current account: Pocket money</item>
+        <item>Saving account: Holiday saving</item>
+    </string-array>
+
+    <string-array name="share_options">
+        <item>Share Wallet Address</item>
+        <item>Copy to Clipboard</item>
+        <item>Send to Whatsapp</item>
+        <item>Send to Message</item>
+    </string-array>
+
+    <string name="title_activity_requests_received">Requests Received</string>
+    <string name="title_activity_activity_main">Main Activity</string>
+    <string name="empty_view">Empty List view</string>
+
+
+    <!-- TAB BALANCE STRINGS  -->
+    <string name="available_balance">available balance</string>
+    <string name="book_balance">book balance</string>
+    <string name="search_hint">Contact name</string>
+    <string name="empty_list_msg">No contacts</string>
+
+    <!-- TAB TRANSACTIONS -->
+    <string name="nullActorName">Unknown</string>
+    <!-- SEND FRAGMENT -->
+    <string name="debit">Send</string>
+    <string name="credit">Received</string>
+    <string name="fragment_send_change_contact"><u>Change Contact</u></string>
+    <string name="fragment_send_header_summary">Be sure to properly fill out\nthe information.</string>
+    <string name="fragment_send_account_details_summary">Account Details</string>
+    <string name="fragment_send_account_name_hint">Name (*)</string>
+    <string name="fragment_send_account_number_hint">Address (*)</string>
+    <string name="fragment_send_amount_hint">Amount (bits) (*)</string>
+    <string name="fragment_send_notes_hint">Notes (optional)</string>
+    <string name="clear_text_button">Clear</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

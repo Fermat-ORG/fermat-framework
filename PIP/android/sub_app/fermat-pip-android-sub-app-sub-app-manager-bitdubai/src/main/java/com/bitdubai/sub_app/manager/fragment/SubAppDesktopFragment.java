@@ -66,6 +66,7 @@ public class SubAppDesktopFragment extends Fragment {
                         "true",
                         "true",
                         "true",
+                        "true",
                         "true"
                 };
         String[] sub_app_names =
@@ -73,7 +74,8 @@ public class SubAppDesktopFragment extends Fragment {
                    "Wallet Factory",
                    "Wallet Publisher",
                         "Wallet Store",
-                        "Intra user"
+                        "Intra user",
+                        "Intra User Community"
                 };
 
 
@@ -82,7 +84,8 @@ public class SubAppDesktopFragment extends Fragment {
                         "wallet_factory",
                         "wallet_publisher",
                         "wallet_store",
-                        "intra_user"
+                        "intra_user",
+                        "intra_user_community"
                 };
 
         mlist = new ArrayList<InstalledSubApp>();
@@ -96,8 +99,12 @@ public class SubAppDesktopFragment extends Fragment {
         mlist.add(installedSubApp);
         installedSubApp = new InstalledSubApp(SubApps.CWP_DEVELOPER_APP,null,null,"developer_sub_app","Developer","developer_sub_app","developer_sub_app",new Version(1,0,0));
         mlist.add(installedSubApp);
-        installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER,null,null,"intra_user_sub_app","Intra user","intra_user_sub_app","intra_user_sub_app",new Version(1,0,0));
-        mlist.add(installedSubApp);
+//        installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Intra user Identity","intra_user_identity_sub_app","intra_user_identity_sub_app",new Version(1,0,0));
+//        mlist.add(installedSubApp);
+//
+//        installedSubApp = new InstalledSubApp(SubApps.CCP_INTRA_USER_COMMUNITY,null,null,"intra_user_community_sub_app","Intra user Community","intra_user_community_sub_app","intra_user_community_sub_app",new Version(1,0,0));
+//        mlist.add(installedSubApp);
+
 
         GridView gridView = new GridView(getActivity());
 
@@ -244,7 +251,20 @@ public class SubAppDesktopFragment extends Fragment {
                         }
                     });
                     break;
-                case "intra_user_sub_app":
+                case "intra_user_identity_sub_app":
+                    holder.imageView.setImageResource(R.drawable.intra_user);
+                    holder.imageView.setTag("StoreFrontActivity|1");
+                    linearLayout.setTag("StoreFrontActivity|1");
+                    holder.imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //set the next fragment and params
+                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                        }
+                    });
+
+                case "intra_user_community_sub_app":
                     holder.imageView.setImageResource(R.drawable.intra_user);
                     holder.imageView.setTag("StoreFrontActivity|1");
                     linearLayout.setTag("StoreFrontActivity|1");

@@ -11,7 +11,7 @@ import java.util.Map;
 
 
 /**
- * Created by rodrigo on 2015.07.17..
+ * Created by Matias Furszyfer on 2015.07.17..
  */
 
 public class TabStrip implements FermatTabStrip {
@@ -41,6 +41,12 @@ public class TabStrip implements FermatTabStrip {
     String tabsTextColor;
 
     String tabsIndicateColor;
+
+    boolean hasIcon=false;
+
+    boolean hasText;
+
+    int startItem;
 
     List<Tab> tabs = new ArrayList<>();
 
@@ -177,8 +183,32 @@ public class TabStrip implements FermatTabStrip {
         this.tabsIndicateColor = tabsIndicateColor;
     }
 
+    public int getStartItem() {
+        return startItem;
+    }
+
+    public void setStartItem(int startItem) {
+        this.startItem = startItem;
+    }
+
     public void setTabs(List<Tab> tabs) {
         this.tabs = tabs;
+    }
+
+    public boolean isHasIcon() {
+        return hasIcon;
+    }
+
+    public void setHasIcon(boolean hasIcon) {
+        this.hasIcon = hasIcon;
+    }
+
+    public boolean isHasText() {
+        return hasText;
+    }
+
+    public void setHasText(boolean hasText) {
+        this.hasText = hasText;
     }
 
     /**

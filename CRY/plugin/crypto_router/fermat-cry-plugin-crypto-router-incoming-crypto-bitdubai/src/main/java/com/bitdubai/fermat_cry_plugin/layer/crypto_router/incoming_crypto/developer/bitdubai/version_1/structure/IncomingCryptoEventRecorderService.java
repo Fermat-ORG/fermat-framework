@@ -2,12 +2,12 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoOnBlockchainEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoOnCryptoNetworkEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReversedOnBlockchainEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReversedOnCryptoNetworkEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.events.IncomingCryptoOnBlockchainEvent;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.events.IncomingCryptoOnCryptoNetworkEvent;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.events.IncomingCryptoReversedOnBlockchainEvent;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.events.IncomingCryptoReversedOnCryptoNetworkEvent;
+import com.bitdubai.fermat_cry_api.layer.definition.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoOnBlockchainEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoOnCryptoNetworkEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedOnBlockchainEventHandler;
@@ -16,9 +16,10 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionService;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,13 +41,13 @@ import java.util.List;
  * * * * * * * *
  */
 
-public class IncomingCryptoEventRecorderService implements com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents, DealsWithRegistry, TransactionService {
+public class IncomingCryptoEventRecorderService implements DealsWithEvents, DealsWithRegistry, TransactionService {
 
     /**
      * DealsWithEvents Interface member variables.
      */
     private EventManager eventManager;
-    private List<EventListener> listenersAdded = new ArrayList<>();
+    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /*
      * DealsWithRegistry Interface member variables.
@@ -65,7 +66,7 @@ public class IncomingCryptoEventRecorderService implements com.bitdubai.fermat_p
      * DealWithEvents Interface implementation.
      */
     @Override
-    public void setEventManager(com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager eventManager) {
+    public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
     }
 
@@ -117,8 +118,8 @@ public class IncomingCryptoEventRecorderService implements com.bitdubai.fermat_p
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
-        EventListener eventListener;
-        EventHandler eventHandler;
+        FermatEventListener fermatEventListener;
+        FermatEventHandler fermatEventHandler;
 
 
         /**
@@ -126,33 +127,33 @@ public class IncomingCryptoEventRecorderService implements com.bitdubai.fermat_p
          * Added the handlers for the new four events raised in the vault.
          */
 
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
-        eventHandler = new IncomingCryptoOnCryptoNetworkEventHandler();
-        ((IncomingCryptoOnCryptoNetworkEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        fermatEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
+        fermatEventHandler = new IncomingCryptoOnCryptoNetworkEventHandler();
+        ((IncomingCryptoOnCryptoNetworkEventHandler) fermatEventHandler).setIncomingCryptoEventRecorderService(this);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN);
-        eventHandler = new IncomingCryptoOnBlockchainEventHandler();
-        ((IncomingCryptoOnBlockchainEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        fermatEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN);
+        fermatEventHandler = new IncomingCryptoOnBlockchainEventHandler();
+        ((IncomingCryptoOnBlockchainEventHandler) fermatEventHandler).setIncomingCryptoEventRecorderService(this);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
-        eventHandler = new IncomingCryptoReversedOnCryptoNetworkEventHandler();
-        ((IncomingCryptoReversedOnCryptoNetworkEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        fermatEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
+        fermatEventHandler = new IncomingCryptoReversedOnCryptoNetworkEventHandler();
+        ((IncomingCryptoReversedOnCryptoNetworkEventHandler) fermatEventHandler).setIncomingCryptoEventRecorderService(this);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
-        eventHandler = new IncomingCryptoReversedOnBlockchainEventHandler();
-        ((IncomingCryptoReversedOnBlockchainEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        fermatEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
+        fermatEventHandler = new IncomingCryptoReversedOnBlockchainEventHandler();
+        ((IncomingCryptoReversedOnBlockchainEventHandler) fermatEventHandler).setIncomingCryptoEventRecorderService(this);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
         this.serviceStatus = ServiceStatus.STARTED;
         
@@ -165,8 +166,8 @@ public class IncomingCryptoEventRecorderService implements com.bitdubai.fermat_p
     }
 
     private void removeRegisteredListeners(){
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
         listenersAdded.clear();
     }

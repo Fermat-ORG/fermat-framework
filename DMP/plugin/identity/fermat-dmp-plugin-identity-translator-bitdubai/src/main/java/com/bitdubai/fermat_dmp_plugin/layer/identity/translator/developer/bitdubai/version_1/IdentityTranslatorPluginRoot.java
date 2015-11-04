@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantInitializeExtraUserRegistryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -32,11 +31,12 @@ import com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.exceptions.CantGetUserTranslatorIdentitiesException;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentityManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.translator.developer.bitdubai.version_1.exceptions.CantInitializeTranslatorIdentityDatabaseException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
@@ -72,8 +72,6 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
     /**
      * PlugIn Interface member variables.
      */
-
-
     IdentityTranslatorDao identityTranslatorDao;
 
     /**
@@ -119,12 +117,8 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-
-
         IdentityTranslatorDeveloperDataBaseFactory dbFactory = new IdentityTranslatorDeveloperDataBaseFactory(this.pluginId.toString(), IdentityTranslatorDatabaseConstants.TRANSLATOR_DB_NAME);
         return dbFactory.getDatabaseList(developerObjectFactory);
-
-
     }
 
     @Override
@@ -152,7 +146,6 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
         return new ArrayList<>();
     }
 
-
     /**
      * DealsWithDeviceUser Interface implementation
      */
@@ -170,7 +163,6 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
         this.errorManager = errorManager;
     }
 
-
     /**
      * DealsWithPluginIdentity methods implementation.
      */
@@ -183,15 +175,12 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-
     }
 
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
-
     }
-
 
     /**
      * DealsWithLogger Interface implementation.
@@ -215,20 +204,17 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity_translator.developer.bitdubai.version_1.database.IdentityTranslatorDatabaseFactory");
         returnedClasses.add("com.bitdubai.fermat_dmp_plugin.layer.identity_translator.developer.bitdubai.version_1.database.IdentityTranslatorDatabaseConstants");
 
-
         /**
          * I return the values.
          */
         return returnedClasses;
     }
 
-
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
         /**
          * I will check the current values and update the LogLevel in those which is different
          */
-
         for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
             /**
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
@@ -240,48 +226,42 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
                 IdentityTranslatorPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
-
     }
 
     @Override
     public void start() throws CantStartPluginException {
 
         this.serviceStatus = ServiceStatus.STARTED;
-
         /**
          * I created instance of IdentityTranslatorDao
          */
         this.identityTranslatorDao = new IdentityTranslatorDao(errorManager, pluginDatabaseSystem, pluginId, this.pluginFileSystem);
-
-
         try {
             this.identityTranslatorDao.initialize();
-
-        } catch (CantInitializeExtraUserRegistryException cantInitializeExtraUserRegistryException) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeExtraUserRegistryException);
-            throw new CantStartPluginException(cantInitializeExtraUserRegistryException, Plugins.BITDUBAI_USER_EXTRA_USER);
+        } catch (CantInitializeTranslatorIdentityDatabaseException cantInitializeExtraUserRegistryException) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TRANSLATOR_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeExtraUserRegistryException);
+            throw new CantStartPluginException(cantInitializeExtraUserRegistryException, Plugins.BITDUBAI_TRANSLATOR_IDENTITY);
         }
-
     }
 
     @Override
     public void pause() {
-
+        this.serviceStatus = ServiceStatus.PAUSED;
     }
 
     @Override
     public void resume() {
-
+        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
     public void stop() {
-
+        this.serviceStatus = ServiceStatus.STOPPED;
     }
 
     @Override
     public ServiceStatus getStatus() {
-        return null;
+        return this.serviceStatus;
     }
 
     /**
@@ -289,43 +269,26 @@ public class IdentityTranslatorPluginRoot implements DatabaseManagerForDeveloper
      */
     @Override
     public List<TranslatorIdentity> getTranslatorsFromCurrentDeviceUser() throws CantGetUserTranslatorIdentitiesException {
-
         try {
-
             return this.identityTranslatorDao.getDevelopersFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
-
         } catch (CantGetLoggedInDeviceUserException e) {
-
             throw new CantGetUserTranslatorIdentitiesException("CAN'T GET TRANSLATORS LIST", e, "Translator Identity", ".");
         } catch (CantGetUserDeveloperIdentitiesException e) {
             throw new CantGetUserTranslatorIdentitiesException("CAN'T GET TRANSLATORS LIST", e, "Translator Identity", "");
         }
-
     }
 
     @Override
     public TranslatorIdentity createNewTranslator(String alias) throws CantCreateNewTranslatorException {
-
         // Create the new developer.
         try {
-
             ECCKeyPair keyPair = new ECCKeyPair();
-
             identityTranslatorDao.createNewTranslator(alias, keyPair, deviceUserManager.getLoggedInDeviceUser());
-
             return new IdentityTranslatorTranslator(alias, keyPair.getPublicKey(), keyPair.getPrivateKey());
-
         } catch (CantGetLoggedInDeviceUserException e) {
-
             throw new CantCreateNewTranslatorException("CAN'T CREATE TRANSLATOR IDENTITY", e, "Translator Identity", ".");
-
         } catch (CantCreateNewDeveloperException e) {
-
             throw new CantCreateNewTranslatorException("CAN'T CREATE TRANSLATOR IDENTITY", e, "Translator Identity", "");
-
         }
-
     }
-
-
 }

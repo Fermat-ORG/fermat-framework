@@ -5,14 +5,14 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_api.layer.dmp_transaction.incoming_device_user.IncomingDeviceUserManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 
 
 /**
  * Created by loui on 23/02/15.
  */
-public class IncomingCryptoReversedFromDeviceUserEventHandler implements EventHandler {
+public class IncomingCryptoReversedFromDeviceUserEventHandler implements FermatEventHandler {
     
     IncomingDeviceUserManager incomingDeviceUserManager;
     
@@ -23,7 +23,7 @@ public class IncomingCryptoReversedFromDeviceUserEventHandler implements EventHa
 
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         if (((Service) this.incomingDeviceUserManager).getStatus() == ServiceStatus.STARTED){
 
 

@@ -4,25 +4,34 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.DeveloperBitDubai;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantCreateBlockStoreFileException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkMonitoringAgent;
 
+import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.Wallet;
 
 import java.util.ArrayList;
@@ -30,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
 /**
@@ -47,7 +57,27 @@ import java.util.regex.Pattern;
  * * * * * * * *
  */
 
-public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManager, DealsWithErrors, DealsWithPluginFileSystem, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
+public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
+        BitcoinCryptoNetworkManager,
+        DealsWithErrors,
+        DealsWithPluginFileSystem,
+        DealsWithLogger,
+        LogManagerForDevelopers {
+
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.PLUGIN_FILE_SYSTEM    )
+    private PluginFileSystem pluginFileSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.LOG_MANAGER           )
+    private LogManager logManager;
+
+
+    public BitcoinCryptoNetworkPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
 
     /**
      * BitcoinCryptoNetworkManager interface member variables
@@ -55,20 +85,8 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
     CryptoVault cryptoVault;
     BitcoinCryptoNetworkMonitoringAgent bitcoinCryptoNetworkMonitoringAgent;
 
-    /**
-     * DealsWithErrors interface member variables
-     */
-    ErrorManager errorManager;
 
-    /**
-     * DealsWithPluginIdentity interface member variable
-     */
-    UUID pluginId;
 
-    /**
-     * DealsWithLogManager interface member variable
-     */
-    LogManager logManager;
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
 
@@ -110,17 +128,6 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
     }
 
     /**
-     * DealswithPluginFileSystem interface member variable
-     */
-    PluginFileSystem pluginFileSystem;
-
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
-
-    /**
      * DealsWithError interface implementation
      *
      * @param errorManager
@@ -159,42 +166,20 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
     }
 
     @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }
-
-    /**
-     * Plugin interface implementation
-     *
-     * @param uuid
-     */
-    @Override
-    public void setId(UUID uuid) {
-        this.pluginId = uuid;
-    }
-
-    @Override
     public void setVault(CryptoVault cryptoVault) {
         this.cryptoVault = cryptoVault;
     }
 
     @Override
+    public void connectToBitcoinNetwork(CryptoVault cryptoVault) throws CantConnectToBitcoinNetwork {
+        this.cryptoVault = cryptoVault;
+        this.connectToBitcoinNetwork();
+
+    }
+
+    @Override
     public void connectToBitcoinNetwork() throws CantConnectToBitcoinNetwork {
+        System.out.println("Bitcoin Crypto Network Connected.");
         bitcoinCryptoNetworkMonitoringAgent = new BitcoinCryptoNetworkMonitoringAgent((Wallet) cryptoVault.getWallet(), cryptoVault.getUserPublicKey());
         bitcoinCryptoNetworkMonitoringAgent.setPluginFileSystem(pluginFileSystem);
         bitcoinCryptoNetworkMonitoringAgent.setLogManager(this.logManager);
@@ -252,5 +237,14 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
      */
     public int getConnectedPeers() {
         return bitcoinCryptoNetworkMonitoringAgent.getConnectedPeers();
+    }
+
+    @Override
+    public void broadcastTransaction(Transaction transaction) throws CantBroadcastTransactionException {
+        try {
+            bitcoinCryptoNetworkMonitoringAgent.broadcastTransaction(transaction);
+        } catch (ExecutionException | InterruptedException e) {
+            throw new CantBroadcastTransactionException (CantBroadcastTransactionException.DEFAULT_MESSAGE, e, null, null);
+        }
     }
 }

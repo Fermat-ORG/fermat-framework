@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="#5C92BBBC"
+    >
+
+        <ImageView
+            android:id="@+id/imageView_profile"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/mati_profile"/>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:id="@+id/intra_user_container"
+        android:layout_toRightOf="@+id/imageView_profile"
+        >
+
+
+        <TextView
+            android:id="@+id/textView_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Matias Furszyfer"
+            android:gravity="left"
+            android:layout_gravity="left|center_horizontal"
+            android:textStyle="bold"
+            android:padding="3sp"
+            android:textSize="10dp"
+
+            />
+        <TextView
+            android:id="@+id/textView_phrase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="want to connect with you!!"
+            android:gravity="left"
+            android:layout_gravity="left|center_horizontal"
+            android:textStyle="bold"
+            android:padding="3sp"
+            android:textSize="7dp"
+
+            android:layout_marginTop="10dp"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_toRightOf="@+id/intra_user_container"
+        >
+
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:id="@+id/imageView_accept"
+            android:padding="3sp"
+            android:src="@drawable/ic_action_accept_grey"
+
+            />
+        <ImageView
+            android:id="@+id/imageView_denied"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:padding="3sp"
+            android:layout_marginLeft="12dp"
+            android:src="@drawable/ic_action_discard_grey"
+
+            />
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

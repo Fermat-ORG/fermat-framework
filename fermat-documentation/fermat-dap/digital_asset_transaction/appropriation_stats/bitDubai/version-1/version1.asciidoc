@@ -1,0 +1,33 @@
+[[digital-asset-transaction-appropriation-stats-BitDubai-V1]]
+= Version 1
+
+== Plug-in Description
+
+Transaction Flow on Prezi: https://prezi.com/jwnuv7i13mnb/dap-asset-redemption/
+
+.Escenario:
+
+Nos encontramos en el dispositivo del asset issuer con al menos un asset distribuido y entregado correctamente a un asset user.
+
+El asset se encuentra confirmado y el Asset está disponible en el available Balance del asset user.
+
+Si el usuario decide apropiarse del monto asociado al digital asset, por lo tanto, el mencionado asset no podrá ser redimido a través de un Asset Redeem point, en este
+caso, el dispositivo del Asset user deberá enviar una notificación al Asset Issuer de la apropiación del monto, esto lo hace a través del Asset transmission.
+
+La transacción Appropiation stats ejecuta los siguientes pasos:
+
+1) Escucha los eventos del asset transmission.
+
+2) si existe un evento con el DistributionStatus.ASSET_APPROPRIATED, este plugin debe activarse y verificar que actor generó este evento.
+
+3) Con la verificación del actor se puede identificarr el digital asset que le fue distribuido al Asset user.
+
+4) Una vez identificado el Digital Asset en cuestión, se procederá indicarle a la Asset reference Issuer wallet que el mencionado asset ha sido apropiado,
+generando un débito en la mencionada wallet.
+
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details

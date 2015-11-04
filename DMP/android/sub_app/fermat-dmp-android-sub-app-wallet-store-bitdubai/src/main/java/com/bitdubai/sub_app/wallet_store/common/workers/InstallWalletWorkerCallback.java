@@ -1,12 +1,16 @@
 package com.bitdubai.sub_app.wallet_store.common.workers;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.view.View;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedSubAppExceptionSeverity;
+import com.wallet_store.bitdubai.R;
 
 /**
  * Created by nelson on 31/08/15.
@@ -14,15 +18,33 @@ import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.Unex
 public class InstallWalletWorkerCallback implements FermatWorkerCallBack {
     private final Activity activity;
     private final ErrorManager errorManager;
+    private ProgressDialog dialog;
+    private FermatButton installButton;
+    private FermatButton uninstallButton;
 
-    public InstallWalletWorkerCallback(Activity activity, ErrorManager errorManager) {
+    public InstallWalletWorkerCallback(Activity activity, ErrorManager errorManager, ProgressDialog dialog) {
         this.activity = activity;
         this.errorManager = errorManager;
+        this.dialog = dialog;
+    }
+
+    public InstallWalletWorkerCallback(Activity activity, ErrorManager errorManager, ProgressDialog dialog, FermatButton installButton, FermatButton uninstallButton) {
+        this.activity = activity;
+        this.errorManager = errorManager;
+        this.dialog = dialog;
+        this.installButton = installButton;
+        this.uninstallButton = uninstallButton;
     }
 
     @Override
     public void onPostExecute(Object... result) {
-        Toast.makeText(activity, "Se a instalado la billetera", Toast.LENGTH_SHORT).show();
+        dialog.dismiss();
+        Toast.makeText(activity, R.string.wallet_installed_message, Toast.LENGTH_SHORT).show();
+
+        if (uninstallButton != null)
+            uninstallButton.setVisibility(View.VISIBLE);
+        if (installButton != null)
+            installButton.setText(R.string.wallet_status_open);
     }
 
     @Override
@@ -30,6 +52,7 @@ public class InstallWalletWorkerCallback implements FermatWorkerCallBack {
         errorManager.reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                 UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
 
-        Toast.makeText(activity, "Disculpe, no se pudo instalar la billetera", Toast.LENGTH_SHORT).show();
+        dialog.dismiss();
+        Toast.makeText(activity, R.string.wallet_not_installed_message, Toast.LENGTH_SHORT).show();
     }
 }

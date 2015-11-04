@@ -48,7 +48,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
     /**
      * database Interface member variables.
      */
-    private Context context;
+    private String path;
 
     private String databaseName;
 
@@ -57,12 +57,12 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
     /**
      * <p>Plugin implementation constructor
      *
-     * @param context      Android Context Object
+     * @param path         android path
      * @param ownerId      PlugIn owner id
      * @param databaseName name database using
      */
-    public AndroidDatabase(Context context, UUID ownerId, String databaseName) {
-        this.context = context;
+    public AndroidDatabase(String path, UUID ownerId, String databaseName) {
+        this.path = path;
         this.ownerId = ownerId;
         this.databaseName = databaseName;
     }
@@ -70,11 +70,11 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
     /**
      * <p>Platform implementation constructor
      *
-     * @param context      Android Context Object
+     * @param path         Android path
      * @param databaseName name database using
      */
-    public AndroidDatabase(Context context, String databaseName) {
-        this.context = context;
+    public AndroidDatabase(String path, String databaseName) {
+        this.path = path;
         this.databaseName = databaseName;
     }
 
@@ -264,84 +264,6 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         }
     }
 
-    private void updateTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record, List<DatabaseVariable> variablesResult) throws CantUpdateRecordException {
-
-        try {
-            List<DatabaseRecord> records = record.getValues();
-            StringBuilder strRecords = new StringBuilder();
-
-            for (DatabaseRecord dbRecord : records) {
-
-                if (dbRecord.getChange()) {
-
-                    if (strRecords.length() > 0)
-                        strRecords.append(",");
-
-                    if (dbRecord.getUseValueofVariable()) {
-                        for (int j = 0; j < variablesResult.size(); ++j) {
-
-                            if (variablesResult.get(j).getName().equals(dbRecord.getValue())){
-                                strRecords.append(dbRecord.getName())
-                                        .append(" = '")
-                                        .append(variablesResult.get(j).getValue())
-                                        .append("'");
-                            }
-                        }
-                    } else {
-                        strRecords.append(dbRecord.getName())
-                                .append(" = '")
-                                .append(dbRecord.getValue())
-                                .append("'");
-                    }
-                }
-            }
-
-            database.execSQL("UPDATE " + table.getTableName() + " SET " + strRecords + " " + table.makeFilter());
-
-        } catch (Exception exception) {
-            throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
-        }
-    }
-
-    private void insertTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record, List<DatabaseVariable> variableResultList) throws CantInsertRecordException {
-
-        try {
-            StringBuilder strRecords = new StringBuilder("");
-            StringBuilder strValues = new StringBuilder("");
-
-            List<DatabaseRecord> records = record.getValues();
-
-
-            for (int i = 0; i < records.size(); ++i) {
-
-                if (strRecords.length() > 0)
-                    strRecords.append(",");
-                strRecords.append(records.get(i).getName());
-
-                if (strValues.length() > 0)
-                    strValues.append(",");
-
-                if (records.get(i).getUseValueofVariable()) {
-                    for (DatabaseVariable variableResult :  variableResultList) {
-
-                        if (variableResult.getName().equals(records.get(i).getValue())) {
-                            strValues.append("'")
-                                    .append(variableResult.getValue())
-                                    .append("'");
-                        }
-                    }
-                } else {
-                    strValues.append("'")
-                            .append(records.get(i).getValue())
-                            .append("'");
-                }
-            }
-
-            database.execSQL("INSERT INTO " + table.getTableName() + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
-        } catch (Exception exception) {
-            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
-        }
-    }
 
     public SQLiteDatabase getWritableDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException {
         String databasePath = getDatabasePath();
@@ -514,9 +436,9 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
      */
     private String getPath() {
         if (ownerId != null)
-            return context.getFilesDir().getPath() + "/databases/" + ownerId.toString();
+            return path + "/databases/" + ownerId.toString();
         else
-            return context.getFilesDir().getPath() + "/databases/";
+            return path + "/databases/";
     }
 
     /**
@@ -645,4 +567,84 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
     public DatabaseTableFactory newTableFactory(String tableName) {
         return new AndroidDatabaseTableFactory(tableName);
     }
+
+    private void updateTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record, List<DatabaseVariable> variablesResult) throws CantUpdateRecordException {
+
+        try {
+            List<DatabaseRecord> records = record.getValues();
+            StringBuilder strRecords = new StringBuilder();
+
+            for (DatabaseRecord dbRecord : records) {
+
+                if (dbRecord.getChange()) {
+
+                    if (strRecords.length() > 0)
+                        strRecords.append(",");
+
+                    if (dbRecord.getUseValueofVariable()) {
+                        for (int j = 0; j < variablesResult.size(); ++j) {
+
+                            if (variablesResult.get(j).getName().equals(dbRecord.getValue())){
+                                strRecords.append(dbRecord.getName())
+                                        .append(" = '")
+                                        .append(variablesResult.get(j).getValue())
+                                        .append("'");
+                            }
+                        }
+                    } else {
+                        strRecords.append(dbRecord.getName())
+                                .append(" = '")
+                                .append(dbRecord.getValue())
+                                .append("'");
+                    }
+                }
+            }
+
+            database.execSQL("UPDATE " + table.getTableName() + " SET " + strRecords + " " + table.makeFilter());
+
+        } catch (Exception exception) {
+            throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
+        }
+    }
+
+    private void insertTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record, List<DatabaseVariable> variableResultList) throws CantInsertRecordException {
+
+        try {
+            StringBuilder strRecords = new StringBuilder("");
+            StringBuilder strValues = new StringBuilder("");
+
+            List<DatabaseRecord> records = record.getValues();
+
+
+            for (int i = 0; i < records.size(); ++i) {
+
+                if (strRecords.length() > 0)
+                    strRecords.append(",");
+                strRecords.append(records.get(i).getName());
+
+                if (strValues.length() > 0)
+                    strValues.append(",");
+
+                if (records.get(i).getUseValueofVariable()) {
+                    for (DatabaseVariable variableResult :  variableResultList) {
+
+                        if (variableResult.getName().equals(records.get(i).getValue())) {
+                            strValues.append("'")
+                                    .append(variableResult.getValue())
+                                    .append("'");
+                        }
+                    }
+                } else {
+                    strValues.append("'")
+                            .append(records.get(i).getValue())
+                            .append("'");
+                }
+            }
+
+            database.execSQL("INSERT INTO " + table.getTableName() + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
+        } catch (Exception exception) {
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause for this error");
+        }
+    }
+
 }

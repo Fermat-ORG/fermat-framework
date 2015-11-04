@@ -1,0 +1,116 @@
+[[digital-asset-transaction-incoming-issuer-BitDubai-V1]]
+= Version 1
+    Por definir.
+= Plug-in Description
+
+= Pasos detallados
+
+Diagrama de flujo en Prezi: http://prezi.com/_mbtb0pa22c3/?utm_campaign=share&utm_medium=copy&rc=ex0share
+
+.Escenario:
+
+
+Nos encontramos con balance positivo en la Asset Wallet de al menos un asset disponible. Esto significa que disponemos del objeto _DigitalAssetMetadata_ persistido
+en la wallet y bitcoins en la Asset Vault (Ver <<digital-asset-transaction-asset-issuing-BitDubai-V1,Asset Issuing Transaction>> ) suficientes para transferir el asset la cantidad de veces que sea necesaria.
+
+Al tener instalada en el dispositivo la Issuer Wallet, el <<actor-asset-issuer-BitDubai-V1, Actor NetworkService Issuer>> ha comenzado a solicitar al Communication Server
+la lista de Asset Users disponibles y persiste esta información en su base de datos. Entre otros datos, se guarda la dirección Bitcoin de cada user.
+
+Es decir, tenemos balance positivo y una lista de usuarios a quienes enviar el asset.
+
+En la reference Wallet del Asset Issuer se ha seleccionado enviar el asset (o los assets) a ciertos usuarios, lo cual inicia la transacción Asset Distribution
+con los siguientes pasos:
+
+1) Se llama al método distributeAsset (String assetPublicKey, List<AssetUser> assetUsers) que inicia la transacción recibiendo el id del asset a distribuir y
+la lista de usuarios a distribuir. El estado de la transacción se actualiza a PendingVerify
+
+2) Se debe verificar que el Asset no ha sido modificado externamente y que sigue siendo válido comparando el Hash del Asset con el Hash guardado en la Genesis Transaction.
+Para ello, se obtiene el hash de la genesis transaction invocando al método getAssetHash(transactionId genesisTransaction) de la AssetVault.
+
+Si la comparación entre el _DigitalAssetMetadata_ es igual a la obtenida por la Asset Vault, entonces el asset es válido sigue siendo válido.
+
+3) Debemos verificar que seguimos disponiendo fondos suficientes en la Asset Vault para transferir los assets invocando al método _getAssetVaultBalance_ de la Asset Vault
+ y verificando que disponemos de un balance superior al GenesisAmount del DA.
+
+TIP: En esta etapa, el asset es válido para ser transferido y la transacción pasa a estado VerifyCompleted.
+
+4) Lo siguiente ocurre por cada AssetUser a quien se transfiera. El objeto _assetUser_ va a tener la propiedad _CryptoAddress_ con la dirección bitcoin propia.
+
+IMPORTANT: La AssetDistribution transaction debe mantener un registro por cada transacción de envío a Asset Users. La transaction macro de envío de/l asset/s
+se descompone en tantas transacciones como usuarios a enviar existan.
+
+.*En el dispositivo del Asset Issuer*
+
+A través del Asset Transmission NetworkService, va a transmitir el AssetMetadata especificando al AssetUser llamando al método:
+[source, java]
+UUID distributeAssetToAssetUser(DigitalAssetMetadata, AssetUser);
+
+Esta llamada será en forma asincrónica y su valor de retorno será un _DistributionId_ para persistir esta información y aguardar a que obtengamos el ok desde el Asset User networkService.
+
+.*En el dispositivo del usuario*
+
+El ActorNetworkService Asset User recibe el mensaje con el _DigitalAssetMetadata_ para validarlo y ejecuta lo siguiente:
+
+* El UUID generado por _distributeAssetToAssetUser_ será persistido localmente para mantener un registro del ID de transacción y poder informar
+luego el resultado.
+
+Validación de _DigitalAssetMetadata_
+
+* Verifica que el Asset es válido buscando en la blockChain la GenesisTransaction y obteniendo el hash del DigitalAsset. Compara el hash
+obtenido con el generado por el _DigitalAssetMetadata_.getDigitalAssetHash. Si los valores son iguales el DA es válido.
+* Verifica que el contrato del Digital Asset cumple con las propiedades. Es decir,
+[source, java]
+DigitalAssetContract.getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE)
+
+está dentro de la fecha válida.
+
+* Infoma a través del NetworkService AssetUser que el AssetMetadata es válido informado el status completed del _DistributionId_ pasado originalmente.
+En caso de error o que el asset no es válido o no cumple el contrato, se informa igualmente para cerrar esta transacción.
+
+* De ser aceptado, el _DigitalAssetMetadata_ es persistido en la UserWallet sin actualizar aún balance ya que es medio asset.
+
+* Informa a través del Asset User NetworkService pasando el _DistributionId_ y el status de ok para informar fin del proceso.
+
+.*En el dispositivo del Asset Issuer*
+
+El network Service del AssetUser retorna mensaje de OK o fallido para el _DistributionId_ generado y ocurre lo siguiente:
+
+* Si no se aceptó el _DigitalAssetMetadata_, esta transacción se marca fallida y se cierra.
+* Si se aceptó el _DigitalAssetMetadata_ entonces lo siguiente ocurre:
+** Se envían los Bitcoins a través de un método de la AssetVault llamando al método:
+[source, java]
+sendAssetBitcoins (long amount, CryptoAddress sendTo, String AssetPublicKey)
+
+ El *Amount* es la cantidad de satoshis del Asset que se obtiene de la propiedad DigitalAsset.getUnitValue()
+
+ El *sentTo* es la dirección del AssetUser que la obtuvimos al inicio a través del ActorNetworkService Asset Issuer.
+
+ El *AssetPublicKey* es el Id del asset que se obtiene de DigitalAsset.getPublicKey().
+
+Esto genera una nueva transacción en la AssetVault que colocará el PublicKey del asset dentro de la transacción (*Output OP_RETURN*) y la enviará al usuario.
+
+** Se genera un dèbito en la Issuer Wallet que indica que el Asset ha sido enviado tanto en su metadata como los bitcoins.
+
+** Cuando luego la transacción bitcoin sea confirmada en la red por un bloque, se actualizará el balance available.
+
+.*En el dispositivo del usuario*
+* El Agent IncomingCrypto detectará el ingreso de los bitcoins y como la direccion a la que llegan está registrada a través del Address Book
+se informará un evento que la Asset User Wallet escucha.
+* La Asset User Wallet obtendrá de la transacción bitcoin que llegó la publicKey del asset buscando el output del tipo OP_RETURN para machearlo con la _DigitalAssetMetadata_ que
+ya tiene guardada del paso anterior y actualizará el book balance.
+* Cuando esta transacción bitcoin se confirme, actualizará el available balance de la wallet.
+
+
+Si la conexión con el AssetUser no estaba abierta, entonces esta transmisión será marcada como fallida y se tendrá que reintentar más adelante.
+Una propiedad en la Issuer Reference Wallet  definirá estos parámetros de retry.
+
+Si el _DigitalAssetMetadata_ no fue aceptado, esta transmisión será marcada como erronea y no se volverá a reintentar.
+
+
+
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details

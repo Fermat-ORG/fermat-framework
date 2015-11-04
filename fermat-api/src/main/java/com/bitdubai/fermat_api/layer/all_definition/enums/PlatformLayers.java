@@ -1,11 +1,12 @@
 /*
- * @#PlatformLayers.java - 2015
+ * @#java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
 package com.bitdubai.fermat_api.layer.all_definition.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
@@ -18,7 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * @version 1.0
  * @since Java JDK 1.7
  */
-public enum PlatformLayers {
+public enum PlatformLayers implements FermatEnum {
 
     /**
      * Definitions types
@@ -48,7 +49,49 @@ public enum PlatformLayers {
     BITDUBAI_PIP_IDENTITY_LAYER("BPIDL", Developers.BITDUBAI),
     BITDUBAI_PIP_MODULE_LAYER("BPIPML", Developers.BITDUBAI),
     BITDUBAI_REQUEST_LAYER("BRL", Developers.BITDUBAI),
-    BITDUBAI_PIP_NETWORK_SERVICE_LAYER("BPIPNSL", Developers.BITDUBAI);
+    BITDUBAI_PIP_NETWORK_SERVICE_LAYER("BPIPNSL", Developers.BITDUBAI),
+    BITDUBAI_ENGINE_LAYER("BEL",Developers.BITDUBAI),
+
+    // Init CCP Layers
+    BITDUBAI_CCP_ACTOR_LAYER          ("BCCPACL", Developers.BITDUBAI),
+    BITDUBAI_CCP_IDENTITY_LAYER       ("BCCPIDL", Developers.BITDUBAI),
+    BITDUBAI_CCP_MIDDLEWARE_LAYER     ("BCCPMIL", Developers.BITDUBAI),
+    BITDUBAI_CCP_NETWORK_SERVICE_LAYER("BCCPNSL", Developers.BITDUBAI),
+    BITDUBAI_CCP_REQUEST_LAYER        ("BCCPRQL", Developers.BITDUBAI),
+    BITDUBAI_CCP_TRANSACTION_LAYER    ("BCCPTRL", Developers.BITDUBAI),
+    // End CCP Layers
+
+    // Init CCM Layers
+    BITDUBAI_CCM_ACTOR_LAYER          ("BCCMACL", Developers.BITDUBAI),
+
+    // Init DAP Layers
+    BITDUBAI_DAP_ACTOR_LAYER                  ("BDAPAL",  Developers.BITDUBAI),
+    BITDUBAI_DAP_ACTOR_NETWORK_SERVICE_LAYER  ("BDAPANSL",  Developers.BITDUBAI),
+    BITDUBAI_DAP_NETWORK_SERVICE_LAYER        ("BDAPNSL",  Developers.BITDUBAI),
+    BITDUBAI_DAP_IDENTITY_LAYER               ("BDAPIL",  Developers.BITDUBAI),
+    BITDUBAI_DAP_MIDDLEWARE_LAYER             ("BDAPMIL", Developers.BITDUBAI),
+    BITDUBAI_DAP_MODULE_LAYER                 ("BDAPMOL", Developers.BITDUBAI),
+    BITDUBAI_DAP_SUB_APP_MODULE_LAYER         ("BDAPSAML", Developers.BITDUBAI),
+    BITDUBAI_DAP_TRANSACTION_LAYER            ("BDAPTL",  Developers.BITDUBAI),
+    BITDUBAI_DAP_WALLET_LAYER                 ("BDAPWA",  Developers.BITDUBAI),
+    // End DAP Layers
+
+    // Init WPD Layers
+    BITDUBAI_WPD_ACTOR_LAYER          ("BWPDAL",   Developers.BITDUBAI),
+    BITDUBAI_WPD_DESKTOP_MODULE_LAYER ("BWPDDML",  Developers.BITDUBAI),
+    BITDUBAI_WPD_ENGINE_LAYER         ("BWPDEL",   Developers.BITDUBAI),
+    BITDUBAI_WPD_IDENTITY_LAYER       ("BWPDIL",   Developers.BITDUBAI),
+    BITDUBAI_WPD_MIDDLEWARE_LAYER     ("BWPDML",   Developers.BITDUBAI),
+    BITDUBAI_WPD_NETWORK_SERVICE_LAYER("BWPDNSL",  Developers.BITDUBAI),
+    BITDUBAI_WPD_SUB_APP_MODULE_LAYER ("BWPDSAML", Developers.BITDUBAI),
+    // End WPD Layers
+
+    //Init CBP Layers
+    BITDUBAI_CBP_IDENTITY_LAYER ("BCBPIL", Developers.BITDUBAI),
+    BITDUBAI_CBP_SUB_APP_MODULE_LAYER ("BCBPSAML", Developers.BITDUBAI),
+    //END CBP Layers
+
+            ;
 
     /**
      * Represent the key
@@ -90,7 +133,7 @@ public enum PlatformLayers {
     }
 
     /**
-     * Get the plataform layer representation from key
+     * Get the platform layer representation from key
      *
      * @param code
      * @return PlatformLayers
@@ -100,57 +143,96 @@ public enum PlatformLayers {
         switch (code) {
 
             case "BCOMML":
-                return PlatformLayers.BITDUBAI_COMMUNICATION_LAYER;
+                return BITDUBAI_COMMUNICATION_LAYER;
             case "BDEFL":
-                return PlatformLayers.BITDUBAI_DEFINITION_LAYER;
+                return BITDUBAI_DEFINITION_LAYER;
             case "BPSL":
-                return PlatformLayers.BITDUBAI_PLATFORM_SERVICE_LAYER;
+                return BITDUBAI_PLATFORM_SERVICE_LAYER;
             case "BOSL":
-                return PlatformLayers.BITDUBAI_OS_LAYER;
+                return BITDUBAI_OS_LAYER;
             case "BHARDWL":
-                return PlatformLayers.BITDUBAI_HARDWARE_LAYER;
+                return BITDUBAI_HARDWARE_LAYER;
             case "BUSERL":
-                return PlatformLayers.BITDUBAI_USER_LAYER;
+                return BITDUBAI_USER_LAYER;
             case "BLICL":
-                return PlatformLayers.BITDUBAI_LICENSE_LAYER;
+                return BITDUBAI_LICENSE_LAYER;
             case "BWORLDL":
-                return PlatformLayers.BITDUBAI_WORLD_LAYER;
+                return BITDUBAI_WORLD_LAYER;
             case "BCRYPTL":
-                return PlatformLayers.BITDUBAI_CRYPTO_LAYER;
+                return BITDUBAI_CRYPTO_LAYER;
             case "BCRYPTNL":
-                return PlatformLayers.BITDUBAI_CRYPTO_NETWORK_LAYER;
+                return BITDUBAI_CRYPTO_NETWORK_LAYER;
             case "BCRYPTVL":
-                return PlatformLayers.BITDUBAI_CRYPTO_VAULT_LAYER;
+                return BITDUBAI_CRYPTO_VAULT_LAYER;
             case "BCRYPTRL":
-                return PlatformLayers.BITDUBAI_CRYPTO_ROUTER_LAYER;
+                return BITDUBAI_CRYPTO_ROUTER_LAYER;
             case "BNETSL":
-                return PlatformLayers.BITDUBAI_NETWORK_SERVICE_LAYER;
+                return BITDUBAI_NETWORK_SERVICE_LAYER;
             case "BTRANSL":
-                return PlatformLayers.BITDUBAI_TRANSACTION_LAYER;
+                return BITDUBAI_TRANSACTION_LAYER;
             case "BMIDDL":
-                return PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER;
+                return BITDUBAI_MIDDLEWARE_LAYER;
             case "BMODL":
-                return PlatformLayers.BITDUBAI_MODULE_LAYER;
+                return BITDUBAI_MODULE_LAYER;
             case "BAGL":
-                return PlatformLayers.BITDUBAI_AGENT_LAYER;
+                return BITDUBAI_AGENT_LAYER;
             case "BWALL":
-                return PlatformLayers.BITDUBAI_BASIC_WALLET_LAYER;
+                return BITDUBAI_BASIC_WALLET_LAYER;
             case "BWALML":
-                return PlatformLayers.BITDUBAI_WALLET_MODULE_LAYER;
+                return BITDUBAI_WALLET_MODULE_LAYER;
             case "BACTL":
-                return PlatformLayers.BITDUBAI_ACTOR_LAYER;
+                return BITDUBAI_ACTOR_LAYER;
             case "BPACTL":
-                return PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER;
+                return BITDUBAI_PIP_ACTOR_LAYER;
             case "BPIDL":
-                return PlatformLayers.BITDUBAI_PIP_IDENTITY_LAYER;
+                return BITDUBAI_PIP_IDENTITY_LAYER;
             case "BIDL":
-                return PlatformLayers.BITDUBAI_IDENTITY_LAYER;
+                return BITDUBAI_IDENTITY_LAYER;
             case "BPIPML":
-                return PlatformLayers.BITDUBAI_PIP_MODULE_LAYER;
+                return BITDUBAI_PIP_MODULE_LAYER;
             case "BRL":
-                return PlatformLayers.BITDUBAI_REQUEST_LAYER;
+                return BITDUBAI_REQUEST_LAYER;
             case "BPIPNSL":
-                return PlatformLayers.BITDUBAI_PIP_NETWORK_SERVICE_LAYER;
+                return BITDUBAI_PIP_NETWORK_SERVICE_LAYER;
+            case "BEL":
+                return BITDUBAI_ENGINE_LAYER;
+
+            // Init CCP Layers
+            case "BCCPACL":  return BITDUBAI_CCP_ACTOR_LAYER;
+            case "BCCPIDL":  return BITDUBAI_CCP_IDENTITY_LAYER;
+            case "BCCPNSL":  return BITDUBAI_CCP_NETWORK_SERVICE_LAYER;
+            case "BCCPMIL":  return BITDUBAI_CCP_MIDDLEWARE_LAYER;
+            case "BCCPRQL":  return BITDUBAI_CCP_REQUEST_LAYER;
+            case "BCCPTRL":  return BITDUBAI_CCP_TRANSACTION_LAYER;
+            // End  CCP Layers
+
+            // Init DAP Layers
+            case "BDAPAL":   return BITDUBAI_DAP_ACTOR_LAYER;
+            case "BDAPANSL": return BITDUBAI_DAP_ACTOR_NETWORK_SERVICE_LAYER;
+            case "BDAPNSL":  return BITDUBAI_DAP_NETWORK_SERVICE_LAYER;
+            case "BDAPIL":   return BITDUBAI_DAP_IDENTITY_LAYER;
+            case "BDAPMIL":  return BITDUBAI_DAP_MIDDLEWARE_LAYER;
+            case "BDAPMOL":  return BITDUBAI_DAP_MODULE_LAYER;
+            case "BDAPSAML": return BITDUBAI_DAP_SUB_APP_MODULE_LAYER;
+            case "BDAPTL":   return BITDUBAI_DAP_TRANSACTION_LAYER;
+            case "BDAPWA":   return BITDUBAI_DAP_WALLET_LAYER;
+            // End  DAP Layers
+
+            // Init WPD Layers
+            case "BWPDAL":   return BITDUBAI_WPD_ACTOR_LAYER;
+            case "BWPDDML":  return BITDUBAI_WPD_DESKTOP_MODULE_LAYER;
+            case "BWPDEL":   return BITDUBAI_WPD_ENGINE_LAYER;
+            case "BWPDIL":   return BITDUBAI_WPD_IDENTITY_LAYER;
+            case "BWPDML":   return BITDUBAI_WPD_MIDDLEWARE_LAYER;
+            case "BWPDNSL":  return BITDUBAI_WPD_NETWORK_SERVICE_LAYER;
+            case "BWPDSAML": return BITDUBAI_WPD_SUB_APP_MODULE_LAYER;
+            // End  WPD Layers
+
+            //Init CBP Layers
+            case "BCBPIL":   return BITDUBAI_CBP_IDENTITY_LAYER;
+            case "BCBPSAML": return BITDUBAI_CBP_SUB_APP_MODULE_LAYER;
+            //End CBP Layers
+
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the PlatformLayers enum");
 

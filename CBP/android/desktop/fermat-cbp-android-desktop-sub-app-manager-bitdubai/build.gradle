@@ -1,0 +1,94 @@
+apply plugin: 'com.android.library'
+apply plugin: 'jacoco'
+
+android {
+
+    lintOptions {
+        abortOnError false
+    }
+
+    compileSdkVersion 23
+    buildToolsVersion '23.0.1'
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug{
+            debuggable true
+            testCoverageEnabled = true
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    // Fermat
+    compile project(':fermat-api')
+    compile project(':fermat-cbp-api')
+    compile project(':fermat-android-api')
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    // Android
+    compile 'com.android.support:support-v4:21.0.2'
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:recyclerview-v7:22.2.1'
+    compile 'com.android.support:support-v13:21.0.2'
+    // RoboLectric y JUnit
+    testCompile 'org.robolectric:robolectric:3.0+'
+    testCompile 'junit:junit:4.11+'
+    testCompile 'org.easytesting:fest-assert-core:2.0M10'
+    testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
+}
+
+// Configuracion de JaCoCo
+def jacocoHtmlReport = ""
+
+task jacocoTestReport(type:JacocoReport, dependsOn: [assemble, "testDebug"]) {
+    group = "Reporting"
+
+    description = "Generate Jacoco coverage reports"
+
+    classDirectories = fileTree(
+            dir: 'build/intermediates/classes/debug',
+            excludes: ['**/R.class',
+                       '**/R$*.class',
+                       '**/*$ViewInjector*.*',
+                       '**/BuildConfig.*',
+                       '**/Manifest*.*']
+    )
+
+    def coverageSourceDirs = [
+            'src/main/java'
+    ]
+
+    additionalSourceDirs = files(coverageSourceDirs)
+    sourceDirectories = files(coverageSourceDirs)
+    executionData = files('build/jacoco/testDebug.exec')
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+        jacocoHtmlReport = "Code Coverage HTML Report: file://" + html.destination + "/index.html"
+    }
+}
+
+task testCoverage(dependsOn: jacocoTestReport) << {
+    println jacocoHtmlReport
+}
+
+tasks.assemble.dependsOn clean
+tasks.assemble.mustRunAfter clean
+
+

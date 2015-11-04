@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <ExpandableListView
+        android:id="@+id/expListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.14"
+        android:layout_below="@+id/send_form"
+        android:headerDividersEnabled="false"
+        android:divider="#00000000"
+        android:transcriptMode="alwaysScroll">
+    </ExpandableListView>
+
+    <LinearLayout
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:paddingRight="7dip"
+        android:paddingLeft="7dip"
+        android:paddingTop="3dip"
+        android:paddingBottom="3dip"
+        android:layout_alignParentBottom="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <EditText android:id="@+id/edit_text"
+                android:layout_width="270dp"
+                android:layout_height="match_parent"
+                android:textSize="15sp"
+                android:hint="Enter message"
+                android:layout_weight="2"
+                android:textStyle="normal"/>
+            <Button android:id="@+id/send_message_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Send"
+                android:background="#f0e173"
+                android:textSize="15sp"
+                android:textStyle="normal"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

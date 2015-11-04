@@ -14,4 +14,8 @@ public class UnexpectedCryptoStatusException extends FermatException {
     public UnexpectedCryptoStatusException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
+    public UnexpectedCryptoStatusException(String context, String possibleReason) {
+        super(DEFAULT_MESSAGE, null, context, possibleReason);
+    }
 }

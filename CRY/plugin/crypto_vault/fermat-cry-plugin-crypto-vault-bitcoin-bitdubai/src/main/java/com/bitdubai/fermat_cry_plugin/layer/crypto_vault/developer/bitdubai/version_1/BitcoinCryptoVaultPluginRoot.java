@@ -1,21 +1,31 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -27,12 +37,15 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventListener;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
@@ -63,8 +76,46 @@ import java.util.regex.Pattern;
 /**
  * Created by loui on 08/06/15.
  */
-public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DatabaseManagerForDevelopers, DealsWithBitcoinCryptoNetwork, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUser, DealsWithLogger, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
+public class BitcoinCryptoVaultPluginRoot extends AbstractPlugin implements
+        CryptoVaultManager,
+        DatabaseManagerForDevelopers,
+        DealsWithBitcoinCryptoNetwork,
+        DealsWithEvents,
+        DealsWithErrors,
+        DealsWithPluginDatabaseSystem,
+        DealsWithDeviceUser,
+        DealsWithLogger,
+        DealsWithPluginFileSystem,
+        LogManagerForDevelopers {
 
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private EventManager eventManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.USER            , addon = Addons.DEVICE_USER         )
+    private DeviceUserManager deviceUserManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.LOG_MANAGER)
+    private LogManager logManager;
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK)
+    BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
+
+
+    public BitcoinCryptoVaultPluginRoot() {
+        super(new PluginVersionReference(new Version()));
+    }
+
+    public static final EventSource EVENT_SOURCE = EventSource.CRYPTO_VAULT;
 
     /**
      * BitcoinCryptoVaultPluginRoot member variables
@@ -72,60 +123,15 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     BitcoinCryptoVault vault;
     TransactionNotificationAgent transactionNotificationAgent;
 
-    /**
-     * DealsWithBitcoinCryptoNetwork interface member variable
-     */
-    BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
 
-    /**
-     * DealWithEvents Interface member variables.
-     */
-    EventManager eventManager;
 
-    /**
-     * Plugin Interface member variables.
-     */
-    UUID pluginId;
-
-    /**
-     * DealsWithErrors interface member variable
-     */
-    ErrorManager errorManager;
-
-    /**
-     * DealsWithPluginDatabaseSystem interface member variable
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
     Database database;
 
-    /**
-     * DealsWithLogger interface member variable
-     */
-    LogManager logManager;
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
-    /**
-     * DealsWithDeviceUsers interface member variable
-     */
-    DeviceUserManager deviceUserManager;
-
-    /**
-     * LogManagerForDevelopers member variables
-     */
-    public static LogLevel logLevel;
 
 
-    /**
-     * DealsWithPluginFileSystem interface member variable
-     */
-    PluginFileSystem pluginFileSystem;
-
-
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    List<FermatEventListener> listenersAdded = new ArrayList<>();
 
 
     /**
@@ -152,7 +158,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseConstants");
         returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinNetworkConfiguration");
         returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.TransactionConfidenceCalculator");
-         /**
+        /**
          * I return the values.
          */
         return returnedClasses;
@@ -223,16 +229,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         this.logManager = logManager;
     }
 
-    /**
-     * Service interface implementation
-     * @return
-     */
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
-
-
     @Override
     public boolean isValidAddress(CryptoAddress addressTo) {
         return vault.isValidAddress(addressTo);
@@ -264,16 +260,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
-    /**
-     * Plugin method implementation.
-     */
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-
     @Override
     public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
         this.deviceUserManager = deviceUserManager;
@@ -291,7 +277,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     //TODO Franklin, aqui falta la gestion de excepciones genericas
     @Override
     public void start() throws CantStartPluginException {
-        //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault Starting...", null, null);
 
         /**
          * I get the userPublicKey from the deviceUserManager
@@ -346,82 +331,66 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
             }
         }
 
+        /**
+         * I will start the loading creation of the wallet from the user Id
+         */
+        try {
+            vault = new BitcoinCryptoVault(userPublicKey);
+            vault.setLogManager(logManager);
+            vault.setErrorManager(errorManager);
+            vault.setPluginDatabaseSystem(pluginDatabaseSystem);
+            vault.setDatabase(this.database);
+            vault.setPluginFileSystem(this.pluginFileSystem);
+            vault.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
+            vault.setPluginId(pluginId);
+            vault.setEventManager(eventManager);
+
+            vault.loadOrCreateVault();
+
+
             /**
-             * I will start the loading creation of the wallet from the user Id
+             * Once the vault is loaded or created, I will connect it to Bitcoin network to recieve pending transactions
              */
+
             try {
-                vault = new BitcoinCryptoVault(userPublicKey);
-                vault.setLogManager(logManager);
-                vault.setErrorManager(errorManager);
-                vault.setPluginDatabaseSystem(pluginDatabaseSystem);
-                vault.setDatabase(this.database);
-                vault.setPluginFileSystem(this.pluginFileSystem);
-                vault.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
-                vault.setPluginId(pluginId);
-                vault.setEventManager(eventManager);
+                vault.connectVault();
+            } catch (CantConnectToBitcoinNetwork cantConnectToBitcoinNetwork) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantConnectToBitcoinNetwork);
+                throw new CantStartPluginException("Error trying to start CryptoVault plugin.", cantConnectToBitcoinNetwork, null, "I couldn't connect to the Bitcoin network.");
 
-                vault.loadOrCreateVault();
-
-
-                /**
-                 * Once the vault is loaded or created, I will connect it to Bitcoin network to recieve pending transactions
-                 */
-
-                try {
-                    vault.connectVault();
-                } catch (CantConnectToBitcoinNetwork cantConnectToBitcoinNetwork) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantConnectToBitcoinNetwork);
-                    throw new CantStartPluginException("Error trying to start CryptoVault plugin.", cantConnectToBitcoinNetwork, null, "I couldn't connect to the Bitcoin network.");
-
-                }
-
-
-            } catch (CantCreateCryptoWalletException cantCreateCryptoWalletException ) {
-                /**
-                 * If I couldnt create the Vault, I cant go on.
-                 */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateCryptoWalletException );
-                throw new CantStartPluginException("Error trying to start CryptoVault plugin.", cantCreateCryptoWalletException, null, "Probably not enought space available to save the vault.");
             }
 
 
+        } catch (CantCreateCryptoWalletException cantCreateCryptoWalletException ) {
             /**
-             * now I will start the TransactionNotificationAgent to monitor
+             * If I couldnt create the Vault, I cant go on.
              */
-            transactionNotificationAgent = new TransactionNotificationAgent(eventManager, pluginDatabaseSystem, errorManager, pluginId, userPublicKey);
-            transactionNotificationAgent.setLogManager(this.logManager);
-            try {
-                transactionNotificationAgent.start();
-            } catch (CantStartAgentException cantStartAgentException ) {
-                /**
-                 * If I couldn't start the agent, I still will continue with the vault
-                 */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantStartAgentException );
-            }
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateCryptoWalletException );
+            throw new CantStartPluginException("Error trying to start CryptoVault plugin.", cantCreateCryptoWalletException, null, "Probably not enought space available to save the vault.");
+        }
 
 
+        /**
+         * now I will start the TransactionNotificationAgent to monitor
+         */
+        transactionNotificationAgent = new TransactionNotificationAgent(eventManager, errorManager, logManager, database);
+        try {
+            transactionNotificationAgent.start();
+        } catch (CantStartAgentException cantStartAgentException ) {
             /**
-             * the service is started.
+             * If I couldn't start the agent, I still will continue with the vault
              */
-            this.serviceStatus = ServiceStatus.STARTED;
-            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault started.", null, null);
-    }
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantStartAgentException );
+        }
 
-    /**
-     * Service interface implementation
-     */
-    @Override
-    public void pause() {
+        // test method
+        //sendTestBitcoins();
 
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    /**
-     * Service interface implementation
-     */
-    @Override
-    public void resume() {
+        /**
+         * the service is started.
+         */
         this.serviceStatus = ServiceStatus.STARTED;
+        logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault started.", null, null);
     }
 
     /**
@@ -434,8 +403,8 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
          * I will remove all the event listeners registered with the event manager.
          */
 
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (FermatEventListener fermatEventListener : listenersAdded) {
+            eventManager.removeListener(fermatEventListener);
         }
 
         listenersAdded.clear();
@@ -498,8 +467,13 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     // changed wallet id from UUID to Strubg representing a public key
     // Ezequiel Postan August 15th 2015
     @Override
-    public String sendBitcoins(String walletPublicKey, UUID FermatTrId, CryptoAddress addressTo, long satoshis) throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
-        return vault.sendBitcoins(FermatTrId, addressTo, satoshis);
+    public String sendBitcoins(String walletPublicKey, UUID FermatTrId, CryptoAddress addressTo, long satoshis) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
+        return vault.sendBitcoins(FermatTrId, addressTo, satoshis, null);
+    }
+
+    @Override
+    public String sendBitcoins(String walletPublicKey, UUID FermatTrId, CryptoAddress addressTo, long satoshis, String op_Return) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException {
+        return vault.sendBitcoins(FermatTrId, addressTo, satoshis, op_Return);
     }
 
     @Override
@@ -529,15 +503,15 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         }
     }
 
-    //TODO Franklin, aqui falta la gestion de excepciones genericas
+
     @Override
-    public CryptoStatus getCryptoStatus(UUID transactionId) throws CouldNotGetCryptoStatusException {
+    public CryptoStatus getCryptoStatus(String txHash) throws CouldNotGetCryptoStatusException {
         try {
-            return vault.getCryptoStatus(transactionId);
+            return vault.getCryptoStatus(txHash);
         } catch (CantExecuteQueryException e) {
-            throw new CouldNotGetCryptoStatusException("There was an error accesing the database to get the CryptoStatus.", e, "TransactionId: " + transactionId.toString(), "An error in the database plugin.");
+            throw new CouldNotGetCryptoStatusException("There was an error accesing the database to get the CryptoStatus.", e, "TransactionId: " + txHash, "An error in the database plugin.");
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
-            throw new CouldNotGetCryptoStatusException("There was an error getting the CryptoStatus of the transaction.", e, "TransactionId: " + transactionId.toString(), "Duplicated transaction Id in the database.");
+            throw new CouldNotGetCryptoStatusException("There was an error getting the CryptoStatus of the transaction.", e, "TransactionId: " + txHash, "Duplicated transaction Id in the database.");
         }
     }
 }

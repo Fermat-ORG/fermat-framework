@@ -1,0 +1,11 @@
+= FERMAT-DAP /actor
+
+:leveloffset: 2
+include::asset_issuing/bitDubai/version-1/version1.asciidoc[]
+
+:leveloffset: 2
+include::asset_distribution/bitDubai/version-1/version1.asciidoc[]
+
+:leveloffset: 2
+include::asset_redemption/bitDubai/version-1/version1.asciidoc[]
+

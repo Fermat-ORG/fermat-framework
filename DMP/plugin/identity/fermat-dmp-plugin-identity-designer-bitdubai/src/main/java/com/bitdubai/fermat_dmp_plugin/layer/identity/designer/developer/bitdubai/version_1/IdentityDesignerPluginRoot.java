@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1;
 
 
-
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
@@ -16,7 +15,6 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantInitializeExtraUserRegistryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -34,11 +32,12 @@ import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerId
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.estructure.IdentityDesignerDao;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.exceptions.CantInitializeDesignerIdentityDatabaseException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
@@ -46,6 +45,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai
 import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.database.IdentityDesignerDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.estructure.IdentityDesignerDesigner;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,11 +63,11 @@ import java.util.UUID;
  * Serves layers above list Designers returning linked to Device User who is logged in.
  * Create a new Designer, the User Device automatically associated with this log .
  * You should allow signing messages using the private key of Designer.
- *
+ * <p/>
  * * * * * * *
  */
 
-public class IdentityDesignerPluginRoot implements DatabaseManagerForDevelopers,DealsWithDeviceUser,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,DealsWithErrors,DealsWithLogger, LogManagerForDevelopers,Plugin,Service,DesignerIdentityManager {
+public class IdentityDesignerPluginRoot implements DatabaseManagerForDevelopers, DealsWithDeviceUser, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Plugin, Service, DesignerIdentityManager {
 
     /**
      * PlugIn Interface member variables.
@@ -138,16 +138,15 @@ public class IdentityDesignerPluginRoot implements DatabaseManagerForDevelopers,
         try {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, IdentityDesignerDatabaseConstants.DESIGNER_DB_NAME);
             return IdentityDesignerDeveloperDataBaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
-        }catch (CantOpenDatabaseException cantOpenDatabaseException){
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             /**
              * The database exists but cannot be open. I can not handle this situation.
              */
-            FermatException e = new CantDeliverDatabaseException("I can't open database",cantOpenDatabaseException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DEVELOPER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-        }
-        catch (DatabaseNotFoundException databaseNotFoundException) {
-            FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DEVELOPER_IDENTITY,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            FermatException e = new CantDeliverDatabaseException("I can't open database", cantOpenDatabaseException, "WalletId: " + developerDatabase.getName(), "");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DEVELOPER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (DatabaseNotFoundException databaseNotFoundException) {
+            FermatException e = new CantDeliverDatabaseException("Database does not exists", databaseNotFoundException, "WalletId: " + developerDatabase.getName(), "");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DEVELOPER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empry list
         return new ArrayList<>();
@@ -163,12 +162,12 @@ public class IdentityDesignerPluginRoot implements DatabaseManagerForDevelopers,
     }
 
     /**
-     *DealWithErrors Interface implementation.
+     * DealWithErrors Interface implementation.
      */
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager =errorManager;
+        this.errorManager = errorManager;
     }
 
 
@@ -189,7 +188,7 @@ public class IdentityDesignerPluginRoot implements DatabaseManagerForDevelopers,
 
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem  = pluginFileSystem;
+        this.pluginFileSystem = pluginFileSystem;
 
     }
 
@@ -218,8 +217,8 @@ public class IdentityDesignerPluginRoot implements DatabaseManagerForDevelopers,
 
 
         /**
-   * I return the values.
-   */
+         * I return the values.
+         */
         return returnedClasses;
     }
 
@@ -252,37 +251,37 @@ public class IdentityDesignerPluginRoot implements DatabaseManagerForDevelopers,
         /**
          * I created instance of IdentityTranslatorDao
          */
-        this.identityDesignerDao = new IdentityDesignerDao(errorManager,pluginDatabaseSystem,pluginId, this.pluginFileSystem);
+        this.identityDesignerDao = new IdentityDesignerDao(errorManager, pluginDatabaseSystem, pluginId, this.pluginFileSystem);
 
 
         try {
             this.identityDesignerDao.initialize();
 
-        } catch (CantInitializeExtraUserRegistryException cantInitializeExtraUserRegistryException) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_EXTRA_USER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeExtraUserRegistryException);
-            throw new CantStartPluginException(cantInitializeExtraUserRegistryException, Plugins.BITDUBAI_USER_EXTRA_USER);
+        } catch (CantInitializeDesignerIdentityDatabaseException cantInitializeExtraUserRegistryException) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DESIGNER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeExtraUserRegistryException);
+            throw new CantStartPluginException(cantInitializeExtraUserRegistryException, Plugins.BITDUBAI_DESIGNER_IDENTITY);
         }
 
     }
 
     @Override
     public void pause() {
-
+        this.serviceStatus = ServiceStatus.PAUSED;
     }
 
     @Override
     public void resume() {
-
+        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
     public void stop() {
-
+        this.serviceStatus = ServiceStatus.STOPPED;
     }
 
     @Override
     public ServiceStatus getStatus() {
-        return null;
+        return serviceStatus;
     }
 
     /**
@@ -295,14 +294,11 @@ public class IdentityDesignerPluginRoot implements DatabaseManagerForDevelopers,
 
             return this.identityDesignerDao.getDesignersFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
 
-        }
-        catch (CantGetLoggedInDeviceUserException e) {
+        } catch (CantGetLoggedInDeviceUserException e) {
 
             throw new CantGetUserDesignerIdentitiesException("CAN'T GET DESIGNERS LIST", e, "Designer Identity", ".");
-        }
-        catch (CantGetUserDeveloperIdentitiesException e)
-        {
-            throw new CantGetUserDesignerIdentitiesException ("CAN'T GET DESIGNERS LIST", e, "Designer Identity", "");
+        } catch (CantGetUserDeveloperIdentitiesException e) {
+            throw new CantGetUserDesignerIdentitiesException("CAN'T GET DESIGNERS LIST", e, "Designer Identity", "");
         }
 
     }
@@ -313,20 +309,20 @@ public class IdentityDesignerPluginRoot implements DatabaseManagerForDevelopers,
         // Create the new developer.
         try {
 
-            ECCKeyPair keyPair= new ECCKeyPair();
+            ECCKeyPair keyPair = new ECCKeyPair();
 
             identityDesignerDao.createNewDesigner(alias, keyPair, deviceUserManager.getLoggedInDeviceUser());
 
 
-            return new IdentityDesignerDesigner(alias,keyPair.getPublicKey(), keyPair.getPrivateKey());
+            return new IdentityDesignerDesigner(alias, keyPair.getPublicKey(), keyPair.getPrivateKey());
 
         } catch (CantGetLoggedInDeviceUserException e) {
 
-           throw new CantCreateNewDesignerException ("CAN'T CREATE DESIGNER IDENTITY", e, "Designer Identity", ".");
+            throw new CantCreateNewDesignerException("CAN'T CREATE DESIGNER IDENTITY", e, "Designer Identity", ".");
 
         } catch (CantCreateNewDeveloperException e) {
 
-            throw new CantCreateNewDesignerException ("CAN'T CREATE DESIGNER IDENTITY", e, "Designer Identity", "");
+            throw new CantCreateNewDesignerException("CAN'T CREATE DESIGNER IDENTITY", e, "Designer Identity", "");
 
         }
 

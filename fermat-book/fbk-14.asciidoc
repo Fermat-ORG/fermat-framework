@@ -1,0 +1,24 @@
+== FERMAT Bank Notes Platform
+
+This platform ....
+
+=== _Network Service layer_
+Each time that a certain system function must perform any operation *outside* the device where FERMAT is running, a _network service_ is required to follow the execution in other devices until is completed. +
+Network services' modules need to have a * communication channel* stablished and maintained between the parties involved, what is done by the *P2P networks and communication superlayer* ( see the explanation at the previous section <<communicationLayer>> )+
+Each *network service module* running on a _local device_ stablish communication EXCLUSIVELY to its _counterpart_ running in the _remote device_. +
+ 
+Bank Notes :: +
+
+=== _Wallet layer_
+Bank Notes :: +
+
+
+=== _Middleware layer_
+Bank Notes :: +
+
+
+=== _Wallet Module layer_
+Bank Notes Wallet :: +
+
+=== _Reference Wallet layer_
+Bank Notes Wallet :: +

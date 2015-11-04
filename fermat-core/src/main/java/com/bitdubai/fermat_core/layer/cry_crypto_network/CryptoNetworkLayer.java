@@ -3,6 +3,7 @@ package com.bitdubai.fermat_core.layer.cry_crypto_network;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
+import com.bitdubai.fermat_core.layer.cry_crypto_network.bitcoin.BitcoinSubsystem2;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.CantStartSubsystemException;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.CryptoNetworkSubsystem;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.CryptoNetworks;
@@ -44,9 +45,13 @@ public class CryptoNetworkLayer implements PlatformLayer {
          * Lets see if we have an implementation to access the bitcoin network.
          */
         cryptoNetworkSubsystem = new BitcoinSubsystem();
+
+         CryptoNetworkSubsystem cryptoNetworkSubsystem2 = new BitcoinSubsystem2();
         try {
             cryptoNetworkSubsystem.start();
+            cryptoNetworkSubsystem2.start();
             plugin.add(cryptoNetworkSubsystem);
+            plugin.add(cryptoNetworkSubsystem2);
         }
         catch (CantStartSubsystemException e) {
             System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
@@ -62,7 +67,7 @@ public class CryptoNetworkLayer implements PlatformLayer {
             plugin.add(cryptoNetworkSubsystem);
         }
         catch (CantStartSubsystemException e) {
-            System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
+            System.err.println("CantStartCryptoNetworkException: " + e.getMessageContent());
         }
          */
          
@@ -76,7 +81,7 @@ public class CryptoNetworkLayer implements PlatformLayer {
             plugin.add(cryptoNetworkSubsystem);
         }
         catch (CantStartSubsystemException e) {
-            System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
+            System.err.println("CantStartCryptoNetworkException: " + e.getMessageContent());
         }
 
         if (plugin.size() == 0) {
@@ -108,7 +113,20 @@ public class CryptoNetworkLayer implements PlatformLayer {
                 cryptoNetworkPlugin =  bitcoinSubsystem.getPlugin();
 
                 break;
+            case BITCOIN2:
+                BitcoinSubsystem2 bitcoinSubsystem2 = null;
 
+                for (CryptoNetworkSubsystem cryptoNetworkSubsystem : plugin)
+                {
+                    try {
+                        if (bitcoinSubsystem2 == null) {
+                            bitcoinSubsystem2 = (BitcoinSubsystem2) cryptoNetworkSubsystem;
+                        }
+                    }
+                    catch (Exception e) {}
+                }
+                cryptoNetworkPlugin =  bitcoinSubsystem2.getPlugin();
+                break;
             case LITECOIN:
                 break;
             case DOGECOIN:

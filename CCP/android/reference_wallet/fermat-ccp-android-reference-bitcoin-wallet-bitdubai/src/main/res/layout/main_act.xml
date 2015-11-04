@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/fragment_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/fragment_container2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1173aa"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_contact_search"
+            android:paddingTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp" />
+
+        <EditText
+
+            android:id="@+id/search_view"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_margin="6dp"
+            android:layout_toLeftOf="@+id/clear_search_image_button"
+            android:layout_toStartOf="@+id/clear_search_image_button"
+            android:hint="@string/search_hint"
+            android:textSize="14sp"
+
+            android:textColor="#ffffff"
+            android:singleLine="true"
+            />
+
+        <ImageButton
+
+            android:id="@+id/clear_search_image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/search_view"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/search_view"
+            android:src="@drawable/ic_action_cancel_grey"
+            android:contentDescription="@string/clear_text_button"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        >
+
+
+        <include layout="@layout/loading_empty_view"/>
+
+        <com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView
+            android:id="@+id/list_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scrollingCache="false" />
+
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/fab_add_person"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="35dp"
+            android:layout_marginRight="35dp"
+
+            android:src="@drawable/ic_contact_newcontact"
+            fab:fab_colorNormal="#1173aa"
+            fab:fab_colorPressed="@color/material_blue_grey_800"
+            fab:fab_colorRipple="@color/ripple_material_dark"/>
+    </FrameLayout>
+
+
+</LinearLayout>

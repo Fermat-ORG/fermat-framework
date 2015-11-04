@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.dmp_actor.extra_user.exceptions.CantInitializeExtraUserRegistryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -26,8 +25,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.exceptions.CantInitializeDesignerIdentityDatabaseException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.database.IdentityDesignerDatabaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.identity.designer.developer.bitdubai.version_1.database.IdentityDesignerDatabaseFactory;
@@ -87,7 +87,7 @@ public class IdentityDesignerDao {
 
     // Private instance methods declarations.
 
-    public void initialize() throws CantInitializeExtraUserRegistryException {
+    public void initialize() throws CantInitializeDesignerIdentityDatabaseException {
         /**
          * I will try to open the translator' database..
          */
@@ -106,20 +106,20 @@ public class IdentityDesignerDao {
                 this.database = databaseFactory.createDatabase(pluginId);
 
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                String message = CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE;
+                String message = CantInitializeDesignerIdentityDatabaseException.DEFAULT_MESSAGE;
                 FermatException cause = cantCreateDatabaseException.getCause();
                 String context = "DataBase Factory: " + cantCreateDatabaseException.getContext();
                 String possibleReason = "The exception occurred when calling  'databaseFactory.createDatabase()': " + cantCreateDatabaseException.getPossibleReason();
 
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DESIGNER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-                throw new CantInitializeExtraUserRegistryException(message, cause, context, possibleReason);
+                throw new CantInitializeDesignerIdentityDatabaseException(message, cause, context, possibleReason);
             } catch (Exception exception) {
 
-                throw new CantInitializeExtraUserRegistryException(CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+                throw new CantInitializeDesignerIdentityDatabaseException(CantInitializeDesignerIdentityDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
 
             }
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            String message = CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE;
+            String message = CantInitializeDesignerIdentityDatabaseException.DEFAULT_MESSAGE;
             FermatException cause = cantOpenDatabaseException.getCause();
             String context = "Create Database:" + cantOpenDatabaseException.getContext();
             String possibleReason = "The exception occurred while trying to open the database of users 'this.database = this.platformDatabaseSystem.openDatabase (\"ExtraUser\")': " + cantOpenDatabaseException.getPossibleReason();
@@ -128,10 +128,10 @@ public class IdentityDesignerDao {
             /*
             Modified by Francisco Arce
             */
-            throw new CantInitializeExtraUserRegistryException(message, cause, context, possibleReason);
+            throw new CantInitializeDesignerIdentityDatabaseException(message, cause, context, possibleReason);
         } catch (Exception exception) {
 
-            throw new CantInitializeExtraUserRegistryException(CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CantInitializeDesignerIdentityDatabaseException(CantInitializeDesignerIdentityDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
 
         }
 

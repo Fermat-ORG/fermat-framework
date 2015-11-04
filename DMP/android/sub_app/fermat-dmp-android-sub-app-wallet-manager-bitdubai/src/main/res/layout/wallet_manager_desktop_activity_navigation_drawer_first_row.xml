@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="180dp"
-    android:background="#77000000"
+    android:background="#FFFFFF"
     >
 
 
@@ -38,42 +38,28 @@
             android:textColor="#DDDDDDDD"
             android:textSize="16sp"
             android:layout_alignParentBottom="true"
-            android:gravity="center"
+            android:gravity="left"
             />
 
 
     </FrameLayout>
 
+
     <ImageView
-        android:id="@+id/icon_edit_profile"
+        android:id="@+id/icon_change_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_action_edit"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:paddingLeft="7dp"
-        android:paddingRight="7dp"
-        android:paddingBottom="7dp"
-        android:paddingTop="7dp"
-        android:onClick="onNavigationDrawerEditProfileIconClicked"
-        />
-
-
-    <ImageView
-        android:id="@+id/icon_edit_picture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_action_camera"
+        android:src="@drawable/ic_home_arrow_down"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         android:paddingLeft="7dp"
         android:paddingRight="7dp"
         android:paddingBottom="7dp"
         android:paddingTop="7dp"
 
         />
+
 
 
 </RelativeLayout>

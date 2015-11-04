@@ -3,6 +3,7 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interf
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -11,7 +12,7 @@ import java.util.ArrayList;
  * @author Francisco Vásquez
  * @version 1.0
  */
-public interface FermatWizard {
+public interface FermatWizard extends Serializable {
 
     /**
      * Add Wizard Page

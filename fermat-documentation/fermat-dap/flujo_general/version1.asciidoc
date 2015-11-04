@@ -1,0 +1,163 @@
+[line-through]#[[flujo-general-BitDubai-V1]]
+
+= Flujo General de la Plataform DAP
+
+= Flujo Desarrollo
+
+El flujo de desarrollo del Asset describe lo necesario para generar un Digital Asset.
+
+  Objeto Digital Asset (DA)
+
+El objeto DigitalAsset de la plataforma, contará con las siguientes propiedades:
+
+ * Identity Asset Issuer: Identity del Actor AssetIssuer
+ * String name: nombre del Asset definido por el issuer.
+ * String description: descripción del asset definido por el issuer.
+ * List<Resource>: lista de recursos posibles del asset, como por ejemplo imágenes, videos, etc.
+ * String GenesisTransaction: hash de la transacciín bitcoin donde el asset está incluido.
+ * Address GenesisAddress: dirección Genesis generada por la Asset Vault
+ * long GenesisAmount: valor crypto del digital asset en Satoshis.
+
+ Digital Asset Contract (DAC)
+
+Como contrato básico para el Digital Asset para poder cerrar el ciclo en el desarrollo inicial de la plataforma,
+especificaremos que:
+
+ * Redimible
+ * ExpirationDate: fecha de expiración que puede ser nunca.
+ * Transferible _(es bueno plantearlo desde la versión inicial para poder establecer a los responsables del proceso de traspaso de propiedad del Digital Asset)_
+
+La emisión de un Digital Asset va a tener un enum con los siguientes estados:
+
+* Draft: cuando el issuer está completando los datos básicos del asset y del contrato.
+* PendingFinal: cuando el issuer solicita que se arme la transacción bitcoin y se cierre el asset.
+* Final: cuando se generó el hash del DA y el Asset ya no se puede modificar.
+
+== Asset Issuing
+
+Una vez completadas estas propiedades por parte del Issuer, la Asset Issuer subApp, inicia una Digital Asset Transaction de Asset Issuing en la que lo siguiente ocurre:
+
+* Se reciben la información multimedia y las características de la transacción del Digital Asset.
+* Se solicita a la Crypto Vault la creación de una transaction bitcoin a través del Outoing Intra user. Este hash se define como la GenesisTransaction
+en el Digital Asset.
+* Se solicita a la Asset Vault una dirección bitcoin que será la GenesisAddress. Esta dirección solicitada queda registrada en el Address Book como solicitada por el Issue Actor,
+la plataforma DAP y la vault de donde sale la dirección.
+* Se completa la crypto transacción especificando el GenesisAmount.
+* Se ejecuta un hash del Digital Asset y el mismo se coloca en el OP_RETURN de la crypto transacción.
+* Se commitea la transacción y la misma es publicada a la red de bitcoin a través de la Crypto Network.
+* Se asocia la metadata a la genesis transaction.
+* El Digital Asset es considerado creado.
+* El Digital Asset se considera available cuando la transacción bitcoin es detectada como entrante por el Incoming Crypto. _no entiendo este paso_
+* Todos los Digital Assets generados deben ser transferidos al plugin AssetDistribution, este plugin se encargará de realizar la transferencia.
+
+ Detalles de Modulos:
+
+ * Asset Issuer (Module)
+ Registrara toda la logica intermedia, originado de la (Sub App Module), que sera expuestas para la Asset Issuet (sub app)
+
+ * Asset Issuer (Sub App Module)
+ Registrara toda la logica de negocio que seran expuestas para la Asset Issuet (module)
+
+ * Asset User (Module)
+   Registrara toda la logica intermedia, originado de la (Sub App Module), que sera expuestas para la Asset User (sub app)
+
+ * Asset User (Sub App Module)
+   Registrara toda la logica de negocio que seran expuestas para la Asset User (module)
+
+ * Redeem Point (Module)
+   Registrara toda la logica intermedia, originado de la (Sub App Module), que sera expuestas para la Redeem Point (sub app)
+
+ * Redeem Point (Sub App Module)
+   Registrara toda la logica de negocio que seran expuestas para la Redeem Point (module)
+* (Manuel completar más info de la transacción) *
+
+Realizadas estas operaciones, y al momento de recibir el GenesisAmount en la Asset Vault, las operaciones de crédito dentro de la
+Asset Wallet deben ocurrir.
+
+
+ * *Asset Issuer Wallet (wallet)*
+
+Realizara una transaccion contable al balance (asset issuet wallet), debitando la cantidad de Asset originado en su creacion, en el momento en que
+el Issuer envie un Asset a un User, este le sea acreditado dicho al (asset issuet wallet) y debitado a la (asset user wallet), de esta forma el Issuer podria determinar el balance total enviado y disponible en su Book Address,
+todo esta operacion debe ser originado mediante una transaccion de la capa transaction.
+
+* *Asset User Wallet (wallet)*
+
+Este proceso realizara una transaccion contable a la (asset user wallet), debitando el disponible de asset, y acreditando cuando sea redimido el asset,todo esta operacion debe ser originado mediante una transaccion
+de la capa transaction.
+
+* *Redeem Point Wallet (wallet)*
+
+Este proceso determina el intercambio de la wallet Asset User donde mediante un metodo donde se pase las direcciones correspondiente se realizara una transaccion contable a la Asset del User, disminuyendo la cantidad de la wallet Asset User,
+y acreditando o retornando dicho asset a la Asset Issuer en punto Reddem Point o en alguna wallet que determine la Redemcion.
+Aclarar que pasa con este Asset si se puede volver a enviar.
+Una vez verificada la genesis transaction por parte del Redeem Point, se debe notificar al plugin Outgoing Issuer que debe realizar la transferencia del monto crypto asociado
+a la genesis transaction hacía el dispositivo que va a recibir el digital asset para su "redemción". Una vez que se produzca la transferencia del monto del Digital Asset
+el dispositivo del beneficiero del asset debe proceder a registrar el consumo del mencionado Asset y proceder a su inhabilitación (¿?) del dispositivo y registrarlo como consumido.
+
+
+El proceso de canje de un Asset por un servicio (Redeem Point) va a tener un enum, en el dispositivo del beneficierio, con los siguientes estados:
+ * ToRedeem: cuando la Asset Wallet comienza el proceso de canje del DA.
+ * Checking: cuando el DA ha sido enviado al Redeem point para su verificación.
+ * Checked: cuando el Redeem Point ha revisado el DA.
+ * Acepted: cuando el RP ha validado correctamente el contrato y la transacción del DA.
+ * NotAcepted: cuando el RP ha validado la transacción del DA pero no el contrato del mismo.
+ * NotRedeemable: cuando el ha validado el contrato del DA pero no la transacción del mismo.
+ * Rejected: cuando el RP no ha validado la trasacción del DA ni el contrato del mismo.
+
+ En el caso del dispositivo Redeem Point, el proceso de canje de un Digital Asset incluye los siguientes estados, definidos en un enum:
+ * Incoming: cuando se recibe la notificación de un Asset entrante.
+ * ToCheck: cuando el DA se ha recibido en el RP.
+ * Checking: cuando el RP esté verificando la información provista por el DA.
+ * Checked: cuando el Redeem Point ha revisado el DA.
+ * Acepted: cuando el RP ha validado correctamente el contrato y la transacción del DA.
+ * NotAcepted: cuando el RP ha validado la transacción del DA pero no el contrato del mismo.
+ * NotRedeemable: cuando el ha validado el contrato del DA pero no la transacción del mismo.
+ * Rejected: cuando el RP no ha validado la trasacción del DA ni el contrato del mismo.
+ 
+
+= Funciones del Asset Issuing
+
+El plugin Asset Issuing será el encargado de la creación de los Assets, incluyendo metadata y crypto monto, que posteriormente serán enviados a los posibles destinatarios de los Digital Assets. Este plugin
+deberá solicitar la genesis transaction, la cual se define como la transacción origen de los crypto montos a ser transferidos junto al asset, así mismo, debe solicitar
+la genesis address, la cual se define como la dirección que emitió el Asset. Una vez obtenida la información antes mencionada, este plugin debe crear las transacciones que
+permitan la transferencia de los Assets a los destinatarios. Este plugin debe ser responsable de cada uno de los Assets generados hasta que todos hayan sido entregados a los
+destinatarios. Este plugin debe tener la capacidad de monitorear que Asset ha sido entregado y registrarlo (aun no veo donde), para su posterior consumo. Si un asset no hasido registrado como entregado por este plugin, ese Asset no debería ser consumido por el beneficiario.
+Estos Assets pueden ser enviados a cualquier tipo de wallet, es decir, debe ser transparente para este plugin los destinatarios de los assets, la metadata que se entrega a
+ este plugin debe incluir la información que permita discriminar a que tipo de wallet/destinatario va dirigido el Asset, este proceso de filtrado podría tomarse de las wallets
+ instaladas actualmente, este plugin debe recibir de una capa superior el criterio de selección de los destinatarios, de tal forma que este pueda crear la transación que permita
+ enviar el asset al destinatario.
+Los Assets que no se hayan enviado deben permanecer en el dispositivo emisor hasta que el beneficiario haya autorizado la instalación/descarga del digital asset
+a su dispositivo. Al momento de instalación del Asset en el dispositivo destino es que se debe realizar la trasferencia del crypto monto al dispositivo destino.
+Los crypto montos del emisor asociados a cada assets deben estar reservados en el dispositivo emisor hasta que sean transferidos a los beneficiarios. Estos montos no deben
+cambiar una vez reservados.
+
+
+= Transferencia y confirmación de Asset a beneficiario
+
+= Notificación en Incoming Issuer
+
+El plugin Incoming Issuer en el lado del consumidor o beneficiario será el encargado de monitorear la existencia de un Digital Asset (de alguna manera, por definir) que esté dirigido para la Asset Wallet del usuario,
+en caso de recibir la notificación de la existencia de un Digital Asset, este plugin deberá verificar la metadata que debe estar incluida en el Asset,  esta comprobación debe
+incluir la verificación de la genesis Transaction, con lo cual se puede verificar el origen del Asset.
+Una vez verificado el origen del Asset, el plugin debe lanzará una notificación a una capa superior para que el usuario esté en cuenta de la existencia de este Asset.
+Es de hacer notar que hasta el momento, se piensa que el usuario va a autorizar si el Asset va a ser descargado en el dispositivo, esto podría cambiar en un futuro,
+ya que se plantea que este Asset puede estar "pre-instalado" en el dispositivo. Se podría definir varias posibles condiciones de descarga de un Asset:
+ * descargable automáticamente (el Issuer la instala automáticamente en las Asset Wallets destino)
+ * descargable por autorización del usuario.
+ * preinstalada en la Asset Wallet.
+Una vez que la Asset Wallet autoriza la instalación o descarga del Digital Asset, se procede a crear la transacción que va a transferir el monto crypto asociado a la metadata
+de la genesis transaction a la Asset Vault del destinatario. Una vez realizada correctamente la transferencia de fondos, se debe notificar a las capas que controlan la UI la
+correcta instalación/descarga del Asset.
+
+*Preguntar al team*:
+¿Un asset puede ser descargado o instalado por algún otro medio distinto a la red de fermat? ¿Se podría recibir vía código QR?
+
+ = Transferencia y confirmación del Digital Asset a Redeem Point.
+
+El proceso de transferencia de un Digital Asset a un Redeem Point es aquel en el cual el usuario va a canjear el DA por un servicio provisto por el emisor del asset (Issuer).
+Este proceso incluye la participación del Plugin Outgoing Issuer en el dispositivo del beneficiario, el cual será el encargado de generar la trasacción que transferirá el DA
+al Redeem Point. Este plugin, una vez culminada la creación de la transacción para realizar el envío del Digital Asset este debe modificar el estado del DA para que los siguientes
+actores de la DAP procedan a notificar al usuario su consumo o su rechazo y su eliminación de la Asset Wallet.
+
+#

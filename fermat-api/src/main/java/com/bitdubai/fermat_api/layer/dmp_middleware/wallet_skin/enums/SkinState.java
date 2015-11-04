@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+
 /**
  * The enum <code>com.bitdubai.fermat_api.layer.middleware.wallet_skin.enums.SkinState</code>
  * enumerates states of an Skin.
@@ -16,7 +18,7 @@ public enum SkinState {
     DISMISSED("dismissed"),
     CLOSED("closed");
 
-    public static SkinState getByCode(String key) {
+    public static SkinState getByCode(String key) throws InvalidParameterException {
         switch(key) {
             case"draft":
                 return DRAFT;
@@ -26,8 +28,11 @@ public enum SkinState {
                 return DISMISSED;
             case"closed":
                 return CLOSED;
+            default:
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + key, "This Code Is Not Valid for the Plugins enum");
+
         }
-        return null;
+        //return null;
     }
 
     private final String code;

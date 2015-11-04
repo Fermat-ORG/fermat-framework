@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MoreInfoActivityText">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:lineSpacingExtra">1.5sp</item>
+    </style>
+
+    <style name="WhatsNew">
+        <item name="android:textColor">#e326693b</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingExtra">1.5sp</item>
+    </style>
+</resources>

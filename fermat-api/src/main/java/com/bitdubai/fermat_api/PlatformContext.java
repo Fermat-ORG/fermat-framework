@@ -31,7 +31,7 @@ public interface PlatformContext {
      * @param addon
      * @param key
      */
-    public void registerAddon(Addon addon, Addons key);
+    void registerAddon(Addon addon, Addons key);
 
     /**
      * Get a addon instance
@@ -39,7 +39,7 @@ public interface PlatformContext {
      * @param key
      * @return Addon
      */
-    public Addon getAddon (Addons key);
+    Addon getAddon (Addons key);
 
     /**
      * Register a new plugin to the reference
@@ -47,7 +47,7 @@ public interface PlatformContext {
      * @param plugin
      * @param key
      */
-    public void registerPlugin(Plugin plugin, Plugins key);
+    void registerPlugin(Plugin plugin, Plugins key);
 
     /**
      * Get a plugin instance
@@ -55,7 +55,7 @@ public interface PlatformContext {
      * @param key
      * @return Plugin
      */
-    public Plugin getPlugin (Plugins key);
+    Plugin getPlugin (Plugins key);
 
     /**
      * Register a new platform layer to the reference
@@ -63,7 +63,7 @@ public interface PlatformContext {
      * @param platformLayer
      * @param key
      */
-    public void registerPlatformLayer(PlatformLayer platformLayer, PlatformLayers key);
+    void registerPlatformLayer(PlatformLayer platformLayer, PlatformLayers key);
 
     /**
      * Get a platformLayer instance
@@ -71,28 +71,28 @@ public interface PlatformContext {
      * @param key
      * @return PlatformLayer
      */
-    public PlatformLayer getPlatformLayer (PlatformLayers key);
+    PlatformLayer getPlatformLayer (PlatformLayers key);
 
     /**
      * Get the list of keys of the addons register
      *
      * @return Collection<Addons>
      */
-    public Collection<Addons> getRegisteredAddonskeys();
+    Collection<Addons> getRegisteredAddonskeys();
 
     /**
      * Get the list of keys of the plugins register
      *
      * @return Collection<Plugins>
      */
-    public Collection<Plugins> getRegisteredPluginskeys();
+    Collection<Plugins> getRegisteredPluginskeys();
 
     /**
      * Get the list of keys of the platform layers register
      *
      * @return Collection<PlatformLayers>
      */
-    public Collection<PlatformLayers> getRegisteredPlatformLayerskeys();
+    Collection<PlatformLayers> getRegisteredPlatformLayerskeys();
 
     /**
      * Validate is register
@@ -100,7 +100,7 @@ public interface PlatformContext {
      * @param  key Addons
      * @return boolean
      */
-    public boolean isRegister(Addons key);
+    boolean isRegister(Addons key);
 
     /**
      * Validate is register
@@ -108,7 +108,7 @@ public interface PlatformContext {
      * @param  key Plugins
      * @return boolean
      */
-    public boolean isRegister(Plugins key);
+    boolean isRegister(Plugins key);
 
     /**
      * Validate is register
@@ -116,7 +116,7 @@ public interface PlatformContext {
      * @param  key platformLayer
      * @return boolean
      */
-    public boolean isRegister(PlatformLayer key);
+    boolean isRegister(PlatformLayers key);
 
     
 }

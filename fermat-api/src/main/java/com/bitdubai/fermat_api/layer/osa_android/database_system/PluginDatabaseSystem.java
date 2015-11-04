@@ -20,12 +20,10 @@ import java.util.UUID;
 
  public interface PluginDatabaseSystem {
 
-    public Database openDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException;
+    Database openDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException;
 
-    public void deleteDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException;
+    void deleteDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException;
 
-    public Database createDatabase (UUID ownerId, String databaseName) throws CantCreateDatabaseException;
-
-    void setContext (Object context);
+    Database createDatabase (UUID ownerId, String databaseName) throws CantCreateDatabaseException;
 
 }

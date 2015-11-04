@@ -1,0 +1,34 @@
+[[identityPublicKey-asset-issuer-BitDubai-V1]]
+= Version 1
+
+Esta Plugin Asset Factory de naturaleza CRUD, su función principal es la, modificación, y listado del Asset en su etapa de fabricación, para que pueda ser consultados en toda sus etapas,
+y poder actualizar sus propiedades, siempre y cuando este en "state" _Draft_.
+
+
+== Plug-in Description
+
+Este pluggin pedira las siguiente propiedades:
+
+ * Identity Asset Issuer: Identity del Actor AssetIssuer
+ * String name: nombre del Asset definido por el issuer.
+ * String description: descripción del asset definido por el issuer.
+ * List<Resource>: lista de recursos posibles del asset, como por ejemplo imágenes, videos, etc.
+ * String GenesisTransaction: hash de la transacciín bitcoin donde el asset está incluido.
+ * Address GenesisAddress: dirección Genesis generada por la Asset Vault
+ * Cantidad de Assets que se están creando (DigitalAsset.quantity)
+ * Valor de cada Asset. (DigitalAsset.unitValue)
+ * Valor del Fee de cada transacción. (DigitalAsset.transactionFee).
+ * long GenesisAmount: valor crypto del digital asset en Satoshis.
+    *DigitalAsset.quantity * DigitalAsset.unitValue + ( DigitalAsset.transactionFee * DigitalAsset.quantity)*
+
+El Issuer debe determinar el calculo del transactionFee, llamando un metodo de la cryptoVault getEstimatedFeeValue, y tambien chequear que hayan fondos disponibles para cubrir el GenesisAmount.
+
+Una vez que todas las validaciones anteriores esten correctas debemos de comenzar el envio a la capa transaccional con el metodo IssueAsset(DigitalAsset digitalAsset) y setear el "state" a _PendingFinal_,
+y luego cuando tengamos el GenesisTransaction y GenesisAddress, procedemos actualizarlo en el Digital Asset del Factory y el "state" a _Final_.
+
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details

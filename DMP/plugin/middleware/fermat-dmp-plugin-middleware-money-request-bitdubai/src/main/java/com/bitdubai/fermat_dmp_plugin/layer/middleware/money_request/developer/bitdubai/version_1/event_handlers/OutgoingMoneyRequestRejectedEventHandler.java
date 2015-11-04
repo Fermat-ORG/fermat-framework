@@ -4,14 +4,14 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_middleware.money_request.MoneyRequestManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 //import com.bitdubai.fermat_api.layer.crypto_module.actor_address_book.exceptions.ExampleException;
 
 /**
  * Created by loui on 23/02/15.
  */
-public class OutgoingMoneyRequestRejectedEventHandler implements EventHandler {
+public class OutgoingMoneyRequestRejectedEventHandler implements FermatEventHandler {
 
     MoneyRequestManager moneyRequestManager;
 
@@ -22,7 +22,7 @@ public class OutgoingMoneyRequestRejectedEventHandler implements EventHandler {
 
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         if (((Service) this.moneyRequestManager).getStatus() == ServiceStatus.STARTED) {
 /*
             try

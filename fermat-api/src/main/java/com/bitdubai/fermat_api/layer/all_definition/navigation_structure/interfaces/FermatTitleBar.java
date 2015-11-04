@@ -2,10 +2,12 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interf
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SearchView;
 
+import java.io.Serializable;
+
 /**
- * Created by rodrigo on 2015.07.20..
+ * Created by Matias Furszyfer on 2015.07.20..
  */
-public interface FermatTitleBar {
+public interface FermatTitleBar  extends Serializable {
 
     String getLabel();
 

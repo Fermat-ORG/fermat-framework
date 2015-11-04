@@ -2,17 +2,17 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoOnBlockchainEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.events.IncomingCryptoOnBlockchainEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantSaveEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoEventRecorderService;
 
 /**
  * Created by rodrigo on 2015.07.08..
  */
-public class IncomingCryptoOnBlockchainEventHandler implements EventHandler {
+public class IncomingCryptoOnBlockchainEventHandler implements FermatEventHandler {
 
     /**
      * IncomingCryptoIdentifiedEventHandler member variables
@@ -28,7 +28,7 @@ public class IncomingCryptoOnBlockchainEventHandler implements EventHandler {
     }
 
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         /**
          * Modified by Franklin Marcano, 03/08/2015
          */
@@ -36,7 +36,7 @@ public class IncomingCryptoOnBlockchainEventHandler implements EventHandler {
 
             try
             {
-                this.incomingCryptoEventRecorderService.incomingCryptoWaitingTransference((IncomingCryptoOnBlockchainEvent) platformEvent);
+                this.incomingCryptoEventRecorderService.incomingCryptoWaitingTransference((IncomingCryptoOnBlockchainEvent) fermatEvent);
             }
             catch (CantSaveEvent cantSaveEvent)
             {

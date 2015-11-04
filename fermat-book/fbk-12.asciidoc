@@ -1,0 +1,43 @@
+== FERMAT Crypto Currency Platform
+This platform provides all the interconnectivity necessary to interact with existent cryptonetworks (Bitcoin, Litecoin, etc) and also to develop plug-ins for new cryptocurrencies invented in the future. + 
+It contains the specific modules needed to run a Crypto Currency Wallet on FERMAT, whose functions depend on consuming the services provided by other modules in lower layers.
+For a *niche wallet* to run, we need to count on modules offering:
+
+* 1 user identification 
+* 2 device identification
+* 3 cryptonetwork services to allow connection to existing cryptocurrencies networks ( *value transport* )
+* 4 cyptoaddress management (addressbook)
+* 5 network services ( to allow processing of events occurring outside the running device ) ( *information transport* )
+* 6 world services ( to allow access to information provided from services living in the web like exchange rates,...)
+* 7 transaction layer ( to allow the broadcasting of transaction created in a wallet)
+
+
+=== Bitcoin Wallet
+This wallet is one of FERMAT's basic building block to allow interaction with the
+most popular cryptonetwork: Bitcoin. + 
+FERMAT's Bitcoin's Niche *Reference Wallet*  is a _basic wallet_ in terms of its functionalities, even simpler as other popular BTC wallets on the market. This is so  to maximize its ulterior reutilisation. + 
+This wallet provides the minimum necessary functionalities to perform a succesful transaction of Bitcoins: (+)
+
+* to make a payment in BTC ( send value to a BTC Wallet owner)
+* to receive payments in BTC
+* to show the transactions 
+* to show the balance of the wallet
+* to show a basic contacts list ( username and cryptoaddress related to each contact)
+
+The wallet prompts the user to provide a *password* ( or *passphrase* ) on first run. Then it generates a pair of privat key/public Key for him, and derived from it, a valid _bitcoin address_ and the QR-Code image associated with it.
+When the user decides to send a payment, he enteres the amount and chooses the destination among the addresses stored in the contact's list, the wallet software creates a transaction with the valid format of a bitcoin transaction, it signes the transaction with the wallet's user unique digital signature (derived from his privat/public key), and sends it to the bitcoin network to be propagated among the active nodes.,s and when it is confirmed by others, it becomes part of the blockchain. When the transaction is confirmed by a mining node, it is written inside a transaction block of a new bitcoin blockchain's block. +
+At this stage, the BTC amoun was really "spent" i.e. transfered from the wallet's user to the destination user.  
+The Bi-Wa will then be able to show its up-dated balance, and also the succesful transaction in the wallet's transaction's log.
+
+
+NOTE: the simplicity of this wallet is maximized. Bi-Wa does NOT handles payment or money request and and it is _wether_ interconnected with other wallets _not_ showing anything else but plain BTC currency. (no FIAT money abstraction!)
+
+=== Bitcoin Loss Protected Wallet 
+BLP is the second *Reference Wallet* developed by FERMAT, and its main goal is to protect the user from losing money when attemping to spend 
+Bitcoin at a change curse lower that the price when that Bitcoin amount was purchased (entered the wallet). +
+The new functionalities added are:
+
+* to store the *exchange rate* when a BTC amount is received in the wallet
+* to check the *exchange rate* when the user attemps to spend an amount of BTC and to freeze the funds if they are below the *purchase price* 
+
+

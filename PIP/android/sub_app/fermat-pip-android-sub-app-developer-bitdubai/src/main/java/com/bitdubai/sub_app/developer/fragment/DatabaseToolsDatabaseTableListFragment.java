@@ -24,8 +24,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.exception.CantGetDataBaseToolException;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.DatabaseTool;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -72,7 +72,6 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
 
     private Resource databases;
 
-    private String[] params;
     private GridView gridView;
 
 
@@ -81,18 +80,20 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
      */
     DeveloperSubAppSession developerSubAppSession;
 
-    public static DatabaseToolsDatabaseTableListFragment newInstance(int position) {
-        DatabaseToolsDatabaseTableListFragment f = new DatabaseToolsDatabaseTableListFragment();
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
-        return f;
+    public static DatabaseToolsDatabaseTableListFragment newInstance() {
+        return new DatabaseToolsDatabaseTableListFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //developerSubAppSession = (DeveloperSubAppSession) super.walletSession;
+
+        if(super.subAppsSession!=null){
+            developerSubAppSession = (DeveloperSubAppSession) super.subAppsSession;
+
+            databases = (Resource)developerSubAppSession.getData("resource");
+        }
+
 
         errorManager = developerSubAppSession.getErrorManager();
         setRetainInstance(true);
@@ -227,13 +228,12 @@ public class DatabaseToolsDatabaseTableListFragment extends FermatFragment {
                         dabaDatabaseToolsDatabaseTableListFragment.setDeveloperDatabase(developerDatabase);
 
                         //set the next fragment and params
-                        Object[] params = new Object[3];
 
-                        params[0] = databases;
-                        params[1] = developerDatabase;
-                        params[2] = developerDatabaseTableList.get(position);
+                        developerSubAppSession.setData("resource",databases);
+                        developerSubAppSession.setData("developerDataBase",developerDatabase);
+                        developerSubAppSession.setData("databaseTable",developerDatabaseTableList.get(position));
 
-                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey(),params);
+                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey(),R.id.startContainer,null);
                     }
                 });
                 //holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);

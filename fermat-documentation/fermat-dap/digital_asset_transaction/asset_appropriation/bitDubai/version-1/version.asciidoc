@@ -1,0 +1,36 @@
+[[digital-asset-transaction-asset-appropriation-BitDubai-V1]]
+= Version 1
+
+== Plug-in Description
+
+Transaction Flow on Prezi: https://prezi.com/jwnuv7i13mnb/dap-asset-redemption/
+
+.Escenario:
+
+Nos encontramos en el dispositivo del usuario con al menos un asset disponible en su Asset User Wallet y los fondos necesarios en su Asset Vault
+para al menos pagar el fee de una transacción.
+
+El asset se encuentra confirmado y el Asset está disponible en el available Balance.
+
+En la Asset user Reference Wallet el usuario tiene la posibilidad de tomar la genesis amount asociada aun digital asset con todas las condiciones descritas anteriomente,
+de transferir ese monto a la bitcoin wallet de su preferencia, eliminando el digital asset de la Asset User reference wallet, así como también, la posibilidad de
+intercambiar el digital asset por el servicio asociado al mismo.
+
+Para apropiarse la genesis amount del digital asset, el usuario debera presionar el boton "Appropriate" para poner en marcha el proceso descrito anteriormente. Otra condición
+para que se ejecute la transacción, es que el contrato del digital asset esté vencido.
+
+La transacción Asset Appropriation ejecuta los siguientes pasos:
+
+1) Verifica que el Digital Asset sigue siendo válido y no fue modificado.
+
+2) Se envía el monto descrito en la genesis amount a través del OutgoingIntraActor desde el actor DAP_ASSET_USER al actor INTRA_USER.
+
+3) Si la transacción es llevada a cabo con éxito, se debe hacer un débito a la Asset User Wallet por el Digital Asset que se desea apropiarse.
+
+4) Se debe notificar al issuer a través del Asset Transmission que el Digital Asset ha sido apropiado.
+
+== Plug-in Structure
+
+== Events
+
+== Implementation Details

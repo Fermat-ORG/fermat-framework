@@ -8,9 +8,11 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bit
 import org.bitcoinj.core.AbstractBlockChain;
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChainListener;
+import org.bitcoinj.core.FilteredBlock;
 import org.bitcoinj.core.GetDataMessage;
 import org.bitcoinj.core.Message;
 import org.bitcoinj.core.Peer;
+import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerEventListener;
 import org.bitcoinj.core.ScriptException;
 import org.bitcoinj.core.Sha256Hash;
@@ -19,6 +21,7 @@ import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.VerificationException;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -40,7 +43,7 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
      */
     @Override
     public void notifyNewBestBlock(StoredBlock block) throws VerificationException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
 
@@ -53,7 +56,7 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
      */
     @Override
     public void reorganize(StoredBlock splitPoint, List<StoredBlock> oldBlocks, List<StoredBlock> newBlocks) throws VerificationException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
     /**
@@ -98,24 +101,6 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
         return true;
     }
 
-
-    /**
-     * PeerEventListener intercace implementation
-     * @param peer
-     * @param block
-     * @param blocksLeft
-     */
-    @Override
-    public void onBlocksDownloaded(Peer peer, Block block, int blocksLeft) {
-        StringBuilder logAggresive = new StringBuilder("New Block downloaded from Peer  " + peer.toString());
-        logAggresive.append(System.getProperty("line.separator"));
-        logAggresive.append("Blocks Left: " + blocksLeft);
-        logAggresive.append(System.getProperty("line.separator"));
-        logAggresive.append("Blocks info: " + block.toString());
-        LogLevel logLevel = BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName());
-        logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "Block Downloaded", "Block downloaded. Blocks left " + blocksLeft, logAggresive.toString());
-    }
-
     /**
      * PeerEventListener intercace implementation
      * @param peer
@@ -136,6 +121,7 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
         StringBuilder logAggresive = new StringBuilder("New connection to Peer " + peer.toString());
         logAggresive.append(System.getProperty("line.separator"));
         logAggresive.append("Total connected peers: " + peerCount);
+        System.out.println(logAggresive.toString());
         logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "Connected to Peer.", "Total peers are " + peerCount, logAggresive.toString());
     }
 
@@ -157,6 +143,7 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
      */
     @Override
     public Message onPreMessageReceived(Peer peer, Message m) {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
@@ -167,7 +154,8 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
      */
     @Override
     public void onTransaction(Peer peer, Transaction t) {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        //System.out.println("Transaction detected: " + t.toString());
     }
 
     /**
@@ -179,6 +167,17 @@ public class BitcoinEventListeners implements BlockChainListener, DealsWithLogge
     @Nullable
     @Override
     public List<Message> getData(Peer peer, GetDataMessage m) {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
+    }
+
+    @Override
+    public void onPeersDiscovered(Set<PeerAddress> peerAddresses) {
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+    }
+
+    @Override
+    public void onBlocksDownloaded(Peer peer, Block block, @Nullable FilteredBlock filteredBlock, int blocksLeft) {
+        //System.out.println("Blockchain block downloaded. Blocks Left: " + blocksLeft);
     }
 }

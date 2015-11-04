@@ -2,17 +2,17 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantSaveEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoEventRecorderService;
 
 /**
  * Created by eze on 2015.06.19..
  */
-public class IncomingCryptoTransactionsWaitingTransferenceEventHandler implements EventHandler {
+public class IncomingCryptoTransactionsWaitingTransferenceEventHandler implements FermatEventHandler {
     /**
      * IncomingCryptoIdentifiedEventHandler member variables
      */
@@ -28,10 +28,10 @@ public class IncomingCryptoTransactionsWaitingTransferenceEventHandler implement
 
 
     /**
-     * EventHandler interface implementation
+     * FermatEventHandler interface implementation
      */
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException{
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException{
         /**
          * Modified by Franklin Marcano, 03/08/2015
          */
@@ -39,7 +39,7 @@ public class IncomingCryptoTransactionsWaitingTransferenceEventHandler implement
 
             try
             {
-                this.incomingCryptoEventRecorderService.incomingCryptoWaitingTransference((IncomingCryptoTransactionsWaitingTransferenceEvent) platformEvent);
+                this.incomingCryptoEventRecorderService.incomingCryptoWaitingTransference((IncomingCryptoTransactionsWaitingTransferenceEvent) fermatEvent);
             }
             catch (CantSaveEvent cantSaveEvent)
             {

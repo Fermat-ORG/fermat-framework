@@ -70,7 +70,7 @@ public class CreateTableTest {
     public void CreateTableWithOwnerId_TheOwnerUUIDIsDifferent_MethodInvokedSuccessfully() throws Exception{
         catchException(testDatabase).createTable(UUID.randomUUID(), testTableFactory);
         assertThat(caughtException()).isInstanceOf(InvalidOwnerIdException.class);
-        caughtException().printStackTrace();
+
     }
 
     @Test
@@ -83,6 +83,17 @@ public class CreateTableTest {
     public void CreateTable_NullTableFactory_ThrowCantCreateTableException() throws Exception{
         catchException(testDatabase).createTable(testOwnerId, null);
         assertThat(caughtException()).isInstanceOf(CantCreateTableException.class);
-        caughtException().printStackTrace();
+
     }
+
+
+    @Test
+    public void CreateTable_InvalidOwnerId_ThrowCantCreateTableException() throws Exception{
+        testDatabase = new AndroidDatabase(mockContext, testOwnerId, "DataBase2");
+        testDatabase.createDatabase("DataBase2");
+        catchException(testDatabase).createTable(UUID.randomUUID(), testTableFactory);
+        assertThat(caughtException()).isInstanceOf(InvalidOwnerIdException.class);
+
+    }
+
 }

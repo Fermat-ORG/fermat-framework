@@ -1,18 +1,17 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CryptoStatusNotHandledException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.SpecialistNotRegisteredException;
 
-import java.util.EnumSet;
 import java.util.Set;
 
 /**
@@ -57,23 +56,103 @@ public class EventsLauncher implements DealsWithEvents {
                     case REVERSED_ON_BLOCKCHAIN:
                         raiseEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER);
                         break;
+                    case IRREVERSIBLE:
+                        //define what to do.
+                        break;
                     default:
-                        String message = "I could not find the event for this crypto status";
-                        String context = "Specialist: " + specialist.name() + " with code: " + specialist.getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "Crypto Status: " + cryptoStatus.name() + " with code: " + cryptoStatus.getCode();
+                        String message       = "I could not find the event for this crypto status";
+                        String context       = "Specialist: " + specialist.name() + " with code: " + specialist.getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "Crypto Status: " + cryptoStatus.name() + " with code: " + cryptoStatus.getCode();
                         String possibleCause = "Crypto Status not considered in switch statement";
                         throw new CryptoStatusNotHandledException(message, null, context , possibleCause);
                 }
                 break;
-            default:
-                String message = "I could not find the event for this specialist";
-                String context = "Specialist: " + specialist.name() + " with code: " + specialist.getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "Crypto Status: " + cryptoStatus.name() + " with code: " + cryptoStatus.getCode();
+            case INTRA_USER_SPECIALIST:
+                switch (cryptoStatus) {
+                    case ON_CRYPTO_NETWORK:
+                        raiseEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_INTRA_USER);
+                        break;
+                    case ON_BLOCKCHAIN:
+                        raiseEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER);
+                        break;
+                    case REVERSED_ON_CRYPTO_NETWORK:
+                        raiseEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_INTRA_USER);
+                        break;
+                    case REVERSED_ON_BLOCKCHAIN:
+                        raiseEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER);
+                        break;
+                    case IRREVERSIBLE:
+                        //define what to do.
+                        break;
+                    default:
+                        String message       = "I could not find the event for this crypto status";
+                        String context       = "Specialist: " + specialist.name() + " with code: " + specialist.getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "Crypto Status: " + cryptoStatus.name() + " with code: " + cryptoStatus.getCode();
+                        String possibleCause = "Crypto Status not considered in switch statement";
+                        throw new CryptoStatusNotHandledException(message, null, context , possibleCause);
+                }
+                break;
+            case ASSET_ISSUER_SPECIALIST:
+                switch (cryptoStatus) {
+                    case ON_CRYPTO_NETWORK:
+                        raiseEvent(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER);
+                        System.out.println("Event INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER) raised.");
+                        break;
+                    case ON_BLOCKCHAIN:
+                        raiseEvent(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER);
+                        System.out.println("Event INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER raised.");
+                        break;
+                    case REVERSED_ON_CRYPTO_NETWORK:
+                        raiseEvent(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER);
+                        break;
+                    case REVERSED_ON_BLOCKCHAIN:
+                        raiseEvent(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER);
+                        break;
+                    case IRREVERSIBLE:
+                        //define what to do.
+                        break;
+                    default:
+                        String message = "I could not find the event for this crypto status";
+                        String context = "Specialist: " + specialist.name() + " with code: " + specialist.getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "Crypto Status: " + cryptoStatus.name() + " with code: " + cryptoStatus.getCode();
+                        String possibleCause = "Crypto Status not considered in switch statement";
+                        throw new CryptoStatusNotHandledException(message, null, context, possibleCause);
+
+                }
+                break;
+            case ASSET_USER_SPECIALIST:
+                switch (cryptoStatus) {
+                    case ON_CRYPTO_NETWORK:
+                        raiseEvent(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER);
+                        break;
+                    case ON_BLOCKCHAIN:
+                        raiseEvent(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER);
+                        break;
+                    case REVERSED_ON_CRYPTO_NETWORK:
+                        raiseEvent(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER);
+                        break;
+                    case REVERSED_ON_BLOCKCHAIN:
+                        raiseEvent(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER);
+                        break;
+                    case IRREVERSIBLE:
+                        //define what to do.
+                        break;
+                    default:
+                        String message = "I could not find the event for this crypto status";
+                        String context = "Specialist: " + specialist.name() + " with code: " + specialist.getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "Crypto Status: " + cryptoStatus.name() + " with code: " + cryptoStatus.getCode();
+                        String possibleCause = "Crypto Status not considered in switch statement";
+                        throw new CryptoStatusNotHandledException(message, null, context, possibleCause);
+                }
+                break;
+
+
+                    default:
+                String message       = "I could not find the event for this specialist";
+                String context       = "Specialist: " + specialist.name() + " with code: " + specialist.getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "Crypto Status: " + cryptoStatus.name() + " with code: " + cryptoStatus.getCode();
                 String possibleCause = "Specialist not considered in switch statement";
                 throw new SpecialistNotRegisteredException(message, null, context, possibleCause);
         }
     }
 
     private void raiseEvent(EventType eventType){
-        PlatformEvent eventToRaise = eventManager.getNewEvent(eventType);
+        FermatEvent eventToRaise = eventManager.getNewEvent(eventType);
         eventToRaise.setSource(this.eventSource);
         eventManager.raiseEvent(eventToRaise);
     }

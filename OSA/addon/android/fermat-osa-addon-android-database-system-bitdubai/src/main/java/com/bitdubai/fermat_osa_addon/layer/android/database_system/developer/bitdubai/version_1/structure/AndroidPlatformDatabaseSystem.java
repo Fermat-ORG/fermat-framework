@@ -30,7 +30,12 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
     /**
      * PlatformDatabaseSystem Interface member variables.
      */
-    private Context context;
+    private final String path;
+
+    public AndroidPlatformDatabaseSystem(final String path) {
+
+        this.path = path;
+    }
 
 
     /**
@@ -51,7 +56,7 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
         try{
             AndroidDatabase database;
             String hasDBName = hashDataBaseName(databaseName);
-            database = new AndroidDatabase(this.context, hasDBName);
+            database = new AndroidDatabase(path, hasDBName);
             database.openDatabase();
             return database;
         }
@@ -80,8 +85,8 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
         try{
             AndroidDatabase database;
             String hasDBName = hashDataBaseName(databaseName);
-            database = new AndroidDatabase(this.context, hasDBName);
-            database.createDatabase(hasDBName       );
+            database = new AndroidDatabase(path, hasDBName);
+            database.createDatabase(hasDBName);
             return database;
         }
         catch (NoSuchAlgorithmException e){
@@ -106,21 +111,23 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
      */
     @Override
     public void deleteDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
-        AndroidDatabase database;
-        database = new AndroidDatabase(this.context, databaseName);
-        database.deleteDatabase();
-    }
+        try{
+            String hasDBName = hashDataBaseName(databaseName);
+            AndroidDatabase database;
+            database = new AndroidDatabase(path, hasDBName);
+            database.deleteDatabase();
 
-    /**
-     *<p> This method set the context object
-     *
-     * @param context Android Context object
-     */
-    @Override
-    public void setContext (Object context){
-        this.context = (Context)context;
+        } catch (NoSuchAlgorithmException e){
+            String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(e);
+            String context = "Database Name : " + databaseName;
+            String possibleReason = "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name";
+            throw new CantOpenDatabaseException(message, cause, context, possibleReason);
+        }
+        catch (Exception e){
+            throw new CantOpenDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE,FermatException.wrapException(e),null,"Check the cause");
+        }
     }
-
 
     /**
      * <p> This method hash the database file name using the algorithm SHA 256

@@ -13,33 +13,44 @@ public class Layout {
 
     private String name;
 
+    public Layout() {
+
+    }
+
+
     public Layout(UUID id, String filename,String name) {
         this.id = id;
         this.filename = filename;
         this.name=name;
     }
 
-    public UUID getId() {
-        return id;
-    }
 
     public void setId(UUID id) {
         this.id = id;
     }
 
-    public String getFilename() {
-        return filename;
+    public void setName(String name) {
+        this.name = name;
     }
+
 
     public void setFilename(String filename) {
         this.filename = filename;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
+
+    public String getFilename() {
+        return filename;
+    }
+
+
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+
 }

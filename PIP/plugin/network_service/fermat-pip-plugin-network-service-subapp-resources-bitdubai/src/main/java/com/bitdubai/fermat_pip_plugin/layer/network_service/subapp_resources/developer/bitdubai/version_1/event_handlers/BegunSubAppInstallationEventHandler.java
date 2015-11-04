@@ -4,17 +4,17 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesInstalationManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 
 
 
 /**
  * Created by loui on 17/02/15.
  */
-public class BegunSubAppInstallationEventHandler implements EventHandler {
+public class BegunSubAppInstallationEventHandler implements FermatEventHandler {
     SubAppResourcesInstalationManager subappResourcesInstalationManager;
     
     public void setSubAppResourcesManager(SubAppResourcesInstalationManager subappResourcesInstalationManager){
@@ -22,7 +22,7 @@ public class BegunSubAppInstallationEventHandler implements EventHandler {
     }
     
     @Override
-    public void handleEvent(PlatformEvent platformEvent) throws FermatException {
+    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
 
 

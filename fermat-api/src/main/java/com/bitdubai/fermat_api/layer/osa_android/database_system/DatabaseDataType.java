@@ -3,15 +3,13 @@ package com.bitdubai.fermat_api.layer.osa_android.database_system;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
+ * <p>The enum <code>DatabaseDataType</code>
+ * defined data types for fields in a table
  *
- *  <p>The enum <code>DatabaseDataType</code>
- *     defined data types for fields in a table
- *
- *
- *  @author  Luis
- *  @version 1.0.0
- *  @since   01/02/15.
- * */
+ * @author Luis
+ * @version 1.0.0
+ * @since 01/02/15.
+ */
 public enum DatabaseDataType {
 
     //Modified by Manuel Perez on 05/08/2015
@@ -19,42 +17,38 @@ public enum DatabaseDataType {
     INTEGER("INT"),
     LONG_INTEGER("LINT"),
     MONEY("MONEY"),
+    BLOB("BLOB"),
     REAL("REAL");
 
     private String code;
 
-    DatabaseDataType(String code){
-
-        this.code=code;
-
+    DatabaseDataType(String code) {
+        this.code = code;
     }
 
-    public String getCode(){
-
+    public String getCode() {
         return this.code;
-
     }
 
-    public static DatabaseDataType getByCode(String code)throws InvalidParameterException{
+    public static DatabaseDataType getByCode(String code) throws InvalidParameterException {
 
-        switch (code){
+        switch (code) {
 
             case "STR":
-                return DatabaseDataType.STRING;
+                return STRING;
             case "INT":
-                return DatabaseDataType.INTEGER;
+                return INTEGER;
             case "LINT":
-                return DatabaseDataType.LONG_INTEGER;
+                return LONG_INTEGER;
             case "MONEY":
-                return DatabaseDataType.MONEY;
+                return MONEY;
+            case "BLOB":
+                return BLOB;
             case "REAL":
-                return DatabaseDataType.REAL;
+                return REAL;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the DatabaseDataType enum");
-
-
         }
-
     }
 
 }

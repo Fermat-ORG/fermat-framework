@@ -2,7 +2,7 @@ package com.bitdubai.sub_app.developer.session;
 
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_pip_api.layer.pip_module.developer.interfaces.ToolManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,28 +23,14 @@ public class DeveloperSubAppSession implements com.bitdubai.fermat_android_api.l
      */
     Map<String,Object> data;
 
-    /**
-     * Error manager
-     */
     private ErrorManager errorManager;
 
-    /**
-     * Tool Manager
-     */
     private ToolManager toolManager;
 
 
-    /**
-     * Event manager.
-     */
-    // Ver si esto va acá
-    //private EventManager eventManager;
-
-
-
-    public DeveloperSubAppSession(SubApps subApps, ErrorManager errorManager, ToolManager toolManager){
+    public DeveloperSubAppSession(final SubApps subApps, final ErrorManager errorManager, final ToolManager toolManager){
         this.subApps=subApps;
-        data= new HashMap<String,Object>();
+        data= new HashMap<>();
         this.errorManager=errorManager;
         this.toolManager=toolManager;
     }

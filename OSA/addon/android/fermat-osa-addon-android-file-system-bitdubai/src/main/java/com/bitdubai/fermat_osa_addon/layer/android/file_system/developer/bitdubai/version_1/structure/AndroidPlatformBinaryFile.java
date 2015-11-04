@@ -38,26 +38,18 @@ public class AndroidPlatformBinaryFile implements PlatformBinaryFile {
     private final String directoryName;
     private final FilePrivacy privacyLevel;
     private final FileLifeSpan lifeSpan;
-    private Context context;
+    private String contextPath;
     private byte[] content;
 
 
-    public AndroidPlatformBinaryFile(final Context context, final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan){
-        this.context = context;
+    public AndroidPlatformBinaryFile(final String contextPath, final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan) {
+        this.contextPath = contextPath;
         this.directoryName = directoryName;
         this.fileName = fileName;
         this.privacyLevel = privacyLevel;
         this.lifeSpan = lifeSpan;
     }
     
-    public Context getContext() {
-		return context;
-	}
-
-	public void setContext(Context context) {
-		this.context = context;
-	}
-
 	public String getFileName() {
 		return fileName;
 	}
@@ -104,7 +96,7 @@ public class AndroidPlatformBinaryFile implements PlatformBinaryFile {
         if(privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
         else
-            path = this.context.getFilesDir().toString();
+            path = contextPath;
         /**
          * I set the path where the file is going to be located.
          */
@@ -222,7 +214,7 @@ public class AndroidPlatformBinaryFile implements PlatformBinaryFile {
         if(privacyLevel == FilePrivacy.PUBLIC)
             path = Environment.getExternalStorageDirectory().toString();
         else
-            path = this.context.getFilesDir().toString();
+            path = contextPath;
         return path +"/"+ this.directoryName + "/" + fileName;
     }
 

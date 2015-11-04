@@ -7,7 +7,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -15,9 +15,11 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.DealsWithBitcoinNetwork;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
@@ -47,7 +49,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 
 
-public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsWithErrors, DealsWithRegistry, TransactionAgent {
+public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsWithErrors, DealsWithBitcoinNetwork, DealsWithRegistry, TransactionAgent {
 
 
     /**
@@ -60,6 +62,10 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
      */
     ErrorManager errorManager;
 
+    /**
+     * DealsWithBitcoinNetwork interface member variables
+     */
+    BitcoinNetworkManager bitcoinNetworkManager;
 
     /**
      * DealsWithRegistry Interface member variables.
@@ -92,6 +98,14 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
     }
 
     /**
+     * DealsWithBitcoinNetwork interface implementation
+     */
+    @Override
+    public void setBitcoinNetworkManager(BitcoinNetworkManager bitcoinNetworkManager) {
+        this.bitcoinNetworkManager = bitcoinNetworkManager;
+    }
+
+    /**
      *DealsWithRegistry Interface implementation.
      */
     @Override
@@ -113,6 +127,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
             this.monitorAgent.setErrorManager(this.errorManager);
             this.monitorAgent.setRegistry(this.registry);
             this.monitorAgent.setCryptoVaultManager(this.cryptoVaultManager);
+            this.monitorAgent.setBitcoinNetworkManager(this.bitcoinNetworkManager);
             this.monitorAgent.initialize();
 
             this.agentThread = new Thread(this.monitorAgent);
@@ -135,7 +150,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
         return this.monitorAgent.isRunning();
     }
 
-    private static class MonitorAgent implements DealsWithCryptoVault, DealsWithErrors, DealsWithRegistry, Runnable  {
+    private static class MonitorAgent implements DealsWithCryptoVault, DealsWithErrors, DealsWithBitcoinNetwork, DealsWithRegistry, Runnable  {
 
         private AtomicBoolean running = new AtomicBoolean(false);
         /**
@@ -156,6 +171,10 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
          */
         private ErrorManager errorManager;
 
+        /**
+         * DealsWithBitcoinNetwork interface member variables
+         */
+        private BitcoinNetworkManager bitcoinNetworkManager;
 
         /**
          * DealsWithRegistry Interface member variables.
@@ -189,6 +208,14 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
         }
 
         /**
+         * DealsWithBitcoinNetwork interface implementation
+         */
+        @Override
+        public void setBitcoinNetworkManager(BitcoinNetworkManager bitcoinNetworkManager) {
+            this.bitcoinNetworkManager = bitcoinNetworkManager;
+        }
+
+        /**
          *DealsWithRegistry Interface implementation.
          */
         @Override
@@ -202,6 +229,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
         private void initialize () {
             this.sourceAdministrator = new SourceAdministrator();
             this.sourceAdministrator.setCryptoVaultManager(this.cryptoVaultManager);
+            this.sourceAdministrator.setBitcoinNetworkManager(this.bitcoinNetworkManager);
         }
 
         /**

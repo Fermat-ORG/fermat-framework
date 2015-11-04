@@ -6,10 +6,12 @@ package com.bitdubai.fermat_api.layer.all_definition.github;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubNotAuthorizedException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_skin.exceptions.GitHubRepositoryNotFoundException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
+
+import com.google.gson.JsonParseException;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.egit.github.core.*;
+import org.eclipse.egit.github.core.client.GitHubClient;
 import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
@@ -30,6 +32,8 @@ public class GithubConnection {
 
     String mainRepository;
 
+    RepositoryId repo;
+    GitHubClient client;
 
     Properties properties;
     GHRepository ghRepository;
@@ -49,15 +53,17 @@ public class GithubConnection {
         properties = new Properties();
         properties.setProperty("login", "MALOTeam");
         properties.setProperty("password", "fermat123456");
-        try {
-
+        try{
+            String user = "MALOTeam";
+            String password = "fermat123456";
+            String vec[] = mainRepository.split("/");
+            repo = new RepositoryId(vec[0],vec[1]);
+            client = new GitHubClient();
+            client.setCredentials(user, password);
             GitHub gitHub = GitHubBuilder.fromProperties(properties).build();
             ghRepository = gitHub.getRepository(mainRepository);
 
-
-        } catch (java.io.FileNotFoundException e) {
-            throw new GitHubRepositoryNotFoundException(GitHubRepositoryNotFoundException.DEFAULT_MESSAGE, e, "Check the name of the repository.", "");
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new GitHubNotAuthorizedException(GitHubNotAuthorizedException.DEFAULT_MESSAGE, e, "Check your credentials or access to this repository.", "");
         }
     }
@@ -66,19 +72,20 @@ public class GithubConnection {
         properties = new Properties();
         properties.setProperty("login", user);
         properties.setProperty("password", password);
-        try {
+        try{
 
+            String vec[] = mainRepository.split("/");
+            repo = new RepositoryId(vec[0],vec[1]);
+            client = new GitHubClient();
+            client.setCredentials(user, password);
             GitHub gitHub = GitHubBuilder.fromProperties(properties).build();
             ghRepository = gitHub.getRepository(mainRepository);
 
-
-        } catch (java.io.FileNotFoundException e) {
-            throw new GitHubRepositoryNotFoundException(GitHubRepositoryNotFoundException.DEFAULT_MESSAGE, e, "Check the name of the repository.", "");
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new GitHubNotAuthorizedException(GitHubNotAuthorizedException.DEFAULT_MESSAGE, e, "Check your credentials or access to this repository.", "");
         }
-    }
 
+    }
 
     /**
      *
@@ -88,7 +95,6 @@ public class GithubConnection {
      * @return
      * @throws IOException
      */
-
 
     public String getFile(String path) throws IOException {
 
@@ -111,13 +117,10 @@ public class GithubConnection {
      * @return
      * @throws IOException
      */
-
     public byte[] getImage(String path) throws IOException {
 
         GHContent ghContent= ghRepository.getFileContent(path);
-
         InputStream inputStream = ghContent.read();
-
         BufferedInputStream in = new BufferedInputStream(inputStream);
         ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
         int c;
@@ -130,6 +133,7 @@ public class GithubConnection {
 
     }
 
+
     /**
      *
      *  Push image file to github repository
@@ -141,9 +145,17 @@ public class GithubConnection {
 
     public void createGitHubImageFile(String path, byte[] commitContent, String commitMessage) {
         try {
-            ghRepository.createContent(commitContent,commitMessage, path);
+            Contents contents = new Contents();
+            contents.setEncoding(RepositoryContents.ENCODING_BASE64);
+            contents.setContent(org.eclipse.egit.github.core.util.EncodingUtils.toBase64(commitContent));
+            contents.setName(commitMessage);
+            contents.setMessage(commitMessage);
+            contents.setPath(path);
+            client.put("/repos/" + repo.generateId() + "/contents/" + path, contents, Contents.class);
+        }catch (JsonParseException e){
+            System.out.println("creado");
         } catch (IOException e) {
-            System.out.println(getJsonMessage(e.getMessage()));
+            System.out.println(e.getMessage());
         }
     }
 
@@ -156,23 +168,21 @@ public class GithubConnection {
      * @param commitContent
      * @param commitMessage
      */
+
     public void createGitHubTextFile(String path, String commitContent, String commitMessage) {
         try {
-            ghRepository.createContent(commitContent,commitMessage, path);
-        } catch (IOException e) {
-            System.out.println(getJsonMessage(e.getMessage()));
-        }
-    }
 
-    private String getJsonMessage(String jsonMessage) {
-        try {
-            ObjectMapper m = new ObjectMapper();
-            JsonNode rootNode = m.readTree(jsonMessage);
-            JsonNode nameNode = rootNode.path("message");
-
-            return nameNode.textValue();
+            Contents contents = new Contents();
+            contents.setEncoding(RepositoryContents.ENCODING_BASE64);
+            contents.setContent(org.eclipse.egit.github.core.util.EncodingUtils.toBase64(commitContent));
+            contents.setName(commitMessage);
+            contents.setMessage(commitMessage);
+            contents.setPath(path);
+            client.put("/repos/" + repo.generateId() + "/contents/" + path, contents, Contents.class);
+        }catch (JsonParseException e){
+            System.out.println("creado");
         } catch (IOException e) {
-            return "Unexpected error.";
+            System.out.println(e.getMessage());
         }
     }
 

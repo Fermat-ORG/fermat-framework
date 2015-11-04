@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Crypto Broker Identity</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_settings">Settings</string>
+    <string name="create">CREATE</string>
+    <string name="update">UPDATE</string>
+    <string name="broker_name">Broker name</string>
+    <string name="identity_img">identity_image</string>
+    <string name="description_search">Search</string>
+    <string name="publish_identity">Publish identity</string>
+    <string name="empty_identity_list_msg">No Identities\nCreate a new one</string>
+    <string name="no_matches">No Matches</string>
+    <string name="camera_option_context_menu">Camera</string>
+    <string name="gallery_option_context_menu">Gallery</string>
+    <string name="title_photo_context_menu">Choose mode</string>
+</resources>

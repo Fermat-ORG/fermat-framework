@@ -7,9 +7,9 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.event.EventSource;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.*;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
@@ -18,17 +18,17 @@ import com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.v
 import com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.exceptions.CantPersistDeviceUserException;
 import com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.exceptions.CantPersistDeviceUserPersonalImageFileException;
 import com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.structure.DeviceUserUser;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.DeviceUserCreatedEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.DeviceUserLoggedInEvent;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.event_manager.events.DeviceUserLoggedOutEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.DeviceUserCreatedEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.DeviceUserLoggedInEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.DeviceUserLoggedOutEvent;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantCreateNewDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetDeviceUserListException;
@@ -250,10 +250,10 @@ public class DeviceUserUserAddonRoot implements Addon, DealsWithErrors, DealsWit
     }
 
     private void raiseDeviceUserCreatedEvent(String publicKey) {
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.DEVICE_USER_CREATED);
-        ((DeviceUserCreatedEvent) platformEvent).setPublicKey(publicKey);
-        platformEvent.setSource(EventSource.USER_DEVICE_USER_PLUGIN);
-        eventManager.raiseEvent(platformEvent);
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.DEVICE_USER_CREATED);
+        ((DeviceUserCreatedEvent) fermatEvent).setPublicKey(publicKey);
+        fermatEvent.setSource(EventSource.USER_DEVICE_USER_PLUGIN);
+        eventManager.raiseEvent(fermatEvent);
     }
 
     @Override
@@ -352,10 +352,10 @@ public class DeviceUserUserAddonRoot implements Addon, DealsWithErrors, DealsWit
                 /**
                  * If all goes ok i send the event of User logged in
                  */
-                PlatformEvent platformEvent = eventManager.getNewEvent(EventType.DEVICE_USER_LOGGED_IN);
-                ((DeviceUserLoggedInEvent) platformEvent).setPublicKey(publicKey);
-                platformEvent.setSource(EventSource.USER_DEVICE_USER_PLUGIN);
-                eventManager.raiseEvent(platformEvent);
+                FermatEvent fermatEvent = eventManager.getNewEvent(EventType.DEVICE_USER_LOGGED_IN);
+                ((DeviceUserLoggedInEvent) fermatEvent).setPublicKey(publicKey);
+                fermatEvent.setSource(EventSource.USER_DEVICE_USER_PLUGIN);
+                eventManager.raiseEvent(fermatEvent);
             } else {
                 throw new IncorrectUserOrPasswordException(IncorrectUserOrPasswordException.DEFAULT_MESSAGE, null, "Bad credentials", "");
             }
@@ -370,10 +370,10 @@ public class DeviceUserUserAddonRoot implements Addon, DealsWithErrors, DealsWit
         /**
          * Raise event user logged out to platform.
          */
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.DEVICE_USER_LOGGED_OUT);
-        ((DeviceUserLoggedOutEvent) platformEvent).setPublicKey(mLoggedInDeviceUser.getPublicKey());
-        platformEvent.setSource(EventSource.USER_DEVICE_USER_PLUGIN);
-        eventManager.raiseEvent(platformEvent);
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.DEVICE_USER_LOGGED_OUT);
+        ((DeviceUserLoggedOutEvent) fermatEvent).setPublicKey(mLoggedInDeviceUser.getPublicKey());
+        fermatEvent.setSource(EventSource.USER_DEVICE_USER_PLUGIN);
+        eventManager.raiseEvent(fermatEvent);
 
         /**
          * Set loggedin User null

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">fermat-dap-android-sub-app-asset-factory-bitdubai</string>
+    <string name="asset_factory_main_publish_menu">Publish</string>
+    <string name="asset_factory_main_edit_menu">Edit</string>
+</resources>

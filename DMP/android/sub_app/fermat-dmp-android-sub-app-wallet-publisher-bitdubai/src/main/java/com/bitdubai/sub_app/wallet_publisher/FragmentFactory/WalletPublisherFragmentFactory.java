@@ -1,14 +1,8 @@
 package com.bitdubai.sub_app.wallet_publisher.FragmentFactory;
 
-import android.app.Fragment;
-
 import com.bitdubai.fermat_android_api.engine.FermatSubAppFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_settings.interfaces.SubAppSettingsManager;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.wallet_publisher.fragment.MainFragment;
 import com.bitdubai.sub_app.wallet_publisher.preference_settings.WalletPublisherPreferenceSettings;
 import com.bitdubai.sub_app.wallet_publisher.session.WalletPublisherSubAppSession;

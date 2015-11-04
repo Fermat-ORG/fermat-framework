@@ -5,68 +5,33 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.CantStartSubsystemException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.CryptoSubsystem;
-import com.bitdubai.fermat_core.layer.cry_crypto_module.actor_crypto_address_book.UserAddressBookSubsystem;
-import com.bitdubai.fermat_core.layer.cry_crypto_module.wallet_address_book.WalletAddressBookSubsystem;
+import com.bitdubai.fermat_core.layer.cry_crypto_module.crypto_address_book.CryptoAddressBookSubsystem;
 
 /**
- * Created by loui on 20/02/15.
+ * CryptoLayer
+ *
+ * Created by Leon Acosta (laion.cj91@gmail.com) on 02/09/2015.
  */
 public class CryptoLayer implements PlatformLayer {
-    
-    private Plugin mUserAddressBook;
-    private Plugin mWalletAddressBook;
 
+    private Plugin mCryptoAddressBook;
 
-
-
-    public Plugin getmWalletAddressBook() {
-        return mWalletAddressBook;
+    public Plugin getCryptoAddressBook() {
+        return mCryptoAddressBook;
     }
-    public Plugin getmUserAddressBook(){
-        return mUserAddressBook;
-    }
-
-
-
-
 
     @Override
     public void start() throws CantStartLayerException {
 
-        CryptoSubsystem userAddressBookSubsystem = new UserAddressBookSubsystem();
+        CryptoSubsystem cryptoAddressBookSubsystem = new CryptoAddressBookSubsystem();
 
         try {
-            userAddressBookSubsystem.start();
-            mUserAddressBook = ((UserAddressBookSubsystem) userAddressBookSubsystem).getPlugin();
+            cryptoAddressBookSubsystem.start();
+            mCryptoAddressBook = cryptoAddressBookSubsystem.getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
-
-            /**
-             * Since this is the only implementation, if this does not start, then the layer can't start either.
-             */
-
             throw new CantStartLayerException();
-
         }
-
-
-        CryptoSubsystem walletAddressBookSubsystem = new WalletAddressBookSubsystem();
-
-        try {
-            walletAddressBookSubsystem.start();
-            mWalletAddressBook = ((WalletAddressBookSubsystem) walletAddressBookSubsystem).getPlugin();
-
-        } catch (CantStartSubsystemException e) {
-            System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
-
-            /**
-             * Since this is the only implementation, if this does not start, then the layer can't start either.
-             */
-
-            throw new CantStartLayerException();
-
-        }
-
     }
 }

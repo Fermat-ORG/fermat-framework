@@ -72,37 +72,37 @@ public class FermatException extends Exception {
 	}
 
 	public String getFormattedContext() {
-		StringBuffer buffer = new StringBuffer("");
+		StringBuilder builder = new StringBuilder("");
 		for(String contextPart : context.split(CONTEXT_CONTENT_SEPARATOR))
 			if(!contextPart.isEmpty())
-				buffer.append(contextPart + "\n");
-		return buffer.toString();
+				builder.append(contextPart).append("\n");
+		return builder.toString();
 	}
 
 	public String getFormattedTrace() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder builder = new StringBuilder();
 		for(StackTraceElement element : getStackTrace())
 			//if(element.getClassName().contains("com.bitdubai"))
-			buffer.append("Class: " + element.getClassName() + " - Line: " + element.getLineNumber() + "\n");
-		return buffer.toString();
+			builder.append("Class: ").append(element.getClassName()).append(" - Line: ").append(element.getLineNumber()).append("\n");
+		return builder.toString();
 	}
 
 	@Override
 	public String toString(){
-		StringBuffer buffer = new StringBuffer();
-		buffer.append("Exception Number: " + depth.toString() + "\n");
-		buffer.append("Exception Type: " + exceptionName + "\n");
-		buffer.append("Exception Message: " + getMessage() + "\n");
-		buffer.append("Exception Possible Cause: ");
-		buffer.append(getPossibleReason() + "\n");
-		buffer.append("Exception Context: " );
-		buffer.append("\n---------------------------------------------------------------------------------\n");
-		buffer.append(getFormattedContext());
-		buffer.append("---------------------------------------------------------------------------------\n");
-		buffer.append("Exception Stack Trace: \n");
-		buffer.append("---------------------------------------------------------------------------------\n");
-		buffer.append(getFormattedTrace());
-		buffer.append("---------------------------------------------------------------------------------\n");
-		return buffer.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append("Exception Number: ").append(depth.toString()).append("\n");
+		builder.append("Exception Type: ").append(exceptionName).append("\n");
+		builder.append("Exception Message: ").append(getMessage()).append("\n");
+		builder.append("Exception Possible Cause: ");
+		builder.append(getPossibleReason()).append("\n");
+		builder.append("Exception Context: " );
+		builder.append("\n---------------------------------------------------------------------------------\n");
+		builder.append(getFormattedContext());
+		builder.append("---------------------------------------------------------------------------------\n");
+		builder.append("Exception Stack Trace: \n");
+		builder.append("---------------------------------------------------------------------------------\n");
+		builder.append(getFormattedTrace());
+		builder.append("---------------------------------------------------------------------------------\n");
+		return builder.toString();
 	}
 }

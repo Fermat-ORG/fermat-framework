@@ -1,0 +1,101 @@
+[[best-practices]]
+== Best Practices
+https://www.lucidchart.com/techblog/2015/08/31/the-worst-mistake-of-computer-science/
+
+http://blog.jooq.org/2013/08/20/10-subtle-best-practices-when-coding-java/
+
+Definamos lo todo lo conveniente.
+
+== Consideraciones para DAP
+
+* Crear una DAPException para poder manejar todo tipo de Exception que se presente
+
+* Validar todos los SET y GET con THROWS para asegurar que tengan valores y no se generen
+Excepciones desencadenadas de NULL
+
+
+=== Uso de "getters"
+Todos los métodos getters deben usar en la Digital Asset Platform el siguiente formato:
+
+```java
+public SomeObject getSomething() throws ObjectNotSetException {
+
+    ....
+    if(returningObject==null){
+        throw new ObjectNotSetException("The object to get is null");
+    }
+
+    return returningObject;
+
+}
+```
+El objetivo de esta técnica es evitar que los métodos getters devuelvan null, para ello se debe realizar una verificación previa antes de obtener algún objeto.
+
+En el caso de implementar un método get proveniente de una interfaz que no posea throws ObjectNotSetException, se recomienda usar el report manager para que quede registrada el intento de obtener un objeto que está null, por ejemplo:
+```java
+@Override
+public SomeObject getSomething(){
+    ...
+    try{
+        if(returningObject==null){
+            throw new ObjectNotSetException("The object to get is null");
+        }
+        return this.someObject;
+    } catch(ObjectNotSetException exception) {
+        this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_PLUGIN, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+    }
+}
+```
+=== Uso de "setters"
+La gran mayoría de los métodos setters que se van a usar en la Digital Asset Platform deben seguir el siguiente formato:
+
+```java
+public void setSomething(Something something) throws CantSetObjectException {
+
+    ....
+    if(returningObject==null){
+        throw new CantSetObjectException("Something is null");
+    }
+    this.something=something;
+
+}
+```
+El objetivo de esta técnica es evitar que los métodos setters instancien un null como valor de un objeto, para ello se debe realizar una verificación previa antes de establecer algún objeto.
+
+En el caso de implementar un método get proveniente de una interfaz que no posea throws CantSetObjectException, se recomienda usar el report manager para que quede registrada el intento de "setear" un objeto que está null, por ejemplo:
+```java
+@Override
+public void setSomething(SomeObject someObject){
+    ...
+    try{
+        if(someObject==null){
+            throw new CantSetObjectException("SomeObject is null");
+        }
+    } catch(CantSetObjectException exception) {
+        this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_PLUGIN, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+    }
+}
+```
+=== Creación de excepciones.
+
+Todas las excepciones en DAP deben extender de DAPException, la cual a su vez, extiende de FermatException. A continuación está la estructura de CantSetObjectException,
+el cual puede servir como ejemplo para la creación de las excepciones de DAP:
+```java
+public class CantSetObjectException extends DAPException {
+
+    static final String DEFAULT_MESSAGE = "There was an error setting an object.";
+
+    public CantSetObjectException(Exception cause, String context, String possibleReason) {
+        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+    }
+
+    public CantSetObjectException(final String message) {
+        this(null, DEFAULT_MESSAGE, message);
+    }
+
+}
+```
+
+== Refactor Pendientes por hacer:
+
+* Cambiar todos UUID a string las propiedades de las wallet, skin, language, ya que deberan de usar la publickey asociada.

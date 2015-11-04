@@ -17,7 +17,6 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -57,9 +56,9 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bit
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.database.WalletSkinMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.exceptions.CantInitializeWalletSkinMiddlewareDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_skin.developer.bitdubai.version_1.structure.WalletSkinMiddlewareWalletSkin;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -162,7 +161,12 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
         } catch (CantListWalletSkinsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+            //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         }
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        return null;
     }
 
     @Override
@@ -172,7 +176,12 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
         } catch (CantGetWalletSkinException | SkinNotFoundException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+            //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         }
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        return null;
     }
 
     @Override
@@ -182,7 +191,12 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
         } catch (CantGetWalletSkinException | SkinNotFoundException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+            //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         }
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        return null;
     }
 
     @Override
@@ -192,7 +206,12 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
         } catch (CantListWalletSkinsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_SKIN_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+            //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         }
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        return null;
     }
 
     @Override
@@ -223,17 +242,19 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
 
     @Override
     public WalletSkin copySkin(String newName, String designerPublicKey, WalletSkin walletSkin) throws CantCopyWalletSkinException, SkinNotFoundException {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
     @Override
     public WalletSkin createNewVersion(String alias, WalletSkin walletSkin) throws CantCopyWalletSkinException {
+        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
     }
 
     @Override
     public void closeSkin(WalletSkin walletSkin) throws CantCloseWalletSkinException, SkinNotFoundException {
-        // TODO to do...
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
     @Override
@@ -376,12 +397,12 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
 
     @Override
     public void updateResource(Resource resource, byte[] file, WalletSkin walletSkin) throws CantUpdateResourceException, ResourceNotFoundException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
     @Override
     public void deleteResource(Resource resource, WalletSkin walletSkin) throws CantDeleteResourceException, ResourceNotFoundException {
-
+        //TODO METODO NO IMPLEMENTADO AUN - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
     }
 
 
@@ -409,6 +430,7 @@ public class WalletSkinMiddlewarePluginRoot implements DatabaseManagerForDevelop
             return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (Exception e) {
             System.out.println("******* Error trying to get database table list for plugin Wallet Skin");
+            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             return null;
         }
     }

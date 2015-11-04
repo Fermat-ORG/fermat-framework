@@ -2,10 +2,7 @@ package unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.develop
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v13.BuildConfig;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.CantSendFundsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;

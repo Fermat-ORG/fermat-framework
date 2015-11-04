@@ -1,0 +1,4 @@
+:numbered: 
+== FERMAT between money and digital assets 1
+=== FERMAT money management
+

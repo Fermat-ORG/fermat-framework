@@ -6,6 +6,6 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interf
 
 public interface FermatNotifications {
 
-    public void launchNotification(String notificationTitle,String notificationImageText,String notificationTextBody);
+    public void launchWalletNotification(String walletPublicKey,String notificationTitle,String notificationImageText,String notificationTextBody);
 
 }

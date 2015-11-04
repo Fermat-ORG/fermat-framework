@@ -66,7 +66,7 @@ public class OsLayer implements PlatformLayer {
                 mOs = osSubsystem.getOs();
             }
             catch (WrongOsException e) {
-                System.err.println("WrongOsException: " + e.getMessage());
+                System.err.println("WrongOsException: " + e.getMessageContent());
             }
         }
 
@@ -77,7 +77,7 @@ public class OsLayer implements PlatformLayer {
                 mOs = osSubsystem.getOs();
             }
             catch (WrongOsException e) {
-                System.err.println("WrongOsException: " + e.getMessage());
+                System.err.println("WrongOsException: " + e.getMessageContent());
             }
         }
 
@@ -88,7 +88,7 @@ public class OsLayer implements PlatformLayer {
                 mOs = osSubsystem.getOs();
             }
             catch (WrongOsException e) {
-                System.err.println("WrongOsException: " + e.getMessage());
+                System.err.println("WrongOsException: " + e.getMessageContent());
             }
         }
 */

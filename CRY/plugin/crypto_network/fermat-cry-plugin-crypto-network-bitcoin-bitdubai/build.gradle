@@ -44,16 +44,15 @@ repositories {
 }
 
 dependencies {
-
     compile project(':fermat-api')
     compile project(':fermat-cry-api')
     compile project(':fermat-pip-api')
-
     testCompile 'junit:junit:4.11'
-    testCompile 'org.mockito:mockito-all:2.0.2-beta'
-    compile('org.bitcoinj:bitcoinj-core:0.12.3') {
+    testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
+    compile('org.bitcoinj:bitcoinj-core:0.13.2') {
         exclude module: 'scrypt'
     }
+    compile 'log4j:log4j:1.2.17'
 }
 
 test {
