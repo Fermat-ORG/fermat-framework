@@ -1,21 +1,39 @@
-== FERMAT Crypto Currency Platform
-This platform provides all the interconnectivity necessary to interact with existent cryptonetworks (Bitcoin, Litecoin, etc) and also to develop plug-ins for new cryptocurrencies invented in the future. + 
-It contains the specific modules needed to run a Crypto Currency Wallet on FERMAT, whose functions depend on consuming the services provided by other modules in lower layers.
-For a *niche wallet* to run, we need to count on modules offering:
+== Fermat Crypto Currency Platform
+This platform introduces the first *niche wallets* to manage existing crypto currencies - Bitcoin Wallet, Litecoin Wallet, Ripple Wallet, etc - and also the resources to develop wallets of new cryptocurrencies invented in the future. + 
 
-* 1 user identification 
-* 2 device identification
-* 3 cryptonetwork services to allow connection to existing cryptocurrencies networks ( *value transport* )
-* 4 cyptoaddress management (addressbook)
-* 5 network services ( to allow processing of events occurring outside the running device ) ( *information transport* )
-* 6 world services ( to allow access to information provided from services living in the web like exchange rates,...)
-* 7 transaction layer ( to allow the broadcasting of transaction created in a wallet)
+The new identity type introduced in this platform is the +
 
+[horizontal]
+Intra Crypto Wallet User identity :: +
+
+
+Also two new *actor identities*: +
+
+[horizontal]
+IntraUser :: 
+ExtraUser :: +
+
+
+For a *niche wallet* to run, we need _reference wallets_ and underlying plug-ins which grant:
+
+. user identification 
+. device identification
+. cryptonetwork services 
+. cyptoaddress management (addressbook)
+. network services 
+. world services ( to access exchange rates, non-Fermat wallets, etc ...)
+. transactions management 
+
+=== New components
+Some of the new components added to the framework by this platform are those to offer the following functionalities:
+
+* crypto address management, money requests and money transmission
+* consulting of crypto currency indexes 
 
 === Bitcoin Wallet
-This wallet is one of FERMAT's basic building block to allow interaction with the
+This wallet is one of Fermat's basic building block to allow interaction with the
 most popular cryptonetwork: Bitcoin. + 
-FERMAT's Bitcoin's Niche *Reference Wallet*  is a _basic wallet_ in terms of its functionalities, even simpler as other popular BTC wallets on the market. This is so  to maximize its ulterior reutilisation. + 
+Fermat's Bitcoin's Niche *Reference Wallet*  is a _basic wallet_ in terms of its functionalities, even simpler as other popular BTC wallets on the market. This is so  to maximize its ulterior reutilisation. + 
 This wallet provides the minimum necessary functionalities to perform a succesful transaction of Bitcoins: (+)
 
 * to make a payment in BTC ( send value to a BTC Wallet owner)
@@ -33,11 +51,21 @@ The Bi-Wa will then be able to show its up-dated balance, and also the succesful
 NOTE: the simplicity of this wallet is maximized. Bi-Wa does NOT handles payment or money request and and it is _wether_ interconnected with other wallets _not_ showing anything else but plain BTC currency. (no FIAT money abstraction!)
 
 === Bitcoin Loss Protected Wallet 
-BLP is the second *Reference Wallet* developed by FERMAT, and its main goal is to protect the user from losing money when attemping to spend 
+BLP is the second *Reference Wallet* developed by Fermat, and its main goal is to protect the user from losing money when attemping to spend 
 Bitcoin at a change curse lower that the price when that Bitcoin amount was purchased (entered the wallet). +
 The new functionalities added are:
 
 * to store the *exchange rate* when a BTC amount is received in the wallet
 * to check the *exchange rate* when the user attemps to spend an amount of BTC and to freeze the funds if they are below the *purchase price* 
+
+
+=== Continue Reading
+////
+link:book-chapter-19.asciidoc[Digital Assets Platform]
+////
+
+link:book-chapter-13.asciidoc[Next Chapter]
+
+link:book-chapter-11.asciidoc[Previous Chapter]
 
 
