@@ -131,7 +131,7 @@ public class CircularProgressBar extends View {
         mLayoutHeight = newHeight;
         setupBounds();
     }
-
+//
     private void setupBounds() {
         int minValue = Math.min(mLayoutWidth, mLayoutHeight);
 
@@ -162,6 +162,7 @@ public class CircularProgressBar extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawArc(mCircleBounds, 0, 360, false, mPaintBackground);
+        System.out.print("x: "+mCircleBounds.centerX() + " y:"+ mCircleBounds.centerY());
         canvas.drawArc(mCircleBounds, 270, mProgress2Value, false, mPaintProgress2);
         canvas.drawArc(mCircleProgressBounds, 270, mProgressValue, false, mPaintProgress);
 
