@@ -19,6 +19,10 @@ import com.bitdubai.android_api.R;
 
 import java.util.List;
 
+/**
+ *  Created by Furszyfer Matias 4-10-2015
+ */
+
 
 public class CircularProgressBar extends View {
     private static final int BACKGROUND_COLOR = Color.LTGRAY;
@@ -28,7 +32,7 @@ public class CircularProgressBar extends View {
 
     private int mLayoutHeight = 0;
     private int mLayoutWidth = 0;
-    private float mStrokeWidth = STROKE_WIDTH;
+    private final float mStrokeWidth = STROKE_WIDTH;
     private Paint mPaintBackground = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mPaintProgress = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mPaintProgress2 = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -70,8 +74,8 @@ public class CircularProgressBar extends View {
         TypedArray ta = getContext().obtainStyledAttributes(attrs,
                 R.styleable.RoundProgressBar, style, 0);
 
-        mStrokeWidth = ta.getDimension(R.styleable.RoundProgressBar_tlcp_strokeWidth,
-                STROKE_WIDTH);
+//        mStrokeWidth = ta.getDimension(R.styleable.RoundProgressBar_tlcp_strokeWidth,
+//                STROKE_WIDTH);
         mBackgroundColor = ta.getColor(R.styleable.RoundProgressBar_tlcp_bg_color,
                 BACKGROUND_COLOR);
         mProgressColor = ta.getColor(R.styleable.RoundProgressBar_tlcp_progress_color,
@@ -103,11 +107,9 @@ public class CircularProgressBar extends View {
         Resources r = getResources();
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mFontSize,
                 r.getDisplayMetrics());
-
-        STROKE_WIDTH = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+        STROKE_WIDTH = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
                 mStrokeWidth,
                 r.getDisplayMetrics());
-
         mPaintBackground.setColor(mBackgroundColor);
         mPaintProgress.setColor(mProgressColor);
         mPaintProgress2.setColor(mProgressColor2);
@@ -131,7 +133,7 @@ public class CircularProgressBar extends View {
         mLayoutHeight = newHeight;
         setupBounds();
     }
-
+//
     private void setupBounds() {
         int minValue = Math.min(mLayoutWidth, mLayoutHeight);
 
@@ -202,7 +204,6 @@ public class CircularProgressBar extends View {
         final int width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
         final int min = Math.min(width, height);
         setMeasuredDimension((int) (min + 2 * STROKE_WIDTH), (int) (min + 2 * STROKE_WIDTH));
-
         mCircleBounds.set(STROKE_WIDTH, STROKE_WIDTH, min + STROKE_WIDTH, min + STROKE_WIDTH);
         mCircleProgressBounds.set(STROKE_WIDTH, STROKE_WIDTH, min + STROKE_WIDTH, min + STROKE_WIDTH);
     }

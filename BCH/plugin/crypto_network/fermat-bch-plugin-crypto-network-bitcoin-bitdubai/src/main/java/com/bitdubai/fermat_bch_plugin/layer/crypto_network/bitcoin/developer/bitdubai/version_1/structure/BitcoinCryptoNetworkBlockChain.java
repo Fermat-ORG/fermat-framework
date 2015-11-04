@@ -66,11 +66,13 @@ class BitcoinCryptoNetworkBlockChain implements Serializable{
         File blockChainFile = new File(fileName);
         try {
             blockStore = new SPVBlockStore(networkParameters, blockChainFile);
-        } catch (BlockStoreException e) {
+        } catch (Exception e) {
             /**
              * If there is an error saving it to file, I will save it to memory
              */
             blockStore = new MemoryBlockStore(this.networkParameters);
+            System.out.println("*** Crypto Network Warning, error creating file to store blockchain, will save it to memory.");
+            System.out.println("*** Crypto Network: " + e.toString());
         }
 
         /**

@@ -44,7 +44,7 @@ import java.util.UUID;
 public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry {
 
     private final CryptoAddressesManager cryptoAddressesManager;
-    private final ErrorManager           errorManager          ;
+    private final ErrorManager errorManager          ;
     private final LogManager             logManager            ;
     private final PluginDatabaseSystem   pluginDatabaseSystem  ;
     private final UUID                   pluginId              ;
@@ -408,8 +408,8 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                         + "\n-------------------------------------------------");
 
                 walletContactsMiddlewareDao.updateCompatibility(
-                    walletContactRecord.getContactId(),
-                    Compatibility.COMPATIBLE
+                        walletContactRecord.getContactId(),
+                        Compatibility.COMPATIBLE
                 );
 
                 cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());

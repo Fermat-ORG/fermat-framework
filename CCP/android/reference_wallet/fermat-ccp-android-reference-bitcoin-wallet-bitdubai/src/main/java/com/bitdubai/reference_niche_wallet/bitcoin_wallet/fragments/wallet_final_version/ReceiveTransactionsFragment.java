@@ -403,6 +403,11 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
     private void setUpDonut(LayoutInflater inflater){
         RelativeLayout container_header_balance = getActivityHeader();
+        try {
+            container_header_balance.removeAllViews();
+        }catch (Exception e){
+
+        }
         inflater =
                 (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 

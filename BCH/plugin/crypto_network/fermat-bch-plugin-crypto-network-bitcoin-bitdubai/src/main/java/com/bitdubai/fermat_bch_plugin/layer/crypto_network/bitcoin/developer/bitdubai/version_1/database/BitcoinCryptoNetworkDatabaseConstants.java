@@ -15,38 +15,21 @@ class BitcoinCryptoNetworkDatabaseConstants {
     /**
      * Incoming_Transactions database table definition.
      */
-    static final String INCOMING_TRANSACTIONS_TABLE_NAME = "incoming_transactions";
+    static final String TRANSACTIONS_TABLE_NAME = "transactions";
 
-    static final String INCOMING_TRANSACTIONS_TRX_ID_COLUMN_NAME = "trx_id";
-    static final String INCOMING_TRANSACTIONS_HASH_COLUMN_NAME = "hash";
-    static final String INCOMING_TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME = "crypto_status";
-    static final String INCOMING_TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME = "block_depth";
-    static final String INCOMING_TRANSACTIONS_ADDRESS_TO_COLUMN_NAME = "address_to";
-    static final String INCOMING_TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME = "address_from";
-    static final String INCOMING_TRANSACTIONS_VALUE_COLUMN_NAME = "value";
-    static final String INCOMING_TRANSACTIONS_OP_RETURN_COLUMN_NAME = "op_return";
-    static final String INCOMING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME = "protocol_status";
-    static final String INCOMING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME = "last_update";
+    static final String TRANSACTIONS_TRX_ID_COLUMN_NAME = "trx_id";
+    static final String TRANSACTIONS_HASH_COLUMN_NAME = "hash";
+    static final String TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME = "crypto_status";
+    static final String TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME = "block_depth";
+    static final String TRANSACTIONS_ADDRESS_TO_COLUMN_NAME = "address_to";
+    static final String TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME = "address_from";
+    static final String TRANSACTIONS_VALUE_COLUMN_NAME = "value";
+    static final String TRANSACTIONS_OP_RETURN_COLUMN_NAME = "op_return";
+    static final String TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME = "protocol_status";
+    static final String TRANSACTIONS_LAST_UPDATE_COLUMN_NAME = "last_update";
+    static final String TRANSACTIONS_TYPE_COLUMN_NAME = "type";
 
-    static final String INCOMING_TRANSACTIONS_FIRST_KEY_COLUMN = "trx_id";
-
-    /**
-     * Outgoing_Transactions database table definition.
-     */
-    static final String OUTGOING_TRANSACTIONS_TABLE_NAME = "outgoing_transactions";
-
-    static final String OUTGOING_TRANSACTIONS_TRX_ID_COLUMN_NAME = "trx_id";
-    static final String OUTGOING_TRANSACTIONS_HASH_COLUMN_NAME = "hash";
-    static final String OUTGOING_TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME = "crypto_status";
-    static final String OUTGOING_TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME = "block_depth";
-    static final String OUTGOING_TRANSACTIONS_ADDRESS_TO_COLUMN_NAME = "address_to";
-    static final String OUTGOING_TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME = "address_from";
-    static final String OUTGOING_TRANSACTIONS_VALUE_COLUMN_NAME = "value";
-    static final String OUTGOING_TRANSACTIONS_OP_RETURN_COLUMN_NAME = "op_return";
-    static final String OUTGOING_TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME = "transmission_status";
-    static final String OUTGOING_TRANSACTIONS_LAST_UPDATE_COLUMN_NAME = "last_update";
-
-    static final String OUTGOING_TRANSACTIONS_FIRST_KEY_COLUMN = "trx_id";
+    static final String TRANSACTIONS_FIRST_KEY_COLUMN = "trx_id";
 
     /**
      * CryptoVaults_Stats database table definition.
