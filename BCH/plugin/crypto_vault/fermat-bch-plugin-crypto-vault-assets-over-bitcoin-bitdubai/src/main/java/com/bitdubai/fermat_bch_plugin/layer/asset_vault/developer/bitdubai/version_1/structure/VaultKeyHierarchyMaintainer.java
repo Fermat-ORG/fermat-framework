@@ -241,6 +241,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
             return publicKeys;
         }
 
+
         /**
          * updates the generateKey values
          * @param accountId
