@@ -26,7 +26,7 @@ public class GetGenesisTransactionByAssetAcceptedStatusTest {
     }
 
     @Test
-    public void getEventTypeByIdTest () throws CantCheckAssetDistributionProgressException {
+    public void getGenesisTransactionByAssetAcceptedStatusTest () throws CantCheckAssetDistributionProgressException {
         List<String> list = mockAssetDistributionDao.getGenesisTransactionByAssetAcceptedStatus();
         assertThat(list).isNotNull();
     }

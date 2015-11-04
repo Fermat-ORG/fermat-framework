@@ -25,7 +25,7 @@ public class GetActorUserPublicKeyByGenesisTransactionTest {
     private AssetDistributionDao mockAssetDistributionDao;
 
     @Test
-    public void getEventTypeByIdTest () throws UnexpectedResultReturnedFromDatabaseException, CantCheckAssetDistributionProgressException {
+    public void getActorUserPublicKeyByGenesisTransactionTest () throws UnexpectedResultReturnedFromDatabaseException, CantCheckAssetDistributionProgressException {
         String genesisTransaction = "d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43";
         mockAssetDistributionDao.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);
     }

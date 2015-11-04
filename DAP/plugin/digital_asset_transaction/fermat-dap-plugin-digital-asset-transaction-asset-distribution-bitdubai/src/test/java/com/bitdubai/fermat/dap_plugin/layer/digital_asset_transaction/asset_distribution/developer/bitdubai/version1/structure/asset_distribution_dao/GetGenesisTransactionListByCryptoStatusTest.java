@@ -27,7 +27,7 @@ public class GetGenesisTransactionListByCryptoStatusTest {
     }
 
     @Test
-    public void getEventTypeByIdTest () throws CantCheckAssetDistributionProgressException {
+    public void getGenesisTransactionListByCryptoStatusTest () throws CantCheckAssetDistributionProgressException {
         List<String> list = mockAssetDistributionDao.getGenesisTransactionListByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
         assertThat(list).isNotNull();
     }
