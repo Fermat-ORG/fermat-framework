@@ -255,6 +255,9 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
         this.eventManager = DealsWithEvents;
     }
 
+    public boolean isRegister() {
+        return register;
+    }
 
     /**
      * Get the IdentityPublicKey
@@ -722,16 +725,6 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
         remoteNetworkServicesRegisteredList = platformComponentProfileRegisteredList;
 
         System.out.println(" AssetTransmissionPluginRoot - remoteNetworkServicesRegisteredList.size() "+remoteNetworkServicesRegisteredList.size());
-
-    }
-
-    /**
-     * Get is Register
-     * @return boolean
-     */
-    @Override
-    public boolean isRegister() {
-        return register;
     }
 
     @Override
@@ -743,23 +736,6 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
          * Tell the manager to handler the new connection stablished
          */
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
-
-
-        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
-
-            /* -------------------------------------------------------------------------------------------------
-             * This is for test and example of how to use
-             * Get the local representation of the remote network service
-             */
-            CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
-
-            /*
-             * Get a remote network service registered from the list requested
-             */
-            PlatformComponentProfile remoteNetworkServiceToConnect = remoteNetworkServicesRegisteredList.get(0);
-
-        }
-
     }
 
     /**

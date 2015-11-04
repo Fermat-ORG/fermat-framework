@@ -5,8 +5,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_bch_core.layer.crypto_router.incoming_crypto.IncomingCryptoPluginSubsystem;
-import com.bitdubai.fermat_bch_core.layer.crypto_vault.bitcoin_asset_vault.BitcoinAssetVaultPluginSubsystem;
-import com.bitdubai.fermat_bch_core.layer.crypto_vault.bitcoin_vault.BitcoinVaultPluginSubsystem;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 30/10/2015.

@@ -15,23 +15,24 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
-
 import com.bitdubai.android_api.R;
 
+import java.util.List;
 
 /**
- * Created by Matias Furszyfer 25/10/2015
+ *  Created by Furszyfer Matias 4-10-2015
  */
+
 
 public class CircularProgressBar extends View {
     private static final int BACKGROUND_COLOR = Color.LTGRAY;
-    private static float STROKE_WIDTH = 20.0f;
+    private static float STROKE_WIDTH = 15.0f;
     private RectF mCircleBounds = new RectF();
     private RectF mCircleProgressBounds = new RectF();
 
     private int mLayoutHeight = 0;
     private int mLayoutWidth = 0;
-    private float mStrokeWidth = STROKE_WIDTH;
+    private final float mStrokeWidth = STROKE_WIDTH;
     private Paint mPaintBackground = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mPaintProgress = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mPaintProgress2 = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -44,6 +45,10 @@ public class CircularProgressBar extends View {
     private int mProgress2Value = 0;
     private float mFontSize = 14;
     private String mText;
+
+
+    private List<String> lstText;
+    private int textPosY = 110;
 
     public CircularProgressBar(Context context) {
         super(context);
@@ -67,10 +72,10 @@ public class CircularProgressBar extends View {
 
     public void init(AttributeSet attrs, int style) {
         TypedArray ta = getContext().obtainStyledAttributes(attrs,
-                 R.styleable.RoundProgressBar, style, 0);
+                R.styleable.RoundProgressBar, style, 0);
 
-        mStrokeWidth = ta.getDimension(R.styleable.RoundProgressBar_tlcp_strokeWidth,
-                STROKE_WIDTH);
+//        mStrokeWidth = ta.getDimension(R.styleable.RoundProgressBar_tlcp_strokeWidth,
+//                STROKE_WIDTH);
         mBackgroundColor = ta.getColor(R.styleable.RoundProgressBar_tlcp_bg_color,
                 BACKGROUND_COLOR);
         mProgressColor = ta.getColor(R.styleable.RoundProgressBar_tlcp_progress_color,
@@ -102,11 +107,9 @@ public class CircularProgressBar extends View {
         Resources r = getResources();
         float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mFontSize,
                 r.getDisplayMetrics());
-
-        STROKE_WIDTH = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+        STROKE_WIDTH = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
                 mStrokeWidth,
                 r.getDisplayMetrics());
-
         mPaintBackground.setColor(mBackgroundColor);
         mPaintProgress.setColor(mProgressColor);
         mPaintProgress2.setColor(mProgressColor2);
@@ -130,7 +133,7 @@ public class CircularProgressBar extends View {
         mLayoutHeight = newHeight;
         setupBounds();
     }
-
+//
     private void setupBounds() {
         int minValue = Math.min(mLayoutWidth, mLayoutHeight);
 
@@ -186,7 +189,7 @@ public class CircularProgressBar extends View {
             float wT = mPaintText.measureText(txt);
 
             float pX = mCircleBounds.left + wH - wT / 2;
-            float pY = mCircleBounds.top + mPaintText.getFontSpacing() + 20
+            float pY = mCircleBounds.top + mPaintText.getFontSpacing() + textPosY
                     + mPaintText.getFontSpacing() * i;
 
             canvas.drawText(txt, pX, pY, mPaintText);
@@ -201,7 +204,6 @@ public class CircularProgressBar extends View {
         final int width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
         final int min = Math.min(width, height);
         setMeasuredDimension((int) (min + 2 * STROKE_WIDTH), (int) (min + 2 * STROKE_WIDTH));
-
         mCircleBounds.set(STROKE_WIDTH, STROKE_WIDTH, min + STROKE_WIDTH, min + STROKE_WIDTH);
         mCircleProgressBounds.set(STROKE_WIDTH, STROKE_WIDTH, min + STROKE_WIDTH, min + STROKE_WIDTH);
     }
@@ -229,8 +231,9 @@ public class CircularProgressBar extends View {
         return 360 * mProgressValue / 100;
     }
 
-    public void setText(String text) {
+    public void setText(String text,int color) {
         this.mText = text;
+        this.mPaintText.setColor(color);
         postInvalidate();
     }
     public void setProgressColor(int color){
@@ -240,5 +243,10 @@ public class CircularProgressBar extends View {
     public void setProgressColor2(int color){
         mProgressColor2 = color;
         mPaintProgress2.setColor(mProgressColor2);
+    }
+
+    public void setBackgroundProgressColor(int color) {
+        mPaintBackground.setColor(color);
+
     }
 }

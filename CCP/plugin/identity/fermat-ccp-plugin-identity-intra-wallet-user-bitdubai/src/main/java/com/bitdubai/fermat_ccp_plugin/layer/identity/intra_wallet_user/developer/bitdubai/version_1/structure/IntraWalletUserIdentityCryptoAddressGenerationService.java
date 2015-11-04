@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CallToGetByCodeOnNONEException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantGetInstalledWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.DefaultWalletNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
@@ -13,7 +14,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantAcceptAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantDenyAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantGetPendingAddressExchangeRequestException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressRequestEventException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantIdentifyVaultException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
@@ -57,8 +57,8 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
 
         try {
             CryptoAddressRequest request = cryptoAddressesManager.getPendingRequest(requestId);
-            handleCryptoAddressRequestedEvent(request);
-        } catch (CantGetPendingAddressExchangeRequestException | PendingRequestNotFoundException e) {
+           handleCryptoAddressRequestedEvent(request);
+       } catch (CantGetPendingAddressExchangeRequestException | PendingRequestNotFoundException e) {
 
             throw new CantHandleCryptoAddressRequestEventException(e, "RequestId: "+requestId);
         }
@@ -115,11 +115,11 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
             }
 
         } catch (PendingRequestNotFoundException              |
-                 CantDenyAddressExchangeRequestException      |
-                 CantAcceptAddressExchangeRequestException    |
-                 CantRegisterCryptoAddressBookRecordException |
-                 CallToGetByCodeOnNONEException               |
-                 InvalidParameterException e                  ) {
+                CantDenyAddressExchangeRequestException      |
+                CantAcceptAddressExchangeRequestException    |
+                CantRegisterCryptoAddressBookRecordException |
+                CallToGetByCodeOnNONEException               |
+                InvalidParameterException e                  ) {
 
             throw new CantHandleCryptoAddressRequestEventException(e);
         } catch (CantIdentifyVaultException e) {

@@ -69,6 +69,7 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
                 ActorAssetIssuer actorAssetIssuerSender = gson.fromJson(jsonObject.get(JsonAssetUserANSAttNamesConstants.ISSUER).getAsString(), AssetIssuerActorRecord.class);
                 ActorAssetUser actorAssetUserDestination = gson.fromJson(jsonObject.get(JsonAssetUserANSAttNamesConstants.USER).getAsString(), AssetUserActorRecord.class);
 
+                System.out.print("Actor Asset User: SE LANZARA EVENTO PARA REQUEST CRYPTO ADDRESS");
 
                 FermatEvent event = eventManager.getNewEvent(EventType.NEW_CRYPTO_ADDRESS_REQUEST_ASSET_USER);
                 event.setSource(EventSource.ACTOR_ASSET_USER);
@@ -83,6 +84,8 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
                 CryptoAddress cryptoAddress = gson.fromJson(jsonObject.get(JsonAssetUserANSAttNamesConstants.CRYPTOADDRES).getAsString(), CryptoAddress.class);
                 ActorAssetIssuer actorAssetIssuerDestination = gson.fromJson(jsonObject.get(JsonAssetUserANSAttNamesConstants.ISSUER).getAsString(), AssetIssuerActorRecord.class);
                 ActorAssetUser actorAssetUserSender = gson.fromJson(jsonObject.get(JsonAssetUserANSAttNamesConstants.USER).getAsString(), AssetUserActorRecord.class);
+
+                System.out.print("Actor Asset User: SE LANZARA EVENTO PARA RECEIVE CRYPTO ADDRESS");
 
                 FermatEvent event = eventManager.getNewEvent(EventType.NEW_CRYPTO_ADDRESS_RECEIVE_ASSET_USER);
                 event.setSource(EventSource.ACTOR_ASSET_USER);
