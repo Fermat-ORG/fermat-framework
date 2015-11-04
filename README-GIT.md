@@ -12,7 +12,7 @@ Actualmente tenemos una estructura jerárquica de varios niveles sobre la cuál 
 Entendiendo que de leer este documento ya tenéis visibilidad sobre el repositorio, ambos Developer y Responsable debéis también tener un fork del repositorio y una copia local del mismo.
 
 #### Forkeando el repositorio Fermat
-Desde GitHub, luego de acceder al repositorio Fermat [Link Repo](https://github.com/bitDubai/fermat), debéis dirigirse al sector superior izquierdo y dar click sobre el botón **Fork**, saldrá un pop-up preguntando "`Where should we fork this repository?`", aquí debéis seleccionar su usuario.
+Desde GitHub, luego de acceder al repositorio Fermat ([Link Repo](https://github.com/bitDubai/fermat)), debéis dirigirse al sector superior izquierdo y dar click sobre el botón **Fork**, saldrá un pop-up preguntando "`Where should we fork this repository?`", aquí debéis seleccionar su usuario.
 
 #### Realizando una copia local de vuestro Fork
 Sobreentendemos entonces que leído el artículo Contributing ya tenéis el cliente git instalado en su ordenador.
