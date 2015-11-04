@@ -9,6 +9,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.
 
 /**
  * Created by ciencias on 20.01.15.
+ * Modified by Alex on 11/3/2015.
  */
 public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
 
@@ -27,22 +28,22 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
      */
     @Override
     public int getAmountToPay() {
-        return 100;
+        return 0;
     }
 
     @Override
     public CryptoCurrency getCryptoCurrency() {
-        return CryptoCurrency.BITCOIN;
+        return null;
     }
 
     @Override
     public String getAddress() {
-        return "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv";
+        return null;
     }
 
     @Override
     public TimeFrequency getTimePeriod() {
-        return TimeFrequency.MONTHLY;
+        return null;
     }
 
 }
