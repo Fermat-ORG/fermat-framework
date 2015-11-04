@@ -44,7 +44,7 @@ import java.util.UUID;
 public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry {
 
     private final CryptoAddressesManager cryptoAddressesManager;
-    private final ErrorManager           errorManager          ;
+    private final ErrorManager errorManager          ;
     private final LogManager             logManager            ;
     private final PluginDatabaseSystem   pluginDatabaseSystem  ;
     private final UUID                   pluginId              ;
