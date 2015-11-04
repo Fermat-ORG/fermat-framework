@@ -1469,10 +1469,10 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                     Log.d(TAG, TAG + "::onTouchEvent: parent ACTION_DOWN");
 
 
-                    return false;
+                    break;
                 case MotionEvent.ACTION_MOVE:
                     Log.d(DEBUG_TAG, "Action was DOWN");
-                    return false;
+                    break;
 
                 case MotionEvent.ACTION_UP:
                     Log.d(DEBUG_TAG, "Action was MOVE");
@@ -1501,7 +1501,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 //                    });
 //                    header.startAnimation(anim1);
                     Log.d(TAG, TAG + "::onTouchEvent: parent ACTION_UP");
-                    return false;
+                    break;
                 default:
                     break;
             }
