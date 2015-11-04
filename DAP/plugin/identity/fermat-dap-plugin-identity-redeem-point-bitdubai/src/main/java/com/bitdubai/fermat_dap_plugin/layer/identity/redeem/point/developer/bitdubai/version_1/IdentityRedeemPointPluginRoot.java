@@ -60,6 +60,9 @@ public class IdentityRedeemPointPluginRoot implements DealsWithErrors, DealsWith
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
+    public static final String ASSET_REDEEM_POINT_PROFILE_IMAGE_FILE_NAME = "assetRedeemPointIdentityProfileImage";
+    public static final String ASSET_REDEEM_POINT_PRIVATE_KEYS_FILE_NAME  = "assetRedeemPointIdentityPrivateKey";
+
     @Override
     public void setEventManager(EventManager DealsWithEvents) {
         this.eventManager = DealsWithEvents;
