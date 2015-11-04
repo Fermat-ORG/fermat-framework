@@ -41,7 +41,7 @@ responsible https://github.com/$RESPONSIBLE_USER/fermat (fetch)
 responsible https://github.com/$RESPONSIBLE_USER/fermat (push)
 ```
 ##### Jalar cambios del Responsable
-Para traeros las últimas actualizaciones de vuesto Responsable, primero dirigíos a su rama develop (que ya deberíais tener creada) a través del comando:
+Para traeros las últimas actualizaciones de vuestro Responsable, primero dirigíos a su rama develop (que ya deberíais tener creada) a través del comando:
 ```bash
 git checkout develop
 ```
