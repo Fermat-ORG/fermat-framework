@@ -58,7 +58,14 @@ git pull responsible develop
 
 #### Comprometer vuestros cambios
 A la hora de comprometer nuestros cambios, siempre ponemos un mensaje indicando cuáles fueron, para poder identificar rápidamente los commits. Corroboramos **SIEMPRE** cuáles son aquellos cambios que hicimos, para así no mandar cosas de más o de menos.
-Recomendamos siempre comprometer cambios a través de las integraciones con git de los IDE IntelliJ o Android Studio y realizarlos cada 30 minutos/1 hora para no perder los cambios locales.
+Los commits deben hacerse cada cada vez que uno esta seguro de que algo que hizo funciona, ya que es como poner un check point, si hacemos algo mal luego, podemos regresar al estado anterior haciendo un revert.
+Estos check points pueden ser: 
+* La corrección de un bug.
+* Finalización de una clase o metodo de importancia.
+* 
+No hay un tiempo fijo definido, pero esto debería ser cada más o menos media hora y una hora.
+
+Recomendamos siempre comprometer cambios a través de las integraciones con git de los IDE IntelliJ o Android Studio.
 ##### Consola
 Para comprometer cambios a través de consola se usan los comandos:
 ```bash
