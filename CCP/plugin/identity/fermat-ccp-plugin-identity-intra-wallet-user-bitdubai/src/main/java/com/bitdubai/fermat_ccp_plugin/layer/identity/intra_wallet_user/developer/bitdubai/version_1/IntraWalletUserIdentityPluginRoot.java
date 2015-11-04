@@ -84,7 +84,7 @@ import java.util.UUID;
  * The "authentication" is managed in each wallet or sub-app in which is used.
  * <p/>
  * Created by loui on 22/02/15.
- * Modified by Leon Acosta - (laion.cj91@gmail.com) on 07/08/15.
+ * Modified by Leon Acosta - (laion.cj91@gmail.com) on 07/08/15.z
  *
  * @version 1.0
  * @since Java JDK 1.7
