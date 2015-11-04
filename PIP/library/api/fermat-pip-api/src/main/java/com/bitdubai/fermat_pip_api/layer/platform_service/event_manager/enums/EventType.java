@@ -22,10 +22,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listener
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.NewCryptoAddressReceiveAssetUserActorNotificationEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.NewCryptoAddressRequestAssetUserActorNotificationEventListener;
 
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorAssetUserCompleteRegistrationNotificationEventListener;
+//import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorAssetUserCompleteRegistrationNotificationEventListener;
 
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ActorAssetUserCompleteRegistrationNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorAssetUserCompleteRegistrationNotificationEventListener;
+//import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ActorAssetUserCompleteRegistrationNotificationEvent;
+//import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorAssetUserCompleteRegistrationNotificationEventListener;
 
 
 /**
@@ -767,15 +767,15 @@ public enum EventType implements FermatEventEnum {
 //            return new ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent(this);
 //        }
 //    },
-    COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION("CL_CAURN") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new ActorAssetUserCompleteRegistrationNotificationEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new ActorAssetUserCompleteRegistrationNotificationEvent(this);
-        }
-    },
+ //   COMPLETE_ASSET_USER_REGISTRATION_NOTIFICATION("CL_CAURN") {
+   //     public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+     //       return new ActorAssetUserCompleteRegistrationNotificationEventListener(this, fermatEventMonitor);
+       // }
+//
+  //      public FermatEvent getNewEvent() {
+    //        return new ActorAssetUserCompleteRegistrationNotificationEvent(this);
+      //  }
+    //},
     //DAP EVENT END
 
     RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION("RNDAMN") {
