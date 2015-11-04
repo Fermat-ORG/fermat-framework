@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by ciencias on 23.01.15.
@@ -35,7 +36,7 @@ public class EventManagerPlatformServiceAddonRootOld implements Addon, EventMana
     /**
      * EventManager Interface member variables.
      */
-    private Map<String, List<FermatEventListener>> listenersMap = new HashMap<>();
+    private final ConcurrentHashMap<String, List<FermatEventListener>> listenersMap = new ConcurrentHashMap<>();
 
     /**
      * EventManager Interface implementation.
@@ -85,10 +86,10 @@ public class EventManagerPlatformServiceAddonRootOld implements Addon, EventMana
 
         String eventKey = buildMapKey(fermatEvent.getEventType());
 
-        List<FermatEventListener> listenersList = listenersMap.get(eventKey);
+        final List<FermatEventListener> listenersList = listenersMap.get(eventKey);
 
         if (listenersList != null) {
-            for (FermatEventListener fermatEventListener : listenersList) {
+            for (final FermatEventListener fermatEventListener : listenersList) {
                 fermatEventListener.raiseEvent(fermatEvent);
             }
         }
