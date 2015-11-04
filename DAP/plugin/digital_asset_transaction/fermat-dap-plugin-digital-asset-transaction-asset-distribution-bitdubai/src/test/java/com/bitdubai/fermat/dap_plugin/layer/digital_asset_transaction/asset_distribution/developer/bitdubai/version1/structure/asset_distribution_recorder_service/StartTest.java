@@ -81,7 +81,6 @@ public class StartTest {
 
     @Test
     public void startRecordServiceFail () throws CantStartServiceException {
-        //when(eventManager.getNewListener(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER)).thenThrow(new CantStartServiceException(new Exception("You can not start the service"), "Error", "You can not start the service"));
         when(eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION)).thenReturn(null);
 
         catchException(assetDistributionRecorderService).start();
