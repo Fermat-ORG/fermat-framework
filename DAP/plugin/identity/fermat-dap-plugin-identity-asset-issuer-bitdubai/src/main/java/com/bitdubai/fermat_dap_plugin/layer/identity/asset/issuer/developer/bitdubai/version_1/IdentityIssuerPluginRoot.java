@@ -4,6 +4,11 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -19,6 +24,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.Ca
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
+import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.database.AssetIssuerIdentityDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantInitializeAssetIssuerIdentityDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.structure.IdentityAssetIssuerManagerImpl;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
@@ -42,7 +49,7 @@ import java.util.UUID;
  * Created by Nerio on 07/09/15.
  * Modified by Franklin 02/11/2015
  */
-public class IdentityIssuerPluginRoot implements DealsWithDeviceUser, DealsWithLogger, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable, IdentityAssetIssuerManager {
+public class IdentityIssuerPluginRoot implements DatabaseManagerForDevelopers, DealsWithDeviceUser, DealsWithLogger, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable, IdentityAssetIssuerManager {
 
     /**
      * Service Interface member variables.
@@ -240,4 +247,28 @@ public class IdentityIssuerPluginRoot implements DealsWithDeviceUser, DealsWithL
         identityAssetIssuerManager.registerIdentities();
     }
 
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        AssetIssuerIdentityDeveloperDatabaseFactory dbFactory = new AssetIssuerIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        AssetIssuerIdentityDeveloperDatabaseFactory dbFactory = new AssetIssuerIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        return dbFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        try {
+            AssetIssuerIdentityDeveloperDatabaseFactory dbFactory = new AssetIssuerIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+            dbFactory.initializeDatabase();
+            return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (CantInitializeAssetIssuerIdentityDatabaseException e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+        // If we are here the database could not be opened, so we return an empty list
+        return new ArrayList<>();
+    }
 }
