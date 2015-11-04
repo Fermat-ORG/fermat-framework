@@ -16,6 +16,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdu
 
 /**
  * Created by jorge on 26-10-2015.
+ * Modified by Yordin Alayn 27.10.15
  */
 public class CryptoBrokerStock implements Stock {
 
@@ -23,7 +24,7 @@ public class CryptoBrokerStock implements Stock {
     private KeyPair walletKeys;
     private final CryptoBrokerWalletDatabaseDao databaseDao;
 
-    public CryptoBrokerStock(final FermatEnum stockType, final KeyPair walletKeys, final CryptoBrokerWalletDatabaseDao databaseDao){
+    public CryptoBrokerStock(final FermatEnum stockType, final KeyPair walletKeys ,final CryptoBrokerWalletDatabaseDao databaseDao){
         this.stockType = stockType;
         this.walletKeys = walletKeys;
         this.databaseDao = databaseDao;
@@ -33,7 +34,7 @@ public class CryptoBrokerStock implements Stock {
     public float getBookedBalance() throws CantGetBookedBalanceCryptoBrokerWalletException{
         //esto se tiene que responder con una consulta al DAO para obtener el booked balance
         try{
-            return databaseDao.getCalculateBookBalance();
+            return databaseDao.getCalculateBookBalance(this.stockType,this.walletKeys.getPublicKey());
         } catch (CantCalculateBalanceException e) {
             throw new CantGetBookedBalanceCryptoBrokerWalletException("CAN'T GET CRYPTO BROKER WALLET BOOKED BALANCE", e, "", "");
         } catch (Exception e) {
@@ -45,7 +46,7 @@ public class CryptoBrokerStock implements Stock {
     public float getAvailableBalance() throws CantGetAvailableBalanceCryptoBrokerWalletException{
         //esto se tiene que responder con una consulta al DAO para obtener el available balance
         try{
-            return databaseDao.getCalculateBookBalance();
+            return databaseDao.getCalculateAvailableBalance(this.stockType,this.walletKeys.getPublicKey());
         } catch (CantCalculateBalanceException e) {
             throw new CantGetAvailableBalanceCryptoBrokerWalletException("CAN'T GET CRYPTO BROKER WALLET BOOKED BALANCE", e, "", "");
         } catch (Exception e) {
