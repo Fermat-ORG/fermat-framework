@@ -35,7 +35,7 @@ public class LoadFromMediaTest {
     private AndroidPlatformTextFile testTextFile1;
     private AndroidPlatformTextFile testTextFile2;
 
-    private Context testContext;
+    private String testContext;
     private String testDirectory;
     private String testFileName;
     private FilePrivacy testPrivacyLevel;
@@ -44,7 +44,7 @@ public class LoadFromMediaTest {
     @Before
     public void setUpValues() throws Exception{
         Activity mockActivity = Robolectric.setupActivity(Activity.class);
-        testContext = shadowOf(mockActivity).getApplicationContext();
+        testContext = shadowOf(mockActivity).getApplicationContext().getFilesDir().getPath();
         testDirectory = "ROBOLECTRICTEST";
         testFileName = "TESTFILE.txt";
         testPrivacyLevel = FilePrivacy.PUBLIC;

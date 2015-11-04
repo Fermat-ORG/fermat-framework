@@ -133,7 +133,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
          * BlockchainNetworkType has MainNet, RegTest and TestNet. The default value is the one used for the platform.
          * If the address generated is for a network different than default, I need to update the database so we start monitoring this network
          */
-        if (blockchainNetworkType != BlockchainNetworkType.DEFAULT){
+        if (BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType) != BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT)){
             setActiveNetwork(blockchainNetworkType);
         }
 
