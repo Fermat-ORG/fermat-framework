@@ -6,7 +6,9 @@ A partir de ahora los llamaremos Developer y Responsable respectivamente.
 
 Actualmente tenemos una estructura jerárquica de varios niveles sobre la cuál estamos trabajando para gestionar las contribuciones:
 * **Fermat Core Developers**: [Responsable|Developer] Son los únicos que pueden enviar/aprobar Pull Requests al repositorio **fermat** de **bitDubai**; ellos se encuentran identificados en .-
+* 
 * **Fermat Team Leaders**: [Responsable|Developer] Gestionan equipos revisando y aprobando los Pull Request de los **Developers** u otros **Team Leaders** que dependan de ellos y envían Pull Requests a los Core Developers para que lleguen a **bitDubai**.
+* 
 * **Fermat Developers**: [Developer] Sólo pueden realizar Pull Requests hacia el Responsable (Team Leader o Core Developer) del cuál dependan.
 
 Entendiendo que de leer este documento ya tenéis visibilidad sobre el repositorio, ambos Developer y Responsable debéis también tener un fork del repositorio y una copia local del mismo.
