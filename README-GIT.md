@@ -1,6 +1,13 @@
 # Git Management
+Para poder entender mejor el contenido, favor de leer el siguiente documento: [Contributing](https://github.com/bitDubai/fermat/CONTRIBUTING.md).
+
 A la hora de contribuir a través de git identificamos dos roles, uno es el que compromete sus cambios, mientras que el otro es el responsable de mezclar los cambios comprometidos.
 A partir de ahora los llamaremos Developer y Responsable respectivamente.
+
+Actualmente tenemos una estructura jerárquica de varios niveles sobre la cuál estamos trabajando para gestionar las contribuciones:
+* **Fermat Core Developers**: Son los únicos que pueden enviar/aprobar Pull Requests al repositorio **fermat** de **bitDubai**; ellos se encuentran identificados en .-
+* **Fermat Team Leaders**: Gestionan equipos revisando y aprobando los Pull Request de los **Developers** u otros **Team Leaders** que dependan de ellos y envían Pull Requests a los Core Developers para que lleguen a **bitDubai**.
+* **Fermat Developers**: Sólo pueden realizar Pull Requests hacia el Responsable (Team Leader o Core Developer) del cuál dependan.
 
 Entendiendo que de leer este documento ya tenéis visibilidad sobre el repositorio, ambos Developer y Responsable debéis también tener un fork del repositorio y una copia local del mismo.
 
@@ -8,7 +15,6 @@ Entendiendo que de leer este documento ya tenéis visibilidad sobre el repositor
 Desde GitHub, luego de acceder al repositorio Fermat, debéis dirigirse al sector superior izquierdo y dar click sobre el botón **Fork**, saldrá un pop-up preguntando "`Where should we fork this repository?`", aquí debéis seleccionar su usuario.
 
 #### Realizando una copia local de vuestro Fork
-Para poder realizar una copia local y poder trabajarla, por favor leer primero la sección [Contributing](https://github.com/bitDubai/fermat/CONTRIBUTING.md).
 Sobreentendemos entonces que leído el artículo Contributing ya tenéis el cliente git instalado en su ordenador.
 Para realizar la copia local de vuestro fork debéis dirigirse al directorio donde quieráis descargarlo y ejecutar el comando ` git clone https://github.com/$YOUR_USER/fermat `
 
