@@ -8,7 +8,7 @@ Entendiendo que de leer este documento ya tenéis visibilidad sobre el repositor
 Desde GitHub, luego de acceder al repositorio Fermat, debéis dirigirse al sector superior izquierdo y dar click sobre el botón **Fork**, saldrá un pop-up preguntando "`Where should we fork this repository?`", aquí debéis seleccionar su usuario.
 
 #### Realizando una copia local de vuestro Fork
-Para poder realizar una copia local y poder trabajarla, por favor leed primero la sección [Contributing](https://github.com/bitDubai/fermat/CONTRIBUTING.md).
+Para poder realizar una copia local y poder trabajarla, por favor leer primero la sección [Contributing](https://github.com/bitDubai/fermat/CONTRIBUTING.md).
 Sobreentendemos entonces que leído el artículo Contributing ya tenéis el cliente git instalado en su ordenador.
 Para realizar la copia local de vuestro fork debéis dirigirse al directorio donde quieráis descargarlo y ejecutar el comando ` git clone https://github.com/$YOUR_USER/fermat `
 
