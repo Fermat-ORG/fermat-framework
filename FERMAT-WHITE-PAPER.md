@@ -62,13 +62,13 @@ For scalability reasons, we moved the responsability of finding actors within th
 
 #### To developers
 
-Plug-ins developers declare a _Micro-Use-License_ for each plug-in they add to the Framework. Wallet or Financial Apps developers declare a _Micro-Use-License_ for their components. End users install the Apps (wallets) of their choice and the license paid is the summary of the App's micro-use-license plus all the micro-use-licenses of the plug-ins used by that App. 
+Plug-ins developers declare a _Micro-Use-License_ for each plug-in they add to the Framework. Wallet or Financial Apps developers declare a _Micro-Use-License_ for their components. End users install the Apps (wallets) of their choice and the license to be paid is the summary of the App's micro-use-license plus all the micro-use-licenses of the plug-ins used by that App. 
 
-The Framework assumes the responsibility to enforce the agreements, charge the end user and distribute the payments to all developers involved.
+The Framework assumes the responsibility to enforce the license agreements, charge the end user and distribute the payments to all developers involved.
 
 #### To network nodes
 
-Clients establishes a home node where they register themselves and their network services and identities in order to be found by other clients. They will pay a subscription fee to their home node for it's services. Finding and calling other clients through other nodes is free as those nodes income is coming from the clients for which they are the home node.
+Network clients establishes a _home node_ where they check themselves and their actors in order to be found by other clients. They must pay a subscription fee to their _home node_ for it's services. Finding and calling other clients through other nodes is free as those nodes income is covered by network clients for which they are their _home node_.
 
 <br>
 ### Platforms
