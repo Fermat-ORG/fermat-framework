@@ -5,15 +5,14 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.IncomingMessageDao;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.IncomingMessageDao;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -186,7 +185,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
                 /*
                  * Instantiate the remote reference
                  */
-                com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
+                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(identity, communicationsVPNConnection, errorManager, eventManager, incomingMessageDao, outgoingMessageDao);
 
                 /*
                  * Register the observer to the observable agent
@@ -257,7 +256,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * Get the OutgoingMessageDao
      * @return OutgoingMessageDao
      */
-    public com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.OutgoingMessageDao getOutgoingMessageDao() {
+    public OutgoingMessageDao getOutgoingMessageDao() {
         return outgoingMessageDao;
     }
 
@@ -265,7 +264,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * Get the IncomingMessageDao
      * @return IncomingMessageDao
      */
-    public com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.IncomingMessageDao getIncomingMessageDao() {
+    public IncomingMessageDao getIncomingMessageDao() {
         return incomingMessageDao;
     }
 }
