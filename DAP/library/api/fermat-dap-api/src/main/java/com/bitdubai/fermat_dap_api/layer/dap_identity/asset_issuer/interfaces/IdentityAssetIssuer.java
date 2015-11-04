@@ -5,6 +5,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.Ca
 
 /**
  * Created by Nerio on 07/09/15.
+ * Modified by Franklin on 02/11/2015
  */
 public interface IdentityAssetIssuer extends ActiveIdentity {
 
@@ -31,7 +32,7 @@ public interface IdentityAssetIssuer extends ActiveIdentity {
      * The method <code>setNewProfileImage</code> let the user set a new profile image
      *
      * @param newProfileImage the new profile image to set
-     * @throws com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantSetNewProfileImageException
+     * @throws
      */
     void setNewProfileImage(byte[] newProfileImage);
 
