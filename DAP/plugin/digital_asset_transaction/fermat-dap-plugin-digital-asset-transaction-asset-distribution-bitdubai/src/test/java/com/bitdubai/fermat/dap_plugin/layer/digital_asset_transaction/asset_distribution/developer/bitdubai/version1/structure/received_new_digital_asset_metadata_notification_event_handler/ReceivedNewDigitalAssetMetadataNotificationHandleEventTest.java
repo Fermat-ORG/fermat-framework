@@ -63,8 +63,7 @@ public class ReceivedNewDigitalAssetMetadataNotificationHandleEventTest {
     @Before
     public void init() throws Exception {
         pluginId = UUID.randomUUID();
-        assetDistributionRecorderService = new AssetDistributionRecorderService(assetDistributionDao);
-        assetDistributionRecorderService.setEventManager(eventManager);
+        assetDistributionRecorderService = new AssetDistributionRecorderService(assetDistributionDao, eventManager);
         receivedNewDigitalAssetMetadataNotificationEventHandler.setAssetDistributionRecorderService(assetDistributionRecorderService);
         setUpMockitoRules();
     }

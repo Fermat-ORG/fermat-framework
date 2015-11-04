@@ -63,8 +63,7 @@ public class OnBlockChainHandleEventTest {
     @Before
     public void init() throws Exception {
         pluginId = UUID.randomUUID();
-        assetDistributionRecorderService = new AssetDistributionRecorderService(assetDistributionDao);
-        assetDistributionRecorderService.setEventManager(eventManager);
+        assetDistributionRecorderService = new AssetDistributionRecorderService(assetDistributionDao, eventManager);
         incomingAssetOnBlockchainWaitingTransferenceAssetUserEventHandler.setAssetDistributionRecorderService(assetDistributionRecorderService);
         setUpMockitoRules();
     }

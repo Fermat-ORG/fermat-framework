@@ -63,7 +63,7 @@ public class ReversedOnCryptoNetworkHandleEventTest {
     @Before
     public void init() throws Exception {
         pluginId = UUID.randomUUID();
-        assetDistributionRecorderService = new AssetDistributionRecorderService(assetDistributionDao);
+        assetDistributionRecorderService = new AssetDistributionRecorderService(assetDistributionDao, eventManager);
         assetDistributionRecorderService.setEventManager(eventManager);
         incomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetUserEventHandler.setAssetDistributionRecorderService(assetDistributionRecorderService);
         setUpMockitoRules();

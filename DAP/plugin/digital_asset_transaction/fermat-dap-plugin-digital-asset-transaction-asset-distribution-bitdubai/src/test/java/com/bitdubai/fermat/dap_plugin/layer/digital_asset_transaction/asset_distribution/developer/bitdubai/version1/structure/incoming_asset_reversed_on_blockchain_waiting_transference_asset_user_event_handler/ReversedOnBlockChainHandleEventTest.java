@@ -63,8 +63,7 @@ public class ReversedOnBlockChainHandleEventTest {
     @Before
     public void init() throws Exception {
         pluginId = UUID.randomUUID();
-        assetDistributionRecorderService = new AssetDistributionRecorderService(assetDistributionDao);
-        assetDistributionRecorderService.setEventManager(eventManager);
+        assetDistributionRecorderService = new AssetDistributionRecorderService(assetDistributionDao, eventManager);
         incomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventHandler.setAssetDistributionRecorderService(assetDistributionRecorderService);
         setUpMockitoRules();
     }
