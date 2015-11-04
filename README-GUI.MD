@@ -183,6 +183,13 @@ Donde: **cbp** es la plataforma, **android** es el dispositivo, **sub-app** es e
 
 <br>
 
+### Modules
+ 
+- Hay que explicar para que se usan los module
+
+----------------------
+
+
 ### Navigation structure
  
 - Hay que explicarlo con ejemplos.
