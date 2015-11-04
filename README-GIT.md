@@ -94,9 +94,9 @@ Debéis aprobar los Pull Requests de los Developers que dependan de vosotros.
 Para aprobar los Pull Requests tenéis que seguir religiosamente una serie de pasos que os dan mayor seguridad:
 
 #### Revisión de cambios
-Si los Pull Requests son pequeños, siempre es bueno revisar que archivos fueron modificados, y por arriba, cuales son las modificaciones.
-Si los Pull Requests son grandes, revisar los nombres de los archivos teniendo en cuenta de que no hayan modificado cosas que no debiesen ser modificadas o que no se encuentren descriptas en el Pull Request.
-En caso de encontrar alguna irregularidad o conflictos informar al Developer y/o cancelar el Pull Request y pedir que actualicen el mismo.
+* Si los Pull Requests son pequeños, siempre es bueno revisar que archivos fueron modificados, y por arriba, cuales son las modificaciones.
+* Si los Pull Requests son grandes, revisar los nombres de los archivos teniendo en cuenta de que no hayan modificado cosas que no debiesen ser modificadas o que no se encuentren descriptas en el Pull Request.
+* En caso de encontrar alguna irregularidad o conflictos informar al Developer y/o cancelar el Pull Request y pedir que actualicen el mismo.
 
 #### Crear una rama local para realizar la mezcla
 Crearáis una rama para realizar la mezcla con la ejecución del comando:
