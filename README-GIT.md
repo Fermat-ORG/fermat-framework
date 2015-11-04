@@ -84,6 +84,7 @@ Desde allí se verá en Verde grande un botón que dice **New Pull Request**
 La página os mostrará en pantalla una serie de menú desplegables en donde indica:
 * ¿A quién deseáis realizar el Pull Request?, ¿A qué rama?
 * ¿Desde dónde deseáis realizar el Pull Request?, ¿A qué rama?
+
 Aseguráos elegir el fork de vuestro Responsable, la rama develop en los primeros y vuestro fork y la rama develop en los segundos.
 Completad los campos indicando el motivo del Pull Requests y cuáles fueron las modificaciones realizadas.
 Confirmad el Pull Request haciendo click sobre el botón **Crear Pull Request** y aquí termina vuestra responsabilidad.
