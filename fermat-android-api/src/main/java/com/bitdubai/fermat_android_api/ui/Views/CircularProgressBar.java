@@ -18,10 +18,8 @@ import android.view.View;
 
 import com.bitdubai.android_api.R;
 
+import java.util.List;
 
-/**
- * Created by Matias Furszyfer 25/10/2015
- */
 
 public class CircularProgressBar extends View {
     private static final int BACKGROUND_COLOR = Color.LTGRAY;
@@ -45,6 +43,10 @@ public class CircularProgressBar extends View {
     private float mFontSize = 14;
     private String mText;
 
+
+    private List<String> lstText;
+    private int textPosY = 110;
+
     public CircularProgressBar(Context context) {
         super(context);
     }
@@ -67,7 +69,7 @@ public class CircularProgressBar extends View {
 
     public void init(AttributeSet attrs, int style) {
         TypedArray ta = getContext().obtainStyledAttributes(attrs,
-                 R.styleable.RoundProgressBar, style, 0);
+                R.styleable.RoundProgressBar, style, 0);
 
         mStrokeWidth = ta.getDimension(R.styleable.RoundProgressBar_tlcp_strokeWidth,
                 STROKE_WIDTH);
@@ -186,7 +188,7 @@ public class CircularProgressBar extends View {
             float wT = mPaintText.measureText(txt);
 
             float pX = mCircleBounds.left + wH - wT / 2;
-            float pY = mCircleBounds.top + mPaintText.getFontSpacing() + 20
+            float pY = mCircleBounds.top + mPaintText.getFontSpacing() + textPosY
                     + mPaintText.getFontSpacing() * i;
 
             canvas.drawText(txt, pX, pY, mPaintText);
@@ -229,8 +231,9 @@ public class CircularProgressBar extends View {
         return 360 * mProgressValue / 100;
     }
 
-    public void setText(String text) {
+    public void setText(String text,int color) {
         this.mText = text;
+        this.mPaintText.setColor(color);
         postInvalidate();
     }
     public void setProgressColor(int color){
@@ -240,5 +243,10 @@ public class CircularProgressBar extends View {
     public void setProgressColor2(int color){
         mProgressColor2 = color;
         mPaintProgress2.setColor(mProgressColor2);
+    }
+
+    public void setBackgroundProgressColor(int color) {
+        mPaintBackground.setColor(color);
+
     }
 }

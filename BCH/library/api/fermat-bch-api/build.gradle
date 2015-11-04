@@ -8,4 +8,5 @@ dependencies {
         exclude module: 'scrypt'
     }
     compile project(':fermat-api')
+    compile 'org.scala-lang:scala-library:2.11.1'
 }

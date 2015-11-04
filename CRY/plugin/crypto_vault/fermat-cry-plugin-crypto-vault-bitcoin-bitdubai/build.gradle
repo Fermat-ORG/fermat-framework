@@ -19,7 +19,7 @@ dependencies {
     compile project(':fermat-cry-api')
     compile project(':fermat-pip-api')
 
-    compile('org.bitcoinj:bitcoinj-core:0.13.2') {
+    compile('org.bitcoinj:bitcoinj-core:0.13.3') {
         exclude module: 'scrypt'
     }
     testCompile group: 'junit', name: 'junit', version: '4.11'

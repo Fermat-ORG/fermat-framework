@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.AbstractCommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -17,16 +18,16 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
  * @version 1.0
  * @since Java JDK 1.7
  */
-public final class AbstractCommunicationNetworkServiceConnectionManager extends com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.AbstractCommunicationNetworkServiceConnectionManager {
+public final class CommunicationNetworkServiceConnectionManager extends AbstractCommunicationNetworkServiceConnectionManager {
 
-    public AbstractCommunicationNetworkServiceConnectionManager(final PlatformComponentProfile platformComponentProfile,
-                                                                final ECCKeyPair identity,
-                                                                final CommunicationsClientConnection communicationsClientConnection,
-                                                                final Database dataBase,
-                                                                final ErrorManager errorManager,
-                                                                final EventManager eventManager,
-                                                                final EventSource eventSource,
-                                                                final PluginVersionReference pluginVersionReference) {
+    public CommunicationNetworkServiceConnectionManager(final PlatformComponentProfile platformComponentProfile,
+                                                        final ECCKeyPair identity,
+                                                        final CommunicationsClientConnection communicationsClientConnection,
+                                                        final Database dataBase,
+                                                        final ErrorManager errorManager,
+                                                        final EventManager eventManager,
+                                                        final EventSource eventSource,
+                                                        final PluginVersionReference pluginVersionReference) {
 
         super(
                 platformComponentProfile      ,
@@ -39,4 +40,6 @@ public final class AbstractCommunicationNetworkServiceConnectionManager extends 
                 pluginVersionReference
         );
     }
+
+
 }
