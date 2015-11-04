@@ -1,5 +1,9 @@
 ## Fermat: A Trust-less Financial Application Framework
 
+Luis Fernando Molina
+
+luis.molina@bitDubai.com
+
 <br>
 ### Abstract
 
@@ -47,7 +51,7 @@ b. clients calling other clients.
 
 Every Node has a copy of a distributed geo-localized inventory of all network nodes. They run a protocol that allows them to keep their copy synchronized. 
 
-To be able to be found, a client registers itself and some inner components and identities with the geographically closest node, which we call the _home node_. When it needs to find other clients it follows a protocol that considers the approximate location of the client it is willing to connect to.
+To be able to be found, a client registers itself and some inner components and identities with the geographically closest node, which we call the _home node_. When it needs to find other clients it follows a protocol that requires the approximate location of the client it is willing to connect to.
 
 <br>
 ### Incentive
