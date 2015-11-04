@@ -15,18 +15,20 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.FiatCurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.world.Index;
 import com.bitdubai.fermat_cbp_api.layer.cbp_world.cbp_fiat_index.exceptions.CantGetIndexException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_world.cbp_fiat_index.interfaces.FiatIndexManager;
+import com.bitdubai.fermat_cbp_plugin.layer.world.fiat_index.developer.bitdubai.version_1.structure.IndexHelper;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
- * Created by natalia on 16.09.15.
+ * Created by Alex on 11/2/2015.
  */
 
 /**
@@ -35,6 +37,7 @@ import java.util.regex.Pattern;
 
 public class FiatIndexPluginRoot implements FiatIndexManager,DealsWithErrors, DealsWithLogger, LogManagerForDevelopers, Service, Plugin {
 
+    IndexHelper indexHelper = new IndexHelper();
 
     /**
      * DealsWithErrors interface member variables
@@ -173,19 +176,23 @@ public class FiatIndexPluginRoot implements FiatIndexManager,DealsWithErrors, De
     }
 
 
+
     @Override
     public FiatCurrencyType getReferenceCurrency() {
-        return null;
+        return FiatCurrencyType.US_DOLLAR;
     }
 
     @Override
     public Collection<FiatCurrencyType> getSupportedCurrencies() {
-        return null;
+        Collection<FiatCurrencyType> c = new HashSet<>();
+        for (FiatCurrencyType f : FiatCurrencyType.values())
+            c.add(f);
+        return c;
     }
 
     @Override
     public Index getCurrentIndex(FiatCurrencyType currency) throws CantGetIndexException {
-        return null;
+        return indexHelper.getCurrentIndex(currency);
     }
 
     @Override
