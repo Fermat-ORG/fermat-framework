@@ -51,8 +51,8 @@ project(':fermat-ccp-core').projectDir = new File('CCP/library/core/fermat-ccp-c
 include ':fermat-ccp-plugin-actor-extra-user-bitdubai'
 project(':fermat-ccp-plugin-actor-extra-user-bitdubai').projectDir = new File('CCP/plugin/actor/fermat-ccp-plugin-actor-extra-user-bitdubai')
 
-include ':fermat-ccp-plugin-actor-intra-wallet-user-bitdubai'
-project(':fermat-ccp-plugin-actor-intra-wallet-user-bitdubai').projectDir = new File('CCP/plugin/actor/fermat-ccp-plugin-actor-intra-wallet-user-bitdubai')
+include ':fermat-ccp-plugin-actor-intra-user-bitdubai'
+project(':fermat-ccp-plugin-actor-intra-user-bitdubai').projectDir = new File('CCP/plugin/actor/fermat-ccp-plugin-actor-intra-user-bitdubai')
 
 include ':fermat-ccp-plugin-basic-wallet-bitcoin-wallet-bitdubai'
 project(':fermat-ccp-plugin-basic-wallet-bitcoin-wallet-bitdubai').projectDir = new File('CCP/plugin/basic_wallet/fermat-ccp-plugin-basic-wallet-bitcoin-wallet-bitdubai')
