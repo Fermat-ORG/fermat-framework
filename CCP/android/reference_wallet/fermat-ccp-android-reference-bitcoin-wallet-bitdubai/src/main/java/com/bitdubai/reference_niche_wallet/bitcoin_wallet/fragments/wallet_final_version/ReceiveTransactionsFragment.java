@@ -337,7 +337,9 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
                 public void onClick(View view) {
                     if (walletContact != null) {
                         try {
-                            CryptoWalletWalletContact walletContactDatabase = cryptoWallet.findWalletContactById(walletContact.contactId);
+
+                            //check the contact is a intra user
+                            CryptoWalletWalletContact walletContactDatabase = cryptoWallet.findWalletContactById(walletContact.contactId,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
 
                             if (walletContact.actorPublicKey.equals(walletContactDatabase.getActorPublicKey())) {
                                 ReceiveFragmentDialog receiveFragmentDialog = new ReceiveFragmentDialog(getActivity(), cryptoWallet, referenceWalletSession.getErrorManager(), walletContact, user_id, referenceWalletSession.getWalletSessionType().getWalletPublicKey());
@@ -361,6 +363,8 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
                         } catch (CantFindWalletContactException e) {
                             e.printStackTrace();
                         } catch (WalletContactNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         //                        walletContact.contactId
@@ -408,8 +412,8 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
         }catch (Exception e){
 
         }
-        inflater =
-                (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        inflater =
+//                (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         container_header_balance.setBackgroundColor(Color.parseColor("#06356f"));
         container_header_balance.setVisibility(View.VISIBLE);
@@ -424,6 +428,45 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
         circularProgressBar.setBackgroundProgressColor(Color.parseColor("#022346"));
         circularProgressBar.setProgressColor(Color.parseColor("#05ddd2"));
         circularProgressBar.setProgressColor2(Color.parseColor("#05537c"));
+
+
+        txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
+        //txt_type_balance.setTypeface(tf);
+
+        ((TextView) balance_header.findViewById(R.id.txt_touch_to_change)).setTypeface(tf);
+
+        TextView txt_amount_type = (TextView) balance_header.findViewById(R.id.txt_balance_amount_type);
+        if(txt_amount_type!=null)
+        txt_amount_type.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
+                //txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
+                changeBalanceType(txt_type_balance, txt_balance_amount);
+            }
+        });
+
+
+        txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
+
+        txt_balance_amount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
+                //txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
+                changeAmountType(txt_balance_amount);
+            }
+        });
+
+        txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
+        //txt_balance_amount.setTypeface(tf);
+
+        try {
+            long balance = cryptoWallet.getBalance(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+            txt_balance_amount.setText(formatBalanceString(balance, referenceWalletSession.getTypeAmount()));
+        } catch (CantGetBalanceException e) {
+            e.printStackTrace();
+        }
 
     }
 
