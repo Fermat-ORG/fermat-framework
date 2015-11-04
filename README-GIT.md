@@ -79,6 +79,50 @@ La página os mostrará en pantalla una serie de menú desplegables en donde ind
 * ¿A quién deseáis realizar el Pull Request?, ¿A qué rama?
 * ¿Desde dónde deseáis realizar el Pull Request?, ¿A qué rama?
 Aseguráos elegir el fork de vuestro Responsable, la rama develop en los primeros y vuestro fork y la rama develop en los segundos.
+Completad los campos indicando el motivo del Pull Requests y cuáles fueron las modificaciones realizadas.
 Confirmad el Pull Request haciendo click sobre el botón **Crear Pull Request** y aquí termina vuestra responsabilidad.
 
 ## Rol Responsable
+Como Responsable podéis estar en los dos roles al mismo tiempo, como Developer y como Responsable, pero vuestras responsabilidades son bastante mayores.
+Debéis aprobar los Pull Requests de los Developers que dependan de vosotros.
+Para aprobar los Pull Requests tenéis que seguir religiosamente una serie de pasos que os dan mayor seguridad:
+
+#### Revisión de cambios
+Si los Pull Requests son pequeños, siempre es bueno revisar que archivos fueron modificados, y por arriba, cuales son las modificaciones.
+Si los Pull Requests son grandes, revisar los nombres de los archivos teniendo en cuenta de que no hayan modificado cosas que no debiesen ser modificadas o que no se encuentren descriptas en el Pull Request.
+En caso de encontrar alguna irregularidad o conflictos informar al Developer y/o cancelar el Pull Request y pedir que actualicen el mismo.
+
+#### Crear una rama local para realizar la mezcla
+Crearáis una rama para realizar la mezcla con la ejecución del comando:
+```bash
+git checkout -b mezcla$nombreDeveloper
+```
+
+#### Jalar los cambios del Developer
+Podráis jalar los cambios a través del comando:
+```bash
+git pull https://github.com/$nombreDeveloper/fermat.git develop
+```
+
+#### Compilar y Correr el proyecto en el IDE
+Es en verdad justo y necesario realizar una prueba sobre el contenido del Pull Request, testeando las nuevas funcionalidades o cambios que indica poseer.
+
+#### Aprobar la mezcla
+Una vez decidida la aprobación del Pull Request, para hacerla efectivo debéis realizar los siguientes pasos:
+##### Volver a vuestra rama develop
+```bash
+git checkout develop
+```
+##### Realizar el merge
+```bash
+git merge --no-ff mezcla$nombreDeveloper
+```
+##### Actualizar vuestro Fork
+```bash
+git push origin develop
+```
+##### Borrar rama temporal para mezcla
+```bash
+git branch -d mezcla$nombreDeveloper
+```
+
