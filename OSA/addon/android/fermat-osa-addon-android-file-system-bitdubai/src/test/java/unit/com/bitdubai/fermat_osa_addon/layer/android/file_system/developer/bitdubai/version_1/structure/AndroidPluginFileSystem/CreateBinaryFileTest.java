@@ -36,7 +36,7 @@ public class CreateBinaryFileTest {
     private PluginBinaryFile testFile;
 
     private UUID testId;
-    private Context testContext;
+    private String testContext;
     private String testDirectory;
     private String testFileName;
     private FilePrivacy testPrivacyLevel;
@@ -46,7 +46,7 @@ public class CreateBinaryFileTest {
     public void setUpValues(){
         testId = UUID.randomUUID();
         Activity mockActivity = Robolectric.setupActivity(Activity.class);
-        testContext = shadowOf(mockActivity).getApplicationContext();
+        testContext = shadowOf(mockActivity).getApplicationContext().getFilesDir().getPath();
         testDirectory = "ROBOLECTRICTEST";
         testFileName = "TESTFILE.dat";
         testPrivacyLevel = FilePrivacy.PUBLIC;
@@ -55,15 +55,14 @@ public class CreateBinaryFileTest {
 
     @Test
     public void CreateTextFile_ValidFileValues_FileCreated() throws Exception{
-        testFileSystem = new AndroidPluginFileSystem();
-        testFileSystem.setContext(testContext);
+        testFileSystem = new AndroidPluginFileSystem(testContext);
         testFile = testFileSystem.createBinaryFile(testId, testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         assertThat(testFile).isNotNull();
     }
 
     @Test
     public void CreateTextFile_NoContext_ThrowsException() throws Exception{
-        testFileSystem = new AndroidPluginFileSystem();
+        testFileSystem = new AndroidPluginFileSystem(testContext);
         catchException(testFileSystem).createTextFile(testId,testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         assertThat(caughtException()).isNotNull();
         caughtException().printStackTrace();

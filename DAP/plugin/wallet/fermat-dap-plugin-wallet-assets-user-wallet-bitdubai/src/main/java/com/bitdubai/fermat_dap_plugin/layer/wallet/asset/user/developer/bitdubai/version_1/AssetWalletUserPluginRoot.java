@@ -117,8 +117,8 @@ public class AssetWalletUserPluginRoot implements AssetUserWalletManager, Plugin
     public void start() throws CantStartPluginException {
         try{
             loadWalletIssuerMap();
-            //createWalletAssetIssuer("walletPublicKeyTest");
-            //loadAssetIssuerWallet("walletPublicKeyTest");
+            createAssetUserWallet("walletPublicKeyTest");
+            loadAssetUserWallet("walletPublicKeyTest");
             System.out.println("Star Plugin AssetWalletUser");
             this.serviceStatus = ServiceStatus.STARTED;
         }catch(CantStartPluginException exception){

@@ -75,7 +75,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
      * Represent the SERVER_IP
      */
     public static final String SERVER_IP = "52.11.156.16"; //AWS
-    //public static final String SERVER_IP = "192.168.100.105";
+    //public static final String SERVER_IP = "192.168.0.103";
 
     /**
      * Represent the DEFAULT_PORT

@@ -54,42 +54,48 @@ public interface ActorAssetUser {
     long getRegistrationDate();
 
     /**
-     * The method <code>getLastConnectionDate</code> gives us the Las Connection Date of the represented Asset User
+     * The method <code>getLastConnectionDate</code> gives us the Las Connection Date of the represented
+     * Asset User
      *
      * @return the Connection Date
      */
     long getLastConnectionDate();
 
     /**
-     * The method <code>getConnectionState</code> gives us the connection state of the represented Asset User
+     * The method <code>getConnectionState</code> gives us the connection state of the represented
+     * Asset User
      *
      * @return the Connection state
      */
     ConnectionState getConnectionState();
 
     /**
-     * The method <code>getLocation</code> gives us the Location of the represented Asset user
+     * The method <code>getLocation</code> gives us the Location of the represented
+     * Asset user
      *
      * @return the Location of the Asset user
      */
     Location getLocation();
 
     /**
-     * The method <code>getLocationLatitude</code> gives us the Location of the represented Asset user
+     * The method <code>getLocationLatitude</code> gives us the Location of the represented
+     * Asset user
      *
      * @return the Location Latitude of the Asset user
      */
     Double getLocationLatitude();
 
     /**
-     * The method <code>getLocationLongitude</code> gives us the Location of the represented Asset user
+     * The method <code>getLocationLongitude</code> gives us the Location of the represented
+     * Asset user
      *
      * @return the Location Longitude of the Asset user
      */
     Double getLocationLongitude();
 
     /**
-     * The method <coda>getProfileImage</coda> gives us the profile image of the represented Asset User
+     * The method <coda>getProfileImage</coda> gives us the profile image of the represented
+     * Asset User
      *
      * @return the image
      */

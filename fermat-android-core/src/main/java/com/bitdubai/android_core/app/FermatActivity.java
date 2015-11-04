@@ -24,6 +24,8 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -34,12 +36,16 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -168,6 +174,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
     protected boolean developMode;
 
+    private GestureDetectorCompat mDetector;
+
+    private String DEBUG_TAG =  "TESTEANDO";
+
+    private float lastTouchY;
+
     /**
      * Called when the activity is first created
      *
@@ -189,6 +201,14 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             // need to create any new ones here.
         }
 
+
+
+        FermatGestureDetector fermatGestureDetector = new FermatGestureDetector(this);
+
+        mDetector = new GestureDetectorCompat(this,fermatGestureDetector);
+        // Set the gesture detector as the double tap
+        // listener.
+        mDetector.setOnDoubleTapListener(fermatGestureDetector);
 
         try {
 
@@ -1151,28 +1171,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     }
 
     /**
-     * Get WalletManagerManager from the fermat platform
-     *
-     * @return reference of WalletManagerManager
-     */
-
-    public WalletFactoryManager getWalletFactoryManager() {
-        return (WalletFactoryManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WPD_WALLET_FACTORY_SUB_APP_MODULE);
-    }
-
-    /**
      * Get WalletSettingsManager
      */
     public WalletSettingsManager getWalletSettingsManager() {
         return (WalletSettingsManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WPD_WALLET_SETTINGS_MIDDLEWARE);
     }
 
-    /**
-     * Get SubAppSettingsManager
-     */
-    public SubAppSettingsManager getSubAppSettingsManager() {
-        return (SubAppSettingsManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_SUB_APP_SETTINGS_MIDDLEWARE);
-    }
 
     /**
      * Get WalletResourcesProvider
@@ -1188,19 +1192,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         return (SubAppResourcesProviderManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_SUBAPP_RESOURCES_NETWORK_SERVICE);
     }
 
-    /**
-     * Get ToolManager
-     */
-    public ToolManager getToolManager() {
-        return (ToolManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE);
-    }
-
-    /**
-     * Get WalletStoreModuleManager
-     */
-    public WalletStoreModuleManager getWalletStoreModuleManager() {
-        return (WalletStoreModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE);
-    }
 
     /**
      * Get IntraUserModuleManager
@@ -1209,12 +1200,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         return (IntraUserModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_INTRA_USER_FACTORY_MODULE);
     }
 
-    /**
-     * Get WalletStoreModuleManager
-     */
-    public WalletPublisherModuleManager getWalletPublisherManager() {
-        return (WalletPublisherModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WPD_WALLET_PUBLISHER_SUB_APP_MODULE);
-    }
 
     /**
      * Get NotificationManager
@@ -1252,50 +1237,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     public AssetRedeemPointWalletSubAppModule getAssetRedeemPointWalletModuleManager() {
         return (AssetRedeemPointWalletSubAppModule) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE);
     }
-
-    /**
-     *  Assets Issuer community
-     */
-    public AssetIssuerCommunitySubAppModuleManager getAssetIssuerCommunitySubAppModuleManager() {
-        return (AssetIssuerCommunitySubAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE);
-    }
-
-    /**
-     * Assets User community
-     */
-    public AssetUserCommunitySubAppModuleManager getAssetUserCommunitySubAppModuleManager() {
-        return (AssetUserCommunitySubAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE);
-    }
-
-    /**
-     *  Assets Redeem Point community
-     */
-    public RedeemPointCommunitySubAppModuleManager getAssetRedeemPointCommunitySubAppModuleManager() {
-        return (RedeemPointCommunitySubAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE);
-    }
-
     /**
      * CBP
      */
     public CryptoBrokerWalletModuleManager getCryptoBrokerWalletModuleManager() {
         //return (CryptoBrokerWalletModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BRO);
         return null;
-    }
-
-    public CryptoBrokerIdentityModuleManager getCryptoBrokerIdentityModuleManager() {
-        ApplicationSession applicationSession = (ApplicationSession) getApplication();
-        Platform platform = applicationSession.getFermatPlatform();
-        CorePlatformContext platformContext = platform.getCorePlatformContext();
-
-        return (CryptoBrokerIdentityModuleManager) platformContext.getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE);
-    }
-
-    public CryptoCustomerIdentityModuleManager getCryptoCustomerIdentityModuleManager() {
-        ApplicationSession applicationSession = (ApplicationSession) getApplication();
-        Platform platform = applicationSession.getFermatPlatform();
-        CorePlatformContext platformContext = platform.getCorePlatformContext();
-
-        return (CryptoCustomerIdentityModuleManager) platformContext.getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE);
     }
 
     /**
@@ -1448,6 +1395,119 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     @Override
     public void changeNavigationDrawerAdapter(ListAdapter listAdapter) {
         navigationDrawerFragment.changeNavigationDrawerAdapter(listAdapter);
+    }
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+
+        int action = MotionEventCompat.getActionMasked(event);
+
+        this.mDetector.onTouchEvent(event);
+
+        switch(action) {
+            case (MotionEvent.ACTION_DOWN) :
+                Log.d(DEBUG_TAG,"Action was DOWN");
+                return true;
+            case (MotionEvent.ACTION_MOVE) :
+                Log.d(DEBUG_TAG,"Action was MOVE");
+                return true;
+            case (MotionEvent.ACTION_UP) :
+                Log.d(DEBUG_TAG,"Action was UP");
+                return true;
+            case (MotionEvent.ACTION_CANCEL) :
+                Log.d(DEBUG_TAG,"Action was CANCEL");
+                return true;
+            case (MotionEvent.ACTION_OUTSIDE) :
+                Log.d(DEBUG_TAG,"Movement occurred outside bounds " +
+                        "of current screen element");
+                return true;
+            default :
+                return super.onTouchEvent(event);
+        }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        int eventaction=event.getAction();
+
+        final RelativeLayout header = getActivityHeader();
+
+        if(header!=null) {
+            final float y = event.getY();
+            // Remember where we started
+            lastTouchY = y;
+
+            switch (eventaction) {
+                case MotionEvent.ACTION_DOWN:
+                    Log.d(DEBUG_TAG, "Action was MOVE");
+
+//                    TranslateAnimation anim = new TranslateAnimation(0, 0, header.getX() - header.getHeight(), 0);
+//                    anim.setDuration(1000);
+//
+//                    anim.setAnimationListener(new TranslateAnimation.AnimationListener() {
+//
+//                        @Override
+//                        public void onAnimationStart(Animation animation) {
+//                        }
+//
+//                        @Override
+//                        public void onAnimationRepeat(Animation animation) {
+//                        }
+//
+//                        @Override
+//                        public void onAnimationEnd(Animation animation) {
+////                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)header.getLayoutParams();
+////                        params.topMargin += amountToMoveDown;
+////                        params.leftMargin += amountToMoveRight;
+////                        view.setLayoutParams(params);
+//                            header.setVisibility(View.GONE);
+//                        }
+//                    });
+//
+//                    header.startAnimation(anim);
+                    Log.d(TAG, TAG + "::onTouchEvent: parent ACTION_DOWN");
+
+
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    Log.d(DEBUG_TAG, "Action was DOWN");
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                    Log.d(DEBUG_TAG, "Action was MOVE");
+
+//                    TranslateAnimation anim1 = new TranslateAnimation(0, 0, 0, y);
+//                    anim1.setDuration(1000);
+//
+//                    anim1.setAnimationListener(new TranslateAnimation.AnimationListener() {
+//
+//                        @Override
+//                        public void onAnimationStart(Animation animation) {
+//                            header.setVisibility(View.VISIBLE);
+//                        }
+//
+//                        @Override
+//                        public void onAnimationRepeat(Animation animation) {
+//                        }
+//
+//                        @Override
+//                        public void onAnimationEnd(Animation animation) {
+////                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)header.getLayoutParams();
+////                        params.topMargin += amountToMoveDown;
+////                        params.leftMargin += amountToMoveRight;
+////                        view.setLayoutParams(params);
+//                        }
+//                    });
+//                    header.startAnimation(anim1);
+                    Log.d(TAG, TAG + "::onTouchEvent: parent ACTION_UP");
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return super.dispatchTouchEvent(event);
     }
 
 
