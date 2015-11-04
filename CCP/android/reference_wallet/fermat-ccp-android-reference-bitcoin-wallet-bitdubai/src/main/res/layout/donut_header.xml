@@ -4,7 +4,6 @@
     android:layout_gravity="center_horizontal"
     android:gravity="center"
     android:paddingTop="12dp"
-    android:paddingBottom="12dp"
     android:layout_marginLeft="12dp"
     >
 
@@ -44,7 +43,8 @@
                 />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:text="btc"
-                android:layout_toRightOf="@+id/txt_amount_type"
+                android:id="@+id/txt_balance_amount_type"
+                android:layout_toRightOf="@+id/txt_balance_amount"
                 android:layout_marginTop="14sp"
                 android:textColor="#05ddd2"
                 android:layout_marginLeft="2dp"

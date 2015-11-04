@@ -435,7 +435,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
         ((TextView) balance_header.findViewById(R.id.txt_touch_to_change)).setTypeface(tf);
 
-        TextView txt_amount_type = (TextView) balance_header.findViewById(R.id.txt_amount_type);
+        TextView txt_amount_type = (TextView) balance_header.findViewById(R.id.txt_balance_amount_type);
         if(txt_amount_type!=null)
         txt_amount_type.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -447,16 +447,16 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
         });
 
 
+        txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
 
-//        LinearLayout linear_amount_container = (LinearLayout) balance_header.findViewById(R.id.linear_amount_container);
-//        linear_amount_container.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
-//                //txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
-//                changeAmountType(txt_balance_amount);
-//            }
-//        });
+        txt_balance_amount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
+                //txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
+                changeAmountType(txt_balance_amount);
+            }
+        });
 
         txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
         //txt_balance_amount.setTypeface(tf);
