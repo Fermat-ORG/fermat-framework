@@ -1,5 +1,5 @@
 # Git Management
-Para poder entender mejor el contenido, favor de leer el siguiente documento: [Contributing](https://github.com/bitDubai/fermat/CONTRIBUTING.md).
+Para poder entender mejor el contenido, favor de leer el siguiente documento: [Contributing](https://github.com/bitDubai/fermat/CONTRIBUTING.md)
 
 A la hora de contribuir a través de git identificamos dos roles, uno es el que compromete sus cambios, mientras que el otro es el responsable de mezclar los cambios comprometidos.
 A partir de ahora los llamaremos Developer y Responsable respectivamente.
