@@ -702,7 +702,7 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
     }
 
     @Override
-    public List<ActorAssetIssuer> getListActorAssetIssuerRegistered() throws RequestedListNotReadyRecevivedException {
+    public List<ActorAssetIssuer> getListActorAssetIssuerRegistered() throws CantRequestListActorAssetIssuerRegisteredException {
         return actorAssetIssuerRegisteredList;
     }
 
@@ -811,9 +811,9 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
 
             /* test register one actor */
 
+            Location loca = null;
 
-
-            ActorAssetIssuer  actorAssetIssuerNewRegsitered = new AssetIssuerActorRecord("Pedrito","18009",new byte[]{9},0);
+            ActorAssetIssuer  actorAssetIssuerNewRegsitered = new AssetIssuerActorRecord("Pedrito","18009",new byte[]{9},loca);
 
 
             try {

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_api.layer.crypto_vault;
+package com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces;
 
 /**
  * Created by rodrigo on 10/4/15.
