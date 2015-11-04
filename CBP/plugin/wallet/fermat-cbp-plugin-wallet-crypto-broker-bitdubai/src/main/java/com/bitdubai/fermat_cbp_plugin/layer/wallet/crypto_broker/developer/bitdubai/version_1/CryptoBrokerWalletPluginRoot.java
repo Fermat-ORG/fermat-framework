@@ -80,11 +80,7 @@ public class CryptoBrokerWalletPluginRoot implements    CryptoBrokerWalletManage
 
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    public static final String CRYPTO_BROKER_PRIVATE_KEYS_WALLET_FILE_NAME = "cryptoBrokerWalletPrivateKeyWallet";
-
-    public static final String CRYPTO_BROKER_PRIVATE_KEYS_BROKER_FILE_NAME = "cryptoBrokerWalletPrivateKeyBroker";
-
-    public static final String CRYPTO_BROKER_PRIVATE_KEYS_CUSTOMER_FILE_NAME = "cryptoBrokerWalletPrivateKeyCustomer";
+    public static final String CRYPTO_BROKER_WALLET_PRIVATE_KEYS_FILE_NAME = "cryptoBrokerWalletPrivateKeyWallet";
 
     /*CryptoBrokerMAnager Interface Implementation*/
     @Override
