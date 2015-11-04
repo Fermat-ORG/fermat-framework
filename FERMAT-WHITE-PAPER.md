@@ -51,7 +51,11 @@ b. clients calling other clients.
 
 Every Node has a copy of a distributed geo-localized inventory of all network nodes. They run a protocol that allows them to keep their copy synchronized. 
 
-To be able to be found, a client registers itself and some inner components and identities with the geographically closest node, which we call the _home node_. When it needs to find other clients it follows a protocol that requires the approximate location of the client it is willing to connect to. This is possible becasue the system deals with End Users and usually people know the city, state or country where the people they know live. We avoid in this way using phone numbers, emails or any other possible identifier that could compromise End Users privacy.
+An Actor is a type of role an End User might play and in this context represent one of the End Users identities.
+ 
+To be able to be found, a network client registers itself and its Actors with the geographically closest node. We call this the _Home Node_. When and Actor needs to find other Actors it follows a protocol that requires the approximate location of the Actor it is willing to connect to. This is possible becasue the system deals with End Users and usually people know the city, state or country where the people they know actually live. We avoid in this way using phone numbers, emails or any other possible personal identifier that could compromise End Users privacy.
+
+For scalability reasons, we moved the responsability of finding Actors within the network, from the network itself to the network clients. Each node has a distributed catalog of Actors and is responsible to keep it updated. But instead of every node having the full catallog, only a set of nodes nearby the _Home Node_ of an actor knows that actor and which node is her home. This allows any Actor who knows the approximate location of the Actor she is searching for to easily find a trace and follow it to the current _Home Node_ where her friend is checked in, and stablish a coonection between them. 
 
 <br>
 ### Incentive
