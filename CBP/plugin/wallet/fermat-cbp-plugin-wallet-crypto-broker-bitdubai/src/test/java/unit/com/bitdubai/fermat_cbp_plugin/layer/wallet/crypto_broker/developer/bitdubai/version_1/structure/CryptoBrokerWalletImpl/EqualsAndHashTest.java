@@ -30,8 +30,7 @@ public class EqualsAndHashTest {
 
     private UUID transactionId = UUID.randomUUID();
     private KeyPair testkeyPairWallet;
-    private KeyPair testkeyPairBroker;
-    private KeyPair testkeyPairCustomer;
+    private String ownerPublicKey;
     private BalanceType balanceType = BalanceType.BOOK;
     private TransactionType transactionType = TransactionType.DEBIT;
     private float amount = 300;
@@ -49,13 +48,10 @@ public class EqualsAndHashTest {
     @Before
     public void setUpWallet(){
         testkeyPairWallet = AsymmetricCryptography.createKeyPair(TEST_PRIVATE_KEY);
-        testkeyPairBroker = AsymmetricCryptography.createKeyPair(TEST_PRIVATE_KEY);
-        testkeyPairCustomer = AsymmetricCryptography.createKeyPair(TEST_PRIVATE_KEY);
         testIdentity1 = new CryptoBrokerStockTransactionRecordImpl(
                 transactionId,
                 testkeyPairWallet,
-                testkeyPairBroker,
-                testkeyPairCustomer,
+                ownerPublicKey,
                 balanceType,
                 transactionType,
                 currencyType,
@@ -72,8 +68,7 @@ public class EqualsAndHashTest {
         testIdentity2 = new CryptoBrokerStockTransactionRecordImpl(
                 transactionId,
                 testkeyPairWallet,
-                testkeyPairBroker,
-                testkeyPairCustomer,
+                ownerPublicKey,
                 balanceType,
                 transactionType,
                 currencyType,
@@ -92,8 +87,7 @@ public class EqualsAndHashTest {
         testIdentity2 = new CryptoBrokerStockTransactionRecordImpl(
                 transactionId,
                 AsymmetricCryptography.generateECCKeyPair(),
-                testkeyPairBroker,
-                testkeyPairCustomer,
+                ownerPublicKey,
                 balanceType,
                 transactionType,
                 currencyType,
@@ -112,8 +106,7 @@ public class EqualsAndHashTest {
         testIdentity2 = new CryptoBrokerStockTransactionRecordImpl(
                 transactionId,
                 testkeyPairWallet,
-                AsymmetricCryptography.generateECCKeyPair(),
-                testkeyPairCustomer,
+                TEST_PUBLIC_KEY,
                 balanceType,
                 transactionType,
                 currencyType,
