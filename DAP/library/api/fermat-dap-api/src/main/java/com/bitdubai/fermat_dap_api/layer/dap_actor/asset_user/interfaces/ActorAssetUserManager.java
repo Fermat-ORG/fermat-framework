@@ -58,15 +58,28 @@ public interface ActorAssetUserManager {
    *
    * @throws CantGetAssetUserActorsException
    */
-  ActorAssetUser createActorAssetUserFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage, Double locationLatitude, Double locationLongitude) throws CantCreateAssetUserActorException;
+//  ActorAssetUser createActorAssetUserFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage, Double locationLatitude, Double locationLongitude) throws CantCreateAssetUserActorException;
 
 
 //  void createAndRegisterActorAssetUserTest() throws CantCreateAssetUserActorException;
 
+  /**
+   * The method <code>registerActorInActorNetowrkSerice</code> Register or Add Actor a Lst in
+   * Actor Network Service
+   *
+   * @throws CantCreateAssetUserActorException
+   */
    void registerActorInActorNetowrkSerice() throws CantCreateAssetUserActorException;
 
-
+  /**
+   * The method <code>connectToActorAssetUser</code> Stablish Connection
+   * with Issuer (Requester) and Lists Users for get a CryptoAdress (Delivered)
+   *
+   * @throws CantConnectToAssetUserException
+   */
   void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToAssetUserException;
 
+
+  void setCryptoAddress(ActorAssetUser actorAssetUser);
 
 }

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -28,8 +29,9 @@ public class TransactionConfidenceCalculator {
     Database database;
     final int TARGET_DEPTH = DepthInBlocksThreshold.DEPTH;
 
-    public TransactionConfidenceCalculator(Transaction transaction) {
+    public TransactionConfidenceCalculator(Transaction transaction, Database database) {
         this.transaction = transaction;
+        this.database = database;
     }
 
     private CryptoStatus getPreviousCryptoStatus(String txHash) throws CantLoadTableToMemoryException {
@@ -44,7 +46,12 @@ public class TransactionConfidenceCalculator {
         } else {
             CryptoStatus previousCryptoStatus = null;
             for (DatabaseTableRecord record : databaseTableRecordList) {
-                CryptoStatus cryptoStatus = CryptoStatus.valueOf(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME));
+                CryptoStatus cryptoStatus = null;
+                try {
+                    cryptoStatus = CryptoStatus.getByCode(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME));
+                } catch (InvalidParameterException e) {
+                    e.printStackTrace();
+                }
                 if (previousCryptoStatus == null)
                     previousCryptoStatus = cryptoStatus;
                 else if (previousCryptoStatus.getOrder() < cryptoStatus.getOrder())
@@ -80,12 +87,13 @@ public class TransactionConfidenceCalculator {
                      *
                      * for a found bug we've in count two more blocks to corroborate if the transaction is in the correct state
                      */
-                    if (height >= TARGET_DEPTH)
-                        if (height < 3 && getPreviousCryptoStatus(transaction.getHashAsString()) == CryptoStatus.ON_CRYPTO_NETWORK)
+                    if (height >= TARGET_DEPTH){
+                        if (getPreviousCryptoStatus(transaction.getHashAsString()) == CryptoStatus.ON_CRYPTO_NETWORK)
                             return CryptoStatus.ON_BLOCKCHAIN;
                         else
                             return CryptoStatus.IRREVERSIBLE;
-                    break;
+                    } else
+                        return CryptoStatus.ON_BLOCKCHAIN;
                 case DEAD:
                     /**
                      * If DEAD, then it means the transaction won’t confirm unless there is another re-org, because some other transaction is spending one of its inputs.

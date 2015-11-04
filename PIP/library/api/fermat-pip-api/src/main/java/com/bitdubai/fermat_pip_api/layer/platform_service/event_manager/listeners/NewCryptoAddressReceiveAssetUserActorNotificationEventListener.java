@@ -1,9 +1,3 @@
-/*
-* @#NewCryptoAddressReceiveAssetUserActorNotificationEventListener.java - 2015
-* Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
-* BITDUBAI/CONFIDENTIAL
-*/
 package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
@@ -14,39 +8,65 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 
 /**
- * The Class <code>com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.NewCryptoAddressReceiveAssetUserActorNotificationEventListener</code>
- * <p/>
- * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 28/10/15.
- *
- * @version 1.0
- * @since Java JDK 1.7
+ * Created by Nerio on 28/10/15.
  */
 public class NewCryptoAddressReceiveAssetUserActorNotificationEventListener implements FermatEventListener {
-
 
     FermatEventMonitor fermatEventMonitor;
     private EventType eventType;
     private FermatEventHandler fermatEventHandler;
+    /**
+     * Constructor with parameters
+     *
+     * @param eventType
+     * @param fermatEventMonitor
+     */
 
     public NewCryptoAddressReceiveAssetUserActorNotificationEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
         this.eventType = eventType;
         this.fermatEventMonitor = fermatEventMonitor;
     }
 
+    /**
+     * Throw the method <code>getEventType</code> you can get the information of the event type.
+     *
+     * @return an instance of a Fermat Enum.
+     */
     @Override
-    public FermatEventEnum getEventType() {
+    public EventType getEventType() {
         return eventType;
     }
 
+    /**
+     * Throw the method <code>setEventHandler</code> you can set a handler for the listener.
+     *
+     * @param fermatEventHandler handler for the event listener.
+     */
     @Override
     public void setEventHandler(FermatEventHandler fermatEventHandler) {
         this.fermatEventHandler = fermatEventHandler;
     }
 
+    /**
+     * Throw the method <code>getEventHandler</code>  you can get the handler assigned to the listener.
+     *
+     * @return an instance of FermatEventHandler.
+     */
+//    @Override
+//    public FermatEventEnum getEventType() {
+//        return eventType;
+//    }
+
     @Override
     public FermatEventHandler getEventHandler() {
         return this.fermatEventHandler;
     }
+
+    /**
+     * Throw the method <code>raiseEvent</code> you can raise the event to be listened.
+     *
+     * @param fermatEvent an instance of fermat event to be listened.
+     */
 
     @Override
     public void raiseEvent(FermatEvent fermatEvent) {

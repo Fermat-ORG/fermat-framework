@@ -1,0 +1,115 @@
+:numbered!:
+[[layersExplanation]]
+== Fermat layers explanation
+
+The *_multilayer architecture_* reveals useful when grouping the plugins according to their common functionalities. This gives , on one hand, a certain order and structure to the system and lets identify common challenges to solve when writing code. On the other hand, the conceptual strength of using _layers_ stimulate the creation of future plugins that are revealed as necessary when decomposing a big task in smaller steps to solve and implement. What's more, plugins that are originally conceived to serve a certain function, afterwards appear to be reusable for new developments beyond their initial purpose. +
+We have already explored in the previous sections the main role of the *Core Platform* to deploy the whole system structure, and the first available services provided by the system-wide *_superlayers_* . +
+Now, let us explore the next *_layers_* following on top, which are almost present in every *_Fermat platform_* which follows. +
+*Layers* are built with a considerable atomicity in its components (i.e. each component deals with a very specific and constrained set of events) what really renders the whole Fermat system with a strong, structured and solid foundation and at the same time a large flexibility and adaptability for further development and evolution. +
+
+:numbered:
+
+=== _Platform Services layer_
+The modules in this layer handle the very basic tasks that allow plugins interact safely in and uncontrolled environment, taking care of a careful transmission of responsability from one component to another and specially the management of exceptions and track of all system's *events*.
+
+////
+=== _Hardware layer_
+As Fermat runs distributed in different devices, this layer has the modules necessary to identify each of this devices _independently_ of the user that is logged in, and also to provide all the device's information that is needed for the system to run.+
+
+=== _Users layer_
+Fermat is a multiuser and multidevice system. Therefore, depending on how the user interacts with Fermat, users are divided into certain _users categories_ which allow to properly handle the user's activity within Fermat. +
+=== _Plugin layer_
+=== _License layer_
+Fermat system ensures a _microlicense_ system to let the developer of a certain plug-in or certain wallet or any other module to charge a *fee* for the use of the component, and the revenue is enforced programmatically by Fermat to reach the license owner.    
+Plugin :: +
+////
+
+=== _Network Service layer_
+Each time that a certain system function must perform any operation *outside* the device where Fermat is running, a _network service_ is required to follow the execution in other devices until is completed. +
+Network services' modules need to have a *communication channel* stablished and maintained between the parties involved, what is done by the *Fermat network*  +
+Each *network service module* running on a _local device_ stablishes communication EXCLUSIVELY to its _counterpart_ running in the _remote device_. +
+The module handles a table of request and responses to communicate with the counterpart and so perform the required task. +
+
+=== _Actor Network Service layer_
+This layer provides specific *network services* to interconnect the *actors identity* of an actor of a specific Fermat platform to the *user identity* on which it depends. + 
+
+=== _Identity layer_
+Plug-ins in this layer manage the necessary information about the end user's *identity* within Fermat. Every *identity* in Fermat is a pair of privat/public key that acts like a credential to access to certain functionalities for specific to the * identity's owner For example, it allows the *end user* to have access to his own *wallets*. +
+
+=== _World layer_
+In this layer the components consult certain specific information from the world "outside"of Fermat, usually checking indexes on webpages, or gathering any kind of information offered in the web, to make this available to Fermats plugins to consume the collected data.
+
+=== _Wallet layer_
+The components in this layer do all the *accountancy operations* related to the wallets.
+
+=== _Transaction layers_
+[horizontal]
+Transaction :: a transaction is basically any operation that includes *money*. 
+
+A transaction is dependent on the _atomicity_ of the changes of status in the operations involved, so each _transaction plugin_ should aknowledge wether the operation was succesfully ACCEPTED or at the contrary, it was REFUSED.
+Each plugin deals with a certain _transaction type_ defined by different criteria, mostly of the time, according to the *actors* involved and the *direction* (incoming / outgoing). +
+In Fermat the *transport of value* goes on a parallel path to the *transport of information (metadata)* of the transaction, so both transports are managed by the _transaction plugins_.
+
+:numbered!:
+==== _Digital Money Transaction layer_
+This type of transaction layer deals with *digital money transaction*
+
+==== _Cash Money Transaction layer_
+This type of transaction layer deals with *cash money transaction*
+
+==== _Money Transaction layer_
+This type of transaction layer deals with *digital money transaction*
+
+:numbered:
+=== _Business Transaction layers_
+More complex plugins that deal with multiple transactions that occur at the same time to reflect a desired *business transaction* 
+
+=== _Request layer_
+Plugins in this layer gather the differents _requests_ than have been triggered in the system and deliver them to the appropiated plugin to manage and fullfill the request.
+
+=== _Middleware layer_
+Every plugin that cover any other functionality required and that is not included in the other layers.
+
+[[actorLayer]]
+=== _Actor layer_
+This is the layer where the business logic of a specific *actor* is defined. *Actor identities* are derived in a hierarchical way from the end user's *root identity*, and let him create and control how many identities he wants to play different roles within Fermat's platforms.
+
+=== _Agent layer_
+High level plugins (near to the *end user*) that by means of a certain kind of _Artificial Intelligence (AI)_ can take decisions on the *user's* behalf, to simplify the management of wallets  with high abstraction levels. For example, when the user wants to make a payment, an agent could choose where to withdraw the fund from to be more profitable financially to the user.
+
+=== _Modules layers_
+*Modules* plugins in this layers act as a "general manager" of all the functionalities that a *desktop* needs to consume from Fermat, delivering to it what is required in a transparent way (without the desktop program actually managing anything inside Fermat, but querying the _desktop module_ to get what it needs).
+
+:numbered!:
+==== _Desktop Module layer_
+[horizontal]
+*Desktop* :: is an sub-application (sub-program) that concentrate functionalities provided by several other sub-applications to present them in a _graphic user interface (GUI)_ to interact with the user. ( see <<desktopLayer>> ) +
+
+==== _Sub App Module layer_
+Similar to the _Desktop Module layer_ but applied to the _Sub Applications_ that run *below* _desktops_. +
+These _sub app_ do *NOT* manage money.
+
+==== _Wallet Module layer_
+Similar to the _Sub App  Module layer_ but applied to _Wallets_, i.e. "sub apps" that *DO* manage money. +
+
+NOTE: Until now, the _layers_ presented are written in *JAVA*. +
+The next layers are NOT *code portable*, i.e. they depend on the Operating Systems where they run, and therefore are written in each OS's specific language.
+
+:numbered:
+[[desktopLayer]]
+=== *_Desktop layer_*
+In this layer live the part of the *desktop application* responsible of the GUI (Graphic User Interface) which has a *one-on-one* relationship to the component of the same name in the _Desktop Module Layer_
+
+=== *_Subapp layer_*
+In this layer live the part of the *sub app* responsible of the GUI (Graphic User Interface) which has a *one-on-one* relationship to the component of the same name in the _Sub App Module Layer_
+
+=== *_Reference Wallet layer_*
+In this layer live the part of the *wallet* responsible of the GUI (Graphic User Interface) and which manages the *wallets resources* (multimedia) and the *wallet navigation structure*. This also has a  *one-on-one* relationship to the component of the same name  in the _Wallet Module Layer_
+
+:numbered!:
+  
+=== Continue Reading
+link:book-chapter-08.asciidoc[Next Chapter]
+
+link:book-chapter-06.asciidoc[Previous Chapter]
+

@@ -255,6 +255,9 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
         this.eventManager = DealsWithEvents;
     }
 
+    public boolean isRegister() {
+        return register;
+    }
 
     /**
      * Get the IdentityPublicKey
@@ -600,11 +603,6 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
     }
 
     @Override
-    public UUID getId() {
-        return this.pluginId;
-    }
-
-    @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return platformComponentProfile;
     }
@@ -727,160 +725,6 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
         remoteNetworkServicesRegisteredList = platformComponentProfileRegisteredList;
 
         System.out.println(" AssetTransmissionPluginRoot - remoteNetworkServicesRegisteredList.size() "+remoteNetworkServicesRegisteredList.size());
-
-         /* -----------------------------------------------------------------------
-         * This is for test and example of how to use
-         */
-        if(getRemoteNetworkServicesRegisteredList() != null && !getRemoteNetworkServicesRegisteredList().isEmpty()){
-
-            /*
-             * Get a remote network service registered from the list requested
-             */
-            final PlatformComponentProfile remoteToConnect = getRemoteNetworkServicesRegisteredList().get(0);
-
-            System.out.println(" AssetTransmissionPluginRoot - remoteToConnect "+remoteToConnect);
-            
-            try {
-
-                ActorAssetIssuer actorAssetIssuer = new ActorAssetIssuer() {
-                    @Override
-                    public String getPublicKey() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getName() {
-                        return null;
-                    }
-
-                    @Override
-                    public long getRegistrationDate() {
-                        return 0;
-                    }
-
-                    @Override
-                    public byte[] getProfileImage() {
-                        return new byte[0];
-                    }
-
-                    @Override
-                    public ConnectionState getConnectionState() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getDescription() {
-                        return null;
-                    }
-
-                    @Override
-                    public Location getLocation() {
-                        return null;
-                    }
-
-                    @Override
-                    public Double getLocationLatitude() {
-                        return null;
-                    }
-
-                    @Override
-                    public Double getLocationLongitude() {
-                        return null;
-                    }
-
-                    @Override
-                    public CryptoAddress getCryptoAddress() {
-                        return null;
-                    }
-                };
-
-                ActorAssetUser actorAssetUser = new ActorAssetUser() {
-
-                    @Override
-                    public String getPublicLinkedIdentity() {
-                        return remoteToConnect.getIdentityPublicKey();
-                    }
-
-                    @Override
-                    public String getPublicKey() {
-                        return remoteToConnect.getIdentityPublicKey();
-                    }
-
-                    @Override
-                    public String getName() {
-                        return remoteToConnect.getName();
-                    }
-
-                    @Override
-                    public long getRegistrationDate() {
-                        return 0;
-                    }
-
-                    @Override
-                    public long getLastConnectionDate() {
-                        return 0;
-                    }
-
-                    @Override
-                    public byte[] getProfileImage() {
-                        return new byte[0];
-                    }
-
-                    @Override
-                    public ConnectionState getConnectionState() {
-                        return null;
-                    }
-
-                    @Override
-                    public Double getLocationLatitude() {
-                        return null;
-                    }
-
-                    @Override
-                    public Double getLocationLongitude() {
-                        return null;
-                    }
-
-                    @Override
-                    public Genders getGenders() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getAge() {
-                        return null;
-                    }
-
-                    @Override
-                    public CryptoAddress getCryptoAddress() {
-                        return null;
-                    }
-                };
-
-
-                MockDigitalAssetMetadataForTesting mockDigitalAssetForTesting = new MockDigitalAssetMetadataForTesting();
-
-                sendDigitalAssetMetadata(actorAssetIssuer,actorAssetUser, mockDigitalAssetForTesting);
-
-
-            } catch (CantDefineContractPropertyException e) {
-                e.printStackTrace();
-            } catch (CantSendDigitalAssetMetadataException e) {
-                e.printStackTrace();
-            }
-
-
-        }
-
-    }
-
-    /**
-     * Get is Register
-     * @return boolean
-     */
-    @Override
-    public boolean isRegister() {
-        return register;
     }
 
     @Override
@@ -892,25 +736,6 @@ public class AssetTransmissionPluginRoot implements AssetTransmissionNetworkServ
          * Tell the manager to handler the new connection stablished
          */
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
-
-
-        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
-
-            /* -------------------------------------------------------------------------------------------------
-             * This is for test and example of how to use
-             * Get the local representation of the remote network service
-             */
-            CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(remoteComponentProfile.getIdentityPublicKey());
-
-            /*
-             * Get a remote network service registered from the list requested
-             */
-            PlatformComponentProfile remoteNetworkServiceToConnect = remoteNetworkServicesRegisteredList.get(0);
-
-
-
-        }
-
     }
 
     /**

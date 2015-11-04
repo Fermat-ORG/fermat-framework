@@ -18,7 +18,7 @@ public enum Platforms implements FermatEnum {
     OPERATIVE_SYSTEM_API("OSA"),
     PLUG_INS_PLATFORM("PIP"),
 
-    ;
+    WALLET_PRODUCTION_AND_DISTRIBUTION("WPD");
 
     private String code;
 

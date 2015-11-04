@@ -37,9 +37,10 @@ public class AssetDistributionRecorderService implements DealsWithEvents, AssetT
      */
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
-    public AssetDistributionRecorderService(AssetDistributionDao assetDistributionDao) throws CantStartServiceException {
+    public AssetDistributionRecorderService(AssetDistributionDao assetDistributionDao, EventManager eventManager) throws CantStartServiceException {
         try {
             setAssetDistributionDao(assetDistributionDao);
+            setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
             throw new CantStartServiceException(exception, "Cannot set the asset distribution database handler","The database handler is null");
         }
@@ -140,7 +141,7 @@ public class AssetDistributionRecorderService implements DealsWithEvents, AssetT
             //LOG.info("ASSET ISSUING EVENT RECORDER STARTED");
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantSetObjectException exception){
-            throw new CantStartServiceException(exception,"Starting the AssetIssuingRecorderService", "The AssetIssuingRecorderService is probably null");
+            throw new CantStartServiceException(exception,"Starting the AssetDistributionRecorderService", "The AssetDistributionRecorderService is probably null");
         }
 
     }

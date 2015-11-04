@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_iss
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
@@ -15,6 +16,8 @@ import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interf
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
@@ -53,6 +56,7 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
     DigitalAssetIssuingVault digitalAssetIssuingVault;
     LogManager logManager;
     BitcoinNetworkManager bitcoinNetworkManager;
+    //ActorAssetIssuerManager actorAssetIssuerManager;
 
     public AssetIssuingTransactionManager(UUID pluginId,
                                           CryptoVaultManager cryptoVaultManager,
@@ -111,6 +115,14 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         }
         this.bitcoinNetworkManager = bitcoinNetworkManager;
     }
+
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException{
+        if(actorAssetIssuerManager==null){
+            throw new CantSetObjectException("actorAssetIssuerManager is null");
+        }
+        this.digitalAssetCryptoTransactionFactory.setActorAssetIssuerManager(actorAssetIssuerManager);
+    }
+
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the asset issuing plugin
      * @throws CantGetLoggedInDeviceUserException
@@ -248,5 +260,18 @@ public class AssetIssuingTransactionManager implements AssetIssuingManager, Deal
         } catch (CantCheckAssetIssuingProgressException exception) {
             throw new CantExecuteDatabaseOperationException(exception, "Getting the number of issued assets","Cannot check the asset issuing progress");
         }
+    }
+
+    @Override
+    public IssuingStatus getIssuingStatus(String assetPublicKey) throws CantExecuteDatabaseOperationException {
+        try {
+            String issuingStatusCode=this.assetIssuingTransactionDao.getIssuingStatusByPublicKey(assetPublicKey);
+            return IssuingStatus.getByCode(issuingStatusCode);
+        } catch (CantCheckAssetIssuingProgressException exception) {
+            throw new CantExecuteDatabaseOperationException(exception,"Getting the Issuing status","Cannot check the Asset Issuing progress");
+        } catch (InvalidParameterException exception) {
+            throw new CantExecuteDatabaseOperationException(exception,"Getting the Issuing status","Cannot invalid parameter in IssuingStatus enum");
+        }
+
     }
 }

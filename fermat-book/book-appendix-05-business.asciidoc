@@ -1,0 +1,37 @@
+
+=== Business Model
+* **Fermat is inclusive.** By creating their own plugins, current industry members can integrate with Fermat to offer their services and products to Fermat user base. 
+
+* **Fermat segments the world population and offers a custom tailored solution for each segment.** Any developer can easily create niche wallets for a particular group of people. Brands can create their own wallets for their followers. All the heavy lifting is done by the Fermat platform.
+
+At the same time, the open source *plug-in platform* allows any skilled actor in the community to jump in and develop applications and offer services with different abstraction levels and addressing a wide range of segmented markets. In fact, as we have seen in the section about Fermat as a _master plan_, the possibility of using the existent global talent and intelligence that the community already has in a clever collaborative way, can rapidily expand this technology to mass adoption. + 
+Instead of beginning a new project in this industry completley from scratch, the clear and firm logic of Fermat can make it a new standard in the industry, giving the collective a strong and stabile group coherence it had never experienced before. All participants in the different sectors get , because of Fermat's transparency, clear logic and solid foundations, a sense of trust, safety and equity, and the corresponding right to become a revenue for each one's contribution and effort.
+
+* PUBLIC
+Anybody can connect to the Fermat P2P network and use its services. Anybody can write plug-ins for its platforms.
+
+* OPEN
+Anybody can participate and innovate without requiring permission.
+
+* INCLUSIVE
+Any existing crypto service running outside the Fermat network / platform can be integrated and consumed from within the network.
+
+* OPEN STANDARD
+Can be freely adopted, implemented and extended.
+
+
+* *Fermat guaratees plugins and wallet developers a revenue stream.* Fermat implements an innovative business model which allows plugins and wallet developers to define a use license, and Fermat itself enforces this license on behalf of developers. )
+
+=== Target 
+The first goal is to get very close to the *end user* offering and easy way of coming onboard the crytocurrency world by means of possesing a digital *wallet* running on his preferred device. +
+=== segmentation 
+Fermat understands that there exists on the world so many different tastes and preferences like humans exists on earth, because each one is _unique_, and therefore there are potentially a huge number of differents ways of shaping the applications being developed, considering its functionalities, accessibility, and appearance among other various customizable characteristics, although they are conceived to deal with the same tasks of managing cryptocurrencies and blockchain technology.  + 
+Here begins the huge differentation between Fermat applications and the rest ! + 
+Fermat takes very _seriously_ into account the _actor's profile_ to develop attractive applications in each case to match very specificaly the demand of each consumer's niche. For instance, some actors with a more complex relationships world require more complexity in their wallets and in the wallet of his partners.
+
+=== levels of abstraction
+On the other hand, while certain actors need basic operations, other's use of blockchain technology may demand higher levels of abstraction.
+For instance, low abstraction is needed for user that only need to see their value in *cryptocurrency*. Others may want to have their wallets showing them their content in *fiat money*. Others might need some functionalities that prevent them for *losing value* depending on the exchange rate they purchased the currency and when they want to spend it, and some of them would like even to see the profitable exchange rate as a *discount* obtained in the purchase of goods.. There are also many who will only serve themselves of the cryptonetwork not to transport value, but to issue *digital assets* instead, assets that are made public through the blockchain ledger... + 
+All this different _*abstraction levels*_ are possible within Fermat, and Fermat multi-platform system is specifically designed to match this increasing demand in the industry, and at the same time, the use of Fermat'S products foster the creation of real-world environments, connecting in a very efficient, secure, and scalable way, the actors offering services with those consuming them.
+
+link:book-appendix-03-money.asciidoc[Appendix 03: Fiat Money & Crypto Currency]

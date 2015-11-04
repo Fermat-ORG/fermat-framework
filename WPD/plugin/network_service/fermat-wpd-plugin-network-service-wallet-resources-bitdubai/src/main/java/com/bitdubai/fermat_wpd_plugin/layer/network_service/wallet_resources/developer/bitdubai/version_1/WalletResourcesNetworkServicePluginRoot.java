@@ -167,11 +167,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     private final String LOCAL_STORAGE_PATH = "wallet-resources/";
 
-    /**
-     * Represent the register
-     */
-    private boolean register;
-
 
     /**
      *  Wallet instalation progress
@@ -287,11 +282,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      */
 
     @Override
-    public UUID getId() {
-        return pluginId;
-    }
-
-    @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return null;
     }
@@ -356,13 +346,9 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     }
 
-    /**
-     * Get is Register
-     * @return boolean
-     */
     @Override
     public boolean isRegister() {
-        return register;
+        return false;
     }
 
     /**

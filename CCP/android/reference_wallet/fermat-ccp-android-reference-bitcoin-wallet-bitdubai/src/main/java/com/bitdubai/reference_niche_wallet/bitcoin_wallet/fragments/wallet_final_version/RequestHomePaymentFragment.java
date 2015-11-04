@@ -194,15 +194,16 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
                     //add connection like a wallet contact
                     try
                     {
-                        cryptoWallet.convertConnectionToContact(walletContact.name,
-                                Actors.INTRA_USER,
-                                walletContact.actorPublicKey,
-                                new byte[0],
-                                Actors.INTRA_USER,
-                                intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),
-                                "reference_wallet"/*referenceWalletSession.getWalletSessionType().getWalletPublicKey()*/ ,
-                                CryptoCurrency.BITCOIN,
-                                BlockchainNetworkType.TEST);
+                        if(walletContact.isConnection)
+                            cryptoWallet.convertConnectionToContact(walletContact.name,
+                                    Actors.INTRA_USER,
+                                    walletContact.actorPublicKey,
+                                    walletContact.profileImage,
+                                    Actors.INTRA_USER,
+                                    intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),
+                                    "reference_wallet"/*referenceWalletSession.getWalletSessionType().getWalletPublicKey()*/ ,
+                                    CryptoCurrency.BITCOIN,
+                                    BlockchainNetworkType.TEST);
 
                     }
                     catch (CantGetActiveLoginIdentityException e) {
@@ -477,7 +478,7 @@ public class RequestHomePaymentFragment extends FermatWalletListFragment<Payment
                 String contactAddress = "";
                 if(wcr.getReceivedCryptoAddress().size() > 0)
                     contactAddress = wcr.getReceivedCryptoAddress().get(0).getAddress();
-                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress,wcr.isConnection()));
+                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress,wcr.isConnection(),wcr.getProfilePicture()));
             }
         }
         catch (CantGetAllWalletContactsException e) {

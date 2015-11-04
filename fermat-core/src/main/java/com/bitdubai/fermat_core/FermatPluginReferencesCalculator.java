@@ -1,10 +1,11 @@
 package com.bitdubai.fermat_core;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantListReferencesException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CyclicalRelationshipFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.VersionNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantListNeededReferencesException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantListReferencesException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CyclicalRelationshipFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -110,7 +111,8 @@ public class FermatPluginReferencesCalculator {
     private void setLevels(final PluginVersionReference               prToCalc    ,
                            final Integer                              lvlToAssign ,
                            final Map<PluginVersionReference, Integer> pluginLevels) throws VersionNotFoundException           ,
-                                                                                           CyclicalRelationshipFoundException {
+                                                                                           CyclicalRelationshipFoundException ,
+                                                                                           CantListNeededReferencesException  {
 
         Integer lvlToAssignToReferences = lvlToAssign + 1;
 
@@ -152,7 +154,8 @@ public class FermatPluginReferencesCalculator {
                            final List<PluginVersionReference>         prList      ,
                            final Integer                              lvlToAssign ,
                            final Map<PluginVersionReference, Integer> pluginLevels) throws VersionNotFoundException           ,
-                                                                                           CyclicalRelationshipFoundException {
+                                                                                           CyclicalRelationshipFoundException ,
+                                                                                           CantListNeededReferencesException  {
 
         Integer lvlToAssignToReferences = lvlToAssign + 1;
 
@@ -191,11 +194,12 @@ public class FermatPluginReferencesCalculator {
     private void assignToReferences(final AbstractPlugin                       prToCalc    ,
                                     final Integer                              lvlToAssign ,
                                     final Map<PluginVersionReference, Integer> pluginLevels) throws VersionNotFoundException           ,
-                                                                                                    CyclicalRelationshipFoundException {
+                                                                                                    CyclicalRelationshipFoundException ,
+                                                                                                    CantListNeededReferencesException  {
 
-        List<PluginVersionReference> refNeededList = prToCalc.getNeededPluginReferences();
+        List<PluginVersionReference> refNeededList = prToCalc.getNeededPlugins();
         for (PluginVersionReference refNeeded : refNeededList) {
-            List<PluginVersionReference> refNeededReferenceList = fermatSystemContext.getPluginVersion(refNeeded).getNeededPluginReferences();
+            List<PluginVersionReference> refNeededReferenceList = fermatSystemContext.getPluginVersion(refNeeded).getNeededPlugins();
             setLevels(refNeeded, refNeededReferenceList, lvlToAssign, pluginLevels);
         }
     }
@@ -215,10 +219,11 @@ public class FermatPluginReferencesCalculator {
                                     final List<PluginVersionReference>         prList      ,
                                     final Integer                              lvlToAssign ,
                                     final Map<PluginVersionReference, Integer> pluginLevels) throws VersionNotFoundException           ,
-                                                                                                    CyclicalRelationshipFoundException {
+                                                                                                    CyclicalRelationshipFoundException ,
+                                                                                                    CantListNeededReferencesException  {
 
         for (final PluginVersionReference refNeeded : prList) {
-            List<PluginVersionReference> refNeededReferenceList = fermatSystemContext.getPluginVersion(refNeeded).getNeededPluginReferences();
+            List<PluginVersionReference> refNeededReferenceList = fermatSystemContext.getPluginVersion(refNeeded).getNeededPlugins();
             if (compareReferences(prToCalc, refNeeded, refNeededReferenceList))
                 setLevels(refNeeded, refNeededReferenceList, lvlToAssign, pluginLevels);
         }

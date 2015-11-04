@@ -72,11 +72,6 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
      */
     UUID pluginId;
 
-    /**
-     * Represent the register
-     */
-    private boolean register;
-
 
     /**
      *  MoneyRequestNetworkServicePluginRoot methods implementation.
@@ -181,11 +176,6 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
     }
 
     @Override
-    public UUID getId() {
-        return this.pluginId;
-    }
-
-    @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return null;
     }
@@ -249,13 +239,9 @@ public class MoneyRequestNetworkServicePluginRoot implements Service, NetworkSer
 
     }
 
-    /**
-     * Get is Register
-     * @return boolean
-     */
     @Override
     public boolean isRegister() {
-        return register;
+        return false;
     }
 
     /*

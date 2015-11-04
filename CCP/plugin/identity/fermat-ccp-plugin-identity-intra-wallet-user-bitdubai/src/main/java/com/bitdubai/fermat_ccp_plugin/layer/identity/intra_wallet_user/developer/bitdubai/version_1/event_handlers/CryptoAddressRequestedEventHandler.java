@@ -39,13 +39,13 @@ public class CryptoAddressRequestedEventHandler implements FermatEventHandler {
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
-        if (this.intraUserIdentityPluginRoot.getStatus() == ServiceStatus.STARTED) {
+      //  if (this.intraUserIdentityPluginRoot.isStarted()) {
 
             if (fermatEvent instanceof CryptoAddressRequestedEvent) {
                 CryptoAddressRequestedEvent cryptoAddressRequestedEvent = (CryptoAddressRequestedEvent) fermatEvent;
 
-                if (cryptoAddressRequestedEvent.getActorType().equals(Actors.INTRA_USER))
-                    cryptoAddressGenerationService.handleCryptoAddressRequestedEvent(cryptoAddressRequestedEvent.getRequestId());
+                //if (cryptoAddressRequestedEvent.getActorType().equals(Actors.INTRA_USER))
+                    //cryptoAddressGenerationService.handleCryptoAddressRequestedEvent(cryptoAddressRequestedEvent.getRequestId());
 
             } else {
                 EventType eventExpected = EventType.CRYPTO_ADDRESS_REQUESTED;
@@ -53,8 +53,8 @@ public class CryptoAddressRequestedEventHandler implements FermatEventHandler {
                                  "Event expected: " + eventExpected.toString()              + " - " + eventExpected.getCode();
                 throw new UnexpectedEventException(context);
             }
-        } else {
+     /*   } else {
             throw new IntraWalletUserIdentityPluginNotStartedException(null, "Plugin is not started.", "");
-        }
+        }*/
     }
 }

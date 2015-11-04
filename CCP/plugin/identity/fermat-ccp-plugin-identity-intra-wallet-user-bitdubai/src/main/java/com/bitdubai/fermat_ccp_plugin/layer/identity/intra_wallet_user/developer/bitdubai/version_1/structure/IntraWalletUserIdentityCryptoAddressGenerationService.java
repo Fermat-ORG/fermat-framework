@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CallToGetByCodeOnNONEException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantGetInstalledWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.DefaultWalletNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
@@ -13,7 +14,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantAcceptAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantDenyAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantGetPendingAddressExchangeRequestException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.AddressExchangeRequest;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressRequestEventException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantIdentifyVaultException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
@@ -37,15 +37,15 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
 
     public static final Actors actorType = Actors.INTRA_USER;
 
-    private final CryptoAddressesManager                cryptoAddressesManager;
-    private final CryptoAddressBookManager              cryptoAddressBookManager;
-    private final IntraWalletUserIdentityVaultAdministrator vaultAdministrator;
-    private final WalletManagerManager                  walletManagerManager;
+    private final CryptoAddressesManager                    cryptoAddressesManager  ;
+    private final CryptoAddressBookManager                  cryptoAddressBookManager;
+    private final IntraWalletUserIdentityVaultAdministrator vaultAdministrator      ;
+    private final WalletManagerManager                      walletManagerManager    ;
 
-    public IntraWalletUserIdentityCryptoAddressGenerationService(final CryptoAddressesManager cryptoAddressesManager,
-                                                                 final CryptoAddressBookManager cryptoAddressBookManager,
-                                                                 final IntraWalletUserIdentityVaultAdministrator vaultAdministrator,
-                                                                 final WalletManagerManager walletManagerManager) {
+    public IntraWalletUserIdentityCryptoAddressGenerationService(final CryptoAddressesManager                    cryptoAddressesManager  ,
+                                                                 final CryptoAddressBookManager                  cryptoAddressBookManager,
+                                                                 final IntraWalletUserIdentityVaultAdministrator vaultAdministrator      ,
+                                                                 final WalletManagerManager                      walletManagerManager    ) {
 
         this.cryptoAddressesManager   = cryptoAddressesManager;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
@@ -53,21 +53,18 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
         this.walletManagerManager     = walletManagerManager;
     }
 
-    // TODO what happens if i don't recognize the actor? if the request arrives to me must belongs.. but...
-
-
-    public void handleCryptoAddressRequestedEvent(UUID requestId) throws CantHandleCryptoAddressRequestEventException {
+    public void handleCryptoAddressRequestedEvent(final UUID requestId) throws CantHandleCryptoAddressRequestEventException {
 
         try {
-            AddressExchangeRequest request = cryptoAddressesManager.getPendingRequest(requestId);
-            handleCryptoAddressRequestedEvent(request);
-        } catch (CantGetPendingAddressExchangeRequestException | PendingRequestNotFoundException e) {
+            CryptoAddressRequest request = cryptoAddressesManager.getPendingRequest(requestId);
+           handleCryptoAddressRequestedEvent(request);
+       } catch (CantGetPendingAddressExchangeRequestException | PendingRequestNotFoundException e) {
 
             throw new CantHandleCryptoAddressRequestEventException(e, "RequestId: "+requestId);
         }
     }
 
-    public void handleCryptoAddressRequestedEvent(AddressExchangeRequest request) throws CantHandleCryptoAddressRequestEventException {
+    public void handleCryptoAddressRequestedEvent(final CryptoAddressRequest request) throws CantHandleCryptoAddressRequestEventException {
 
         try {
 
@@ -86,6 +83,8 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
 
                 ReferenceWallet referenceWallet = ReferenceWallet.getByCategoryAndIdentifier(wallet.getWalletCategory(), wallet.getWalletPlatformIdentifier());
 
+                System.out.println("************ Crypto Addresses -> updating ok.");
+
                 cryptoAddressBookManager.registerCryptoAddress(
                         cryptoAddress,
                         request.getIdentityPublicKeyResponding(),
@@ -99,10 +98,16 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
                         referenceWallet
                 );
 
+                System.out.println("************ Crypto Addresses ->registered crypto address.");
+
+                System.out.println("************ Crypto Addresses -> i will accept the address exchange request.");
+
                 cryptoAddressesManager.acceptAddressExchangeRequest(
                         request.getRequestId(),
                         cryptoAddress
                 );
+
+                System.out.println("************ Crypto Addresses -> i already accept the address exchange request.");
 
             } catch(DefaultWalletNotFoundException z) {
 
@@ -110,11 +115,11 @@ public class IntraWalletUserIdentityCryptoAddressGenerationService {
             }
 
         } catch (PendingRequestNotFoundException              |
-                 CantDenyAddressExchangeRequestException      |
-                 CantAcceptAddressExchangeRequestException    |
-                 CantRegisterCryptoAddressBookRecordException |
-                 CallToGetByCodeOnNONEException               |
-                 InvalidParameterException e                  ) {
+                CantDenyAddressExchangeRequestException      |
+                CantAcceptAddressExchangeRequestException    |
+                CantRegisterCryptoAddressBookRecordException |
+                CallToGetByCodeOnNONEException               |
+                InvalidParameterException e                  ) {
 
             throw new CantHandleCryptoAddressRequestEventException(e);
         } catch (CantIdentifyVaultException e) {

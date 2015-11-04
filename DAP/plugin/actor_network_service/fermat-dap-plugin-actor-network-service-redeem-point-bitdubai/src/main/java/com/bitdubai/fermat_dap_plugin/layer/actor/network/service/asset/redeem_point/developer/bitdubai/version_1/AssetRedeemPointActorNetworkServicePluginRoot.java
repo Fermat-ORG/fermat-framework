@@ -44,6 +44,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.DealsWithActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRequestListActorAssetRedeemPointRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.ActorNetworkServiceRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
@@ -565,11 +566,6 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
         }
     }
 
-    /**
-     * Get is Register
-     * @return boolean
-     */
-    @Override
     public boolean isRegister() {
         return register;
     }
@@ -658,7 +654,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
                 /*
                  * ask to the communication cloud client to register
                  */
-                communicationsClientConnection.registerComponentForCommunication(platformComponentProfileAssetRedeemPoint);
+                communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfileAssetRedeemPoint);
 
             }else{
 
@@ -734,18 +730,13 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
     }
 
     @Override
-    public List<ActorAssetRedeemPoint> getListActorAssetRedeemPointRegistered() throws com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.RequestedListNotReadyRecevivedException {
+    public List<ActorAssetRedeemPoint> getListActorAssetRedeemPointRegistered() throws CantRequestListActorAssetRedeemPointRegisteredException {
         return actorAssetRedeemPointRegisteredList;
     }
 
     @Override
     public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
-    }
-
-    @Override
-    public UUID getId() {
-        return this.pluginId;
     }
 
     @Override
@@ -823,7 +814,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot implements ActorNetwo
                      * ask to the communication cloud client to register
                      */
                     try {
-                        communicationsClientConnection.registerComponentForCommunication(platformComponentProfileAssetRedeemPoint);
+                        communicationsClientConnection.registerComponentForCommunication(getNetworkServiceType(), platformComponentProfileAssetRedeemPoint);
                     } catch (CantRegisterComponentException e) {
                         e.printStackTrace();
                     }

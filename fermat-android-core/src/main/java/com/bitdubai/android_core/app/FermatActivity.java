@@ -2,6 +2,7 @@ package com.bitdubai.android_core.app;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.Notification;
@@ -23,6 +24,8 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -33,12 +36,16 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -62,6 +69,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Wallet
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -133,6 +141,7 @@ import static java.lang.System.gc;
 public class FermatActivity extends FragmentActivity implements WizardConfiguration, FermatNotifications, PaintActivtyFeactures, Observer,FermatNotificationListener {
 
     private static final String TAG = "fermat-core";
+    public static final String DEVELOP_MODE = "develop_mode";
     private MainMenu mainMenu;
 
     /**
@@ -161,168 +170,15 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
      */
     private ActivityType activityType;
 
+    ArrayList activePlatforms;
 
-    public static Bitmap fastblur(Bitmap sentBitmap, int radius) {
-        Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
-        if (radius < 1) {
-            return (null);
-        }
-        int w = bitmap.getWidth();
-        int h = bitmap.getHeight();
-        int[] pix = new int[w * h];
-        Log.e("pix", w + " " + h + " " + pix.length);
-        bitmap.getPixels(pix, 0, w, 0, 0, w, h);
-        int wm = w - 1;
-        int hm = h - 1;
-        int wh = w * h;
-        int div = radius + radius + 1;
-        int r[] = new int[wh];
-        int g[] = new int[wh];
-        int b[] = new int[wh];
-        int rsum, gsum, bsum, x, y, i, p, yp, yi, yw;
-        int vmin[] = new int[Math.max(w, h)];
-        int divsum = (div + 1) >> 1;
-        divsum *= divsum;
-        int dv[] = new int[256 * divsum];
-        for (i = 0; i < 256 * divsum; i++) {
-            dv[i] = (i / divsum);
-        }
-        yw = yi = 0;
-        int[][] stack = new int[div][3];
-        int stackpointer;
-        int stackstart;
-        int[] sir;
-        int rbs;
-        int r1 = radius + 1;
-        int routsum, goutsum, boutsum;
-        int rinsum, ginsum, binsum;
-        for (y = 0; y < h; y++) {
-            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
-            for (i = -radius; i <= radius; i++) {
-                p = pix[yi + Math.min(wm, Math.max(i, 0))];
-                sir = stack[i + radius];
-                sir[0] = (p & 0xff0000) >> 16;
-                sir[1] = (p & 0x00ff00) >> 8;
-                sir[2] = (p & 0x0000ff);
-                rbs = r1 - Math.abs(i);
-                rsum += sir[0] * rbs;
-                gsum += sir[1] * rbs;
-                bsum += sir[2] * rbs;
-                if (i > 0) {
-                    rinsum += sir[0];
-                    ginsum += sir[1];
-                    binsum += sir[2];
-                } else {
-                    routsum += sir[0];
-                    goutsum += sir[1];
-                    boutsum += sir[2];
-                }
-            }
-            stackpointer = radius;
-            for (x = 0; x < w; x++) {
-                r[yi] = dv[rsum];
-                g[yi] = dv[gsum];
-                b[yi] = dv[bsum];
-                rsum -= routsum;
-                gsum -= goutsum;
-                bsum -= boutsum;
-                stackstart = stackpointer - radius + div;
-                sir = stack[stackstart % div];
-                routsum -= sir[0];
-                goutsum -= sir[1];
-                boutsum -= sir[2];
-                if (y == 0) {
-                    vmin[x] = Math.min(x + radius + 1, wm);
-                }
-                p = pix[yw + vmin[x]];
-                sir[0] = (p & 0xff0000) >> 16;
-                sir[1] = (p & 0x00ff00) >> 8;
-                sir[2] = (p & 0x0000ff);
-                rinsum += sir[0];
-                ginsum += sir[1];
-                binsum += sir[2];
-                rsum += rinsum;
-                gsum += ginsum;
-                bsum += binsum;
-                stackpointer = (stackpointer + 1) % div;
-                sir = stack[(stackpointer) % div];
-                routsum += sir[0];
-                goutsum += sir[1];
-                boutsum += sir[2];
-                rinsum -= sir[0];
-                ginsum -= sir[1];
-                binsum -= sir[2];
-                yi++;
-            }
-            yw += w;
-        }
-        for (x = 0; x < w; x++) {
-            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
-            yp = -radius * w;
-            for (i = -radius; i <= radius; i++) {
-                yi = Math.max(0, yp) + x;
-                sir = stack[i + radius];
-                sir[0] = r[yi];
-                sir[1] = g[yi];
-                sir[2] = b[yi];
-                rbs = r1 - Math.abs(i);
-                rsum += r[yi] * rbs;
-                gsum += g[yi] * rbs;
-                bsum += b[yi] * rbs;
-                if (i > 0) {
-                    rinsum += sir[0];
-                    ginsum += sir[1];
-                    binsum += sir[2];
-                } else {
-                    routsum += sir[0];
-                    goutsum += sir[1];
-                    boutsum += sir[2];
-                }
-                if (i < hm) {
-                    yp += w;
-                }
-            }
-            yi = x;
-            stackpointer = radius;
-            for (y = 0; y < h; y++) {
-// Preserve alpha channel: ( 0xff000000 & pix[yi] )
-                pix[yi] = (0xff000000 & pix[yi]) | (dv[rsum] << 16) | (dv[gsum] << 8) | dv[bsum];
-                rsum -= routsum;
-                gsum -= goutsum;
-                bsum -= boutsum;
-                stackstart = stackpointer - radius + div;
-                sir = stack[stackstart % div];
-                routsum -= sir[0];
-                goutsum -= sir[1];
-                boutsum -= sir[2];
-                if (x == 0) {
-                    vmin[y] = Math.min(y + r1, hm) * w;
-                }
-                p = x + vmin[y];
-                sir[0] = r[p];
-                sir[1] = g[p];
-                sir[2] = b[p];
-                rinsum += sir[0];
-                ginsum += sir[1];
-                binsum += sir[2];
-                rsum += rinsum;
-                gsum += ginsum;
-                bsum += binsum;
-                stackpointer = (stackpointer + 1) % div;
-                sir = stack[stackpointer];
-                routsum += sir[0];
-                goutsum += sir[1];
-                boutsum += sir[2];
-                rinsum -= sir[0];
-                ginsum -= sir[1];
-                binsum -= sir[2];
-                yi += w;
-            }
-        }
-        Log.e("pix", w + " " + h + " " + pix.length);
-        bitmap.setPixels(pix, 0, w, 0, 0, w, h);
-        return (bitmap);
-    }
+    protected boolean developMode;
+
+    private GestureDetectorCompat mDetector;
+
+    private String DEBUG_TAG =  "TESTEANDO";
+
+    private float lastTouchY;
 
     /**
      * Called when the activity is first created
@@ -346,7 +202,17 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         }
 
 
+
+        FermatGestureDetector fermatGestureDetector = new FermatGestureDetector(this);
+
+        mDetector = new GestureDetectorCompat(this,fermatGestureDetector);
+        // Set the gesture detector as the double tap
+        // listener.
+        mDetector.setOnDoubleTapListener(fermatGestureDetector);
+
         try {
+
+            activePlatforms = new ArrayList();
 
             /*
             *  Our Future code goes here ...
@@ -948,7 +814,7 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                     window.setStatusBarColor(Color.TRANSPARENT);
 
                     gc();
-                    InputStream inputStream = getAssets().open("drawables/fondo.jpg");
+                    InputStream inputStream = getAssets().open("drawables/mdpi.jpg");
 
 
                     window.setBackgroundDrawable(Drawable.createFromStream(inputStream, null));
@@ -1061,8 +927,10 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 navigationDrawerFragment.onDetach();
                 navigationDrawerFragment = null;
                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().
-                        remove(getFragmentManager().findFragmentById(R.id.navigation_drawer)).commit();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                Fragment fragment = getFragmentManager().findFragmentById(R.id.navigation_drawer);
+                if(fragment!=null)
+                fragmentTransaction.remove(fragment).commit();
                 fragmentManager.executePendingTransactions();
             }
 
@@ -1155,6 +1023,17 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
         try {
 
+            if(activePlatforms==null) {
+                activePlatforms = new ArrayList();
+                activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
+            }
+
+            if(developMode){
+                activePlatforms.add(Platforms.CRYPTO_CURRENCY_PLATFORM);
+                activePlatforms.add(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
+                activePlatforms.add(Platforms.DIGITAL_ASSET_PLATFORM);
+                activePlatforms.add(Platforms.CRYPTO_BROKER_PLATFORM);
+            }
 
             List<android.app.Fragment> fragments = new Vector<android.app.Fragment>();
 
@@ -1165,26 +1044,33 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
                 switch (desktopObject.getType()) {
                     case "DCCP":
                         //por ahora va esto
-                        WalletManager manager = getWalletManager();
-                        WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
-                        fragments.add(walletDesktopFragment);
-
-                        SubAppDesktopFragment subAppDesktopFragment = SubAppDesktopFragment.newInstance(0);
-
-                        fragments.add(subAppDesktopFragment);
+                        if(activePlatforms.contains(Platforms.CRYPTO_CURRENCY_PLATFORM)) {
+                            WalletManager manager = getWalletManager();
+                            WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
+                            fragments.add(walletDesktopFragment);
+                        }
+                        break;
+                    case "WPD":
+                        if(activePlatforms.contains(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION)) {
+                            SubAppDesktopFragment subAppDesktopFragment = SubAppDesktopFragment.newInstance(0);
+                            fragments.add(subAppDesktopFragment);
+                        }
                         break;
                     case "DDAP":
-                        com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment went1 = com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment.newInstance(0);
-                        fragments.add(went1);
-                        com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment dapDesktopFragment = com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment.newInstance(0);
-                        fragments.add(dapDesktopFragment);
+                        if(activePlatforms.contains(Platforms.DIGITAL_ASSET_PLATFORM)) {
+                            com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment went1 = com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.WalletDesktopFragment.newInstance(0);
+                            fragments.add(went1);
+                            com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment dapDesktopFragment = com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.SubAppDesktopFragment.newInstance(0);
+                            fragments.add(dapDesktopFragment);
+                        }
                         break;
                     case "DCBP":
-
-                        com.bitdubai.desktop.wallet_manager.fragments.WalletDesktopFragment dapDesktopFragment3 = com.bitdubai.desktop.wallet_manager.fragments.WalletDesktopFragment.newInstance(0);
-                        fragments.add(dapDesktopFragment3);
-                        com.bitdubai.desktop.sub_app_manager.SubAppDesktopFragment walletDesktopFragment2 = com.bitdubai.desktop.sub_app_manager.SubAppDesktopFragment.newInstance(0);
-                        fragments.add(walletDesktopFragment2);
+                        if(activePlatforms.contains(Platforms.CRYPTO_BROKER_PLATFORM)) {
+                            com.bitdubai.desktop.wallet_manager.fragments.WalletDesktopFragment dapDesktopFragment3 = com.bitdubai.desktop.wallet_manager.fragments.WalletDesktopFragment.newInstance(0);
+                            fragments.add(dapDesktopFragment3);
+                            com.bitdubai.desktop.sub_app_manager.SubAppDesktopFragment walletDesktopFragment2 = com.bitdubai.desktop.sub_app_manager.SubAppDesktopFragment.newInstance(0);
+                            fragments.add(walletDesktopFragment2);
+                        }
                         break;
 
                 }
@@ -1204,10 +1090,8 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
             pager.setAdapter(this.screenPagerAdapter);
 
             if (pager.getBackground() == null) {
-                //Drawable d = Drawable.createFromStream(getAssets().open("drawables/fondo.jpg"), null);
-                Bitmap bitmap = fastblur(BitmapFactory.decodeStream(getAssets().open("drawables/fondo.jpg")), 5);
-                Drawable drawable = new BitmapDrawable(bitmap);
-                pager.setBackground(drawable);
+                Drawable d = Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null);
+                pager.setBackground(d);
             }
 
 
@@ -1287,28 +1171,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     }
 
     /**
-     * Get WalletManagerManager from the fermat platform
-     *
-     * @return reference of WalletManagerManager
-     */
-
-    public WalletFactoryManager getWalletFactoryManager() {
-        return (WalletFactoryManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WPD_WALLET_FACTORY_SUB_APP_MODULE);
-    }
-
-    /**
      * Get WalletSettingsManager
      */
     public WalletSettingsManager getWalletSettingsManager() {
         return (WalletSettingsManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WPD_WALLET_SETTINGS_MIDDLEWARE);
     }
 
-    /**
-     * Get SubAppSettingsManager
-     */
-    public SubAppSettingsManager getSubAppSettingsManager() {
-        return (SubAppSettingsManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_SUB_APP_SETTINGS_MIDDLEWARE);
-    }
 
     /**
      * Get WalletResourcesProvider
@@ -1324,19 +1192,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         return (SubAppResourcesProviderManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_SUBAPP_RESOURCES_NETWORK_SERVICE);
     }
 
-    /**
-     * Get ToolManager
-     */
-    public ToolManager getToolManager() {
-        return (ToolManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DEVELOPER_MODULE);
-    }
-
-    /**
-     * Get WalletStoreModuleManager
-     */
-    public WalletStoreModuleManager getWalletStoreModuleManager() {
-        return (WalletStoreModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WPD_WALLET_STORE_SUB_APP_MODULE);
-    }
 
     /**
      * Get IntraUserModuleManager
@@ -1345,12 +1200,6 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
         return (IntraUserModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_INTRA_USER_FACTORY_MODULE);
     }
 
-    /**
-     * Get WalletStoreModuleManager
-     */
-    public WalletPublisherModuleManager getWalletPublisherManager() {
-        return (WalletPublisherModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_WPD_WALLET_PUBLISHER_SUB_APP_MODULE);
-    }
 
     /**
      * Get NotificationManager
@@ -1388,50 +1237,12 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
     public AssetRedeemPointWalletSubAppModule getAssetRedeemPointWalletModuleManager() {
         return (AssetRedeemPointWalletSubAppModule) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE);
     }
-
-    /**
-     *  Assets Issuer community
-     */
-    public AssetIssuerCommunitySubAppModuleManager getAssetIssuerCommunitySubAppModuleManager() {
-        return (AssetIssuerCommunitySubAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_ISSUER_COMMUNITY_SUB_APP_MODULE);
-    }
-
-    /**
-     * Assets User community
-     */
-    public AssetUserCommunitySubAppModuleManager getAssetUserCommunitySubAppModuleManager() {
-        return (AssetUserCommunitySubAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE);
-    }
-
-    /**
-     *  Assets Redeem Point community
-     */
-    public RedeemPointCommunitySubAppModuleManager getAssetRedeemPointCommunitySubAppModuleManager() {
-        return (RedeemPointCommunitySubAppModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BITDUBAI_DAP_REDEEM_POINT_COMMUNITY_SUB_APP_MODULE);
-    }
-
     /**
      * CBP
      */
     public CryptoBrokerWalletModuleManager getCryptoBrokerWalletModuleManager() {
         //return (CryptoBrokerWalletModuleManager) ((ApplicationSession) getApplication()).getFermatPlatform().getCorePlatformContext().getPlugin(Plugins.BRO);
         return null;
-    }
-
-    public CryptoBrokerIdentityModuleManager getCryptoBrokerIdentityModuleManager() {
-        ApplicationSession applicationSession = (ApplicationSession) getApplication();
-        Platform platform = applicationSession.getFermatPlatform();
-        CorePlatformContext platformContext = platform.getCorePlatformContext();
-
-        return (CryptoBrokerIdentityModuleManager) platformContext.getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_BROKER_IDENTITY_SUB_APP_MODULE);
-    }
-
-    public CryptoCustomerIdentityModuleManager getCryptoCustomerIdentityModuleManager() {
-        ApplicationSession applicationSession = (ApplicationSession) getApplication();
-        Platform platform = applicationSession.getFermatPlatform();
-        CorePlatformContext platformContext = platform.getCorePlatformContext();
-
-        return (CryptoCustomerIdentityModuleManager) platformContext.getPlugin(Plugins.BITDUBAI_CBP_CRYPTO_CUSTOMER_IDENTITY_SUB_APP_MODULE);
     }
 
     /**
@@ -1583,7 +1394,120 @@ public class FermatActivity extends FragmentActivity implements WizardConfigurat
 
     @Override
     public void changeNavigationDrawerAdapter(ListAdapter listAdapter) {
-        //navigationDrawerFragment.changeNavigationDrawerAdapter(listAdapter);
+        navigationDrawerFragment.changeNavigationDrawerAdapter(listAdapter);
+    }
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+
+        int action = MotionEventCompat.getActionMasked(event);
+
+        this.mDetector.onTouchEvent(event);
+
+        switch(action) {
+            case (MotionEvent.ACTION_DOWN) :
+                Log.d(DEBUG_TAG,"Action was DOWN");
+                return true;
+            case (MotionEvent.ACTION_MOVE) :
+                Log.d(DEBUG_TAG,"Action was MOVE");
+                return true;
+            case (MotionEvent.ACTION_UP) :
+                Log.d(DEBUG_TAG,"Action was UP");
+                return true;
+            case (MotionEvent.ACTION_CANCEL) :
+                Log.d(DEBUG_TAG,"Action was CANCEL");
+                return true;
+            case (MotionEvent.ACTION_OUTSIDE) :
+                Log.d(DEBUG_TAG,"Movement occurred outside bounds " +
+                        "of current screen element");
+                return true;
+            default :
+                return super.onTouchEvent(event);
+        }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        int eventaction=event.getAction();
+
+        final RelativeLayout header = getActivityHeader();
+
+        if(header!=null) {
+            final float y = event.getY();
+            // Remember where we started
+            lastTouchY = y;
+
+            switch (eventaction) {
+                case MotionEvent.ACTION_DOWN:
+                    Log.d(DEBUG_TAG, "Action was MOVE");
+
+//                    TranslateAnimation anim = new TranslateAnimation(0, 0, header.getX() - header.getHeight(), 0);
+//                    anim.setDuration(1000);
+//
+//                    anim.setAnimationListener(new TranslateAnimation.AnimationListener() {
+//
+//                        @Override
+//                        public void onAnimationStart(Animation animation) {
+//                        }
+//
+//                        @Override
+//                        public void onAnimationRepeat(Animation animation) {
+//                        }
+//
+//                        @Override
+//                        public void onAnimationEnd(Animation animation) {
+////                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)header.getLayoutParams();
+////                        params.topMargin += amountToMoveDown;
+////                        params.leftMargin += amountToMoveRight;
+////                        view.setLayoutParams(params);
+//                            header.setVisibility(View.GONE);
+//                        }
+//                    });
+//
+//                    header.startAnimation(anim);
+                    Log.d(TAG, TAG + "::onTouchEvent: parent ACTION_DOWN");
+
+
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    Log.d(DEBUG_TAG, "Action was DOWN");
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                    Log.d(DEBUG_TAG, "Action was MOVE");
+
+//                    TranslateAnimation anim1 = new TranslateAnimation(0, 0, 0, y);
+//                    anim1.setDuration(1000);
+//
+//                    anim1.setAnimationListener(new TranslateAnimation.AnimationListener() {
+//
+//                        @Override
+//                        public void onAnimationStart(Animation animation) {
+//                            header.setVisibility(View.VISIBLE);
+//                        }
+//
+//                        @Override
+//                        public void onAnimationRepeat(Animation animation) {
+//                        }
+//
+//                        @Override
+//                        public void onAnimationEnd(Animation animation) {
+////                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)header.getLayoutParams();
+////                        params.topMargin += amountToMoveDown;
+////                        params.leftMargin += amountToMoveRight;
+////                        view.setLayoutParams(params);
+//                        }
+//                    });
+//                    header.startAnimation(anim1);
+                    Log.d(TAG, TAG + "::onTouchEvent: parent ACTION_UP");
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return super.dispatchTouchEvent(event);
     }
 
 

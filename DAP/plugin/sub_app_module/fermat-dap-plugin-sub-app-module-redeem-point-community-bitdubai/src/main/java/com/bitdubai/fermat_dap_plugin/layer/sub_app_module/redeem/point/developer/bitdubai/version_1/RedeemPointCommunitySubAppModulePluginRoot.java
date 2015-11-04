@@ -11,6 +11,16 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.DealsWithActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.DealsWithActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
@@ -27,7 +37,7 @@ import java.util.UUID;
 /**
  * Created by Nerio on 13/10/15.
  */
-public class RedeemPointCommunitySubAppModulePluginRoot implements RedeemPointCommunitySubAppModuleManager, DealsWithActorAssetRedeemPoint, DealsWithLogger, LogManagerForDevelopers, Plugin, Service {
+public class RedeemPointCommunitySubAppModulePluginRoot implements RedeemPointCommunitySubAppModuleManager, DealsWithActorAssetUser, DealsWithActorAssetRedeemPoint, DealsWithLogger, LogManagerForDevelopers, Plugin, Service {
 
     UUID pluginId;
 
@@ -46,6 +56,8 @@ public class RedeemPointCommunitySubAppModulePluginRoot implements RedeemPointCo
 
     RedeemPointCommunitySupAppModuleManager redeemPointCommunitySupAppModuleManager;
 
+    ActorAssetUserManager actorAssetUserManager;
+
     ActorAssetRedeemPointManager actorAssetRedeemPointManager;
 
     @Override
@@ -58,6 +70,12 @@ public class RedeemPointCommunitySubAppModulePluginRoot implements RedeemPointCo
         redeemPointCommunitySupAppModuleManager = new RedeemPointCommunitySupAppModuleManager(actorAssetRedeemPointManager);
 
         this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+
+    @Override
+    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
+        this.actorAssetUserManager = actorAssetUserManager;
     }
 
     @Override
@@ -119,22 +137,39 @@ public class RedeemPointCommunitySubAppModulePluginRoot implements RedeemPointCo
         }
     }
 
+    List<ActorAssetRedeemPoint> actorAssetList;
+
     @Override
     public List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointRegistered() throws CantGetAssetRedeemPointActorsException {
-        List<ActorAssetRedeemPoint> actorAssetList = new ArrayList<>();
+        actorAssetList = new ArrayList<>();
 
-//        Location location = new DeviceLocation(00.00, 00.00, 12345678910L, 00.00, LocationProvider.NETWORK);
-
-//        actorAssetList.add(new RedeemPointActorRecord("Rodrigo Acosta",UUID.randomUUID().toString(),new byte[0],location));
-//        actorAssetList.add(new RedeemPointActorRecord("Franklin Marcano",UUID.randomUUID().toString(),new byte[0],location));
-//        actorAssetList.add(new RedeemPointActorRecord("Manuel Colmenares",UUID.randomUUID().toString(),new byte[0],location));
-//        actorAssetList.add(new RedeemPointActorRecord("Nerio Indriago",UUID.randomUUID().toString(),new byte[0],location));
         try {
-            actorAssetList = actorAssetRedeemPointManager.getAllAssetRedeemPointActorRegistered();
+            actorAssetRedeemPointManager.registerActorInActorNetowrkSerice();
+
+            actorAssetList = actorAssetRedeemPointManager.getAllAssetRedeemPointActorInTableRegistered();
         } catch (CantGetAssetRedeemPointActorsException e) {
+            e.printStackTrace();
+        } catch (CantCreateActorRedeemPointException e) {
             e.printStackTrace();
         }
 
         return actorAssetList;
+    }
+
+    @Override
+    public void connectToActorAssetRedeemPoint(ActorAssetUser requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantConnectToActorAssetRedeemPointException {
+        //todo SE DEBE CONOCER QUIEN ES EL REQUESTER SOLICITANTE Y QUIEN EL SOLICITADO
+
+        ActorAssetUser actorAssetUser;
+        //TODO Para Realizacion de TEST se tomara el ISSUER de la BD LOCAL
+        //TODO Se necesita PASAR el Actor seleccionado en la Community
+        try {
+            actorAssetUser = actorAssetUserManager.getActorAssetUser();
+            actorAssetRedeemPointManager.connectToActorAssetRedeemPoint(actorAssetUser, actorAssetRedeemPoints);
+        } catch (CantGetAssetUserActorsException e) {
+            throw new CantConnectToActorAssetRedeemPointException(CantConnectToActorAssetRedeemPointException.DEFAULT_MESSAGE, e, "There was an error connecting to users.", null);
+        } catch (CantAssetUserActorNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

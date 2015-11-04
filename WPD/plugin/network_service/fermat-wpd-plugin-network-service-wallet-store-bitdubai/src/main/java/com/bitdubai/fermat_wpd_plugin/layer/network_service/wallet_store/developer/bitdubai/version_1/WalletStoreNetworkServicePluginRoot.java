@@ -127,8 +127,6 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
         this.platformInfoManager = platformInfoManager;
     }
 
-    private boolean register;
-
     /**
      * DealsWithCommunicationLayerManager interface variables and implementation
      */
@@ -409,11 +407,6 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
      */
 
     @Override
-    public UUID getId() {
-        return pluginId;
-    }
-
-    @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return null;
     }
@@ -477,13 +470,9 @@ public class WalletStoreNetworkServicePluginRoot implements DatabaseManagerForDe
 
     }
 
-    /**
-     * Get is Register
-     * @return boolean
-     */
     @Override
     public boolean isRegister() {
-        return register;
+        return false;
     }
 
     @Override

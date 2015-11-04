@@ -57,11 +57,6 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
      */
     UUID pluginId;
 
-    /**
-     * Represent the register
-     */
-    private boolean register;
-
 
     /**
      * MoneyPluginRoot Interface implementation.
@@ -129,11 +124,6 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
      */
 
     @Override
-    public UUID getId() {
-        return this.pluginId;
-    }
-
-    @Override
     public PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
         return null;
     }
@@ -169,15 +159,6 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
     }
 
     /**
-     * Get is Register
-     * @return boolean
-     */
-    @Override
-    public boolean isRegister() {
-        return register;
-    }
-
-    /**
      * Handles the events CompleteComponentRegistrationNotification
      * @param platformComponentProfileRegistered
      */
@@ -204,6 +185,11 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
     @Override
     public void handleCompleteComponentConnectionRequestNotificationEvent(PlatformComponentProfile applicantComponentProfile, PlatformComponentProfile remoteComponentProfile) {
 
+    }
+
+    @Override
+    public boolean isRegister() {
+        return false;
     }
 
 

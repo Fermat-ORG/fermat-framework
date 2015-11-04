@@ -8,76 +8,148 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
+import java.util.Arrays;
+
 /**
  * Created by Nerio on 22/09/15.
  */
 public class AssetUserActorRecord implements ActorAssetUser {
 
-    private String publiclinkedIdentity;
-    private String publicKey;
-    private String name;
-    private String age;
-    private Genders genders;
-    private ConnectionState connectionState;
-    private Double locationLatitude;
-    private Double locationLongitude;
-    private long registrationDate;
-    private long lastConnectionDate;
-    private CryptoAddress cryptoAddress;
-
-    private byte[] profileImage;
+    private String          publicLinkedIdentity    ;
+    private String          publicKey               ;
+    private String          name                    ;
+    private String          age                     ;
+    private Genders         genders                 ;
+    private ConnectionState connectionState         ;
+    private Location        location                ;
+    private Double          locationLatitude        ;
+    private Double          locationLongitude       ;
+    private long            registrationDate        ;
+    private long            lastConnectionDate      ;
+    private CryptoAddress   cryptoAddress           ;
+    private byte[]          profileImage            ;
 
     /**
      * Constructor
-     * @param assetUserActorPublicKey
-     * @param assetUserActorName
-     * @param assetUserActorprofileImage
-     * @param locationLatitude
-     * @param locationLongitude
      */
-
-    public AssetUserActorRecord(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage, Double locationLatitude, Double locationLongitude){
+    public AssetUserActorRecord(){
 
     }
 
     /**
-     *  Register in Actor Network Service
+     *  Method for Set Actor in Actor Network Service User
      */
-    public AssetUserActorRecord(String publicKey, String name, byte[] profileImage, Location location) {
+    public AssetUserActorRecord(String publicKey,
+                                String name,
+                                byte[] profileImage,
+                                Location location) {
 
-        this.name = name;
-        this.publicKey = publicKey;
-        this.profileImage = profileImage.clone();     
-        this.genders = Genders.INDEFINITE;
+        this.name                   = name                      ;
+        this.publicKey              = publicKey                 ;
+        this.profileImage           = profileImage.clone()      ;
+
+        if (location != null) {
+            this.locationLatitude   = location.getLatitude()    ;
+            this.locationLongitude  = location.getLongitude()   ;
+        }else{
+            this.locationLatitude   = (double) 0                ;
+            this.locationLongitude  = (double) 0                ;
+        }
+
+        this.genders                = Genders.INDEFINITE        ;
+//        if(!age.isEmpty())
+//            this.age = age;
+        this.connectionState        = ConnectionState.CONNECTED ;
+
+    }
+
+
+    public AssetUserActorRecord(String publicKey,
+                                String name,
+                                byte[] profileImage,
+                                Double locationA,
+                                Double locationL) {
+
+        this.name                   = name                          ;
+        this.publicKey              = publicKey                     ;
+        this.profileImage           = profileImage.clone()          ;
+
+        if (locationA != null)
+            this.locationLatitude   = locationA                     ;
+        if(locationL != null)
+            this.locationLongitude  = locationL                     ;
+
+        this.genders                = Genders.INDEFINITE            ;
 //        this.age = age;
 //        this.cryptoAddress = cryptoAddress;
-        this.connectionState = ConnectionState.CONNECTED;
+        this.connectionState        = ConnectionState.CONNECTED     ;
 
     }
 
-    public AssetUserActorRecord(String publicKey, String name, String age, Genders genders,
-                                ConnectionState connectionState, Double locationLatitude,
-                                Double locationLongitude, CryptoAddress cryptoAddress,
-                                Long registrationDate, Long lastConnectionDate,
+    public AssetUserActorRecord(String publicKey,
+                                String name,
+                                String age,
+                                Genders genders,
+                                ConnectionState connectionState,
+                                Double locationLatitude,
+                                Double locationLongitude,
+                                CryptoAddress cryptoAddress,
+                                Long registrationDate,
+                                Long lastConnectionDate,
                                 byte[] profileImage){
 
-        this.publicKey = publicKey;
-        this.name = name;
-        this.age = age;
-        this.genders = genders;
-        this.connectionState = connectionState;
-        this.cryptoAddress = cryptoAddress;
-        this.locationLatitude = locationLatitude;
-        this.locationLongitude = locationLongitude;
-        this.registrationDate = registrationDate;
-        this.lastConnectionDate = lastConnectionDate;
-        this.profileImage = profileImage.clone();
+        this.publicKey              = publicKey             ;
+        this.name                   = name                  ;
+        this.age                    = age                   ;
+        this.genders                = genders               ;
+        this.connectionState        = connectionState       ;
+
+        if(cryptoAddress != null)
+            this.cryptoAddress      = cryptoAddress         ;
+
+        this.locationLatitude       = locationLatitude      ;
+        this.locationLongitude      = locationLongitude     ;
+        this.registrationDate       = registrationDate      ;
+        this.lastConnectionDate     = lastConnectionDate    ;
+        this.profileImage           = profileImage.clone()  ;
 
     }
 
-    @Override
+    public AssetUserActorRecord(final String publicKey,
+                                final String name,
+                                final String age,
+                                final Genders genders,
+                                final ConnectionState connectionState,
+                                final Double locationLatitude,
+                                final Double locationLongitude,
+                                final Long registrationDate,
+                                final Long lastConnectionDate,
+                                final byte[] profileImage) {
+
+        this.publicKey          =       publicKey               ;
+        this.name               =       name                    ;
+        this.age                =       age                     ;
+        this.genders            =       genders                 ;
+        this.connectionState    =       connectionState         ;
+        this.locationLatitude   =       locationLatitude        ;
+        this.locationLongitude  =       locationLongitude       ;
+        this.registrationDate   =       registrationDate        ;
+        this.lastConnectionDate =       lastConnectionDate      ;
+        this.profileImage       =       profileImage.clone()    ;
+
+    }
+
+    /**
+     * The method <code>getPubliclinkedIdentity</code> gives us the public Linked Identity of the represented Asset User
+     *
+     * @return the Public Linked Identity
+     */
     public String getPublicLinkedIdentity() {
-        return this.publiclinkedIdentity;
+        return publicLinkedIdentity;
+    }
+
+    public void setPublicLinkedIdentity(String publicLinkedIdentity) {
+        this.publicLinkedIdentity = publicLinkedIdentity;
     }
 
     /**
@@ -104,16 +176,19 @@ public class AssetUserActorRecord implements ActorAssetUser {
         return this.name;
     }
 
-    @Override
-    public String getAge() {
-        return this.age;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
-      
+    /**
+     * The method <code>getAge</code> gives us the Age of the represented Asset user
+     *
+     * @return the Age of the Asset user
+     */
+    @Override
+    public String getAge() {
+        return this.age;
+    }
 
     public void setAge(String age) {
         this.age = age;
@@ -179,7 +254,25 @@ public class AssetUserActorRecord implements ActorAssetUser {
         if(connectionState != null)
            this.connectionState = connectionState;
         else
-            this.connectionState = ConnectionState.CONNECTED;
+            this.connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
+    }
+
+    /**
+     * The method <code>getLocation</code> gives us the Location of the represented Asset user
+     *
+     * @return the Location of the Asset user
+     */
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        if(location != null) {
+            this.location = location;
+        }else{
+            this.locationLatitude = (double) 0;
+            this.locationLongitude = (double) 0;
+        }
     }
 
     /**
@@ -224,7 +317,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
         if(profileImage != null)
             this.profileImage = profileImage;
         else
-            this.profileImage = profileImage.clone();
+            this.profileImage = new byte[0];
     }
 
     /**
@@ -240,5 +333,24 @@ public class AssetUserActorRecord implements ActorAssetUser {
     public void setCryptoAddress(CryptoAddress cryptoAddress) {
         if(cryptoAddress != null)
             this.cryptoAddress = cryptoAddress;
+    }
+
+    @Override
+    public String toString() {
+        return "AssetUserActorRecord{" +
+                "publicLinkedIdentity='" + publicLinkedIdentity + '\'' +
+                ", publicKey='" + publicKey + '\'' +
+                ", name='" + name + '\'' +
+                ", age='" + age + '\'' +
+                ", genders=" + genders +
+                ", connectionState=" + connectionState +
+                ", location=" + location +
+                ", locationLatitude=" + locationLatitude +
+                ", locationLongitude=" + locationLongitude +
+                ", registrationDate=" + registrationDate +
+                ", lastConnectionDate=" + lastConnectionDate +
+                ", cryptoAddress=" + cryptoAddress +
+                ", profileImage=" + Arrays.toString(profileImage) +
+                '}';
     }
 }

@@ -1,11 +1,5 @@
 package com.bitdubai.fermat_core;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.abstract_classes.AbstractAddon;
-import com.bitdubai.fermat_api.layer.all_definition.common.exceptions.CantInjectReferencesException;
-import com.bitdubai.fermat_api.layer.all_definition.common.utils.AddonVersionReference;
-
-import java.util.List;
-
 /**
  * The class <code>com.bitdubai.fermat_core.FermatAddonReferencesInjector</code>
  * is the responsible for the injection of the addon references.

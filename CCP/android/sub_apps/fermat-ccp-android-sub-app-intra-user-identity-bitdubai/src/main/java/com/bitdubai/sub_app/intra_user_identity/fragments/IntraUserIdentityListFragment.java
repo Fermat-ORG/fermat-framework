@@ -13,6 +13,7 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -63,20 +64,42 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalle
     protected void initViews(View layout) {
         super.initViews(layout);
 
-        FloatingActionButton newIdentityButton = (FloatingActionButton) layout.findViewById(R.id.new_crypto_broker_identity_float_action_button);
-        newIdentityButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
-            }
-        });
+         try {
 
-        if (getActivity().getActionBar() != null) {
-            getActivity().getActionBar().setDisplayShowHomeEnabled(false);
+             FloatingActionButton newIdentityButton = (FloatingActionButton) layout.findViewById(R.id.new_crypto_broker_identity_float_action_button);
+             newIdentityButton.setOnClickListener(new View.OnClickListener() {
+                 @Override
+                 public void onClick(View view) {
+                     changeActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
+                 }
+             });
+
+             if (getActivity().getActionBar() != null) {
+                 getActivity().getActionBar().setDisplayShowHomeEnabled(false);
+             }
+
+             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
+             recyclerView.addItemDecoration(itemDecoration);
+
+             //TODO: para la primer version limitamos la cantidad de identidades a una sola
+             //TODO: Robert sacá esto si queres testear lo tuyo XXOO
+             if(moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser().size() > 0)
+                 newIdentityButton.setVisibility(View.INVISIBLE);
+             else
+                 newIdentityButton.setVisibility(View.VISIBLE);
+         }
+        catch (CantListIntraWalletUsersException e)
+        {
+            Toast.makeText(getActivity().getApplicationContext(), "Can't Get Intra User List", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
 
-        RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
-        recyclerView.addItemDecoration(itemDecoration);
+
     }
 
     @Override
@@ -150,15 +173,12 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalle
 
         try {
             if (moduleManager == null) {
-                for (int i = 0; i < 20; i++) {
-                    data.add(new IntraUserIdentityInformationImp("Intra User Name " + i,"",new byte[0]));
-                }
+                Toast.makeText(getActivity(),"Nodule manager null",Toast.LENGTH_SHORT).show();
             } else {
                 data = moduleManager.getAllIntraWalletUsersFromCurrentDeviceUser();
             }
         }
-        catch(Exception e)
-        {
+        catch(Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }

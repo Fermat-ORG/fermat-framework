@@ -92,7 +92,7 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
 
     @Override
     public byte[] getProfilePicture() {
-        return profilePicture != null ? profilePicture.clone() : null;
+        return profilePicture != null ? profilePicture.clone() : new byte[0];
     }
 
     @Override

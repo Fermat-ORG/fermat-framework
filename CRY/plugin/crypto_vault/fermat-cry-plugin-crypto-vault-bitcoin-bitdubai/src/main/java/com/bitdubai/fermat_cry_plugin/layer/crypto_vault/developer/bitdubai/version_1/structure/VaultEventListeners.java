@@ -34,6 +34,7 @@ public class VaultEventListeners extends AbstractWalletEventListener {
     private final EventManager               eventManager;
     private final LogManager                 logManager  ;
     private final CryptoVaultDatabaseActions dbActions   ;
+    private final Database                   database    ;
 
     /**
      * Constructor with final params...
@@ -43,6 +44,7 @@ public class VaultEventListeners extends AbstractWalletEventListener {
                                final EventManager eventManager,
                                final LogManager   logManager  ) {
 
+        this.database = database;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
         this.logManager   = logManager  ;
@@ -79,10 +81,10 @@ public class VaultEventListeners extends AbstractWalletEventListener {
     }
 
     @Override
-    public void onTransactionConfidenceChanged(final Wallet wallet, final Transaction tx) {
+    public void onTransactionConfidenceChanged(Wallet wallet,Transaction tx) {
         logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Transaction confidence change detected!", "Transaction confidence changed. Transaction: " + tx, "Transaction confidence changed. Transaction: " + tx);
 
-        TransactionConfidenceCalculator transactionConfidenceCalculator = new TransactionConfidenceCalculator(tx);
+        TransactionConfidenceCalculator transactionConfidenceCalculator = new TransactionConfidenceCalculator(tx, database);
         CryptoStatus cryptoStatus;
         try {
             cryptoStatus = transactionConfidenceCalculator.getCryptoStatus();
@@ -106,7 +108,7 @@ public class VaultEventListeners extends AbstractWalletEventListener {
                     break;
                 case IRREVERSIBLE:
                     // NOW WE'RE NOT SAVING THIS TYPE IF TRANSACTIONS
-                    raiseTransactionEvent(EventType.INCOMING_CRYPTO_IRREVERSIBLE);
+                    //raiseTransactionEvent(EventType.INCOMING_CRYPTO_IRREVERSIBLE);
                     break;
                 default:
                     throw new UnexpectedCryptoStatusException(
