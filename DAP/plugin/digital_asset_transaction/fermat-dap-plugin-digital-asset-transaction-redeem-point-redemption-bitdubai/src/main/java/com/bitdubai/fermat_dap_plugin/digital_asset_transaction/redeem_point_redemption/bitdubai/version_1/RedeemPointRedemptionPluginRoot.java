@@ -125,7 +125,7 @@ public class RedeemPointRedemptionPluginRoot implements RedeemPointRedemptionMan
             monitorAgent.start();
             recorderService = createNewRecorderService();
             recorderService.start();
-            test();
+//            test();
         } catch (CantSetObjectException e) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, context, "There was a null reference, check the context.");
         } catch (CantCreateDatabaseException e) {
