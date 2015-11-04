@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -21,7 +23,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantP
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistsTransactionUUIDException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.exceptions.CantCheckAssetUserRedemptionProgressException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -174,6 +178,304 @@ public class UserRedemptionDao {
         } catch (Exception exception) {
             this.database.closeDatabase();
             throw new CantPersistsTransactionUUIDException(FermatException.wrapException(exception), "Persisting redemptionId in database", "Unexpected exception");
+        }
+    }
+
+    public boolean isGenesisTransactionRegistered(String genesisTransaction) throws CantExecuteQueryException {
+        try {
+            this.database=openDatabase();
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME);
+            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            this.database.closeDatabase();
+            return !databaseTable.getRecords().isEmpty();
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantExecuteQueryException("Error executing query in DB.", exception, "Checking if genesis transaction exists in database.", "Cannot load table to memory.");
+        }catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Checking if genesis transaction exits in database.", "Unexpected exception");
+        }
+    }
+
+    public String getActorUserPublicKeyByGenesisTransaction(String genesisTransaction) throws CantCheckAssetUserRedemptionProgressException, UnexpectedResultReturnedFromDatabaseException {
+        return getStringValueFromSelectedTableTableByFieldCode(UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME,
+                genesisTransaction,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_ACTOR_REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME);
+    }
+
+    public String getActorRedeemPointCryptoAddressByGenesisTransaction(String genesisTransaction) throws CantCheckAssetUserRedemptionProgressException, UnexpectedResultReturnedFromDatabaseException {
+        return getStringValueFromSelectedTableTableByFieldCode(UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME,
+                genesisTransaction,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_ACTOR_REDEEM_POINT_BITCOIN_ADDRESS_COLUMN_NAME,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME);
+    }
+
+    public String getTransactionIdByGenesisTransaction(String genesisTransaction) throws CantCheckAssetUserRedemptionProgressException, UnexpectedResultReturnedFromDatabaseException {
+        return getStringValueFromSelectedTableTableByFieldCode(UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME,
+                genesisTransaction,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_REDEMPTION_ID_COLUMN_NAME,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME);
+    }
+
+    public List<String> getGenesisTransactionListByCryptoStatus(CryptoStatus cryptoStatus) throws CantCheckAssetUserRedemptionProgressException {
+        return getValueListFromTableByColumn(cryptoStatus.getCode(),
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_CRYPTO_STATUS_COLUMN_NAME,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME);
+    }
+    
+    /**
+    * This method returns a String value from the fieldCode, filtered by value in indexColumn
+    * @param tableName table name
+    * @param value value used as filter
+    * @param fieldCode column that contains the required value
+    * @param indexColumn the column filter
+    * @return a String with the required value
+    * @throws CantCheckAssetUserRedemptionProgressException
+    * @throws UnexpectedResultReturnedFromDatabaseException
+    */
+    private String getStringValueFromSelectedTableTableByFieldCode(String tableName, String value, String fieldCode, String indexColumn) throws CantCheckAssetUserRedemptionProgressException, UnexpectedResultReturnedFromDatabaseException {
+        try {
+            this.database=openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(tableName);
+            databaseTable.setStringFilter(indexColumn, value, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            DatabaseTableRecord databaseTableRecord;
+            List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
+            if (databaseTableRecords.size() > 1){
+                this.database.closeDatabase();
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.",  indexColumn+":" + value);
+            } else {
+                databaseTableRecord = databaseTableRecords.get(0);
+            }
+            this.database.closeDatabase();
+            String stringToReturn=databaseTableRecord.getStringValue(fieldCode);
+            return stringToReturn;
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetUserRedemptionProgressException(exception, "Trying to get "+fieldCode,"Cannot find or open the database");
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetUserRedemptionProgressException(exception, "Trying to get "+fieldCode,"Cannot load the database into memory");
+        }
+    }
+
+    public void updateEventStatus(String eventId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
+        try{
+            this.database=openDatabase();
+            DatabaseTable databaseTable=this.database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
+            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            DatabaseTableRecord databaseTableRecord;
+            List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
+            if (databaseTableRecords.size() > 1){
+                this.database.closeDatabase();
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.",  "Event ID:" + eventId);
+            } else {
+                databaseTableRecord = databaseTableRecords.get(0);
+            }
+            databaseTableRecord.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.NOTIFIED.toString());
+            databaseTable.updateRecord(databaseTableRecord);
+            this.database.closeDatabase();
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantExecuteQueryException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,exception, "Trying to update "+UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME,"Check the cause");
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantExecuteQueryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, exception,"Trying to update "+UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME,"Check the cause");
+        } catch (Exception exception){
+            this.database.closeDatabase();
+            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception),"Trying to update "+UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME,"Check the cause");
+        }
+    }
+
+    public List<String> getPendingNetworkLayerEvents() throws CantCheckAssetUserRedemptionProgressException, UnexpectedResultReturnedFromDatabaseException {
+        return getPendingEventsBySource(EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION);
+    }
+
+    public List<String> getPendingCryptoRouterEvents() throws CantCheckAssetUserRedemptionProgressException, UnexpectedResultReturnedFromDatabaseException {
+        return getPendingEventsBySource(EventSource.ASSETS_OVER_BITCOIN_VAULT);
+    }
+    
+    private List<String> getPendingEventsBySource(EventSource eventSource) throws CantCheckAssetUserRedemptionProgressException, UnexpectedResultReturnedFromDatabaseException {
+
+        try {
+            this.database=openDatabase();
+            List<String> eventIdList=new ArrayList<>();
+            DatabaseTable databaseTable = getDatabaseTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
+            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.setFilterOrder(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
+            for(DatabaseTableRecord databaseTableRecord : databaseTableRecords){
+                String eventId=databaseTableRecord.getStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME);
+                eventIdList.add(eventId);
+            }
+            this.database.closeDatabase();
+            return eventIdList;
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetUserRedemptionProgressException(exception, "Trying to get pending events","Cannot find or open the database");
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetUserRedemptionProgressException(exception, "Trying to get pending events","Cannot load the database into memory");
+        } catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantCheckAssetUserRedemptionProgressException(FermatException.wrapException(exception), "Trying to get pending events.", "Unexpected exception");
+        }
+    }
+
+    public List<String> getGenesisTransactionByAssetAcceptedStatus() throws CantCheckAssetUserRedemptionProgressException {
+        return getGenesisTransactionByDistributionStatus(DistributionStatus.ASSET_ACCEPTED);
+    }
+
+    public List<String> getGenesisTransactionByAssetRejectedByHashStatus() throws CantCheckAssetUserRedemptionProgressException {
+        return getGenesisTransactionByDistributionStatus(DistributionStatus.ASSET_REJECTED_BY_HASH);
+    }
+
+    public List<String> getGenesisTransactionByAssetRejectedByContractStatus() throws CantCheckAssetUserRedemptionProgressException {
+        return getGenesisTransactionByDistributionStatus(DistributionStatus.ASSET_REJECTED_BY_CONTRACT);
+    }
+
+    private List<String> getGenesisTransactionByDistributionStatus(DistributionStatus distributionStatus)throws CantCheckAssetUserRedemptionProgressException{
+        return getValueListFromTableByColumn(distributionStatus.getCode(),
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_REDEMPTION_STATUS_COLUMN_NAME,
+                UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME);
+    }
+
+    private List<String> getValueListFromTableByColumn(String referenceValue, String table, String referenceColumn, String returningColumn)throws CantCheckAssetUserRedemptionProgressException{
+
+        try{
+            this.database=openDatabase();
+            DatabaseTable databaseTable;
+            List<String> returningList=new ArrayList<>();
+            databaseTable = database.getTable(table);
+            databaseTable.setStringFilter(referenceColumn, referenceValue, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            for (DatabaseTableRecord record : databaseTable.getRecords()){
+                returningList.add(record.getStringValue(returningColumn));
+            }
+            this.database.closeDatabase();
+            return returningList;
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetUserRedemptionProgressException(exception, "Getting "+referenceColumn+" list", "Cannot load table to memory");
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetUserRedemptionProgressException(exception, "Getting "+referenceColumn+" list", "Cannot open or find the Asset Distribution database");
+        } catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantCheckAssetUserRedemptionProgressException(FermatException.wrapException(exception), "Getting "+referenceColumn+" list", "Unexpected exception");
+        }
+    }
+
+    public void updateDigitalAssetCryptoStatusByGenesisTransaction(String genesisTransaction, CryptoStatus cryptoStatus) throws CantCheckAssetUserRedemptionProgressException, UnexpectedResultReturnedFromDatabaseException {
+        try{
+            this.database=openDatabase();
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME);
+            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
+            DatabaseTableRecord databaseTableRecord;
+            if (databaseTableRecords.size() > 1){
+                this.database.closeDatabase();
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.",  "Genesis Transaction:" + genesisTransaction);
+            } else {
+                databaseTableRecord = databaseTableRecords.get(0);
+            }
+            databaseTableRecord.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode());
+            databaseTable.updateRecord(databaseTableRecord);
+            this.database.closeDatabase();
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetUserRedemptionProgressException(exception, "Updating Crypto Status.", "Cannot open or find the Asset Issuing database");
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetUserRedemptionProgressException(exception, "Updating Crypto Status ", "Cannot load the table into memory");
+        } catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantCheckAssetUserRedemptionProgressException(FermatException.wrapException(exception), "Updating Crypto Status.", "Unexpected exception - Transaction hash:" + genesisTransaction);
+        }
+    }
+
+    public String getEventTypeById(String eventId) throws CantCheckAssetUserRedemptionProgressException, UnexpectedResultReturnedFromDatabaseException {
+
+        try {
+            this.database=openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
+            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> databaseTableRecords=databaseTable.getRecords();
+            DatabaseTableRecord databaseTableRecord;
+            if (databaseTableRecords.size() > 1){
+                this.database.closeDatabase();
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.",  "Event Id" + eventId);
+            } else {
+                databaseTableRecord = databaseTableRecords.get(0);
+            }
+            this.database.closeDatabase();
+            return databaseTableRecord.getStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_EVENT_COLUMN_NAME);
+        } catch (CantExecuteDatabaseOperationException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetUserRedemptionProgressException(exception, "Trying to get pending events","Cannot find or open the database");
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantCheckAssetUserRedemptionProgressException(exception, "Trying to get pending events","Cannot load the database into memory");
+        } catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantCheckAssetUserRedemptionProgressException(FermatException.wrapException(exception), "Trying to get pending events.", "Unexpected exception");
+        }
+    }
+
+    public boolean isPendingTransactions(CryptoStatus cryptoStatus) throws CantExecuteQueryException {
+        try {
+            this.database=openDatabase();
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_DATABASE);
+            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            this.database.closeDatabase();
+            return !databaseTable.getRecords().isEmpty();
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantExecuteQueryException("Error executing query in DB.", exception, "Getting pending transactions.", "Cannot load table to memory.");
+        }catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Getting pending transactions.", "Unexpected exception");
+        }
+    }
+
+    public boolean isPendingNetworkLayerEvents() throws CantExecuteQueryException {
+        return isPendingEventsBySource(EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION);
+    }
+
+    public boolean isPendingIncomingCryptoEvents() throws CantExecuteQueryException {
+        return isPendingEventsBySource(EventSource.CRYPTO_ROUTER);
+    }
+
+    private boolean isPendingEventsBySource(EventSource eventSource) throws CantExecuteQueryException {
+        try {
+            this.database=openDatabase();
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
+            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.setStringFilter(UserRedemptionDatabaseConstants.USER_REDEMPTION_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            this.database.closeDatabase();
+            return !databaseTable.getRecords().isEmpty();
+        } catch (CantLoadTableToMemoryException exception) {
+            this.database.closeDatabase();
+            throw new CantExecuteQueryException("Error executing query in DB.", exception, "Getting pending events.", "Cannot load table to memory.");
+        }catch(Exception exception){
+            this.database.closeDatabase();
+            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
         }
     }
 
