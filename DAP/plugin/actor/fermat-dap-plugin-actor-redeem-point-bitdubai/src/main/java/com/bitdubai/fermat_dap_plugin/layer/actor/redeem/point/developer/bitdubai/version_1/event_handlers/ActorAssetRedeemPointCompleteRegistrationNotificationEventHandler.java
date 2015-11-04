@@ -22,7 +22,7 @@ public class ActorAssetRedeemPointCompleteRegistrationNotificationEventHandler i
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        System.out.println("Actor Asset User Succesfull register AssetuserActor - handleEvent =" + platformEvent);
+        System.out.println("Actor Asset Redeem Point Succesfull register - handleEvent =" + platformEvent);
 
         if (this.redeemPointPluginRoot.getStatus() == ServiceStatus.STARTED) {
 

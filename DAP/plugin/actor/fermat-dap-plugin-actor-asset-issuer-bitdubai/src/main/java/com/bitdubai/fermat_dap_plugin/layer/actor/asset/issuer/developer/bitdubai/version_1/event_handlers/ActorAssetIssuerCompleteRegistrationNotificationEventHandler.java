@@ -23,7 +23,7 @@ public class ActorAssetIssuerCompleteRegistrationNotificationEventHandler implem
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
-        System.out.println("Actor Asset User Succesfull register AssetuserActor - handleEvent =" + platformEvent);
+        System.out.println("Actor Asset Issuer Succesfull register - handleEvent =" + platformEvent);
 
         if (this.assetActorIssuerPluginRoot.getStatus() == ServiceStatus.STARTED) {
 
