@@ -613,11 +613,11 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
 
                 this.assetUserActorDao.createNewAssetUser(record);
                 actorAssetUser = this.assetUserActorDao.getActorAssetUser();
-                System.out.println("*****************************************Actor Asset User***********************************************");
+                System.out.println("*****************Actor Asset User************************");
                 System.out.println("Actor Asset PublicKey: " + actorAssetUser.getPublicKey());
                 System.out.println("Actor Asset Name: " + actorAssetUser.getName());
 //                System.out.println("Actor Asset GenesisAddress in Crypto Address Book: " + actorAssetUser.getCryptoAddress().getAddress());
-                System.out.println("********************************************************************************************************");
+                System.out.println("**********************************************************");
             }
 //            registerActorInActorNetowrkSerice();
 //                else {

@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRequestListActorAssetIssuerRegisteredException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.RequestedListNotReadyRecevivedException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.AssetActorIssuerPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.exceptions.CantAddPendingAssetIssuerException;
@@ -145,20 +144,22 @@ public class ActorAssetIssuerMonitorAgent implements Agent, DealsWithLogger, Dea
 
         private void listByActorAssetIssuerNetworkService() throws CantCreateActorAssetIssuerException {
             try {
-                List<ActorAssetIssuer> list = assetIssuerActorNetworkServiceManager.getListActorAssetIssuerRegistered();
-
-                if (list.isEmpty()) {
-                    System.out.println("Actor Asset Issuer - Lista de Actor Asset Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
-                    //TODO List Empty State = DISCONNECTED_REMOTELY
-                    System.out.println("Actor Asset Issuer - Se procede actualizar Lista en TABLA (si) Existiera algun Registro");
-                    assetIssuerActorDao.createNewAssetIssuerRegisterInNetworkServiceByList(list);
+                if (assetIssuerActorNetworkServiceManager != null) {
+                    List<ActorAssetIssuer> list = assetIssuerActorNetworkServiceManager.getListActorAssetIssuerRegistered();
+                    if (list.isEmpty()) {
+                        System.out.println("Actor Asset Issuer - Lista de Actor Asset Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
+                        //TODO List Empty State = DISCONNECTED_REMOTELY
+                        System.out.println("Actor Asset Issuer - Se procede actualizar Lista en TABLA (si) Existiera algun Registro");
+                        assetIssuerActorDao.createNewAssetIssuerRegisterInNetworkServiceByList(list);
+                    } else {
+                        System.out.println("Actor Asset Issuer - Se Recibio Lista de: " + list.size() + " Actors desde Actor Network Service - SE PROCEDE A SU REGISTRO");
+                        //TODO new Actors State = PENDING_LOCALLY_ACCEPTANCE
+                        int recordInsert = assetIssuerActorDao.createNewAssetIssuerRegisterInNetworkServiceByList(list);
+                        System.out.println("Actor Asset Issuer - Se Registro en tabla REGISTER Lista de: " + recordInsert + " Actors desde Actor Network Service");
+                    }
                 } else {
-                    System.out.println("Actor Asset Issuer - Se Recibio Lista de: " + list.size() + " Actors desde Actor Network Service - SE PROCEDE A SU REGISTRO");
-                    //TODO new Actors State = PENDING_LOCALLY_ACCEPTANCE
-                    int recordInsert = assetIssuerActorDao.createNewAssetIssuerRegisterInNetworkServiceByList(list);
-                    System.out.println("Actor Asset Issuer - Se Registro en tabla ASSET_ISSUER_REGISTER_ACTOR Lista de: " + recordInsert + " Actors desde Actor Network Service");
+                    System.out.println("Actor Asset assetIssuerActorNetworkServiceManager: " + assetIssuerActorNetworkServiceManager);
                 }
-
             } catch (CantRequestListActorAssetIssuerRegisteredException e) {
                 throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
             } catch (CantAddPendingAssetIssuerException e) {
