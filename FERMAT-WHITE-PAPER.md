@@ -34,7 +34,7 @@ The Framework core is in charge of initializing Add-ons and Plug-ins and managin
 
 A set of Plug-ins is needed for each crypto network to be supported. One for interfacing the network, pushing outgoing transactions and monitoring incoming transactions. Another couple being the digital vaults where the crypto currency value and digital assets are stored.
 
-Wallets are higher level abstractions and have their own set of Plug-ins for keeping the accounting of each kind of them. This means that the we split the accounting from the handling the value having components at different layers to handle each ativity.
+Wallets are higher level abstractions and have their own set of Plug-ins for keeping the accounting of each kind of them. This means that we split the accounting from the handling of the value by having components at different layers to handle each ativity.
 
 <br>
 ### Fermat Network
