@@ -41,9 +41,11 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/container_header_balance"
                 app:layout_scrollFlags="scroll|enterAlways"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
                 >
 
             </RelativeLayout>
