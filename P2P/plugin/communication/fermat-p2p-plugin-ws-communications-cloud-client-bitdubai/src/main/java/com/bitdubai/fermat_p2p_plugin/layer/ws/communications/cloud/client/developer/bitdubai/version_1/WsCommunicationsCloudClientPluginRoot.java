@@ -59,7 +59,7 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     /**
      * Represents the value of ENABLE_CLIENT
      */
-    public static final Boolean ENABLE_CLIENT = Boolean.TRUE;
+    public static final Boolean ENABLE_CLIENT = Boolean.FALSE;
 
     /**
      * Represent the WS_PROTOCOL
@@ -74,8 +74,8 @@ public class WsCommunicationsCloudClientPluginRoot implements Service, DealsWith
     /**
      * Represent the SERVER_IP
      */
-    public static final String SERVER_IP = "52.11.156.16"; //AWS
-    //public static final String SERVER_IP = "192.168.100.105";
+//    public static final String SERVER_IP = "52.11.156.16"; //AWS
+    public static final String SERVER_IP = "192.168.0.103";
 
     /**
      * Represent the DEFAULT_PORT

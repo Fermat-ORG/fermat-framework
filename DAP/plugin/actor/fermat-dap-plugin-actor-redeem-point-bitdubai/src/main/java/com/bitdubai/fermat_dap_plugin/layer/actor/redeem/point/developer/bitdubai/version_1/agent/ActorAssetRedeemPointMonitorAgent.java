@@ -146,20 +146,22 @@ public class ActorAssetRedeemPointMonitorAgent implements Agent, DealsWithLogger
 
         private void listByActorAssetRedeemPointNetworkService() throws CantCreateActorRedeemPointException {
             try {
-                List<ActorAssetRedeemPoint> list = assetRedeemPointActorNetworkServiceManager.getListActorAssetRedeemPointRegistered();
-
-                if (list.isEmpty()) {
-                    System.out.println("Actor Asset Issuer - Lista de Actor Asset Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
-                    //TODO List Empty State = DISCONNECTED_REMOTELY
-                    System.out.println("Actor Asset Issuer - Se procede actualizar Lista en TABLA (si) Existiera algun Registro");
-                    redeemPointActorDao.createNewAssetRedeemPointRegisterInNetworkServiceByList(list);
+                if (assetRedeemPointActorNetworkServiceManager != null) {
+                    List<ActorAssetRedeemPoint> list = assetRedeemPointActorNetworkServiceManager.getListActorAssetRedeemPointRegistered();
+                    if (list.isEmpty()) {
+                        System.out.println("Actor Asset Redeem Point - Lista de Actor Asset Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
+                        //TODO List Empty State = DISCONNECTED_REMOTELY
+                        System.out.println("Actor Asset Redeem Point - Se procede actualizar Lista en TABLA (si) Existiera algun Registro");
+                        redeemPointActorDao.createNewAssetRedeemPointRegisterInNetworkServiceByList(list);
+                    } else {
+                        System.out.println("Actor Asset Redeem Point - Se Recibio Lista de: " + list.size() + " Actors desde Actor Network Service - SE PROCEDE A SU REGISTRO");
+                        //TODO new Actors State = PENDING_LOCALLY_ACCEPTANCE
+                        int recordInsert = redeemPointActorDao.createNewAssetRedeemPointRegisterInNetworkServiceByList(list);
+                        System.out.println("Actor Asset Redeem Point - Se Registro en tabla REGISTER Lista de: " + recordInsert + " Actors desde Actor Network Service");
+                    }
                 } else {
-                    System.out.println("Actor Asset Issuer - Se Recibio Lista de: " + list.size() + " Actors desde Actor Network Service - SE PROCEDE A SU REGISTRO");
-                    //TODO new Actors State = PENDING_LOCALLY_ACCEPTANCE
-                    int recordInsert = redeemPointActorDao.createNewAssetRedeemPointRegisterInNetworkServiceByList(list);
-                    System.out.println("Actor Asset Issuer - Se Registro en tabla ASSET_ISSUER_REGISTER_ACTOR Lista de: " + recordInsert + " Actors desde Actor Network Service");
+                    System.out.println("Actor Asset assetRedeemPointActorNetworkServiceManager: " + assetRedeemPointActorNetworkServiceManager);
                 }
-
             } catch (CantRequestListActorAssetRedeemPointRegisteredException e) {
                 throw new CantCreateActorRedeemPointException("CAN'T ADD NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
             } catch (CantAddPendingRedeemPointException e) {
