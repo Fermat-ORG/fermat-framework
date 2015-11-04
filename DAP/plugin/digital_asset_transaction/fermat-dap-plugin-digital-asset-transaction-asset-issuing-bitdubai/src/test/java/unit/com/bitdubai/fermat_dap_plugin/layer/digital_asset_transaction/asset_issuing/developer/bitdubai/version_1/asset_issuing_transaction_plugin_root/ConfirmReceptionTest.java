@@ -18,6 +18,8 @@ import com.bitdubai.fermat_ccp_api.layer.transaction.outgoing_intra_actor.interf
 import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.AssetIssuingTransactionDeveloperDatabaseFactory;
@@ -78,6 +80,9 @@ public class ConfirmReceptionTest {
     AssetIssuerWalletManager assetIssuerWalletManager;
 
     @Mock
+    ActorAssetIssuerManager actorAssetIssuerManager;
+
+    @Mock
     CryptoVaultManager cryptoVaultManager;
 
     @Mock
@@ -116,6 +121,9 @@ public class ConfirmReceptionTest {
     DatabaseTableRecord mockDatabaseTableRecord = Mockito.mock(DatabaseTableRecord.class);
     Database mockDatabase = Mockito.mock(Database.class);
 
+    @Mock
+    ActorAssetIssuer actorAssetIssuer;
+
     @Before
     public void setUp() throws Exception {
         assetIssuingPluginRoot = new AssetIssuingTransactionPluginRoot();
@@ -130,6 +138,7 @@ public class ConfirmReceptionTest {
         assetIssuingPluginRoot.setPluginDatabaseSystem(pluginDatabaseSystem);
         assetIssuingPluginRoot.setPluginFileSystem(pluginFileSystem);
         assetIssuingPluginRoot.setAssetIssuerManager(assetIssuerWalletManager);
+        assetIssuingPluginRoot.setActorAssetIssuerManager(actorAssetIssuerManager);
         assetIssuingPluginRoot.setCryptoVaultManager(cryptoVaultManager);
         assetIssuingPluginRoot.setBitcoinWalletManager(bitcoinWalletManager);
         assetIssuingPluginRoot.setAssetVaultManager(assetVaultManager);
@@ -156,14 +165,15 @@ public class ConfirmReceptionTest {
         when(eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER)).thenReturn(fermatEventListener3);
         when(eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER)).thenReturn(fermatEventListener4);
         when(eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION)).thenReturn(fermatEventListener5);
+
+        when(actorAssetIssuerManager.getActorAssetIssuer()).thenReturn(actorAssetIssuer);
     }
 
-    @Test
-    public void test_OK() throws Exception {
-        //TODO test fail
+//    @Test
+//    public void test_OK() throws Exception {
 //        assetIssuingPluginRoot.start();
 //        assetIssuingPluginRoot.confirmReception("genesisTransaction");
-    }
+//    }
 
     @Test
     public void test_Throws_CantExecuteQueryException() throws Exception {
