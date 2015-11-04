@@ -24,7 +24,7 @@ public interface ActorAssetIssuer {
     String getName();
 
     /**
-     * The method <code>getContactRegistrationDate</code> gives us the date when both Asset Issuers
+     * The method <code>getRegistrationDate</code> gives us the date when both Asset Issuers
      * exchanged their information and accepted each other as contacts.
      *
      * @return the date
@@ -39,10 +39,10 @@ public interface ActorAssetIssuer {
     byte[] getProfileImage();
 
     /**
-     * The method <code>getContactState</code> gives us the contact state of the represented Asset
-     * Issuer
+     * The method <code>getConnectionState</code> gives us the connection state of the represented
+     * Asset Issuer
      *
-     * @return the contact state
+     * @return the Connection state
      */
     ConnectionState getConnectionState();
 
@@ -56,25 +56,33 @@ public interface ActorAssetIssuer {
     String getDescription();
 
     /**
-     * Método {@code getLocation}
-     * Este método retorna la ubicación geográfica del Actor Issuer.
-     * Sólo se utiliza Longitude y Latitude para esto.
+     * The method <code>getLocation</code> gives us the Location of the represented
+     * Asset Issuer
      *
-     * @return {@link Location} con la ubicación del {@link ActorAssetIssuer}
+     * @return the Location
      */
     Location getLocation();
 
+    /**
+     * The method <code>getLocationLatitude</code> gives us the Location of the represented
+     * Asset Issuer
+     *
+     * @return the Location Latitude
+     */
     Double getLocationLatitude();
 
+    /**
+     * The method <code>getLocationLongitude</code> gives us the Location of the represented
+     * Asset Issuer
+     *
+     * @return the Location Longitude
+     */
     Double getLocationLongitude();
 
     /**
-     * Método {@code getCryptoAddress}
-     * Este método retorna la dirección criptográfica del
-     * Issuer.
+     * returns the crypto address to which it belongs
      *
-     * @return {@link CryptoAddress} con la dirección criptoráfica del {@link ActorAssetIssuer}
+     * @return CryptoAddress instance.
      */
-    CryptoAddress getCryptoAddress();
-
+//    CryptoAddress getCryptoAddress();
 }

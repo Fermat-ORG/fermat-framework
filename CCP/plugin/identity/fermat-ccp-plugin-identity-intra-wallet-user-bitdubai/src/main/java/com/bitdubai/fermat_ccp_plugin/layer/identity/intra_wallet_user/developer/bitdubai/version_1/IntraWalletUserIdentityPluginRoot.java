@@ -23,6 +23,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.DealsWithIntraUsersNetworkService;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 
@@ -289,27 +291,23 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
         eventManager.addListener(cryptoAddressReceivedEventListener);
         listenersAdded.add(cryptoAddressReceivedEventListener);
 
-
-
-
-
-
     }
 
     private void executePendingAddressExchangeRequests(IntraWalletUserIdentityCryptoAddressGenerationService cryptoAddressGenerationService) {
-//        try {
-//            List<AddressExchangeRequest> addressExchangeRequestList = cryptoAddressesManager.listPendingRequests(
-//                    IntraWalletUserIdentityCryptoAddressGenerationService.actorType
-//            );
-//
-//            for (AddressExchangeRequest request : addressExchangeRequestList) {
-//                cryptoAddressGenerationService.handleCryptoAddressRequestedEvent(request);
-//            }
-//
-//        } catch (CantListPendingAddressExchangeRequestsException | CantHandleCryptoAddressRequestEventException e) {
-//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-//        }
+        try {
+            List<CryptoAddressRequest> cryptoAddressRequestList = cryptoAddressesManager.listPendingCryptoAddressRequests(
+                    IntraWalletUserIdentityCryptoAddressGenerationService.actorType
+            );
+
+            for (CryptoAddressRequest request : cryptoAddressRequestList) {
+                cryptoAddressGenerationService.handleCryptoAddressRequestedEvent(request);
+            }
+
+        } catch (CantListPendingCryptoAddressRequestsException | CantHandleCryptoAddressRequestEventException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
     }
+
 
     @Override
     public void stop() {

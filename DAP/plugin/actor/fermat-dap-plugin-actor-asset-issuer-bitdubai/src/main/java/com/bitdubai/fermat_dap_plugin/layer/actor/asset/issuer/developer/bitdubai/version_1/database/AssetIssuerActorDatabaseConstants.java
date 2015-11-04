@@ -17,7 +17,7 @@ public class AssetIssuerActorDatabaseConstants {
     public static final String ASSET_ISSUER_NAME_COLUMN_NAME = "name";
     public static final String ASSET_ISSUER_CONNECTION_STATE_COLUMN_NAME = "connection_state";
     public static final String ASSET_ISSUER_REGISTRATION_DATE_COLUMN_NAME = "registration_date";
-    public static final String ASSET_ISSUER_MODIFIED_DATE_COLUMN_NAME = "modified_date";
+    public static final String ASSET_ISSUER_LAST_CONNECTION_DATE_COLUMN_NAME = "last_connection_date";
     public static final String ASSET_ISSUER_PUBLIC_KEY_EXTENDED_COLUMN_NAME = "publicKey_extended";
 //    public static final String ASSET_ISSUER_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME = "crypto_address";
 //    public static final String ASSET_ISSUER_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME = "crypto_currency";
@@ -37,7 +37,7 @@ public class AssetIssuerActorDatabaseConstants {
     public static final String ASSET_ISSUER_REGISTERED_NAME_COLUMN_NAME = "register_name";
     public static final String ASSET_ISSUER_REGISTERED_CONNECTION_STATE_COLUMN_NAME = "register_connection_state";
     public static final String ASSET_ISSUER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME = "register_registration_date";
-    public static final String ASSET_ISSUER_REGISTERED_MODIFIED_DATE_COLUMN_NAME = "register_modified_date";
+    public static final String ASSET_ISSUER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME = "register_last_connection_date";
     public static final String ASSET_ISSUER_REGISTERED_PUBLIC_KEY_EXTENDED_COLUMN_NAME = "register_publicKey_extended";
 //    public static final String ASSET_ISSUER_REGISTERED_ISSUER_CRYPTO_ADDRESS_COLUMN_NAME = "register_crypto_address";
 //    public static final String ASSET_ISSUER_REGISTERED_ISSUER_CRYPTO_CURRENCY_COLUMN_NAME = "register_crypto_currency";

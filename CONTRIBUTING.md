@@ -1,5 +1,6 @@
 ![alt text](https://raw.githubusercontent.com/bitDubai/fermat-graphic-design/36cac2f9961a0a55f78df85ff602157b66fa13d4/Drafts/3D%20Design/Cover_OSA_2.png?token=ANBHS_GNU7x8fda7hVGiJIlP-h7kNvOQks5WNsR2wA%3D%3D "Fermat Logo")
 
+
 <br>
 #Contributing Guide
 
@@ -66,7 +67,7 @@ It is very easy to contribute to the book, just edit the desired file and at the
 <br>
 ### Adding a New Plugin
 
-For the details o this process, you can check the [Adding a New Plugin to Fermat](AddingNewPlugin.md) document.
+For the details o this process, you can check the [Adding a New Plugin to Fermat](https://github.com/bitDubai/fermat/blob/master/README-PLUG-INS.MD) document.
 
 <br>
 ### Adding a New Reference Wallet
