@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 
+import java.util.Arrays;
+
 /**
  * Created by Nerio on 22/09/15.
  */
@@ -34,6 +36,26 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
                                   String publicKey) {
         this.name       = name      ;
         this.publicKey  = publicKey ;
+    }
+
+    /**
+     *  Method for Set Actor in Actor Network Service Issuer
+     */
+    public AssetIssuerActorRecord(String name,
+                                  String publicKey,
+                                  byte[] profileImage,
+                                  Location location) {
+
+        this.name                   = name                      ;
+        this.publicKey              = publicKey                 ;
+        this.profileImage           = profileImage.clone()      ;
+        if (location != null) {
+            this.locationLatitude   = location.getLatitude()    ;
+            this.locationLongitude  = location.getLongitude()   ;
+        }else{
+            this.locationLatitude   = (double) 0                ;
+            this.locationLongitude  = (double) 0                ;
+        }
     }
 
     public AssetIssuerActorRecord(String name,
@@ -172,13 +194,30 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         return locationLongitude;
     }
 
-    @Override
-    public CryptoAddress getCryptoAddress() {
-        return cryptoAddress;
-    }
+//    @Override
+//    public CryptoAddress getCryptoAddress() {
+//        return cryptoAddress;
+//    }
 
     public void setCryptoAddress(CryptoAddress cryptoAddress) {
         if(cryptoAddress != null)
             this.cryptoAddress = cryptoAddress;
+    }
+
+    @Override
+    public String toString() {
+        return "AssetIssuerActorRecord{" +
+                "publicLinkedIdentity='" + publicLinkedIdentity + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", publicKey='" + publicKey + '\'' +
+                ", registrationDate=" + registrationDate +
+                ", connectionState=" + connectionState +
+                ", location=" + location +
+                ", locationLatitude=" + locationLatitude +
+                ", locationLongitude=" + locationLongitude +
+                ", cryptoAddress=" + cryptoAddress +
+                ", profileImage=" + Arrays.toString(profileImage) +
+                '}';
     }
 }

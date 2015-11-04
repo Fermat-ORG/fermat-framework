@@ -34,7 +34,7 @@ public class GetTextFileTest {
     private PluginTextFile testFile2;
 
     private UUID testId;
-    private Context testContext;
+    private String testContext;
     private String testDirectory;
     private String testFileName;
     private FilePrivacy testPrivacyLevel;
@@ -44,7 +44,7 @@ public class GetTextFileTest {
     public void setUpValues(){
         testId = UUID.randomUUID();
         Activity mockActivity = Robolectric.setupActivity(Activity.class);
-        testContext = shadowOf(mockActivity).getApplicationContext();
+        testContext = shadowOf(mockActivity).getApplicationContext().getFilesDir().getPath();
         testDirectory = "ROBOLECTRICTEST";
         testFileName = "TESTFILE.txt";
         testPrivacyLevel = FilePrivacy.PUBLIC;
@@ -53,8 +53,7 @@ public class GetTextFileTest {
 
     @Test
     public void GetTextFile_FileExists_TheFileIsLoaded() throws Exception{
-        testFileSystem = new AndroidPluginFileSystem();
-        testFileSystem.setContext(testContext);
+        testFileSystem = new AndroidPluginFileSystem(testContext);
         testFile1 = testFileSystem.createTextFile(testId,testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         testFile1.persistToMedia();
 
@@ -65,8 +64,7 @@ public class GetTextFileTest {
 
     @Test
     public void GetTextFile_FileDoesntExists_ThrowsException() throws Exception{
-        testFileSystem = new AndroidPluginFileSystem();
-        testFileSystem.setContext(testContext);
+        testFileSystem = new AndroidPluginFileSystem(testContext);
         catchException(testFileSystem).getTextFile(testId, testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         assertThat(caughtException()).isNotNull();
         caughtException().printStackTrace();
@@ -74,7 +72,7 @@ public class GetTextFileTest {
 
     @Test
     public void GetTextFile_NoContext_ThrowsException() throws Exception{
-        testFileSystem = new AndroidPluginFileSystem();
+        testFileSystem = new AndroidPluginFileSystem(null);
         catchException(testFileSystem).getTextFile(testId, testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
         assertThat(caughtException()).isNotNull();
         caughtException().printStackTrace();
