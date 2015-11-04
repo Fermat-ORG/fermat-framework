@@ -13,12 +13,12 @@ import org.mockito.runners.MockitoJUnitRunner;
  * Created by Luis Campo (campusprize@gmail.com) on 03/10/15.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GetStringValueFromSelectedTableTableByFieldCodeTest {
+public class IsPendingTransactionsTest {
     @Mock
     private AssetDistributionDao mockAssetDistributionDao;
 
     @Test
-    public void getEventTypeByIdTest () throws CantExecuteQueryException {
+    public void isPendingTransactionsTest () throws CantExecuteQueryException {
         mockAssetDistributionDao.isPendingTransactions(CryptoStatus.PENDING_SUBMIT);
     }
 }
