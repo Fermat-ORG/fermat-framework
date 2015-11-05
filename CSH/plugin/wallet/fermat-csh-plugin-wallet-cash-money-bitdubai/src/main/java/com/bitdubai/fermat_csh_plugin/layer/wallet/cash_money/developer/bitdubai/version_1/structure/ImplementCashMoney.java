@@ -42,7 +42,7 @@ public class ImplementCashMoney implements CashMoney, CashMoneyBalance {
         try {
             return getCurrentBalance(balanceType);
         } catch (CantGetCurrentBalanceException e) {
-           throw new CantTransactionCashMoneyException(CantTransactionCashMoneyException.DEFAULT_MESSAGE,e,"Cant TransactionCashMoney CashMoney Exception","Cant Get CurrentBalance Exception");
+           throw new CantTransactionCashMoneyException(CantTransactionCashMoneyException.DEFAULT_MESSAGE,e,"Cant TransactionCashMoney CashMoneyConstructor Exception","Cant Get CurrentBalance Exception");
         }
     }
 
@@ -57,7 +57,7 @@ public class ImplementCashMoney implements CashMoney, CashMoneyBalance {
         try {
             return getCurrentBalance(balanceType);
         } catch (CantGetCurrentBalanceException e) {
-           throw new CantTransactionCashMoneyException(CantTransactionCashMoneyException.DEFAULT_MESSAGE,e,"Cant TransactionCashMoney CashMoney Exception","Cant Get Current Balance Exception");
+           throw new CantTransactionCashMoneyException(CantTransactionCashMoneyException.DEFAULT_MESSAGE,e,"Cant TransactionCashMoney CashMoneyConstructor Exception","Cant Get Current Balance Exception");
         }
     }
 
@@ -90,7 +90,7 @@ public class ImplementCashMoney implements CashMoney, CashMoneyBalance {
         try {
             balanceAmount=cashMoneyWalletDao.getAmaunt();
         } catch (CantGetCashMoneyListException e) {
-            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE,e,"Cant Calculate Balance Exception","Cant Get CashMoney List Exception");
+            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE,e,"Cant Calculate Balance Exception","Cant Get CashMoneyConstructor List Exception");
         }
         return balanceAmount;
     }
