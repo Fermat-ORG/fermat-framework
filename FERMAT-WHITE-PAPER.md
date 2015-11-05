@@ -136,7 +136,7 @@ Crypto funds are kept into a Multi-Sig vault and there is a shared _Petty-Cash-V
 <br>
 ### User Interface
 
-The Framework adds layer by layer starting down at the OS level, going through the _Blockchain Level_, the _Communication Level_, _Platform Level_ up to the user interface. We define several concepts in order achieve the goal of allowing even non-developers to deployd their own trust-less financial applications:
+The Framework handles a stack of layers. Starting down we have the _OS API level_, then the _Blockchain Level_, the _Communication Level_, _Platform Level_ up to the _User Interface Level_. With the goal in mind of allowing even non-developers to deployd their own trust-less financial applications, we define several concepts:
 
 **Wallet** : Any kind of financial application that handles either crypto or digital assets for any purpose. 
 
@@ -144,13 +144,15 @@ The Framework adds layer by layer starting down at the OS level, going through t
 
 **Niche Wallet** : A combination of several _Reference Wallets_ into a single product with its own look and feel and possibly extra functionality.
 
-**Branded Wallet** : A _niche wallet_ turned into a new product owned by a different End User by a process similar to building a Worldpress site but locally on the End Users device. Usually involves re-using a set of the business logic of the _niche wallet_ it derives from and a new look and feel (different skin and navigation structure).
+**Branded Wallet** : A _niche wallet_ turned into a new product owned by a different End User. Achieved by a process similar to building a Worldpress site but locally on the End Users device. Usually involves re-using a set of the business logic of the _niche wallet_ it derives from and a new look and feel (different skin and navigation structure).
 
 **External Wallet** : A third party APP running on the same device that uses Fermat as a backend for different reasons. For example to benefit from its infraestructure to interface crypto networks, transporting data through its p2p network, or storing data on the End Users _Private Device Network_. 
 
 Several tools were designed with the purpose to enable the development of new wallets, an their distribution.
 
 **Wallet Factory** : Is a built-in functionality that enables the development of reference and niche wallets.
+
+**Wallet Editor** : Enables the creation by non-developers of _Branded Wallets_ based on any of the _Niche Wallets_ available.
 
 **Wallet Store** : Is a distributed application which manages a shared wallet catallog and enables the End User to download from peers the different wallets available for the Framework.
 
