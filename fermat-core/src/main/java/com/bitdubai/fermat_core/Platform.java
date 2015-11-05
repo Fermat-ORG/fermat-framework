@@ -654,26 +654,6 @@ public class Platform implements Serializable {
              */
             pluginsIdentityManager = new PluginsIdentityManager(fileSystemOs.getPlatformFileSystem());
 
-            /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-             * ------------------------------------------------------------------------------------------------------------*
-             * Other Plugins initialization                                                                                *
-             * ------------------------------------------------------------------------------------------------------------*
-             * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-            /*
-             * Plugin Cloud Server Communication
-             * -----------------------------
-             */
-            //Plugin cloudServerCommunication = ((CommunicationLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_COMMUNICATION_LAYER)).getCloudServerPlugin();
-            //injectPluginReferencesAndStart(cloudServerCommunication, Plugins.BITDUBAI_CLOUD_SERVER_COMMUNICATION);
-
-            /*
-             * Plugin Cloud Client Communication
-             * -----------------------------
-             */
-            //Plugin cloudCommunication = ((CommunicationLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_COMMUNICATION_LAYER)).getCloudPlugin();
-            //injectPluginReferencesAndStart(cloudCommunication, Plugins.BITDUBAI_CLOUD_CHANNEL);
-
 
              /* flag temporal para desactivar plugins que tarde demasiado en inicializar,
             y asi poder trabajar en otras partes del sistema de forma relativamente rapida */
@@ -791,12 +771,6 @@ public class Platform implements Serializable {
 
                 Plugin cryptoNetwork2 = ((CryptoNetworkLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CRYPTO_NETWORK_LAYER)).getCryptoNetwork(CryptoNetworks.BITCOIN2);
                 injectPluginReferencesAndStart(cryptoNetwork2, Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK2);
-
-           /*
-            *  Plugin Crypto Address Book         *
-            * ------------------------------------*
-            */
-
 
            /*
             * Plugin Bitcoin Crypto Vault
@@ -1014,22 +988,6 @@ public class Platform implements Serializable {
                     injectPluginReferencesAndStart(walletStatisticsNetworkService, Plugins.BITDUBAI_WALLET_STATISTICS_NETWORK_SERVICE);
 
                 }
-            /*
-            * Plugin Extra User Actor
-            * -------------------------------
-//            */
-//                Plugin extraUser = ((CryptoVaultLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PIP_ACTOR_LAYER)).getmActorExtraUser();
-//                injectPluginReferencesAndStart(extraUser, Plugins.BITDUBAI_ACTOR_EXTRA_USER);
-
-           /*
-            * Plugin Intra User Actor
-            * -----------------------------
-            */
-//                Plugin intraUserActor = ((CCPActorLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_CCP_ACTOR_LAYER)).getIntraWalletUserPlugin();
-//                injectPluginReferencesAndStart(intraUserActor, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR);
-
-
-
 
             }
 
@@ -1060,30 +1018,6 @@ public class Platform implements Serializable {
                 injectPluginReferencesAndStart(walletRuntime, Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
 
            /*
-            * Plugin Inter Wallet Transaction
-            * ----------------------------------
-            */
-//                Plugin interWalletTransaction = ((TransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_TRANSACTION_LAYER)).getInterWalletPlugin();
-                //   injectPluginReferencesAndStart(interWalletTransaction, Plugins.BITDUBAI_INTER_WALLET_TRANSACTION);
-
-           /*
-            * Plugin Outgoing Device user Transaction
-            * ----------------------------------
-            */
-                //  Plugin outgoingDeviceUserTransaction = ((TransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_TRANSACTION_LAYER)).getOutgoingDeviceUserPlugin();
-                //    injectPluginReferencesAndStart(outgoingDeviceUserTransaction, Plugins.BITDUBAI_OUTGOING_DEVICE_USER_TRANSACTION);
-
-           /*
-            * Plugin Incoming Device user Transaction
-            * ----------------------------------
-            */
-                ////        Plugin incomingDeviceUserTransaction = ((TransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_TRANSACTION_LAYER)).getIncomingDeviceUserPlugin();
-                //    injectPluginReferencesAndStart(incomingDeviceUserTransaction, Plugins.BITDUBAI_INCOMING_DEVICE_USER_TRANSACTION);
-
-
-
-
-           /*
             * Plugin notification
             *---------------------
             */
@@ -1103,14 +1037,6 @@ public class Platform implements Serializable {
             */
                 Plugin appRuntimeMiddleware = ((MiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER)).getAppRuntimePlugin();
                 injectPluginReferencesAndStart(appRuntimeMiddleware, Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
-
-           /*
-            * Plugin Bank Notes Middleware
-            * -----------------------------
-            */
-                Plugin bankNotesMiddleware = ((MiddlewareLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_MIDDLEWARE_LAYER)).getBankNotesPlugin();
-                injectPluginReferencesAndStart(bankNotesMiddleware, Plugins.BITDUBAI_BANK_NOTES_MIDDLEWARE);
-
 
             }
 
