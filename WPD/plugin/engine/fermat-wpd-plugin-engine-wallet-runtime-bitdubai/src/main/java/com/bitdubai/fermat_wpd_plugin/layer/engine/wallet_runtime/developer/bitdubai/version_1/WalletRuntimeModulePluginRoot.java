@@ -2005,9 +2005,9 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeTabStrip.setTabsColor("#06356f");
 
-        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+        runtimeTabStrip.setTabsTextColor("#b9bfcd");
 
-        runtimeTabStrip.setTabsIndicateColor("#669d8c");
+        runtimeTabStrip.setTabsIndicateColor("#12aca1");
 
 
         runtimeTab = new Tab();
