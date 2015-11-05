@@ -252,7 +252,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
         try {
 
-            String intraUserPk = moduleManager.getActiveIdentities().get(0).getPublicKey();
+            String intraUserPk = null;//moduleManager.getActiveIdentities().get(0).getPublicKey();
 
             List<CryptoWalletTransaction> list =moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.CREDIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(),intraUserPk, MAX_TRANSACTIONS, available_offset);
 
