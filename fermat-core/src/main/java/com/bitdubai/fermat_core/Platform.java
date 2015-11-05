@@ -10,7 +10,9 @@ import com.bitdubai.fermat_api.*;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -304,6 +306,11 @@ public class Platform implements Serializable {
      */
     private LoggerSystemOs loggerSystemOs;
 
+    private FermatSystem fermatSystem;
+
+    public void setFermatSystem(FermatSystem fermatSystem) {
+        this.fermatSystem = fermatSystem;
+    }
 
     /**
      * Constructor
@@ -381,14 +388,6 @@ public class Platform implements Serializable {
          * ------------------------------------------------------------------------------------------------------------*
          * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
         initializePlatformLayers();
-
-
-        /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-         * ------------------------------------------------------------------------------------------------------------*
-         * Addons initialization                                                                                       *
-         * ------------------------------------------------------------------------------------------------------------*
-         * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-        initializeAddons();
 
         /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
          * ------------------------------------------------------------------------------------------------------------*
@@ -561,79 +560,6 @@ public class Platform implements Serializable {
     /**
      * Method tha initialize all addons component
      */
-    private void initializeAddons() throws CantStartPlatformException {
-
-        LOG.info("Platform - initializing Addons ...");
-
-        try {
-
-            /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-             * ------------------------------------------------------------------------------------------------------------*
-             * Critical Addons initialization                                                                              *
-             * ------------------------------------------------------------------------------------------------------------*
-             * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-            /*
-             * Addon Error Manager
-             * -------------------
-             */
-            Service errorManager = (Service) ((PlatformServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PLATFORM_SERVICE_LAYER)).getErrorManager();
-
-            corePlatformContext.registerAddon((Addon) errorManager, Addons.ERROR_MANAGER);
-            errorManager.start();
-
-
-            /**
-             * The event monitor is intended to handle exceptions on listeners, in order to take appropiate action.
-             */
-            PlatformFermatEventMonitor eventMonitor = new PlatformFermatEventMonitor((ErrorManager) errorManager);
-
-            /*
-             * Addon Event Manager
-             * -------------------
-             */
-            Service eventManager = (Service) ((PlatformServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PLATFORM_SERVICE_LAYER)).getEventManager();
-            ((DealsWithEventMonitor) eventManager).setFermatEventMonitor(eventMonitor);
-            corePlatformContext.registerAddon((Addon) eventManager, Addons.EVENT_MANAGER);
-            eventManager.start();
-
-            /*
-             * Addon User Manager
-             * -----------------------------
-             *
-             * Give the User Manager access to the File System so it can load and save user information from
-             * persistent media.
-             */
-            DeviceUserUserAddonRoot deviceUser = new DeviceUserUserAddonRoot();
-            deviceUser.setPlatformFileSystem(fileSystemOs.getPlatformFileSystem());
-            deviceUser.setEventManager((EventManager) eventManager);
-            deviceUser.setErrorManager((ErrorManager) errorManager);
-            corePlatformContext.registerAddon(deviceUser, Addons.DEVICE_USER);
-
-             /*
-             * Addon PlatformInfoPlatformServiceFileData
-             * -----------------------------
-             *
-             * Give the PlatformInfoPlatformServiceFileData Manager access to the File System so it can load and save user information from
-             * persistent media.
-             */
-            Service platformInfo = (Service) ((PlatformServiceLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_PLATFORM_SERVICE_LAYER)).getPlatformInfo();
-            ((DealsWithPlatformFileSystem) platformInfo).setPlatformFileSystem(fileSystemOs.getPlatformFileSystem());
-
-            corePlatformContext.registerAddon((Addon) platformInfo, Addons.PLATFORM_INFO);
-            platformInfo.start();
-
-        } catch (CantStartPluginException cantStartPluginException) {
-
-            LOG.log(Level.SEVERE, cantStartPluginException.getLocalizedMessage());
-            throw new CantStartPlatformException(CantStartPlatformException.DEFAULT_MESSAGE, cantStartPluginException, "", "");
-        }
-
-    }
-
-    /**
-     * Method tha initialize all addons component
-     */
     private void initializePlugins() throws CantStartPlatformException {
 
         LOG.info("Platform - initializing Plugins ...");
@@ -675,29 +601,33 @@ public class Platform implements Serializable {
             boolean WPD = true;
 
             //TODO: Esto va acá porque es necesario para que se le pase la instancia a otros plugins
-            final FermatSystem fermatSystem = new FermatSystem(osContext);;
-            try {
-                fermatSystem.start();
-            } catch (FermatException e) {
-                System.err.println(e.toString());
-                System.out.println(e.getPossibleReason());
-                System.out.println(e.getFormattedContext());
-                System.out.println(e.getFormattedTrace());
-            }
 
+            // addons initializing
+
+            try {
+                AbstractAddon errorManager = fermatSystem.getAddon(ref(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.ERROR_MANAGER));
+                corePlatformContext.registerAddon(errorManager, Addons.ERROR_MANAGER);
+
+                AbstractAddon eventManager = fermatSystem.getAddon(ref(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.EVENT_MANAGER));
+                corePlatformContext.registerAddon(eventManager, Addons.EVENT_MANAGER);
+
+                AbstractAddon deviceUserManager = fermatSystem.getAddon(ref(Platforms.PLUG_INS_PLATFORM, Layers.USER, Addons.DEVICE_USER));
+                corePlatformContext.registerAddon(deviceUserManager, Addons.DEVICE_USER);
+
+                AbstractAddon platformInfoManager = fermatSystem.getAddon(ref(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.PLATFORM_INFO));
+                corePlatformContext.registerAddon(platformInfoManager, Addons.PLATFORM_INFO);
+
+            } catch(Exception e) {
+                System.out.println("apa, encontramos un error.");
+                System.out.println(e);
+            }
 
             //--------------------------------
 
             if (P2P) {
                 try {
 
-                    PlatformReference platformReference = new PlatformReference(Platforms.COMMUNICATION_PLATFORM);
-
-                    LayerReference layerReference = new LayerReference(platformReference, Layers.COMMUNICATION);
-
-                    PluginVersionReference cloudClientReference = newVersionReference(layerReference, Plugins.WS_CLOUD_CLIENT);
-
-                    Plugin wsCommunicationCloudClient = fermatSystem.getPluginVersion(cloudClientReference);
+                    Plugin wsCommunicationCloudClient = fermatSystem.getPluginVersion(ref(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.WS_CLOUD_CLIENT));
                     injectPluginReferencesAndStart(wsCommunicationCloudClient, Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL);
 
                 } catch (Exception e) {
@@ -808,78 +738,58 @@ public class Platform implements Serializable {
 
                 try {
 
-                    PlatformReference platformReference = new PlatformReference(Platforms.BLOCKCHAINS);
-
-                    LayerReference layerReference = new LayerReference(platformReference, Layers.MIDDLEWARE);
-
-                    PluginVersionReference cryptoAddressesMiddlewareVersionReference = newVersionReference(layerReference, Plugins.CRYPTO_ADDRESSES);
-
-                    platformReference = new PlatformReference(Platforms.CRYPTO_CURRENCY_PLATFORM);
-
-                    layerReference = new LayerReference(platformReference, Layers.BASIC_WALLET);
-
-                    Plugin bitcoinWalletBasicWallet = fermatSystem.getPluginVersion(newVersionReference(layerReference, Plugins.BITCOIN_WALLET));
+                    Plugin bitcoinWalletBasicWallet = fermatSystem.getPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.BASIC_WALLET, Plugins.BITCOIN_WALLET));
                     injectPluginReferencesAndStart(bitcoinWalletBasicWallet, Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET);
 
-                    layerReference = new LayerReference(platformReference, Layers.NETWORK_SERVICE);
-
-                    Plugin cryptoPaymentRequestNetworkService = fermatSystem.getPluginVersion(newVersionReference(layerReference, Plugins.CRYPTO_PAYMENT_REQUEST));
+                    Plugin cryptoPaymentRequestNetworkService = fermatSystem.getPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_PAYMENT_REQUEST));
                     injectLayerReferences(cryptoPaymentRequestNetworkService);
                     injectPluginReferencesAndStart(cryptoPaymentRequestNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE);
 
-
-                    Plugin intraUserNetworkService = fermatSystem.getPluginVersion(newVersionReference(layerReference, Plugins.INTRA_WALLET_USER));
+                    Plugin intraUserNetworkService = fermatSystem.getPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.INTRA_WALLET_USER));
                     injectLayerReferences(intraUserNetworkService);
                     injectPluginReferencesAndStart(intraUserNetworkService, Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE);
 
-                    Plugin cryptoTransmissionNetworkService = fermatSystem.getPluginVersion(newVersionReference(layerReference, Plugins.CRYPTO_TRANSMISSION));
+                    Plugin cryptoTransmissionNetworkService = fermatSystem.getPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_TRANSMISSION));
                     injectLayerReferences(cryptoTransmissionNetworkService);
                     injectPluginReferencesAndStart(cryptoTransmissionNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_CRYPTO_TRANSMISSION_NETWORK_SERVICE);
 
-                   Plugin cryptoAddressesNetworkService = fermatSystem.getPluginVersion(newVersionReference(layerReference, Plugins.CRYPTO_ADDRESSES));
+                   Plugin cryptoAddressesNetworkService = fermatSystem.getPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.NETWORK_SERVICE, Plugins.CRYPTO_ADDRESSES));
                    injectPluginReferencesAndStart(cryptoAddressesNetworkService, Plugins.BITDUBAI_CCP_CRYPTO_ADDRESSES_NETWORK_SERVICE);
 
-// temporal
-                    Plugin cryptoAddressesMiddleware = fermatSystem.getPluginVersion(cryptoAddressesMiddlewareVersionReference);
+                    Plugin cryptoAddressesMiddleware = fermatSystem.getPluginVersion(ref(Platforms.BLOCKCHAINS, Layers.MIDDLEWARE, Plugins.CRYPTO_ADDRESSES));
                     injectPluginReferencesAndStart(cryptoAddressesMiddleware, Plugins.CRYPTO_ADDRESSES__MIDDLEWARE_TEMP);
 
-                    layerReference = new LayerReference(platformReference, Layers.MIDDLEWARE);
-
-                    Plugin walletContactsMiddleware = fermatSystem.getPluginVersion(newVersionReference(layerReference, Plugins.WALLET_CONTACTS));
+                    Plugin walletContactsMiddleware = fermatSystem.getPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.MIDDLEWARE, Plugins.WALLET_CONTACTS));
                     injectPluginReferencesAndStart(walletContactsMiddleware, Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE);
 
-                    layerReference = new LayerReference(platformReference, Layers.REQUEST);
-
-                    Plugin cryptoPaymentRequest = fermatSystem.getPluginVersion(newVersionReference(layerReference, Plugins.CRYPTO_PAYMENT_REQUEST));
+                    Plugin cryptoPaymentRequest = fermatSystem.getPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.REQUEST, Plugins.CRYPTO_PAYMENT_REQUEST));
                     injectPluginReferencesAndStart(cryptoPaymentRequest, Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST);
 
+                    Plugin ccpIntraWalletUserIdentity = fermatSystem.getPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.IDENTITY, Plugins.INTRA_WALLET_USER));
+                    injectPluginReferencesAndStart(ccpIntraWalletUserIdentity, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY);
 
-                    layerReference = new LayerReference(platformReference, Layers.TRANSACTION);
-                    Plugin outgoingIntraActorPlugin = fermatSystem.getPluginVersion(newVersionReference(layerReference, Plugins.OUTGOING_INTRA_ACTOR));
+                    Plugin outgoingIntraActorPlugin = fermatSystem.getPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION, Plugins.OUTGOING_INTRA_ACTOR));
                     injectPluginReferencesAndStart(outgoingIntraActorPlugin, Plugins.BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION);
 
-                    Plugin outgoingExtraUserPlugin = fermatSystem.getPluginVersion(newVersionReference(layerReference, Plugins.OUTGOING_EXTRA_USER));
+                    Plugin outgoingExtraUserPlugin = fermatSystem.getPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION, Plugins.OUTGOING_EXTRA_USER));
                     injectPluginReferencesAndStart(outgoingExtraUserPlugin, Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION);
 
-                    Plugin incomingExtraUserTransaction = fermatSystem.getPluginVersion(newVersionReference(layerReference, Plugins.INCOMING_EXTRA_USER));
+                    Plugin incomingExtraUserTransaction = fermatSystem.getPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION, Plugins.INCOMING_EXTRA_USER));
                     injectPluginReferencesAndStart(incomingExtraUserTransaction, Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
 
-                    Plugin incomingIntraUserTransaction = fermatSystem.getPluginVersion(newVersionReference(layerReference, Plugins.INCOMING_INTRA_USER));
+                    Plugin incomingIntraUserTransaction = fermatSystem.getPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.TRANSACTION, Plugins.INCOMING_INTRA_USER));
                     injectPluginReferencesAndStart(incomingIntraUserTransaction, Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION);
 
-                    layerReference = new LayerReference(platformReference, Layers.ACTOR);
-                    Plugin extraUser = fermatSystem.getPluginVersion(newVersionReference(layerReference, Plugins.EXTRA_WALLET_USER));
+                    Plugin extraUser = fermatSystem.getPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.ACTOR, Plugins.EXTRA_WALLET_USER));
                     injectPluginReferencesAndStart(extraUser, Plugins.BITDUBAI_ACTOR_EXTRA_USER);
 
-                    Plugin intraUserActor = fermatSystem.getPluginVersion(newVersionReference(layerReference, Plugins.INTRA_WALLET_USER));
+                    Plugin intraUserActor = fermatSystem.getPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.ACTOR, Plugins.INTRA_WALLET_USER));
                     injectPluginReferencesAndStart(intraUserActor, Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR);
 
-                    layerReference = new LayerReference(platformReference, Layers.SUB_APP_MODULE);
-                    Plugin intraUserModule = fermatSystem.getPluginVersion(newVersionReference(layerReference, Plugins.INTRA_WALLET_USER));
+                    Plugin intraUserModule = fermatSystem.getPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.SUB_APP_MODULE, Plugins.INTRA_WALLET_USER));
                     injectPluginReferencesAndStart(intraUserModule, Plugins.BITDUBAI_INTRA_USER_FACTORY_MODULE);
 
-                    layerReference = new LayerReference(platformReference, Layers.WALLET_MODULE);
-                    Plugin cryptoWalletWalletModule = fermatSystem.getPluginVersion(newVersionReference(layerReference, Plugins.CRYPTO_WALLET));
+                    Plugin cryptoWalletWalletModule = fermatSystem.getPluginVersion(ref(Platforms.CRYPTO_CURRENCY_PLATFORM, Layers.WALLET_MODULE, Plugins.CRYPTO_WALLET));
                     injectPluginReferencesAndStart(cryptoWalletWalletModule, Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1399,11 +1309,22 @@ public class Platform implements Serializable {
 
     }
 
-    private PluginVersionReference newVersionReference(LayerReference layer, Plugins fermatPluginsEnum) {
+    private AddonVersionReference ref(Platforms platform, Layers layer, Addons fermatAddonsEnum) {
+
+        return new AddonVersionReference(
+                platform,
+                layer,
+                fermatAddonsEnum,
+                Developers.BITDUBAI,
+                new Version()
+        );
+    }
+
+    private PluginVersionReference ref(Platforms platform, Layers layer, Plugins fermatPluginsEnum) {
 
         return new PluginVersionReference(
-                layer.getPlatformReference().getPlatform(),
-                layer.getLayer(),
+                platform,
+                layer,
                 fermatPluginsEnum,
                 Developers.BITDUBAI,
                 new Version()
