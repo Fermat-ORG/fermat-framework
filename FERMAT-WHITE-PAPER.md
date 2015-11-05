@@ -170,7 +170,12 @@ The collection of system information for visualization and statistics uses hashe
 <br>
 ### Conclusion
 
-We have proposed a Framework for developing and running Trust-less Financial Applications. Bitcoin provided part of the solution. The Fermat Framework shows the way of how to keep the End User away from trusted third parties at a higher level. We proposed the solution to several problems at the same time. The hightlights of our work are how to exchange meta-data in a trust-less way, how to prevent the lost of private keys (funds and identities), how to maximize reusibillity by building with Plug-ins, and how to enable even non-developers to create and deploy their own wallets in a Wordpress style. 
+We have proposed a Framework for developing and running trust-less financial applications. The Fermat Framework shows the way of how to keep the End User away from trusted third parties at a higher level. We propose the solution to several problems at the same time. The hightlights of our work are:
+
+* How to exchange meta-data in a trust-less way
+* How to prevent the lost of private keys (funds and identities)
+* How to maximize reusibillity by building with Plug-ins
+* How to enable even non-developers to create and deploy their own wallets in a Wordpress style. 
 
 With this system we enable a new ecosystem of trust-less financial applications that are both crypto and digital asset enabled.
 
