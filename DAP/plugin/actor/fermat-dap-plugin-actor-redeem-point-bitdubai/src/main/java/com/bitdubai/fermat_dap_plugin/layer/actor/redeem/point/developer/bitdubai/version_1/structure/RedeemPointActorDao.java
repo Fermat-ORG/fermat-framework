@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.database.RedeemPointActorDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.database.RedeemPointActorDatabaseFactory;
@@ -571,7 +572,41 @@ public class RedeemPointActorDao implements Serializable {
         return list;
     }
 
-    public ActorAssetRedeemPoint getActorAssetRedeemPoint() throws CantGetRedeemPointsListException {
+    public ActorAssetRedeemPoint getActorByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException {
+
+        ActorAssetRedeemPoint actorAssetRedeemPoint = null;
+        DatabaseTable table;
+
+        // Get Asset Users identities list.
+        try {
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_TABLE_NAME);
+
+            if (table == null) {
+                throw new CantGetUserDeveloperIdentitiesException("Cant get asset User identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
+            }
+            table.setStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+            // 3) Get Asset Users Record.
+            actorAssetRedeemPoint = this.addRecords(table.getRecords());
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetAssetRedeemPointActorsException(e.getMessage(), e, "Asset User Actor", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_TABLE_NAME + " table in memory.");
+        } catch (CantGetRedeemPointActorProfileImageException e) {
+            throw new CantGetAssetRedeemPointActorsException(e.getMessage(), e, "Asset User Actor", "Can't get profile ImageMiddleware.");
+        } catch (Exception e) {
+            throw new CantGetAssetRedeemPointActorsException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
+        } finally {
+            database.closeDatabase();
+        }
+        // Return the values.
+        return actorAssetRedeemPoint;
+    }
+
+    public ActorAssetRedeemPoint getActorAssetRedeemPoint() throws CantGetAssetRedeemPointActorsException {
 
         ActorAssetRedeemPoint actorAssetRedeemPoint = null;//new RedeemPointActorRecord();
         DatabaseTable table;
@@ -594,11 +629,11 @@ public class RedeemPointActorDao implements Serializable {
             actorAssetRedeemPoint = this.addRecords(table.getRecords());
             database.closeDatabase();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetRedeemPointsListException(e.getMessage(), e, "Asset User Actor", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_TABLE_NAME + " table in memory.");
+            throw new CantGetAssetRedeemPointActorsException(e.getMessage(), e, "Asset User Actor", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_TABLE_NAME + " table in memory.");
         } catch (CantGetRedeemPointActorProfileImageException e) {
-            throw new CantGetRedeemPointsListException(e.getMessage(), e, "Asset User Actor", "Can't get profile ImageMiddleware.");
+            throw new CantGetAssetRedeemPointActorsException(e.getMessage(), e, "Asset User Actor", "Can't get profile ImageMiddleware.");
         } catch (Exception e) {
-            throw new CantGetRedeemPointsListException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
+            throw new CantGetAssetRedeemPointActorsException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
         } finally {
             database.closeDatabase();
         }

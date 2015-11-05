@@ -170,28 +170,26 @@ You can learn more, see some cool visualizations of Fermat's architecture and it
 
 #### Download
 
-Installers for the latest stable build for Android, Mac, Windows and Linux (Debian/Ubuntu) can be [downloaded here](http://fermat.org/download/).
+Installers for the latest stable build for Android can be [downloaded here](http://fermat.org/fermat.apk). Mac, Windows and Linux (Debian/Ubuntu) will be supported in the near future.
 
 #### Usage
 
-In addition to the core features built into Fermat, there is a large and growing
-community of developers building plugins and niche wallets that add all sorts of useful functionality.
+In addition to the core features built into Fermat, there is a growing community of developers building plugins and niche wallets that add all sorts of useful functionality.
 
-For installation instructions and running from the source code, see the [Fermat Development Environment Installation and Configuration documentation](https://github.com/bitDubai/fermat/blob/master/fermat-documentation/installation/Linux.asciidoc).
+For installation instructions and running from the source code, see the [CONTRIBUTING.md](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md).
 
 #### Need help?
 
 Having problems compiling or running Fermat the first time, or not sure how to use Fermat?  Please
-review [Troubleshooting](https://github.com/bitDubai/fermat/fermat-documentation), which helps
-you to fix common problems and find extra help if needed.
+log into the [IRC DEV Channel](http://irc.lc/freenode/fermat-dev/), and we will help you to fix common problems and find extra help if needed.
 
 #### Status of the Project:
 
-As of October 2015 the state of the project is the following:
+As of November 2015 the state of the project is the following:
 
-State of the code: Under development for 5 months. No realeses yet. 24 full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
+State of the code: Under development for 6 months. No realeses yet. 20+ full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
 
-Future path of development: Active (First release with very limited features schedulled for late November 2015).
+Future path of development: Active (First release with very limited features schedulled for December 2015).
 
 ## I Want to Join the Team!
 

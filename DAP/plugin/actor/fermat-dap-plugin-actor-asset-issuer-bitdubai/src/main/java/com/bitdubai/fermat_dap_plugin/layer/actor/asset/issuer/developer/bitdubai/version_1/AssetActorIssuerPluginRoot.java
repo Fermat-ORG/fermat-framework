@@ -28,6 +28,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.Ass
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.DealsWithAssetVault;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantConnectToAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
@@ -277,23 +278,23 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Data
         return Collections.EMPTY_LIST;
     }
 
-    public CryptoAddress getGenesisAddress() throws CantGetGenesisAddressException {
+    @Override
+    public ActorAssetIssuer getActorByPublicKey(String actorPublicKey) throws CantGetAssetIssuerActorsException,
+                                                                                CantAssetIssuerActorNotFoundException {
+
         try {
-//            System.out.println("La BlockChain es: " + blockchainNetworkType);
-            CryptoAddress genesisAddress = this.assetVaultManager.getNewAssetVaultCryptoAddress(this.blockchainNetworkType);
-//            System.out.println("========================================================================");
-//            System.out.println("Genesis Address Actor Asset User: " + genesisAddress.getAddress() + " Currency: " + genesisAddress.getCryptoCurrency());
-            return genesisAddress;
-        } catch (GetNewCryptoAddressException exception) {
-            throw new CantGetGenesisAddressException(exception, "Requesting a genesis address", "Cannot get a new crypto address from asset vault");
+            return this.assetIssuerActorDao.getActorByPublicKey(actorPublicKey);
+        } catch (CantGetAssetIssuerActorsException e) {
+            throw new CantGetAssetIssuerActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset Issuer from Data Base", null);
         }
+
     }
 
-    /**
-     * The method <code>getActorPublicKey</code> get All Information about Actor
-     *
-     * @throws CantGetAssetIssuerActorsException
-     */
+    @Override
+    public void createActorAssetIssuerFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage) throws CantCreateActorAssetIssuerException {
+
+    }
+
     @Override
     public ActorAssetIssuer getActorAssetIssuer() throws CantGetAssetIssuerActorsException {
 
@@ -306,12 +307,6 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Data
         return actorAssetIssuer;
     }
 
-    /**
-     * The method <code>getAllAssetIssuerActorInTableRegistered</code> get All Actors Registered in Actor Network Service
-     * and used in Sub App Community
-     *
-     * @throws CantGetAssetIssuerActorsException
-     */
     @Override
     public List<ActorAssetIssuer> getAllAssetIssuerActorInTableRegistered() throws CantGetAssetIssuerActorsException {
         List<ActorAssetIssuer> list;
@@ -323,11 +318,6 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Data
         return list;
     }
 
-    /**
-     * The method <code>getAllAssetIssuerActorConnected</code> receives All Actors with have CryptoAddress in BD
-     *
-     * @throws CantGetAssetIssuerActorsException
-     */
     @Override
     public List<ActorAssetIssuer> getAllAssetIssuerActorConnected() throws CantGetAssetIssuerActorsException {
         List<ActorAssetIssuer> list; // Asset User Actor list.
@@ -351,7 +341,7 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Data
 //            } else {
 //                System.out.println("Actor Asset Issuer YA REGISTRADO - NO Puede volver a registrarse");
 //            }
-        } catch (CantRegisterActorAssetIssuerException | CantGetAssetIssuersListException e) {
+        } catch (CantRegisterActorAssetIssuerException | CantGetAssetIssuerActorsException e) {
             e.printStackTrace();
         }
     }
@@ -373,7 +363,7 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Data
     //TODO al confirmarse el registro del Actor cambia su estado local a CONNECTED
     public void handleCompleteAssetIssuerActorRegistrationNotificationEvent(ActorAssetIssuer actorAssetIssuer) {
         System.out.println("***************************************************************");
-        System.out.println("Actor Asset Issuer se Registro " + actorAssetIssuer.getName());
+        System.out.println("Actor Asset Issuer se Registro: " + actorAssetIssuer.getName());
         try {
             //TODO Cambiar luego por la publicKey Linked proveniente de Identity
             this.assetIssuerActorDao.updateAssetIssuerConnectionState(actorAssetIssuer.getPublicKey(),
@@ -415,12 +405,24 @@ public class AssetActorIssuerPluginRoot implements ActorAssetIssuerManager, Data
                 System.out.println("Actor Asset Name: " + actorAssetIssuer.getName());
                 System.out.println("Actor Asset Description: " + actorAssetIssuer.getDescription());
                 System.out.println("***************************************************************");
-                assetIssuerActorDao.createNewAssetIssuerRegistered(record);
+//                assetIssuerActorDao.createNewAssetIssuerRegistered(record);
             }
         } catch (CantAddPendingAssetIssuerException e) {
             throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ACTOR ASSET ISSUER", e, "", "");
         } catch (Exception e) {
             throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ACTOR ASSET ISSUER", FermatException.wrapException(e), "", "");
+        }
+    }
+
+    public CryptoAddress getGenesisAddress() throws CantGetGenesisAddressException {
+        try {
+//            System.out.println("La BlockChain es: " + blockchainNetworkType);
+            CryptoAddress genesisAddress = this.assetVaultManager.getNewAssetVaultCryptoAddress(this.blockchainNetworkType);
+//            System.out.println("========================================================================");
+//            System.out.println("Genesis Address Actor Asset User: " + genesisAddress.getAddress() + " Currency: " + genesisAddress.getCryptoCurrency());
+            return genesisAddress;
+        } catch (GetNewCryptoAddressException exception) {
+            throw new CantGetGenesisAddressException(exception, "Requesting a genesis address", "Cannot get a new crypto address from asset vault");
         }
     }
 

@@ -697,50 +697,10 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
                     } else {
                         return actorAssetUserRegisteredList;
-//                        StringBuffer contextBuffer = new StringBuffer();
-//                        contextBuffer.append("Plugin ID: " + pluginId);
-//                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-//                        contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-//                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-//                        contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-//                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-//                        contextBuffer.append("errorManager: " + errorManager);
-//                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-//                        contextBuffer.append("eventManager: " + eventManager);
-//
-//                        String context = contextBuffer.toString();
-//                        String possibleCause = "Cant Request List Actor Asset User Registered";
-//
-//                        CantRequestListActorAssetUserRegisteredException pluginStartException = new CantRequestListActorAssetUserRegisteredException(CantRequestListActorAssetUserRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
-//
-//                        //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-//
-//                        throw pluginStartException;
                     }
 
             }else{
                 return actorAssetUserRegisteredList;
-//                StringBuffer contextBuffer = new StringBuffer();
-//                contextBuffer.append("Plugin ID: " + pluginId);
-//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-//                contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-//                contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-//                contextBuffer.append("errorManager: " + errorManager);
-//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-//                contextBuffer.append("eventManager: " + eventManager);
-//
-//                String context = contextBuffer.toString();
-//                String possibleCause = "Asset User Actor Network Service Not Registered";
-//
-//                CantRequestListActorAssetUserRegisteredException pluginStartException = new CantRequestListActorAssetUserRegisteredException(CantRequestListActorAssetUserRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
-//
-//               // errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-//
-//                throw pluginStartException;
-
-
             }
 
         } catch (CantRequestListException e) {

@@ -9,7 +9,7 @@ luis.molina@bitDubai.com
 
 A trust-less financial application framework would allow standalone crypto wallets to evolve into any kind of trust-less financial applications. Crypto networks provide part of the solution, but the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallet files or keys, manage identities, interface crypto networks or the legacy financial system.
 
-We propose a Peer-to-Peer network for transporting meta-data and inter-connect clients one to the other. A synchronization scheme complements it, transforming a standalone app into a distributed application across several devices still owned by the same user.
+We propose a Peer-to-Peer network for transporting meta-data and inter-connect clients between each other. A synchronization scheme complements it, transforming a standalone app into a distributed application across several devices still owned by the same user.
 
 The framework replaces the standalone wallet and enables the development of trust-less financial applications that are both crypto-currency and digital-asset-enabled.
 
@@ -53,7 +53,7 @@ Every Node has a copy of a distributed geo-localized inventory of all network no
 
 An **actor** is a type of role an End User might play and in this context represents one of the End Users identities.
  
-To be able to be found, a network client checks itself in and its actors with the geographically closest node. We call this the _Home Node_. When and actor needs to find another actor, it follows a protocol that requires the approximate location of the actor it is willing to connect to. This is possible becasue the system deals with End Users and usually people know the city, state or country where the people they know actually live. We avoid in this way using phone numbers, emails or any other possible personal identifier that could compromise End Users privacy.
+To be able to be found, a network client checks itself and its actors in with the geographically closest node. We call this the _Home Node_. When and actor needs to find another actor, it follows a protocol that requires the approximate location of the actor it is willing to connect to. This is possible becasue the system deals with End Users and usually people know the city, state or country where the people they know actually live. We avoid in this way using phone numbers, emails or any other possible personal identifier that could compromise End Users privacy.
 
 For scalability reasons, we moved the responsability of finding actors within the network, from the network itself to the network clients. Each node has a distributed catalog of Actors and is responsible to keep it updated. But instead of every node having the full catallog, only a set of nodes nearby the _Home Node_ of an actor knows that actor and which node is her home. This allows any actor who knows the approximate location of the actor she is searching for to easily find a trace and follow it to the current _Home Node_ where her friend is checked in, and stablish a coonection between them. 
 
@@ -62,20 +62,20 @@ For scalability reasons, we moved the responsability of finding actors within th
 
 #### To developers
 
-Plug-ins developers declare a _Micro-Use-License_ for each plug-in they add to the Framework. Wallet or Financial Apps developers declare a _Micro-Use-License_ for their components. End users install the Apps (wallets) of their choice and the license to be paid is the summary of the App's micro-use-license plus all the micro-use-licenses of the plug-ins used by that App. 
+Plug-ins developers declare a _Micro-Use-License_ for each plug-in they add to the Framework. Wallet or Financial Apps developers declare a _Micro-Use-License_ for their components. End users install the Apps (wallets) of their choice. The license to be paid is the summary of the App's _Micro-Use-License_ plus all the _Micro-Use-Licenses_ of the plug-ins used by that App. 
 
-The Framework assumes the responsibility to enforce the license agreements, charge the end user and distribute the payments to all developers involved.
+The Framework is responsibile to enforce the license agreements, charge the end user and distribute the payments to all developers involved.
 
 #### To network nodes
 
-Network clients establishes a _home node_ where they check themselves and their actors in order to be found by other clients. They must pay a subscription fee to their _home node_ for it's services. Finding and calling other clients through other nodes is free as those nodes income is covered by network clients for which they are their _home node_.
+Network clients establishes a _Home Node_ where they check themselves and their actors in so as to be found by other network clients. They must pay a subscription fee to their _Home Node_ for it's services. Finding and calling other clients through other nodes is free for the caller. Those nodes income is covered by network clients for which they are their _Home Node_.
 
 <br>
 ### Platforms
 
-We define as a Platform to a set of interrelated functionality. Platforms may consume services from other platforms and their dependencies form a hirearchical stack. 
+We define as a _Platform_ to a set of interrelated functionality. _Platforms_ may consume services from other _platforms_ and their dependencies form a hirearchical stack. 
 
-Each Platform may introduce to the system new workflows, Add-ons, Plug-ins, identities and GUI components (Apps, wallets). This enables the system to target different use cases with different users involved in a clean way. 
+Each _Platform_ may introduce to the system new workflows, Add-ons, Plug-ins, GUI components (Apps, wallets) and Actors. This enables the system to target different use cases with different actors involved. 
 
 <br>
 ### Identities
@@ -86,66 +86,98 @@ We handle identities at different levels for multiple purposes. In all cases ide
 
 The need to handle multiple logins on the same device brings with it the first kind of identity which we call _device-user_. This identity lives only at a certain device and not even the public key is exposed to the network.
 
-Besides that, the end users can have multiple types of identities, and within each type as many instances as they want. Each type of identity corresponds to a role or actor in a use case. Usually each Platform introduces a set of indentities and all the Platform's functionality orbits around all the use cases derived on the interactions between those actors. 
+Besides that, the End Users can have multiple types of identities (we call this _Actors_), and within each type as many instances as they want. Each type of identity corresponds to a role in real life or an actor in a use case. Usually each Platform introduces a set of actors and all the Platform's functionality orbits around all the use cases derived on the interactions between those actors. 
 
-Even having a hierarchy of identities, end users have a root identity. At that level thay can set a standard set of information and overwrite it at any level down the hierarchy, narrowing or expanding that information as needed. All these identities are exposed to the Fermat Network in a way that from the outside, no one can tell they are related between each other or to a certain end user. 
+The Framework handles a hierarchy of identities. One of them is what we call the _root identity_. At root level End Users can set a standard set of information that can be overwriten at any level down the hierarchy, narrowing or expanding that information as needed. All these identities are exposed to the Fermat Network in a way that from the outside, no one can tell they are related between each other or to a certain End User. 
 
 #### Componets Identities
 
 Many components have their identities for a variety of purposes:
 
-a. Plug-ins to identify themselves to Add-ons in order to get access to identity-specific resources as Databases or areas of the File System.
+a. Plug-ins to identify themselves to Add-ons in order to get access to identity-specific resources as Databases or their own share of the File System.
 
-b. Network Services to encrypt the communications between each other.
+b. _Network Services_ to encrypt the communications between each other.
 
-c. Clients to encrypt the communication with nodes.
+c. Network Clients to encrypt the communication with nodes.
 
 d. Nodes to recognize each other even when their IP, location or other profile information changes.
 
 <br>
 ### Workflows
 
-We define workflows as high level processes that requires several components to achieve a certain goal. Manny workflows start at a GUI component triggered by the end user and spans through several Plug-ins on the same device, and in some cases jumps into other devices. Other workflows may start directly at some Plug-ins, triggered by events happening within the same device.
+We define workflows as high level processes that requires several components to achieve a certain goal. Manny workflows start at a GUI component triggered by the End User and spans through several Plug-ins on the same device, and in some cases jumping into other devices. Other workflows may start at some Plug-ins, triggered by events happening within the same device.
 
 From a workflow point of view, each Plug-ins executes a certain task and is fully responsible for doing it's job. Workflows are a chain of tasks that may split in several paths and may span through more than one device.
+
+In some cases workflows interconnect with each other, forming a _workflow chain_ that usually spans more than one _Platform_. 
 
 <br>
 ### Transactions
 
 #### Transactional Workflows
 
-As the Fermat Framework runs on potentially unstable devices such as mobile phones, each Plug-in must be prepared to overcome the difficulties caused by a device shutting down at any moment and it must be able to complete later on it's intended job and never to leave information on an inconsistent state. This is quite challenging but not impossible. 
+As the Framework runs on potentially unstable devices such as mobile phones, each Plug-in must be prepared to overcome the difficulties caused by a device shutting down at any moment and it must be able to complete later on it's intended job and never to leave information on an inconsistent state. This is quite challenging but not impossible. 
 
-Part of the solution is to make each Plug-in assume a responsability while they are handling part of a transaction on a transactional workflow. So this responsability is transfered on each step of the chain using a _Responsibility Transfer Protocol_. This means that the one who is responsible at the moment of a black out is the one which must resume and do it's best to get rid of that responsability moving it further down the chain within the transactional workflow.
+The solution is to make each Plug-in responsabile for the workflow while they are handling part of a transaction on a transactional workflow. So this responsability is transfered on each step of the chain using a _Responsibility Transfer Protocol_. This means that the one who is responsible at the moment of a black out is the one which must resume and do it's best to get rid of that responsability moving it further down the chain within the transactional workflow.
  
-#### Monetary Transactions
+#### Value Transactions
 
-We handle monetary transactions dividing the accounting from the value. Usually transactions start on specialized Plug-ins which are in charge of coordinating the whole transaction. These Plug-ins usually interact with wallets-Plug-ins debiting or crediting the accounts involved. The accounting of the currency or asset involved are keeped by these wallets-Plug-ins. Later the transactional workflow splits between moving the value (crypto currency) and moving the meta-data associated to the transaction.
+We handle monetary and digital assets transactions dividing the accounting from the value. Usually transactions start on specialized Plug-ins which are in charge of coordinating the whole transaction. These Plug-ins usually interact with wallets-Plug-ins debiting or crediting the accounts involved. The accounting of the currency or digital asset involved are keeped by these wallets-Plug-ins. Later the transactional workflow splits between moving the value (usually crypto currency) and moving the meta-data associated to the transaction.
 
-Through two different paths, the value and the meta-data arrives to the recipient's device and they are combined together by the remote counter-party transaction component which in turn interacts with the remote wallet-Plu-ins to record the accounting as appropriate.
+Through two different paths, the value and the meta-data arrives to the recipient's device and they are combined together by the remote counter-party transaction component which in turn interacts with the remote wallet-Plug-ins to record the accounting as appropriate.
 
 <br>
 ### Syncronization
 
-We define a Private Device Network as a network of devices owned by the same end user. Using the Fermat Network, the Framework synchronizes the information on all nodes of this Private Network. In this way all the information and system wide identities belonging to the End User are available at any device.
+We define a Private Device Network as a network of devices owned by the same End User. Using the Fermat Network, the Framework synchronizes the information on all nodes of this Private Network. In this way all the information and system wide identities belonging to the End User are available at any device.
 
-Crypto funds are kept into a Multi-Sig vault and there is a shared Petty-Cash-Vault accessible from all nodes even when they are off-line from this Private Network. An automated process monitors the Petty-Cash-Vault and tops it up when needed. Several nodes must sign the top up transaction in order to proceed. In this way if a device is lost or stolen, only the Petty-Cash fund is at risk. End users can eject stolen devices from it's Private Network and if they act quickly they might be on time to re-create the Petty-Cash fund under the new configuration and saving those funds.
+Crypto funds are kept into a Multi-Sig vault and there is a shared _Petty-Cash-Vault_ accessible from all nodes even when they are off-line from this Private Network. An automated process monitors the Petty-Cash-Vault and tops it up when needed. Several nodes must sign the top up transaction in order to proceed. In this way if a device is lost or stolen, only the Petty-Cash fund is at risk. End Users can eject stolen devices from its Private Network and if they act quickly they might be on time to re-create the Petty-Cash fund under the new configuration and save those funds.
+
+<br>
+### User Interface
+
+The Framework handles a stack of layers. Starting down we have the _OS API level_, then the _Blockchain Level_, the _Communication Level_, _Platform Level_ up to the _User Interface Level_. With the goal in mind of allowing even non-developers to deployd their own trust-less financial applications, we define several concepts:
+
+**Wallet** : Any kind of financial application that handles either crypto or digital assets for any purpose. 
+
+**Reference Wallet** : A primitive wallet that it is used by a sigle actor for a handfull of use cases. 
+
+**Niche Wallet** : A combination of several _Reference Wallets_ into a single product with its own look and feel and possibly extra functionality.
+
+**Branded Wallet** : A _niche wallet_ turned into a new product owned by a different End User. Achieved by a process similar to building a Worldpress site but locally on the End Users device. Usually involves re-using a set of the business logic of the _niche wallet_ it derives from and a new look and feel (different skin and navigation structure).
+
+**External Wallet** : A third party APP running on the same device that uses Fermat as a backend for different reasons. For example to benefit from its infraestructure to interface crypto networks, transporting data through its p2p network, or storing data on the End Users _Private Device Network_. 
+
+<br>
+Several tools were designed with the purpose to enable the development of new wallets, an their distribution.
+
+**Wallet Factory** : Is a built-in functionality that enables the development of reference and niche wallets.
+
+**Wallet Editor** : Enables the creation by non-developers of _Branded Wallets_ based on any of the _Niche Wallets_ available.
+
+**Wallet Store** : Is a distributed application which manages a shared wallet catallog and enables the End User to download from peers the different wallets available for the Framework.
 
 <br>
 ### Privacy
 
-The proposed system complements the privacy properties of crypto networks, extending them to the full stack needed to run different kind of financial applications. By using it's own P2P network with point to point encryption for transporting meta-data both value and information are under similar privacy standard.
+The proposed system complements the privacy properties of crypto networks, extending them to the full stack needed to run different kind of financial applications. By using it's own P2P network with point to point encryption for transporting meta-data both value and information are under a similar privacy standard.
 
-Identities are public keys related to private keys kept by the End User and not shared to anyone in any way. 
+Identities are public keys related to private keys kept by the End User and never shared to anyone in any way. 
 
-Even the collection of system information for visualization and statistics uses hashes of public keys to protect End User's privacy and at the same time preserve the relationships between them.
+The collection of system information for visualization and statistics uses hashes of public keys to protect End User's privacy and at the same time preserve the relationships between them.
+
 
 <br>
 ### Conclusion
 
-We have proposed a Framework developing and running Trust-less Financial Applications. Bitcoin provided part of the solution but standalone wallets fell short to show the way of how to keep the End User away from trusted third parties at a higher level. Without solving obvious problems like how to exchange meta-data in a trust-less way, and how to prevent the lost of private keys (funds and identities) the industry evolved introducing trust again into the system.
+We have proposed a Framework for developing and running trust-less financial applications. The Fermat Framework shows the way of how to keep the End User away from trusted third parties at a higher level. We propose the solution to several problems at the same time. The hightlights of our work are:
 
-With a Framework we not only solve the problem for a single wallet application, but also to any kind of financial application that could benefit from being crypto and digital asset enabled and trust-less at the same time.
+* How to exchange meta-data in a trust-less way
+* How to prevent the lost of private keys (funds and identities)
+* How to maximize reusibillity by building with Plug-ins
+* How to enable even non-developers to create and deploy their own wallets in a Wordpress style. 
+
+With this system we enable a new ecosystem of trust-less financial applications that are both crypto and digital asset enabled.
 
 <br>
 ### References

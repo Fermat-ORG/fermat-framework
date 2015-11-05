@@ -159,7 +159,7 @@ public class TransactionsReceivedHistory extends FermatWalletListFragment<Crypto
         List<CryptoWalletTransaction> lstTransactions  = null;
 
         try {
-            lstTransactions = cryptoWallet.getTransactions(BalanceType.AVAILABLE,TransactionType.CREDIT,referenceWalletSession.getWalletSessionType().getWalletPublicKey(), MAX_TRANSACTIONS, offset);
+            lstTransactions = cryptoWallet.getTransactions(referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),BalanceType.AVAILABLE,TransactionType.CREDIT,referenceWalletSession.getWalletSessionType().getWalletPublicKey(), MAX_TRANSACTIONS, offset);
             offset += MAX_TRANSACTIONS;
         } catch (Exception e) {
 //            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(e,

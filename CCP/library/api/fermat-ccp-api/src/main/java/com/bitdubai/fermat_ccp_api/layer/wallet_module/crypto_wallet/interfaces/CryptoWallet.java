@@ -53,6 +53,7 @@ public interface CryptoWallet extends Serializable {
      * List all wallet contact related to an specific wallet.
      *
      * @param walletPublicKey public key of the wallet in which we are working.
+    * @param intraUserLoggedInPublicKey public key of the wallet intra user identity.
      * @param max             quantity of instance you want to return
      * @param offset          the point of start in the list you're trying to bring.
      *
@@ -61,6 +62,7 @@ public interface CryptoWallet extends Serializable {
      * @throws CantGetAllWalletContactsException if something goes wrong
      */
     List<CryptoWalletWalletContact> listWalletContactsScrolling(String  walletPublicKey,
+                                                                String intraUserLoggedInPublicKey,
                                                                 Integer max,
                                                                 Integer offset) throws CantGetAllWalletContactsException;
 
@@ -203,11 +205,12 @@ public interface CryptoWallet extends Serializable {
      * find a wallet contact having in count its id
      *
      * @param contactId specific id of the contact that you're trying to find
+     * @param intraUserLoggedInPublicKey public key of the wallet intra user identity.
      * @return instance of a crypto wallet contact
      * @throws CantFindWalletContactException
      * @throws WalletContactNotFoundException
      */
-    CryptoWalletWalletContact findWalletContactById(UUID contactId) throws CantFindWalletContactException, WalletContactNotFoundException;
+    CryptoWalletWalletContact findWalletContactById(UUID contactId, String intraUserLoggedInPublicKey) throws CantFindWalletContactException, WalletContactNotFoundException;
 
     /**
      * Throw the method <code>isValidAddress</code> you can validate in the specific vault if a specific crypto address is valid.
@@ -275,7 +278,7 @@ public interface CryptoWallet extends Serializable {
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
-    List<CryptoWalletTransaction> getTransactions(BalanceType balanceType,
+    List<CryptoWalletTransaction> getTransactions(String intraUserLoggedInPublicKey,BalanceType balanceType,
                                                                                                              TransactionType transactionType,
                                                                                                              String walletPublicKey,
                                                                                                              int max,
@@ -295,10 +298,11 @@ public interface CryptoWallet extends Serializable {
      * @throws CantListTransactionsException if something goes wrong.
      */
     List<CryptoWalletTransaction> listTransactionsByActor(BalanceType balanceType,
-                                                                                                                     String walletPublicKey,
-                                                                                                                     String actorPublicKey,
-                                                                                                                     int max,
-                                                                                                                     int offset) throws CantListTransactionsException;
+                                                          String walletPublicKey,
+                                                          String actorPublicKey,
+                                                          String intraUserLoggedInPublicKey,
+                                                          int max,
+                                                          int offset) throws CantListTransactionsException;
 
     /**
      * Throw the method <code>getActorTransactionHistory</code> you can get the transaction history of an specific actor.
@@ -332,6 +336,7 @@ public interface CryptoWallet extends Serializable {
     List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
                                                                                                                                         TransactionType transactionType,
                                                                                                                                         String walletPublicKey,
+                                                                             String actorPublicKey,
                                                                                                                                         int max,
                                                                                                                                         int offset) throws CantListTransactionsException;
 

@@ -27,8 +27,13 @@ public class EllipticCryptographyCurve extends EllipticCurve implements Curve {
 		this.p = field.getP();
 	}	
 
-	public static EllipticCryptographyCurve getSecP256K1() { 
-		return new EllipticCryptographyCurve.SecP256K1();
+	private static EllipticCryptographyCurve ellipticCryptographyCurve;
+
+	public static EllipticCryptographyCurve getSecP256K1() {
+		if (ellipticCryptographyCurve == null)
+			ellipticCryptographyCurve = new EllipticCryptographyCurve.SecP256K1();
+
+		return ellipticCryptographyCurve;
 	}
 
 	@Override
