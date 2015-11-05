@@ -2,11 +2,14 @@ package com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.devel
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetFeatureForDevelopersException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FeatureForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
@@ -25,9 +28,13 @@ import java.util.List;
  * Created by natalia on 29/07/15.
  * Modified by lnacosta (laion.cj91@gmail.com) on 26/10/2015.
  */
-public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implements PlatformInfoManager {
+public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implements
+        PlatformInfoManager {
 
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager       errorManager      ;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.PLATFORM_FILE_SYSTEM)
     private PlatformFileSystem platformFileSystem;
 
     private PlatformInfoPlatformService platformInfoPlatformService;
