@@ -195,7 +195,6 @@ import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserMa
 import com.bitdubai.fermat_core.layer.cry_crypto_router.CryptoRouterLayer;
 import com.bitdubai.fermat_core.layer.pip_actor.ActorLayer;
 import com.bitdubai.fermat_core.layer.dmp_identity.IdentityLayer;
-import com.bitdubai.fermat_core.layer.pip_platform_service.PlatformServiceLayer;
 
 import com.bitdubai.fermat_core.layer.all_definition.DefinitionLayer;
 import com.bitdubai.fermat_core.layer.dmp_world.WorldLayer;
@@ -449,13 +448,6 @@ public class Platform implements Serializable {
             PlatformLayer mDefinitionLayer = new DefinitionLayer();
             mDefinitionLayer.start();
 
-            /*
-             * Create and star Platform Service Layer
-             */
-            PlatformLayer mPlatformServiceLayer = new PlatformServiceLayer();
-            mPlatformServiceLayer.start();
-
-
             /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
              * ------------------------------------------------------------------------------------------------------------*
              * Other Layer initialization                                                                                  *
@@ -539,7 +531,6 @@ public class Platform implements Serializable {
              * to prevent start again the critical layer in the previous code
              */
             corePlatformContext.registerPlatformLayer(mDefinitionLayer, PlatformLayers.BITDUBAI_DEFINITION_LAYER);
-            corePlatformContext.registerPlatformLayer(mPlatformServiceLayer, PlatformLayers.BITDUBAI_PLATFORM_SERVICE_LAYER);
 
         } catch (CantStartLayerException cantStartLayerException) {
 
