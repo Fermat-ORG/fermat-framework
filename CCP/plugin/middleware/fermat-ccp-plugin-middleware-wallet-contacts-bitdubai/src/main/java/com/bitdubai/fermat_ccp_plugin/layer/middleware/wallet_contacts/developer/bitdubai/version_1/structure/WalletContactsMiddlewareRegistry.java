@@ -359,7 +359,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
     public void handleCryptoAddressesNewsEvent() throws CantHandleCryptoAddressesNewsEventException {
 
         try {
-            final List<CryptoAddressRequest> list = cryptoAddressesManager.listPendingCryptoAddressRequests();
+            final List<CryptoAddressRequest> list = cryptoAddressesManager.listAllPendingRequests();
 
             System.out.println("----------------------------\n" +
                     "WALLET CONTACT MIDDLEWARE  : handleCryptoAddressesNewsEvent " + list.size()
