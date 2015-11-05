@@ -12,36 +12,20 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.Toast;
-import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsDataBaseSystem;
-import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsFileSystem;
-import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsLocationSystem;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.CantReportCriticalStartingProblemException;
 import com.bitdubai.fermat_api.CantStartPlatformException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlatform;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.DeviceInfoUtils;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.osa_android.LoggerSystemOs;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.bitdubai.fermat_core.Platform;
-import com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.version_1.LoggerAddonRoot;
 import com.bitdubai.fermat_osa_android_core.OSAPlatform;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
@@ -71,12 +55,7 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
 
     ArrayList<Platforms> activePlatforms;
 
-
-    private AndroidOsFileSystem fileSystemOs;
     private CorePlatformContext platformContext;
-    private AndroidOsDataBaseSystem databaseSystemOs;
-    private AndroidOsLocationSystem locationSystemOs;
-    private LoggerSystemOs loggerSystemOs;
 
     private Platform platform;
 
