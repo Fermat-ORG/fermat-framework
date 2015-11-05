@@ -283,7 +283,7 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
                 }
 
             // todo testing
-
+/*
             try {
 
                 AbstractPlatform osaPlatform = new OSAPlatform();
@@ -303,7 +303,7 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
 
             } catch(Exception e) {
                 ((ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER)).reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-            }
+            }*/
 
             // todo testing
                 /**
