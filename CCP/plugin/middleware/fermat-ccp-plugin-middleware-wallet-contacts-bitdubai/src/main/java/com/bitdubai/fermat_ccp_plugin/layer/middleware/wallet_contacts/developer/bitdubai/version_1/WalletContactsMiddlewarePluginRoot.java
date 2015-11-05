@@ -160,7 +160,7 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
 
     private void executePendingAddressExchangeRequests(WalletContactsMiddlewareRegistry walletContactsRegistry) {
         try {
-            List<CryptoAddressRequest> list = cryptoAddressesManager.listPendingCryptoAddressRequests();
+            List<CryptoAddressRequest> list = cryptoAddressesManager.listAllPendingRequests();
 
             System.out.println("----------------------------\n" +
                     "WALLET CONTACT MIDDLEWARE  : executePendingAddressExchangeRequests " +  list.size()

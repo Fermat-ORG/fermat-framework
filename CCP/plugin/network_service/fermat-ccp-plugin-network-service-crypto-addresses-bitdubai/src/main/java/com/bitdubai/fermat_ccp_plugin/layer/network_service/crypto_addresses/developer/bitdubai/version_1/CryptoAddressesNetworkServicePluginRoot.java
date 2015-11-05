@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
@@ -498,16 +497,15 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      * we'll return to the actor all the pending requests pending a local action.
      * State : PENDING_ACTION.
      *
-     * @param actorType  type of actor asking for pending requests
      *
      * @throws CantListPendingCryptoAddressRequestsException      if something goes wrong.
      */
     @Override
-    public List<CryptoAddressRequest> listPendingCryptoAddressRequests(Actors actorType) throws CantListPendingCryptoAddressRequestsException {
+    public List<CryptoAddressRequest> listAllPendingRequests() throws CantListPendingCryptoAddressRequestsException {
 
         try {
 
-            return cryptoAddressesNetworkServiceDao.listPendingRequestsByActorType(actorType);
+            return cryptoAddressesNetworkServiceDao.listAllPendingRequests();
 
         } catch (CantListPendingCryptoAddressRequestsException e){
 
