@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
@@ -9,13 +9,15 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
-import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.database.AssetUserIdentityDao;
-import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException;
-import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantListAssetUserIdentitiesException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
+import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.database.AssetRedeemPointIdentityDao;
+import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantListAssetRedeemPointIdentitiesException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
@@ -29,7 +31,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 02/11/15.
  */
-public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
+public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
     /**
      * IdentityAssetIssuerManagerImpl member variables
      */
@@ -89,7 +91,7 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public IdentityAssetUserManagerImpl(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, DeviceUserManager deviceUserManager) {
+    public IdentityAssetRedeemPointManagerImpl(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, DeviceUserManager deviceUserManager) {
         this.errorManager = errorManager;
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -98,38 +100,38 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
         this.deviceUserManager = deviceUserManager;
     }
 
-    private AssetUserIdentityDao getAssetUserIdentityDao(){
-        AssetUserIdentityDao assetUserIdentityDao = new AssetUserIdentityDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
-        return assetUserIdentityDao;
+    private AssetRedeemPointIdentityDao getAssetRedeemPointIdentityDao(){
+        AssetRedeemPointIdentityDao assetRedeemPointIdentityDao = new AssetRedeemPointIdentityDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
+        return assetRedeemPointIdentityDao;
     }
 
-    public void  initializeDatabase() throws CantInitializeAssetUserIdentityDatabaseException {
-        getAssetUserIdentityDao().initializeDatabase();
+    public void  initializeDatabase() throws CantInitializeAssetRedeemPointIdentityDatabaseException {
+        getAssetRedeemPointIdentityDao().initializeDatabase();
     }
 
-    public List<IdentityAssetUser> getIdentityAssetUsersFromCurrentDeviceUser() throws CantListAssetUsersException {
+    public List<RedeemPointIdentity> getIdentityAssetRedeemPointsFromCurrentDeviceUser() throws CantListAssetRedeemPointException {
 
         try {
 
-            List<IdentityAssetUser> assetUserList = new ArrayList<IdentityAssetUser>();
+            List<RedeemPointIdentity> assetRedeemPointList = new ArrayList<>();
 
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            assetUserList = getAssetUserIdentityDao().getAllIntraUserFromCurrentDeviceUser(loggedUser);
+            assetRedeemPointList = getAssetRedeemPointIdentityDao().getAllIntraUserFromCurrentDeviceUser(loggedUser);
 
 
-            return assetUserList;
+            return assetRedeemPointList;
 
         } catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantListAssetUsersException("CAN'T GET ASSET USER IDENTITIES", e, "Error get logged user device", "");
-        } catch (CantListAssetUserIdentitiesException e) {
-            throw new CantListAssetUsersException("CAN'T GET ASSET USER  IDENTITIES", e, "", "");
+            throw new CantListAssetRedeemPointException("CAN'T GET ASSET ISSUER IDENTITIES", e, "Error get logged user device", "");
+        } catch (CantListAssetRedeemPointIdentitiesException e) {
+            throw new CantListAssetRedeemPointException("CAN'T GET ASSET ISSUER  IDENTITIES", e, "", "");
         } catch (Exception e) {
-            throw new CantListAssetUsersException("CAN'T GET ASSET USER IDENTITIES", FermatException.wrapException(e), "", "");
+            throw new CantListAssetRedeemPointException("CAN'T GET ASSET ISSUER IDENTITIES", FermatException.wrapException(e), "", "");
         }
     }
 
-    public IdentityAssetUser createNewIdentityAssetUser(String alias, byte[] profileImage) throws CantCreateNewIdentityAssetUserException {
+    public RedeemPointIdentity createNewIdentityAssetRedeemPoint(String alias, byte[] profileImage) throws CantCreateNewRedeemPointException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -137,37 +139,37 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
             String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            getAssetUserIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage);
+            getAssetRedeemPointIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage);
 
-            IdentityAssetUsermpl identityAssetUser = new IdentityAssetUsermpl(alias, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
+            IdentityAssetRedeemPointImpl identityAssetRedeemPoint = new IdentityAssetRedeemPointImpl(alias, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
 
             //TODO:Revisar como registrar con el Network Service
             //registerIdentities();
 
-            return identityAssetUser;
+            return identityAssetRedeemPoint;
         } catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantCreateNewIdentityAssetUserException("CAN'T CREATE NEW ASSET USER IDENTITY", e, "Error getting current logged in device user", "");
+            throw new CantCreateNewRedeemPointException("CAN'T CREATE NEW ASSET USER IDENTITY", e, "Error getting current logged in device user", "");
         } catch (CantCreateNewDeveloperException e) {
-            throw new CantCreateNewIdentityAssetUserException("CAN'T CREATE NEW ASSET USER IDENTITY", e, "Error save user on database", "");
+            throw new CantCreateNewRedeemPointException("CAN'T CREATE NEW ASSET USER IDENTITY", e, "Error save user on database", "");
         } catch (Exception e) {
-            throw new CantCreateNewIdentityAssetUserException("CAN'T CREATE NEW ASSET USER IDENTITY", FermatException.wrapException(e), "", "");
+            throw new CantCreateNewRedeemPointException("CAN'T CREATE NEW ASSET USER IDENTITY", FermatException.wrapException(e), "", "");
         }
     }
 
-    public boolean  hasIntraUserIdentity() throws CantListAssetUsersException{
+    public boolean  hasIntraUserIdentity() throws CantListAssetRedeemPointException{
         try {
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            if(getAssetUserIdentityDao().getAllIntraUserFromCurrentDeviceUser(loggedUser).size() > 0)
+            if(getAssetRedeemPointIdentityDao().getAllIntraUserFromCurrentDeviceUser(loggedUser).size() > 0)
                 return true;
             else
                 return false;
         } catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantListAssetUsersException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Error get logged user device", "");
-        }  catch (CantListAssetUserIdentitiesException e) {
-            throw new CantListAssetUsersException("CAN'T GET IF ASSET USER IDENTITIES EXISTS", e, "", "");
+            throw new CantListAssetRedeemPointException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Error get logged user device", "");
+        }  catch (CantListAssetRedeemPointIdentitiesException e) {
+            throw new CantListAssetRedeemPointException("CAN'T GET IF ASSET USER IDENTITIES EXISTS", e, "", "");
         }catch (Exception e) {
-            throw new CantListAssetUsersException("CAN'T GET ASSET USER USER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
+            throw new CantListAssetRedeemPointException("CAN'T GET ASSET USER USER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
         }
     }
 
