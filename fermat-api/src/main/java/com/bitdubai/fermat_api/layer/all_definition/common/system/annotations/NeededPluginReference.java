@@ -21,7 +21,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface NeededPluginReference {
 
-    OperativeSystems operativeSystem() default OperativeSystems.INDIFFERENT;
     Platforms        platform();
     Layers           layer();
     Plugins          plugin();

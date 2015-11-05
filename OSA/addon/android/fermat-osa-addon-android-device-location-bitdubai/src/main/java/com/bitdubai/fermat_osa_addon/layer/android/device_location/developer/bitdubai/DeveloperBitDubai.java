@@ -4,7 +4,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAddonDeveloperException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonDeveloperReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_osa_addon.layer.android.device_location.developer.bitdubai.version_1.DeviceLocationAndroidAddonRoot;
 
 /**
@@ -17,8 +19,8 @@ import com.bitdubai.fermat_osa_addon.layer.android.device_location.developer.bit
  */
 public class DeveloperBitDubai extends AbstractAddonDeveloper {
 
-    public DeveloperBitDubai() {
-        super(new AddonDeveloperReference(Developers.BITDUBAI));
+    public DeveloperBitDubai(final AddonDeveloperReference addonDeveloperReference) {
+        super(addonDeveloperReference);
     }
 
     @Override
