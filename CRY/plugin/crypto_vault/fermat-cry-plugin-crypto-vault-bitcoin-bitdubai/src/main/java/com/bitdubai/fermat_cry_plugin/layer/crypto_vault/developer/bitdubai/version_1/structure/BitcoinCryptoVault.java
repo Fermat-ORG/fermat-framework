@@ -390,7 +390,7 @@ public class BitcoinCryptoVault implements
      */
     private void configureVault() throws CantCreateCryptoWalletException {
         try{
-            vault.autosaveToFile(vaultFile, 0, TimeUnit.NANOSECONDS, null);
+            vault.autosaveToFile(vaultFile, 500, TimeUnit.MILLISECONDS, null);
             vaultEventListeners = new VaultEventListeners(database, errorManager, eventManager, logManager);
             vault.addEventListener(vaultEventListeners);
         }catch(Exception exception){
