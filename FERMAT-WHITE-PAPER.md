@@ -109,6 +109,8 @@ We define workflows as high level processes that requires several components to 
 
 From a workflow point of view, each Plug-ins executes a certain task and is fully responsible for doing it's job. Workflows are a chain of tasks that may split in several paths and may span through more than one device.
 
+In some cases workflows interconnect with each other, forming a _workflow chain_ that usually spans more than one _Platform_. 
+
 <br>
 ### Transactions
 
@@ -118,34 +120,34 @@ As the Framework runs on potentially unstable devices such as mobile phones, eac
 
 The solution is to make each Plug-in responsabile for the workflow while they are handling part of a transaction on a transactional workflow. So this responsability is transfered on each step of the chain using a _Responsibility Transfer Protocol_. This means that the one who is responsible at the moment of a black out is the one which must resume and do it's best to get rid of that responsability moving it further down the chain within the transactional workflow.
  
-#### Monetary Transactions
+#### Value Transactions
 
-We handle monetary transactions dividing the accounting from the value. Usually transactions start on specialized Plug-ins which are in charge of coordinating the whole transaction. These Plug-ins usually interact with wallets-Plug-ins debiting or crediting the accounts involved. The accounting of the currency or asset involved are keeped by these wallets-Plug-ins. Later the transactional workflow splits between moving the value (crypto currency) and moving the meta-data associated to the transaction.
+We handle monetary and digital assets transactions dividing the accounting from the value. Usually transactions start on specialized Plug-ins which are in charge of coordinating the whole transaction. These Plug-ins usually interact with wallets-Plug-ins debiting or crediting the accounts involved. The accounting of the currency or digital asset involved are keeped by these wallets-Plug-ins. Later the transactional workflow splits between moving the value (usually crypto currency) and moving the meta-data associated to the transaction.
 
-Through two different paths, the value and the meta-data arrives to the recipient's device and they are combined together by the remote counter-party transaction component which in turn interacts with the remote wallet-Plu-ins to record the accounting as appropriate.
+Through two different paths, the value and the meta-data arrives to the recipient's device and they are combined together by the remote counter-party transaction component which in turn interacts with the remote wallet-Plug-ins to record the accounting as appropriate.
 
 <br>
 ### Syncronization
 
-We define a Private Device Network as a network of devices owned by the same end user. Using the Fermat Network, the Framework synchronizes the information on all nodes of this Private Network. In this way all the information and system wide identities belonging to the End User are available at any device.
+We define a Private Device Network as a network of devices owned by the same End User. Using the Fermat Network, the Framework synchronizes the information on all nodes of this Private Network. In this way all the information and system wide identities belonging to the End User are available at any device.
 
-Crypto funds are kept into a Multi-Sig vault and there is a shared Petty-Cash-Vault accessible from all nodes even when they are off-line from this Private Network. An automated process monitors the Petty-Cash-Vault and tops it up when needed. Several nodes must sign the top up transaction in order to proceed. In this way if a device is lost or stolen, only the Petty-Cash fund is at risk. End users can eject stolen devices from it's Private Network and if they act quickly they might be on time to re-create the Petty-Cash fund under the new configuration and saving those funds.
+Crypto funds are kept into a Multi-Sig vault and there is a shared _Petty-Cash-Vault_ accessible from all nodes even when they are off-line from this Private Network. An automated process monitors the Petty-Cash-Vault and tops it up when needed. Several nodes must sign the top up transaction in order to proceed. In this way if a device is lost or stolen, only the Petty-Cash fund is at risk. End Users can eject stolen devices from its Private Network and if they act quickly they might be on time to re-create the Petty-Cash fund under the new configuration and save those funds.
 
 <br>
 ### Privacy
 
-The proposed system complements the privacy properties of crypto networks, extending them to the full stack needed to run different kind of financial applications. By using it's own P2P network with point to point encryption for transporting meta-data both value and information are under similar privacy standard.
+The proposed system complements the privacy properties of crypto networks, extending them to the full stack needed to run different kind of financial applications. By using it's own P2P network with point to point encryption for transporting meta-data both value and information are under a similar privacy standard.
 
-Identities are public keys related to private keys kept by the End User and not shared to anyone in any way. 
+Identities are public keys related to private keys kept by the End User and never shared to anyone in any way. 
 
-Even the collection of system information for visualization and statistics uses hashes of public keys to protect End User's privacy and at the same time preserve the relationships between them.
+The collection of system information for visualization and statistics uses hashes of public keys to protect End User's privacy and at the same time preserve the relationships between them.
 
 <br>
 ### Conclusion
 
-We have proposed a Framework developing and running Trust-less Financial Applications. Bitcoin provided part of the solution but standalone wallets fell short to show the way of how to keep the End User away from trusted third parties at a higher level. Without solving obvious problems like how to exchange meta-data in a trust-less way, and how to prevent the lost of private keys (funds and identities) the industry evolved introducing trust again into the system.
+We have proposed a Framework for developing and running Trust-less Financial Applications. Bitcoin provided part of the solution. The Fermat Framework shows the way of how to keep the End User away from trusted third parties at a higher level. We proposed the solution to several problems at the same time. The hightlights of our work are how to exchange meta-data in a trust-less way, how to prevent the lost of private keys (funds and identities), how to maximize reusibillity by building with plug-ins, and how to enable even non-developers to create and deploy their own wallets in a Wordpress style. 
 
-With a Framework we not only solve the problem for a single wallet application, but also to any kind of financial application that could benefit from being crypto and digital asset enabled and trust-less at the same time.
+With this system we enable a new ecosystem of trust-less financial applications that are both crypto and digital asset enabled.
 
 <br>
 ### References
