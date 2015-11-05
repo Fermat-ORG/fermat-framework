@@ -20,12 +20,16 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.DealsWithActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.database.AssetIssuerIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantInitializeAssetIssuerIdentityDatabaseException;
+import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantListAssetIssuerIdentitiesException;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.structure.IdentityAssetIssuerManagerImpl;
 import com.bitdubai.fermat_pip_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
@@ -49,7 +53,7 @@ import java.util.UUID;
  * Created by Nerio on 07/09/15.
  * Modified by Franklin 02/11/2015
  */
-public class IdentityIssuerPluginRoot implements DatabaseManagerForDevelopers, DealsWithDeviceUser, DealsWithLogger, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable, IdentityAssetIssuerManager {
+public class IdentityIssuerPluginRoot implements DealsWithActorAssetIssuer, DatabaseManagerForDevelopers, DealsWithDeviceUser, DealsWithLogger, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service, Serializable, IdentityAssetIssuerManager {
 
     /**
      * Service Interface member variables.
@@ -86,6 +90,11 @@ public class IdentityIssuerPluginRoot implements DatabaseManagerForDevelopers, D
      */
 
     IdentityAssetIssuerManagerImpl identityAssetIssuerManager;
+
+    /**
+     * DealsWithActorAssetIssuer Interface implementation.
+     */
+    ActorAssetIssuerManager actorAssetIssuerManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -136,6 +145,13 @@ public class IdentityIssuerPluginRoot implements DatabaseManagerForDevelopers, D
         this.logManager = logManager;
     }
 
+    /**
+     * DealsWithActorAssetIssuer Interface implementation.
+     */
+    @Override
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
+        this.actorAssetIssuerManager = actorAssetIssuerManager;
+    }
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
@@ -195,11 +211,11 @@ public class IdentityIssuerPluginRoot implements DatabaseManagerForDevelopers, D
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem,
                     this.pluginId,
-                    this.deviceUserManager);
+                    this.deviceUserManager,
+                    this.actorAssetIssuerManager);
 
             identityAssetIssuerManager.initializeDatabase();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
 
-            //TODO:Revisar como registrar con el Network Service
             registerIdentities();
 
         } catch (Exception e) {
@@ -243,10 +259,6 @@ public class IdentityIssuerPluginRoot implements DatabaseManagerForDevelopers, D
         return identityAssetIssuerManager.hasIntraUserIdentity();
     }
 
-    public void registerIdentities(){
-        identityAssetIssuerManager.registerIdentities();
-    }
-
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         AssetIssuerIdentityDeveloperDatabaseFactory dbFactory = new AssetIssuerIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
@@ -271,4 +283,9 @@ public class IdentityIssuerPluginRoot implements DatabaseManagerForDevelopers, D
         // If we are here the database could not be opened, so we return an empty list
         return new ArrayList<>();
     }
+
+    public void registerIdentities() throws CantListAssetIssuerIdentitiesException {
+        identityAssetIssuerManager.registerIdentities();
+    }
+
 }
