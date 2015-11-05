@@ -724,13 +724,15 @@ public class CryptoWalletWalletModuleManager implements
                                                          String walletPublicKey,
                                                          int max,
                                                          int offset) throws CantListTransactionsException {
+        List<CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
         try {
-            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
-            List<CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
-            List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactions(balanceType, transactionType, max, offset);
+            if(intraUserLoggedInPublicKey!=null) {
+                BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+                List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactions(balanceType, transactionType, max, offset);
 
-            for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
-                cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
+                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
+                    cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
+                }
             }
             if(cryptoWalletTransactionList.isEmpty()){
                 cryptoWalletTransactionList.add(new CryptoWalletTransaction() {
@@ -1012,18 +1014,21 @@ public class CryptoWalletWalletModuleManager implements
                                                                                     int max,
                                                                                     int offset) throws CantListTransactionsException {
 
-        try {
-            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
-            List<CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
-            List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listLastActorTransactionsByTransactionType(
-                    balanceType,
-                    transactionType,
-                    max,
-                    offset
-            );
 
-            for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
-                cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
+        List<CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
+        try {
+            if(intraUserLoggedInPublicKey!=null){
+                BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+                List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listLastActorTransactionsByTransactionType(
+                        balanceType,
+                        transactionType,
+                        max,
+                        offset
+                );
+
+                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
+                    cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
+                }
             }
 
             if(cryptoWalletTransactionList.isEmpty()){
