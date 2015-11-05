@@ -1,0 +1,40 @@
+== Fermat Bank Notes Platform
+
+This platform introduces the connection to the physical representation of fiat money, the _bank notes_. + 
+At first hand, it serves as a digital registration in a wallet component of an end user's available stock of money in bank notes that he needs to keep track of for future  reference. This tends to build a traceability of these funds when participating in future transactions.  
+
+
+===  Bank Notes Wallet
+
+
+
+
+
+
+
+
+////
+=== _Network Service layer_
+Bank Notes :: +
+
+=== _Wallet layer_
+Bank Notes :: +
+
+=== _Middleware layer_
+Bank Notes :: +
+
+=== _Wallet Module layer_
+Bank Notes Wallet :: +
+
+=== _Reference Wallet layer_
+Bank Notes Wallet :: +
+////
+
+=== Continue reading ...
+////
+link:book-chapter-19.asciidoc[Digital Assets Platform]
+////
+
+link:book-chapter-15.asciidoc[Next Chapter]
+
+link:book-chapter-13.asciidoc[Previous Chapter]
