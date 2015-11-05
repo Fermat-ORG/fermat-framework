@@ -9,6 +9,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
@@ -63,6 +66,8 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
      */
     private DeviceUserManager deviceUserManager;
 
+    private ActorAssetRedeemPointManager actorAssetRedeemPointManager;
+
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
@@ -91,13 +96,14 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public IdentityAssetRedeemPointManagerImpl(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, DeviceUserManager deviceUserManager) {
-        this.errorManager = errorManager;
-        this.logManager = logManager;
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginFileSystem = pluginFileSystem;
-        this.pluginId = pluginId;
-        this.deviceUserManager = deviceUserManager;
+    public IdentityAssetRedeemPointManagerImpl(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, DeviceUserManager deviceUserManager, ActorAssetRedeemPointManager actorAssetRedeemPointManager) {
+        this.errorManager                 = errorManager;
+        this.logManager                   = logManager;
+        this.pluginDatabaseSystem         = pluginDatabaseSystem;
+        this.pluginFileSystem             = pluginFileSystem;
+        this.pluginId                     = pluginId;
+        this.deviceUserManager            = deviceUserManager;
+        this.actorAssetRedeemPointManager = actorAssetRedeemPointManager;
     }
 
     private AssetRedeemPointIdentityDao getAssetRedeemPointIdentityDao(){
@@ -173,18 +179,19 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
         }
     }
 
-    public void registerIdentities(){
-//        try {
-//            List<IntraWalletUser> lstIntraWalletUSer = intraWalletUserIdentityDao.getAllIntraUserFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
-//            List<Actor> lstActors = new ArrayList<Actor>();
-//            for(IntraWalletUser user : lstIntraWalletUSer){
-//                lstActors.add(intraActorManager.contructIdentity(user.getPublicKey(), user.getAlias(), Actors.INTRA_USER,user.getProfileImage()));
-//            }
-//            intraActorManager.registrateActors(lstActors);
-//        } catch (CantListIntraWalletUserIdentitiesException e) {
-//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-//        } catch (CantGetLoggedInDeviceUserException e) {
-//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-//        }
+    public void registerIdentities() throws CantListAssetRedeemPointIdentitiesException {
+        try {
+            List<RedeemPointIdentity> redeemPointIdentities = getAssetRedeemPointIdentityDao().getAllIntraUserFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
+            for(RedeemPointIdentity identityAssetRedeemPoint : redeemPointIdentities){
+                actorAssetRedeemPointManager.createActorAssetRedeemPointFactory(identityAssetRedeemPoint.getPublicKey(), identityAssetRedeemPoint.getAlias(), identityAssetRedeemPoint.getProfileImage());
+            }
+        }
+        catch (CantGetLoggedInDeviceUserException e) {
+            throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET  REDEEM POINT IDENTITIES  EXISTS", e, "Cant List Asset Redeem Point Identities", "");
+        } catch (CantListAssetRedeemPointIdentitiesException e) {
+            throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET  REDEEM POINT IDENTITIES  EXISTS", e, "Cant List Asset Redeem Point Identities", "");
+        } catch (CantCreateActorRedeemPointException e) {
+            throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET  REDEEM POINT IDENTITIES  EXISTS", e, "Cant Create Actor Redeem Point User", "");
+        }
     }
 }
