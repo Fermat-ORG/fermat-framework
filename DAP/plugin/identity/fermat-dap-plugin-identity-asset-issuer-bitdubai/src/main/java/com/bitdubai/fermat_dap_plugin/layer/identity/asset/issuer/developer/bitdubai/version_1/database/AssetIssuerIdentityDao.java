@@ -58,10 +58,16 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
 
-    public AssetIssuerIdentityDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public AssetIssuerIdentityDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) throws CantInitializeAssetIssuerIdentityDatabaseException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+
+        try {
+            initializeDatabase();
+        } catch (CantInitializeAssetIssuerIdentityDatabaseException e) {
+            throw new CantInitializeAssetIssuerIdentityDatabaseException(e.getMessage());
+        }
     }
 
     /**
@@ -79,7 +85,7 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
      *
      * @throws CantInitializeAssetIssuerIdentityDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeAssetIssuerIdentityDatabaseException {
+    private void initializeDatabase() throws CantInitializeAssetIssuerIdentityDatabaseException {
         try {
 
              /*
@@ -170,14 +176,14 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
         }
     }
 
-    public List<IdentityAssetIssuer> getAllIntraUserFromCurrentDeviceUser (DeviceUser deviceUser) throws CantListAssetIssuerIdentitiesException {
+    public List<IdentityAssetIssuer> getIdentityAssetIssuersFromCurrentDeviceUser (DeviceUser deviceUser) throws CantListAssetIssuerIdentitiesException {
 
 
         // Setup method.
-        List<IdentityAssetIssuer> list = new ArrayList<IdentityAssetIssuer>(); // Intra User list.
+        List<IdentityAssetIssuer> list = new ArrayList<IdentityAssetIssuer>(); // Issuer list.
         DatabaseTable table; // Intra User table.
 
-        // Get Intra Users identities list.
+        // Get Issuer identities list.
         try {
 
             /**
@@ -193,12 +199,12 @@ public class AssetIssuerIdentityDao implements DealsWithPluginDatabaseSystem {
             }
 
 
-            // 2) Find the Intra users.
+            // 2) Find the Issuer.
             table.setStringFilter(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
 
-            // 3) Get Intra users.
+            // 3) Get Issuer.
             for (DatabaseTableRecord record : table.getRecords ()) {
 
                 // Add records to list.

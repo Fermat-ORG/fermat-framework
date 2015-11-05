@@ -203,8 +203,6 @@ public class IdentityRedeemPointPluginRoot implements DealsWithActorAssetRedeemP
                     this.deviceUserManager,
                     this.actorAssetRedeemPointManager);
 
-            identityAssetRedeemPointManager.initializeDatabase();
-
             registerIdentities();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);

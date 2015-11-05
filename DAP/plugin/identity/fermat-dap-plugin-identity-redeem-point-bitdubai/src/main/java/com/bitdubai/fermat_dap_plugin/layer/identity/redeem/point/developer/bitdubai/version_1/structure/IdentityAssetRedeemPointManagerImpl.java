@@ -106,13 +106,9 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
         this.actorAssetRedeemPointManager = actorAssetRedeemPointManager;
     }
 
-    private AssetRedeemPointIdentityDao getAssetRedeemPointIdentityDao(){
+    private AssetRedeemPointIdentityDao getAssetRedeemPointIdentityDao() throws CantInitializeAssetRedeemPointIdentityDatabaseException {
         AssetRedeemPointIdentityDao assetRedeemPointIdentityDao = new AssetRedeemPointIdentityDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
         return assetRedeemPointIdentityDao;
-    }
-
-    public void  initializeDatabase() throws CantInitializeAssetRedeemPointIdentityDatabaseException {
-        getAssetRedeemPointIdentityDao().initializeDatabase();
     }
 
     public List<RedeemPointIdentity> getIdentityAssetRedeemPointsFromCurrentDeviceUser() throws CantListAssetRedeemPointException {
@@ -123,7 +119,7 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
 
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            assetRedeemPointList = getAssetRedeemPointIdentityDao().getAllIntraUserFromCurrentDeviceUser(loggedUser);
+            assetRedeemPointList = getAssetRedeemPointIdentityDao().getIdentityAssetRedeemPointsFromCurrentDeviceUser(loggedUser);
 
 
             return assetRedeemPointList;
@@ -142,15 +138,14 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
             ECCKeyPair keyPair = new ECCKeyPair();
-            String publicKey = keyPair.getPublicKey();
-            String privateKey = keyPair.getPrivateKey();
+            String publicKey   = keyPair.getPublicKey();
+            String privateKey  = keyPair.getPrivateKey();
 
             getAssetRedeemPointIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage);
 
             IdentityAssetRedeemPointImpl identityAssetRedeemPoint = new IdentityAssetRedeemPointImpl(alias, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
 
-            //TODO:Revisar como registrar con el Network Service
-            //registerIdentities();
+            registerIdentities();
 
             return identityAssetRedeemPoint;
         } catch (CantGetLoggedInDeviceUserException e) {
@@ -166,7 +161,7 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
         try {
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            if(getAssetRedeemPointIdentityDao().getAllIntraUserFromCurrentDeviceUser(loggedUser).size() > 0)
+            if(getAssetRedeemPointIdentityDao().getIdentityAssetRedeemPointsFromCurrentDeviceUser(loggedUser).size() > 0)
                 return true;
             else
                 return false;
@@ -181,17 +176,21 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
 
     public void registerIdentities() throws CantListAssetRedeemPointIdentitiesException {
         try {
-            List<RedeemPointIdentity> redeemPointIdentities = getAssetRedeemPointIdentityDao().getAllIntraUserFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
-            for(RedeemPointIdentity identityAssetRedeemPoint : redeemPointIdentities){
-                actorAssetRedeemPointManager.createActorAssetRedeemPointFactory(identityAssetRedeemPoint.getPublicKey(), identityAssetRedeemPoint.getAlias(), identityAssetRedeemPoint.getProfileImage());
+            List<RedeemPointIdentity> redeemPointIdentities = getAssetRedeemPointIdentityDao().getIdentityAssetRedeemPointsFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
+            if (redeemPointIdentities.size() > 0) {
+                for (RedeemPointIdentity identityAssetRedeemPoint : redeemPointIdentities) {
+                    actorAssetRedeemPointManager.createActorAssetRedeemPointFactory(identityAssetRedeemPoint.getPublicKey(), identityAssetRedeemPoint.getAlias(), identityAssetRedeemPoint.getProfileImage());
+                }
             }
         }
         catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET  REDEEM POINT IDENTITIES  EXISTS", e, "Cant List Asset Redeem Point Identities", "");
+            throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET  REDEEM POINT IDENTITIES  EXISTS", e, "Cant Get Logged InDevice User", "");
         } catch (CantListAssetRedeemPointIdentitiesException e) {
             throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET  REDEEM POINT IDENTITIES  EXISTS", e, "Cant List Asset Redeem Point Identities", "");
         } catch (CantCreateActorRedeemPointException e) {
             throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET  REDEEM POINT IDENTITIES  EXISTS", e, "Cant Create Actor Redeem Point User", "");
+        } catch (CantInitializeAssetRedeemPointIdentityDatabaseException e) {
+            throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET  REDEEM POINT IDENTITIES  EXISTS", e, "Cant Initialize Asset Redeem Point Identity", "");
         }
     }
 }
