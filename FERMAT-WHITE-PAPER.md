@@ -145,7 +145,7 @@ The collection of system information for visualization and statistics uses hashe
 <br>
 ### User Interface
 
-The Framework adds layer by layer from the OS level, going through the blockchain level, the communication level, platform level up to the user interface. We define several concepts in order achieve the goal of allowing even non-developers to deployd their own trust-less financial applications on a Wordpress style:
+The Framework adds layer by layer starting down at the OS level, going through the _Blockchain Level_, the _Communication Level_, _Platform Level_ up to the user interface. We define several concepts in order achieve the goal of allowing even non-developers to deployd their own trust-less financial applications:
 
 **Wallet** : Any kind of financial application that handles either crypto or digital assets for any purpose. 
 
@@ -155,11 +155,14 @@ The Framework adds layer by layer from the OS level, going through the blockchai
 
 **Branded Wallet** : A _niche wallet_ turned into a new product owned by a different End User by a process similar to building a Worldpress site but locally on the End Users device. Usually involves re-using a set of the business logic of the _niche wallet_ it derives from and a new look and feel (different skin and navigation structure).
 
+**External Wallet** : A third party APP running on the same device that uses Fermat as a backend for different reasons. For example to benefit from its infraestructure to interface crypto networks, transporting data through its p2p network, or storing data on the End Users _Private Device Network_. 
+
 Several tools were designed with the purpose to enable the development of new wallets, an their distribution.
 
 **Wallet Factory** : Is a built-in functionality that enables the development of reference and niche wallets.
 
 **Wallet Store** : Is a distributed application which manages a shared wallet catallog and enables the End User to download from peers the different wallets available for the Framework.
+
 
 
 <br>
