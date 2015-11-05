@@ -169,7 +169,6 @@ public abstract class AbstractAddon implements Addon, Service {
                         NeededAddonReference addonReference = (NeededAddonReference) a;
 
                         AddonVersionReference avr = new AddonVersionReference(
-                                addonReference.operativeSystem(),
                                 addonReference.platform(),
                                 addonReference.layer(),
                                 addonReference.addon(),

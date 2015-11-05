@@ -740,7 +740,7 @@ public class Platform implements Serializable {
             boolean WPD = true;
 
             //TODO: Esto va acá porque es necesario para que se le pase la instancia a otros plugins
-            final FermatSystem fermatSystem = new FermatSystem(osContext, OperativeSystems.ANDROID);;
+            final FermatSystem fermatSystem = new FermatSystem(osContext);;
             try {
                 fermatSystem.start();
             } catch (FermatException e) {

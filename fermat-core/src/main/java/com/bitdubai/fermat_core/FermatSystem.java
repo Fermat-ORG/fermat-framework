@@ -38,10 +38,9 @@ public final class FermatSystem {
     private final FermatAddonManager  fermatAddonManager ;
     private final FermatPluginManager fermatPluginManager;
 
-    public FermatSystem(final Object           osContext      ,
-                        final OperativeSystems operativeSystem) {
+    public FermatSystem(final Object osContext) {
 
-        this.fermatSystemContext = new FermatSystemContext(osContext, operativeSystem);
+        this.fermatSystemContext = new FermatSystemContext(osContext);
         this.fermatAddonManager  = new FermatAddonManager(fermatSystemContext);
         this.fermatPluginManager = new FermatPluginManager(fermatSystemContext, fermatAddonManager);
     }
@@ -83,8 +82,7 @@ public final class FermatSystem {
 
         final PlatformReference pr = abstractPlatform.getPlatformReference();
 
-        if (pr.getPlatform().equals(Platforms.OPERATIVE_SYSTEM_API) &&
-                !pr.getOperativeSystem().equals(OperativeSystems.INDIFFERENT))
+        if (pr.getPlatform().equals(Platforms.OPERATIVE_SYSTEM_API))
             fermatSystemContext.registerPlatform(abstractPlatform);
         else
             throw new CantRegisterPlatformException(abstractPlatform.getPlatformReference().toString(), "Is not an OSA specific Platform");

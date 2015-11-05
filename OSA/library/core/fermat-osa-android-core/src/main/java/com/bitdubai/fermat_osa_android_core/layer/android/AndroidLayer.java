@@ -18,7 +18,7 @@ import com.bitdubai.fermat_osa_android_core.layer.android.plugin_file_system.Plu
 public class AndroidLayer extends AbstractLayer {
 
     public AndroidLayer() {
-        super(Layers.ANDROID);
+        super(Layers.SYSTEM);
     }
 
     public void start() throws CantStartLayerException {
