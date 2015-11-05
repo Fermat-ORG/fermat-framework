@@ -6,7 +6,7 @@
 
 Plug-ins are one of the three basic components that can be added into the Fermat Framework. The two others are Addons, and GUI components. Each Plug-in has a well defined responsability within the system. Usually a Plug-in performs a task on one or more workflows.  
 
-To accomplish it's mission, a Plug-in may have it's own database and files to persist it's state. It also has an internal structure of classes designed specifically to fullfill it's goals. Some of these classes implement public interfaces which in turn, exposes the Plug-in public services to other Fermat components.
+To accomplish its mission, a Plug-in may have its own database and files to persist its state. It also has an internal structure of classes designed specifically to fullfill its goals. Some of these classes implement public interfaces which in turn, exposes the Plug-in public services to other Fermat components.
 
 
 <br>
@@ -41,7 +41,7 @@ The Plug-in root is the starting point of a Plug-in. It is the point of contact 
 
 #### Public Interfaces
 
-Each Plug-in gives services to other Plug-ins. They do it through public interfaces published either on Fermat-api, or on the Platfom's API where the Plug-in belongs. Some clases of it's internal structure implements these public interfaces.
+Each Plug-in gives services to other Plug-ins. They do it through public interfaces published either on Fermat-api, or on the Platfom's API where the Plug-in belongs. Some clases of its internal structure implements these public interfaces.
 
 <br>
 #### Internal Structure
@@ -68,7 +68,7 @@ b. **External** : These are exceptions that are thrown within a Plug-in and are 
 <br>
 #### Agents
 
-We define Agents as objects which at runtime will create a new thread of execition. We have developed this pattern in order to standarize and simplify the handling of processes that need to run from time to time and perform certain tasks. 
+We define Agents as objects which at runtime will create a new thread of execution. We have developed this pattern in order to standarize and simplify the handling of processes that need to run from time to time and perform certain tasks. 
 
 <br>
 ### Othe Elements
@@ -99,7 +99,7 @@ This section will help you undestand the workflow needed to be followed in order
 
 It is mandatory that you create an initial set of github issues before you proceed further on the workflow. This will show the rest of the temas that someone is working in this functionality and avoid conflicting work early on. It will also hook the team leader into your workflow and allow him to guide and advise you when needed.
 
-A basic hiriarchy of issues is created as a first step. The issues are linked one to the other just by placing a link on the first commet.
+A basic hierarchy of issues is created as a first step. The issues are linked one to the other just by placing a link on the first commet.
 
 ##### Naming Convention
 
@@ -113,7 +113,7 @@ All of them seprated by " - ".
 
 ##### Linking to parent Issue
 
-Issues that needs to be linked to it's parent must have their first line starting with "Parent: " + http link to parent issue. 
+Issues that needs to be linked to its parent must have their first line starting with "Parent: " + http link to parent issue. 
 
 ##### Tagging the Team Leader
 
@@ -129,7 +129,7 @@ The mandatory initial structure is the following: (note: the word ISSUE it is no
 <br>
 ##### ISSUE: '_Plugin Name_' - Plug-In
 
-This is the root of your issue structure and must be labeled as _SUPER ISSUE_. It is closed only when all of it's children and grand children are closed.
+This is the root of your issue structure and must be labeled as _SUPER ISSUE_. It is closed only when all its children and grand children are closed.
 
 <br>
 ##### ISSUE: '_Plugin Name_' - Analisys
@@ -196,7 +196,7 @@ This issue is closed when the n public interfaces are written.
 <br>
 5 - ISSUE: **'_Plugin Name_' - Implementation - Internal Structure**
 
-This issue is closed when all interna structure's code is written.  Note that the 1, 2, n must be replaced with the actual class names.
+This issue is closed when all internal structure's code is written.  Note that the 1, 2, n must be replaced with the actual class names.
 
 * ISSUE: '_Plugin Name_' - Implementation - Internal Structure - Class 1
   
@@ -217,15 +217,15 @@ This issue is closed when all event handler classes are written. Note that the 1
 
 * ISSUE: '_Plugin Name_' - Implementation - Event Handling - Event Handler 1
 
-This issue is closed when this Event Hndler class if fully implemented.
+This issue is closed when this Event Handler class if fully implemented.
 
 * ISSUE: '_Plugin Name_' - Implementation - Event Handling - Event Handler 2
 
-This issue is closed when this Event Hndler class if fully implemented.
+This issue is closed when this Event Handler class if fully implemented.
 
 * ISSUE: '_Plugin Name_' - Implementation - Event Handling - Event Handler n
 
-This issue is closed when this Event Hndler class if fully implemented.
+This issue is closed when this Event Handler class if fully implemented.
 
 <br>
 ##### ISSUE: '_Plugin Name_' - Testing
@@ -523,7 +523,7 @@ To facilitate the work of creating these classes, Fermat has developed a script 
 <br>
 #### Agents
 
-As the basic purpose of an agent is to run a parallel process or simultaneous to the main run of Plug-in, usually in order to achieve this we need to create classes that extend the Thread class, and rewrite the main "run (method) "which is to be run primarily when starting a new thread or process which represent this agent.
+As the basic purpose of an agent is to run a parallel process or simultaneous to the main run of Plug-in, usually in order to achieve this we need to create classes that extend the Thread class, and rewrite the main "run (method) " which is to be run primarily when starting a new thread or process which represent this agent.
 
 We must consider that we should not create indiscriminate agents, we always use as there is no better alternative for carrying out the task or process to be performed, as using excessively Agents they may compromise the stability and system speed.
 
