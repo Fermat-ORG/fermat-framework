@@ -749,20 +749,15 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         try {
 
-            System.out.println("********* Crypto Addresses: Initializing and starting Executor Agent. ");
-
             cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
                     this,
                     errorManager,
                     eventManager,
-                    pluginDatabaseSystem,
-                    pluginId,
+                    cryptoAddressesNetworkServiceDao,
                     wsCommunicationsCloudClientManager
             );
 
             cryptoAddressesExecutorAgent.start();
-
-            System.out.println("********* Crypto Addresses: Successful initialize and start of Executor Agent. ");
 
         } catch(CantStartAgentException e) {
 
@@ -772,8 +767,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     }
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
-
-        System.out.println(" ******* Crypto Addresses: Ahora si me estoy registrando como la gente.....");
 
         /*
          * If the component registered have my profile and my identity public key
@@ -893,7 +886,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         try {
 
-            ProtocolState protocolState = ProtocolState.PROCESSING_RECEIVE;
+            ProtocolState protocolState = ProtocolState.PENDING_ACTION    ;
             RequestType   type          = RequestType  .RECEIVED          ;
             RequestAction action        = RequestAction.REQUEST           ;
 
@@ -932,7 +925,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         try {
 
-            ProtocolState protocolState = ProtocolState.PROCESSING_RECEIVE;
+            ProtocolState protocolState = ProtocolState.PENDING_ACTION;
 
             cryptoAddressesNetworkServiceDao.acceptAddressExchangeRequest(
                     acceptMessage.getRequestId(),
@@ -960,7 +953,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         try {
 
-            ProtocolState protocolState = ProtocolState.PROCESSING_RECEIVE;
+            ProtocolState protocolState = ProtocolState.PENDING_ACTION;
 
             cryptoAddressesNetworkServiceDao.denyAddressExchangeRequest(
                     denyMessage.getRequestId(),

@@ -33,15 +33,6 @@ public enum EventType implements FermatEventEnum {
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
 
-    CRYPTO_ADDRESS_DENIED ("CRYADEN") {
-        public FermatEvent getNewEvent() { return new CryptoAddressDeniedEvent(this); }
-    },
-    CRYPTO_ADDRESS_RECEIVED ("CRYARVD") {
-        public FermatEvent getNewEvent() { return new CryptoAddressReceivedEvent(this); }
-    },
-    CRYPTO_ADDRESS_REQUESTED("CRYAREQ") {
-        public FermatEvent getNewEvent() { return new CryptoAddressRequestedEvent(this); }
-    },
     CRYPTO_ADDRESSES_NEWS("CRYADDN") {
         public FermatEvent getNewEvent() { return new CryptoAddressesNewsEvent(this); }
     },
@@ -81,9 +72,6 @@ public enum EventType implements FermatEventEnum {
 
         switch (code){
 
-            case "CRYAden": return CRYPTO_ADDRESS_DENIED                     ;
-            case "CRYARVD": return CRYPTO_ADDRESS_RECEIVED                   ;
-            case "CRYAREQ": return CRYPTO_ADDRESS_REQUESTED                  ;
             case "CRYADDN": return CRYPTO_ADDRESSES_NEWS                     ;
             case "CRYPAAP": return CRYPTO_PAYMENT_REQUEST_APPROVED           ;
             case "CRYPACR": return CRYPTO_PAYMENT_REQUEST_CONFIRMED_RECEPTION;
