@@ -159,7 +159,16 @@ public class OutgoingIntraActorTransactionProcessorAgent  {
 
         private void doTheMainTask() {
             try {
+
+                System.out.print("-----------------------\n" +
+                        "OUTGOING INTRA USER TRANSACTION START - Get Pending Transactions!!!!! -----------------------\n" +
+                        "-----------------------\n STATE: ");
+
+
                 List<OutgoingIntraActorTransactionWrapper> transactionList = dao.getNewTransactions();
+
+                System.out.print("PROCESSING : " + transactionList.size() + " pendings transactions.");
+
 
             /* For each transaction:
              1. We check that we can apply it
@@ -173,6 +182,7 @@ public class OutgoingIntraActorTransactionProcessorAgent  {
                         } else {
                             dao.cancelTransaction(transaction);
                             // TODO: Lanzar un evento de fondos insuficientes
+                            System.out.print("fondos insuficientes");
                         }
                     } catch (OutgoingIntraActorWalletNotSupportedException | CantCalculateBalanceException
                             | CantRegisterDebitException | OutgoingIntraActorCantCancelTransactionException
@@ -197,6 +207,7 @@ public class OutgoingIntraActorTransactionProcessorAgent  {
                         else
                             hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), transaction.getAmount(), transaction.getOp_Return());
 
+                        System.out.print("-------------- sendBitcoins to cryptoVaultManager");
                         dao.setTransactionHash(transaction, hash);
                         // TODO: The crypto vault should let us obtain the transaction hash before sending the currency. As this was never provided by the vault
                         //       we will just send the metadata in this place. This MUST be corrected.

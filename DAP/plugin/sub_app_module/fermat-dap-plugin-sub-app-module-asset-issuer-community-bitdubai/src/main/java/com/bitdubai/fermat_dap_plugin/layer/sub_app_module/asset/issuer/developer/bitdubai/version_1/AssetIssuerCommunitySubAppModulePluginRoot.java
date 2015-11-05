@@ -135,6 +135,7 @@ public class AssetIssuerCommunitySubAppModulePluginRoot implements AssetIssuerCo
 
     @Override
     public List<ActorAssetIssuer> getAllActorAssetIssuerRegistered() throws CantGetAssetIssuerActorsException {
+
         actorAssetList = new ArrayList<>();
 
         try {
@@ -145,7 +146,6 @@ public class AssetIssuerCommunitySubAppModulePluginRoot implements AssetIssuerCo
         } catch (CantCreateActorAssetIssuerException e) {
             e.printStackTrace();
         }
-
         return actorAssetList;
     }
 

@@ -24,6 +24,7 @@ import com.google.gson.JsonParser;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.framing.Framedata;
+import org.java_websocket.framing.FramedataImpl1;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
@@ -103,22 +104,57 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
     private Map<PlatformComponentType, List<PlatformComponentProfile>> registeredOtherPlatformComponentProfileCache;
 
     /**
+     * Holds all pong message by connection
+     */
+    private Map<Integer, Boolean> pendingPongMessageByConnection;
+
+    /**
      * Constructor with parameter
      * @param address
      */
     public WsCommunicationCloudServer(InetSocketAddress address) {
         super(address);
-        this.wsCommunicationVpnServerManagerAgent     = new WsCommunicationVpnServerManagerAgent(address.getHostString(), address.getPort());
-        this.pendingRegisterClientConnectionsCache    = new ConcurrentHashMap<>();
-        this.registeredClientConnectionsCache         = new ConcurrentHashMap<>();
-        this.serverIdentityByClientCache              = new ConcurrentHashMap<>();
-        this.clientIdentityByClientConnectionCache    = new ConcurrentHashMap<>();
-        this.packetProcessorsRegister                 = new ConcurrentHashMap<>();
-        this.registeredCommunicationsCloudServerCache = new ConcurrentHashMap<>();
-        this.registeredCommunicationsCloudClientCache = new ConcurrentHashMap<>();
-        this.registeredNetworkServicesCache           = new ConcurrentHashMap<>();
+        this.wsCommunicationVpnServerManagerAgent         = new WsCommunicationVpnServerManagerAgent(address.getHostString(), address.getPort());
+        this.pendingRegisterClientConnectionsCache        = new ConcurrentHashMap<>();
+        this.registeredClientConnectionsCache             = new ConcurrentHashMap<>();
+        this.serverIdentityByClientCache                  = new ConcurrentHashMap<>();
+        this.clientIdentityByClientConnectionCache        = new ConcurrentHashMap<>();
+        this.packetProcessorsRegister                     = new ConcurrentHashMap<>();
+        this.registeredCommunicationsCloudServerCache     = new ConcurrentHashMap<>();
+        this.registeredCommunicationsCloudClientCache     = new ConcurrentHashMap<>();
+        this.registeredNetworkServicesCache               = new ConcurrentHashMap<>();
         this.registeredOtherPlatformComponentProfileCache = new ConcurrentHashMap<>();
+        this.pendingPongMessageByConnection               = new ConcurrentHashMap<>();
     }
+
+    /**
+     * Send ping message to the remote node, to verify is connection
+     * alive
+     */
+    public void sendPingMessage(WebSocket conn){
+
+        System.out.println(" WsCommunicationCloudServer - Sending ping message to remote node (" + conn.getRemoteSocketAddress() + ")");
+        FramedataImpl1 frame = new FramedataImpl1(Framedata.Opcode.PING);
+        frame.setFin(true);
+        conn.sendFrame(frame);
+        pendingPongMessageByConnection.put(conn.hashCode(), Boolean.TRUE);
+    }
+
+    /**
+     * Receive pong message from the remote node, to verify is connection
+     * alive
+     *
+     * @param conn
+     * @param f
+     */
+    @Override
+    public void onWebsocketPong(WebSocket conn, Framedata f) {
+        if (f.getOpcode() == Framedata.Opcode.PONG){
+            System.out.println(" WsCommunicationCloudServer - Pong message receiveRemote from node ("+conn.getRemoteSocketAddress()+") connection is alive");
+            pendingPongMessageByConnection.remove(conn.hashCode());
+        }
+    }
+
 
     /**
      * (non-javadoc)
@@ -274,14 +310,6 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
          * Close the connection
          */
         clientConnection.closeConnection(505, "- ERROR :" + ex.getLocalizedMessage());
-    }
-
-    @Override
-    public void onWebsocketPing(WebSocket conn, Framedata f) {
-
-        System.out.println(" WsCommunicationCloudServer - onWebsocketPing");
-        System.out.println(" WsCommunicationCloudServer - Framedata = " + f.getOpcode());
-        super.onWebsocketPing(conn, f);
     }
 
     /**
@@ -531,5 +559,13 @@ public class WsCommunicationCloudServer extends WebSocketServer implements Commu
      */
     public Map<FermatPacketType, List<FermatPacketProcessor>> getPacketProcessorsRegister() {
         return packetProcessorsRegister;
+    }
+
+    /**
+     * Get the PendingPongMessageByConnection
+     * @return Map<Integer, Boolean>
+     */
+    public Map<Integer, Boolean> getPendingPongMessageByConnection() {
+        return pendingPongMessageByConnection;
     }
 }
