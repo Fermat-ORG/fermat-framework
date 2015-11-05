@@ -15,12 +15,11 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUser;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.sub_app.intra_user_identity.R;
 import com.bitdubai.sub_app.intra_user_identity.common.adapters.IntraUserIdentityInfoAdapter;
 
-import com.bitdubai.sub_app.intra_user_identity.common.model.IntraUserIdentityInformationImp;
 import com.bitdubai.sub_app.intra_user_identity.common.views.DividerItemDecoration;
 
 import com.bitdubai.sub_app.intra_user_identity.session.IntraUserIdentitySubAppSession;
@@ -37,7 +36,7 @@ public class IntraUserIdentityListFragment extends FermatListFragment<IntraWalle
         implements FermatListItemListeners<IntraWalletUser> {
 
 
-    private IntraWalletUserManager moduleManager;
+    private IntraWalletUserIdentityManager moduleManager;
     private ErrorManager errorManager;
     private ArrayList<IntraWalletUser> identityInformationList;
 
