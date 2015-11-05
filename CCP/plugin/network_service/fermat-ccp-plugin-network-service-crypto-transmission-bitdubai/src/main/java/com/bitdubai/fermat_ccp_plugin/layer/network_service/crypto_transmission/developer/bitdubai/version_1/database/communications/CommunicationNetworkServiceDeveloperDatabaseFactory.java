@@ -22,7 +22,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -75,7 +74,7 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -96,7 +95,7 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
                   /*
                    * We create the new database
                    */
-                database = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -112,7 +111,7 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Template", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(pluginId.toString(), this.pluginId.toString()));
         return databases;
     }
 
@@ -157,7 +156,6 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
          */
         DeveloperDatabaseTable outgoingmessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME, outgoingmessagesColumns);
         tables.add(outgoingmessagesTable);
-
 
 
         return tables;

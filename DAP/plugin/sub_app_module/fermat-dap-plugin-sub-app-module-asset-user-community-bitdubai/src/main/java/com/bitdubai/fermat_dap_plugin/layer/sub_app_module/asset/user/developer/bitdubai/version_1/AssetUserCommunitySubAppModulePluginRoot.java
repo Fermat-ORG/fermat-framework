@@ -145,8 +145,6 @@ public class AssetUserCommunitySubAppModulePluginRoot implements AssetUserCommun
         try {
             actorAssetUserManager.registerActorInActorNetowrkSerice();
             actorAssetList = actorAssetUserManager.getAllAssetUserActorInTableRegistered();
-        } catch (CantAssetUserActorNotFoundException e) {
-            e.printStackTrace();
         } catch (CantCreateAssetUserActorException e) {
             e.printStackTrace();
         }

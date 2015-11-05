@@ -1,26 +1,26 @@
 Readme
 ========= 
 
-Welcome to FERMAT'S  official book ! 
+Welcome to Fermat's  official book ! 
 ------------------------------------
 
-This is the repository version of FERMAT's book.
+This is the repository version of Fermat's book.
 To begin reading the book please clic on the following link:
-[book](https://github.com/bitDubai/fermat/blob/master/fermat-book/book-intro.asciidoc)
+[fermat-book](https://github.com/bitDubai/fermat/blob/master/fermat-book/book-intro.asciidoc)
 
-If you are a developer interested in code documentation, please refer to: 
-[documentation](https://github.com/bitDubai/fermat/tree/master/fermat-documentation)
+For a technical and academic description of the project, please refer to: 
+[Fermat White Paper](https://github.com/bitDubai/fermat/tree/master/fermat/FERMAT-WHITE-PAPER.md)
 
-You can see also picture a visual idea of FERMAT at a glimpse ( and real-time FERMAT P2P network tracking) at 
-[Fermat.org](http://www.fermat.org).
+You can also get a nice visualization of the project and real-time Fermat Network tracking at 
+[fermat.org](http://www.fermat.org).
 
 
-For installation instructions and running from the source code, see the [documentation](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md).
+For installation instructions and running from the source code, see the [documentation](https://github.com/bitDubai/fermat/tree/master/fermat-documentation/documentation.asciidoc)
 
-Welcome to FERMAT !
+Welcome to Fermat !
 
 Sincerely, 
 
 Gustavo Corradi. 
-FERMAT BOOK Team
+Fermat Book Team
 ( book@fermat.org ) 

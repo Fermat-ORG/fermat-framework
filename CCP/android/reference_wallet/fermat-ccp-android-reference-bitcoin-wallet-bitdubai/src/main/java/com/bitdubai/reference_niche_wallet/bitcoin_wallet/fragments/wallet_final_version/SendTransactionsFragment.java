@@ -72,7 +72,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanne
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.custom_anim.Fx;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigationDrawer.NavigationDrawerArrayAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationDrawerArrayAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.CreateContactFragmentDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -281,7 +281,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                                     walletContact.name,
                                     Actors.INTRA_USER,
                                     walletContact.actorPublicKey,
-                                    new byte[0],
+                                    walletContact.profileImage,
                                     Actors.INTRA_USER,
                                     intraUserModuleManager.getActiveIntraUserIdentity().getPublicKey(),
                                     "reference_wallet"/*referenceWalletSession.getWalletSessionType().getWalletPublicKey()*/ ,
@@ -602,7 +602,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                     }
 
 
-                    CryptoWalletWalletContact cryptoWalletWalletContact = cryptoWallet.findWalletContactById(walletContact.contactId);
+                    CryptoWalletWalletContact cryptoWalletWalletContact = cryptoWallet.findWalletContactById(walletContact.contactId,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
 
                     //TODO: ver que mas puedo usar del cryptoWalletWalletContact
 
@@ -647,11 +647,11 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
 
                 try {
 
-                    lstCryptoWalletTransactionsAvailable.addAll(cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(), MAX_TRANSACTIONS, available_offset));
+                    lstCryptoWalletTransactionsAvailable.addAll(cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),MAX_TRANSACTIONS, available_offset));
 
                     available_offset = lstCryptoWalletTransactionsAvailable.size();
 
-                    lstCryptoWalletTransactionsBook.addAll(cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.DEBIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(), MAX_TRANSACTIONS, book_offset));
+                    lstCryptoWalletTransactionsBook.addAll(cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.DEBIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),MAX_TRANSACTIONS, book_offset));
 
                     book_offset = lstCryptoWalletTransactionsBook.size();
 
@@ -660,6 +660,9 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                 } catch (CantListTransactionsException e) {
                     e.printStackTrace();
                 }
+             catch (CantGetActiveLoginIdentityException e) {
+                e.printStackTrace();
+            }
 
             }
         };
@@ -686,7 +689,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                 String contactAddress = "";
                 if(wcr.getReceivedCryptoAddress().size() > 0)
                     contactAddress = wcr.getReceivedCryptoAddress().get(0).getAddress();
-                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress,wcr.isConnection()));
+                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress,wcr.isConnection(),wcr.getProfilePicture()));
             }
         }
         catch (CantGetAllWalletContactsException e) {
