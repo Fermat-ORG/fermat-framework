@@ -98,9 +98,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
     public static final int REQUEST_LOAD_IMAGE = 2;
     public static final int CONTEXT_MENU_CAMERA = 1;
     public static final int CONTEXT_MENU_GALLERY = 2;
-
     private static final int CONTEXT_MENU_NO_PHOTO = 4;
-
     private static final int UNIQUE_FRAGMENT_GROUP_ID = 16;
 
     // TODO: preguntar de donde saco el user id
@@ -436,8 +434,8 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
         ((TextView) balance_header.findViewById(R.id.txt_touch_to_change)).setTypeface(tf);
 
         TextView txt_amount_type = (TextView) balance_header.findViewById(R.id.txt_balance_amount_type);
-        if(txt_amount_type!=null)
-        txt_amount_type.setOnClickListener(new View.OnClickListener() {
+
+        txt_type_balance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
@@ -450,6 +448,14 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
         txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
 
         txt_balance_amount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
+                //txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
+                changeAmountType(txt_balance_amount);
+            }
+        });
+        txt_amount_type.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
@@ -577,23 +583,7 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
 
     @Override
     public List<CryptoWalletTransaction> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-//        List<CryptoWalletTransaction> lstTransactions  = new ArrayList<CryptoWalletTransaction>();
-//
-//
-//        try {
-//            lstTransactions = cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionTypes.CREDIT,referenceWalletSession.getWalletSessionType().getWalletPublicKey(),MAX_TRANSACTIONS,offset);
-//            offset+=lstTransactions.size();
-//        }
-//        catch (Exception e) {
-//            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
-//                    UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//            e.printStackTrace();
-//            // data = RequestPaymentListItem.getTestData(getResources());
-//        }
-
         updateTransactions();
-
-
         return null;
     }
 
@@ -659,7 +649,6 @@ public class ReceiveTransactionsFragment extends FermatWalletListFragment<Crypto
                 emptyState();
 
             }
-            //}
         }
     }
 
