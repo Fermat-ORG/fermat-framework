@@ -2,7 +2,7 @@ package unit.com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.dev
 
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantShowProfileImageException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_wallet_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity;
+import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.structure.IntraWalletUserIdentity;
 
 import org.junit.Before;
 import org.junit.Test;
