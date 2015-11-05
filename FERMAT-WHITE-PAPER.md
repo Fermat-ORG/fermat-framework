@@ -105,7 +105,7 @@ d. Nodes to recognize each other even when their IP, location or other profile i
 <br>
 ### Workflows
 
-We define workflows as high level processes that requires several components to achieve a certain goal. Manny workflows start at a GUI component triggered by the end user and spans through several Plug-ins on the same device, and in some cases jumps into other devices. Other workflows may start directly at some Plug-ins, triggered by events happening within the same device.
+We define workflows as high level processes that requires several components to achieve a certain goal. Manny workflows start at a GUI component triggered by the End User and spans through several Plug-ins on the same device, and in some cases jumping into other devices. Other workflows may start at some Plug-ins, triggered by events happening within the same device.
 
 From a workflow point of view, each Plug-ins executes a certain task and is fully responsible for doing it's job. Workflows are a chain of tasks that may split in several paths and may span through more than one device.
 
@@ -114,9 +114,9 @@ From a workflow point of view, each Plug-ins executes a certain task and is full
 
 #### Transactional Workflows
 
-As the Fermat Framework runs on potentially unstable devices such as mobile phones, each Plug-in must be prepared to overcome the difficulties caused by a device shutting down at any moment and it must be able to complete later on it's intended job and never to leave information on an inconsistent state. This is quite challenging but not impossible. 
+As the Framework runs on potentially unstable devices such as mobile phones, each Plug-in must be prepared to overcome the difficulties caused by a device shutting down at any moment and it must be able to complete later on it's intended job and never to leave information on an inconsistent state. This is quite challenging but not impossible. 
 
-Part of the solution is to make each Plug-in assume a responsability while they are handling part of a transaction on a transactional workflow. So this responsability is transfered on each step of the chain using a _Responsibility Transfer Protocol_. This means that the one who is responsible at the moment of a black out is the one which must resume and do it's best to get rid of that responsability moving it further down the chain within the transactional workflow.
+The solution is to make each Plug-in responsabile for the workflow while they are handling part of a transaction on a transactional workflow. So this responsability is transfered on each step of the chain using a _Responsibility Transfer Protocol_. This means that the one who is responsible at the moment of a black out is the one which must resume and do it's best to get rid of that responsability moving it further down the chain within the transactional workflow.
  
 #### Monetary Transactions
 
