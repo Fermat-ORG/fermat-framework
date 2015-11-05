@@ -19,6 +19,6 @@ public class AssetIssuerCommunitySupAppModuleManager {
     }
 
     public List<ActorAssetIssuer> getAllAssetIssuerActorRegistered() throws CantGetAssetIssuerActorsException, CantAssetIssuerActorNotFoundException {
-        return actorAssetIssuerManager.getAllAssetIssuerActorRegistered();
+        return actorAssetIssuerManager.getAllAssetIssuerActorInTableRegistered();
     }
 }

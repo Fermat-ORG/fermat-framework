@@ -17,7 +17,7 @@ public class RedeemPointActorDatabaseConstants {
     public static final String REDEEM_POINT_NAME_COLUMN_NAME = "name";
     public static final String REDEEM_POINT_CONNECTION_STATE_COLUMN_NAME = "redeem_point_connection_state";
     public static final String REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME = "registration_date";
-    public static final String REDEEM_POINT_MODIFIED_DATE_COLUMN_NAME = "modified_date";
+    public static final String REDEEM_POINT_LAST_CONNECTION_DATE_COLUMN_NAME = "last_connection_date";
     public static final String REDEEM_POINT_LOCATION_LATITUDE_COLUMN_NAME = "location_latitude";
     public static final String REDEEM_POINT_LOCATION_LONGITUDE_COLUMN_NAME = "location_longitude";
     public static final String REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME = "crypto_address";
@@ -43,7 +43,7 @@ public class RedeemPointActorDatabaseConstants {
     public static final String REDEEM_POINT_REGISTERED_NAME_COLUMN_NAME = "register_name";
     public static final String REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME = "register_redeem_point_connection_state";
     public static final String REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME = "register_registration_date";
-    public static final String REDEEM_POINT_REGISTERED_MODIFIED_DATE_COLUMN_NAME = "register_modified_date";
+    public static final String REDEEM_POINT_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME = "register_last_connection_date";
     public static final String REDEEM_POINT_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME = "register_location_latitude";
     public static final String REDEEM_POINT_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME = "register_location_longitude";
     public static final String REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME = "register_crypto_address";

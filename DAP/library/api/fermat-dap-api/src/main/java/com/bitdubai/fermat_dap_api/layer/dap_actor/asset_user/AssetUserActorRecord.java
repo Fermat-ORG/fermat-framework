@@ -8,6 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
+import java.util.Arrays;
+
 /**
  * Created by Nerio on 22/09/15.
  */
@@ -35,13 +37,8 @@ public class AssetUserActorRecord implements ActorAssetUser {
     }
 
     /**
-     *  Constructor Register in Actor Network Service
-     * @param publicKey
-     * @param name
-     * @param profileImage
-     * @param location
+     *  Method for Set Actor in Actor Network Service User
      */
-
     public AssetUserActorRecord(String publicKey,
                                 String name,
                                 byte[] profileImage,
@@ -336,5 +333,24 @@ public class AssetUserActorRecord implements ActorAssetUser {
     public void setCryptoAddress(CryptoAddress cryptoAddress) {
         if(cryptoAddress != null)
             this.cryptoAddress = cryptoAddress;
+    }
+
+    @Override
+    public String toString() {
+        return "AssetUserActorRecord{" +
+                "publicLinkedIdentity='" + publicLinkedIdentity + '\'' +
+                ", publicKey='" + publicKey + '\'' +
+                ", name='" + name + '\'' +
+                ", age='" + age + '\'' +
+                ", genders=" + genders +
+                ", connectionState=" + connectionState +
+                ", location=" + location +
+                ", locationLatitude=" + locationLatitude +
+                ", locationLongitude=" + locationLongitude +
+                ", registrationDate=" + registrationDate +
+                ", lastConnectionDate=" + lastConnectionDate +
+                ", cryptoAddress=" + cryptoAddress +
+                ", profileImage=" + Arrays.toString(profileImage) +
+                '}';
     }
 }

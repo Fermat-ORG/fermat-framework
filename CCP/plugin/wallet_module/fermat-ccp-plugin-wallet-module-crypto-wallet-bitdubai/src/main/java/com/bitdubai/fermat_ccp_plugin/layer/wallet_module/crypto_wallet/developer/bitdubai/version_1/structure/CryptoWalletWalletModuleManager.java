@@ -239,15 +239,16 @@ public class CryptoWalletWalletModuleManager implements
     }
 
     @Override
-    public List<CryptoWalletWalletContact> listWalletContacts(String walletPublicKey) throws CantGetAllWalletContactsException {
+    public List<CryptoWalletWalletContact> listWalletContacts(String walletPublicKey,String intraUserLoggedInPublicKey) throws CantGetAllWalletContactsException {
         try {
+
 
             List<CryptoWalletWalletContact> finalRecordList = new ArrayList<>();
             finalRecordList.clear();
             WalletContactsSearch walletContactsSearch = walletContactsRegistry.searchWalletContact(walletPublicKey);
             for(WalletContactRecord r : walletContactsSearch.getResult()){
 
-                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(),r.getWalletPublicKey());
+                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(),intraUserLoggedInPublicKey);
 
                 finalRecordList.add(new CryptoWalletWalletModuleWalletContact(r, image));
             }
@@ -260,7 +261,7 @@ public class CryptoWalletWalletModuleManager implements
     }
 
     @Override
-    public List<CryptoWalletWalletContact> listAllActorContactsAndConnections(String walletPublicKey,String intraUserPublicKey) throws CantGetAllWalletContactsException {
+    public List<CryptoWalletWalletContact> listAllActorContactsAndConnections(String walletPublicKey,String intraUserLoggedInPublicKey) throws CantGetAllWalletContactsException {
         try {
             Map<String, CryptoWalletWalletContact> contactMap = new HashMap<>();
 
@@ -270,12 +271,12 @@ public class CryptoWalletWalletModuleManager implements
 
             for(WalletContactRecord r : walletContactsSearch.getResult()){
                // System.out.println("wallet contact: "+r);
-                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(),r.getWalletPublicKey());
+                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(),intraUserLoggedInPublicKey);
                 contactMap.put(r.getActorPublicKey(), new CryptoWalletWalletModuleWalletContact(r, image));
             }
 
             // get intra user connections
-            List<IntraWalletUser> intraUserList = intraUserManager.getConnectedIntraWalletUsers(intraUserPublicKey);
+            List<IntraWalletUser> intraUserList = intraUserManager.getConnectedIntraWalletUsers(intraUserLoggedInPublicKey);
 
             for(IntraWalletUser intraUser : intraUserList) {
                // System.out.println("intra user: " + intraUser);
@@ -304,7 +305,7 @@ public class CryptoWalletWalletModuleManager implements
     }
 
     private byte[] getImageByActorType(final Actors actorType     ,
-                                       final String actorPublicKey, final String walletPublicKey) throws CantGetAllWalletContactsException,
+                                       final String actorPublicKey, final String intraUserLoggedInPublicKey) throws CantGetAllWalletContactsException,
                                                                            ExtraUserNotFoundException       ,
                                                                            CantGetExtraUserException        {
         Actor actor;
@@ -314,7 +315,7 @@ public class CryptoWalletWalletModuleManager implements
                return actor.getPhoto();
             case INTRA_USER:
                 try {
-                    actor = intraUserManager.getActorByPublicKey(walletPublicKey,actorPublicKey);
+                    actor = intraUserManager.getActorByPublicKey(intraUserLoggedInPublicKey,actorPublicKey);
                     return actor.getPhoto();
 
                 }
@@ -330,6 +331,7 @@ public class CryptoWalletWalletModuleManager implements
 
     @Override
     public List<CryptoWalletWalletContact> listWalletContactsScrolling(String  walletPublicKey,
+                                                                       String intraUserLoggedInPublicKey,
                                                                        Integer max,
                                                                        Integer offset) throws CantGetAllWalletContactsException {
         try {
@@ -339,7 +341,7 @@ public class CryptoWalletWalletModuleManager implements
             WalletContactsSearch walletContactsSearch = walletContactsRegistry.searchWalletContact(walletPublicKey);
             for(WalletContactRecord r : walletContactsSearch.getResult(max, offset)){
 
-                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(),r.getWalletPublicKey());
+                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(),intraUserLoggedInPublicKey);
 
                 finalRecordList.add(new CryptoWalletWalletModuleWalletContact(r, image));
             }
@@ -576,12 +578,12 @@ public class CryptoWalletWalletModuleManager implements
     }
 
     @Override
-    public CryptoWalletWalletContact findWalletContactById(UUID contactId) throws CantFindWalletContactException, WalletContactNotFoundException {
+    public CryptoWalletWalletContact findWalletContactById(UUID contactId,String intraUserLoggedInPublicKey) throws CantFindWalletContactException, WalletContactNotFoundException {
         try {
             WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByContactId(contactId);
 
 
-         byte[] image = getImageByActorType(walletContactRecord.getActorType(), walletContactRecord.getActorPublicKey(),walletContactRecord.getWalletPublicKey());
+         byte[] image = getImageByActorType(walletContactRecord.getActorType(), walletContactRecord.getActorPublicKey(),intraUserLoggedInPublicKey);
 
 
             return new CryptoWalletWalletModuleWalletContact(walletContactRecord, image);
