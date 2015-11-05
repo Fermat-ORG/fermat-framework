@@ -10,6 +10,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.IdentityPublished;
 
 /**
  * Created by jorge on 28-09-2015.
+ * Modified by Yordin Alayn 10.09.15
  */
 public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity {
 

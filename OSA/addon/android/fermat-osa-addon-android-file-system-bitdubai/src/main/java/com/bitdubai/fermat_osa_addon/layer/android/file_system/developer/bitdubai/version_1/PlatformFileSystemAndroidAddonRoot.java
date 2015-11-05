@@ -42,7 +42,7 @@ public class PlatformFileSystemAndroidAddonRoot extends AbstractAddon implements
     public PlatformFileSystemAndroidAddonRoot() {
         super(
                 new AddonVersionReference(new Version()),
-                OperativeSystems.ANDROID
+                true
         );
     }
 

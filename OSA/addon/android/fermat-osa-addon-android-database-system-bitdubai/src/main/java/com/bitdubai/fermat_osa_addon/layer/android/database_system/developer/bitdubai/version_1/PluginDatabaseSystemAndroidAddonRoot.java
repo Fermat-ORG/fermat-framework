@@ -35,10 +35,11 @@ public class PluginDatabaseSystemAndroidAddonRoot extends AbstractAddon implemen
 
     private Context context;
 
+
     public PluginDatabaseSystemAndroidAddonRoot() {
         super(
                 new AddonVersionReference(new Version()),
-                OperativeSystems.ANDROID
+                true
         );
     }
 

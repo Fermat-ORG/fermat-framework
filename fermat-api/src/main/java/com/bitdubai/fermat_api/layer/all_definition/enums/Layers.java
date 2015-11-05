@@ -13,27 +13,28 @@ public enum Layers implements FermatEnum {
     /**
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    ACTOR           ("ACT"),
-    ANDROID         ("AND"),
-    BASIC_WALLET    ("BSW"),
-    COMMUNICATION   ("COM"),
-    CRYPTO_MODULE   ("CRM"),
-    CRYPTO_NETWORK  ("CRN"),
-    CRYPTO_ROUTER   ("CRR"),
-    CRYPTO_VAULT    ("CRV"),
-    DEFINITION      ("DEF"),
-    ENGINE          ("ENG"),
-    HARDWARE        ("HAR"),
-    IDENTITY        ("IDT"),
-    MIDDLEWARE      ("MID"),
-    NETWORK_SERVICE ("NTS"),
-    PLATFORM_SERVICE("PMS"),
-    REQUEST         ("REQ"),
-    SUB_APP_MODULE  ("SAM"),
-    TRANSACTION     ("TRA"),
-    USER            ("USR"),
-    WALLET_MODULE   ("WAM"),
-    WORLD           ("WRL"),
+    ACTOR             ("ACT"),
+    BASIC_WALLET      ("BSW"),
+    COMMUNICATION     ("COM"),
+    CRYPTO_MODULE     ("CRM"),
+    CRYPTO_NETWORK    ("CRN"),
+    CRYPTO_ROUTER     ("CRR"),
+    CRYPTO_VAULT      ("CRV"),
+    DEFINITION        ("DEF"),
+    ENGINE            ("ENG"),
+    HARDWARE          ("HAR"),
+    IDENTITY          ("IDT"),
+    MIDDLEWARE        ("MID"),
+    NETWORK_SERVICE   ("NTS"),
+    PLATFORM_SERVICE  ("PMS"),
+    REQUEST           ("REQ"),
+    SUB_APP_MODULE    ("SAM"),
+    SYSTEM            ("SYS"),
+    TRANSACTION       ("TRA"),
+    USER              ("USR"),
+    WALLET_MODULE     ("WAM"),
+    WORLD             ("WRL"),
+
     ;
 
     private String code;
@@ -47,7 +48,6 @@ public enum Layers implements FermatEnum {
         switch (code) {
 
             case "ACT":  return ACTOR;
-            case "AND":  return ANDROID;
             case "BSW":  return BASIC_WALLET;
             case "COM":  return COMMUNICATION;
             case "CRM":  return CRYPTO_MODULE;
@@ -63,6 +63,7 @@ public enum Layers implements FermatEnum {
             case "PMS":  return PLATFORM_SERVICE;
             case "REQ":  return REQUEST;
             case "SAM":  return SUB_APP_MODULE;
+            case "SYS":  return SYSTEM;
             case "TRA":  return TRANSACTION;
             case "USR":  return USER;
             case "WAM":  return WALLET_MODULE;
