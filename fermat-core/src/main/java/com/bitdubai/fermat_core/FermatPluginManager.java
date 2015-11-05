@@ -56,7 +56,7 @@ public final class FermatPluginManager {
 
                 final AddonVersionReference platformFileSystemReference = new AddonVersionReference(
                         Platforms.OPERATIVE_SYSTEM_API,
-                        Layers.ANDROID,
+                        Layers.SYSTEM,
                         Addons.PLATFORM_FILE_SYSTEM,
                         Developers.BITDUBAI,
                         new Version()

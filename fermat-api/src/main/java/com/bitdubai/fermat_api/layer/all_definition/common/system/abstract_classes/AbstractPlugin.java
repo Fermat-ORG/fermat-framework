@@ -171,7 +171,6 @@ public abstract class AbstractPlugin implements Plugin, Service {
                         NeededAddonReference addonReference = (NeededAddonReference) a;
 
                         AddonVersionReference avr = new AddonVersionReference(
-                                addonReference.operativeSystem(),
                                 addonReference.platform(),
                                 addonReference.layer(),
                                 addonReference.addon(),
@@ -186,7 +185,6 @@ public abstract class AbstractPlugin implements Plugin, Service {
                         NeededPluginReference pluginReference = (NeededPluginReference) a;
 
                         PluginVersionReference pvr = new PluginVersionReference(
-                                pluginReference.operativeSystem(),
                                 pluginReference.platform(),
                                 pluginReference.layer(),
                                 pluginReference.plugin(),

@@ -26,6 +26,7 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_purchas
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerPurchaseNegotiationDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseNegotiationDaoException;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseNegotiationDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
@@ -92,9 +93,9 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot implements CustomerBrok
     public void start() throws CantStartPluginException {
         this.serviceStatus = ServiceStatus.STARTED;
         try {
-            this.customerBrokerPurchaseNegotiationDao = new CustomerBrokerPurchaseNegotiationDao(pluginDatabaseSystem);
-            this.customerBrokerPurchaseNegotiationDao.initialize(pluginId);
-        } catch (CantInitializeCustomerBrokerPurchaseNegotiationDaoException cantInitializeExtraUserRegistryException) {
+            this.customerBrokerPurchaseNegotiationDao = new CustomerBrokerPurchaseNegotiationDao(pluginDatabaseSystem, pluginId);
+            this.customerBrokerPurchaseNegotiationDao.initializeDatabase();
+        } catch (CantInitializeCustomerBrokerPurchaseNegotiationDatabaseException cantInitializeExtraUserRegistryException) {
             //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DESIGNER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeExtraUserRegistryException);
             // throw new CantStartPluginException(cantInitializeExtraUserRegistryException, Plugins.BITDUBAI_ACTOR_DEVELOPER);
         }
