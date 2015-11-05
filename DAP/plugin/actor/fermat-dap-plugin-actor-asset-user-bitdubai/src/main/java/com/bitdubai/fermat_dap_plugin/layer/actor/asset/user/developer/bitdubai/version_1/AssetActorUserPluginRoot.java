@@ -683,10 +683,10 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        FermatEventListener cryptoAddressReceivedEventListener = eventManager.getNewListener(com.bitdubai.fermat_ccp_api.all_definition.enums.EventType.CRYPTO_ADDRESS_REQUESTED);
+        /*FermatEventListener cryptoAddressReceivedEventListener = eventManager.getNewListener(com.bitdubai.fermat_ccp_api.all_definition.enums.EventType.CRYPTO_ADDRESS_REQUESTED);
         cryptoAddressReceivedEventListener.setEventHandler(new CryptoAddressRequestedEventHandler(this));
         eventManager.addListener(cryptoAddressReceivedEventListener);
-        listenersAdded.add(cryptoAddressReceivedEventListener);
+        listenersAdded.add(cryptoAddressReceivedEventListener);*/
     }
 
     private void testRaiseEvent() {
