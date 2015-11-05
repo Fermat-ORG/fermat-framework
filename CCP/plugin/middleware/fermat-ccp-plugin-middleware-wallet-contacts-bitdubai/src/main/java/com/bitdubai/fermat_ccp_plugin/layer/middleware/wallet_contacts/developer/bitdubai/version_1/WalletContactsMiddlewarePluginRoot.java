@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -36,10 +35,9 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interf
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.DealsWithCryptoAddressesNetworkService;
 
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.database.WalletContactsMiddlewareDeveloperDatabaseFactory;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.event_handlers.CryptoAddressDeniedEventHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.event_handlers.CryptoAddressReceivedEventHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressDeniedEventException;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressReceivedEventException;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.event_handlers.CryptoAddressesNewsEventHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressDeniedActionException;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressReceivedActionException;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantInitializeWalletContactsMiddlewareDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -52,7 +50,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -153,22 +150,17 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
         // execute pending address exchange requests
         executePendingAddressExchangeRequests(walletContactsRegistry);
 
-        FermatEventListener cryptoAddressReceivedEventListener = eventManager.getNewListener(EventType.CRYPTO_ADDRESS_RECEIVED);
-        cryptoAddressReceivedEventListener.setEventHandler(new CryptoAddressReceivedEventHandler(walletContactsRegistry, this));
-        eventManager.addListener(cryptoAddressReceivedEventListener);
-        listenersAdded.add(cryptoAddressReceivedEventListener);
-
-        FermatEventListener cryptoAddressDeniedEventListener = eventManager.getNewListener(EventType.CRYPTO_ADDRESS_DENIED);
-        cryptoAddressDeniedEventListener.setEventHandler(new CryptoAddressDeniedEventHandler(walletContactsRegistry, this));
-        eventManager.addListener(cryptoAddressDeniedEventListener);
-        listenersAdded.add(cryptoAddressDeniedEventListener);
+        FermatEventListener cryptoAddressNewsEventListener = eventManager.getNewListener(EventType.CRYPTO_ADDRESSES_NEWS);
+        cryptoAddressNewsEventListener.setEventHandler(new CryptoAddressesNewsEventHandler(walletContactsRegistry, this));
+        eventManager.addListener(cryptoAddressNewsEventListener);
+        listenersAdded.add(cryptoAddressNewsEventListener);
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
     private void executePendingAddressExchangeRequests(WalletContactsMiddlewareRegistry walletContactsRegistry) {
         try {
-            List<CryptoAddressRequest> list = cryptoAddressesManager.listPendingCryptoAddressRequests();
+            List<CryptoAddressRequest> list = cryptoAddressesManager.listAllPendingRequests();
 
             System.out.println("----------------------------\n" +
                     "WALLET CONTACT MIDDLEWARE  : executePendingAddressExchangeRequests " +  list.size()
@@ -185,8 +177,8 @@ public class WalletContactsMiddlewarePluginRoot extends AbstractPlugin
             }
 
         } catch(CantListPendingCryptoAddressRequestsException |
-                CantHandleCryptoAddressDeniedEventException   |
-                CantHandleCryptoAddressReceivedEventException e) {
+                CantHandleCryptoAddressDeniedActionException |
+                CantHandleCryptoAddressReceivedActionException e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }

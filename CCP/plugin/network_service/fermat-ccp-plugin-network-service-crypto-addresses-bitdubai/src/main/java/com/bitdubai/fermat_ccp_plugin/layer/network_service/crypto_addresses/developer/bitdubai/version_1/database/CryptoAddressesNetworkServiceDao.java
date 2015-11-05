@@ -144,14 +144,10 @@ public class CryptoAddressesNetworkServiceDao {
      * we'll return to the actor all the pending requests pending a local action.
      * State : PENDING_ACTION.
      *
-     * @param actorType  type of actor asking for pending requests
-     *
      * @throws CantListPendingCryptoAddressRequestsException      if something goes wrong.
      */
-    public List<CryptoAddressRequest> listPendingRequestsByActorType(Actors actorType) throws CantListPendingCryptoAddressRequestsException {
+    public List<CryptoAddressRequest> listAllPendingRequests() throws CantListPendingCryptoAddressRequestsException {
 
-        if (actorType == null)
-            throw new CantListPendingCryptoAddressRequestsException(null, "", "actorType, can not be null");
 
         try {
 
@@ -159,7 +155,6 @@ public class CryptoAddressesNetworkServiceDao {
 
             DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
-            addressExchangeRequestTable.setStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_TYPE_RESPONDING_COLUMN_NAME, actorType    .getCode(), DatabaseFilterType.EQUAL);
             addressExchangeRequestTable.setStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_STATE_COLUMN_NAME                   , protocolState.getCode(), DatabaseFilterType.EQUAL);
 
             addressExchangeRequestTable.loadToMemory();
