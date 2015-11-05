@@ -1,4 +1,4 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragmentFactory;
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 

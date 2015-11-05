@@ -1,4 +1,4 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView;
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.custom_view;
 
 import android.app.Activity;
 import android.content.Context;
