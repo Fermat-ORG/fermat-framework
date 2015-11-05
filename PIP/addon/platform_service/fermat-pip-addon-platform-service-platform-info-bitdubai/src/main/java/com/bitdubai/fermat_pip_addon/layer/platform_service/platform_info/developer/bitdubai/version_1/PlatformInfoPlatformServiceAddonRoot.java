@@ -1,18 +1,12 @@
 package com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetFeatureForDevelopersException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FeatureForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.platform_info.developer.bitdubai.version_1.structure.PlatformInfoPlatformService;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
@@ -21,9 +15,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions.CantSetPlatformInformationException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by natalia on 29/07/15.
@@ -37,14 +28,17 @@ public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implemen
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLATFORM_FILE_SYSTEM)
     private PlatformFileSystem platformFileSystem;
 
+    /**
+     * PlatformInfoManager interface variables.
+     */
+
     private PlatformInfoPlatformService platformInfoPlatformService;
 
+    /**
+     * Constructor without parameters.
+     */
     public PlatformInfoPlatformServiceAddonRoot() {
         super(new AddonVersionReference(new Version()));
-    }
-
-    public void start() throws CantStartPluginException {
-        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
@@ -99,15 +93,5 @@ public class PlatformInfoPlatformServiceAddonRoot extends AbstractAddon implemen
 
     private void reportUnexpectedError(Exception e) {
         errorManager.reportUnexpectedAddonsException(Addons.PLATFORM_INFO, UnexpectedAddonsExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS, e);
-    }
-
-    @Override
-    public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
-        return null;
     }
 }
