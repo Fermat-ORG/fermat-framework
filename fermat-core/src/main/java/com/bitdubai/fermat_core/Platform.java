@@ -730,7 +730,7 @@ public class Platform implements Serializable {
             boolean CCP = true;
             boolean CRY = true;
             boolean CSH = true;
-            boolean DAP = false; /* DAP no da errores al iniciar, si la desactivas enviar mensaje a Rodrigo por favor*/
+            boolean DAP = true; /* DAP no da errores al iniciar, si la desactivas enviar mensaje a Rodrigo por favor*/
             boolean DMP = true;//DOBLEMENTE TEMPORAL
             boolean MKT = true;
             boolean OSA = true;
@@ -1286,6 +1286,13 @@ public class Platform implements Serializable {
             */
                 Plugin assetReceptionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetReceptionPlugin();
                 injectPluginReferencesAndStart(assetReceptionTransaction, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION);
+
+           /*
+            * Plugin Redeem Point Redemption Transaction.
+            * -----------------------------
+            */
+                Plugin redeemPointRedemptionTransaction = ((DAPTransactionLayer) corePlatformContext.getPlatformLayer(PlatformLayers.BITDUBAI_DAP_TRANSACTION_LAYER)).getAssetRedeemPointRedemptionPlugin();
+                injectPluginReferencesAndStart(redeemPointRedemptionTransaction, Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION);
 
            /*
             * Plugin Asset Issuer Identity Layer

@@ -74,7 +74,7 @@ public class DigitalAssetMetaDataTransactionDao {
      * @return DatabaseTable
      */
     DatabaseTable getDatabaseTable() {
-        return getDataBase().getTable(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
+        return getDataBase().getTable(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TABLE_NAME);
     }
 
     /**
