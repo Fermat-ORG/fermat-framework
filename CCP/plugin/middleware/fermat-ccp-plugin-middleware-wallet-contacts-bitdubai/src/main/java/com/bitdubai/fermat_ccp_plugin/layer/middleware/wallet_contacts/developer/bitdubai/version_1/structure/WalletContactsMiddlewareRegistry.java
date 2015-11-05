@@ -17,15 +17,18 @@ import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.W
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestAction;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantConfirmAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantGetPendingAddressExchangeRequestException;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.database.WalletContactsMiddlewareDao;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressDeniedEventException;
-import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressReceivedEventException;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressDeniedActionException;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressReceivedActionException;
+import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressesNewsEventException;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantInitializeWalletContactsMiddlewareDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -330,7 +333,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
         try {
             // get contact id if exists
             WalletContactRecord walletContactRecord = walletContactsMiddlewareDao.findWalletContactByActorAndWalletPublicKey(
-                    actorPublicKey ,
+                    actorPublicKey,
                     walletPublicKey
             );
             // add crypto address
@@ -353,40 +356,34 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
         }
     }
 
-    public void handleCryptoAddressReceivedEvent(final UUID requestId) throws CantHandleCryptoAddressReceivedEventException {
+    public void handleCryptoAddressesNewsEvent() throws CantHandleCryptoAddressesNewsEventException {
 
         try {
+            final List<CryptoAddressRequest> list = cryptoAddressesManager.listAllPendingRequests();
 
             System.out.println("----------------------------\n" +
-                    "LLEGO ADDRESS PARA EL REQUEST :" + requestId
+                    "WALLET CONTACT MIDDLEWARE  : handleCryptoAddressesNewsEvent " + list.size()
                     + "\n-------------------------------------------------");
 
+            for (final CryptoAddressRequest request : list) {
 
-            CryptoAddressRequest request = cryptoAddressesManager.getPendingRequest(requestId);
-            handleCryptoAddressReceivedEvent(request);
-        } catch (CantGetPendingAddressExchangeRequestException | PendingRequestNotFoundException e) {
+                if (request.getAction().equals(RequestAction.ACCEPT))
+                    this.handleCryptoAddressReceivedEvent(request);
 
-            throw new CantHandleCryptoAddressReceivedEventException(e, "RequestId: "+requestId);
+                if (request.getAction().equals(RequestAction.DENY))
+                    this.handleCryptoAddressDeniedEvent(request);
+
+            }
+
+        } catch(CantListPendingCryptoAddressRequestsException |
+                CantHandleCryptoAddressDeniedActionException |
+                CantHandleCryptoAddressReceivedActionException e) {
+
+            throw new CantHandleCryptoAddressesNewsEventException(e, "", "Error handling Crypto Addresses News Event.");
         }
     }
 
-    public void handleCryptoAddressDeniedEvent(final UUID requestId) throws CantHandleCryptoAddressDeniedEventException {
-
-        try {
-            System.out.println("----------------------------\n" +
-                    " ADDRESS DENIED PARA EL REQUEST :" + requestId
-                    + "\n-------------------------------------------------");
-
-
-            CryptoAddressRequest request = cryptoAddressesManager.getPendingRequest(requestId);
-            handleCryptoAddressDeniedEvent(request);
-        } catch (CantGetPendingAddressExchangeRequestException | PendingRequestNotFoundException e) {
-
-            throw new CantHandleCryptoAddressDeniedEventException(e, "RequestId: "+requestId);
-        }
-    }
-
-    public void handleCryptoAddressReceivedEvent(final CryptoAddressRequest request) throws CantHandleCryptoAddressReceivedEventException {
+    public void handleCryptoAddressReceivedEvent(final CryptoAddressRequest request) throws CantHandleCryptoAddressReceivedActionException {
 
         try {
             try {
@@ -420,24 +417,24 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                 cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());
             } catch (CantAddCryptoAddressException e) {
 
-                throw new CantHandleCryptoAddressReceivedEventException(e, "Can't add the crypto address to the existent wallet contact.");
+                throw new CantHandleCryptoAddressReceivedActionException(e, "Can't add the crypto address to the existent wallet contact.");
             } catch (CantGetWalletContactException e) {
 
-                throw new CantHandleCryptoAddressReceivedEventException(e, "Can't get wallet contact.");
+                throw new CantHandleCryptoAddressReceivedActionException(e, "Can't get wallet contact.");
             }
         } catch (PendingRequestNotFoundException e) {
             // TODO what to do here?
-            throw new CantHandleCryptoAddressReceivedEventException(e, "Can't find the pending request when confirming.");
+            throw new CantHandleCryptoAddressReceivedActionException(e, "Can't find the pending request when confirming.");
         } catch (CantConfirmAddressExchangeRequestException e) {
 
-            throw new CantHandleCryptoAddressReceivedEventException(e, "Can't confirm address exchange request.");
+            throw new CantHandleCryptoAddressReceivedActionException(e, "Can't confirm address exchange request.");
         } catch (CantUpdateWalletContactException e) {
 
-            throw new CantHandleCryptoAddressReceivedEventException(e, "Can't update wallet contact.");
+            throw new CantHandleCryptoAddressReceivedActionException(e, "Can't update wallet contact.");
         }
     }
 
-    public void handleCryptoAddressDeniedEvent(final CryptoAddressRequest request) throws CantHandleCryptoAddressDeniedEventException {
+    public void handleCryptoAddressDeniedEvent(final CryptoAddressRequest request) throws CantHandleCryptoAddressDeniedActionException {
 
         try {
             try {
@@ -467,20 +464,20 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                 cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());
             } catch (CantAddCryptoAddressException e) {
 
-                throw new CantHandleCryptoAddressDeniedEventException(e, "Can't add the crypto address to the existent wallet contact.");
+                throw new CantHandleCryptoAddressDeniedActionException(e, "Can't add the crypto address to the existent wallet contact.");
             } catch (CantGetWalletContactException e) {
 
-                throw new CantHandleCryptoAddressDeniedEventException(e, "Can't get wallet contact.");
+                throw new CantHandleCryptoAddressDeniedActionException(e, "Can't get wallet contact.");
             }
         } catch (PendingRequestNotFoundException e) {
             // TODO what to do here?
-            throw new CantHandleCryptoAddressDeniedEventException(e, "Can't find the pending request when confirming.");
+            throw new CantHandleCryptoAddressDeniedActionException(e, "Can't find the pending request when confirming.");
         } catch (CantConfirmAddressExchangeRequestException e) {
 
-            throw new CantHandleCryptoAddressDeniedEventException(e, "Can't confirm address exchange request.");
+            throw new CantHandleCryptoAddressDeniedActionException(e, "Can't confirm address exchange request.");
         } catch (CantUpdateWalletContactException e) {
 
-            throw new CantHandleCryptoAddressDeniedEventException(e, "Can't update wallet contact.");
+            throw new CantHandleCryptoAddressDeniedActionException(e, "Can't update wallet contact.");
         }
     }
 }

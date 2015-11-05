@@ -17,7 +17,8 @@ import java.util.UUID;
 /**
  * Created by Nerio on 17/09/15.
  */
-public class RedeemPointIdentityDatabaseFactory implements DealsWithErrors, DealsWithPluginDatabaseSystem {
+public class AssetRedeemPointIdentityDatabaseFactory implements DealsWithErrors, DealsWithPluginDatabaseSystem {
+
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -28,10 +29,9 @@ public class RedeemPointIdentityDatabaseFactory implements DealsWithErrors, Deal
      */
     private ErrorManager errorManager;
 
-    public RedeemPointIdentityDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
+    public AssetRedeemPointIdentityDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
-
 
     /**
      * <p>Method that create a new database and her tables.
@@ -45,7 +45,7 @@ public class RedeemPointIdentityDatabaseFactory implements DealsWithErrors, Deal
          * I will create the database where I am going to store the information of this User.
          */
         try {
-            database = this.pluginDatabaseSystem.createDatabase(pluginId, RedeemPointIdentityDatabaseConstants.REDEEM_POINT_IDENTITY_DB_NAME);
+            database = this.pluginDatabaseSystem.createDatabase(pluginId, AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_DB_NAME);
             /**
              * Next, I will add the needed tables.
              */
@@ -55,15 +55,13 @@ public class RedeemPointIdentityDatabaseFactory implements DealsWithErrors, Deal
              */
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
-            table = databaseFactory.newTableFactory(RedeemPointIdentityDatabaseConstants.REDEEM_POINT_IDENTITY_TABLE_NAME);
+            table = databaseFactory.newTableFactory(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_TABLE_NAME);
 
-            table.addColumn(RedeemPointIdentityDatabaseConstants.REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, true);
-            table.addColumn(RedeemPointIdentityDatabaseConstants.REDEEM_POINT_IDENTITY_PRIVATE_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, false);
-            table.addColumn(RedeemPointIdentityDatabaseConstants.REDEEM_POINT_IDENTITY_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
-            table.addColumn(RedeemPointIdentityDatabaseConstants.REDEEM_POINT_IDENTITY_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 130, false);
-            table.addColumn(RedeemPointIdentityDatabaseConstants.REDEEM_POINT_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 130, false);
+            table.addColumn(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, true);
+            table.addColumn(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
+            table.addColumn(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
 
-            table.addIndex(RedeemPointIdentityDatabaseConstants.REDEEM_POINT_IDENTITY_FIRST_KEY_COLUMN);
+            table.addIndex(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_FIRST_KEY_COLUMN);
 
             databaseFactory.createTable(table);
 
@@ -73,7 +71,7 @@ public class RedeemPointIdentityDatabaseFactory implements DealsWithErrors, Deal
              */
             String message = CantCreateDatabaseException.DEFAULT_MESSAGE;
             FermatException cause = cantCreateDatabaseException.getCause();
-            String context = "Asset Issuer Identity DataBase_Factory: " + cantCreateDatabaseException.getContext();
+            String context = "Asset Redeem Point Identity DataBase_Factory: " + cantCreateDatabaseException.getContext();
             String possibleReason = "The exception is thrown the Create Database Asset Issuer Identity 'this.platformDatabaseSystem.createDatabase(\"AssetIssuerIdentity\")'" + cantCreateDatabaseException.getPossibleReason();
 
             throw new CantCreateDatabaseException(message, cause, context, possibleReason);
@@ -82,7 +80,7 @@ public class RedeemPointIdentityDatabaseFactory implements DealsWithErrors, Deal
 
             String message = CantCreateTableException.DEFAULT_MESSAGE;
             FermatException cause = cantCreateTableException.getCause();
-            String context = "Create Table Asset Issuer Identity" + cantCreateTableException.getContext();
+            String context = "Create Table Asset Redeem Point Identity" + cantCreateTableException.getContext();
             String possibleReason = "The exception is generated when creating the table Asset Issuer Identity - DatabaseFactory.createTable(table) " + cantCreateTableException.getPossibleReason();
 
             throw new CantCreateDatabaseException(message, cause, context, possibleReason);

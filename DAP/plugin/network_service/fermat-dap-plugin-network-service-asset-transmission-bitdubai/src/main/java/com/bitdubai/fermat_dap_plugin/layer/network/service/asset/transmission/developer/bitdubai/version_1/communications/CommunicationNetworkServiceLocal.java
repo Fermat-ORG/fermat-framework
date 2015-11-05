@@ -100,7 +100,7 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
         try {
 
             FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(senderIdentityPublicKey,  //Sender NetworkService
-                    remoteNetworkServiceProfile.getIdentityPublicKey(),   //Receiver
+                    pk,   //Receiver
                     messageContent,                //Message Content
                     FermatMessageContentType.TEXT);//Type
             /*

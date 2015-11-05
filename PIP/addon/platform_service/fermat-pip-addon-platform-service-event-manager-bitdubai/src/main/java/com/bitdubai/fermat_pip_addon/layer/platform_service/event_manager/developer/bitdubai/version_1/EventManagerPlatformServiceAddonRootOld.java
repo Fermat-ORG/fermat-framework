@@ -11,10 +11,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by ciencias on 23.01.15.
@@ -35,7 +33,7 @@ public class EventManagerPlatformServiceAddonRootOld implements Addon, EventMana
     /**
      * EventManager Interface member variables.
      */
-    private Map<String, List<FermatEventListener>> listenersMap = new HashMap<>();
+    private final ConcurrentHashMap<String, CopyOnWriteArrayList<FermatEventListener>> listenersMap = new ConcurrentHashMap<>();
 
     /**
      * EventManager Interface implementation.
@@ -55,10 +53,10 @@ public class EventManagerPlatformServiceAddonRootOld implements Addon, EventMana
 
         String eventKey = buildMapKey(listener.getEventType());
 
-        List<FermatEventListener> listenersList = listenersMap.get(eventKey);
+        CopyOnWriteArrayList<FermatEventListener> listenersList = listenersMap.get(eventKey);
 
         if (listenersList == null)
-            listenersList = new ArrayList<>();
+            listenersList = new CopyOnWriteArrayList<>();
 
         listenersList.add(listener);
 
@@ -70,7 +68,7 @@ public class EventManagerPlatformServiceAddonRootOld implements Addon, EventMana
 
         String eventKey = buildMapKey(listener.getEventType());
 
-        List<FermatEventListener> listenersList = listenersMap.get(eventKey);
+        CopyOnWriteArrayList<FermatEventListener> listenersList = listenersMap.get(eventKey);
 
         listenersList.remove(listener);
 
@@ -85,10 +83,10 @@ public class EventManagerPlatformServiceAddonRootOld implements Addon, EventMana
 
         String eventKey = buildMapKey(fermatEvent.getEventType());
 
-        List<FermatEventListener> listenersList = listenersMap.get(eventKey);
+        final CopyOnWriteArrayList<FermatEventListener> listenersList = listenersMap.get(eventKey);
 
         if (listenersList != null) {
-            for (FermatEventListener fermatEventListener : listenersList) {
+            for (final FermatEventListener fermatEventListener : listenersList) {
                 fermatEventListener.raiseEvent(fermatEvent);
             }
         }

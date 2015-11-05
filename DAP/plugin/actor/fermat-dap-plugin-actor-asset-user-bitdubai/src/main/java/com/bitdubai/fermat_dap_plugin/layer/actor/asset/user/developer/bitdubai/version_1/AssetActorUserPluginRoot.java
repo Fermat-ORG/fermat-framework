@@ -402,39 +402,26 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         return new ArrayList<>();
     }
 
-    /**
-     * The method <code>getActorByPublicKey</code> shows the information associated with the actorPublicKey
-     *
-     * @param actorPublicKey the public key of the Asset Actor User
-     * @return THe information associated with the actorPublicKey.
-     * @throws CantGetAssetUserActorsException
-     * @throws CantAssetUserActorNotFoundException
-     */
     @Override
-    public List<ActorAssetUser> getActorByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
-        List<ActorAssetUser> list = new ArrayList<ActorAssetUser>(); // Asset User Actor list.
+    public ActorAssetUser getActorByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException,
+                                                                            CantAssetUserActorNotFoundException {
 
         try {
-//            return this.assetUserActorDao.getAssetUserActor(actorPublicKey);
-
-//            not found actor
-//             if(actor == null)
-//             throw new CantAssetUserActorNotFoundException("", null, ".","Intra User not found");
-
-//             return new IntraUserActorRecord(actorPublicKey, "",actor.getName(),actor.getProfileImage());
-
-//            list.add(new AssetUserActorRecord("Thunders Asset Wallet User", UUID.randomUUID().toString(), new byte[0], 987654321, ConnectionState.CONNECTED));
-
-//             } catch (CantGetAssetUserActorsException  e) {
-//              throw new CantGetAssetUserActorsException("", e, ".","Cant Get Intra USer from Data Base");
-        } catch (Exception e) {
-            throw new CantGetAssetUserActorsException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
+            return this.assetUserActorDao.getActorByPublicKey(actorPublicKey);
+        } catch (CantGetAssetUserActorsException e) {
+            throw new CantGetAssetUserActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset User from Data Base", null);
         }
-        return list;
+
     }
 
     @Override
-    public ActorAssetUser getActorAssetUser() throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
+    public void createActorAssetUserFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage) throws CantCreateAssetUserActorException {
+
+    }
+
+    @Override
+    public ActorAssetUser getActorAssetUser() throws CantGetAssetUserActorsException,
+                                                        CantAssetUserActorNotFoundException {
 
         ActorAssetUser actorAssetUser;
         try {
@@ -442,11 +429,12 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         } catch (Exception e) {
             throw new CantGetAssetUserActorsException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
         }
+
         return actorAssetUser;
     }
 
     @Override
-    public List<ActorAssetUser> getAllAssetUserActorInTableRegistered() throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
+    public List<ActorAssetUser> getAllAssetUserActorInTableRegistered() throws CantGetAssetUserActorsException {
         List<ActorAssetUser> list; // Asset User Actor list.
         try {
             list = this.assetUserActorDao.getAllAssetUserActorRegistered();
@@ -474,14 +462,6 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         }
         return list;
     }
-
-    /*
-     * Metodo para ser usado por el Actor Network Service para Instanciar los ActorAssetUser
-     */
-//    @Override
-//    public ActorAssetUser createActorAssetUserFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage, Double locationLatitude, Double locationLongitude) throws CantCreateAssetUserActorException {
-//        return new AssetUserActorRecord(assetUserActorPublicKey, assetUserActorName, assetUserActorprofileImage, locationLatitude, locationLongitude);
-//    }
 
     @Override
     public void registerActorInActorNetowrkSerice() {
@@ -683,10 +663,10 @@ public class AssetActorUserPluginRoot implements ActorAssetUserManager, ActorNet
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        FermatEventListener cryptoAddressReceivedEventListener = eventManager.getNewListener(com.bitdubai.fermat_ccp_api.all_definition.enums.EventType.CRYPTO_ADDRESS_REQUESTED);
+        /*FermatEventListener cryptoAddressReceivedEventListener = eventManager.getNewListener(com.bitdubai.fermat_ccp_api.all_definition.enums.EventType.CRYPTO_ADDRESS_REQUESTED);
         cryptoAddressReceivedEventListener.setEventHandler(new CryptoAddressRequestedEventHandler(this));
         eventManager.addListener(cryptoAddressReceivedEventListener);
-        listenersAdded.add(cryptoAddressReceivedEventListener);
+        listenersAdded.add(cryptoAddressReceivedEventListener);*/
     }
 
     private void testRaiseEvent() {

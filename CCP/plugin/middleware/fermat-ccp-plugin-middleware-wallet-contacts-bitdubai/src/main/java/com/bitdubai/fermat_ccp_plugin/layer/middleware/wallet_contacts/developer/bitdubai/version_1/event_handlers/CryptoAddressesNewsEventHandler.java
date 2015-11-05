@@ -6,24 +6,23 @@ import com.bitdubai.fermat_api.layer.all_definition.events.exceptions.Unexpected
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressDeniedEvent;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressReceivedEvent;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressesNewsEvent;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.WalletContactsMiddlewarePluginNotStartedException;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareRegistry;
 
 /**
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 17/10/2015.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 24/09/2015.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoAddressDeniedEventHandler implements FermatEventHandler {
+public class CryptoAddressesNewsEventHandler implements FermatEventHandler {
 
     private final WalletContactsMiddlewareRegistry   walletContactsMiddlewareRegistry;
     private final WalletContactsMiddlewarePluginRoot walletContactsMiddlewarePluginRoot;
 
-    public CryptoAddressDeniedEventHandler(final WalletContactsMiddlewareRegistry walletContactsMiddlewareRegistry,
+    public CryptoAddressesNewsEventHandler(final WalletContactsMiddlewareRegistry walletContactsMiddlewareRegistry,
                                            final WalletContactsMiddlewarePluginRoot walletContactsMiddlewarePluginRoot) {
 
         this.walletContactsMiddlewareRegistry   = walletContactsMiddlewareRegistry;
@@ -42,14 +41,12 @@ public class CryptoAddressDeniedEventHandler implements FermatEventHandler {
 
         if (this.walletContactsMiddlewarePluginRoot.getStatus() == ServiceStatus.STARTED) {
 
-            if (fermatEvent instanceof CryptoAddressDeniedEvent) {
-                CryptoAddressDeniedEvent cryptoAddressDeniedEvent = (CryptoAddressDeniedEvent) fermatEvent;
+            if (fermatEvent instanceof CryptoAddressesNewsEvent) {
 
-                if (cryptoAddressDeniedEvent.getActorType().equals(WalletContactsMiddlewarePluginRoot.actorType))
-                    walletContactsMiddlewareRegistry.handleCryptoAddressDeniedEvent(cryptoAddressDeniedEvent.getRequestId());
+                walletContactsMiddlewareRegistry.handleCryptoAddressesNewsEvent();
 
             } else {
-                EventType eventExpected = EventType.CRYPTO_ADDRESS_DENIED;
+                EventType eventExpected = EventType.CRYPTO_ADDRESSES_NEWS;
                 String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode()+"\n"+
                                  "Event expected: " + eventExpected.toString()              + " - " + eventExpected.getCode();
                 throw new UnexpectedEventException(context);
