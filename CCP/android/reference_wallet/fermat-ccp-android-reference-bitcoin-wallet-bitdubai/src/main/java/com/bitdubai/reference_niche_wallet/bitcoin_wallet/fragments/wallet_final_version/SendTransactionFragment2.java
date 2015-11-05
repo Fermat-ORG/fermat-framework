@@ -241,24 +241,26 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         ArrayList<GrouperItem> data = new ArrayList<>();
 
         try {
+            String intraUserPk = moduleManager.getActiveIdentities().get(0).getPublicKey();
 
-            List<CryptoWalletTransaction> list =moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, transactionType, referenceWalletSession.getWalletSessionType().getWalletPublicKey(), MAX_TRANSACTIONS, available_offset);
+            List<CryptoWalletTransaction> list =moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.CREDIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(),intraUserPk, MAX_TRANSACTIONS, available_offset);
 
             lstCryptoWalletTransactionsAvailable.addAll(list);
 
             available_offset = lstCryptoWalletTransactionsAvailable.size();
 
-            lstCryptoWalletTransactionsBook.addAll(moduleManager.listLastActorTransactionsByTransactionType(BalanceType.BOOK, transactionType, referenceWalletSession.getWalletSessionType().getWalletPublicKey(), MAX_TRANSACTIONS, book_offset));
+            lstCryptoWalletTransactionsBook.addAll(moduleManager.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.CREDIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(),intraUserPk, MAX_TRANSACTIONS, book_offset));
 
             book_offset = lstCryptoWalletTransactionsBook.size();
 
 
             for(CryptoWalletTransaction cryptoWalletTransaction : list){
                 List<CryptoWalletTransaction> lst = new ArrayList<>();
-                lst = moduleManager.getTransactions(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), transactionType, referenceWalletSession.getWalletSessionType().getWalletPublicKey(), MAX_TRANSACTIONS, 0);
+                lst = moduleManager.getTransactions(intraUserPk,BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT, referenceWalletSession.getWalletSessionType().getWalletPublicKey(), MAX_TRANSACTIONS, 0);
                 GrouperItem<CryptoWalletTransaction> grouperItem = new GrouperItem<CryptoWalletTransaction>(lst,false,cryptoWalletTransaction);
                 data.add(grouperItem);
             }
+
 
         } catch (CantListTransactionsException e) {
             e.printStackTrace();
