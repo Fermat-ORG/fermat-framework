@@ -64,7 +64,7 @@ public class PlatformDatabaseSystemAndroidAddonRoot extends AbstractAddon implem
             database = new AndroidDatabase(context.getFilesDir().getPath(), hasDBName);
             database.openDatabase();
             return database;
-        } catch (final CantHashDatabaseNameException e){
+        } catch (final NoSuchAlgorithmException e){
 
             throw new CantOpenDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
         } catch (final Exception e){
@@ -83,7 +83,7 @@ public class PlatformDatabaseSystemAndroidAddonRoot extends AbstractAddon implem
             database.createDatabase(hasDBName);
             return database;
         }
-        catch (final CantHashDatabaseNameException e){
+        catch (final NoSuchAlgorithmException e){
 
             throw new CantCreateDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
         } catch (Exception e){
@@ -102,7 +102,7 @@ public class PlatformDatabaseSystemAndroidAddonRoot extends AbstractAddon implem
             database = new AndroidDatabase(context.getFilesDir().getPath(), hasDBName);
             database.deleteDatabase();
 
-        } catch (final CantHashDatabaseNameException e){
+        } catch (final NoSuchAlgorithmException e){
 
             throw new CantOpenDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
         } catch (final Exception e){
@@ -110,7 +110,7 @@ public class PlatformDatabaseSystemAndroidAddonRoot extends AbstractAddon implem
             throw new CantOpenDatabaseException(e, null, "Unhandled Exception.");
         }
     }
-
+/*
     private String hashDataBaseName(final String databaseName) throws CantHashDatabaseNameException {
 
         try {
@@ -122,7 +122,9 @@ public class PlatformDatabaseSystemAndroidAddonRoot extends AbstractAddon implem
 
             String encryptedString = new String(encoded, "UTF-8");
 
-            return encryptedString.replace("/","");
+            encryptedString = encryptedString.replace("/","");
+
+            return encryptedString.replace("\n","");
 
         } catch(final UnsupportedEncodingException e){
 
@@ -131,5 +133,26 @@ public class PlatformDatabaseSystemAndroidAddonRoot extends AbstractAddon implem
 
             throw new CantHashDatabaseNameException(e, "databaseName: "+ databaseName, "No such algorithm.");
         }
+    }*/
+    private String hashDataBaseName(String databaseName) throws NoSuchAlgorithmException {
+        String encryptedString = databaseName;
+        try{
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(databaseName.getBytes(Charset.forName("UTF-8")));
+            byte[] digest = md.digest();
+            byte[] encoded = Base64.encode(digest, 1);
+
+            try {
+                encryptedString = new String(encoded, "UTF-8");
+            } catch (Exception e) {
+                throw new NoSuchAlgorithmException (e);
+            }
+
+
+        }catch(NoSuchAlgorithmException e){
+            throw e;
+        }
+        encryptedString = encryptedString.replace("+","");
+        return encryptedString.replace("/","");
     }
 }

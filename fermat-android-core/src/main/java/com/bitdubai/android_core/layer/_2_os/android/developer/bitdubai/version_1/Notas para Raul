@@ -1,7 +1,0 @@
-
-
-Esta parte esta aca , porque cuando se quizo poner como todas las otras librerias JAVA para que la plataforma las inicialice, no se podía porque dependian de Android y no podia
-quedar una libreria JAVA de puente entre dos proyectos que dependen de Android.
-
-Entonces, si logras hacer de alguna manera que se pueda, esto no deberia incializarse aca como se hace. Si no se puede, entonces se tiene que quedar aca, fijate
-como es la manera mas prolija de que quede.
