@@ -59,7 +59,6 @@ public class CompleteComponentConnectionRequestNotificationEventHandler implemen
 
 
             if (completeComponentConnectionRequestNotificationEvent.getNetworkServiceTypeApplicant() == networkService.getNetworkServiceType()){
-            if (completeComponentConnectionRequestNotificationEvent.getNetworkServiceTypeApplicant() == networkService.getNetworkServiceType()){
 
                 /*
                  *  networkService make the job
