@@ -148,6 +148,7 @@ The Framework handles a stack of layers. Starting down we have the _OS API level
 
 **External Wallet** : A third party APP running on the same device that uses Fermat as a backend for different reasons. For example to benefit from its infraestructure to interface crypto networks, transporting data through its p2p network, or storing data on the End Users _Private Device Network_. 
 
+<br>
 Several tools were designed with the purpose to enable the development of new wallets, an their distribution.
 
 **Wallet Factory** : Is a built-in functionality that enables the development of reference and niche wallets.
