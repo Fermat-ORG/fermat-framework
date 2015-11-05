@@ -62,20 +62,20 @@ For scalability reasons, we moved the responsability of finding actors within th
 
 #### To developers
 
-Plug-ins developers declare a _Micro-Use-License_ for each plug-in they add to the Framework. Wallet or Financial Apps developers declare a _Micro-Use-License_ for their components. End users install the Apps (wallets) of their choice and the license to be paid is the summary of the App's micro-use-license plus all the micro-use-licenses of the plug-ins used by that App. 
+Plug-ins developers declare a _Micro-Use-License_ for each plug-in they add to the Framework. Wallet or Financial Apps developers declare a _Micro-Use-License_ for their components. End users install the Apps (wallets) of their choice. The license to be paid is the summary of the App's _Micro-Use-License_ plus all the _Micro-Use-Licenses_ of the plug-ins used by that App. 
 
-The Framework assumes the responsibility to enforce the license agreements, charge the end user and distribute the payments to all developers involved.
+The Framework is responsibile to enforce the license agreements, charge the end user and distribute the payments to all developers involved.
 
 #### To network nodes
 
-Network clients establishes a _home node_ where they check themselves and their actors in so as to be found by other clients. They must pay a subscription fee to their _home node_ for it's services. Finding and calling other clients through other nodes is free as those nodes income is covered by network clients for which they are their _home node_.
+Network clients establishes a _Home Node_ where they check themselves and their actors in so as to be found by other network clients. They must pay a subscription fee to their _Home Node_ for it's services. Finding and calling other clients through other nodes is free for the caller. Those nodes income is covered by network clients for which they are their _Home Node_.
 
 <br>
 ### Platforms
 
-We define as a Platform to a set of interrelated functionality. Platforms may consume services from other platforms and their dependencies form a hirearchical stack. 
+We define as a _Platform_ to a set of interrelated functionality. _Platforms_ may consume services from other _platforms_ and their dependencies form a hirearchical stack. 
 
-Each Platform may introduce to the system new workflows, Add-ons, Plug-ins, identities and GUI components (Apps, wallets). This enables the system to target different use cases with different users involved in a clean way. 
+Each _Platform_ may introduce to the system new workflows, Add-ons, Plug-ins, GUI components (Apps, wallets) and Actors. This enables the system to target different use cases with different actors involved. 
 
 <br>
 ### Identities
@@ -86,19 +86,19 @@ We handle identities at different levels for multiple purposes. In all cases ide
 
 The need to handle multiple logins on the same device brings with it the first kind of identity which we call _device-user_. This identity lives only at a certain device and not even the public key is exposed to the network.
 
-Besides that, the end users can have multiple types of identities, and within each type as many instances as they want. Each type of identity corresponds to a role or actor in a use case. Usually each Platform introduces a set of indentities and all the Platform's functionality orbits around all the use cases derived on the interactions between those actors. 
+Besides that, the End Users can have multiple types of identities (we call this _Actors_), and within each type as many instances as they want. Each type of identity corresponds to a role in real life or an actor in a use case. Usually each Platform introduces a set of actors and all the Platform's functionality orbits around all the use cases derived on the interactions between those actors. 
 
-Even having a hierarchy of identities, end users have a root identity. At that level thay can set a standard set of information and overwrite it at any level down the hierarchy, narrowing or expanding that information as needed. All these identities are exposed to the Fermat Network in a way that from the outside, no one can tell they are related between each other or to a certain end user. 
+The Framework handles a hierarchy of identities. One of them is what we call the _root identity_. At root level End Users can set a standard set of information that can be overwriten at any level down the hierarchy, narrowing or expanding that information as needed. All these identities are exposed to the Fermat Network in a way that from the outside, no one can tell they are related between each other or to a certain End User. 
 
 #### Componets Identities
 
 Many components have their identities for a variety of purposes:
 
-a. Plug-ins to identify themselves to Add-ons in order to get access to identity-specific resources as Databases or areas of the File System.
+a. Plug-ins to identify themselves to Add-ons in order to get access to identity-specific resources as Databases or their own share of the File System.
 
-b. Network Services to encrypt the communications between each other.
+b. _Network Services_ to encrypt the communications between each other.
 
-c. Clients to encrypt the communication with nodes.
+c. Network Clients to encrypt the communication with nodes.
 
 d. Nodes to recognize each other even when their IP, location or other profile information changes.
 
