@@ -1,6 +1,7 @@
 Readme
 ========= 
 
+image:: 
 Welcome to Fermat's  official book ! 
 ------------------------------------
 
@@ -21,6 +22,6 @@ Welcome to Fermat !
 
 Sincerely, 
 
-Gustavo Corradi. 
-Fermat Book Team
+Gustavo Corradi. +
+Fermat Book Team +
 ( book@fermat.org ) 
