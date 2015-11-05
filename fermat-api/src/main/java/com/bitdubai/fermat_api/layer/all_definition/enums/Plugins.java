@@ -157,7 +157,6 @@ public enum Plugins implements FermatEnum {
     BITCOIN_VAULT            ("BV" ),
     BITCOIN_WALLET           ("BW" ),
     BITCOIN_WATCH_ONLY_VAULT ("BWOV" ),
-    CLOUD_CLIENT             ("CCL" ),
     CRYPTO_ADDRESSES         ("CA" ),
     CRYPTO_ADDRESS_BOOK      ("CAB" ),
     CRYPTO_PAYMENT_REQUEST   ("CPR"  ),
@@ -173,6 +172,7 @@ public enum Plugins implements FermatEnum {
     OUTGOING_INTRA_ACTOR     ("OIA" ),
     WALLET_CONTACTS          ("WC"  ),
     WALLET_MANAGER           ("WM"),
+    WS_CLOUD_CLIENT          ("WCL" ),
 
 
     // todo temporal
@@ -409,7 +409,6 @@ public enum Plugins implements FermatEnum {
             case "BV":   return BITCOIN_VAULT           ;
             case "BW":   return BITCOIN_WALLET          ;
             case "BWOV": return BITCOIN_WATCH_ONLY_VAULT;
-            case "CCL":  return CLOUD_CLIENT            ;
             case "CA":   return CRYPTO_ADDRESSES        ;
             case "CAB":  return CRYPTO_ADDRESS_BOOK     ;
             case "CPR":  return CRYPTO_PAYMENT_REQUEST  ;
@@ -424,6 +423,7 @@ public enum Plugins implements FermatEnum {
             case "OIA":  return OUTGOING_INTRA_ACTOR    ;
             case "WC":   return WALLET_CONTACTS         ;
             case "WM":   return WALLET_MANAGER          ;
+            case "WCL":  return WS_CLOUD_CLIENT         ;
 
 
             // temporal

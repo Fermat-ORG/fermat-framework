@@ -259,8 +259,8 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
                 databaseSystemOs = new AndroidOsDataBaseSystem(context.getFilesDir().getPath());
                 platform.setDataBaseSystemOs(databaseSystemOs);
 
-           locationSystemOs = new AndroidOsLocationSystem(context);
-                    platform.setLocationSystemOs(locationSystemOs);
+                locationSystemOs = new AndroidOsLocationSystem(context);
+                platform.setLocationSystemOs(locationSystemOs);
 
 
                 loggerSystemOs = new LoggerAddonRoot(new AddonVersionReference(new Version()));
@@ -274,6 +274,23 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
 
                 //execute start platform
                 try {
+
+                  /*  AbstractPlatform osaPlatform = new OSAPlatform();
+                    FermatSystem fermatSystem = new FermatSystem(getApplicationContext(), osaPlatform);
+
+                    fermatSystem.start();
+
+                    fermatSystem.startAndGetPluginVersion(
+                            new PluginVersionReference(
+                                    Platforms.CRYPTO_CURRENCY_PLATFORM,
+                                    Layers.WALLET_MODULE,
+                                    Plugins.CRYPTO_WALLET,
+                                    Developers.BITDUBAI,
+                                    new Version()
+                            )
+                    );
+
+                    platform.setFermatSystem(fermatSystem);*/
 
                     platform.start();
 
@@ -303,8 +320,8 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
 
             } catch(Exception e) {
                 ((ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER)).reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-            }*/
-
+            }
+*/
             // todo testing
                 /**
                  * get platform object
