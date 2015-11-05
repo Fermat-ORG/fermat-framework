@@ -39,7 +39,7 @@ import java.util.UUID;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 01/10/2015.
  */
-public class CryptoPaymentRequestNetworkServiceDao {
+public final class CryptoPaymentRequestNetworkServiceDao {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID                 pluginId            ;
@@ -53,7 +53,7 @@ public class CryptoPaymentRequestNetworkServiceDao {
         this.pluginId             = pluginId            ;
     }
 
-    public void initialize() throws CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException {
+    public final void initialize() throws CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException {
         try {
 
             database = this.pluginDatabaseSystem.openDatabase(
@@ -71,36 +71,36 @@ public class CryptoPaymentRequestNetworkServiceDao {
                         pluginId.toString()
                 );
 
-            } catch (CantCreateDatabaseException f) {
+            } catch (final CantCreateDatabaseException f) {
 
-                throw new CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
-            } catch (Exception z) {
+                throw new CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException(f, "", "There is a problem and i cannot create the database.");
+            } catch (final Exception z) {
 
                 throw new CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException(z, "", "Unhandled Exception.");
             }
 
-        } catch (CantOpenDatabaseException e) {
+        } catch (final CantOpenDatabaseException e) {
 
-            throw new CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
-        } catch (Exception e) {
+            throw new CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException(e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
+        } catch (final Exception e) {
 
             throw new CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException(e, "", "Unhandled Exception.");
         }
     }
 
-    public void createCryptoPaymentRequest(UUID                        requestId        ,
-                                           String                      identityPublicKey,
-                                           Actors                      identityType     ,
-                                           String                      actorPublicKey   ,
-                                           Actors                      actorType        ,
-                                           CryptoAddress               cryptoAddress    ,
-                                           String                      description      ,
-                                           long                        amount           ,
-                                           long                        startTimeStamp   ,
-                                           RequestType type             ,
-                                           RequestAction               action           ,
-                                           RequestProtocolState        protocolState    ,
-                                           BlockchainNetworkType       networkType      ) throws CantCreateCryptoPaymentRequestException {
+    public final void createCryptoPaymentRequest(final UUID                        requestId        ,
+                                                 final String                      identityPublicKey,
+                                                 final Actors                      identityType     ,
+                                                 final String                      actorPublicKey   ,
+                                                 final Actors                      actorType        ,
+                                                 final CryptoAddress               cryptoAddress    ,
+                                                 final String                      description      ,
+                                                 final long                        amount           ,
+                                                 final long                        startTimeStamp   ,
+                                                 final RequestType                 type             ,
+                                                 final RequestAction               action           ,
+                                                 final RequestProtocolState        protocolState    ,
+                                                 final BlockchainNetworkType       networkType      ) throws CantCreateCryptoPaymentRequestException {
 
         try {
             DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
@@ -131,65 +131,26 @@ public class CryptoPaymentRequestNetworkServiceDao {
         }
     }
 
-    public void createCryptoPaymentInformation(UUID                 requestId    ,
-                                               RequestType direction    ,
-                                               RequestAction        action       ,
-                                               RequestProtocolState protocolState) throws CantCreateCryptoPaymentRequestException {
+    public boolean isPendingRequestByProtocolState(final RequestProtocolState protocolState) throws CantListRequestsException {
 
-        try {
-            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
-
-            DatabaseTableRecord entityRecord = cryptoPaymentRequestTable.getEmptyRecord();
-
-            entityRecord.setUUIDValue  (CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME    , requestId              );
-            entityRecord.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_DIRECTION_COLUMN_NAME     , direction.    getCode());
-            entityRecord.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode());
-            entityRecord.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_ACTION_COLUMN_NAME        , action       .getCode());
-
-            cryptoPaymentRequestTable.insertRecord(entityRecord);
-
-        } catch (CantInsertRecordException e) {
-
-            throw new CantCreateCryptoPaymentRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
-        }
-    }
-
-    public void updateCryptoPaymentInformation(final UUID                 requestId    ,
-                                               final RequestType          type         ,
-                                               final RequestAction        action       ,
-                                               final RequestProtocolState protocolState) throws CantCreateCryptoPaymentRequestException,
-                                                                                          RequestNotFoundException               {
+        if (protocolState == null)
+            throw new CantListRequestsException(null, "", "protocolState, can not be null");
 
         try {
 
-            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
+            DatabaseTable table = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
-            cryptoPaymentRequestTable.setUUIDFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+            table.setStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
 
-            cryptoPaymentRequestTable.loadToMemory();
+            table.setFilterTop("1");
 
-            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+            table.loadToMemory();
 
+            return (!table.getRecords().isEmpty());
 
-            if (!records.isEmpty()) {
+        } catch (CantLoadTableToMemoryException exception) {
 
-                DatabaseTableRecord entityRecord = records.get(0);
-
-                entityRecord.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_DIRECTION_COLUMN_NAME     , type         .getCode());
-                entityRecord.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode());
-                entityRecord.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_ACTION_COLUMN_NAME        , action       .getCode());
-
-                cryptoPaymentRequestTable.updateRecord(entityRecord);
-
-            } else
-                throw new RequestNotFoundException(null, "RequestID: "+requestId, "Can not find an crypto payment request with the given request id.");
-
-        } catch (CantUpdateRecordException e) {
-
-            throw new CantCreateCryptoPaymentRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
-        } catch (CantLoadTableToMemoryException e) {
-
-            throw new CantCreateCryptoPaymentRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+            throw new CantListRequestsException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
     }
 
@@ -310,7 +271,7 @@ public class CryptoPaymentRequestNetworkServiceDao {
         }
     }
 
-    public List<CryptoPaymentRequest> listRequestsByProtocolState(final RequestProtocolState protocolState) throws CantListRequestsException {
+    public final List<CryptoPaymentRequest> listRequestsByProtocolState(final RequestProtocolState protocolState) throws CantListRequestsException {
 
         if (protocolState == null)
             throw new CantListRequestsException("protocolState null", "The protocolState is required, can not be null");
@@ -319,41 +280,6 @@ public class CryptoPaymentRequestNetworkServiceDao {
             DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
 
             cryptoPaymentRequestTable.setStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
-
-            cryptoPaymentRequestTable.loadToMemory();
-
-            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
-
-            List<CryptoPaymentRequest> cryptoPaymentList = new ArrayList<>();
-
-            for (DatabaseTableRecord record : records) {
-                cryptoPaymentList.add(buildCryptoPaymentRequestRecord(record));
-            }
-            return cryptoPaymentList;
-
-        } catch (CantLoadTableToMemoryException e) {
-
-            throw new CantListRequestsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
-        } catch(InvalidParameterException exception){
-
-            throw new CantListRequestsException(exception);
-        }
-    }
-
-    public List<CryptoPaymentRequest> listRequestsByProtocolStateAndType(final RequestProtocolState protocolState,
-                                                                         final RequestType type) throws CantListRequestsException {
-
-        if (protocolState == null)
-            throw new CantListRequestsException("protocolState null", "The protocolState is required, can not be null");
-
-        if (type == null)
-            throw new CantListRequestsException("type null"         , "The RequestType is required, can not be null"  );
-
-        try {
-            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
-
-            cryptoPaymentRequestTable.setStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
-            cryptoPaymentRequestTable.setStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_DIRECTION_COLUMN_NAME     , type         .getCode(), DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.loadToMemory();
 
@@ -396,7 +322,7 @@ public class CryptoPaymentRequestNetworkServiceDao {
         return record;
     }
 
-    private CryptoPaymentRequest buildCryptoPaymentRequestRecord(DatabaseTableRecord record) throws InvalidParameterException {
+    private CryptoPaymentRequest buildCryptoPaymentRequestRecord(final DatabaseTableRecord record) throws InvalidParameterException {
 
         UUID   requestId            = record.getUUIDValue  (CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_REQUEST_ID_COLUMN_NAME         );
         String identityPublicKey    = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
