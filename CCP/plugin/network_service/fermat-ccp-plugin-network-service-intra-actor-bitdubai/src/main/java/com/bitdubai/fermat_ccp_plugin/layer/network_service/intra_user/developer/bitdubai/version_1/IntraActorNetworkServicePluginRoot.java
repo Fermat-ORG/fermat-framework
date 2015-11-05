@@ -145,7 +145,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     /******************************************************************
      * IMPORTANT: CHANGE THE EVENT_SOURCE TO THE NEW PLUGIN TO IMPLEMENT
      ******************************************************************/
-    /**
+    /**buen
      * Represent the EVENT_SOURCE
      */
     public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_INTRA_ACTOR;

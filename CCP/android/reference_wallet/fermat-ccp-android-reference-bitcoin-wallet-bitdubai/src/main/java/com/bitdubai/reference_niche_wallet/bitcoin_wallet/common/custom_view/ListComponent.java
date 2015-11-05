@@ -1,4 +1,4 @@
-package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView;
+package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.custom_view;
 
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
