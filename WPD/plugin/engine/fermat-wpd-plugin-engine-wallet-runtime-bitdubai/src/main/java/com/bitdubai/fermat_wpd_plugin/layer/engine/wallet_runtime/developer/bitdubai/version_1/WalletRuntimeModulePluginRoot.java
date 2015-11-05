@@ -2134,13 +2134,13 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 //         * Menu
 //         */
 //
-//        runtimeMainMenu = new MainMenu();
-//        runtimeMenuItem = new MenuItem();
-//        runtimeMenuItem.setLabel("Settings");
-//        runtimeMainMenu.addMenuItem(runtimeMenuItem);
-//
-//
-//        runtimeActivity.setMainMenu(runtimeMainMenu);
+        runtimeMainMenu = new MainMenu();
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setIcon("send");
+        runtimeMainMenu.addMenuItem(runtimeMenuItem);
+
+
+        runtimeActivity.setMainMenu(runtimeMainMenu);
 //
 //        /**
 //         *  Fin de menu

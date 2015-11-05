@@ -160,14 +160,14 @@ public class OutgoingIntraActorTransactionProcessorAgent  {
         private void doTheMainTask() {
             try {
 
-                System.out.print("-----------------------\n" +
-                        "OUTGOING INTRA USER TRANSACTION START - Get Pending Transactions!!!!! -----------------------\n" +
-                        "-----------------------\n STATE: ");
+//                System.out.print("-----------------------\n" +
+//                        "OUTGOING INTRA USER TRANSACTION START - Get Pending Transactions!!!!! -----------------------\n" +
+//                        "-----------------------\n STATE: ");
 
 
                 List<OutgoingIntraActorTransactionWrapper> transactionList = dao.getNewTransactions();
 
-                System.out.print("PROCESSING : " + transactionList.size() + " pendings transactions.");
+//                System.out.print("PROCESSING : " + transactionList.size() + " pendings transactions.");
 
 
             /* For each transaction:
