@@ -134,15 +134,6 @@ We define a Private Device Network as a network of devices owned by the same End
 Crypto funds are kept into a Multi-Sig vault and there is a shared _Petty-Cash-Vault_ accessible from all nodes even when they are off-line from this Private Network. An automated process monitors the Petty-Cash-Vault and tops it up when needed. Several nodes must sign the top up transaction in order to proceed. In this way if a device is lost or stolen, only the Petty-Cash fund is at risk. End Users can eject stolen devices from its Private Network and if they act quickly they might be on time to re-create the Petty-Cash fund under the new configuration and save those funds.
 
 <br>
-### Privacy
-
-The proposed system complements the privacy properties of crypto networks, extending them to the full stack needed to run different kind of financial applications. By using it's own P2P network with point to point encryption for transporting meta-data both value and information are under a similar privacy standard.
-
-Identities are public keys related to private keys kept by the End User and never shared to anyone in any way. 
-
-The collection of system information for visualization and statistics uses hashes of public keys to protect End User's privacy and at the same time preserve the relationships between them.
-
-<br>
 ### User Interface
 
 The Framework adds layer by layer starting down at the OS level, going through the _Blockchain Level_, the _Communication Level_, _Platform Level_ up to the user interface. We define several concepts in order achieve the goal of allowing even non-developers to deployd their own trust-less financial applications:
@@ -163,6 +154,14 @@ Several tools were designed with the purpose to enable the development of new wa
 
 **Wallet Store** : Is a distributed application which manages a shared wallet catallog and enables the End User to download from peers the different wallets available for the Framework.
 
+<br>
+### Privacy
+
+The proposed system complements the privacy properties of crypto networks, extending them to the full stack needed to run different kind of financial applications. By using it's own P2P network with point to point encryption for transporting meta-data both value and information are under a similar privacy standard.
+
+Identities are public keys related to private keys kept by the End User and never shared to anyone in any way. 
+
+The collection of system information for visualization and statistics uses hashes of public keys to protect End User's privacy and at the same time preserve the relationships between them.
 
 
 <br>
