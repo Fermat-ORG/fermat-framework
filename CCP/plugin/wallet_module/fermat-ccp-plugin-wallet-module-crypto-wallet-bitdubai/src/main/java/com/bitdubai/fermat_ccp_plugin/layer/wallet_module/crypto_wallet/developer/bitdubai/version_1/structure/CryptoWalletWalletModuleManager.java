@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantSetPhotoException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantSignExtraUserMessageException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.ExtraUserNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantCreateIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.exceptions.CantGetIntraUserException;
@@ -717,7 +718,7 @@ public class CryptoWalletWalletModuleManager implements
     }
 
     @Override
-    public List<CryptoWalletTransaction> getTransactions(BalanceType balanceType, TransactionType transactionType,
+    public List<CryptoWalletTransaction> getTransactions(BalanceType balanceType, final TransactionType transactionType,
                                                          String walletPublicKey,
                                                          int max,
                                                          int offset) throws CantListTransactionsException {
@@ -728,6 +729,230 @@ public class CryptoWalletWalletModuleManager implements
 
             for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
                 cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey));
+            }
+            if(cryptoWalletTransactionList.isEmpty()){
+                cryptoWalletTransactionList.add(new CryptoWalletTransaction() {
+                    @Override
+                    public Actor getInvolvedActor() {
+                        return new Actor() {
+                            @Override
+                            public String getActorPublicKey() {
+                                return null;
+                            }
+
+                            @Override
+                            public String getName() {
+                                return "Matias furszy";
+                            }
+
+                            @Override
+                            public Actors getType() {
+                                return Actors.CCM_INTRA_WALLET_USER;
+                            }
+
+                            @Override
+                            public byte[] getPhoto() {
+                                return null;
+                            }
+
+                            @Override
+                            public String createMessageSignature(String message) throws CantSignExtraUserMessageException {
+                                return null;
+                            }
+                        };
+                    }
+
+                    @Override
+                    public UUID getContactId() {
+                        return null;
+                    }
+
+                    @Override
+                    public UUID getTransactionId() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getTransactionHash() {
+                        return null;
+                    }
+
+                    @Override
+                    public CryptoAddress getAddressFrom() {
+                        return null;
+                    }
+
+                    @Override
+                    public CryptoAddress getAddressTo() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getActorToPublicKey() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getActorFromPublicKey() {
+                        return null;
+                    }
+
+                    @Override
+                    public Actors getActorToType() {
+                        return Actors.CCM_INTRA_WALLET_USER;
+                    }
+
+                    @Override
+                    public Actors getActorFromType() {
+                        return null;
+                    }
+
+                    @Override
+                    public BalanceType getBalanceType() {
+                        return BalanceType.AVAILABLE;
+                    }
+
+                    @Override
+                    public TransactionType getTransactionType() {
+                        return transactionType;
+                    }
+
+                    @Override
+                    public long getTimestamp() {
+                        return System.currentTimeMillis();
+                    }
+
+                    @Override
+                    public long getAmount() {
+                        return 1200000;
+                    }
+
+                    @Override
+                    public long getRunningBookBalance() {
+                        return 0;
+                    }
+
+                    @Override
+                    public long getRunningAvailableBalance() {
+                        return 0;
+                    }
+
+                    @Override
+                    public String getMemo() {
+                        return "Spicy Gyros with coke";
+                    }
+                });
+                cryptoWalletTransactionList.add(new CryptoWalletTransaction() {
+                    @Override
+                    public Actor getInvolvedActor() {
+                        return new Actor() {
+                            @Override
+                            public String getActorPublicKey() {
+                                return null;
+                            }
+
+                            @Override
+                            public String getName() {
+                                return "Juan carlos";
+                            }
+
+                            @Override
+                            public Actors getType() {
+                                return Actors.CCM_INTRA_WALLET_USER;
+                            }
+
+                            @Override
+                            public byte[] getPhoto() {
+                                return null;
+                            }
+
+                            @Override
+                            public String createMessageSignature(String message) throws CantSignExtraUserMessageException {
+                                return null;
+                            }
+                        };
+                    }
+
+                    @Override
+                    public UUID getContactId() {
+                        return null;
+                    }
+
+                    @Override
+                    public UUID getTransactionId() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getTransactionHash() {
+                        return null;
+                    }
+
+                    @Override
+                    public CryptoAddress getAddressFrom() {
+                        return null;
+                    }
+
+                    @Override
+                    public CryptoAddress getAddressTo() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getActorToPublicKey() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getActorFromPublicKey() {
+                        return null;
+                    }
+
+                    @Override
+                    public Actors getActorToType() {
+                        return Actors.CCM_INTRA_WALLET_USER;
+                    }
+
+                    @Override
+                    public Actors getActorFromType() {
+                        return null;
+                    }
+
+                    @Override
+                    public BalanceType getBalanceType() {
+                        return BalanceType.AVAILABLE;
+                    }
+
+                    @Override
+                    public TransactionType getTransactionType() {
+                        return transactionType;
+                    }
+
+                    @Override
+                    public long getTimestamp() {
+                        return System.currentTimeMillis();
+                    }
+
+                    @Override
+                    public long getAmount() {
+                        return 1200000;
+                    }
+
+                    @Override
+                    public long getRunningBookBalance() {
+                        return 0;
+                    }
+
+                    @Override
+                    public long getRunningAvailableBalance() {
+                        return 0;
+                    }
+
+                    @Override
+                    public String getMemo() {
+                        return "Haciendo interfaces";
+                    }
+                });
             }
 
             return cryptoWalletTransactionList;
@@ -778,7 +1003,7 @@ public class CryptoWalletWalletModuleManager implements
 
     @Override
     public List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
-                                                                                    TransactionType transactionType,
+                                                                                    final TransactionType transactionType,
                                                                                     String walletPublicKey,
                                                                                     int max,
                                                                                     int offset) throws CantListTransactionsException {
@@ -795,6 +1020,231 @@ public class CryptoWalletWalletModuleManager implements
 
             for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
                 cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey));
+            }
+
+            if(cryptoWalletTransactionList.isEmpty()){
+                cryptoWalletTransactionList.add(new CryptoWalletTransaction() {
+                    @Override
+                    public Actor getInvolvedActor() {
+                        return new Actor() {
+                            @Override
+                            public String getActorPublicKey() {
+                                return null;
+                            }
+
+                            @Override
+                            public String getName() {
+                                return "Matias furszy";
+                            }
+
+                            @Override
+                            public Actors getType() {
+                                return Actors.CCM_INTRA_WALLET_USER;
+                            }
+
+                            @Override
+                            public byte[] getPhoto() {
+                                return null;
+                            }
+
+                            @Override
+                            public String createMessageSignature(String message) throws CantSignExtraUserMessageException {
+                                return null;
+                            }
+                        };
+                    }
+
+                    @Override
+                    public UUID getContactId() {
+                        return null;
+                    }
+
+                    @Override
+                    public UUID getTransactionId() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getTransactionHash() {
+                        return null;
+                    }
+
+                    @Override
+                    public CryptoAddress getAddressFrom() {
+                        return null;
+                    }
+
+                    @Override
+                    public CryptoAddress getAddressTo() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getActorToPublicKey() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getActorFromPublicKey() {
+                        return null;
+                    }
+
+                    @Override
+                    public Actors getActorToType() {
+                        return Actors.CCM_INTRA_WALLET_USER;
+                    }
+
+                    @Override
+                    public Actors getActorFromType() {
+                        return null;
+                    }
+
+                    @Override
+                    public BalanceType getBalanceType() {
+                        return BalanceType.AVAILABLE;
+                    }
+
+                    @Override
+                    public TransactionType getTransactionType() {
+                        return transactionType;
+                    }
+
+                    @Override
+                    public long getTimestamp() {
+                        return System.currentTimeMillis();
+                    }
+
+                    @Override
+                    public long getAmount() {
+                        return 1200000;
+                    }
+
+                    @Override
+                    public long getRunningBookBalance() {
+                        return 0;
+                    }
+
+                    @Override
+                    public long getRunningAvailableBalance() {
+                        return 0;
+                    }
+
+                    @Override
+                    public String getMemo() {
+                        return "Spicy Gyros with coke";
+                    }
+                });
+                cryptoWalletTransactionList.add(new CryptoWalletTransaction() {
+                    @Override
+                    public Actor getInvolvedActor() {
+                        return new Actor() {
+                            @Override
+                            public String getActorPublicKey() {
+                                return null;
+                            }
+
+                            @Override
+                            public String getName() {
+                                return "Juan carlos";
+                            }
+
+                            @Override
+                            public Actors getType() {
+                                return Actors.CCM_INTRA_WALLET_USER;
+                            }
+
+                            @Override
+                            public byte[] getPhoto() {
+                                return null;
+                            }
+
+                            @Override
+                            public String createMessageSignature(String message) throws CantSignExtraUserMessageException {
+                                return null;
+                            }
+                        };
+                    }
+
+                    @Override
+                    public UUID getContactId() {
+                        return null;
+                    }
+
+                    @Override
+                    public UUID getTransactionId() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getTransactionHash() {
+                        return null;
+                    }
+
+                    @Override
+                    public CryptoAddress getAddressFrom() {
+                        return null;
+                    }
+
+                    @Override
+                    public CryptoAddress getAddressTo() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getActorToPublicKey() {
+                        return null;
+                    }
+
+                    @Override
+                    public String getActorFromPublicKey() {
+                        return null;
+                    }
+
+                    @Override
+                    public Actors getActorToType() {
+                        return Actors.CCM_INTRA_WALLET_USER;
+                    }
+
+                    @Override
+                    public Actors getActorFromType() {
+                        return null;
+                    }
+
+                    @Override
+                    public BalanceType getBalanceType() {
+                        return BalanceType.AVAILABLE;
+                    }
+
+                    @Override
+                    public TransactionType getTransactionType() {
+                        return transactionType;
+                    }
+
+                    @Override
+                    public long getTimestamp() {
+                        return System.currentTimeMillis();
+                    }
+
+                    @Override
+                    public long getAmount() {
+                        return 1200000;
+                    }
+
+                    @Override
+                    public long getRunningBookBalance() {
+                        return 0;
+                    }
+
+                    @Override
+                    public long getRunningAvailableBalance() {
+                        return 0;
+                    }
+
+                    @Override
+                    public String getMemo() {
+                        return "Interface design";
+                    }
+                });
             }
 
             return cryptoWalletTransactionList;
