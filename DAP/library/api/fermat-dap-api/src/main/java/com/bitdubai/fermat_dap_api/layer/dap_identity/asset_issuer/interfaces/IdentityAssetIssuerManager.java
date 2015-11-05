@@ -41,11 +41,11 @@ public interface IdentityAssetIssuerManager extends ModuleManager {
                                                      byte[] profileImage) throws CantCreateNewIdentityAssetIssuerException;
 
     /**
-     * The method <code>hasAssetUserIdentity</code> returns if has a intra user identity created
+     * The method <code>hasIntraIssuerIdentity</code> returns if has a intra user identity created
      *
      * @return
      * @throws CantListAssetIssuersException
      */
-    boolean  hasAssetUserIdentity() throws CantListAssetIssuersException ;
+    boolean  hasIntraIssuerIdentity() throws CantListAssetIssuersException ;
 
 }

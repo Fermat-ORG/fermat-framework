@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
@@ -108,9 +107,9 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
         return assetUserIdentityDao;
     }
 
-    public void  initializeDatabase() throws CantInitializeAssetUserIdentityDatabaseException {
-        getAssetUserIdentityDao().initializeDatabase();
-    }
+//    public void  initializeDatabase() throws CantInitializeAssetUserIdentityDatabaseException {
+//        getAssetUserIdentityDao().initializeDatabase();
+//    }
 
     public List<IdentityAssetUser> getIdentityAssetUsersFromCurrentDeviceUser() throws CantListAssetUsersException {
 

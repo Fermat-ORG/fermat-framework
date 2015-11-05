@@ -71,7 +71,7 @@ public class AssetUserIdentityDeveloperDatabaseFactory implements DealsWithPlugi
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DB_NAME);
             database.closeDatabase();
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
