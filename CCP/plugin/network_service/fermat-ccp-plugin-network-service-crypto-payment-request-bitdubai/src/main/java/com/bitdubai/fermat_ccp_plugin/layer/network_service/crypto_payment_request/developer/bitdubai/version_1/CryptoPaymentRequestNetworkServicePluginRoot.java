@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.Ne
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.FailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -435,14 +436,14 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
         try {
 
             /*
-             * Create a new key pair for this execution
-             */
-            identity = new ECCKeyPair();
-
-            /*
              * Initialize the data base
              */
             initializeCommunicationDb();
+
+              /*
+             * Initialize listeners
+             */
+            initializeListener();
 
             /*
              * Verify if the communication cloud client is active
@@ -456,11 +457,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
-            // adding communication network service common events listeners
-            addCryptoPaymentRequestListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION           , new CompleteComponentRegistrationNotificationEventHandler(this));
-            addCryptoPaymentRequestListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION, new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
-            addCryptoPaymentRequestListener(P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION     , new CompleteComponentConnectionRequestNotificationEventHandler(this));
-
         } catch (CantInitializeNetworkServiceDatabaseException exception) {
 
             String context =
@@ -470,10 +466,9 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
-
     }
 
     private void addCryptoPaymentRequestListener(final FermatEventEnum fermatEventEnum,
@@ -551,6 +546,50 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
         }
 
+    }
+
+    private void initializeListener(){
+
+         /*
+         * Listen and handle Complete Component Registration Notification Event
+         */
+        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+         /*
+         * Listen and handle Complete Request List Component Registered Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /*
+         * Listen and handle Complete Request List Component Registered Notification Event
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CompleteComponentConnectionRequestNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /**
+         *  failure connection
+         */
+
+        fermatEventListener = eventManager.getNewListener(P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /**
+         * new message
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
     }
 
     @Override
@@ -720,8 +759,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                         this,
                         errorManager,
                         eventManager,
-                        pluginDatabaseSystem,
-                        pluginId,
+                        cryptoPaymentRequestNetworkServiceDao,
                         wsCommunicationsCloudClientManager,
                         getPluginVersionReference()
                 );
@@ -787,26 +825,26 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     }
 
 
-    public void handleNewMessages(FermatMessage fermatMessage) {
+    public final void handleNewMessages(final FermatMessage fermatMessage) {
 
         try {
 
-            Gson gson = new Gson();
+            final Gson gson = new Gson();
 
-            String jsonMessage = fermatMessage.getContent();
+            final String jsonMessage = fermatMessage.getContent();
 
-            NetworkServiceMessage networkServiceMessage = gson.fromJson(jsonMessage, NetworkServiceMessage.class);
+            final NetworkServiceMessage networkServiceMessage = gson.fromJson(jsonMessage, NetworkServiceMessage.class);
 
             switch (networkServiceMessage.getMessageType()) {
                 case INFORMATION:
                     // update the request to processing receive state with the given action.
-                    InformationMessage informationMessage = gson.fromJson(jsonMessage, InformationMessage.class);
+                    final InformationMessage informationMessage = gson.fromJson(jsonMessage, InformationMessage.class);
                     receiveInformationMessage(informationMessage);
                     System.out.println(" CPR NS - Information Message Received: "+informationMessage.toString());
                     break;
                 case REQUEST:
                     // create the request in processing receive state.
-                    RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
+                    final RequestMessage requestMessage = gson.fromJson(jsonMessage, RequestMessage.class);
                     receiveCryptoPaymentRequest(requestMessage);
                     System.out.println(" CPR NS - Request Message Received: " + requestMessage.toString());
                     break;
@@ -827,7 +865,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     private void receiveCryptoPaymentRequest(RequestMessage requestMessage) throws CantReceiveRequestException {
         try {
 
-            RequestProtocolState protocolState = RequestProtocolState.PROCESSING_RECEIVE;
+            RequestProtocolState protocolState = RequestProtocolState.PENDING_ACTION;
             RequestAction        action        = RequestAction       .REQUEST           ;
             RequestType          direction     = RequestType         .RECEIVED          ;
 
@@ -864,7 +902,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
             cryptoPaymentRequestNetworkServiceDao.takeAction(
                     informationMessage.getRequestId(),
                     informationMessage.getAction(),
-                    RequestProtocolState.PROCESSING_RECEIVE
+                    RequestProtocolState.PENDING_ACTION
             );
 
         } catch(CantTakeActionException  |

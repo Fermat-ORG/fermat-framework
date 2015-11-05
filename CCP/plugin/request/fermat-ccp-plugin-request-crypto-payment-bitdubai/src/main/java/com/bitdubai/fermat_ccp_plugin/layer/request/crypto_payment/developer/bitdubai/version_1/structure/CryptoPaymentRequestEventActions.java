@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantConfirmRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantGetRequestException;
@@ -26,13 +24,11 @@ import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bit
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantHandleCryptoPaymentRequestRefusedEventException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestEventActionsException;
-import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestRegistryException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantGetInstalledWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.DefaultWalletNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -90,27 +86,31 @@ public class CryptoPaymentRequestEventActions {
         String  errorString   = ""   ;
         boolean errorHandlingEvents = false;
 
-        for (CryptoPaymentRequest cpr: cryptoPaymentRequestList) {
+        for (final CryptoPaymentRequest cpr: cryptoPaymentRequestList) {
             try {
                 switch (cpr.getAction()) {
                     case INFORM_APPROVAL :
                         this.handleCryptoPaymentRequestApproved(cpr.getRequestId());
                         break;
                     case INFORM_DENIAL   :
-                        this.handleCryptoPaymentRequestDenied  (cpr.getRequestId());
-                        break;
-                    case INFORM_RECEPTION:
-                        this.handleCryptoPaymentRequestReceived(cpr.getRequestId());
+                        this.handleCryptoPaymentRequestDenied(cpr.getRequestId());
                         break;
                     case INFORM_REFUSAL  :
-                        this.handleCryptoPaymentRequestRefused (cpr.getRequestId());
+                        this.handleCryptoPaymentRequestRefused(cpr.getRequestId());
+                        break;
+                    case INFORM_RECEPTION:
+                        this.handleCryptoPaymentRequestConfirmedReception(cpr.getRequestId());
+                        break;
+                    case REQUEST:
+                        this.handleCryptoPaymentRequestReceived(cpr);
                         break;
                 }
 
-            } catch(CantHandleCryptoPaymentRequestApprovedEventException |
-                    CantHandleCryptoPaymentRequestDeniedEventException   |
-                    CantHandleCryptoPaymentRequestReceivedEventException |
-                    CantHandleCryptoPaymentRequestRefusedEventException  e) {
+            } catch(CantHandleCryptoPaymentRequestApprovedEventException           |
+                    CantHandleCryptoPaymentRequestDeniedEventException             |
+                    CantHandleCryptoPaymentRequestReceivedEventException           |
+                    CantHandleCryptoPaymentRequestRefusedEventException            |
+                    CantHandleCryptoPaymentRequestConfirmedReceptionEventException e) {
 
                 errorHandlingEvents = true;
                 errorString += cpr.getAction()+" ERROR for REQUEST ID "+ cpr.getRequestId() + "\n"+e.getMessage()+"\n";
@@ -216,32 +216,30 @@ public class CryptoPaymentRequestEventActions {
      *          if i don't find one, i have to inform the denial.
      * else i do nothing
      */
-    public void handleCryptoPaymentRequestReceived(UUID requestId) throws CantHandleCryptoPaymentRequestReceivedEventException {
+    public void handleCryptoPaymentRequestReceived(final CryptoPaymentRequest cryptoPaymentRequest) throws CantHandleCryptoPaymentRequestReceivedEventException {
 
         try {
 
             try {
                 // check if exists, if exists, i inform the reception.
                 // if not, i handle CryptoPaymentRequestNotFoundException and generate the crypto payment request.
-                cryptoPaymentRequestDao.getRequestById(requestId);
+                cryptoPaymentRequestDao.getRequestById(cryptoPaymentRequest.getRequestId());
 
-                cryptoPaymentRequestManager.informReception(requestId);
+                cryptoPaymentRequestManager.informReception(cryptoPaymentRequest.getRequestId());
 
             } catch (CantGetCryptoPaymentRequestException e) {
 
-                throw new CantHandleCryptoPaymentRequestReceivedEventException(e, "RequestId: " + requestId, "Error trying to find the record in crypto payments table.");
+                throw new CantHandleCryptoPaymentRequestReceivedEventException(e, "RequestId: " + cryptoPaymentRequest.getRequestId(), "Error trying to find the record in crypto payments table.");
             } catch(CantInformReceptionException |
                     RequestNotFoundException     e ) {
                  // TODO what to do in case i didn't find the request.
-                throw new CantHandleCryptoPaymentRequestReceivedEventException(e, "RequestId: " + requestId, "Error in network service.");
+                throw new CantHandleCryptoPaymentRequestReceivedEventException(e, "RequestId: " + cryptoPaymentRequest.getRequestId(), "Error in network service.");
             }
 
         } catch(CryptoPaymentRequestNotFoundException e) {
 
             try {
                 // then i go to find the new request and a compatible installed wallet to assign it.
-
-                CryptoPaymentRequest cryptoPaymentRequest = cryptoPaymentRequestManager.getRequestById(requestId);
 
                 try {
                     InstalledWallet installedWallet = walletManagerManager.getDefaultWallet(
@@ -256,7 +254,7 @@ public class CryptoPaymentRequestEventActions {
                     // save the record in database
 
                     cryptoPaymentRequestDao.generateCryptoPaymentRequest(
-                            requestId        ,
+                            cryptoPaymentRequest.getRequestId()        ,
                             installedWallet     .getWalletPublicKey()  ,
                             cryptoPaymentRequest.getIdentityPublicKey(),
                             cryptoPaymentRequest.getIdentityType()     ,
@@ -271,33 +269,32 @@ public class CryptoPaymentRequestEventActions {
                             cryptoPaymentRequest.getNetworkType()
                     );
 
-                    cryptoPaymentRequestManager.informReception(requestId);
+                    cryptoPaymentRequestManager.informReception(cryptoPaymentRequest.getRequestId());
                 } catch(DefaultWalletNotFoundException z) {
 
-                    cryptoPaymentRequestManager.informDenial(requestId);
+                    cryptoPaymentRequestManager.informDenial(cryptoPaymentRequest.getRequestId());
 
                 }
 
             } catch(CantInformDenialException    |
-                    CantGetRequestException      |
                     CantInformReceptionException |
                     RequestNotFoundException     z ) {
                 // TODO what to do in case i didn't find the request.
-                throw new CantHandleCryptoPaymentRequestReceivedEventException(z, "RequestId: " + requestId, "Error in network service.");
+                throw new CantHandleCryptoPaymentRequestReceivedEventException(z, "RequestId: " + cryptoPaymentRequest.getRequestId(), "Error in network service.");
             } catch(CantGetInstalledWalletException z ) {
 
-                throw new CantHandleCryptoPaymentRequestReceivedEventException(z, "RequestId: " + requestId, "Error in wallet manager manager.");
+                throw new CantHandleCryptoPaymentRequestReceivedEventException(z, "RequestId: " + cryptoPaymentRequest.getRequestId(), "Error in wallet manager manager.");
             } catch(CantGenerateCryptoPaymentRequestException z ) {
 
-                throw new CantHandleCryptoPaymentRequestReceivedEventException(z, "RequestId: " + requestId, "Error in the generation of the request.");
+                throw new CantHandleCryptoPaymentRequestReceivedEventException(z, "RequestId: " + cryptoPaymentRequest.getRequestId(), "Error in the generation of the request.");
             } catch(Exception z ) {
 
-                throw new CantHandleCryptoPaymentRequestReceivedEventException(z, "RequestId: " + requestId, "Generic Exception.");
+                throw new CantHandleCryptoPaymentRequestReceivedEventException(z, "RequestId: " + cryptoPaymentRequest.getRequestId(), "Unhandled Exception.");
             }
 
         } catch(Exception e) {
 
-            throw new CantHandleCryptoPaymentRequestReceivedEventException(e, "RequestId: "+requestId, "Unhandled exception.");
+            throw new CantHandleCryptoPaymentRequestReceivedEventException(e, "RequestId: "+cryptoPaymentRequest.getRequestId(), "Unhandled exception.");
         }
 
     }
