@@ -75,7 +75,7 @@ public class OutgoingIntraActorTransactionDeveloperDatabaseFactory implements De
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_DATABASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -96,7 +96,7 @@ public class OutgoingIntraActorTransactionDeveloperDatabaseFactory implements De
                   /*
                    * We create the new database
                    */
-                database = outgoingIntraActorTransactionDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = outgoingIntraActorTransactionDatabaseFactory.createDatabase(pluginId, OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
