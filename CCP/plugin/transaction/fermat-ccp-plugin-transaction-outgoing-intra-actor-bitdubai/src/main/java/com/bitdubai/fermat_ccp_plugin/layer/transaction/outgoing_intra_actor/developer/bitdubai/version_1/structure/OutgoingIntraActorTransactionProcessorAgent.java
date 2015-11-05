@@ -168,6 +168,12 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 
              List<OutgoingIntraActorTransactionWrapper> transactionList = dao.getNewTransactions();
 
+//                System.out.print("-----------------------\n" +
+//                        "OUTGOING INTRA USER TRANSACTION START - Get Pending Transactions!!!!! -----------------------\n" +
+//                        "-----------------------\n STATE: ");
+
+
+
             /* For each transaction:
              1. We check that we can apply it
              2. We apply it in the bitcoin wallet available balance

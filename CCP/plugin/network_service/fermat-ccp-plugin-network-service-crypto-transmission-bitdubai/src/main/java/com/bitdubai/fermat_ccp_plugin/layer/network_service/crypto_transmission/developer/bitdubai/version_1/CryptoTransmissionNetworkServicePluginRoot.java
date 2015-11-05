@@ -526,6 +526,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
             communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
+
+
             /*
              * Initialize listeners
              */
@@ -560,11 +562,12 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             cryptoTransmissionConnectionsDAO = new CryptoTransmissionConnectionsDAO(pluginDatabaseSystem,pluginId);
 
 
-
-            /*
+/*
              * Its all ok, set the new status
             */
             this.serviceStatus = ServiceStatus.STARTED;
+
+
 
 
 
@@ -779,7 +782,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      */
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
 
-        System.out.println(" CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
+        System.out.println(" Crypto Transmission CommunicationNetworkServiceConnectionManager - Starting method handleCompleteComponentRegistrationNotificationEvent");
 
 
 
