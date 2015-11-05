@@ -15,6 +15,7 @@ dependencies {
     compile project(':fermat-api')
     compile project(':fermat-pip-api')
 
+    compile project(':fermat-pip-addon-user-device-user-bitdubai')
     compile project(':fermat-pip-addon-platform-service-error-manager-bitdubai')
     compile project(':fermat-pip-addon-platform-service-event-manager-bitdubai')
     compile project(':fermat-pip-addon-platform-service-location-manager-bitdubai')

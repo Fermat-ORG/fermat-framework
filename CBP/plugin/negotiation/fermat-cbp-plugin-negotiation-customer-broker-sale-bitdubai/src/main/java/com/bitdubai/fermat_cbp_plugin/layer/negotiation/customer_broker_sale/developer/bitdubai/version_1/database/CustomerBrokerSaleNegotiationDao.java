@@ -1,12 +1,12 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -25,9 +25,9 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantAddNewCl
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetNextClauseTypeException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantUpdateClausesException;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleNegotiationDaoException;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleNegotiationDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.structure.CustomerBrokerSaleClause;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.structure.CustomerBrokerSaleNegotiationImpl;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.structure.CustomerBrokerSaleNegotiationInformation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,13 +41,15 @@ public class CustomerBrokerSaleNegotiationDao {
 
     private Database database;
     private PluginDatabaseSystem pluginDatabaseSystem;
+    private UUID pluginId;
 
     /*
         Builders
      */
 
-        public CustomerBrokerSaleNegotiationDao(PluginDatabaseSystem pluginDatabaseSystem) {
+        public CustomerBrokerSaleNegotiationDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
             this.pluginDatabaseSystem = pluginDatabaseSystem;
+            this.pluginId = pluginId;
         }
 
     /*
@@ -55,15 +57,18 @@ public class CustomerBrokerSaleNegotiationDao {
      */
 
 
-        public void initialize(UUID pluginId) throws CantInitializeCustomerBrokerSaleNegotiationDaoException {
+        public void initializeDatabase() throws CantInitializeCustomerBrokerSaleNegotiationDatabaseException {
             try {
-                this.database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
-            } catch (DatabaseNotFoundException e) {
-
+                database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
             } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-                throw new CantInitializeCustomerBrokerSaleNegotiationDaoException("I couldn't open the database", cantOpenDatabaseException, "Database Name: " + CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME, "");
-            } catch (Exception exception) {
-                throw new CantInitializeCustomerBrokerSaleNegotiationDaoException(CantInitializeCustomerBrokerSaleNegotiationDaoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+                throw new CantInitializeCustomerBrokerSaleNegotiationDatabaseException(cantOpenDatabaseException.getMessage());
+            } catch (DatabaseNotFoundException e) {
+                CustomerBrokerSaleNegotiationDatabaseFactory customerBrokerSaleNegotiationDatabaseFactory = new CustomerBrokerSaleNegotiationDatabaseFactory(pluginDatabaseSystem);
+                try {
+                    database = customerBrokerSaleNegotiationDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+                    throw new CantInitializeCustomerBrokerSaleNegotiationDatabaseException(cantCreateDatabaseException.getMessage());
+                }
             }
         }
 
@@ -442,7 +447,7 @@ public class CustomerBrokerSaleNegotiationDao {
                     long startDataTime,
                     NegotiationStatus statusNegotiation
             ){
-                return new CustomerBrokerSaleNegotiationImpl(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation, this);
+                return new CustomerBrokerSaleNegotiationInformation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation, this);
             }
     
             private CustomerBrokerSaleNegotiation constructCustomerBrokerSaleFromRecord(DatabaseTableRecord record) throws InvalidParameterException {
@@ -453,7 +458,7 @@ public class CustomerBrokerSaleNegotiationDao {
                 long    startDataTime     = record.getLongValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_START_DATETIME_COLUMN_NAME);
                 NegotiationStatus  statusNegotiation = NegotiationStatus.getByCode(record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME));
         
-                return new CustomerBrokerSaleNegotiationImpl(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation, this);
+                return new CustomerBrokerSaleNegotiationInformation(negotiationId, publicKeyCustomer, publicKeyBroker, startDataTime, statusNegotiation, this);
             }
 
         /*

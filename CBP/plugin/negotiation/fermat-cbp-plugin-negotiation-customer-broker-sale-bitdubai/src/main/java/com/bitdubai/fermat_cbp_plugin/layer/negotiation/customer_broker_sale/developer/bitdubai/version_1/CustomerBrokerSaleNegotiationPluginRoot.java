@@ -26,6 +26,7 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.customer_broker_sale.in
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerSaleNegotiationDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleNegotiationDaoException;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleNegotiationDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
 
@@ -91,9 +92,9 @@ public class CustomerBrokerSaleNegotiationPluginRoot implements CustomerBrokerSa
     public void start() throws CantStartPluginException {
         this.serviceStatus = ServiceStatus.STARTED;
         try {
-            this.customerBrokerSaleNegotiationDao = new CustomerBrokerSaleNegotiationDao(pluginDatabaseSystem);
-            this.customerBrokerSaleNegotiationDao.initialize(pluginId);
-        } catch (CantInitializeCustomerBrokerSaleNegotiationDaoException cantInitializeExtraUserRegistryException) {
+            this.customerBrokerSaleNegotiationDao = new CustomerBrokerSaleNegotiationDao(pluginDatabaseSystem, pluginId);
+            this.customerBrokerSaleNegotiationDao.initializeDatabase();
+        } catch (CantInitializeCustomerBrokerSaleNegotiationDatabaseException cantInitializeExtraUserRegistryException) {
             //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DESIGNER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeExtraUserRegistryException);
             // throw new CantStartPluginException(cantInitializeExtraUserRegistryException, Plugins.BITDUBAI_ACTOR_DEVELOPER);
         }

@@ -1,6 +1,6 @@
 //package unit.com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleSearch;
 //
-//import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
+//import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserIdentityManager;
 //import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentityManager;
 //<<<<<<< HEAD:DMP/plugin/module/fermat-dmp-plugin-module-intra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/module/intra_user/developer/bitdubai/version_1/structure/IntraUserModuleSearch/GetResultTest.java
 //import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantGetIntraUserSearchResult;
@@ -68,7 +68,7 @@
 //     * DealWithActorIntraUserManager Interface member variables.
 //     */
 //    @Mock
-//    private IntraWalletUserManager mockIntraWalletUserManager;
+//    private IntraWalletUserIdentityManager mockIntraWalletUserManager;
 //
 //
 //    /**
