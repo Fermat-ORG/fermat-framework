@@ -202,7 +202,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM    )
     private PluginFileSystem pluginFileSystem;
 
-    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION         , plugin = Plugins.CLOUD_CLIENT)
+    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION         , plugin = Plugins.WS_CLOUD_CLIENT)
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
 

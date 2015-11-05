@@ -1,23 +1,22 @@
-package com.bitdubai.fermat_pip_core;
+package com.bitdubai.fermat_p2p_core;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_pip_core.layer.platform_service.PlatformServiceLayer;
-import com.bitdubai.fermat_pip_core.layer.user.UserLayer;
+import com.bitdubai.fermat_p2p_core.layer.communication.CommunicationsLayer;
 
 /**
- * The class <code>com.bitdubai.fermat_pip_core.PIPPlatform</code>
- * haves all the necessary business logic to start the PIP platform.
+ * The class <code>com.bitdubai.fermat_p2p_core.P2PPlatform</code>
+ * haves all the necessary business logic to start the P2P Communication platform.
  * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 05/11/2015.
  */
-public final class PIPPlatform extends AbstractPlatform {
+public class P2PPlatform extends AbstractPlatform {
 
-    public PIPPlatform() {
-        super(new PlatformReference(Platforms.PLUG_INS_PLATFORM));
+    public P2PPlatform() {
+        super(new PlatformReference(Platforms.COMMUNICATION_PLATFORM));
     }
 
     @Override
@@ -25,8 +24,7 @@ public final class PIPPlatform extends AbstractPlatform {
 
         try {
 
-            registerLayer(new UserLayer());
-            registerLayer(new PlatformServiceLayer());
+            registerLayer(new CommunicationsLayer());
 
         } catch (CantRegisterLayerException e) {
 
