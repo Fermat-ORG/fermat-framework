@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.database;
 
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -26,9 +25,9 @@ import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantAddNewCl
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantGetNextClauseTypeException;
 import com.bitdubai.fermat_cbp_api.layer.cbp_negotiation.exceptions.CantUpdateClausesException;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseNegotiationDaoException;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseNegotiationDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.structure.CustomerBrokerPurchaseClause;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.structure.CustomerBrokerPurchaseNegotiationImpl;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchase.developer.bitdubai.version_1.structure.CustomerBrokerPurchaseNegotiationInformation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,36 +41,33 @@ public class CustomerBrokerPurchaseNegotiationDao {
 
     private Database database;
     private PluginDatabaseSystem pluginDatabaseSystem;
+    private UUID pluginId;
 
     /*
         Builders
      */
 
-        public CustomerBrokerPurchaseNegotiationDao(PluginDatabaseSystem pluginDatabaseSystem) {
+        public CustomerBrokerPurchaseNegotiationDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
             this.pluginDatabaseSystem = pluginDatabaseSystem;
+            this.pluginId = pluginId;
         }
 
     /*
         Public methods
      */
 
-        public void initialize(UUID pluginId) throws CantInitializeCustomerBrokerPurchaseNegotiationDaoException {
+        public void initializeDatabase() throws CantInitializeCustomerBrokerPurchaseNegotiationDatabaseException {
             try {
-                this.database = this.pluginDatabaseSystem.openDatabase(pluginId, CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_DATABASE_NAME);
-            } catch (DatabaseNotFoundException e) {
-                try {
-                    CustomerBrokerPurchaseNegotiationDatabaseFactory databaseFactory = new CustomerBrokerPurchaseNegotiationDatabaseFactory(pluginDatabaseSystem);
-                    database = databaseFactory.createDatabase(pluginId, CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME);
-                } catch (CantCreateDatabaseException f) {
-                    throw new CantInitializeCustomerBrokerPurchaseNegotiationDaoException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
-                } catch (Exception z) {
-                    throw new CantInitializeCustomerBrokerPurchaseNegotiationDaoException(CantOpenDatabaseException.DEFAULT_MESSAGE, z, "", "Generic Exception.");
-                }
-
+                database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
             } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-                throw new CantInitializeCustomerBrokerPurchaseNegotiationDaoException("I couldn't open the database", cantOpenDatabaseException, "Database Name: " + CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_TABLE_NAME, "");
-            } catch (Exception exception) {
-                throw new CantInitializeCustomerBrokerPurchaseNegotiationDaoException(CantInitializeCustomerBrokerPurchaseNegotiationDaoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+                throw new CantInitializeCustomerBrokerPurchaseNegotiationDatabaseException(cantOpenDatabaseException.getMessage());
+            } catch (DatabaseNotFoundException e) {
+                CustomerBrokerPurchaseNegotiationDatabaseFactory customerBrokerPurchaseNegotiationDatabaseFactory = new CustomerBrokerPurchaseNegotiationDatabaseFactory(pluginDatabaseSystem);
+                try {
+                    database = customerBrokerPurchaseNegotiationDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+                    throw new CantInitializeCustomerBrokerPurchaseNegotiationDatabaseException(cantCreateDatabaseException.getMessage());
+                }
             }
         }
 
@@ -451,7 +447,7 @@ public class CustomerBrokerPurchaseNegotiationDao {
                     long startDateTime,
                     NegotiationStatus statusNegotiation
             ){
-                return new CustomerBrokerPurchaseNegotiationImpl(negotiationId, publicKeyCustomer, publicKeyBroker, startDateTime, statusNegotiation, this);
+                return new CustomerBrokerPurchaseNegotiationInformation(negotiationId, publicKeyCustomer, publicKeyBroker, startDateTime, statusNegotiation, this);
             }
 
             private CustomerBrokerPurchaseNegotiation constructCustomerBrokerPurchaseFromRecord(DatabaseTableRecord record) throws InvalidParameterException{

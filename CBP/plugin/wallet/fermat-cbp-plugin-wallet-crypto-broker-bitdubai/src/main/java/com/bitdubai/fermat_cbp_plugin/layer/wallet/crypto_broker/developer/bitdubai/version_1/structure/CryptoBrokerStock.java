@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.Stock;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockTransaction;
@@ -15,22 +16,25 @@ import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdu
 
 /**
  * Created by jorge on 26-10-2015.
+ * Modified by Yordin Alayn 27.10.15
  */
 public class CryptoBrokerStock implements Stock {
 
     private final FermatEnum stockType;
+    private KeyPair walletKeys;
     private final CryptoBrokerWalletDatabaseDao databaseDao;
 
-    public CryptoBrokerStock(final FermatEnum stockType, final CryptoBrokerWalletDatabaseDao databaseDao){
+    public CryptoBrokerStock(final FermatEnum stockType, final KeyPair walletKeys ,final CryptoBrokerWalletDatabaseDao databaseDao){
         this.stockType = stockType;
+        this.walletKeys = walletKeys;
         this.databaseDao = databaseDao;
     }
 
     @Override
-    public float getBookedBalance() throws CantGetBookedBalanceCryptoBrokerWalletException{
+    public float getBookedBalance() throws CantGetBookedBalanceCryptoBrokerWalletException {
         //esto se tiene que responder con una consulta al DAO para obtener el booked balance
-        try{
-            return databaseDao.getCalculateBookBalance();
+        try {
+            return databaseDao.getCalculateBookBalance(this.stockType,this.walletKeys.getPublicKey());
         } catch (CantCalculateBalanceException e) {
             throw new CantGetBookedBalanceCryptoBrokerWalletException("CAN'T GET CRYPTO BROKER WALLET BOOKED BALANCE", e, "", "");
         } catch (Exception e) {
@@ -39,10 +43,10 @@ public class CryptoBrokerStock implements Stock {
     }
 
     @Override
-    public float getAvailableBalance() throws CantGetAvailableBalanceCryptoBrokerWalletException{
+    public float getAvailableBalance() throws CantGetAvailableBalanceCryptoBrokerWalletException {
         //esto se tiene que responder con una consulta al DAO para obtener el available balance
-        try{
-            return databaseDao.getCalculateAvailableBalance();
+        try {
+            return databaseDao.getCalculateAvailableBalance(this.stockType,this.walletKeys.getPublicKey());
         } catch (CantCalculateBalanceException e) {
             throw new CantGetAvailableBalanceCryptoBrokerWalletException("CAN'T GET CRYPTO BROKER WALLET BOOKED BALANCE", e, "", "");
         } catch (Exception e) {
@@ -53,7 +57,7 @@ public class CryptoBrokerStock implements Stock {
     @Override
     public void addDebit(StockTransaction transaction) throws CantAddDebitCryptoBrokerWalletException {
         //aqui se crea un record a partir de la stock transaction y se le envia al DAO
-        try{
+        try {
             databaseDao.addDebit(transaction);
         } catch (CantAddDebitException e) {
             throw new CantAddDebitCryptoBrokerWalletException("CAN'T ADD CRYPTO BROKER WALLET TRANSACTION DEBIT", e, "", "");
@@ -65,7 +69,7 @@ public class CryptoBrokerStock implements Stock {
     @Override
     public void addCredit(StockTransaction transaction) throws CantAddCreditCryptoBrokerWalletException {
         //aqui se crea un record a partir de la stock transaction y se le envia al DAO
-        try{
+        try {
             databaseDao.addCredit(transaction);
         } catch (CantAddCreditException e) {
             throw new CantAddCreditCryptoBrokerWalletException("CAN'T ADD CRYPTO BROKER WALLET TRANSACTION DEBIT", e, "", "");
