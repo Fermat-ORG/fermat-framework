@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.database.AssetIssuerActorDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.database.AssetIssuerActorDatabaseFactory;
@@ -643,7 +644,7 @@ public class AssetIssuerActorDao implements Serializable {
         return list;
     }
 
-    public ActorAssetIssuer getActorAssetIssuer() throws CantGetAssetIssuersListException {
+    public ActorAssetIssuer getActorAssetIssuer() throws CantGetAssetIssuerActorsException {
 
         ActorAssetIssuer assetIssuerActorRecord = new AssetIssuerActorRecord();
         DatabaseTable table;
@@ -666,16 +667,53 @@ public class AssetIssuerActorDao implements Serializable {
             assetIssuerActorRecord = this.addRecords(table.getRecords());
             database.closeDatabase();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetAssetIssuersListException(e.getMessage(), e, "Asset User Actor", "Cant load " + AssetIssuerActorDatabaseConstants.ASSET_ISSUER_TABLE_NAME + " table in memory.");
+            throw new CantGetAssetIssuerActorsException(e.getMessage(), e, "Asset User Actor", "Cant load " + AssetIssuerActorDatabaseConstants.ASSET_ISSUER_TABLE_NAME + " table in memory.");
         } catch (CantGetAssetIssuerActorProfileImageException e) {
-            throw new CantGetAssetIssuersListException(e.getMessage(), e, "Asset User Actor", "Can't get profile ImageMiddleware.");
+            throw new CantGetAssetIssuerActorsException(e.getMessage(), e, "Asset User Actor", "Can't get profile ImageMiddleware.");
         } catch (Exception e) {
-            throw new CantGetAssetIssuersListException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
+            throw new CantGetAssetIssuerActorsException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
         } finally {
             database.closeDatabase();
         }
         // Return the values.
         return assetIssuerActorRecord;
+    }
+
+    public ActorAssetIssuer getActorByPublicKey(String actorPublicKey) throws CantGetAssetIssuerActorsException {
+        ActorAssetIssuer actorAssetIssuerrRecord = null;
+        DatabaseTable table;
+
+        // Get Asset Users identities list.
+        try {
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get asset Actor Issuer, table not found.", "Plugin Identity", "Cant get asset Actor Issuer, table not found.");
+            }
+            table.setStringFilter(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_PUBLIC_KEY_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+            // 3) Get Asset Users Record.
+            actorAssetIssuerrRecord = this.addRecords(table.getRecords());
+
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetAssetIssuerActorsException(e.getMessage(), e, "Asset Issuer Actor", "Cant load " + AssetIssuerActorDatabaseConstants.ASSET_ISSUER_TABLE_NAME + " table in memory.");
+        } catch (CantGetAssetIssuerActorProfileImageException e) {
+            throw new CantGetAssetIssuerActorsException(e.getMessage(), e, "Asset Issuer Actor", "Can't get profile ImageMiddleware.");
+        } catch (Exception e) {
+            throw new CantGetAssetIssuerActorsException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer Actor", "Cant get Asset User Actor, unknown failure.");
+        } finally {
+            database.closeDatabase();
+        }
+        // Return the values.
+        return actorAssetIssuerrRecord;
     }
 
     public List<ActorAssetIssuer> getAllAssetIssuerActorRegistered() throws CantGetAssetIssuersListException {

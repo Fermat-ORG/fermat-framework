@@ -666,81 +666,41 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
                 if(actorAssetUserRegisteredList != null && !actorAssetUserRegisteredList.isEmpty()){ actorAssetUserRegisteredList.clear(); }
 
-                DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
-                        constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_USER, //applicant = who made the request
-                                NetworkServiceType.UNDEFINED,
-                                null,                     // alias
-                                null,                     // identityPublicKey
-                                null,                     // location
-                                null,                     // distance
-                                null,                     // name
-                                null,                     // extraData
-                                null,                     // offset
-                                null,                     // max
-                                null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                null);
+                    DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
+                            constructDiscoveryQueryParamsFactory(PlatformComponentType.ACTOR_ASSET_USER, //applicant = who made the request
+                                    NetworkServiceType.UNDEFINED,
+                                    null,                     // alias
+                                    null,                     // identityPublicKey
+                                    null,                     // location
+                                    null,                     // distance
+                                    null,                     // name
+                                    null,                     // extraData
+                                    null,                     // offset
+                                    null,                     // max
+                                    null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                                    null);
 
 
-                List<PlatformComponentProfile> platformComponentProfileRegisteredListRemote = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParametersAssetUser);
+                    List<PlatformComponentProfile> platformComponentProfileRegisteredListRemote = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParametersAssetUser);
 
 
-                if (platformComponentProfileRegisteredListRemote != null && !platformComponentProfileRegisteredListRemote.isEmpty()) {
+                    if (platformComponentProfileRegisteredListRemote != null && !platformComponentProfileRegisteredListRemote.isEmpty()) {
 
 
-                    for (PlatformComponentProfile p : platformComponentProfileRegisteredListRemote) {
+                        for (PlatformComponentProfile p : platformComponentProfileRegisteredListRemote) {
 
-                        ActorAssetUser actorAssetUserNew = new AssetUserActorRecord(p.getIdentityPublicKey(), p.getName(), convertoByteArrayfromString(p.getExtraData()), p.getLocation());
+                            ActorAssetUser actorAssetUserNew = new AssetUserActorRecord(p.getIdentityPublicKey(), p.getName(), convertoByteArrayfromString(p.getExtraData()), p.getLocation());
 
-                        actorAssetUserRegisteredList.add(actorAssetUserNew);
+                            actorAssetUserRegisteredList.add(actorAssetUserNew);
 
+                        }
+
+                    } else {
+                        return actorAssetUserRegisteredList;
                     }
-
-                } else {
-                    return actorAssetUserRegisteredList;
-//                        StringBuffer contextBuffer = new StringBuffer();
-//                        contextBuffer.append("Plugin ID: " + pluginId);
-//                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-//                        contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-//                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-//                        contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-//                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-//                        contextBuffer.append("errorManager: " + errorManager);
-//                        contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-//                        contextBuffer.append("eventManager: " + eventManager);
-//
-//                        String context = contextBuffer.toString();
-//                        String possibleCause = "Cant Request List Actor Asset User Registered";
-//
-//                        CantRequestListActorAssetUserRegisteredException pluginStartException = new CantRequestListActorAssetUserRegisteredException(CantRequestListActorAssetUserRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
-//
-//                        //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-//
-//                        throw pluginStartException;
-                }
 
             }else{
                 return actorAssetUserRegisteredList;
-//                StringBuffer contextBuffer = new StringBuffer();
-//                contextBuffer.append("Plugin ID: " + pluginId);
-//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-//                contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-//                contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-//                contextBuffer.append("errorManager: " + errorManager);
-//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-//                contextBuffer.append("eventManager: " + eventManager);
-//
-//                String context = contextBuffer.toString();
-//                String possibleCause = "Asset User Actor Network Service Not Registered";
-//
-//                CantRequestListActorAssetUserRegisteredException pluginStartException = new CantRequestListActorAssetUserRegisteredException(CantRequestListActorAssetUserRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
-//
-//               // errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-//
-//                throw pluginStartException;
-
-
             }
 
         } catch (CantRequestListException e) {
@@ -778,7 +738,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
             if (this.isRegister()) {
 
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetUserDestination.getPublicKey());
+                    CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetUserDestination.getPublicKey());
 
                 Gson gson = new Gson();
                 JsonObject packetContent = new JsonObject();
@@ -788,48 +748,48 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
                 String messageContentIntoJson = gson.toJson(packetContent);
 
-                if (communicationNetworkServiceLocal != null) {
+                    if (communicationNetworkServiceLocal != null) {
 
-                    //Send the message
-                    communicationNetworkServiceLocal.sendMessage(actorAssetIssuerSender.getPublicKey(), actorAssetUserDestination.getPublicKey(), messageContentIntoJson);
+                        //Send the message
+                        communicationNetworkServiceLocal.sendMessage(actorAssetIssuerSender.getPublicKey(), actorAssetUserDestination.getPublicKey(), messageContentIntoJson);
 
-                } else {
+                    } else {
 
                     /*
                      * Created the message
                      */
-                    FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetIssuerSender.getPublicKey(),//Sender
-                            actorAssetUserDestination.getPublicKey(), //Receiver
-                            messageContentIntoJson,                //Message Content
-                            FermatMessageContentType.TEXT);//Type
+                        FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetIssuerSender.getPublicKey(),//Sender
+                                actorAssetUserDestination.getPublicKey(), //Receiver
+                                messageContentIntoJson,                //Message Content
+                                FermatMessageContentType.TEXT);//Type
 
                     /*
                      * Configure the correct status
                      */
-                    ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
+                        ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
 
                     /*
                      * Save to the data base table
                      */
-                    OutgoingMessageDao outgoingMessageDao = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
-                    outgoingMessageDao.create(fermatMessage);
+                        OutgoingMessageDao outgoingMessageDao = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
+                        outgoingMessageDao.create(fermatMessage);
 
                     /*
                      * Create the sender basic profile
                      */
-                    PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetIssuerSender.getPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
+                        PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetIssuerSender.getPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
 
                     /*
                      * Create the receiver basic profile
                      */
-                    PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetUserDestination.getPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
+                        PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetUserDestination.getPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
 
                     /*
                      * Ask the client to connect
                      */
-                    communicationNetworkServiceConnectionManager.connectTo(sender, platformComponentProfile, receiver);
+                        communicationNetworkServiceConnectionManager.connectTo(sender, platformComponentProfile, receiver);
 
-                }
+                    }
 
 
             }else{
@@ -856,28 +816,28 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
 
             }
 
-        }catch(Exception e){
+            }catch(Exception e){
 
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
+                StringBuffer contextBuffer = new StringBuffer();
+                contextBuffer.append("Plugin ID: " + pluginId);
+                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+                contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+                contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+                contextBuffer.append("errorManager: " + errorManager);
+                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+                contextBuffer.append("eventManager: " + eventManager);
 
-            String context = contextBuffer.toString();
-            String possibleCause = "Cant Request Crypto Address";
+                String context = contextBuffer.toString();
+                String possibleCause = "Cant Request Crypto Address";
 
-            CantRequestCryptoAddressException pluginStartException = new CantRequestCryptoAddressException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
+                CantRequestCryptoAddressException pluginStartException = new CantRequestCryptoAddressException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+                //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
-            throw pluginStartException;
-        }
+                throw pluginStartException;
+            }
 
     }
 
@@ -1103,7 +1063,7 @@ public class AssetUserActorNetworkServicePluginRoot implements AssetUserActorNet
             Location loca = null;
 
             ActorAssetUser actorAssetUserNewRegsitered =  new AssetUserActorRecord(platformComponentProfileRegistered.getIdentityPublicKey(),
-                    platformComponentProfileRegistered.getName(), convertoByteArrayfromString(platformComponentProfileRegistered.getExtraData()), loca);
+                        platformComponentProfileRegistered.getName(), convertoByteArrayfromString(platformComponentProfileRegistered.getExtraData()), loca);
 
 
             if(createactorAgentnum==0) {
