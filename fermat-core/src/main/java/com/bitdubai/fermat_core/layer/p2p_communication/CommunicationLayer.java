@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
-import com.bitdubai.fermat_core.layer.p2p_communication.ws_cloud_client.WsCommunicationCloudClientSubsystem;
 import com.bitdubai.fermat_core.layer.p2p_communication.ws_cloud_server.WsCommunicationCloudServerSubsystem;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.*;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.enums.RejectConnectionRequestReasons;
@@ -30,7 +29,6 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
 
 
     private Plugin mWsCommunicationCloudServerPlugin;
-    private Plugin mWsCommunicationCloudClientPlugin;
 
     /**
      * CommunicationLayerManager Interface member variables.
@@ -56,10 +54,6 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
 
     public Plugin getWsCommunicationCloudServerPlugin(){
         return mWsCommunicationCloudServerPlugin;
-    }
-
-    public Plugin getWsCommunicationCloudClientPlugin(){
-        return mWsCommunicationCloudClientPlugin;
     }
 
 
@@ -123,25 +117,6 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
             throw new CantStartLayerException();
         }
 
-
-        /**
-         * Initialize the WsCommunicationCloudClientSubsystem
-         */
-        WsCommunicationCloudClientSubsystem wsCommunicationCloudClientSubsystem = new WsCommunicationCloudClientSubsystem();
-
-        try {
-
-            wsCommunicationCloudClientSubsystem.start();
-            mWsCommunicationCloudClientPlugin = wsCommunicationCloudClientSubsystem.getPlugin();
-
-        } catch (CantStartSubsystemException e) {
-            System.err.println("CantStartSubsystemException: " + e.getMessage());
-
-            /**
-             * Since this is the only implementation, if this does not start, then the layer can't start either.
-             */
-            throw new CantStartLayerException();
-        }
     }
 
 

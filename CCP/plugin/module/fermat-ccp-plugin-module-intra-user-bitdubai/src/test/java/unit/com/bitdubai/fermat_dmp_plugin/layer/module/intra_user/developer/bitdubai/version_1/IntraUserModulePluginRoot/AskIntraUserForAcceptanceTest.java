@@ -2,7 +2,7 @@
 //
 //import com.bitdubai.fermat_api.layer.all_definition.IntraUsers.IntraUserSettings;
 //import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-//import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserManager;
+//import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.IntraWalletUserIdentityManager;
 //import com.bitdubai.fermat_api.layer.dmp_identity.intra_user.interfaces.IntraUserIdentity;
 //<<<<<<< HEAD:DMP/plugin/module/fermat-dmp-plugin-module-intra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/module/intra_user/developer/bitdubai/version_1/IntraUserModulePluginRoot/AskIntraUserForAcceptanceTest.java
 //import com.bitdubai.fermat_api.layer.dmp_module.intra_user.exceptions.CantStartRequestException;
@@ -57,7 +57,7 @@
 //     * DealWithActorIntraUserManager Interface member variables.
 //     */
 //    @Mock
-//    private IntraWalletUserManager mockIntraWalletUserManager;
+//    private IntraWalletUserIdentityManager mockIntraWalletUserManager;
 //
 //
 //    /**
@@ -98,7 +98,7 @@
 //        testIntraUserModulePluginRoot.setPluginFileSystem(mockPluginFileSystem);
 //        testIntraUserModulePluginRoot.setErrorManager(mockErrorManager);
 //
-//        testIntraUserModulePluginRoot.setIntraWalletUserManager(mockIntraWalletUserManager);
+//        testIntraUserModulePluginRoot.setIntraWalletUserIdentityManager(mockIntraWalletUserManager);
 //        testIntraUserModulePluginRoot.setIntraUserNetworkServiceManager(mockIntraUserNetworkServiceManager);
 //
 //        setUpMockitoRules();
@@ -132,7 +132,7 @@
 //    @Test
 //    public void askIntraUserForAcceptanceTest_AskedError_throwsCantStartRequestException() throws Exception{
 //
-//        testIntraUserModulePluginRoot.setIntraWalletUserManager(null);
+//        testIntraUserModulePluginRoot.setIntraWalletUserIdentityManager(null);
 //        catchException(testIntraUserModulePluginRoot).askIntraUserForAcceptance(intraUserAlias, intraUserPublicKey, null);
 //
 //        assertThat(caughtException())

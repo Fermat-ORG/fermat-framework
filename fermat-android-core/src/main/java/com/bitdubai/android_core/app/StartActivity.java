@@ -20,15 +20,28 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.CantReportCriticalStartingProblemException;
 import com.bitdubai.fermat_api.CantStartPlatformException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.DeviceInfoUtils;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.LoggerSystemOs;
 import com.bitdubai.fermat_core.CorePlatformContext;
+import com.bitdubai.fermat_core.FermatSystem;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.version_1.LoggerAddonRoot;
+import com.bitdubai.fermat_osa_android_core.OSAPlatform;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.exceptions.CantLoadPlatformInformationException;
@@ -233,11 +246,20 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
         @Override
         protected Object doInBackground() throws Exception {
 
-
                 Context context = getApplicationContext();
 
                 platform = ((ApplicationSession)getApplication()).getFermatPlatform();
 
+                try {
+                    final FermatSystem fermatSystem = new FermatSystem(context, new OSAPlatform());
+                    fermatSystem.start();
+                    platform.setFermatSystem(fermatSystem);
+                } catch (FermatException e) {
+                    System.err.println(e.toString());
+                    System.out.println(e.getPossibleReason());
+                    System.out.println(e.getFormattedContext());
+                    System.out.println(e.getFormattedTrace());
+                }
 
                 //set Os Addons in platform
                 fileSystemOs = new AndroidOsFileSystem(context.getFilesDir().getPath());
@@ -247,11 +269,11 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
                 databaseSystemOs = new AndroidOsDataBaseSystem(context.getFilesDir().getPath());
                 platform.setDataBaseSystemOs(databaseSystemOs);
 
-           locationSystemOs = new AndroidOsLocationSystem(context);
-                    platform.setLocationSystemOs(locationSystemOs);
+                locationSystemOs = new AndroidOsLocationSystem(context);
+                platform.setLocationSystemOs(locationSystemOs);
 
 
-                loggerSystemOs = new LoggerAddonRoot();
+                loggerSystemOs = new LoggerAddonRoot(new AddonVersionReference(new Version()));
                 try {
                     ((Service) loggerSystemOs).start();
                     platform.setLoggerSystemOs(loggerSystemOs);
@@ -263,6 +285,23 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
                 //execute start platform
                 try {
 
+                  /*  AbstractPlatform osaPlatform = new OSAPlatform();
+                    FermatSystem fermatSystem = new FermatSystem(getApplicationContext(), osaPlatform);
+
+                    fermatSystem.start();
+
+                    fermatSystem.startAndGetPluginVersion(
+                            new PluginVersionReference(
+                                    Platforms.CRYPTO_CURRENCY_PLATFORM,
+                                    Layers.WALLET_MODULE,
+                                    Plugins.CRYPTO_WALLET,
+                                    Developers.BITDUBAI,
+                                    new Version()
+                            )
+                    );
+
+                    platform.setFermatSystem(fermatSystem);*/
+
                     platform.start();
 
                 } catch (CantStartPlatformException | CantReportCriticalStartingProblemException e) {
@@ -270,7 +309,30 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
                     Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
                 }
 
+            // todo testing
+/*
+            try {
 
+                AbstractPlatform osaPlatform = new OSAPlatform();
+                FermatSystem fermatSystem = new FermatSystem(getApplicationContext(), osaPlatform);
+
+                fermatSystem.start();
+
+                fermatSystem.startAndGetPluginVersion(
+                        new PluginVersionReference(
+                                Platforms.CRYPTO_CURRENCY_PLATFORM,
+                                Layers.WALLET_MODULE,
+                                Plugins.CRYPTO_WALLET,
+                                Developers.BITDUBAI,
+                                new Version()
+                        )
+                );
+
+            } catch(Exception e) {
+                ((ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER)).reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+            }
+*/
+            // todo testing
                 /**
                  * get platform object
                  */

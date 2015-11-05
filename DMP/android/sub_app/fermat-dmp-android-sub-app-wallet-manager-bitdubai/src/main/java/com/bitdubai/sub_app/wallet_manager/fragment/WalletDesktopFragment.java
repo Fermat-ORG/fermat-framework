@@ -96,7 +96,7 @@ public class WalletDesktopFragment extends Fragment implements Thread.UncaughtEx
         }
 
         ArrayList<Item> list = new ArrayList<>();
-
+        if(lstInstalledWallet!=null)
         for(InstalledWallet installedWallet: lstInstalledWallet){
             list.add(new Item(installedWallet));
         }

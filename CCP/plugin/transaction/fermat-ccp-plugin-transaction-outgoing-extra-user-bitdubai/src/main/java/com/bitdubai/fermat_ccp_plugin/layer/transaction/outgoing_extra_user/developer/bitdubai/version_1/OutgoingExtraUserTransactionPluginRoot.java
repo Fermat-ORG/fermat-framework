@@ -3,12 +3,17 @@ package com.bitdubai.fermat_ccp_plugin.layer.transaction.outgoing_extra_user.dev
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
@@ -48,39 +53,25 @@ public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin imple
         DealsWithPluginDatabaseSystem,
         OutgoingExtraUserManager     {
 
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.BITCOIN_WALLET)
+    private BitcoinWalletManager bitcoinWalletManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS        , layer = Layers.CRYPTO_VAULT   , plugin = Plugins.BITCOIN_VAULT)
+    private CryptoVaultManager cryptoVaultManager;
+
+
     public OutgoingExtraUserTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
-    /**
-     * DealsWithBitcoinWallet Interface member variables.
-     */
-    private BitcoinWalletManager bitcoinWalletManager;
 
-    /**
-     * DealsWithCryptoVault Interface member variables.
-     */
-    private CryptoVaultManager cryptoVaultManager;
-
-    /**
-     * DealWithErrors Interface member variables.
-     */
-    private ErrorManager errorManager;
-
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * Plugin Interface member variables.
-     */
-    private UUID pluginId;
-
-    /**
-     * Service Interface member variables.
-     */
-    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     private OutgoingExtraUserTransactionProcessorAgent transactionProcessorAgent;
 
@@ -120,19 +111,6 @@ public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin imple
                 pluginDatabaseSystem,
                 pluginId
         );
-    }
-
-    @Override
-    public void pause() {
-
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-
-
-        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
@@ -184,11 +162,6 @@ public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin imple
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
-    }
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
     }
 
     @Override

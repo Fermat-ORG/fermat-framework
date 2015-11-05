@@ -26,7 +26,7 @@ import java.util.UUID;
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Yordin Alayn - (y.alayn@gmail.com) on 18/10/15.
+ * Created by Yordin Alayn - (y.alayn@gmail.com) on 30/10/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -115,43 +115,59 @@ public class CryptoBrokerWalletDeveloperDatabaseFactory implements DealsWithPlug
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
         /**
-         * Table Crypto Broker columns.
+         * Table Crypto Broker Wallet columns.
          */
-        List<String> cryptoBrokerColumns = new ArrayList<String>();
+        List<String> cryptoBrokerWalletColumns = new ArrayList<String>();
 
-        cryptoBrokerColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TRANSACTION_ID_COLUMN_NAME);
-        cryptoBrokerColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_WALLET_COLUMN_NAME);
-        cryptoBrokerColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_BROKER_COLUMN_NAME);
-        cryptoBrokerColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_CUSTOMER_COLUMN_NAME);
-        cryptoBrokerColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_BALANCE_TYPE_COLUMN_NAME);
-        cryptoBrokerColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TRANSACTION_TYPE_COLUMN_NAME);
-        cryptoBrokerColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_AMOUNT_COLUMN_NAME);
-        cryptoBrokerColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_CURRENCY_TYPE_COLUMN_NAME);
-        cryptoBrokerColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_RUNNING_BOOK_BALANCE_COLUMN_NAME);
-        cryptoBrokerColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
-        cryptoBrokerColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TIMESTAMP_COLUMN_NAME);
-        cryptoBrokerColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_MEMO_COLUMN_NAME);
+        cryptoBrokerWalletColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_WALLET_PUBLIC_KEY_COLUMN_NAME);
+        cryptoBrokerWalletColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_BROKER_PUBLIC_KEY_COLUMN_NAME);
         /**
-         * Table Crypto Broker addition.
+         * Table Crypto Broker Wallet addition.
          */
-        DeveloperDatabaseTable cryptoBrokerTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TABLE_NAME, cryptoBrokerColumns);
-        tables.add(cryptoBrokerTable);
+        DeveloperDatabaseTable cryptoBrokerWalletTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_TABLE_NAME, cryptoBrokerWalletColumns);
+        tables.add(cryptoBrokerWalletTable);
 
         /**
-         * Table Crypto Broker Total Balances columns.
+         * Table Crypto Broker Stock Balance columns.
          */
-        List<String> cryptoBrokerTotalBalancesColumns = new ArrayList<String>();
+        List<String> cryptoBrokerStockBalanceColumns = new ArrayList<String>();
 
-        cryptoBrokerTotalBalancesColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TOTAL_BALANCES_PUBLIC_KEY_WALLET_COLUMN_NAM);
-        cryptoBrokerTotalBalancesColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TOTAL_BALANCES_CURRENCY_TYPE_COLUMN_NAME);
-        cryptoBrokerTotalBalancesColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TOTAL_BALANCES_DESCRIPTION_COLUMN_NAME);
-        cryptoBrokerTotalBalancesColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TOTAL_BALANCES_AVAILABLE_BALANCE_COLUMN_NAME);
-        cryptoBrokerTotalBalancesColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TOTAL_BALANCES_BOOK_BALANCE_COLUMN_NAME);
+        cryptoBrokerStockBalanceColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_WALLET_PUBLIC_KEY_COLUMN_NAME);
+        cryptoBrokerStockBalanceColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BROKER_PUBLIC_KEY_COLUMN_NAME);
+        cryptoBrokerStockBalanceColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_CURRENCY_TYPE_COLUMN_NAME);
+        cryptoBrokerStockBalanceColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_STOCK_TYPE_COLUMN_NAME);
+        cryptoBrokerStockBalanceColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_DESCRIPTION_COLUMN_NAME);
+        cryptoBrokerStockBalanceColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_AVAILABLE_BALANCE_COLUMN_NAME);
+        cryptoBrokerStockBalanceColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BOOK_BALANCE_COLUMN_NAME);
         /**
-         * Table Crypto Broker Total Balances addition.
+         * Table Crypto Broker Stock Balance addition.
          */
-        DeveloperDatabaseTable cryptoBrokerTotalBalancesTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_TOTAL_BALANCES_TABLE_NAME, cryptoBrokerTotalBalancesColumns);
-        tables.add(cryptoBrokerTotalBalancesTable);
+        DeveloperDatabaseTable cryptoBrokerStockBalanceTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_TABLE_NAME, cryptoBrokerStockBalanceColumns);
+        tables.add(cryptoBrokerStockBalanceTable);
+
+        /**
+         * Table Crypto Broker Stock Transactions columns.
+         */
+        List<String> cryptoBrokerStockTransactionsColumns = new ArrayList<String>();
+
+        cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME);
+        cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_WALLET_PUBLIC_KEY_COLUMN_NAME);
+        cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BROKER_PUBLIC_KEY_COLUMN_NAME);
+        cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME);
+        cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME);
+        cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME);
+        cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_CURRENCY_TYPE_COLUMN_NAME);
+        cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_STOCK_TYPE_COLUMN_NAME);
+        cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_BOOK_BALANCE_COLUMN_NAME);
+        cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
+        cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME);
+        cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MEMO_COLUMN_NAME);
+        cryptoBrokerStockTransactionsColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_STATUS_COLUMN_NAME);
+        /**
+         * Table Crypto Broker Stock Transactions addition.
+         */
+        DeveloperDatabaseTable cryptoBrokerStockTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME, cryptoBrokerStockTransactionsColumns);
+        tables.add(cryptoBrokerStockTransactionsTable);
 
 
 

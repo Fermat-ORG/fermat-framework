@@ -1,1 +1,1 @@
-# fermat-dmp-plugin-middleware-discount-wallet-bitdubai 
+# fermat-ccp-plugin-basic-wallet-discount-wallet-bitdubai
