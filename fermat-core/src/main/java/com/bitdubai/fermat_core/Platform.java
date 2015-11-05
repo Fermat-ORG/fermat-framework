@@ -305,6 +305,11 @@ public class Platform implements Serializable {
      */
     private LoggerSystemOs loggerSystemOs;
 
+    private FermatSystem fermatSystem;
+
+    public void setFermatSystem(FermatSystem fermatSystem) {
+        this.fermatSystem = fermatSystem;
+    }
 
     /**
      * Constructor
@@ -595,16 +600,6 @@ public class Platform implements Serializable {
             boolean WPD = true;
 
             //TODO: Esto va acá porque es necesario para que se le pase la instancia a otros plugins
-            final FermatSystem fermatSystem = new FermatSystem(osContext);
-            ;
-            try {
-                fermatSystem.start();
-            } catch (FermatException e) {
-                System.err.println(e.toString());
-                System.out.println(e.getPossibleReason());
-                System.out.println(e.getFormattedContext());
-                System.out.println(e.getFormattedTrace());
-            }
 
             // addons initializing
 
@@ -615,14 +610,10 @@ public class Platform implements Serializable {
                 AbstractAddon eventManager = fermatSystem.getAddon(ref(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.EVENT_MANAGER));
                 corePlatformContext.registerAddon(eventManager, Addons.EVENT_MANAGER);
 
-                DeviceUserUserAddonRoot deviceUser = new DeviceUserUserAddonRoot();
-                deviceUser.setPlatformFileSystem(fileSystemOs.getPlatformFileSystem());
-                deviceUser.setEventManager((EventManager) eventManager);
-                deviceUser.setErrorManager((ErrorManager) errorManager);
-                corePlatformContext.registerAddon(deviceUser, Addons.DEVICE_USER);
+                AbstractAddon deviceUserManager = fermatSystem.getAddon(ref(Platforms.PLUG_INS_PLATFORM, Layers.USER, Addons.DEVICE_USER));
+                corePlatformContext.registerAddon(deviceUserManager, Addons.DEVICE_USER);
 
                 AbstractAddon platformInfoManager = fermatSystem.getAddon(ref(Platforms.PLUG_INS_PLATFORM, Layers.PLATFORM_SERVICE, Addons.PLATFORM_INFO));
-                ((DealsWithPlatformFileSystem) platformInfoManager).setPlatformFileSystem(fileSystemOs.getPlatformFileSystem());
                 corePlatformContext.registerAddon(platformInfoManager, Addons.PLATFORM_INFO);
 
             } catch(Exception e) {
