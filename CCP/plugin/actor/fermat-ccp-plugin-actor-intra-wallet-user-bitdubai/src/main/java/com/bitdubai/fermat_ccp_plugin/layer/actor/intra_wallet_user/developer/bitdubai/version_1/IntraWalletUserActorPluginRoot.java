@@ -378,7 +378,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 
 
     @Override
-    public Actor createActor(String walletPublicKey, String actorName, byte[] photo) throws CantCreateIntraUserException{
+    public Actor createActor(String intraUserLoggedInPublicKey, String actorName, byte[] photo) throws CantCreateIntraUserException{
 
         ECCKeyPair keyPair = new ECCKeyPair();
        String publicKey = keyPair.getPublicKey();
@@ -388,7 +388,7 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 
             persistPrivateKey(privateKey, publicKey);
 
-            intraWalletUserActorDao.createActorIntraWalletUser(walletPublicKey, actorName, publicKey, photo, ConnectionState.CONNECTED);
+            intraWalletUserActorDao.createActorIntraWalletUser(intraUserLoggedInPublicKey, actorName, publicKey, photo, ConnectionState.CONNECTED);
         }
         catch (CantCreateIntraWalletUserException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -411,25 +411,22 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 
 
     @Override
-    public Actor getActorByPublicKey(String walletPublicKey, String actorPublicKey) throws CantGetIntraUserException, IntraUserNotFoundException{
+    public Actor getActorByPublicKey(String intraUserLoggedInPublicKey, String actorPublicKey) throws CantGetIntraUserException, IntraUserNotFoundException{
 
         try
         {
-            String privateKey = getPrivateKey(actorPublicKey);
+           // String privateKey = getPrivateKey(actorPublicKey);
 
-            Actor actor = this.intraWalletUserActorDao.getIntraUserActorByPublicKey(walletPublicKey,actorPublicKey);
+            Actor actor = this.intraWalletUserActorDao.getIntraUserActorByPublicKey(intraUserLoggedInPublicKey,actorPublicKey);
 
             //not found actor
             if(actor == null)
                 throw new IntraUserNotFoundException("", null, ".","Intra User not found");
 
-            return new IntraUserActorRecord(actorPublicKey, privateKey,actor.getName(), actor.getPhoto());
+            return new IntraUserActorRecord(actorPublicKey, "",actor.getName(), actor.getPhoto());
         }
         catch(CantGetIntraWalletUserActorException e)
         {
-            throw new CantGetIntraUserException("CAN'T GET INTRA USER ACTOR", FermatException.wrapException(e), "", "unknown error");
-        }
-        catch(CantLoadPrivateKeyException e){
             throw new CantGetIntraUserException("CAN'T GET INTRA USER ACTOR", FermatException.wrapException(e), "", "unknown error");
         }
         catch(Exception e)

@@ -283,8 +283,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
                                         digitalAsset.getIdentityAssetIssuer().getPublicKey(),
                                         digitalAsset.getName(),
                                         digitalAsset.getDescription(),
-                                        //TODO: Revisar Manuel
-                                        actorAssetUserManager.getActorByPublicKey(userPublicKey).getCryptoAddress(),//;.get(0).getCryptoAddress(),
+                                        actorAssetUserManager.getActorByPublicKey(userPublicKey).getCryptoAddress(),
                                         actorAssetRedeemPointManager.getActorAssetRedeemPoint().getCryptoAddress(),
                                         assetMetadataTransaction.getSenderId(),
                                         assetMetadataTransaction.getReceiverId(),
@@ -335,8 +334,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent, DealsWithLogger
                                         digitalAsset.getIdentityAssetIssuer().getPublicKey(),
                                         digitalAsset.getName(),
                                         digitalAsset.getDescription(),
-                                        //TODO: Revisar Manuel
-                                        actorAssetUserManager.getActorByPublicKey(userPublicKey).getCryptoAddress(),//.get(0).getCryptoAddress(),
+                                        actorAssetUserManager.getActorByPublicKey(userPublicKey).getCryptoAddress(),
                                         actorAssetRedeemPointManager.getActorAssetRedeemPoint().getCryptoAddress(),
                                         userPublicKey,
                                         actorAssetRedeemPointManager.getActorAssetRedeemPoint().getPublicKey(),
