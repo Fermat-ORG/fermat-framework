@@ -140,8 +140,8 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         referenceWalletSession =(ReferenceWalletSession) walletSession;
 
         setRetainInstance(true);
-        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog()
-                .penaltyDeath().build());
+
+        setHasOptionsMenu(false);
 
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
 
@@ -164,7 +164,6 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.main_act, container, false);
         setupViews(rootView);
-
 
          walletContactRecords = new ArrayList<>();
         try {
