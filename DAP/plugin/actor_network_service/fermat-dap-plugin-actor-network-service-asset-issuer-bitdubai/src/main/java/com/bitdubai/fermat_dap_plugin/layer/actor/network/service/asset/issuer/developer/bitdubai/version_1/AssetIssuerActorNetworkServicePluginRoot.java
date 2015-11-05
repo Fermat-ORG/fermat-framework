@@ -913,12 +913,9 @@ public class AssetIssuerActorNetworkServicePluginRoot implements ActorNetworkSer
             FermatEvent event = eventManager.getNewEvent(com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType.COMPLETE_ASSET_ISSUER_REGISTRATION_NOTIFICATION);
             event.setSource(EventSource.ACTOR_ASSET_ISSUER);
 
-            //TODO:Revisar Nerio este metodo setActorAssetUser deberia ser setActorAssetIssuer
-            ((ActorAssetIssuerCompleteRegistrationNotificationEvent) event).setActorAssetUser(actorAssetIssuerNewRegsitered);
+            ((ActorAssetIssuerCompleteRegistrationNotificationEvent) event).setActorAssetIssuer(actorAssetIssuerNewRegsitered);
 
             eventManager.raiseEvent(event);
-
-
         }
     }
 

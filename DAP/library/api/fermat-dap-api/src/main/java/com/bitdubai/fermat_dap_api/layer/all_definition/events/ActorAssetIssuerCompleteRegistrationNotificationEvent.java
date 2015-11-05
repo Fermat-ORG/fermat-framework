@@ -14,7 +14,7 @@ public class ActorAssetIssuerCompleteRegistrationNotificationEvent extends Abstr
         return actorAssetIssuer;
     }
 
-    public void setActorAssetUser(ActorAssetIssuer actorAssetIssuer) {
+    public void setActorAssetIssuer(ActorAssetIssuer actorAssetIssuer) {
         this.actorAssetIssuer = actorAssetIssuer;
     }
 
