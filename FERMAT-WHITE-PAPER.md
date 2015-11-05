@@ -143,9 +143,29 @@ Identities are public keys related to private keys kept by the End User and neve
 The collection of system information for visualization and statistics uses hashes of public keys to protect End User's privacy and at the same time preserve the relationships between them.
 
 <br>
+### User Interface
+
+The Framework adds layer by layer from the OS level, going through the blockchain level, the communication level, platform level up to the user interface. We define several concepts in order achieve the goal of allowing even non-developers to deployd their own trust-less financial applications on a Wordpress style:
+
+**Wallet** : Any kind of financial application that handles either crypto or digital assets for any purpose. 
+
+**Reference Wallet** : A primitive wallet that it is used by a sigle actor for a handfull of use cases. 
+
+**Niche Wallet** : A combination of several _Reference Wallets_ into a single product with its own look and feel and possibly extra functionality.
+
+**Branded Wallet** : A _niche wallet_ turned into a new product owned by a different End User by a process similar to building a Worldpress site but locally on the End Users device. Usually involves re-using a set of the business logic of the _niche wallet_ it derives from and a new look and feel (different skin and navigation structure).
+
+Several tools were designed with the purpose to enable the development of new wallets, an their distribution.
+
+**Wallet Factory** : Is a built-in functionality that enables the development of reference and niche wallets.
+
+**Wallet Store** : Is a distributed application which manages a shared wallet catallog and enables the End User to download from peers the different wallets available for the Framework.
+
+
+<br>
 ### Conclusion
 
-We have proposed a Framework for developing and running Trust-less Financial Applications. Bitcoin provided part of the solution. The Fermat Framework shows the way of how to keep the End User away from trusted third parties at a higher level. We proposed the solution to several problems at the same time. The hightlights of our work are how to exchange meta-data in a trust-less way, how to prevent the lost of private keys (funds and identities), how to maximize reusibillity by building with plug-ins, and how to enable even non-developers to create and deploy their own wallets in a Wordpress style. 
+We have proposed a Framework for developing and running Trust-less Financial Applications. Bitcoin provided part of the solution. The Fermat Framework shows the way of how to keep the End User away from trusted third parties at a higher level. We proposed the solution to several problems at the same time. The hightlights of our work are how to exchange meta-data in a trust-less way, how to prevent the lost of private keys (funds and identities), how to maximize reusibillity by building with Plug-ins, and how to enable even non-developers to create and deploy their own wallets in a Wordpress style. 
 
 With this system we enable a new ecosystem of trust-less financial applications that are both crypto and digital asset enabled.
 
