@@ -717,7 +717,8 @@ public class CryptoWalletWalletModuleManager implements
     }
 
     @Override
-    public List<CryptoWalletTransaction> getTransactions(BalanceType balanceType, TransactionType transactionType,
+    public List<CryptoWalletTransaction> getTransactions(String intraUserLoggedInPublicKey,
+                                                         BalanceType balanceType, TransactionType transactionType,
                                                          String walletPublicKey,
                                                          int max,
                                                          int offset) throws CantListTransactionsException {
@@ -727,7 +728,7 @@ public class CryptoWalletWalletModuleManager implements
             List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactions(balanceType, transactionType, max, offset);
 
             for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
-                cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey));
+                cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
             }
 
             return cryptoWalletTransactionList;
@@ -742,6 +743,7 @@ public class CryptoWalletWalletModuleManager implements
     public List<CryptoWalletTransaction> listTransactionsByActor(BalanceType balanceType,
                                                                  String walletPublicKey,
                                                                  String actorPublicKey,
+                                                                 String intraUserLoggedInPublicKey,
                                                                  int max,
                                                                  int offset) throws CantListTransactionsException {
         try {
@@ -750,7 +752,7 @@ public class CryptoWalletWalletModuleManager implements
             List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactionsByActor(actorPublicKey, balanceType, max, offset);
 
             for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
-                cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey));
+                cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
             }
 
             return cryptoWalletTransactionList;
@@ -780,6 +782,7 @@ public class CryptoWalletWalletModuleManager implements
     public List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
                                                                                     TransactionType transactionType,
                                                                                     String walletPublicKey,
+                                                                                    String intraUserLoggedInPublicKey,
                                                                                     int max,
                                                                                     int offset) throws CantListTransactionsException {
 
@@ -794,7 +797,7 @@ public class CryptoWalletWalletModuleManager implements
             );
 
             for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
-                cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey));
+                cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
             }
 
             return cryptoWalletTransactionList;
@@ -1071,14 +1074,14 @@ public class CryptoWalletWalletModuleManager implements
         }
     }
 
-    private CryptoWalletTransaction enrichTransaction(BitcoinWalletTransaction bitcoinWalletTransaction, String walletPublicKey) throws CantEnrichTransactionException {
+    private CryptoWalletTransaction enrichTransaction(BitcoinWalletTransaction bitcoinWalletTransaction, String walletPublicKey, String intraUserLoggedInPublicKey) throws CantEnrichTransactionException {
         try {
             Actor involvedActor = null;
             UUID contactId = null;
             switch (bitcoinWalletTransaction.getTransactionType()) {
                 case CREDIT:
                     try {
-                        involvedActor = getActorByActorPublicKeyAndType(walletPublicKey,bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType());
+                        involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(),intraUserLoggedInPublicKey);
                         WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(),walletPublicKey);
                         if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
@@ -1091,8 +1094,8 @@ public class CryptoWalletWalletModuleManager implements
                     break;
                 case DEBIT:
                     try {
-                        involvedActor = getActorByActorPublicKeyAndType(walletPublicKey,bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType());
-                        WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
+                        involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(),intraUserLoggedInPublicKey);
+                        WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
                         if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
 
@@ -1109,7 +1112,7 @@ public class CryptoWalletWalletModuleManager implements
         }
     }
 
-    private Actor getActorByActorPublicKeyAndType(String walletPublicKey,String actorPublicKey, Actors actorType) throws CantGetActorException {
+    private Actor getActorByActorPublicKeyAndType(String actorPublicKey, Actors actorType, String intraUserLoggedInPublicKey) throws CantGetActorException {
         Actor actor;
         switch (actorType) {
             case EXTRA_USER:
@@ -1121,8 +1124,8 @@ public class CryptoWalletWalletModuleManager implements
                 }
             case INTRA_USER:
                 try {
-
-                    actor = intraUserManager.getActorByPublicKey(walletPublicKey,actorPublicKey);
+                    //find actor connected with logget identity
+                    actor = intraUserManager.getActorByPublicKey(intraUserLoggedInPublicKey,actorPublicKey);
                     return actor;
                } catch (CantGetIntraUserException| IntraUserNotFoundException e) {
                    throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, e, null, "Cant get Intra User on DataBase");

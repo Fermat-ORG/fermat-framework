@@ -278,7 +278,7 @@ public interface CryptoWallet extends Serializable {
      *
      * @throws CantListTransactionsException if something goes wrong.
      */
-    List<CryptoWalletTransaction> getTransactions(BalanceType balanceType,
+    List<CryptoWalletTransaction> getTransactions(String intraUserLoggedInPublicKey,BalanceType balanceType,
                                                                                                              TransactionType transactionType,
                                                                                                              String walletPublicKey,
                                                                                                              int max,
@@ -298,10 +298,11 @@ public interface CryptoWallet extends Serializable {
      * @throws CantListTransactionsException if something goes wrong.
      */
     List<CryptoWalletTransaction> listTransactionsByActor(BalanceType balanceType,
-                                                                                                                     String walletPublicKey,
-                                                                                                                     String actorPublicKey,
-                                                                                                                     int max,
-                                                                                                                     int offset) throws CantListTransactionsException;
+                                                          String walletPublicKey,
+                                                          String actorPublicKey,
+                                                          String intraUserLoggedInPublicKey,
+                                                          int max,
+                                                          int offset) throws CantListTransactionsException;
 
     /**
      * Throw the method <code>getActorTransactionHistory</code> you can get the transaction history of an specific actor.
@@ -335,6 +336,7 @@ public interface CryptoWallet extends Serializable {
     List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
                                                                                                                                         TransactionType transactionType,
                                                                                                                                         String walletPublicKey,
+                                                                             String actorPublicKey,
                                                                                                                                         int max,
                                                                                                                                         int offset) throws CantListTransactionsException;
 

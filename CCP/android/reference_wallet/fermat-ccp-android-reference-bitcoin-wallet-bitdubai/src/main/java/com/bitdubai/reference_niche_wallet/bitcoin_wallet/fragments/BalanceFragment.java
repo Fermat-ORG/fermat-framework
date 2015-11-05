@@ -228,6 +228,7 @@ public class BalanceFragment extends FermatWalletFragment {
             BalanceType balanceType = referenceWalletPreferenceSettings.getBalanceType() != null ? referenceWalletPreferenceSettings.getBalanceType() : BalanceType.AVAILABLE;
             lstCryptoWalletTransactions.addAll(
                     cryptoWallet.getTransactions(
+                            referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),
                             balanceType,
                             TransactionType.DEBIT,
                             walletPublicKey,
@@ -238,6 +239,7 @@ public class BalanceFragment extends FermatWalletFragment {
 
             lstCryptoWalletTransactions.addAll(
                     cryptoWallet.getTransactions(
+                            referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey(),
                             balanceType,
                             TransactionType.CREDIT,
                             walletPublicKey,
