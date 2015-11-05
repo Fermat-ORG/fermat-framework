@@ -1,4 +1,4 @@
-== FERMAT DPN: Digital Private Network 
+== Chapter 21: Fermat Digital Private Network 
 === Securing your funds 
 
 

@@ -1,5 +1,5 @@
-:numbered:
-== Fermat: a Platform Stack Framework
+:numbered!:
+== Chapter 2: Fermat as a Platform Stack Framework
 *Fermat* is, technically speaking, an Open Source P2P (Peer-to-Peer) Platform Stack Framework built on a Plug-ins Architecture running on end-user's devices. 
 
 [horizontal]
@@ -70,7 +70,7 @@ So, let us enter the "building site" and explore the foundations.
 
 :numbered!:
   
-=== Continue Reading
+==== Continue Reading
 link:book-chapter-03.asciidoc[Next Chapter]
 
 link:book-chapter-01.asciidoc[Previous Chapter]

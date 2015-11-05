@@ -1,5 +1,5 @@
 [[DigitalAssets]]
-== Fermat Digital Asset Platform
+== Chapter 19: Fermat Digital Asset Platform
 === Blockchain beyond currency 
 
 //// 

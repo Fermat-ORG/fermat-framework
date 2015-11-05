@@ -1,12 +1,12 @@
 :numbered!:
 
-== Fermat Digital Assets Management
+== Chapter 11: Fermat Digital Assets Management
 
 === What is a Digital Asset ?
 
 
 
-=== Continue Reading
+==== Continue Reading
 link:book-chapter-19.asciidoc[Digital Assets Platform]
 
 link:book-chapter-12.asciidoc[Next Chapter]
