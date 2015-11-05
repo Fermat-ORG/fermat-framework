@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractFailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.event_handlers.AbstractFailureComponentConnectionRequestNotificationEventHandler;
 
 /**
  * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.communication.event_handlers.FailureComponentConnectionRequestNotificationEventHandler</code>

@@ -36,12 +36,16 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.DealsWithActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.DealsWithActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DealsWithAssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.DealsWithAssetIssuerWallet;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.developer_utils.AssetDistributionDeveloperDatabaseFactory;
@@ -53,6 +57,7 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_dist
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.events.AssetDistributionMonitorAgent;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.events.AssetDistributionRecorderService;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DealsWithDeviceUser;
 import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
@@ -74,10 +79,11 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/09/15.
  */
-public class AssetDistributionPluginRoot implements AssetDistributionManager, DealsWithActorAssetIssuer, DealsWithAssetIssuerWallet, DealsWithAssetTransmissionNetworkServiceManager, DealsWithBitcoinNetwork, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithDeviceUser,DealsWithErrors, DealsWithEvents, DealsWithLogger,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
+public class AssetDistributionPluginRoot implements AssetDistributionManager, DealsWithActorAssetIssuer, DealsWithActorAssetUser, DealsWithAssetIssuerWallet, DealsWithAssetTransmissionNetworkServiceManager, DealsWithBitcoinNetwork, DatabaseManagerForDevelopers, DealsWithAssetVault, DealsWithDeviceUser,DealsWithErrors, DealsWithEvents, DealsWithLogger,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     ActorAssetIssuerManager actorAssetIssuerManager;
+    ActorAssetUserManager actorAssetUserManager;
     AssetDistributionTransactionManager assetDistributionTransactionManager;
     AssetDistributionMonitorAgent assetDistributionMonitorAgent;
     AssetIssuerWalletManager assetIssuerWalletManager;
@@ -139,6 +145,8 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
             }
             this.digitalAssetDistributionVault =new DigitalAssetDistributionVault(this.pluginId, this.pluginFileSystem, this.errorManager);
             this.digitalAssetDistributionVault.setAssetIssuerWalletManager(this.assetIssuerWalletManager);
+            this.digitalAssetDistributionVault.setErrorManager(this.errorManager);
+            this.digitalAssetDistributionVault.setActorAssetIssuerManager(this.actorAssetIssuerManager);
             AssetDistributionDao assetDistributionDao=new AssetDistributionDao(pluginDatabaseSystem, pluginId);
             this.assetDistributionTransactionManager=new AssetDistributionTransactionManager(
                     this.assetVaultManager,
@@ -152,14 +160,29 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
             this.assetDistributionTransactionManager.setAssetTransmissionNetworkServiceManager(this.assetTransmissionNetworkServiceManager);
             this.assetDistributionTransactionManager.setBitcoinManager(this.bitcoinNetworkManager);
             this.assetDistributionTransactionManager.setActorAssetIssuerManager(this.actorAssetIssuerManager);
+            //Starting Event Recorder
+            AssetDistributionRecorderService assetDistributionRecorderService =new AssetDistributionRecorderService(assetDistributionDao, eventManager);
+            try{
+                assetDistributionRecorderService.start();
+            } catch(CantStartServiceException exception){
+                //This plugin must be stopped if this happens.
+                this.serviceStatus = ServiceStatus.STOPPED;
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                throw new CantStartPluginException("Asset reception Event Recorded could not be started", exception, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION.getKey(), "The plugin event recorder is not started");
+            }
+
             //distributeAssets(null, null);
+            //testDeveloperDatabase();
         }catch(CantSetObjectException exception){
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting Asset Distribution plugin", "Cannot set an object, probably is null");
         } catch (CantExecuteDatabaseOperationException exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception,"Starting pluginDatabaseSystem in DigitalAssetDistributor", "Error in constructor method AssetDistributor");
         } /*catch (CantDistributeDigitalAssetsException e) {
             e.printStackTrace();
-        }*/
+        }*/catch(Exception exception){
+            System.out.println("Asset Distribution test exception "+exception);
+            exception.printStackTrace();
+        }
         this.serviceStatus=ServiceStatus.STARTED;
         //testRaiseEvent();
 
@@ -209,22 +232,25 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
             this.assetDistributionMonitorAgent.setBitcoinNetworkManager(bitcoinNetworkManager);
             this.assetDistributionMonitorAgent.setDigitalAssetDistributionVault(this.digitalAssetDistributionVault);
             this.assetDistributionMonitorAgent.setAssetTransmissionManager(this.assetTransmissionNetworkServiceManager);
+            //this.assetDistributionMonitorAgent.setActorAssetUserManager(this.actorAssetUserManager);
             this.assetDistributionMonitorAgent.start();
-        }else{
+        }/*else{
             this.assetDistributionMonitorAgent.start();
-        }
+        }*/
     }
 
     @Override
     public void distributeAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute, String walletPublicKey) throws CantDistributeDigitalAssetsException {
         //I will hardcode the hashmap and wallet public key for testing, TODO: please change this in production
         printSomething("The hashmap to distribute is hardcoded");
-        digitalAssetsToDistribute=getDistributionHashMapForTesting();
+
 
         ActorAssetUser registeredActorAssetUser = null;
         for (ActorAssetUser actorAssetUser: digitalAssetsToDistribute.values() ){
             registeredActorAssetUser = actorAssetUser;
         }
+
+        digitalAssetsToDistribute=getDistributionHashMapForTesting();
 
         for (DigitalAssetMetadata digitalAssetMetadata: digitalAssetsToDistribute.keySet()){
             digitalAssetsToDistribute.put(digitalAssetMetadata, registeredActorAssetUser);
@@ -363,6 +389,12 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
         this.actorAssetIssuerManager=actorAssetIssuerManager;
     }
 
+
+    @Override
+    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
+        this.actorAssetUserManager=actorAssetUserManager;
+    }
+
     @Override
     public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
         this.deviceUserManager=deviceUserManager;
@@ -390,4 +422,18 @@ public class AssetDistributionPluginRoot implements AssetDistributionManager, De
         eventManager.raiseEvent(eventToRaise);
         printSomething("End event RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION");
     }
+
+    private void testDeveloperDatabase() throws CantExecuteDatabaseOperationException, CantDefineContractPropertyException, CantPersistDigitalAssetException {
+        System.out.println("START TEST DEVELOPER DATABASE ASSET DISTRIBUTION");
+        MockDigitalAssetMetadataForTesting mockDigitalAssetMetadataForTesting=new MockDigitalAssetMetadataForTesting();
+        System.out.println("ASSET DISTRIBUTION MOCKED DAM:"+mockDigitalAssetMetadataForTesting);
+        AssetDistributionDao assetDistributionDao=new AssetDistributionDao(pluginDatabaseSystem,pluginId);
+        assetDistributionDao.persistDigitalAsset(
+                mockDigitalAssetMetadataForTesting.getGenesisTransaction(),
+                "testLocalStorage",
+                mockDigitalAssetMetadataForTesting.getDigitalAssetHash(),
+                "testReceiverPublicKey",
+                mockDigitalAssetMetadataForTesting.getDigitalAsset().getGenesisAddress().getAddress());
+    }
+
 }

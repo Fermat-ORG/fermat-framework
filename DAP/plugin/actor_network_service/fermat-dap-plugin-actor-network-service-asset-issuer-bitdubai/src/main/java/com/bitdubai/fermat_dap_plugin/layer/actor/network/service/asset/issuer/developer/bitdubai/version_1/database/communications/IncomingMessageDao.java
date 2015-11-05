@@ -2,8 +2,10 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -20,6 +22,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatM
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -115,6 +118,8 @@ public class IncomingMessageDao {
         return incomingTemplateNetworkServiceMessage;
     }
 
+    ;
+
     /**
      * Method that list the all entities on the data base.
      *
@@ -128,12 +133,12 @@ public class IncomingMessageDao {
             /*
              * 1 - load the data base to memory
              */
-            DatabaseTable networkIntraIssuerTable = getDatabaseTable();
-            networkIntraIssuerTable.loadToMemory();
+            DatabaseTable networkIntraUserTable = getDatabaseTable();
+            networkIntraUserTable.loadToMemory();
             /*
              * 2 - read all records
              */
-            List<DatabaseTableRecord> records = networkIntraIssuerTable.getRecords();
+            List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
             /*
              * 3 - Create a list of FermatMessage objects
              */
@@ -168,6 +173,9 @@ public class IncomingMessageDao {
          */
         return list;
     }
+
+    ;
+
 
     /**
      * Method that list the all entities on the data base. The valid value of
@@ -195,14 +203,14 @@ public class IncomingMessageDao {
             /*
              * 1 - load the data base to memory with filters
              */
-            DatabaseTable networkIntraIssuerTable = getDatabaseTable();
-            networkIntraIssuerTable.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
-            networkIntraIssuerTable.loadToMemory();
+            DatabaseTable networkIntraUserTable = getDatabaseTable();
+            networkIntraUserTable.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
+            networkIntraUserTable.loadToMemory();
 
             /*
              * 2 - read all records
              */
-            List<DatabaseTableRecord> records = networkIntraIssuerTable.getRecords();
+            List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
 
             /*
              * 3 - Create a list of FermatMessage objects
@@ -244,6 +252,102 @@ public class IncomingMessageDao {
          */
         return list;
     }
+
+    ;
+
+
+    /**
+     * Method that list the all entities on the data base. The valid value of
+     * the key are the att of the <code>CommunicationNetworkServiceDatabaseConstants</code>
+     *
+     * @return All FermatMessage.
+     * @throws CantReadRecordDataBaseException
+     * @see CommunicationNetworkServiceDatabaseConstants
+     */
+    public List<FermatMessage> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
+
+        if (filters == null ||
+                filters.isEmpty()) {
+
+            throw new IllegalArgumentException("The filters are required, can not be null or empty");
+        }
+
+
+        List<FermatMessage> list = null;
+        List<DatabaseTableFilter> filtersTable = new ArrayList<>();
+
+        try {
+
+
+            /*
+             * 1- Prepare the filters
+             */
+            DatabaseTable networkIntraUserTable = getDatabaseTable();
+
+            for (String key : filters.keySet()) {
+
+                DatabaseTableFilter newFilter = networkIntraUserTable.getEmptyTableFilter();
+                newFilter.setType(DatabaseFilterType.EQUAL);
+                newFilter.setColumn(key);
+                newFilter.setValue((String) filters.get(key));
+
+                filtersTable.add(newFilter);
+            }
+
+
+            /*
+             * 2 - load the data base to memory with filters
+             */
+            networkIntraUserTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
+            networkIntraUserTable.loadToMemory();
+
+            /*
+             * 3 - read all records
+             */
+            List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
+
+            /*
+             * 4 - Create a list of FermatMessage objects
+             */
+            list = new ArrayList<>();
+            list.clear();
+
+            /*
+             * 5 - Convert into FermatMessage objects
+             */
+            for (DatabaseTableRecord record : records) {
+
+                /*
+                 * 5.1 - Create and configure a  FermatMessage
+                 */
+                FermatMessage incomingTemplateNetworkServiceMessage = constructFrom(record);
+
+                /*
+                 * 5.2 - Add to the list
+                 */
+                list.add(incomingTemplateNetworkServiceMessage);
+
+            }
+
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+
+            // Register the failure.
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The data no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+        }
+
+        /*
+         * return the list
+         */
+        return list;
+    }
+
+    ;
 
     /**
      * Method that create a new entity in the data base.
@@ -284,7 +388,6 @@ public class IncomingMessageDao {
         }
 
     }
-
 
     /**
      * Method that update an entity in the data base.
@@ -361,6 +464,7 @@ public class IncomingMessageDao {
 
     }
 
+
     /**
      * @param record with values from the table
      * @return FermatMessage setters the values from table
@@ -391,7 +495,6 @@ public class IncomingMessageDao {
 
         return incomingTemplateNetworkServiceMessage;
     }
-
 
     /**
      * Construct a DatabaseTableRecord whit the values of the a FermatMessage pass

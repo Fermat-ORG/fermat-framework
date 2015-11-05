@@ -93,8 +93,6 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
     public final void start() throws CantStartAgentException {
 
-
-
         try {
 
             try {
@@ -162,10 +160,10 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
                         if (sendMessageToActor(
                                 buildJsonAcceptMessage(aer),
-                                aer.getIdentityPublicKeyRequesting(),
-                                aer.getIdentityTypeRequesting(),
                                 aer.getIdentityPublicKeyResponding(),
-                                aer.getIdentityTypeResponding()
+                                aer.getIdentityTypeResponding(),
+                                aer.getIdentityPublicKeyRequesting(),
+                                aer.getIdentityTypeRequesting()
                         )) {
                             toDone(aer.getRequestId());
                         }
@@ -178,10 +176,10 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
                         if (sendMessageToActor(
                                 buildJsonDenyMessage(aer),
-                                aer.getIdentityPublicKeyRequesting(),
-                                aer.getIdentityTypeRequesting(),
                                 aer.getIdentityPublicKeyResponding(),
-                                aer.getIdentityTypeResponding()
+                                aer.getIdentityTypeResponding(),
+                                aer.getIdentityPublicKeyRequesting(),
+                                aer.getIdentityTypeRequesting()
                         )) {
                             toDone(aer.getRequestId());
                         }

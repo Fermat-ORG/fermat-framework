@@ -54,6 +54,8 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.ObjectNotSetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantGetGenesisAddressException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantIssueDigitalAssetsException;
@@ -112,6 +114,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
     PluginFileSystem pluginFileSystem;
     UUID pluginId;
     String walletPublicKey;
+    String actorToPublicKey;
     //This flag must be used to select the way to send bitcoins from this plugin
     boolean SEND_BTC_FROM_CRYPTO_VAULT =false;
     long genesisAmount=100000;
@@ -179,6 +182,19 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
             throw new ObjectNotSetException("walletPublicKey is null");
         }
         this.walletPublicKey=walletPublicKey;
+    }
+
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
+        try {
+            this.actorToPublicKey=actorAssetIssuerManager.getActorAssetIssuer().getPublicKey();
+            if(this.actorToPublicKey==null){
+                this.actorToPublicKey="actorPublicKeyNotFound";
+            }
+            System.out.println("ASSET ISSUING Actor Asset Issuer public key "+actorToPublicKey);
+        } catch (CantGetAssetIssuerActorsException exception) {
+            throw new CantSetObjectException(exception, "Setting the actor asset issuer manager","Cannot get the actor asset issuer manager");
+        }
+
     }
 
     /**
@@ -627,13 +643,13 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
      * @param genesisAddress
      * @throws CantRegisterCryptoAddressBookRecordException
      */
-    private void registerGenesisAddressInCryptoAddressBook(CryptoAddress genesisAddress) throws CantRegisterCryptoAddressBookRecordException{
+    private void registerGenesisAddressInCryptoAddressBook(CryptoAddress genesisAddress) throws CantRegisterCryptoAddressBookRecordException {
         //TODO: solicitar los publickeys de los actors, la publicKey de la wallet
         //I'm gonna harcode the actors publicKey
         this.cryptoAddressBookManager.registerCryptoAddress(genesisAddress,
                 "testDeliveredByActorPublicKey",
                 Actors.INTRA_USER,
-                "testDeliveredToActorPublicKey",
+                this.actorToPublicKey,
                 Actors.DAP_ASSET_ISSUER,
                 Platforms.DIGITAL_ASSET_PLATFORM,
                 VaultType.ASSET_VAULT,
@@ -722,7 +738,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                     digitalAssetHash,
                     this.digitalAsset.getDescription(),
                     "senderPublicKey",
-                    "receptorPublicKey",
+                    this.actorToPublicKey,
                     Actors.INTRA_USER,
                     Actors.DAP_ASSET_ISSUER,
                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
@@ -756,7 +772,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
 
         DigitalAssetMetadata digitalAssetMetadata=null;
         try{
-            //Asign internal UUID
+            //Assign internal UUID
             UUID transactionUUID=generateTransactionUUID();
             String transactionId=transactionUUID.toString();
             //Check the available balance
@@ -787,9 +803,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors{
                 //We kept the DigitalAssetMetadata in DAMVault
                 saveDigitalAssetMetadataInVault(digitalAssetMetadata, transactionId);
             }
-
-
-
         } catch (CantPersistsGenesisAddressException exception) {
             throw new CantCreateDigitalAssetTransactionException(exception,"Issuing a new Digital Asset","Cannot persists the Digital Asset genesis Address in database");
         } catch (CantExecuteQueryException |UnexpectedResultReturnedFromDatabaseException exception) {

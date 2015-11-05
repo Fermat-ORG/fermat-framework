@@ -18,7 +18,17 @@ public class MockIdentityAssetIssuerForTest implements IdentityAssetIssuer {
     }
 
     @Override
-    public String createMessageSignature(String mensage) throws CantSingMessageException {
+    public byte[] getProfileImage() {
+        return new byte[0];
+    }
+
+    @Override
+    public void setNewProfileImage(byte[] newProfileImage) {
+
+    }
+
+    @Override
+    public String createMessageSignature(String mensage) {
         return "signature";
     }
 }

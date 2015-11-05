@@ -32,7 +32,7 @@ public class EqualsAndHashTest {
     private AndroidPluginTextFile testFile2;
 
     private UUID testId;
-    private Context testContext;
+    private String testContext;
     private String testDirectory;
     private String testFileName;
     private FilePrivacy testPrivacyLevel;
@@ -42,7 +42,8 @@ public class EqualsAndHashTest {
     public void setUpValues(){
         testId = UUID.randomUUID();
         Activity mockActivity = Robolectric.setupActivity(Activity.class);
-        testContext = shadowOf(mockActivity).getApplicationContext();
+        testContext = shadowOf(mockActivity).getApplicationContext().getFilesDir().getPath();
+
         testDirectory = "ROBOLECTRICTEST";
         testFileName = "TESTFILE.txt";
         testPrivacyLevel = FilePrivacy.PUBLIC;
@@ -79,7 +80,7 @@ public class EqualsAndHashTest {
         assertThat(testFile1.hashCode()).isNotEqualTo(testFile2.hashCode());
     }
 
-    private AndroidPluginTextFile constructAndroidPluginTextFile(final UUID ownerId, final Context context, final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan){
+    private AndroidPluginTextFile constructAndroidPluginTextFile(final UUID ownerId, final String context, final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan){
         return new AndroidPluginTextFile(ownerId, context, directoryName, fileName, privacyLevel, lifeSpan);
     }
 

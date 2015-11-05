@@ -7,8 +7,8 @@ android {
     }
 
 
-    compileSdkVersion 22
-    buildToolsVersion '22.0.1'
+    compileSdkVersion 23
+    buildToolsVersion '23.0.1'
 
     packagingOptions {
         exclude 'LICENSE.txt'
@@ -21,13 +21,16 @@ android {
     defaultConfig {
         applicationId "com.bitdubai.fermat"
         minSdkVersion 16
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
     }
 
-   dexOptions{ javaMaxHeapSize "7g"}
+    dexOptions {
+        javaMaxHeapSize "7g"
+        incremental true
+    }
 
     sourceSets {
         main {
@@ -53,6 +56,10 @@ android {
     lintOptions {
         abortOnError false
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
 }
 
 
@@ -69,14 +76,14 @@ dependencies {
     compile project(':fermat-ccp-android-reference-bitcoin-wallet-bitdubai')
     compile project(':fermat-ccp-android-clone-reference-nich-wallet')
     /*
-        Wallets on the pipeline:
-            compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai')
-            compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argetina-loss-protected-wallet-bitdubai')
-            compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-multi-account-wallet-bitdubai')
-            compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-discount-wallet-bitdubai')
-            compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bitcoin-wallet-bitdubai')
-            compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bank-notes-wallet-bitdubai')
-        */
+                Wallets on the pipeline:
+                    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai')
+                    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argetina-loss-protected-wallet-bitdubai')
+                    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-multi-account-wallet-bitdubai')
+                    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-discount-wallet-bitdubai')
+                    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bitcoin-wallet-bitdubai')
+                    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bank-notes-wallet-bitdubai')
+                */
 
     // DMP Projects (Sub APPs)
     compile project(':fermat-ccp-android-sub-app-intra-user-identity-bitdubai')
@@ -87,8 +94,8 @@ dependencies {
     compile project(':fermat-dmp-android-sub-app-wallet-store-bitdubai')
     compile project(':fermat-dap-android-reference-wallet-asset-issuer-bitdubai')
     /*
-        Sub APPs on the pipeline
-        */
+                Sub APPs on the pipeline
+                */
     compile project(':fermat-pip-android-sub-app-sub-app-manager-bitdubai')
     // PIP Projects (Sub APPs)
     compile project(':fermat-pip-android-sub-app-developer-bitdubai')
@@ -108,16 +115,16 @@ dependencies {
     compile project(':fermat-dap-android-sub-app-asset-factory-bitdubai')
     compile project(':fermat-dap-android-sub-app-asset-user-community-bitdubai')
     compile project(':fermat-dap-android-sub-app-asset-issuer-community-bitdubai')
-    compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
+    compile project(':fermat-dap-android-sub-app-redeem-point-community-bitdubai')
+//    compile project(':fermat-dap-plugin-wallet-module-asset-issuer-bitdubai')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     //compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.android.support:support-v4:22.0.1'
-    compile 'com.android.support:support-v13:21.0.3'
+    compile 'com.android.support:support-v4:23.0.1'
+    compile 'com.android.support:support-v13:23.0.1'
     compile 'com.google.android.gms:play-services:6.5.87'
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5+'
-    compile project(':fermat-dap-android-sub-app-redeem-point-community-bitdubai')
-
-    compile 'com.android.support:recyclerview-v7:21.0.3'
-    compile 'com.android.support:appcompat-v7:22.2.0'
-    compile 'com.android.support:design:22.2.0'
+    compile 'com.android.support:recyclerview-v7:23.0.1'
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.android.support:design:23.0.1'
+    compile 'com.android.support:design:23.1.0'
 }

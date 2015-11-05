@@ -1,5 +1,9 @@
 ## Fermat: A Trust-less Financial Application Framework
 
+Luis Fernando Molina
+
+luis.molina@bitDubai.com
+
 <br>
 ### Abstract
 
@@ -14,27 +18,27 @@ The framework replaces the standalone wallet and enables the development of trus
 
 Standalone bitcoin wallets were the first trust-less financial applications since they required to trust no third party inheriting this property from the bitcoin network itself. As the ecosystem evolved trusted third parties were introduced again and they took over the wallet space because of technical capabilities that are easier to be built in a centralized way: communication between wallets, synchronization between devices, interfacing the legacy financial system, etc., and they consistently took the biggest share of funding, leaving standalone wallets far behind and at the same time trashing the trust-less property of bitcoin, one of its key features. Applications trying to use the blockchain to transport meta-data were considered spammers and trust-less wallets were effectively left behind.
 
-What is needed on top of all existing protocols is a layer that faces the end user and that finishes the job bitcoin started. By using crypto networks for transporting value or as a registry for digital assets and the Fermat network for transporting the required meta-data at a client level it would allow financial apps to run any user-level interconnected-functionality without ever going through a trusted party.
+What is needed on top of all existing protocols is a layer that faces the End User and that finishes the job bitcoin started. By using crypto networks for transporting value or as a registry for digital assets and the Fermat Network for transporting the required meta-data at a client level it would allow financial apps to run any user-level interconnected-functionality without ever going through a trusted third party.
 
-A plug-ins architecture allows any developer to add their own re-usable plug-ins. A micro-use-licensing scheme enforced by the system itself guarantees plug-ins, wallets, and apps developers a revenue stream. OS dependent GUI components are built on top of the multi-layered plug-ins structure to face the end user as niche-wallets or financial applications in general. Apps and wallets with similar functionality are wrapped into platforms, each one introducing new actors and plug-ins, to the ever increasing functionality of the whole system.
+A plug-ins architecture allows any developer to add their own re-usable plug-ins. A micro-use-licensing-scheme enforced by the system itself guarantees plug-ins, wallets, and apps developers a revenue stream. OS dependent GUI components are built on top of the multi-layered plug-ins structure to face the end user as niche-wallets or financial applications in general. Apps and wallets with similar functionality are wrapped into platforms, each one introducing new actors and plug-ins, to the ever increasing functionality of the whole system.
 
-A built-in wallet-factory allows developers to reuse the highest level components and create niche-wallets or niche-financial-apps by combining existing functionality and adding their own code to the combo. A built-in wallet-editor allows non-developers to reuse any of these niche-wallets to build new branded-wallets just by changing their look and feel. A built-in p2p-wallet-store allows end users to choose which wallets or financial apps to install from the ever growing catalog.
+A built-in _wallet-factory_ allows developers to reuse the highest level components and create niche-wallets or niche-financial-apps by combining existing functionality and adding their own code to the combo. A built-in _wallet-editor_ allows non-developers to reuse any of these niche-wallets to build new branded-wallets just by changing their look and feel. A built-in _p2p-wallet-store_ allows end users to choose which wallets or financial apps to install from the ever growing catalog.
 
 <br>
 ### Framework
 
-The solution we propose begins with a Framework that must be portable into different OS. On a multi layered format, the bottom most layer is interfacing the OS and must be built with replaceable components implementing the same set of public interfaces (polymorphism) in order to build on top of it a single set of OS-independent components. At the same time, the upper most layers will be again OS-dependent, providing a native GUI on each device.
+The solution we propose begins with a Framework that must be portable into different OS. On a multi-layered format, the bottom most layer is interfacing the OS and must be built with replaceable components implementing the same set of public interfaces (polymorphism) in order to build on top of it a single set of OS-independent components. At the same time, the upper most layers are again OS-dependent, providing a native GUI on each device.
 
-We identify 3 different kind of components that we arbitrary call Add-ons, Plug-in, and GUI components. We define Add-ons as low level components that do not need to identify themselves to consume services from other components. This impacts in that they have broad access to the file system and databases. On the other side, Plug-ins have their own identity and must identify themselves to other plugins or add-ons to consume their services which in turn restrict the scope of their services based on the caller's identity (for example the filesystem addon would only give access to a plugin's own folder structure, the database system addon would only give access to a plugin's own databases, and so on). In this way is handled the problem of running plugins from untrusted sources.
+We identify 3 different kind of components that we arbitrary call **Add-ons**, **Plug-ins**, and **GUI** components. We define Add-ons as low level components that do not need to identify themselves to consume services from other components. They have broad access to the file system and databases. Plug-ins have their own identity and must identify themselves to other components to consume their services which in turn restrict the scope of their services based on the caller's identity (for example the filesystem addon would only give access to a Plug-in's own folder structure, the database system addon would only give access to a plugin's own databases, and so on). The problem of running Plug-ins from untrusted sources in handled in this way.
 
-The Framework core is in charge of initializing Add-ons and Plug-ins and managing Plug-ins identities. An internal API library defines the public interfaces that each component exposes to the rest of the components within the same device in order to allow then to consume their services. This provides a strong encapsulation of each component's business logic allowing them to freely define their internal structure and data model.
+The Framework core is in charge of initializing Add-ons and Plug-ins and managing Plug-ins identities. An internal API library defines the public interfaces that each component exposes to the rest of the components within the same device in order to allow then to consume their services locally. This provides a strong encapsulation of each component's business logic allowing them to freely define their internal structure and data model.
 
 <br>
 ### Crypto Networks
 
-A set of plug-ins is needed for each crypto network that want to be supported. One for interfacing the network and being able to push outgoing transactions and monitor incoming transactions. Another couple being the digital vaults where the crypto currency value and digital assets are stored.
+A set of Plug-ins is needed for each crypto network to be supported. One for interfacing the network, pushing outgoing transactions and monitoring incoming transactions. Another couple being the digital vaults where the crypto currency value and digital assets are stored.
 
-Wallets are higher level abstractions and have their own set of Plug-ins for keeping the accounting of each kind of them. This means that the we split the accounting from the value having components at different layers to handle each of them.
+Wallets are higher level abstractions and have their own set of Plug-ins for keeping the accounting of each kind of them. This means that we split the accounting from the handling of the value by having components at different layers to handle each ativity.
 
 <br>
 ### Fermat Network
@@ -47,20 +51,24 @@ b. clients calling other clients.
 
 Every Node has a copy of a distributed geo-localized inventory of all network nodes. They run a protocol that allows them to keep their copy synchronized. 
 
-To be able to be found, a client registers itself and some inner components and identities with the geographically closest node. When it needs to find other clients it runs a protocol based on the approximate location of the client it is willing to connect to.
+An **actor** is a type of role an End User might play and in this context represents one of the End Users identities.
+ 
+To be able to be found, a network client checks itself in and its actors with the geographically closest node. We call this the _Home Node_. When and actor needs to find another actor, it follows a protocol that requires the approximate location of the actor it is willing to connect to. This is possible becasue the system deals with End Users and usually people know the city, state or country where the people they know actually live. We avoid in this way using phone numbers, emails or any other possible personal identifier that could compromise End Users privacy.
+
+For scalability reasons, we moved the responsability of finding actors within the network, from the network itself to the network clients. Each node has a distributed catalog of Actors and is responsible to keep it updated. But instead of every node having the full catallog, only a set of nodes nearby the _Home Node_ of an actor knows that actor and which node is her home. This allows any actor who knows the approximate location of the actor she is searching for to easily find a trace and follow it to the current _Home Node_ where her friend is checked in, and stablish a coonection between them. 
 
 <br>
 ### Incentive
 
 #### To developers
 
-Plug-ins developers declare a micro-use-license for each plug-in they add to the Framework. Wallet or Financial Apps developers declare a micro-use-license for their components. End users install the Apps (wallets) of their choice and the license paid is the summary of the App's micro-use-license plus all the micro-use-licenses of the plug-ins used by that App. 
+Plug-ins developers declare a _Micro-Use-License_ for each plug-in they add to the Framework. Wallet or Financial Apps developers declare a _Micro-Use-License_ for their components. End users install the Apps (wallets) of their choice and the license to be paid is the summary of the App's micro-use-license plus all the micro-use-licenses of the plug-ins used by that App. 
 
-The Framework assumes the responsibility to enforce the agreements, charge the end user and distribute the payments to all developers involved.
+The Framework assumes the responsibility to enforce the license agreements, charge the end user and distribute the payments to all developers involved.
 
 #### To network nodes
 
-Clients establishes a home node where they register themselves and their network services and identities in order to be found by other clients. They will pay a subscription fee to their home node for it's services. Finding and calling other clients through other nodes is free as those nodes income is coming from the clients for which they are the home node.
+Network clients establishes a _home node_ where they check themselves and their actors in order to be found by other clients. They must pay a subscription fee to their _home node_ for it's services. Finding and calling other clients through other nodes is free as those nodes income is covered by network clients for which they are their _home node_.
 
 <br>
 ### Platforms

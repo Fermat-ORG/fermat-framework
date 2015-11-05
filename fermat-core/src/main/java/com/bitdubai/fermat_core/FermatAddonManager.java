@@ -47,6 +47,9 @@ public class FermatAddonManager {
                 abstractAddon.assignAddonReference(reference);
             }
 
+            if (abstractAddon.isDealsWithOsContext())
+                abstractAddon.setOsContext(systemContext.getOsContext());
+
             startAddon(abstractAddon);
 
             return abstractAddon;

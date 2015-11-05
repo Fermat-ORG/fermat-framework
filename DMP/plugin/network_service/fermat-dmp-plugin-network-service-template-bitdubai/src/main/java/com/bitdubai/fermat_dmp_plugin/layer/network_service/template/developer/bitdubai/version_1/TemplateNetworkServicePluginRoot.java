@@ -799,7 +799,6 @@ public class TemplateNetworkServicePluginRoot implements TemplateManager, Servic
      * Get is Register
      * @return boolean
      */
-    @Override
     public boolean isRegister() {
         return register;
     }

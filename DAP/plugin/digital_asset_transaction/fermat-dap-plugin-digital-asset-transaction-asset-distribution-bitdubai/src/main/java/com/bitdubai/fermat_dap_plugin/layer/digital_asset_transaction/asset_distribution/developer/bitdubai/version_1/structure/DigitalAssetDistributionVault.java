@@ -5,6 +5,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetIssuerWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
@@ -47,15 +50,22 @@ public class DigitalAssetDistributionVault extends AbstractDigitalAssetVault {
         this.errorManager=errorManager;
     }
 
-
-
-    public void setDigitalAssetMetadataAssetIssuerWalletDebit(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterDebitException {
+    public void setDigitalAssetMetadataAssetIssuerWalletDebit(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterDebitException, CantGetAssetIssuerActorsException {
         AssetIssuerWallet assetIssuerWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
         AssetIssuerWalletBalance assetIssuerWalletBalance= assetIssuerWallet.getBookBalance(balanceType);
+        ActorAssetIssuer actorAssetIssuer=this.actorAssetIssuerManager.getActorAssetIssuer();
+        String actorFromPublicKey;
+        if(actorAssetIssuer==null){
+            System.out.println("ASSET DISTRIBUTION Actor Issuer is null");
+            actorFromPublicKey="UNDEFINED";
+        }else{
+            actorFromPublicKey=actorAssetIssuer.getPublicKey();
+        }
+        System.out.println("ASSET DISTRIBUTION Actor Issuer public key:"+actorFromPublicKey);
         AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper=new AssetIssuerWalletTransactionRecordWrapper(
                 digitalAssetMetadata,
                 genesisTransaction,
-                "testActorFromPublicKey",
+                actorFromPublicKey,
                 "testActorToPublicKey"
         );
         System.out.println("ASSET DISTRIBUTION AssetIssuerWalletTransactionRecordWrapper:"+assetIssuerWalletTransactionRecordWrapper.getDescription());

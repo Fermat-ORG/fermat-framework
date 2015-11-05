@@ -143,10 +143,10 @@ public class AssetDistributionDao {
             this.database.closeDatabase();
         }  catch (CantExecuteDatabaseOperationException exception) {
             this.database.closeDatabase();
-            throw new CantSaveEventException(exception, "Saving new event.", "Cannot open or find the Asset Issuing database");
+            throw new CantSaveEventException(exception, "Saving new event.", "Cannot open or find the Asset Distribution database");
         } catch (CantInsertRecordException exception) {
             this.database.closeDatabase();
-            throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Issuing database");
+            throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Asset Distribution database");
         } catch(Exception exception){
             this.database.closeDatabase();
             throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
@@ -296,6 +296,13 @@ public class AssetDistributionDao {
             this.database.closeDatabase();
             throw new CantCheckAssetDistributionProgressException(FermatException.wrapException(exception), "Getting "+referenceColumn+" list", "Unexpected exception");
         }
+    }
+
+    public String getActorUserPublicKeyByGenesisTransaction(String genesisTransaction) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
+        return getStringValueFromSelectedTableTableByFieldCode(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME,
+                genesisTransaction,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_ACTOR_ASSET_USER_PUBLIC_KEY_COLUMN_NAME,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME);
     }
 
     public String getPublicKeyByGenesisTransaction(String genesisTransaction) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {

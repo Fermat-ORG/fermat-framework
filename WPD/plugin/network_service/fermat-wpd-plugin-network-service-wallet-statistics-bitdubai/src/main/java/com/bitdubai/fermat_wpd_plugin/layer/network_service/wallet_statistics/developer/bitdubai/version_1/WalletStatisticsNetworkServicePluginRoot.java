@@ -62,11 +62,6 @@ public class WalletStatisticsNetworkServicePluginRoot implements DealsWithErrors
      */
     UUID pluginId;
 
-    /**
-     * Represent the register
-     */
-    private boolean register;
-
 
 
     /**
@@ -164,13 +159,9 @@ public class WalletStatisticsNetworkServicePluginRoot implements DealsWithErrors
 
     }
 
-    /**
-     * Get is Register
-     * @return boolean
-     */
     @Override
     public boolean isRegister() {
-        return register;
+        return false;
     }
 
     /**

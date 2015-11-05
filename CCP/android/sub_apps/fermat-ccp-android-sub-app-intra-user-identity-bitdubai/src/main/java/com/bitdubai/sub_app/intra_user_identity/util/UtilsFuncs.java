@@ -13,21 +13,25 @@ public class UtilsFuncs {
     public static Bitmap getRoundedShape(Bitmap srcBitmap) {
         int targetWidth = 50, targetHeight = 50;
 
-        Bitmap targetBitmap = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888);
+        Bitmap targetBitmap = null;
+        if(srcBitmap!=null) {
 
-        float x = ((float) targetWidth - 1) / 2;
-        float y = ((float) targetHeight - 1) / 2;
-        float radius = Math.min((float) targetWidth, (float) targetHeight) / 2;
+            targetBitmap = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888);
 
-        Path path = new Path();
-        path.addCircle(x, y, radius, Path.Direction.CCW);
+            float x = ((float) targetWidth - 1) / 2;
+            float y = ((float) targetHeight - 1) / 2;
+            float radius = Math.min((float) targetWidth, (float) targetHeight) / 2;
 
-        Rect src = new Rect(0, 0,  srcBitmap.getWidth(),  srcBitmap.getHeight());
-        Rect dst = new Rect(0, 0, targetWidth, targetHeight);
+            Path path = new Path();
+            path.addCircle(x, y, radius, Path.Direction.CCW);
 
-        Canvas canvas = new Canvas(targetBitmap);
-        canvas.clipPath(path);
-        canvas.drawBitmap( srcBitmap, src, dst, null);
+            Rect src = new Rect(0, 0, srcBitmap.getWidth(), srcBitmap.getHeight());
+            Rect dst = new Rect(0, 0, targetWidth, targetHeight);
+
+            Canvas canvas = new Canvas(targetBitmap);
+            canvas.clipPath(path);
+            canvas.drawBitmap(srcBitmap, src, dst, null);
+        }
 
         return targetBitmap;
     }

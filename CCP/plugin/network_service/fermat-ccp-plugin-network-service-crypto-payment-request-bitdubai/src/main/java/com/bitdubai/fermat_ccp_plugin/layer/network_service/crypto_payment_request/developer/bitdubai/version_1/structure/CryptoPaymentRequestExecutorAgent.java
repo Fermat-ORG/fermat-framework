@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_requ
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -62,13 +63,15 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
     private final PluginDatabaseSystem                         pluginDatabaseSystem                        ;
     private final UUID                                         pluginId                                    ;
     private final WsCommunicationsCloudClientManager           wsCommunicationsCloudClientManager          ;
+    private final PluginVersionReference                       pluginVersionReference                      ;
 
     public CryptoPaymentRequestExecutorAgent(final CryptoPaymentRequestNetworkServicePluginRoot cryptoPaymentRequestNetworkServicePluginRoot,
                                              final ErrorManager                                 errorManager                                ,
                                              final EventManager                                 eventManager                                ,
                                              final PluginDatabaseSystem                         pluginDatabaseSystem                        ,
                                              final UUID                                         pluginId                                    ,
-                                             final WsCommunicationsCloudClientManager           wsCommunicationsCloudClientManager) {
+                                             final WsCommunicationsCloudClientManager           wsCommunicationsCloudClientManager          ,
+                                             final PluginVersionReference                       pluginVersionReference                      ) {
 
         this.cryptoPaymentRequestNetworkServicePluginRoot = cryptoPaymentRequestNetworkServicePluginRoot;
         this.errorManager                                 = errorManager                                ;
@@ -76,6 +79,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
         this.pluginDatabaseSystem                         = pluginDatabaseSystem                        ;
         this.pluginId                                     = pluginId                                    ;
         this.wsCommunicationsCloudClientManager           = wsCommunicationsCloudClientManager          ;
+        this.pluginVersionReference                       = pluginVersionReference                      ;
 
         this.status                                       = AgentStatus.CREATED                         ;
 
@@ -472,7 +476,7 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
     }
 
     private void reportUnexpectedError(Exception e) {
-        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_CRYPTO_PAYMENT_REQUEST_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
     public void connectionFailure(String identityPublicKey){

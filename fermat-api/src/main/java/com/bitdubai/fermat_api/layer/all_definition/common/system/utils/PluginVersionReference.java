@@ -150,4 +150,15 @@ public class PluginVersionReference {
                 ", version=" + version +
                 '}';
     }
+
+    public final String toString2() {
+        return "PluginVersionReference{" +
+                "operativeSystem=" + pluginDeveloperReference.getPluginReference().getLayerReference().getPlatformReference().getOperativeSystem() +
+                ", platform=" + pluginDeveloperReference.getPluginReference().getLayerReference().getPlatformReference().getPlatform() +
+                ", layer=" + pluginDeveloperReference.getPluginReference().getLayerReference().getLayer() +
+                ", plugin=" + pluginDeveloperReference.getPluginReference().getPlugin()+
+                ", developer=" + pluginDeveloperReference.getDeveloper()+
+                ", version=" + version +
+                '}';
+    }
 }
