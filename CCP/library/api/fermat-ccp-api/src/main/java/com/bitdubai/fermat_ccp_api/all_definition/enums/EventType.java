@@ -7,9 +7,6 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressDeniedEvent;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressReceivedEvent;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressRequestedEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressesNewsEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestApprovedEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.events.CryptoPaymentRequestConfirmedReceptionEvent;

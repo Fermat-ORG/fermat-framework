@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.all_definition.events.exceptions.Unexpected
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.events.CryptoAddressRequestedEvent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.AssetActorUserPluginRoot;
 
 /**
@@ -36,7 +35,7 @@ public class CryptoAddressRequestedEventHandler implements FermatEventHandler {
 
         if (this.assetActorUserPluginRoot.getStatus() == ServiceStatus.STARTED) {
 
-            if (fermatEvent instanceof CryptoAddressRequestedEvent) {
+           /* if (fermatEvent instanceof CryptoAddressRequestedEvent) {
                 CryptoAddressRequestedEvent cryptoAddressRequestedEvent = (CryptoAddressRequestedEvent) fermatEvent;
 
                 if (cryptoAddressRequestedEvent.getActorType().equals(Actors.DAP_ASSET_USER))
@@ -48,7 +47,7 @@ public class CryptoAddressRequestedEventHandler implements FermatEventHandler {
                                  "Event expected: " + eventExpected.toString()              + " - " + eventExpected.getCode();
                 throw new UnexpectedEventException(context);
             }
-        } else {
+        } else {*/
         }
     }
 }
