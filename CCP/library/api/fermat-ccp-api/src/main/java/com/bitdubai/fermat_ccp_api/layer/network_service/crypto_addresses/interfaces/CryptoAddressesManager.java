@@ -62,15 +62,13 @@ public interface CryptoAddressesManager {
                                                                                   PendingRequestNotFoundException          ;
 
     /**
-     * The method <code>listPendingCryptoAddressRequests</code> return the list of requests waiting for a local action for a specific type of actor
-     *
-     * @param actorType  type of actor asking for the pending requests.
+     * The method <code>listAllPendingRequests</code> return the list of requests waiting for a local action
      *
      * @return a list a request that can be handled by the actor
      *
      * @throws CantListPendingCryptoAddressRequestsException if something goes wrong.
      */
-    List<CryptoAddressRequest> listPendingCryptoAddressRequests(Actors actorType) throws CantListPendingCryptoAddressRequestsException;
+    List<CryptoAddressRequest> listAllPendingRequests() throws CantListPendingCryptoAddressRequestsException;
 
     /**
      * The method <code>listPendingCryptoAddressRequests</code> return the list of requests waiting for a local action.
