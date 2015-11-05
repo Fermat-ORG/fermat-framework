@@ -37,6 +37,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.DealsWithCryptoTransmissionNetworkService;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
@@ -1414,7 +1415,7 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithCCPIntraWalletUsers) {
-                ((DealsWithCCPIntraWalletUsers) plugin).setIntraWalletUserManager((IntraWalletUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR));
+                ((DealsWithCCPIntraWalletUsers) plugin).setIntraWalletUserIdentityManager((IntraWalletUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_ACTOR));
             }
 
             if (plugin instanceof DealsWithIntraUsersModule) {
@@ -1426,7 +1427,9 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithCCPIdentityIntraWalletUser) {
-                ((DealsWithCCPIdentityIntraWalletUser) plugin).setIdentityIntraUserManager((com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY));
+                Plugin plugin1 = corePlatformContext.getPlugin(Plugins.BITDUBAI_CCP_INTRA_WALLET_USER_IDENTITY);
+                System.out.println(plugin1.getClass());
+                ((DealsWithCCPIdentityIntraWalletUser) plugin).setIdentityIntraUserManager((IntraWalletUserIdentityManager) plugin1);
             }
 
             if (plugin instanceof DealsWithDeveloperIdentity) {

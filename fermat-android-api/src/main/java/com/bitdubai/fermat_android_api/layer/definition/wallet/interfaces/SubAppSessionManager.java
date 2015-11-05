@@ -22,7 +22,7 @@ public interface SubAppSessionManager {
 //                                            AssetFactoryModuleManager assetFactoryModuleManager,
 //                                            CryptoBrokerIdentityModuleManager cryptoBrokerIdentityModuleManager,
 //                                            CryptoCustomerIdentityModuleManager cryptoCustomerIdentityModuleManager,
-//                                            IntraWalletUserManager intraWalletUserManager);
+//                                            IntraWalletUserIdentityManager intraWalletUserManager);
 
     public boolean closeSubAppSession(SubApps subApps);
     public Map<SubApps,SubAppsSession> listOpenSubApps();
