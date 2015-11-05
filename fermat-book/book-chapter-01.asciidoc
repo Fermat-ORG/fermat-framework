@@ -43,7 +43,7 @@ Follow next chapters to get a more detailed description of each one.
 
 
   
-=== Continue Reading ...
+==== Continue Reading ...
 
 link:book-chapter-02.asciidoc[Next Chapter]
 

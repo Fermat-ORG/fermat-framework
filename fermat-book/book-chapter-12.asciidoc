@@ -1,15 +1,10 @@
-== Fermat Crypto Currency Platform
+== Chapter 12: Fermat Crypto Currency Platform
 This platform introduces the first *niche wallets* to manage existing crypto currencies - Bitcoin Wallet, Litecoin Wallet, Ripple Wallet, etc - and also the resources to develop wallets of new cryptocurrencies invented in the future. + 
 
-The new identity type introduced in this platform is the +
+The new identities introduced in this platform are:+
 [horizontal]
 Intra-Crypto-Wallet-User identity :: +
-
-
-Also two new *actor identities*: +
-[horizontal]
-Intra-Crypto-Wallet-User :: 
-Extra-Crypto-Wallet-User :: +
+Extra-Crypto-Wallet-User identity :: +
 
 For a *niche wallet* to run, we need _reference wallets_ and underlying plug-ins which grant: +
 
@@ -32,7 +27,7 @@ Some of the new components added to the framework by this platform are those to 
 
 === Bitcoin Wallet
 Fermat's Bitcoin *Niche Wallet*  is a _basic wallet_ in terms of its functionalities, even simpler as other popular BTC wallets on the market. This is so  to maximize its ulterior reutilisation. + 
-This wallet provides the minimum necessary functionalities to perform a succesful transaction of Bitcoins: (+)
+This wallet provides the minimum necessary functionalities to perform a succesful transaction of Bitcoins: +
 
 * to make a payment in BTC ( send value to a BTC Wallet owner)
 * to receive payments in BTC
@@ -58,7 +53,7 @@ The new functionalities added are:
 * to check the *exchange rate* when the user attemps to spend an amount of BTC and to freeze the funds if they are below the *purchase price* 
 
 
-=== Continue Reading
+==== Continue Reading
 ////
 link:book-chapter-19.asciidoc[Digital Assets Platform]
 ////

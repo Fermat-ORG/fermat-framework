@@ -1,5 +1,5 @@
 :numbered!: 
-== Fermat Wallet Production & Distribution 
+== Chapter 9: Fermat Wallet Production & Distribution Line
 
 Fermat builds the necessary services to run a wallet application at a user level collecting different functionalities available. Each functionality has its own workflow, i.e the thread connecting the plug-ins from different layers to complete the task. +
 First group of functionalities are wrapped in the *reference wallets*, which are designed to fullfill only a specific objective. +
@@ -43,7 +43,7 @@ Internally, the Wallet Store  keeps the identity of the wallet, of its developer
 
 Let's explore the different niches covered by Fermat in the platforms described in next chapters.
 
-=== Continue Reading
+==== Continue Reading
 link:book-chapter-10.asciidoc[Next Chapter]
 
 link:book-chapter-08.asciidoc[Previous Chapter]

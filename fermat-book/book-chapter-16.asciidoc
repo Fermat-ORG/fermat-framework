@@ -1,6 +1,6 @@
 :numbered!:
 
-== Fermat Cash & Fermat Bank Platforms 
+== Chapter 16: Fermat Cash & Fermat Bank Platforms 
 These two platforms form the basic infrastructure to interact with the legacy financial system. +
 
 

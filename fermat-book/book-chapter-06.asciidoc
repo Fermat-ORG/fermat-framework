@@ -1,6 +1,6 @@
 :numbered!:
 
-== Fermat Network and Communication Superlayer
+== Chapter 6: Fermat Network and Communication Superlayer
 This superlayer provides connectivity between *devices* by stablishing a _communication channel_ between a plug-in running on a *local device* which requires to consume certain service from its _counterpart_ (i.e. the plug-in with the same task) running on a *remote device*. +
 This superlayer takes the entire responsibility of maintaining the communication channel "alive" as long as it is required, providing this *service* as a whole, i.e. offering this channel to the external layers and plug-ins in a *transparent* way for them, regardless of the *communication technology* that the layer uses to build this channel *_dynamically_*. + 
 The upper layers should not be aware of the technology in use (wi-fi, NFC, p2p, bluetooth, etc.) and problems related to a connection should be solved by the communication layer without disturbing the clients. +
@@ -27,7 +27,7 @@ Mesh :: Fermat+
 ////
 :numbered!:
   
-=== Continue Reading
+==== Continue Reading
 link:book-chapter-07.asciidoc[Next Chapter]
 
 link:book-chapter-05.asciidoc[Previous Chapter]

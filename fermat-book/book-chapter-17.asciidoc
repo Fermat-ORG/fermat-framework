@@ -1,4 +1,4 @@
-== Fermat Crypto Broker Platform
+== Chapter 17: Fermat Crypto Broker Platform
 In this platform the actors involved are the *cryptobroker* and his customers (*cryptocustomers*). A *cryptobroker* is a person or small organization whose business logic is to buy and sell cryptocurrency for fiat money in his local market, obtaining his profits from the difference in the buy/sell price. We distinguish also two usual levels of *cryptobrokers*, those acting as *cryptobrokers wholesalers* and those who deal with final users/customers.   
 
 === New components
@@ -7,6 +7,8 @@ The new components added to the framework offer the following functionalities:
 Fiat Index :: to check the exchange rate of fiat currencies.
 Business transactions :: to handle more complex transactions that include negotiation, agreement, sale and purchase of crypto and fiat money.
 Crypto Broker Platform Wallet Manager :: to manage different wallets according to multiple actor identities in the three actor types ( as cryptobroker, cryptocustomer, crypto wholesaler).
+Community Components :: to keep track of relationships between Crypto Brokers and Crypto Users by defining communities.
+Wholesalers :: contact list of available crypto wholesalers.
 Crypto Broker Wallets :: Crypto Broker Wallet , Crypto Broker Customer Wallet and Crypto Broker Wholesaler Wallet   +
 
 === Fermat Cryptobroker Wallet

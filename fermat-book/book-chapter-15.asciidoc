@@ -1,4 +1,4 @@
-== Fermat Shoping Platform: + 
+== Chapter 15: Fermat Shoping Platform: + 
 
 This platform is designed to allow the interaction between the actors of traditional consumer market of products and services. +
 
