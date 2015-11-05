@@ -20,6 +20,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.CantReportCriticalStartingProblemException;
 import com.bitdubai.fermat_api.CantStartPlatformException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
@@ -245,11 +246,20 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
         @Override
         protected Object doInBackground() throws Exception {
 
-
                 Context context = getApplicationContext();
 
                 platform = ((ApplicationSession)getApplication()).getFermatPlatform();
 
+                try {
+                    final FermatSystem fermatSystem = new FermatSystem(context, new OSAPlatform());
+                    fermatSystem.start();
+                    platform.setFermatSystem(fermatSystem);
+                } catch (FermatException e) {
+                    System.err.println(e.toString());
+                    System.out.println(e.getPossibleReason());
+                    System.out.println(e.getFormattedContext());
+                    System.out.println(e.getFormattedTrace());
+                }
 
                 //set Os Addons in platform
                 fileSystemOs = new AndroidOsFileSystem(context.getFilesDir().getPath());
