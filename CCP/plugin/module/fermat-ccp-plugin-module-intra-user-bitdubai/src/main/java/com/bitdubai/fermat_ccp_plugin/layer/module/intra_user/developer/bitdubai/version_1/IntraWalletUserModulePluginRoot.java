@@ -31,6 +31,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_wallet_user.interfaces.Intr
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.DealsWithCCPIdentityIntraWalletUser;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
@@ -107,7 +108,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements D
     private IntraUserManager intraUserNertwokServiceManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY       , plugin = Plugins.INTRA_WALLET_USER  )
-    private com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager intraWalletUserIdentityManager;
+    private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR          , plugin = Plugins.INTRA_WALLET_USER  )
@@ -643,8 +644,8 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements D
      * DealsWithCCPIdentityIntraWalletUser Interface implementation.
      */
     @Override
-    public void setIdentityIntraUserManager(com.bitdubai.fermat_ccp_api.layer.identity.intra_wallet_user.interfaces.IntraWalletUserManager intraWalletUserManager) {
-        this.intraWalletUserIdentityManager = intraWalletUserManager;
+    public void setIdentityIntraUserManager(IntraWalletUserIdentityManager intraWalletUserIdentityManager) {
+        this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
     }
 
     /**
@@ -652,7 +653,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements D
      */
 
     @Override
-    public void setIntraWalletUserManager(IntraWalletUserManager intraWalletUserManager) {
+    public void setIntraWalletUserIdentityManager(IntraWalletUserManager intraWalletUserManager) {
         this.intraWalletUserManager = intraWalletUserManager;
     }
 

@@ -4,10 +4,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_pip_core.layer.platform_service.error_manager.ErrorManagerSubsystem;
-import com.bitdubai.fermat_pip_core.layer.platform_service.event_manager.EventManagerSubsystem;
-import com.bitdubai.fermat_pip_core.layer.platform_service.location_manager.LocationManagerSubsystem;
-import com.bitdubai.fermat_pip_core.layer.platform_service.platform_info.PlatformInfoSubsystem;
 import com.bitdubai.fermat_pip_core.layer.user.device_user.DeviceUserSubsystem;
 
 /**
