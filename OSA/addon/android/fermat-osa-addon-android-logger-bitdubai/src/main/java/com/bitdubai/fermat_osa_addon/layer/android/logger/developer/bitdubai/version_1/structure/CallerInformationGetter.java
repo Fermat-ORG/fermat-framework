@@ -7,14 +7,14 @@ import java.util.List;
 /**
  * Created by rodrigo on 2015.06.25..
  */
-class CallerInformationGetter {
+public final class CallerInformationGetter {
 
 
     /**
      * returns information of the thread.
      * @return
      */
-    public List<String> getCurrentThreadInformation() {
+    public final List<String> getCurrentThreadInformation() {
         List<String> list = new ArrayList<String>();
         list.add("Thread name:" + Thread.currentThread().getName());
         list.add("Thread state:" + Thread.currentThread().getState().toString());
@@ -27,7 +27,7 @@ class CallerInformationGetter {
      * returns information of the class and method
      * @return
      */
-    public List<String> getCurrentMethodInformation() {
+    public final List<String> getCurrentMethodInformation() {
         List<String> list = new ArrayList<String>();
 
         StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
@@ -47,4 +47,5 @@ class CallerInformationGetter {
         list.add("Method:" + e.toString());
         return list;
     }
+
 }

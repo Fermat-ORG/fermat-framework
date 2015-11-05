@@ -56,6 +56,7 @@ import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
@@ -75,6 +76,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -349,7 +351,7 @@ public class BitcoinCryptoVault implements
             BlockChain blockChain = new BlockChain(this.networkParameters,vault, blockStore);
             peerGroup = new PeerGroup(this.networkParameters,blockChain);
             peerGroup.addWallet(vault);
-            vault.addEventListener(this.vaultEventListeners);
+
 
             if (networkParameters == RegTestParams.get()) {
                 InetSocketAddress inetSocketAddress1 = new InetSocketAddress(REGTEST_SERVER_1_ADDRESS, REGTEST_SERVER_1_PORT);
@@ -367,7 +369,7 @@ public class BitcoinCryptoVault implements
             }
 
             peerGroup.start();
-            peerGroup.startBlockChainDownload(null);
+            peerGroup.downloadBlockChain();
 
         }catch(Exception exception){
             throw new CantConnectToBitcoinNetwork(CantConnectToBitcoinNetwork.DEFAULT_MESSAGE,exception,null,"Unchecked exception, chech the cause");
@@ -390,7 +392,7 @@ public class BitcoinCryptoVault implements
      */
     private void configureVault() throws CantCreateCryptoWalletException {
         try{
-            vault.autosaveToFile(vaultFile, 0, TimeUnit.NANOSECONDS, null);
+            vault.autosaveToFile(vaultFile, 500, TimeUnit.MILLISECONDS, null);
             vaultEventListeners = new VaultEventListeners(database, errorManager, eventManager, logManager);
             vault.addEventListener(vaultEventListeners);
         }catch(Exception exception){
@@ -477,7 +479,17 @@ public class BitcoinCryptoVault implements
             vault.commitTx(request.tx);
             vault.saveToFile(vaultFile);
 
-            peerGroup.broadcastTransaction(request.tx).future().get();
+            final TransactionBroadcast broadcast =peerGroup.broadcastTransaction(request.tx);
+            broadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
+                @Override
+                public void onBroadcastProgress(double progress) {
+                    System.out.println("****CryptoVault: progress broadcast " + progress);
+                }
+            });
+
+
+            System.out.println(broadcast.future().toString());
+            broadcast.future().get(10, TimeUnit.SECONDS);
 
             logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: bitcoin sent!!!", "Address to: " + addressTo.getAddress(), "Amount: " + amount);
 

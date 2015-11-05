@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
@@ -258,11 +259,23 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
         return Collections.EMPTY_LIST;
     }
 
-    /**
-     * The method <code>getActorAssetRedeemPoint</code> get All Information about Actor
-     *
-     * @throws CantGetAssetRedeemPointActorsException
-     */
+    @Override
+    public ActorAssetRedeemPoint getActorByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException,
+                                                                                    CantAssetRedeemPointActorNotFoundException {
+
+        try {
+            return this.redeemPointActorDao.getActorByPublicKey(actorPublicKey);
+        } catch (CantGetAssetRedeemPointActorsException e) {
+            throw new CantGetAssetRedeemPointActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset User from Data Base", null);
+        }
+
+    }
+
+    @Override
+    public void createActorAssetRedeemPointFactory(String assetRedeemPointActorPublicKey, String assetRedeemPointActorName, byte[] assetRedeemPointActorprofileImage) throws CantCreateActorRedeemPointException {
+
+    }
+
     @Override
     public ActorAssetRedeemPoint getActorAssetRedeemPoint() throws CantGetAssetRedeemPointActorsException {
 
@@ -275,12 +288,6 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
         return actorAssetRedeemPoint;
     }
 
-    /**
-     * The method <code>getAllAssetRedeemPointActorInTableRegistered</code> get All Actors
-     * Registered in Actor Network Service and used in Sub App Community
-     *
-     * @throws CantGetAssetRedeemPointActorsException
-     */
     @Override
     public List<ActorAssetRedeemPoint> getAllAssetRedeemPointActorInTableRegistered() throws CantGetAssetRedeemPointActorsException {
         List<ActorAssetRedeemPoint> list; // Asset User Actor list.
@@ -292,11 +299,6 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
         return list;
     }
 
-    /**
-     * The method <code>getAllAssetIssuerActorConnected</code> receives All Actors with have CryptoAddress in BD
-     *
-     * @throws CantGetAssetRedeemPointActorsException
-     */
     @Override
     public List<ActorAssetRedeemPoint> getAllRedeemPointActorConnected() throws CantGetAssetRedeemPointActorsException {
         List<ActorAssetRedeemPoint> list; // Asset User Actor list.
@@ -308,13 +310,6 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
         return list;
     }
 
-
-    /**
-     * The method <code>registerActorInActorNetowrkSerice</code> Register or Add Actor a Lst in
-     * Actor Network Service
-     *
-     * @throws CantCreateActorRedeemPointException
-     */
     @Override
     public void registerActorInActorNetowrkSerice() throws CantCreateActorRedeemPointException {
         try {
@@ -327,7 +322,7 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
 //            } else {
 //                System.out.println("Actor Asset Issuer YA REGISTRADO - NO Puede volver a registrarse");
 //            }
-        } catch (CantRegisterActorAssetRedeemPointException | CantGetRedeemPointsListException e) {
+        } catch (CantRegisterActorAssetRedeemPointException | CantGetAssetRedeemPointActorsException e) {
             e.printStackTrace();
         }
     }
@@ -405,7 +400,7 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
             }
         } catch (CantAddPendingRedeemPointException e) {
             throw new CantCreateActorRedeemPointException("CAN'T ADD NEW ACTOR ASSET REDEEM POINT", e, "", "");
-        } catch (CantGetRedeemPointsListException e) {
+        } catch (CantGetAssetRedeemPointActorsException e) {
             throw new CantCreateActorRedeemPointException("CAN'T ADD NEW ACTOR ASSET REDEEM POINT", FermatException.wrapException(e), "", "");
         }
     }
@@ -442,10 +437,4 @@ public class RedeemPointPluginRoot implements ActorAssetRedeemPointManager, Deal
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
     }
-
-//    @Override
-//    public ActorAssetRedeemPoint createActorAssetRedeemPointFactory(String assetRedeemPointActorPublicKey, String assetRedeemPointActorName, byte[] assetRedeemPointActorprofileImage, Location assetRedeemPointActorlocation) throws CantCreateActorRedeemPointException {
-//
-//        return null;
-//    }
 }

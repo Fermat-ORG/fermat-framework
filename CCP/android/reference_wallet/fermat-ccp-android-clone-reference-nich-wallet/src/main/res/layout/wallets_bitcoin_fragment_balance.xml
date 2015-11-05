@@ -119,12 +119,12 @@
             android:layout_height="30dp" />
 
 
-        <com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati
+        <com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.custom_view.CustomComponentMati
             android:id="@+id/custonMati"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        </com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomView.CustomComponentMati>
+        </com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.custom_view.CustomComponentMati>
         <!--<include layout="@layout/wallet_manager_transaction_view"-->
             <!--android:paddingTop="5dp"-->
             <!--android:paddingBottom="5dp"/>-->

@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
@@ -110,10 +109,10 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.ANDROID         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION         , plugin = Plugins.CLOUD_CLIENT)
+    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION         , plugin = Plugins.WS_CLOUD_CLIENT)
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
     private List<FermatEventListener> listenersAdded;
@@ -498,16 +497,15 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      * we'll return to the actor all the pending requests pending a local action.
      * State : PENDING_ACTION.
      *
-     * @param actorType  type of actor asking for pending requests
      *
      * @throws CantListPendingCryptoAddressRequestsException      if something goes wrong.
      */
     @Override
-    public List<CryptoAddressRequest> listPendingCryptoAddressRequests(Actors actorType) throws CantListPendingCryptoAddressRequestsException {
+    public List<CryptoAddressRequest> listAllPendingRequests() throws CantListPendingCryptoAddressRequestsException {
 
         try {
 
-            return cryptoAddressesNetworkServiceDao.listPendingRequestsByActorType(actorType);
+            return cryptoAddressesNetworkServiceDao.listAllPendingRequests();
 
         } catch (CantListPendingCryptoAddressRequestsException e){
 
@@ -749,20 +747,15 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         try {
 
-            System.out.println("********* Crypto Addresses: Initializing and starting Executor Agent. ");
-
             cryptoAddressesExecutorAgent = new CryptoAddressesExecutorAgent(
                     this,
                     errorManager,
                     eventManager,
-                    pluginDatabaseSystem,
-                    pluginId,
+                    cryptoAddressesNetworkServiceDao,
                     wsCommunicationsCloudClientManager
             );
 
             cryptoAddressesExecutorAgent.start();
-
-            System.out.println("********* Crypto Addresses: Successful initialize and start of Executor Agent. ");
 
         } catch(CantStartAgentException e) {
 
@@ -772,8 +765,6 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     }
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
-
-        System.out.println(" ******* Crypto Addresses: Ahora si me estoy registrando como la gente.....");
 
         /*
          * If the component registered have my profile and my identity public key
@@ -893,7 +884,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         try {
 
-            ProtocolState protocolState = ProtocolState.PROCESSING_RECEIVE;
+            ProtocolState protocolState = ProtocolState.PENDING_ACTION    ;
             RequestType   type          = RequestType  .RECEIVED          ;
             RequestAction action        = RequestAction.REQUEST           ;
 
@@ -932,7 +923,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         try {
 
-            ProtocolState protocolState = ProtocolState.PROCESSING_RECEIVE;
+            ProtocolState protocolState = ProtocolState.PENDING_ACTION;
 
             cryptoAddressesNetworkServiceDao.acceptAddressExchangeRequest(
                     acceptMessage.getRequestId(),
@@ -960,7 +951,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
 
         try {
 
-            ProtocolState protocolState = ProtocolState.PROCESSING_RECEIVE;
+            ProtocolState protocolState = ProtocolState.PENDING_ACTION;
 
             cryptoAddressesNetworkServiceDao.denyAddressExchangeRequest(
                     denyMessage.getRequestId(),

@@ -1,40 +1,32 @@
 package com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai;
 
-
-import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.AddonDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddonDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAddonDeveloperException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonDeveloperReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.version_1.DeviceUserUserAddonRoot;
 
 
 /**
  * Created by ciencias on 22.01.15.
+ * Modified by lnacosta (laion.cj91@gmail.com) on 26/10/2015.
  */
-public class DeveloperBitDubai implements AddonDeveloper {
+public class DeveloperBitDubai extends AbstractAddonDeveloper {
 
-    Addon addon;
-
-
-
+    public DeveloperBitDubai() {
+        super(new AddonDeveloperReference(Developers.BITDUBAI));
+    }
 
     @Override
-    public Addon getAddon() {
-        return addon;
+    public void start() throws CantStartAddonDeveloperException {
+        try {
+
+            this.registerVersion(new DeviceUserUserAddonRoot());
+
+        } catch (CantRegisterVersionException e) {
+
+            throw new CantStartAddonDeveloperException(e, "", "Error registering addon versions for the developer.");
+        }
     }
-
-
-
-
-
-    public DeveloperBitDubai () {
-
-        /**
-         * I will choose from the different versions of my implementations which one to start. Now there is only one, so
-         * it is easy to choose.
-         */
-
-        addon = new DeviceUserUserAddonRoot();
-
-    }
-
-
 }

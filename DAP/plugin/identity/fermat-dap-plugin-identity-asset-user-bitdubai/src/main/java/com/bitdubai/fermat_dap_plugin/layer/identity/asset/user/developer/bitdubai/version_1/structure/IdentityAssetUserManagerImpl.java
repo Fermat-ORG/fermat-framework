@@ -121,11 +121,11 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
             return assetUserList;
 
         } catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantListAssetUsersException("CAN'T GET ASSET ISSUER IDENTITIES", e, "Error get logged user device", "");
+            throw new CantListAssetUsersException("CAN'T GET ASSET USER IDENTITIES", e, "Error get logged user device", "");
         } catch (CantListAssetUserIdentitiesException e) {
-            throw new CantListAssetUsersException("CAN'T GET ASSET ISSUER  IDENTITIES", e, "", "");
+            throw new CantListAssetUsersException("CAN'T GET ASSET USER  IDENTITIES", e, "", "");
         } catch (Exception e) {
-            throw new CantListAssetUsersException("CAN'T GET ASSET ISSUER IDENTITIES", FermatException.wrapException(e), "", "");
+            throw new CantListAssetUsersException("CAN'T GET ASSET USER IDENTITIES", FermatException.wrapException(e), "", "");
         }
     }
 
