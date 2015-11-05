@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
@@ -52,7 +53,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
     // network services registered
     private Map<String, String> poolConnectionsWaitingForResponse;
 
-    private CryptoAddressesNetworkServiceDao cryptoAddressesNetworkServiceDao;
+    private CryptoAddressesNetworkServiceDao dao;
 
     private final CryptoAddressesNetworkServicePluginRoot cryptoAddressesNetworkServicePluginRoot;
     private final ErrorManager                            errorManager                           ;
@@ -97,12 +98,12 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
             try {
 
-                this.cryptoAddressesNetworkServiceDao = new CryptoAddressesNetworkServiceDao(
+                this.dao = new CryptoAddressesNetworkServiceDao(
                         this.pluginDatabaseSystem,
                         this.pluginId
                 );
 
-                cryptoAddressesNetworkServiceDao.initialize();
+                dao.initialize();
             } catch(CantInitializeCryptoAddressesNetworkServiceDatabaseException e) {
 
                 throw new CantInitializeExecutorAgentException(e, "", "Problem initializing Crypto Addresses DAO from Executor Agent.");
@@ -146,7 +147,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
     private void processSend() {
         try {
 
-            List<CryptoAddressRequest> cryptoAddressRequestList = cryptoAddressesNetworkServiceDao.listPendingRequestsByProtocolState(
+            List<CryptoAddressRequest> cryptoAddressRequestList = dao.listPendingRequestsByProtocolState(
                     ProtocolState.PROCESSING_SEND
             );
 
@@ -240,7 +241,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
         try {
 
             // if still processing_send, will send an event and change the state to pending action.
-            List<CryptoAddressRequest> cryptoAddressRequestList = cryptoAddressesNetworkServiceDao.listPendingRequestsByProtocolState(
+            List<CryptoAddressRequest> cryptoAddressRequestList = dao.listPendingRequestsByProtocolState(
                     ProtocolState.PROCESSING_RECEIVE
             );
 
@@ -261,29 +262,20 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
                         break;
                     case REQUEST:
                         System.out.println("************** Crypto Addresses -> Received Address Request: " +cpr);
-                        raiseEvent(EventType.CRYPTO_ADDRESS_REQUESTED, cpr.getRequestId(), cpr.getIdentityTypeResponding());
+                        //raiseEvent(EventType.CRYPTO_ADDRESS_REQUESTED, cpr.getRequestId(), cpr.getIdentityTypeResponding());
+                        // todo commented to use the new middleware crypto addresses plugin
                         toPendingAction(cpr.getRequestId());
 
                         break;
                 }
             }
 
-            // if still pending actions, will send an event for each one of them again.
-            cryptoAddressRequestList = cryptoAddressesNetworkServiceDao.listPendingRequestsByProtocolState(
-                    ProtocolState.PENDING_ACTION
-            );
-
-            for(CryptoAddressRequest cpr : cryptoAddressRequestList) {
-                switch(cpr.getAction()) {
-
-                    case ACCEPT:  raiseEvent(EventType.CRYPTO_ADDRESS_RECEIVED , cpr.getRequestId(), cpr.getIdentityTypeRequesting());
-                        break;
-                    case DENY:    raiseEvent(EventType.CRYPTO_ADDRESS_DENIED   , cpr.getRequestId(), cpr.getIdentityTypeRequesting());
-                        break;
-                    case REQUEST: raiseEvent(EventType.CRYPTO_ADDRESS_REQUESTED, cpr.getRequestId(), cpr.getIdentityTypeResponding());
-                        break;
-
-                }
+            // if there is pending actions i
+            if(dao.isPendingRequestByProtocolState(ProtocolState.PENDING_ACTION)) {
+                System.out.println("************* Crypto Address -> Pending Action detected!");
+                FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
+                eventToRaise.setSource(cryptoAddressesNetworkServicePluginRoot.getEventSource());
+                eventManager.raiseEvent(eventToRaise);
             }
 
         } catch(CantListPendingCryptoAddressRequestsException |
@@ -425,19 +417,19 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
     private void toPendingAction(final UUID requestId) throws CantChangeProtocolStateException,
                                                               PendingRequestNotFoundException {
 
-        cryptoAddressesNetworkServiceDao.changeProtocolState(requestId, ProtocolState.PENDING_ACTION);
+        dao.changeProtocolState(requestId, ProtocolState.PENDING_ACTION);
     }
 
     private void toWaitingResponse(final UUID requestId) throws CantChangeProtocolStateException,
                                                                 PendingRequestNotFoundException {
 
-        cryptoAddressesNetworkServiceDao.changeProtocolState(requestId, ProtocolState.WAITING_RESPONSE);
+        dao.changeProtocolState(requestId, ProtocolState.WAITING_RESPONSE);
     }
 
     private void toDone(final UUID requestId) throws CantChangeProtocolStateException,
                                                      PendingRequestNotFoundException {
 
-        cryptoAddressesNetworkServiceDao.changeProtocolState(requestId, ProtocolState.DONE);
+        dao.changeProtocolState(requestId, ProtocolState.DONE);
     }
 
     private void raiseEvent(final EventType eventType,

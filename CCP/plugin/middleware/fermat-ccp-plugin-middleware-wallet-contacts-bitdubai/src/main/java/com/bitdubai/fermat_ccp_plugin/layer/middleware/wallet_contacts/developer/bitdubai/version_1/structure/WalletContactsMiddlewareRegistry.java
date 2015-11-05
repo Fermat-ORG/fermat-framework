@@ -353,7 +353,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
         }
     }
 
-    public void handleCryptoAddressReceivedEvent(UUID requestId) throws CantHandleCryptoAddressReceivedEventException {
+    public void handleCryptoAddressReceivedEvent(final UUID requestId) throws CantHandleCryptoAddressReceivedEventException {
 
         try {
 
@@ -370,7 +370,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
         }
     }
 
-    public void handleCryptoAddressDeniedEvent(UUID requestId) throws CantHandleCryptoAddressDeniedEventException {
+    public void handleCryptoAddressDeniedEvent(final UUID requestId) throws CantHandleCryptoAddressDeniedEventException {
 
         try {
             System.out.println("----------------------------\n" +
@@ -386,7 +386,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
         }
     }
 
-    public void handleCryptoAddressReceivedEvent(CryptoAddressRequest request) throws CantHandleCryptoAddressReceivedEventException {
+    public void handleCryptoAddressReceivedEvent(final CryptoAddressRequest request) throws CantHandleCryptoAddressReceivedEventException {
 
         try {
             try {
@@ -399,8 +399,8 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                 );
 
                 this.addCryptoAddressToWalletContact(
-                        walletContactRecord.getContactId(),
-                        request.getCryptoAddress()
+                    walletContactRecord.getContactId(),
+                    request.getCryptoAddress()
                 );
 
                 System.out.println("----------------------------\n" +
@@ -437,7 +437,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
         }
     }
 
-    public void handleCryptoAddressDeniedEvent(CryptoAddressRequest request) throws CantHandleCryptoAddressDeniedEventException {
+    public void handleCryptoAddressDeniedEvent(final CryptoAddressRequest request) throws CantHandleCryptoAddressDeniedEventException {
 
         try {
             try {

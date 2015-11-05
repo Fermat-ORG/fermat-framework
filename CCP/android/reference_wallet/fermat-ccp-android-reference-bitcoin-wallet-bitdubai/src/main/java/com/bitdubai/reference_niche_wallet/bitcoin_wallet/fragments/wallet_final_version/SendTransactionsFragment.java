@@ -602,7 +602,7 @@ public class SendTransactionsFragment extends FermatWalletListFragment<CryptoWal
                     }
 
 
-                    CryptoWalletWalletContact cryptoWalletWalletContact = cryptoWallet.findWalletContactById(walletContact.contactId);
+                    CryptoWalletWalletContact cryptoWalletWalletContact = cryptoWallet.findWalletContactById(walletContact.contactId,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
 
                     //TODO: ver que mas puedo usar del cryptoWalletWalletContact
 
