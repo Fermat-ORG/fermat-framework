@@ -12,6 +12,9 @@ import com.bitdubai.fermat_api.layer.PlatformLayer;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
@@ -29,6 +32,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.ObjectSizeFetcher;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.DealsWithCryptoTransmissionNetworkService;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
@@ -277,33 +285,6 @@ public class Platform implements Serializable {
      */
     private CorePlatformContext corePlatformContext;
 
-    private Map<Platforms, AbstractPlatform> platformsMap;
-
-    /**
-     * Represent the osContext
-     */
-    private Object osContext;
-
-    /**
-     * Represent the fileSystemOs
-     */
-    private FileSystemOs fileSystemOs;
-
-    /**
-     * Represent the databaseSystemOs
-     */
-    private DataBaseSystemOs databaseSystemOs;
-
-    /**
-     * Represent the locationSystemOs
-     */
-    private LocationSystemOs locationSystemOs;
-
-    /**
-     * Represent the loggerSystemOs
-     */
-    private LoggerSystemOs loggerSystemOs;
-
     private FermatSystem fermatSystem;
 
     public void setFermatSystem(FermatSystem fermatSystem) {
@@ -321,7 +302,6 @@ public class Platform implements Serializable {
         dealsWithDatabaseManagersAddons = new ConcurrentHashMap<>();
         dealsWithLogManagersAddons = new ConcurrentHashMap<>();
 
-        platformsMap = new ConcurrentHashMap<>();
     }
 
     /**
@@ -329,46 +309,6 @@ public class Platform implements Serializable {
      * the OS. I have to transport a reference to that somebody to the OS subsystem in other to allow it to access
      * the OS through this reference.
      */
-    public void setOsContext(Object osContext) {
-        this.osContext = osContext;
-    }
-
-    /**
-     * An unresolved bug in either Android or Gradle does not allow us to create the os object on a library outside the
-     * main module. While this situation persists, we will create it inside the wallet package and receive it throw this
-     * method.
-     */
-    public void setFileSystemOs(FileSystemOs fileSystemOs) {
-        this.fileSystemOs = fileSystemOs;
-    }
-
-    /**
-     * Set the DataBaseSystemOs
-     *
-     * @param databaseSystemOs
-     */
-    public void setDataBaseSystemOs(DataBaseSystemOs databaseSystemOs) {
-        this.databaseSystemOs = databaseSystemOs;
-    }
-
-    /**
-     * Set the LocationSystemOs
-     *
-     * @param locationSystemOs
-     */
-    public void setLocationSystemOs(LocationSystemOs locationSystemOs) {
-        this.locationSystemOs = locationSystemOs;
-    }
-
-    /**
-     * Set the LoggerSystemOs
-     *
-     * @param loggerSystemOs
-     */
-    public void setLoggerSystemOs(LoggerSystemOs loggerSystemOs) {
-        this.loggerSystemOs = loggerSystemOs;
-    }
-
 
     /**
      * Method that start the platform
@@ -568,8 +508,14 @@ public class Platform implements Serializable {
              *
              * Initialize the Plugin Identity Manager, the one who assigns identities to each plug in.
              */
-            pluginsIdentityManager = new PluginsIdentityManager(fileSystemOs.getPlatformFileSystem());
 
+            try {
+
+                pluginsIdentityManager = new PluginsIdentityManager((PlatformFileSystem)fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.PLATFORM_FILE_SYSTEM)));
+            } catch (CantGetAddonException | VersionNotFoundException e ) {
+                System.out.println("No sepué asiná el plato file sitem loco");
+                System.out.println(e);
+            }
 
              /* flag temporal para desactivar plugins que tarde demasiado en inicializar,
             y asi poder trabajar en otras partes del sistema de forma relativamente rapida */
@@ -1378,11 +1324,11 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithLogger) {
-                ((DealsWithLogger) plugin).setLogManager(loggerSystemOs.getLoggerManager());
+                ((DealsWithLogger) plugin).setLogManager((LogManager) fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.LOG_MANAGER)));
             }
 
             if (plugin instanceof DealsWithDeviceLocation) {
-                ((DealsWithDeviceLocation) plugin).setLocationManager(locationSystemOs.getLocationSystem());
+                ((DealsWithDeviceLocation) plugin).setLocationManager((LocationManager) fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.DEVICE_LOCATION)));
             }
 
             if (plugin instanceof DealsWithWalletModuleCryptoWallet) {
@@ -1394,11 +1340,11 @@ public class Platform implements Serializable {
             }
 
             if (plugin instanceof DealsWithPluginFileSystem) {
-                ((DealsWithPluginFileSystem) plugin).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+                ((DealsWithPluginFileSystem) plugin).setPluginFileSystem((PluginFileSystem) fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.PLUGIN_FILE_SYSTEM)));
             }
 
             if (plugin instanceof DealsWithPluginDatabaseSystem) {
-                ((DealsWithPluginDatabaseSystem) plugin).setPluginDatabaseSystem(databaseSystemOs.getPluginDatabaseSystem());
+                ((DealsWithPluginDatabaseSystem) plugin).setPluginDatabaseSystem((PluginDatabaseSystem) fermatSystem.getAddon(ref(Platforms.OPERATIVE_SYSTEM_API, Layers.SYSTEM, Addons.PLATFORM_DATABASE_SYSTEM)));
             }
 
             if (plugin instanceof DealsWithToolManager) {

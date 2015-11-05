@@ -96,27 +96,6 @@ public class LoaderService extends Service {
 
             platform = ((ApplicationSession)getApplication()).getFermatPlatform();
 
-
-            //set Os Addons in platform
-            fileSystemOs = new AndroidOsFileSystem(context.getFilesDir().getPath());
-            platform.setFileSystemOs(fileSystemOs);
-
-             databaseSystemOs = new AndroidOsDataBaseSystem(context.getFilesDir().getPath());
-            platform.setDataBaseSystemOs(databaseSystemOs);
-
-            //    locationSystemOs = new AndroidOsLocationSystem();
-            //    locationSystemOs.setContext(context);
-            //    platform.setLocationSystemOs(locationSystemOs);
-
-            loggerSystemOs = new LoggerAddonRoot(new AddonVersionReference(new Version()));
-            try {
-                ((com.bitdubai.fermat_api.Service) loggerSystemOs).start();
-                platform.setLoggerSystemOs(loggerSystemOs);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-            }
-
             //execute start platform
             try {
 

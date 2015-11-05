@@ -260,47 +260,8 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
                     System.out.println(e.getFormattedContext());
                     System.out.println(e.getFormattedTrace());
                 }
-
-                //set Os Addons in platform
-                fileSystemOs = new AndroidOsFileSystem(context.getFilesDir().getPath());
-
-                platform.setFileSystemOs(fileSystemOs);
-
-                databaseSystemOs = new AndroidOsDataBaseSystem(context.getFilesDir().getPath());
-                platform.setDataBaseSystemOs(databaseSystemOs);
-
-                locationSystemOs = new AndroidOsLocationSystem(context);
-                platform.setLocationSystemOs(locationSystemOs);
-
-
-                loggerSystemOs = new LoggerAddonRoot(new AddonVersionReference(new Version()));
-                try {
-                    ((Service) loggerSystemOs).start();
-                    platform.setLoggerSystemOs(loggerSystemOs);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-                }
-
                 //execute start platform
                 try {
-
-                  /*  AbstractPlatform osaPlatform = new OSAPlatform();
-                    FermatSystem fermatSystem = new FermatSystem(getApplicationContext(), osaPlatform);
-
-                    fermatSystem.start();
-
-                    fermatSystem.startAndGetPluginVersion(
-                            new PluginVersionReference(
-                                    Platforms.CRYPTO_CURRENCY_PLATFORM,
-                                    Layers.WALLET_MODULE,
-                                    Plugins.CRYPTO_WALLET,
-                                    Developers.BITDUBAI,
-                                    new Version()
-                            )
-                    );
-
-                    platform.setFermatSystem(fermatSystem);*/
 
                     platform.start();
 
@@ -309,30 +270,6 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
                     Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
                 }
 
-            // todo testing
-/*
-            try {
-
-                AbstractPlatform osaPlatform = new OSAPlatform();
-                FermatSystem fermatSystem = new FermatSystem(getApplicationContext(), osaPlatform);
-
-                fermatSystem.start();
-
-                fermatSystem.startAndGetPluginVersion(
-                        new PluginVersionReference(
-                                Platforms.CRYPTO_CURRENCY_PLATFORM,
-                                Layers.WALLET_MODULE,
-                                Plugins.CRYPTO_WALLET,
-                                Developers.BITDUBAI,
-                                new Version()
-                        )
-                );
-
-            } catch(Exception e) {
-                ((ErrorManager) platform.getCorePlatformContext().getAddon(Addons.ERROR_MANAGER)).reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-            }
-*/
-            // todo testing
                 /**
                  * get platform object
                  */
